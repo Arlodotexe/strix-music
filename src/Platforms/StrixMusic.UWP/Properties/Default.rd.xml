@@ -21,18 +21,24 @@
       An Assembly element with Name="*Application*" applies to all assemblies in
       the application package. The asterisks are not wildcards.
     -->
-		<Assembly Name="OwlCore" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
-		<Assembly Name="OwlCore.Uno" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="*Application*" Dynamic="Required All" />
 
-		<Assembly Name="StrixMusic.Sdk" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
-		<Assembly Name="StrixMusic.Sdk.Uno" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<!-- Previous attempt at including only required binaries. Settings serialization fails.
+		<Assembly Name="System" Serialize="Auto" />
+		<Assembly Name="System.Collections" Serialize="Auto" />
 
-		<Assembly Name="StrixMusic.Cores.LocalFiles" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
-		<Assembly Name="StrixMusic.Cores.OneDrive" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="OwlCore" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="OwlCore.Uno" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 
-		<Assembly Name="StrixMusic.Shells.ZuneDesktop" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
-		<Assembly Name="StrixMusic.Shells.Groove" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Sdk" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Sdk.Uno" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 
+		<Assembly Name="StrixMusic.Cores.LocalFiles" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Cores.OneDrive" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+
+		<Assembly Name="StrixMusic.Shells.ZuneDesktop" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Shells.Groove" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		-->
 	</Application>
 
 	<Library Name="Microsoft.Extensions.DependencyInjection">
