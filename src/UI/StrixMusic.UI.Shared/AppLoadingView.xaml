@@ -29,7 +29,7 @@
                         <StackPanel Spacing="8" Width="65">
                             <Image Height="50" Width="50" HorizontalAlignment="Center">
                                 <Image.Source>
-                                    <SvgImageSource UriSource="{x:Bind LogoSvgUrl, Mode=OneWay}"/>
+                                    <SvgImageSource UriSource="{x:Bind LogoUri, Mode=OneWay}"/>
                                 </Image.Source>
                             </Image>
 
