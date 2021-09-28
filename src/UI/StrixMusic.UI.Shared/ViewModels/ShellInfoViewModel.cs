@@ -17,9 +17,9 @@ namespace StrixMusic.Shared.ViewModels
     public class ShellInfoViewModel : ObservableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
+        /// Initializes a new instance of the <see cref="ShellInfoViewModel"/> class.
         /// </summary>
-        /// <param name="assemblyInfo">The shell assembly info to wrap around.</param>
+        /// <param name="metadata">The shell metadata to wrap around.</param>
         public ShellInfoViewModel(ShellMetadata metadata)
         {
             Metadata = metadata;
