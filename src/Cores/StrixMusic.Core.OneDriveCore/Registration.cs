@@ -5,7 +5,10 @@ namespace StrixMusic.Cores.OneDrive
 {
     public static class Registration
     {
-        static Registration()
+        /// <summary>
+        /// Executes core registration.
+        /// </summary>
+        public static void Execute()
         {
             var metadata = new CoreMetadata(
                     id: nameof(OneDriveCore),

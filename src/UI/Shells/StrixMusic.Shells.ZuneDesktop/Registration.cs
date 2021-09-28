@@ -8,7 +8,10 @@ namespace StrixMusic.Shells.ZuneDesktop
     /// </summary>
     public static class Registration
     {
-        static Registration()
+        /// <summary>
+        /// Executes shell registration.
+        /// </summary>
+        public static void Execute()
         {
             var metadata = new ShellMetadata(id: "Zune.Desktop.4.8",
                                              displayName: "Zune Desktop",

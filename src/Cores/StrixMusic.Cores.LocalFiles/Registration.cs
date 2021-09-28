@@ -5,7 +5,10 @@ namespace StrixMusic.Cores.LocalFiles
 {
     public static class Registration
     {
-        static Registration()
+        /// <summary>
+        /// Executes core registration.
+        /// </summary>
+        public static void Execute()
         {
             var metadata = new CoreMetadata(
                     id: nameof(LocalFilesCore),

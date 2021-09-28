@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Services
     public static class CoreRegistry
     {
         private static readonly List<CoreMetadata> _metadataRegistry = new();
-        private static readonly Dictionary<CoreMetadata, Func<string, ICore>> _coreFactories = new Dictionary<CoreMetadata, Func<string, ICore>>();
+        private static readonly Dictionary<string, Func<string, ICore>> _coreFactories = new Dictionary<string, Func<string, ICore>>();
 
         /// <summary>
         /// Holds all registered core metadata.
@@ -25,18 +25,18 @@ namespace StrixMusic.Sdk.Services
         public static void Register(Func<string, ICore> coreFactory, CoreMetadata metadata)
         {
             _metadataRegistry.Add(metadata);
-            _coreFactories.Add(metadata, coreFactory);
+            _coreFactories.Add(metadata.Id, coreFactory);
         }
 
         /// <summary>
         /// Creates a core instance using a registered core factory.
         /// </summary>
-        /// <param name="metadata">The metadata for the core to create an instance of.</param>
+        /// <param name="coreRegistryId">The core registry id of the core to create an instance of.</param>
         /// <param name="instanceId">A unique identifier for this core instance.</param>
         /// <returns>An new instance of <see cref="ICore"/> with the given <paramref name="instanceId"/>.</returns>
-        public static ICore CreateCore(CoreMetadata metadata, string instanceId)
+        public static ICore CreateCore(string coreRegistryId, string instanceId)
         {
-            return _coreFactories[metadata](instanceId);
+            return _coreFactories[coreRegistryId](instanceId);
         }
     }
 }

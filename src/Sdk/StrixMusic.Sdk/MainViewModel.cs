@@ -216,7 +216,7 @@ namespace StrixMusic.Sdk
             if (_sources.Any(x => x.InstanceId == instanceId))
                 return null;
 
-            var core = CoreRegistry.CreateCore(coreMetadata, instanceId);
+            var core = CoreRegistry.CreateCore(coreMetadata.Id, instanceId);
             _sources.Add(core);
 
             // Adds itself into Cores.

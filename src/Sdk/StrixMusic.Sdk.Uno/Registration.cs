@@ -1,7 +1,6 @@
 ﻿using StrixMusic.Sdk.Uno.Services.ShellManagement;
-using Windows.Foundation;
 
-namespace StrixMusic.Sdk.Uno
+namespace StrixMusic.Shells.Sandbox
 {
     /// <summary>
     /// Handles registration for this shell.
@@ -10,11 +9,22 @@ namespace StrixMusic.Sdk.Uno
     {
         static Registration()
         {
-            var metadata = new ShellMetadata(id: "default.sandbox",
-                                             displayName: "Dev Sandbox",
-                                             description: "Used by devs to test and create default controls for other shells.");
-
-            ShellRegistry.Register(() => new StrixMusic.Shells.Default.DefaultShell(), metadata);
+            Metadata = new ShellMetadata(id: "default.sandbox",
+                                         displayName: "Sandbox",
+                                         description: "Used by devs to test and create default controls for other shells.");
         }
+
+        /// <summary>
+        /// Executes shell registration.
+        /// </summary>
+        public static void Execute()
+        {
+            ShellRegistry.Register(() => new Default.DefaultShell(), Metadata);
+        }
+
+        /// <summary>
+        /// Registered metadata for this shell.
+        /// </summary>
+        public static ShellMetadata Metadata { get; }
     }
 }

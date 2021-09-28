@@ -48,7 +48,6 @@ namespace StrixMusic.Shared
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
         private SystemMediaTransportControlsHandler? _smtpHandler;
-        private Dictionary<string, CoreMetadata>? _coreInstanceRegistry;
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
 
@@ -112,9 +111,9 @@ namespace StrixMusic.Shared
             InitializeShellRegistry();
 
             await InitializeServices();
-            await InitializeInstanceRegistry();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeCoreRanking();
+            await InitializeInstanceRegistry();
             await InitializeConfiguredCores();
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
@@ -126,6 +125,11 @@ namespace StrixMusic.Shared
 
         private void InitializeShellRegistry()
         {
+            // TODO: Create a way to load these dynamically (no reflection).
+            Shells.Sandbox.Registration.Execute();
+            Shells.ZuneDesktop.Registration.Execute();
+            Shells.Groove.Registration.Execute();
+
             if (ShellRegistry.MetadataRegistry.Count == 0)
             {
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(ShellRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 shell.");
@@ -135,6 +139,10 @@ namespace StrixMusic.Shared
 
         private void InitializeCoreRegistry()
         {
+            // TODO: Create a way to load these dynamically (no reflection).
+            Cores.LocalFiles.Registration.Execute();
+            Cores.OneDrive.Registration.Execute();
+
             if (CoreRegistry.MetadataRegistry.Count == 0)
             {
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(CoreRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
@@ -146,14 +154,14 @@ namespace StrixMusic.Shared
         {
             UpdateStatus("InitCoreReg");
 
-            var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
-
-            _coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
         }
 
         private async Task InitializeCoreRanking()
         {
-            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            var coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
+
+            Guard.IsGreaterThan(coreInstanceRegistry.Count, 0, nameof(coreInstanceRegistry.Count));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             var existingCoreRanking = await Task.Run(() => _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking)));
@@ -162,11 +170,11 @@ namespace StrixMusic.Shared
 
             foreach (var instanceId in existingCoreRanking)
             {
-                var coreMetadata = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                var coreMetadata = coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
                 if (coreMetadata is null)
                     continue;
 
-                // If this core is still configured, add it to the ranking.
+                // If this core is still registered, add it to the ranking.
                 if (CoreRegistry.MetadataRegistry.Any(x => x.Id == coreMetadata.Id))
                     coreRanking.Add(instanceId);
             }
@@ -175,7 +183,7 @@ namespace StrixMusic.Shared
             if (coreRanking.Count == 0)
             {
                 // TODO: Show abstractUI and let the user rank the cores manually.
-                foreach (var instance in _coreInstanceRegistry)
+                foreach (var instance in coreInstanceRegistry)
                     coreRanking.Add(instance.Key);
             }
 
@@ -260,11 +268,12 @@ namespace StrixMusic.Shared
 
         private async Task InitializeOutOfBoxSetupIfNeeded()
         {
-            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            var coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
 
             // Todo: If coreRegistry is empty, show out of box setup page.
-            if (_coreInstanceRegistry.Count != 0)
+            if (coreInstanceRegistry.Count != 0)
                 return;
 
             // Temp out of box setup

@@ -14,14 +14,14 @@ namespace StrixMusic.Sdk.Uno.Services
     public class SettingsKeysUI : SettingsKeysBase
     {
         /// <summary>
-        /// Stores the assembly name of the user's preferred shell.
+        /// Stores the registry id of the user's preferred shell.
         /// </summary>
-        public static string PreferredShell => "Default";
+        public static string PreferredShell => Shells.Sandbox.Registration.Metadata.Id;
 
         /// <summary>
-        /// The assembly name of the user's current fallback shell. Used to cover display sizes that the <see cref="PreferredShell"/> doesn't support. 
+        /// The registry id of the user's current fallback shell. Used to cover display sizes that the <see cref="PreferredShell"/> doesn't support. 
         /// </summary>
-        public static string FallbackShell => "Default";
+        public static string FallbackShell => Shells.Sandbox.Registration.Metadata.Id;
 
         /// <summary>
         /// Contains keyed information for the last selected Pivot item in various pivots throughout the app. Key is a unique ID for the pivot, value is the index of the selected pivot.

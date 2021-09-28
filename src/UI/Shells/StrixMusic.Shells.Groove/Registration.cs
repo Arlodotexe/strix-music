@@ -7,7 +7,10 @@ namespace StrixMusic.Shells.Groove
     /// </summary>
     public static class Registration
     {
-        static Registration()
+        /// <summary>
+        /// Executes shell registration.
+        /// </summary>
+        public static void Execute()
         {
             var metadata = new ShellMetadata(
                 id: "GrooveMusic.10.21061.10121.0",
