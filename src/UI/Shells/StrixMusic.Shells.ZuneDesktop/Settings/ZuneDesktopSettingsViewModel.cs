@@ -25,7 +25,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
             { "Cells", new ZuneDesktopBackgroundImage("Cells", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Hero", new ZuneDesktopBackgroundImage("Hero", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Meadow", new ZuneDesktopBackgroundImage("Meadow", stretch: Windows.UI.Xaml.Media.Stretch.None) },
-            { "RobotOwl", new ZuneDesktopBackgroundImage("RobotOwl", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Shards", new ZuneDesktopBackgroundImage("Shards", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Smooth", new ZuneDesktopBackgroundImage("Smooth") },
             { "Wired", new ZuneDesktopBackgroundImage("Wired", stretch: Windows.UI.Xaml.Media.Stretch.Uniform) },

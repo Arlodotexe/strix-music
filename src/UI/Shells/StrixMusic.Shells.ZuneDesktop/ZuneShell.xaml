@@ -93,7 +93,7 @@
 
         <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1" Grid.RowSpan="2">
             <Rectangle.Fill>
-                <ImageBrush x:Name="BackgroundImageBrush" ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Backgrounds/RobotOwl.png" AlignmentX="Right" AlignmentY="Top" Stretch="Uniform"/>
+                <ImageBrush x:Name="BackgroundImageBrush" AlignmentX="Right" AlignmentY="Top" Stretch="Uniform"/>
             </Rectangle.Fill>
         </Rectangle>
 
