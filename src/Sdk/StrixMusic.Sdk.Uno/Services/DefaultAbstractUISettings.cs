@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 
 namespace StrixMusic.Sdk.Services.Settings
 {
@@ -17,7 +15,6 @@ namespace StrixMusic.Sdk.Services.Settings
     public class DefaultAbstractUISettings : IAsyncInit
     {
         private readonly ISettingsService _settingsService;
-        private IReadOnlyList<ShellAssemblyInfo>? _shellRegistry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultAbstractUISettings"/> class.
@@ -49,13 +46,11 @@ namespace StrixMusic.Sdk.Services.Settings
 
         private AbstractUICollection CreateThemeSettingItems()
         {
-            Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
-
             var shellSelectorItems = new List<AbstractUIMetadata>();
 
-            foreach (var shell in _shellRegistry)
+            foreach (var shell in ShellRegistry.MetadataRegistry)
             {
-                shellSelectorItems.Add(new AbstractUIMetadata(shell.AssemblyName)
+                shellSelectorItems.Add(new AbstractUIMetadata(shell.Id)
                 {
                     Title = shell.DisplayName,
                 });
@@ -84,7 +79,6 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            _shellRegistry = await Task.Run(() =>_settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)));
             IsInitialized = true;
         }
     }

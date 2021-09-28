@@ -1,8 +1,11 @@
 ﻿using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using Windows.Foundation;
 
-namespace StrixMusic.Shell.ZuneDesktop
+namespace StrixMusic.Shells.ZuneDesktop
 {
+    /// <summary>
+    /// Handles registration for this shell.
+    /// </summary>
     public static class Registration
     {
         static Registration()

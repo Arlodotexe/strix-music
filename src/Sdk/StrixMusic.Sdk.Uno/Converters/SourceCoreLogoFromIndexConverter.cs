@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Uno.Converters
                 var relevantCore = cores.ElementAt(index);
                 var coreVm = mainVieWModel.Cores.First(x => x.InstanceId == relevantCore.InstanceId);
 
-                return coreVm.LogoSvgUrl;
+                return coreVm.LogoUri;
             }
 
             return ThrowHelper.ThrowInvalidOperationException<Uri>(nameof(value));

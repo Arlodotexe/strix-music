@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -38,10 +37,9 @@ namespace StrixMusic.Shared.ViewModels
             // Gets the preferred shell's assembly name
             var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
             var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
-            var shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellMetadata>>(nameof(SettingsKeysUI.ShellRegistry));
 
             // Gets the list of loaded shells.
-            foreach (var shell in shellRegistry)
+            foreach (var shell in ShellRegistry.MetadataRegistry)
             {
                 var viewModel = new ShellInfoViewModel(shell);
 
@@ -54,12 +52,12 @@ namespace StrixMusic.Shared.ViewModels
             foreach (var shell in AllShells)
             {
                 // Mark the current shell selected or Default (if unset)
-                if (shell.AssemblyInfo.AssemblyName == preferredShell)
+                if (shell.Metadata.Id == preferredShell)
                 {
                     PreferredShell = shell;
                 }
 
-                if (shell.AssemblyInfo.AssemblyName == fallbackShell)
+                if (shell.Metadata.Id == fallbackShell)
                 {
                     FallbackShell = shell;
                 }
@@ -85,7 +83,7 @@ namespace StrixMusic.Shared.ViewModels
             set => SetProperty(ref _preferredShell, value, nameof(PreferredShell));
         }
 
-        /// <inheritdoc cref="SettingsKeys.FallbackShell"/>
+        /// <inheritdoc cref="SettingsKeysUI.FallbackShell"/>
         public ShellInfoViewModel? FallbackShell
         {
             get => _fallbackShell;
@@ -103,10 +101,10 @@ namespace StrixMusic.Shared.ViewModels
         private async Task SaveSelectedShell()
         {
             if (PreferredShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.AssemblyInfo.AssemblyName);
+                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.Metadata.Id);
 
             if (FallbackShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.FallbackShell), FallbackShell.AssemblyInfo.AssemblyName);
+                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.FallbackShell), FallbackShell.Metadata.Id);
         }
     }
 }

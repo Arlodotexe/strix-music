@@ -366,10 +366,8 @@ namespace StrixMusic.Shared.ViewModels
 
         private async Task SetupCores()
         {
-            var availableCores = await _coreManagementService.GetCoreRegistryAsync();
-
-            foreach (var coreAssemblyInfo in availableCores)
-                AvailableServices.Add(new AvailableServicesItemViewModel(coreAssemblyInfo));
+            foreach (var metadata in CoreRegistry.MetadataRegistry)
+                AvailableServices.Add(new AvailableServicesItemViewModel(metadata));
 
             foreach (var core in _mainViewModel.Cores)
                 AttachEvents(core);

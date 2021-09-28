@@ -51,11 +51,11 @@
                     
                     <Image Height="50" Width="50" Margin="0,0,0,40">
                         <Image.Source>
-                            <SvgImageSource UriSource="{x:Bind AssemblyInfo.AttributeData.LogoSvgUrl}" />
+                            <SvgImageSource UriSource="{x:Bind Metadata.LogoUri}" />
                         </Image.Source>
                     </Image>
 
-                    <TextBlock Text="{x:Bind AssemblyInfo.AttributeData.Name}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                    <TextBlock Text="{x:Bind Metadata.DisplayName}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                                Margin="0,0,0,40" />
                 </Grid>
             </Border>
@@ -73,7 +73,7 @@
                 <Grid>
                     <Image Height="50" Width="50" Margin="0,0,0,40">
                         <Image.Source>
-                            <SvgImageSource UriSource="{x:Bind Core.LogoSvgUrl, Mode=OneWay}" />
+                            <SvgImageSource UriSource="{x:Bind Core.LogoUri, Mode=OneWay}" />
                         </Image.Source>
                     </Image>
 

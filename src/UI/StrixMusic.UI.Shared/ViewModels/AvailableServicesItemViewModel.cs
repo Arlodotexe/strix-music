@@ -3,7 +3,6 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Shared.ViewModels
@@ -18,18 +17,18 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="AvailableServicesItemViewModel"/> class.
         /// </summary>
-        /// <param name="assemblyInfo">The core assembly to wrap around.</param>
-        public AvailableServicesItemViewModel(CoreAssemblyInfo assemblyInfo)
+        /// <param name="metadata">The core metadata to wrap around.</param>
+        public AvailableServicesItemViewModel(CoreMetadata metadata)
         {
-            AssemblyInfo = assemblyInfo;
+            Metadata = metadata;
 
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
 
             CreateCoreInstanceCommand = new AsyncRelayCommand(CreateCoreInstance);
         }
 
-        /// <inheritdoc cref="CoreAssemblyInfo"/>
-        public CoreAssemblyInfo AssemblyInfo { get; }
+        /// <inheritdoc cref="CoreMetadata"/>
+        public CoreMetadata Metadata { get; }
 
         /// <summary>
         /// Fires when the user selects this item.
@@ -40,7 +39,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             Guard.IsNotNull(_coreManagementService, nameof(_coreManagementService));
 
-            await _coreManagementService.RegisterCoreInstanceAsync(AssemblyInfo);
+            await _coreManagementService.RegisterCoreInstanceAsync(Metadata);
         }
     }
 }

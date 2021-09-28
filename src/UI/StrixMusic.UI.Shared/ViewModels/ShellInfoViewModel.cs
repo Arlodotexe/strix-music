@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.Uno.Models;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,14 +20,14 @@ namespace StrixMusic.Shared.ViewModels
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
         /// </summary>
         /// <param name="assemblyInfo">The shell assembly info to wrap around.</param>
-        public ShellInfoViewModel(ShellMetadata assemblyInfo)
+        public ShellInfoViewModel(ShellMetadata metadata)
         {
-            AssemblyInfo = assemblyInfo;
+            Metadata = metadata;
 
-            IsFullyResponsive = assemblyInfo.AttributeData.MaxWindowSize.Height == double.PositiveInfinity &&
-                                assemblyInfo.AttributeData.MaxWindowSize.Width == double.PositiveInfinity &&
-                                assemblyInfo.AttributeData.MinWindowSize.Height == 0 &&
-                                assemblyInfo.AttributeData.MinWindowSize.Width == 0;
+            IsFullyResponsive = metadata.MaxWindowSize.Height == double.PositiveInfinity &&
+                                metadata.MaxWindowSize.Width == double.PositiveInfinity &&
+                                metadata.MinWindowSize.Height == 0 &&
+                                metadata.MinWindowSize.Width == 0;
 
             ShellPreviews = new ObservableCollection<Uri>();
 
@@ -34,7 +35,7 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <inheritdoc cref="ShellMetadata"/>
-        public ShellMetadata AssemblyInfo { get; }
+        public ShellMetadata Metadata { get; }
 
         /// <summary>
         /// <see cref="Uri"/>s pointing to preview images for this shell. Ordered Alphanumerically based on file name. 
@@ -47,10 +48,10 @@ namespace StrixMusic.Shared.ViewModels
         public bool IsFullyResponsive { get; }
 
         /// <inheritdoc cref="ShellMetadata.DisplayName"/>
-        public string DisplayName => AssemblyInfo.DisplayName;
+        public string DisplayName => Metadata.DisplayName;
 
         /// <inheritdoc cref="ShellMetadata.Description"/>
-        public string Description => AssemblyInfo.Description;
+        public string Description => Metadata.Description;
 
         private async Task SetupImages()
         {
@@ -64,7 +65,7 @@ namespace StrixMusic.Shared.ViewModels
                 {
                     var fileName = $"{++index}.png";
 
-                    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/ShellPreviews/{AssemblyInfo.AssemblyName}/{fileName}"));
+                    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/ShellPreviews/{Metadata.Id}/{fileName}"));
 
                     foundFiles.Add(file);
                 }
@@ -76,7 +77,7 @@ namespace StrixMusic.Shared.ViewModels
 
             foreach (var file in foundFiles)
             {
-                ShellPreviews.Add(new Uri($"ms-appx:///Assets/ShellPreviews/{AssemblyInfo.AssemblyName}/{file.Name}"));
+                ShellPreviews.Add(new Uri($"ms-appx:///Assets/ShellPreviews/{Metadata.Id}/{file.Name}"));
             }
         }
     }
