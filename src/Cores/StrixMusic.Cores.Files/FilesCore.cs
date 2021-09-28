@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 
 namespace StrixMusic.Cores.Files
@@ -30,7 +31,13 @@ namespace StrixMusic.Cores.Files
         }
 
         /// <inheritdoc/>
+        public abstract string CoreRegistryId { get; }
+
+        /// <inheritdoc/>
         public string InstanceId { get; }
+
+        /// <inheritdoc />
+        public virtual string InstanceDescriptor { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public abstract ICoreConfig CoreConfig { get; protected set; }
@@ -40,9 +47,6 @@ namespace StrixMusic.Cores.Files
 
         /// <inheritdoc/>
         public virtual CoreState CoreState { get; protected set; }
-
-        /// <inheritdoc />
-        public virtual string InstanceDescriptor { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public ICoreUser? User => null;

@@ -12,11 +12,11 @@ namespace StrixMusic.Sdk.Services
         /// Creates a new instance of <see cref="CoreInstanceEventArgs"/>.
         /// </summary>
         /// <param name="instanceId">Unique instance identifier for the core instance.</param>
-        /// <param name="assemblyInfo">The assembly info for the core instance.</param>
-        public CoreInstanceEventArgs(string instanceId, CoreAssemblyInfo assemblyInfo)
+        /// <param name="coreMetadata">The metadata for the core instance.</param>
+        public CoreInstanceEventArgs(string instanceId, CoreMetadata coreMetadata)
         {
             InstanceId = instanceId;
-            AssemblyInfo = assemblyInfo;
+            CoreMetadata = coreMetadata;
         }
 
         /// <summary>
@@ -27,6 +27,6 @@ namespace StrixMusic.Sdk.Services
         /// <summary>
         /// The assembly info for the core instance.
         /// </summary>
-        public CoreAssemblyInfo AssemblyInfo { get; }
+        public CoreMetadata CoreMetadata { get; }
     }
 }

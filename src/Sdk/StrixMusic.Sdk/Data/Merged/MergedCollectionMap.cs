@@ -6,6 +6,7 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private static bool _isInitialized;
         private static TaskCompletionSource<bool>? _initCompletionSource;
         private static IReadOnlyList<string>? _coreRanking;
-        private static Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
+        private static Dictionary<string, CoreMetadata>? _coreInstanceRegistry;
         private static MergedCollectionSorting? _sortingMethod;
 
         private readonly TCollection _collection;
@@ -813,13 +814,13 @@ namespace StrixMusic.Sdk.Data.Merged
             var rankedSources = new List<TCoreCollection>();
             foreach (var instanceId in _coreRanking)
             {
-                var coreAssemblyInfo = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
-                if (coreAssemblyInfo is null)
+                // Get metadata by instance id, making sure it's still registered.
+                var coreMetadata = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                if (coreMetadata is null)
                     continue;
 
-                var coreType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
-
-                var source = Sources.FirstOrDefault(x => x.SourceCore.GetType() == coreType);
+                // Find source by instance id.
+                var source = Sources.FirstOrDefault(x => x.SourceCore.InstanceId == instanceId);
 
                 // A core that is in the core ranking might not be part of the sources for this object
                 if (source is null)
@@ -849,9 +850,9 @@ namespace StrixMusic.Sdk.Data.Merged
             return _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking));
         }
 
-        private Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
+        private Task<Dictionary<string, CoreMetadata>> GetConfiguredCoreRegistry()
         {
-            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry));
+            return _settingsService.GetValue<Dictionary<string, CoreMetadata>>(nameof(SettingsKeys.CoreInstanceRegistry));
         }
 
         private Task<MergedCollectionSorting> GetSortingMethod()

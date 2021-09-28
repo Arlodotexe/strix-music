@@ -93,7 +93,7 @@ namespace StrixMusic.Sdk
 
         private async void CoreManagementService_CoreInstanceRegistered(object sender, CoreInstanceEventArgs e)
         {
-            var core = await CreateCore(e.InstanceId, e.AssemblyInfo);
+            var core = await CreateCore(e.InstanceId, e.CoreMetadata);
             if (core is null)
                 return;
 
@@ -165,13 +165,10 @@ namespace StrixMusic.Sdk
             foreach (var registeredCoreInstance in coreInstanceRegistry)
             {
                 var instanceId = registeredCoreInstance.Key;
-                var coreAssemblyInfo = registeredCoreInstance.Value;
-                var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
-
-                Guard.IsNotNull(coreDataType, nameof(coreDataType));
+                var coreMetadata = registeredCoreInstance.Value;
 
                 // Any registered cores that have already been set up will be ignored.
-                await CreateCore(instanceId, coreAssemblyInfo);
+                await CreateCore(instanceId, coreMetadata);
             }
 
             var unloadedSources = _sources.Where(x => x.CoreState == CoreState.Unloaded);
@@ -213,27 +210,21 @@ namespace StrixMusic.Sdk
             IsInitialized = true;
         }
 
-        private async Task<ICore?> CreateCore(string instanceId, CoreAssemblyInfo coreAssemblyInfo)
+        private async Task<ICore?> CreateCore(string instanceId, CoreMetadata coreMetadata)
         {
             // Skip if registered but already set up.
             if (_sources.Any(x => x.InstanceId == instanceId))
                 return null;
 
-            var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
-
-            Guard.IsNotNull(coreDataType, nameof(coreDataType));
-
-            var core = (ICore)Activator.CreateInstance(coreDataType, instanceId);
+            var core = CoreRegistry.CreateCore(coreMetadata, instanceId);
             _sources.Add(core);
-
-            var assemblyInfo = _coreManagementService.GetCoreAssemblyInfoForCore(core);
 
             // Adds itself into Cores.
             // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
 #pragma warning disable CA2000 // Dispose objects before losing scope
             await Threading.OnPrimaryThread(() =>
             {
-                _ = new CoreViewModel(core, assemblyInfo);
+                _ = new CoreViewModel(core, coreMetadata);
             });
 #pragma warning restore CA2000 // Dispose objects before losing scope
 

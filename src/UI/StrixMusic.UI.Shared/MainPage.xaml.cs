@@ -9,11 +9,10 @@ using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +30,6 @@ namespace StrixMusic.Shared
     {
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
         private INavigationService<Control>? _navigationService;
-        private IReadOnlyList<ShellAssemblyInfo>? _shellRegistry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -45,29 +43,19 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The currently loaded shell, if any.
         /// </summary>
-        internal ShellAssemblyInfo? ActiveShellModel { get; private set; }
+        internal ShellMetadata? ActiveShellModel { get; private set; }
 
         /// <summary>
         /// The user's preferred shell.
         /// </summary>
-        internal ShellAssemblyInfo? PreferredShell { get; private set; }
+        internal ShellMetadata? PreferredShell { get; private set; }
 
         /// <summary>
         /// The user's preferred shell.
         /// </summary>
-        internal ShellAssemblyInfo? FallbackShell { get; private set; }
+        internal ShellMetadata? FallbackShell { get; private set; }
 
-        private static Shell CreateShellControl(Type shellType)
-        {
-            if (shellType.BaseType != typeof(Shell))
-                throw new ArgumentException($@"Expected type {nameof(Shell)}", nameof(shellType));
-
-            var shellControl = (Shell)Activator.CreateInstance(shellType);
-
-            return shellControl;
-        }
-
-        private static void InjectServices(Shell shell)
+        private static void InjectServices(Sdk.Uno.Controls.Shells.Shell shell)
         {
             var services = new ServiceCollection();
 
@@ -92,7 +80,6 @@ namespace StrixMusic.Shared
 
             var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
             _navigationService = CurrentWindow.NavigationService;
-            _shellRegistry = await settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry));
 
             LoadRegisteredMediaPlayerElements();
             await SetupShellsFromSettings();
@@ -170,13 +157,12 @@ namespace StrixMusic.Shared
 
         private async Task SetupShellsFromSettings()
         {
-            Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
             Guard.IsNotNull(_navigationService, nameof(_navigationService));
 
             // Gets the preferred shell from settings.
-            var preferredShellAssemblyName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
+            var preferredShellId = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
 
-            PreferredShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == preferredShellAssemblyName);
+            PreferredShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == preferredShellId);
 
             if (PreferredShell == default)
             {
@@ -185,12 +171,12 @@ namespace StrixMusic.Shared
             }
 
             // Gets the preferred shell from settings.
-            var fallbackShellAssemblyName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
+            var fallbackShellId = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
 
-            FallbackShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == fallbackShellAssemblyName);
+            FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id  == fallbackShellId);
         }
 
-        private Task SetupShell(ShellAssemblyInfo shellAssemblyInfo)
+        private Task SetupShell(ShellMetadata shellMetadata)
         {
             using (Threading.PrimaryContext)
             {
@@ -202,12 +188,9 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                ActiveShellModel = shellAssemblyInfo;
+                ActiveShellModel = shellMetadata;
 
-                var shellDataType = Type.GetType(shellAssemblyInfo.AttributeData.ShellTypeAssemblyQualifiedName);
-                Guard.IsNotNull(shellDataType, nameof(shellDataType));
-
-                var shell = CreateShellControl(shellDataType);
+                var shell = ShellRegistry.CreateShell(shellMetadata);
 
                 var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
@@ -222,22 +205,19 @@ namespace StrixMusic.Shared
             return Task.CompletedTask;
         }
 
-        private bool CheckShellModelSupport(ShellAssemblyInfo shell)
+        private bool CheckShellModelSupport(ShellMetadata shell)
         {
-            bool heightIsInRange = ActualHeight < shell.AttributeData.MaxWindowSize.Height &&
-                                   ActualHeight > shell.AttributeData.MinWindowSize.Height;
+            bool heightIsInRange = ActualHeight < shell.MaxWindowSize.Height &&
+                                   ActualHeight > shell.MinWindowSize.Height;
 
-            bool widthIsInRange = ActualWidth > shell.AttributeData.MinWindowSize.Width &&
-                                  ActualWidth > shell.AttributeData.MinWindowSize.Width;
+            bool widthIsInRange = ActualWidth > shell.MinWindowSize.Width &&
+                                  ActualWidth > shell.MinWindowSize.Width;
 
             return widthIsInRange && heightIsInRange;
         }
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_shellRegistry is null)
-                return;
-
             if (ActiveShellModel is null || PreferredShell is null || FallbackShell is null)
             {
                 // Ignore this during initialization
@@ -247,14 +227,10 @@ namespace StrixMusic.Shared
             if (ActiveShellModel != PreferredShell)
             {
                 if (CheckShellModelSupport(PreferredShell))
-                {
                     await SetupShell(PreferredShell);
-                }
             }
             else if (!CheckShellModelSupport(ActiveShellModel))
-            {
                 await SetupShell(FallbackShell);
-            }
         }
 
         /// <summary>

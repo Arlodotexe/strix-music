@@ -13,6 +13,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Core.External
 {
@@ -61,6 +62,15 @@ namespace StrixMusic.Core.External
 
         /// <inheritdoc/>
         public string InstanceId { get; }
+
+        /// <inheritdoc/>
+        public string CoreRegistryId => nameof(ExternalCore);
+
+        /// <inheritdoc />
+        public string? DisplayName { get; } // TODO
+
+        /// <inheritdoc />
+        public Uri? LogoPath { get; } // TODO
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }

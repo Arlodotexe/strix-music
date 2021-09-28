@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Services
 {
+
     /// <summary>
     /// Manages added and removing core instances.
     /// </summary>
@@ -27,8 +28,7 @@ namespace StrixMusic.Sdk.Services
         /// Gets a list of all cores that the user has set up and configured.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task<Dictionary<string, CoreAssemblyInfo>> GetCoreInstanceRegistryAsync();
-
+        Task<Dictionary<string, CoreMetadata>> GetCoreInstanceRegistryAsync();
 
         /// <summary>
         /// Gets a sorted list of cores instance IDs that indicate to the user's preferred ranking.
@@ -37,17 +37,11 @@ namespace StrixMusic.Sdk.Services
         public Task<IReadOnlyList<string>> GetCoreInstanceRanking();
 
         /// <summary>
-        /// Gets a list of all cores that are available to be created.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task<IReadOnlyList<CoreAssemblyInfo>> GetCoreRegistryAsync();
-
-        /// <summary>
         /// Registers a core into the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
         /// </summary>
-        /// <param name="coreAssemblyInfo">The assembly info for the core being registered.</param>
+        /// <param name="coreMetadata">The metadata for the core being registered.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the <see cref="ICore.InstanceId"/> used to uniquely identify the core instance.</returns>
-        Task<string> RegisterCoreInstanceAsync(CoreAssemblyInfo coreAssemblyInfo);
+        Task<string> RegisterCoreInstanceAsync(CoreMetadata coreMetadata);
 
         /// <summary>
         /// Unregisters a core from the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
@@ -57,11 +51,11 @@ namespace StrixMusic.Sdk.Services
         Task UnregisterCoreInstanceAsync(string instanceId);
 
         /// <summary>
-        /// Given a core instance, return the <see cref="CoreAssemblyInfo"/> that was used to create it.
+        /// Given a core instance, return the <see cref="CoreMetadata"/> that was used to create it.
         /// </summary>
         /// <param name="core">The core instance to check.</param>
-        /// <returns>The assembly info used to create the given <paramref name="core"/>.</returns>
-        CoreAssemblyInfo GetCoreAssemblyInfoForCore(ICore core);
+        /// <returns>The metadata used to create the given <paramref name="core"/>.</returns>
+        CoreMetadata GetCoreMetadata(ICore core);
 
         /// <summary>
         /// Creates the services that are injected into a core on InitAsync.

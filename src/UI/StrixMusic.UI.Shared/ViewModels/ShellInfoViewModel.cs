@@ -19,7 +19,7 @@ namespace StrixMusic.Shared.ViewModels
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
         /// </summary>
         /// <param name="assemblyInfo">The shell assembly info to wrap around.</param>
-        public ShellInfoViewModel(ShellAssemblyInfo assemblyInfo)
+        public ShellInfoViewModel(ShellMetadata assemblyInfo)
         {
             AssemblyInfo = assemblyInfo;
 
@@ -33,8 +33,8 @@ namespace StrixMusic.Shared.ViewModels
             _ = SetupImages();
         }
 
-        /// <inheritdoc cref="ShellAssemblyInfo"/>
-        public ShellAssemblyInfo AssemblyInfo { get; }
+        /// <inheritdoc cref="ShellMetadata"/>
+        public ShellMetadata AssemblyInfo { get; }
 
         /// <summary>
         /// <see cref="Uri"/>s pointing to preview images for this shell. Ordered Alphanumerically based on file name. 
@@ -46,10 +46,10 @@ namespace StrixMusic.Shared.ViewModels
         /// </summary>
         public bool IsFullyResponsive { get; }
 
-        /// <inheritdoc cref="ShellAssemblyInfo.DisplayName"/>
+        /// <inheritdoc cref="ShellMetadata.DisplayName"/>
         public string DisplayName => AssemblyInfo.DisplayName;
 
-        /// <inheritdoc cref="ShellAssemblyInfo.Description"/>
+        /// <inheritdoc cref="ShellMetadata.Description"/>
         public string Description => AssemblyInfo.Description;
 
         private async Task SetupImages()

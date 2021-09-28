@@ -6,7 +6,7 @@
     Runtime Directives are documented at http://go.microsoft.com/fwlink/?LinkID=391919
 
     To fully enable reflection for App1.MyClass and all of its public/private members
-    <Type Name="App1.MyClass" Dynamic="Required All"/>
+    <Type Name="App1.MyClass" Dynamic="Required"/>
 
     To enable dynamic creation of the specific instantiation of AppClass<T> over System.Int32
     <TypeInstantiation Name="App1.AppClass" Arguments="System.Int32" Activate="Required Public" />
@@ -16,16 +16,28 @@
 -->
 
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
-  <Application>
-    <!--
+	<Application>
+		<!--
       An Assembly element with Name="*Application*" applies to all assemblies in
       the application package. The asterisks are not wildcards.
     -->
-    <Assembly Name="*Application*" Dynamic="Required All" />
-    
-    
-    <!-- Add your application specific runtime directives here. -->
+		<Assembly Name="OwlCore" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="OwlCore.Uno" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
 
+		<Assembly Name="StrixMusic.Sdk" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Sdk.Uno" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
 
-  </Application>
+		<Assembly Name="StrixMusic.Cores.LocalFiles" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Cores.OneDrive" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+
+		<Assembly Name="StrixMusic.Shells.ZuneDesktop" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+		<Assembly Name="StrixMusic.Shells.Groove" Dynamic="Required PublicAndInternal" Activate="Required PublicAndInternal" />
+
+	</Application>
+
+	<Library Name="Microsoft.Extensions.DependencyInjection">
+		<Type Name="Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope">
+			<Property Name="ResolvedServices" Dynamic="Required" />
+		</Type>
+	</Library>
 </Directives>

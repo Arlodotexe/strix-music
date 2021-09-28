@@ -1,4 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
@@ -16,20 +22,12 @@ using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
-using StrixMusic.Sdk.Uno.Assembly;
-using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Shared.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -43,14 +41,14 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
+        private static List<Assembly> _assemblyLinker = new List<Assembly>();
         private readonly DefaultSettingsService _settingsService;
         private readonly TextStorageService _textStorageService;
         private bool _showingQuip;
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
         private SystemMediaTransportControlsHandler? _smtpHandler;
-        private IReadOnlyList<CoreAssemblyInfo>? _coreRegistry;
-        private Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
+        private Dictionary<string, CoreMetadata>? _coreInstanceRegistry;
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
 
@@ -110,7 +108,9 @@ namespace StrixMusic.Shared
         {
             PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
 
-            await InitializeAssemblies();
+            InitializeCoreRegistry();
+            InitializeShellRegistry();
+
             await InitializeServices();
             await InitializeInstanceRegistry();
             await InitializeOutOfBoxSetupIfNeeded();
@@ -124,122 +124,22 @@ namespace StrixMusic.Shared
             CurrentWindow.NavigationService.NavigateTo(_mainPage);
         }
 
-        /// <summary>
-        /// Checks if we have all the data we need from the assemblies cached already.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task InitializeAssemblies()
+        private void InitializeShellRegistry()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            Assembly[]? assemblies = null;
-
-            // Core registry
-            _coreRegistry = await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry));
-
-            if (Equals(_coreRegistry, SettingsKeys.CoreRegistry))
+            if (ShellRegistry.MetadataRegistry.Count == 0)
             {
-                assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-                await InitializeCoreRegistry(assemblies);
-            }
-
-            // Shell registry
-            var shellRegistryData = await Task.Run(() => _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)));
-
-            if (Equals(shellRegistryData, SettingsKeysUI.ShellRegistry))
-            {
-                assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-                await InitializeShellRegistry(assemblies);
+                ThrowHelper.ThrowInvalidOperationException($"{nameof(ShellRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 shell.");
+                return;
             }
         }
 
-        private async Task InitializeShellRegistry(Assembly[] assemblies)
+        private void InitializeCoreRegistry()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
-            const string shellAssemblyRegex = @"^(?:StrixMusic\.Shells\.)(\w{3,})(?!.)";
-            var shellRegistryData = new List<ShellAssemblyInfo>();
-
-            foreach (Assembly assembly in assemblies)
+            if (CoreRegistry.MetadataRegistry.Count == 0)
             {
-                // Find the shell attribute
-                var shellAttribute = assembly.GetCustomAttribute<ShellAttribute>();
-
-                if (shellAttribute is null)
-                    continue;
-
-                Guard.IsNotNullOrWhiteSpace(shellAttribute.ShellType.Namespace, nameof(shellAttribute.ShellType.Namespace));
-                Guard.IsNotNullOrWhiteSpace(shellAttribute.ShellType.AssemblyQualifiedName, nameof(shellAttribute.ShellType.AssemblyQualifiedName));
-
-                // Check if the namespace is for a shell.
-                var match = Regex.Match(shellAttribute.ShellType.Namespace, shellAssemblyRegex);
-                if (!match.Success)
-                    continue;
-
-                // Gets the AssemblyName of the shell from the Regex.
-                string assemblyName = match.Groups[1].Value;
-
-                var attributeData = new ShellAttributeData(
-                    shellAttribute.ShellType.AssemblyQualifiedName,
-                    shellAttribute.DisplayName,
-                    shellAttribute.Description,
-                    shellAttribute.DeviceFamily,
-                    shellAttribute.InputMethod,
-                    shellAttribute.MaxWindowSize.Width,
-                    shellAttribute.MaxWindowSize.Height,
-                    shellAttribute.MinWindowSize.Width,
-                    shellAttribute.MinWindowSize.Height);
-
-                shellRegistryData.Add(new ShellAssemblyInfo(assemblyName, attributeData));
-            }
-
-            if (shellRegistryData.Count == 0)
-            {
-                ThrowHelper.ThrowInvalidOperationException($"{nameof(shellRegistryData)} contains no elements after registry initialization. App cannot function without at least 1 shell.");
+                ThrowHelper.ThrowInvalidOperationException($"{nameof(CoreRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
                 return;
             }
-
-            await _settingsService.SetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry), shellRegistryData);
-        }
-
-        private async Task InitializeCoreRegistry(Assembly[] assemblies)
-        {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
-            const string coreAssemblyRegex = @"^(?:StrixMusic\.Cores\.)(\w{3,})[^.]";
-            var coreRegistryData = new List<CoreAssemblyInfo>();
-
-            foreach (Assembly assembly in assemblies)
-            {
-                // Find the core attribute
-                var coreAttribute = assembly.GetCustomAttribute<CoreAttribute>();
-
-                if (coreAttribute is null)
-                    continue;
-
-                Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.Namespace, nameof(coreAttribute.CoreType.Namespace));
-                Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.AssemblyQualifiedName, nameof(coreAttribute.CoreType.AssemblyQualifiedName));
-
-                // Check if the namespace is for a core.
-                var match = Regex.Match(coreAttribute.CoreType.Namespace, coreAssemblyRegex);
-                if (!match.Success)
-                    continue;
-
-                string assemblyName = match.Groups[1].Value;
-
-                var attributeData = new CoreAttributeData(coreAttribute.Name, coreAttribute.LogoSvgUrl, coreAttribute.CoreType.AssemblyQualifiedName);
-
-                coreRegistryData.Add(new CoreAssemblyInfo(assemblyName, attributeData));
-            }
-
-            _coreRegistry = coreRegistryData;
-
-            if (_coreRegistry.Count == 0)
-            {
-                ThrowHelper.ThrowInvalidOperationException($"{nameof(_coreRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
-                return;
-            }
-
-            await _settingsService.SetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry), coreRegistryData);
         }
 
         private async Task InitializeInstanceRegistry()
@@ -254,7 +154,6 @@ namespace StrixMusic.Shared
         private async Task InitializeCoreRanking()
         {
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
-            Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             var existingCoreRanking = await Task.Run(() => _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking)));
@@ -263,12 +162,12 @@ namespace StrixMusic.Shared
 
             foreach (var instanceId in existingCoreRanking)
             {
-                var coreAssemblyInfo = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
-                if (coreAssemblyInfo is null)
+                var coreMetadata = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                if (coreMetadata is null)
                     continue;
 
                 // If this core is still configured, add it to the ranking.
-                if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
+                if (CoreRegistry.MetadataRegistry.Any(x => x.Id == coreMetadata.Id))
                     coreRanking.Add(instanceId);
             }
 
@@ -314,7 +213,7 @@ namespace StrixMusic.Shared
 
             // TODO: Add debug boot mode.
 #if NETFX_CORE
-// #741
+            // #741
             ShowQuip();
 #endif
 

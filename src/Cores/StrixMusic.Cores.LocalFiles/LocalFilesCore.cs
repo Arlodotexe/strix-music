@@ -18,7 +18,7 @@ using StrixMusic.Sdk.Services.Settings;
 namespace StrixMusic.Cores.LocalFiles
 {
     /// <inheritdoc />
-    public sealed class LocalFilesCore : FilesCore
+    public sealed partial class LocalFilesCore : FilesCore
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCore"/> class.
@@ -29,6 +29,9 @@ namespace StrixMusic.Cores.LocalFiles
         {
             CoreConfig = new LocalFilesCoreConfig(this);
         }
+
+        /// <inheritdoc/>
+        public override string CoreRegistryId => nameof(LocalFilesCore);
 
         /// <inheritdoc/>
         public override ICoreConfig CoreConfig { get; protected set; }

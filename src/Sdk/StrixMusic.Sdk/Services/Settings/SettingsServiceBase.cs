@@ -33,7 +33,6 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// A service to store and retrieve settings throughout the app.
         /// </summary>
-        /// <param name="textStorageService">The text storage service to be used by this instance.</param>
         protected SettingsServiceBase(ITextStorageService textStorageService)
         {
             _textStorageService = textStorageService;
@@ -114,7 +113,7 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 obj = JsonConvert.DeserializeObject<T>(result!);
             }
-            catch (JsonException ex)
+            catch (JsonException)
             {
                 return GetDefaultSettingValue();
             }
@@ -127,24 +126,20 @@ namespace StrixMusic.Sdk.Services.Settings
 
             T GetDefaultSettingValue()
             {
-                foreach (var type in SettingsKeysTypes)
+                foreach (var settingsKey in SettingsKeys)
                 {
+                    // TODO: better check for if a key exists without reflection. Dictionary instead of method?
                     try
                     {
-                        var field = type.GetField(key);
-                        if (field is null)
-                            continue;
-
-                        return (T)field.GetValue(null);
+                        return (T) settingsKey.GetDefaultValue(key);
                     }
-                    catch (Exception)
+                    catch
                     {
-                        // iteration continues and tries again, or eventually returns null below.
-                        // ignored
+                        // Ignore and try next key.
                     }
                 }
 
-                return ThrowHelper.ThrowArgumentOutOfRangeException<T>(key, $"{key} not found in the provided default {nameof(SettingsKeysTypes)}");
+                return ThrowHelper.ThrowArgumentOutOfRangeException<T>(nameof(key), $"{key} not found in the provided defaults.");
             }
 
             return obj!;
@@ -156,9 +151,9 @@ namespace StrixMusic.Sdk.Services.Settings
         public abstract string Id { get; }
 
         /// <summary>
-        /// The Type used to hold settings keys and default value for this implementation of the Settings Service.
+        /// The settings keys that are used with this service. Should implement GetDefaultValue().
         /// </summary>
-        public abstract IEnumerable<Type> SettingsKeysTypes { get; }
+        public abstract IEnumerable<SettingsKeysBase> SettingsKeys { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
         public event EventHandler<SettingChangedEventArgs>? SettingChanged;

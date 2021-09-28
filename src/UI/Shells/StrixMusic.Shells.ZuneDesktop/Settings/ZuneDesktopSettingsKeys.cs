@@ -1,18 +1,27 @@
-﻿using StrixMusic.Shells.ZuneDesktop.Settings.Models;
+﻿using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings
 {
     /// <summary>
-    /// A <see langword="class"/> containing keys for all settings throughout the zune shell.
+    /// A <see langword="class"/> containing keys for all settings throughout the Zune shell.
     /// </summary>
-    /// <remarks>
-    /// This <see lang="class"/> is used with reflection to generate settings files.
-    /// </remarks>
-    public static class ZuneDesktopSettingsKeys
+    public class ZuneDesktopSettingsKeys : SettingsKeysBase
     {
         /// <summary>
         /// Gets the default value for <see cref="BackgroundImage"/> in settings.
         /// </summary>
         public static readonly ZuneDesktopBackgroundImage BackgroundImage = new ZuneDesktopBackgroundImage();
+
+        /// <inheritdoc />
+        public override object GetDefaultValue(string settingKey)
+        {
+            return settingKey switch
+            {
+                nameof(BackgroundImage) => BackgroundImage,
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<object>(),
+            };
+        }
     }
 }

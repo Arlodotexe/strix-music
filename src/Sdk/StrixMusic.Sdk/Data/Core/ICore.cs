@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Data.Core
 {
@@ -12,6 +13,11 @@ namespace StrixMusic.Sdk.Data.Core
     /// <remarks>In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.</remarks>
     public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
     {
+        /// <summary>
+        /// A unique identifier for this core, regardless of instance. This should match the ID given during core registration.
+        /// </summary>
+        public string CoreRegistryId { get; }
+
         /// <summary>
         /// Identifies this instance of the core. This is given to each core via the constructor.
         /// </summary>

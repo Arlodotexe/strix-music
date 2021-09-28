@@ -13,6 +13,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -22,23 +23,24 @@ namespace StrixMusic.Sdk.ViewModels
     public class CoreViewModel : ObservableObject, ICore
     {
         private readonly ICore _core;
-        private readonly CoreAssemblyInfo _coreAssemblyInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
         /// </summary>
-        /// <param name="core">The base <see cref="ICore"/></param>
-        /// <param name="coreAssemblyInfo">The assembly info provided by the relevant core instance.</param>
+        /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
+        /// <param name="coreMetadata">The metadata that was used to construct this core instance.</param>
         /// <remarks>
         /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/>.
         /// </remarks>
-        public CoreViewModel(ICore core, CoreAssemblyInfo coreAssemblyInfo)
+        public CoreViewModel(ICore core, CoreMetadata coreMetadata)
         {
             _core = core;
-            _coreAssemblyInfo = coreAssemblyInfo;
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
             mainViewModel.Cores.Add(this);
+
+            DisplayName = coreMetadata.DisplayName;
+            LogoUri = coreMetadata.LogoUri;
 
             Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
 
@@ -111,21 +113,27 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateFaulted));
             });
         }
+        /// <inheritdoc />
+        public string CoreRegistryId => _core.CoreRegistryId;
 
         /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
-
-        /// <inheritdoc cref="CoreAttribute.Name" />
-        public string Name => _coreAssemblyInfo.AttributeData.Name;
-
-        /// <inheritdoc cref="CoreAttribute.LogoSvgUrl"/>
-        public Uri LogoSvgUrl => _coreAssemblyInfo.AttributeData.LogoSvgUrl;
 
         /// <inheritdoc />
         public string InstanceDescriptor => _core.InstanceDescriptor;
 
         /// <inheritdoc cref="CoreConfigViewModel"/>
         public CoreConfigViewModel CoreConfig { get; }
+
+        /// <summary>
+        /// A local path or url pointing to a SVG file containing the logo for this core.
+        /// </summary>
+        public Uri LogoUri { get; }
+
+        /// <summary>
+        /// The user-friendly name of the core.
+        /// </summary>
+        public string DisplayName { get; }
 
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;

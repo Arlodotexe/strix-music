@@ -38,7 +38,7 @@ namespace StrixMusic.Shared.ViewModels
             // Gets the preferred shell's assembly name
             var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
             var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
-            var shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry));
+            var shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellMetadata>>(nameof(SettingsKeysUI.ShellRegistry));
 
             // Gets the list of loaded shells.
             foreach (var shell in shellRegistry)

@@ -17,14 +17,14 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         /// <inheritdoc />
-        public async Task<MusicFileProperties?> GetMusicPropertiesAsync()
+        public Task<MusicFileProperties?> GetMusicPropertiesAsync()
         {
             if (_driveItem.Audio is null)
-                return null;
+                return Task.FromResult<MusicFileProperties?>(null);
 
             var audio = _driveItem.Audio;
 
-            return new MusicFileProperties
+            return Task.FromResult<MusicFileProperties?>(new MusicFileProperties
             {
                 Album = audio.Album,
                 AlbumArtist = audio.AlbumArtist,
@@ -42,7 +42,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
                 TrackNumber = (uint?)audio.Track,
                 Writers = null,
                 Year = (uint?)audio.Year,
-            };
+            });
         }
     }
 }

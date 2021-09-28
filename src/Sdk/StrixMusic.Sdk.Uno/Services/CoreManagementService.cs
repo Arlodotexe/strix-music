@@ -19,8 +19,7 @@ namespace StrixMusic.Sdk.Uno.Services
     public class CoreManagementService : ICoreManagementService
     {
         private readonly ISettingsService _settingsService;
-        private Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
-        private IReadOnlyList<CoreAssemblyInfo>? _coreRegistry;
+        private Dictionary<string, CoreMetadata>? _coreInstanceRegistry;
         private List<string>? _coreRanking;
 
         /// <summary>
@@ -33,15 +32,9 @@ namespace StrixMusic.Sdk.Uno.Services
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<CoreAssemblyInfo>> GetCoreRegistryAsync()
+        public Task<Dictionary<string, CoreMetadata>> GetCoreInstanceRegistryAsync()
         {
-            return _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry));
-        }
-
-        /// <inheritdoc/>
-        public Task<Dictionary<string, CoreAssemblyInfo>> GetCoreInstanceRegistryAsync()
-        {
-            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry));
+            return _settingsService.GetValue<Dictionary<string, CoreMetadata>>(nameof(SettingsKeys.CoreInstanceRegistry));
         }
 
         /// <inheritdoc/>
@@ -51,42 +44,39 @@ namespace StrixMusic.Sdk.Uno.Services
         }
 
         /// <inheritdoc/>
-        public async Task<string> RegisterCoreInstanceAsync(CoreAssemblyInfo coreAssemblyInfo)
+        public async Task<string> RegisterCoreInstanceAsync(CoreMetadata coreMetadata)
         {
-            _coreInstanceRegistry ??= new Dictionary<string, CoreAssemblyInfo>();
+            _coreInstanceRegistry ??= new Dictionary<string, CoreMetadata>();
 
             Guard.IsTrue(IsInitialized, nameof(IsInitialized));
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
-            Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
+            Guard.HasSizeGreaterThan(CoreRegistry.MetadataRegistry, 0, nameof(CoreRegistry.MetadataRegistry));
 
-            foreach (var coreData in _coreRegistry)
+            foreach (var metadata in CoreRegistry.MetadataRegistry)
             {
-                if (coreData.AttributeData.CoreTypeAssemblyQualifiedName != coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName)
+                if (metadata.Id != coreMetadata.Id)
                     continue;
 
-                var coreDataType = Type.GetType(coreData.AttributeData.CoreTypeAssemblyQualifiedName);
                 var guid = Guid.NewGuid();
-                var instanceId = $"{coreDataType}.{guid}";
+                var instanceId = $"{metadata.Id}.{guid}";
 
-                _coreInstanceRegistry.Add(instanceId, coreData);
+                _coreInstanceRegistry.Add(instanceId, metadata);
                 _coreRanking.Add(instanceId);
-                await _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry), _coreInstanceRegistry);
+                await _settingsService.SetValue<Dictionary<string, CoreMetadata>>(nameof(SettingsKeys.CoreInstanceRegistry), _coreInstanceRegistry);
                 await _settingsService.SetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking), _coreRanking.AsReadOnly());
 
-                CoreInstanceRegistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, coreAssemblyInfo));
+                CoreInstanceRegistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, coreMetadata));
                 return instanceId;
             }
 
-            return ThrowHelper.ThrowArgumentException<string>($"Could not find core assembly {coreAssemblyInfo.AssemblyName} in the registry.");
+            return ThrowHelper.ThrowArgumentException<string>($"Could not find core with ID {coreMetadata.Id} in the registry.");
         }
 
         /// <inheritdoc/>
         public async Task UnregisterCoreInstanceAsync(string instanceId)
         {
             Guard.IsTrue(IsInitialized, nameof(IsInitialized));
-            Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
-            Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
+            Guard.HasSizeGreaterThan(CoreRegistry.MetadataRegistry, 0, nameof(CoreRegistry.MetadataRegistry));
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry));
@@ -104,7 +94,7 @@ namespace StrixMusic.Sdk.Uno.Services
             var rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
             await rootStorageFolder.DeleteAsync();
 
-            await _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry), _coreInstanceRegistry);
+            await _settingsService.SetValue<Dictionary<string, CoreMetadata>>(nameof(SettingsKeys.CoreInstanceRegistry), _coreInstanceRegistry);
             await _settingsService.SetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking), _coreRanking.AsReadOnly());
         }
 
@@ -125,7 +115,7 @@ namespace StrixMusic.Sdk.Uno.Services
         }
 
         /// <inheritdoc/>
-        public CoreAssemblyInfo GetCoreAssemblyInfoForCore(ICore core)
+        public CoreMetadata GetCoreMetadata(ICore core)
         {
             Guard.IsTrue(IsInitialized, nameof(IsInitialized));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
@@ -151,7 +141,6 @@ namespace StrixMusic.Sdk.Uno.Services
             IsInitialized = true;
 
             _coreInstanceRegistry = await GetCoreInstanceRegistryAsync();
-            _coreRegistry = await GetCoreRegistryAsync();
 
             var ranking = await GetCoreInstanceRanking();
             _coreRanking = ranking.ToList();

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using StrixMusic.Sdk.Data.Core;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Services.Settings.Containers;
 
@@ -11,29 +12,37 @@ namespace StrixMusic.Sdk.Services.Settings
     /// <remarks>
     /// The StrixMusic.Sdk contains the keys that don't return anything UI-dependent, while StrixMusic.Sdk.Uno contains a partial that has the UI-dependent keys.
     /// </remarks>
-    public static partial class SettingsKeys
+    public class SettingsKeys : SettingsKeysBase
     {
         /// <summary>
-        /// Stored assembly information about all available cores.
+        /// Stored information about all core instances that the user has configured.
         /// </summary>
-        public static readonly IReadOnlyList<CoreAssemblyInfo> CoreRegistry = new List<CoreAssemblyInfo>();
-
-        /// <summary>
-        /// Stored assembly information about all core instances that the user has configured.
-        /// </summary>
-        public static readonly Dictionary<string, CoreAssemblyInfo> CoreInstanceRegistry = new Dictionary<string, CoreAssemblyInfo>();
+        public static Dictionary<string, CoreMetadata> CoreInstanceRegistry => new Dictionary<string, CoreMetadata>();
 
         /// <summary>
         /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
         /// </summary>
-        public static readonly IReadOnlyList<string> CoreRanking = new List<string>();
+        public static IReadOnlyList<string> CoreRanking => new List<string>();
 
         /// <summary>
         /// The user's preference for how items in a collection from multiple sources are sorted. 
         /// </summary>
-        public static readonly MergedCollectionSorting MergedCollectionSorting = MergedCollectionSorting.Ranked;
+        public static MergedCollectionSorting MergedCollectionSorting => MergedCollectionSorting.Ranked;
 
         /// <inheritdoc cref="SiblingCollectionPlaybackPreferences"/>
-        public static readonly SiblingCollectionPlaybackPreferences PlayCollectionBehavior = new SiblingCollectionPlaybackPreferences();
+        public static SiblingCollectionPlaybackPreferences PlayCollectionBehavior => new SiblingCollectionPlaybackPreferences();
+
+        /// <inheritdoc/>
+        public override object GetDefaultValue(string settingKey)
+        {
+            return settingKey switch
+            {
+                nameof(CoreInstanceRegistry) => CoreInstanceRegistry,
+                nameof(CoreRanking) => CoreRanking,
+                nameof(MergedCollectionSorting) => MergedCollectionSorting,
+                nameof(PlayCollectionBehavior) => PlayCollectionBehavior,
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<object>(nameof(settingKey)),
+            };
+        }
     }
 }

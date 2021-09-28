@@ -33,10 +33,13 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc/>
-        public override ICoreConfig CoreConfig { get; protected set; }
+        public override string CoreRegistryId => nameof(OneDriveCore);
 
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
+
+        /// <inheritdoc/>
+        public override ICoreConfig CoreConfig { get; protected set; }
 
         /// <inheritdoc/>
         public override event EventHandler<CoreState>? CoreStateChanged;

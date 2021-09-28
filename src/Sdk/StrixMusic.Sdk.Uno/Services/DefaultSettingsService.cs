@@ -69,10 +69,10 @@ namespace StrixMusic.Sdk.Uno.Services
         public override string Id => "Default";
 
         /// <inheritdoc/>
-        public override IEnumerable<Type> SettingsKeysTypes => new[]
+        public override IEnumerable<SettingsKeysBase> SettingsKeys { get; } = new List<SettingsKeysBase>
         {
-            typeof(SettingsKeys),
-            typeof(SettingsKeysUI),
+            new SettingsKeys(),
+            new SettingsKeysUI(),
         };
     }
 }

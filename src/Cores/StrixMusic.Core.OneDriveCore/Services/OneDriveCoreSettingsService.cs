@@ -24,7 +24,6 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <summary>
         /// Resets all settings back to their default values.
         /// </summary>
-        /// <returns></returns>
         public async Task ResetAllAsync()
         {
             await SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), OneDriveCoreSettingsKeys.ClientId);
@@ -33,6 +32,6 @@ namespace StrixMusic.Cores.OneDrive.Services
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<Type> SettingsKeysTypes => typeof(OneDriveCoreSettingsKeys).IntoList();
+        public override IEnumerable<SettingsKeysBase> SettingsKeys => new OneDriveCoreSettingsKeys().IntoList();
     }
 }

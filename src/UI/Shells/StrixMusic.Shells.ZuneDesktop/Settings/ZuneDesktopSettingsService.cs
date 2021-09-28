@@ -25,6 +25,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         public override string Id => "ZuneDesktop";
 
         /// <inheritdoc/>
-        public override IEnumerable<Type> SettingsKeysTypes => typeof(ZuneDesktopSettingsKeys).IntoList();
+        public override IEnumerable<SettingsKeysBase> SettingsKeys { get; } = new ZuneDesktopSettingsKeys().IntoList();
     }
 }

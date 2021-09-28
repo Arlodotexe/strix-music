@@ -21,6 +21,6 @@ namespace StrixMusic.Cores.LocalFiles.Services
         public override string Id { get; }
 
         /// <inheritdoc/>
-        public override IEnumerable<Type> SettingsKeysTypes => typeof(LocalFilesCoreSettingsKeys).IntoList();
+        public override IEnumerable<SettingsKeysBase> SettingsKeys => new LocalFilesCoreSettingsKeys().IntoList();
     }
 }
