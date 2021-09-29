@@ -9,6 +9,11 @@ namespace StrixMusic.Cores.OneDrive.Services
     public class OneDriveCoreSettingsKeys : SettingsKeysBase
     {
         /// <summary>
+        /// A flag that indicates if the user has gone through the first OOBE.
+        /// </summary>
+        public static bool IsFirstSetupComplete => false;
+
+        /// <summary>
         /// If the core should use TagLib to scan file metadata.
         /// </summary>
         public static bool ScanWithTagLib => false;
@@ -43,6 +48,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             return settingKey switch
             {
+                nameof(IsFirstSetupComplete) => IsFirstSetupComplete,
                 nameof(ScanWithTagLib) => ScanWithTagLib,
                 nameof(ScanWithFileProperties) => ScanWithFileProperties,
                 nameof(SelectedFolderId) => SelectedFolderId,

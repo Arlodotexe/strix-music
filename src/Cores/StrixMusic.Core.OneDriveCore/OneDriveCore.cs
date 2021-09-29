@@ -60,10 +60,12 @@ namespace StrixMusic.Cores.OneDrive
             var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
             var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
             var folderId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId));
+            var firstSetupComplete = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete));
 
             await coreConfig.SetupConfigurationServices(services);
 
-            if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(tenantId))
+            // Show very first OOBE and allow the user to change settings before picking a folder.
+            if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(tenantId) || !firstSetupComplete)
             {
                 await _settingsService.ResetAllAsync();
                 ChangeCoreState(CoreState.NeedsSetup);
@@ -90,6 +92,7 @@ namespace StrixMusic.Cores.OneDrive
                     confirmButton.Clicked -= OnConfirmClicked;
                     cancelButton.Clicked -= OnCancelClicked;
 
+                    await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete), true);
                     await InitAsync(services);
                     oobeCompletionSemaphore.Release();
                 }
