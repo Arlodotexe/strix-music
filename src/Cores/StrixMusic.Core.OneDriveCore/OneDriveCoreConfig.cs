@@ -152,7 +152,9 @@ namespace StrixMusic.Cores.OneDrive
             var ui = new AbstractUICollection("SettingsGroup")
             {
                 CreateGenericConfig(),
+#if DEBUG
                 advancedCollection,
+#endif
                 actionButtons,
             };
 
