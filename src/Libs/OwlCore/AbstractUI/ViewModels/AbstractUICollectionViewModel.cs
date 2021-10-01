@@ -7,7 +7,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A view model for <see cref="AbstractUICollection"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractUICollection"/>.
     /// </summary>
     public class AbstractUICollectionViewModel : AbstractUIViewModelBase, IEnumerable<AbstractUIViewModelBase>
     {

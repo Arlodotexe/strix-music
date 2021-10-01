@@ -4,7 +4,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="AbstractBoolean"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractBoolean"/>.
     /// </summary>
     public class AbstractBooleanViewModel : AbstractUIViewModelBase
     {

@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="AbstractProgressIndicator"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractProgressIndicator"/>.
     /// </summary>
     [Bindable(true)]
     public class AbstractProgressIndicatorViewModel : AbstractUIViewModelBase

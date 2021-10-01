@@ -8,7 +8,7 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// A <see cref="AbstractDataList"/> that can be changed by the user.
+    /// Represents a sequence of metadata that is presented to the user, such as a List or Grid.
     /// </summary>
     public class AbstractDataList : AbstractUIElement
     {

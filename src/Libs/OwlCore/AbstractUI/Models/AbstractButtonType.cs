@@ -1,7 +1,7 @@
 ﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// The type of button to display.
+    /// Indicates an intended purpose for an <see cref="AbstractButton"/>.
     /// </summary>
     public enum AbstractButtonType
     {

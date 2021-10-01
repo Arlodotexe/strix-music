@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a list of multiple choices to the user for selection.
+    /// Presents a list of multiple choices to the user for selection, such as radio buttons or a combobox.
     /// </summary>
     public class AbstractMultiChoice : AbstractUIElement
     {

@@ -4,7 +4,7 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a text box to the user, with actions for saving any entered data.
+    /// Represents a box where the user can enter text.
     /// </summary>
     public class AbstractTextBox : AbstractUIElement
     {

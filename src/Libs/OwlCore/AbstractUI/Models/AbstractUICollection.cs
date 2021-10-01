@@ -9,12 +9,8 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a group of abstracted UI elements to the user.
+    /// A special <see cref="ICollection"/> that holds <see cref="AbstractUIElement"/>s, with additional options for presenting them.
     /// </summary>
-    /// <remarks>
-    /// Recommended to create a new <see cref="AbstractUICollection"/> inside of <see cref="Items"/> for each section (Settings, About, etc).
-    /// You can then create <see cref="AbstractUICollection"/>s inside of each of these to group your settings, "About" data, etc.
-    /// </remarks>
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class AbstractUICollection : AbstractUIElement, ICollection<AbstractUIElement>
     {

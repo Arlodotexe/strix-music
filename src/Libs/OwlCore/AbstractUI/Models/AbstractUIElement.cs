@@ -1,7 +1,7 @@
 ﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Abstracted UI elements.
+    /// A base class for all AbstractUI elements.
     /// </summary>
     public abstract class AbstractUIElement : AbstractUIBase
     {

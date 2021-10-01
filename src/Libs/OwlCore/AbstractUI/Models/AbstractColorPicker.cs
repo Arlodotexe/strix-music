@@ -5,7 +5,7 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a way for the user to select a color. 
+    /// Represents a color picker. 
     /// </summary>
     public class AbstractColorPicker : AbstractUIElement
     {

@@ -5,7 +5,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Base view model for all AbstractUI elements.
+    /// Base view model for all AbstractUI element ViewModels.
     /// </summary>
     public class AbstractUIViewModelBase : ObservableObject, IDisposable
     {

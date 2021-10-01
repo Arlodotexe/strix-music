@@ -10,7 +10,7 @@ using OwlCore.Events;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A ViewModel for the <see cref="AbstractDataList"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractDataList"/>.
     /// </summary>
     public class AbstractDataListViewModel : AbstractUIViewModelBase
     {

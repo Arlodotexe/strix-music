@@ -3,7 +3,7 @@
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// ViewModel for <see cref="AbstractRichTextBlock"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractRichTextBlock"/>.
     /// </summary>
     public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase
     {

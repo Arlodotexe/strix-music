@@ -9,7 +9,7 @@ using OwlCore.Extensions;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A view model for an <see cref="AbstractMultiChoice"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractMultiChoice"/>.
     /// </summary>
     public class AbstractMultiChoiceViewModel : AbstractUIViewModelBase
     {

@@ -3,7 +3,7 @@
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents markdown-formatted text to the user.
+    /// Represents a UI element containing rich text, such as markdown, bbcode, etc.
     /// </summary>
     public class AbstractRichTextBlock : AbstractUIElement
     {

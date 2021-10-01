@@ -9,7 +9,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// </summary>
     public class AbstractDataListItemViewModel : AbstractUIMetadataViewModel
     {
-
         /// <summary>
         /// Creates a new instance of <see cref="AbstractDataListItemViewModel"/>.
         /// </summary>

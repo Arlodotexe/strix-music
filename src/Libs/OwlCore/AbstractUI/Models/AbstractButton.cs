@@ -5,9 +5,8 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a link to the user.
+    /// Represents a UI element that the user can click on to perform an action (Button, link, optional icon, etc)
     /// </summary>
-    /// <remarks>This can be displayed in the UI however it wants (Button, text link, Icons, custom, etc)</remarks>
     public class AbstractButton : AbstractUIElement
     {
         /// <summary>

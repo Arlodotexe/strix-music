@@ -7,7 +7,7 @@ using OwlCore.Extensions;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A ViewModel for the <see cref="AbstractTextBox"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractTextBox"/>.
     /// </summary>
     public class AbstractTextBoxViewModel : AbstractUIViewModelBase
     {

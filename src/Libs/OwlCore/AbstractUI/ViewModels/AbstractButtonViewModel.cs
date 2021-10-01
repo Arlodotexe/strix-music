@@ -6,7 +6,7 @@ using OwlCore.Extensions;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Abstract button viewmodel.
+    /// A ViewModel wrapper for an <see cref="AbstractButton"/>.
     /// </summary>
     public class AbstractButtonViewModel : AbstractUIViewModelBase
     {

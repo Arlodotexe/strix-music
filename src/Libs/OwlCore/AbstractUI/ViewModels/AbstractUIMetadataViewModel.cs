@@ -3,7 +3,7 @@
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A wrapping ViewModel for <see cref="AbstractUIMetadata"/>.
+    /// A ViewModel wrapper for an <see cref="AbstractUIMetadata"/>.
     /// </summary>
     public class AbstractUIMetadataViewModel : AbstractUIViewModelBase
     {
