@@ -6,7 +6,6 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using System;
 using System.Linq;

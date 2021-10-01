@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.Logging;
 using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace StrixMusic
 {
@@ -24,6 +27,9 @@ namespace StrixMusic
         /// </summary>
         public App()
         {
+#if !DEBUG
+            AppCenter.Start("SECRET_HERE", typeof(Analytics), typeof(Crashes));
+#endif
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
 
             InitializeComponent();
