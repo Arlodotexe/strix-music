@@ -56,22 +56,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreAlbumsCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
             AlbumCollection.DataContext = e.SelectedItem;
 
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.DataContext = e.SelectedItem;
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.DataContext = e.SelectedItem;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackTable.DataContext =
             DetailsPane.DataContext = e.SelectedItem;
         }
