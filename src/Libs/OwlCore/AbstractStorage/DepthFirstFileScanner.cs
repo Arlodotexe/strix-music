@@ -140,35 +140,10 @@ namespace OwlCore.AbstractStorage
             return filesToScan;
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-
-                _scanningCancellationTokenSource?.Cancel();
-                _scanningCancellationTokenSource?.Dispose();
-            }
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~DepthFirstFileScanner()
-        {
-            Dispose(false);
+            DetachEvents();
         }
     }
 }

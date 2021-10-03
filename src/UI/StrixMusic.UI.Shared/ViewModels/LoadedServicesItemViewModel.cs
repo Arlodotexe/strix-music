@@ -117,22 +117,10 @@ namespace StrixMusic.Shared.ViewModels
             ConfigRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
-            ReleaseUnmanagedResources();
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~LoadedServicesItemViewModel()
-        {
-            ReleaseUnmanagedResources();
+            DetachEvents();
         }
     }
 }
