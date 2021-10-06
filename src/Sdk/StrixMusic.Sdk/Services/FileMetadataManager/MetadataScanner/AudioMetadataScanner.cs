@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
@@ -25,6 +27,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
 
         private readonly FileMetadataManager _metadataManager;
+        private readonly ILogger<AudioMetadataScanner> _logger;
         private readonly SemaphoreSlim _batchLock;
 
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
@@ -41,6 +44,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <param name="metadataManager">The metadata manager that handles this scanner.</param>
         public AudioMetadataScanner(FileMetadataManager metadataManager)
         {
+            _logger = Ioc.Default.GetRequiredService<ILogger<AudioMetadataScanner>>();
             _metadataManager = metadataManager;
             _scanBatchSize = metadataManager.DegreesOfParallelism;
 
@@ -121,6 +125,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 Guard.HasSizeGreaterThan(remainingFilesToScan, 0, nameof(remainingFilesToScan));
 
+                _logger.LogInformation($"{nameof(ScanMusicFilesAsync)}: Queued processing of {remainingFilesToScan.Count} files.");
+
                 while (remainingFilesToScan.Count > 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
@@ -140,6 +146,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
 
                     // Scan the files in the current batch
+                    _logger.LogInformation($"{nameof(ScanMusicFilesAsync)}: Starting batch processing of {batchSize} files. ({remainingFilesToScan.Count} remaining)");
                     await Task.Run(() => currentBatch.InParallel(ProcessFile), cancellationToken);
                 }
 
@@ -208,6 +215,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Url?.OriginalString, nameof(metadata.TrackMetadata.Url));
+
+            _logger.LogInformation($"Cross-linking IDs for metadata ID {metadata.Id} located at {metadata.TrackMetadata.Url}");
 
             // Albums
             Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
@@ -283,8 +293,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return primaryData;
         }
 
-        private static async Task<FileMetadata?> GetMusicFilesProperties(IFileData fileData)
+        private async Task<FileMetadata?> GetMusicFilesProperties(IFileData fileData)
         {
+            _logger.LogInformation($"{nameof(GetMusicFilesProperties)} entered for {nameof(IFileData)} at {fileData.Path}");
+
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
             if (details is null)
@@ -356,6 +368,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
             Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
 
+            _logger.LogInformation($"{nameof(GetId3Metadata)} entered for {nameof(IFileData)} at {fileData.Path}");
+
             try
             {
                 using var stream = await fileData.GetStreamAsync();
@@ -424,24 +438,29 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 return fileMetadata;
             }
-            catch (CorruptFileException)
+            catch (CorruptFileException ex)
             {
+                _logger.LogError(ex, $"{nameof(CorruptFileException)} for {nameof(IFileData)} at {fileData.Path}");
                 return null;
             }
-            catch (UnsupportedFormatException)
+            catch (UnsupportedFormatException ex)
             {
+                _logger.LogError(ex, $"{nameof(UnsupportedFormatException)} for {nameof(IFileData)} at {fileData.Path}");
                 return null;
             }
-            catch (FileLoadException)
+            catch (FileLoadException ex)
             {
+                _logger.LogError(ex, $"{nameof(FileLoadException)} for {nameof(IFileData)} at {fileData.Path}");
                 return null;
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
+                _logger.LogError(ex, $"{nameof(FileNotFoundException)} for {nameof(IFileData)} at {fileData.Path}");
                 return null;
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
+                _logger.LogError(ex, $"{nameof(ArgumentException)} for {nameof(IFileData)} at {fileData.Path}");
                 return null;
             }
         }
@@ -495,13 +514,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
+            _logger.LogInformation($"{nameof(HandleChangedAsync)}: Emitting {_batchMetadataToEmit.Count} scanned items.");
+
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
 
             _batchMetadataToEmit.Clear();
             _batchLock.Release();
 
             if (IsFinishedScanning())
+            {
+                _logger.LogInformation($"{nameof(HandleChangedAsync)}: finished scanning.");
                 FileScanCompleted?.Invoke(this, _allFileMetadata);
+            }
         }
 
         /// <inheritdoc />

@@ -2,6 +2,7 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -74,7 +75,7 @@ namespace StrixMusic
 
             // Bi-directional language support
 #if NETFX_CORE
-// https://github.com/unoplatform/uno/issues/21
+            // https://github.com/unoplatform/uno/issues/21
             var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
             if (flowDirectionSetting == "LTR")
             {
@@ -129,12 +130,7 @@ namespace StrixMusic
                 // { "Windows.UI.Xaml.Controls.NativeListViewBaseAdapter", LogLevel.Debug }, //Android
                 // { "Windows.UI.Xaml.Controls.BufferViewCache", LogLevel.Debug }, //Android
                 // { "Windows.UI.Xaml.Controls.VirtualizingPanelGenerator", LogLevel.Debug }, //WASM
-            })
-#if DEBUG
-                .AddConsole(LogLevel.Debug);
-#else
-                .AddConsole(LogLevel.Information);
-#endif
+            });
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
