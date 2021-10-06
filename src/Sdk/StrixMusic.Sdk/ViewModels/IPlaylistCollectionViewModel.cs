@@ -40,6 +40,17 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMorePlaylistsAsync(int limit);
 
+        /// <summary>
+        /// Loads the collection of <see cref="IPlaylist"/> for the first time.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitPlaylistCollectionAsync();
+
+        /// <summary>
+        /// Initializes the list of the <see cref="IPlaylist"/>.
+        /// </summary>
+        public IAsyncRelayCommand InitPlaylistCollectionAsyncCommand { get; }
+
         /// <inheritdoc cref="PopulateMorePlaylistsAsync" />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
 

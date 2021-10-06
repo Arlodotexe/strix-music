@@ -23,6 +23,17 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreGenresAsync(int limit);
 
         /// <summary>
+        /// Loads the collection of <see cref="IGenre"/> for the first time.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitGenreCollectionAsync();
+
+        /// <summary>
+        /// Initializes the list of the <see cref="IGenre"/>.
+        /// </summary>
+        public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
+
+        /// <summary>
         /// <inheritdoc cref="PopulateMoreGenresAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreGenresCommand { get; }
