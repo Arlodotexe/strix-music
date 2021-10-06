@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -16,6 +17,7 @@ namespace StrixMusic.Cores.Files.Models
     public sealed class FilesCoreLibrary : FilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private IFileMetadataManager? _fileMetadataManager;
+        private SemaphoreSlim _initSemaphore = new SemaphoreSlim(1, 1); 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCoreLibrary"/> class.
@@ -29,7 +31,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public override async Task InitAsync()
         {
-            IsInitialized = true;
+            await _initSemaphore.WaitAsync();
 
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
 
@@ -41,6 +43,10 @@ namespace StrixMusic.Cores.Files.Models
             await base.InitAsync();
 
             AttachEvents();
+
+            IsInitialized = true;
+
+            _initSemaphore.Release();
         }
 
         private void AttachEvents()
@@ -58,8 +64,14 @@ namespace StrixMusic.Cores.Files.Models
             _fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
         }
 
-        private void DetachEvents()
+        private async Task DetachEvents()
         {
+            await _initSemaphore.WaitAsync();
+
+            // _fileMetadataManager can be null if InitAsync hasn't been called.
+            if (!IsInitialized && _fileMetadataManager is null)
+                return;
+
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
 
             _fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
@@ -71,6 +83,8 @@ namespace StrixMusic.Cores.Files.Models
             _fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
             _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
             _fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataRemoved;
+
+            _initSemaphore.Release();
         }
 
         private void Playlists_MetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
@@ -280,10 +294,10 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override ValueTask DisposeAsync()
+        public override async ValueTask DisposeAsync()
         {
-            DetachEvents();
-            return base.DisposeAsync();
+            await DetachEvents();
+            await base.DisposeAsync();
         }
     }
 }
