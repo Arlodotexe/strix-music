@@ -12,7 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
-    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:auic="using:OwlCore.Uno.AbstractUI.Controls"
     mc:Ignorable="d"
     MinHeight="650"
     MaxWidth="1000"
@@ -140,7 +140,7 @@
                         <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentCoreConfig.CoreConfig.AbstractUIElements, Mode=OneWay}" Margin="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <controls:AbstractUICollectionPresenter />
+                                    <auic:AbstractUICollectionPresenter />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -193,8 +193,7 @@
             </PivotItem>
             <PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
                 <StackPanel Spacing="15" HorizontalAlignment="Center">
-                    <ProgressRing IsActive="{x:Bind ViewModel.ResetAppCommand.IsRunning}" Height="30" Width="30" />
-                    <Button Content="Reset app" Command="{x:Bind ViewModel.ResetAppCommand}" />
+                    <auic:AbstractUICollectionPresenter ViewModel="{x:Bind ViewModel.AdvancedSettings}" />
                 </StackPanel>
             </PivotItem>
         </Pivot>

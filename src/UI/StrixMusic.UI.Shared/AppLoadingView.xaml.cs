@@ -81,13 +81,22 @@ namespace StrixMusic.Shared
 #endif
         }
 
+        /// <summary>
+        /// Keeps the logger type available in the <paramref name="services"/> but without any output functionality.
+        /// </summary>
+        private static void AddLoggerBlackHole(IServiceCollection services)
+        {
+            services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
+            services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+        }
+
         private static void AddNLog(IServiceCollection services)
         {
-            var logPath = ApplicationData.Current.LocalFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
-
+            var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
             var defaultLayout = @"${date} [Thread ${threadname:whenEmpty=${threadid}}] ${logger} [${level}] | ${message} ${exception:format=ToString}";
 
             var config = new LoggingConfiguration();
+
             var fileTarget = new FileTarget("filelog")
             {
                 FileName = logPath,
@@ -101,17 +110,20 @@ namespace StrixMusic.Shared
                 OpenFileFlushTimeout = 10,
                 ConcurrentWrites = false,
                 CleanupFileName = false,
+                OptimizeBufferReuse = true,
                 EnableArchiveFileCompression = true,
             };
+
+            config.AddTarget(fileTarget);
+            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
 
             var debuggerTarget = new DebuggerTarget("debuggerTarget")
             {
                 Layout = defaultLayout,
+                OptimizeBufferReuse = true,
             };
 
-            config.AddTarget(fileTarget);
             config.AddTarget(debuggerTarget);
-            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, fileTarget);
             config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
 
             services.AddLogging(loggingBuilder =>
@@ -208,7 +220,12 @@ namespace StrixMusic.Shared
 
             IServiceCollection services = new ServiceCollection();
 
-            AddNLog(services);
+            var isLoggingEnabled = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
+
+            if (isLoggingEnabled)
+                AddNLog(services);
+            else
+                AddLoggerBlackHole(services);
 
             _playbackHandlerService = new PlaybackHandlerService();
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
