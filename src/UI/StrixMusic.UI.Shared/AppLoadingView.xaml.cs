@@ -101,9 +101,9 @@ namespace StrixMusic.Shared
             {
                 FileName = logPath,
                 Layout = defaultLayout,
-                MaxArchiveDays = 3,
-                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
-                ArchiveOldFileOnStartup = true,
+                MaxArchiveDays = 7,
+                ArchiveNumbering = ArchiveNumberingMode.Date,
+                ArchiveEvery = FileArchivePeriod.Day,
                 KeepFileOpen = true,
                 OpenFileCacheTimeout = 10,
                 AutoFlush = false,
