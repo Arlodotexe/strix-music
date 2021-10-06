@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public partial class AudioMetadataScanner : IDisposable
     {
         private readonly int _scanBatchSize;
-        private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
+        private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
 
         private readonly FileMetadataManager _metadataManager;
         private readonly ILogger<AudioMetadataScanner> _logger;
@@ -384,10 +384,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 using var tagFile = TagLibFile.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
-                // TODO: Switch based on file type to avoid brute-forcing.
-                var tags = tagFile.GetTag(TagTypes.Id3v2) ??
-                           tagFile.GetTag(TagTypes.Asf) ??
-                           tagFile.GetTag(TagTypes.FlacMetadata);
+                var tags = tagFile.GetTag(tagFile.Tag.TagTypes);
 
                 // If there's no metadata to read, return null
                 if (tags == null)
@@ -480,6 +477,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 _allFileMetadata.Add(fileMetadata);
                 _batchMetadataToEmit.Add(fileMetadata);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Warning, $"{nameof(ProcessFile)}: file scan return no metadata and will be ignored. (at {file.Path})");
             }
 
             _batchLock.Release();
