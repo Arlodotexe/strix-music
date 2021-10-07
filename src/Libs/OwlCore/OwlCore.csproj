@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.24</Version>
+		<Version>0.0.25</Version>
 		<Product>OwlCore</Product>
 		<Description>
 			Have you ever seen an owl do a barrel roll? Me neither.
@@ -28,6 +28,10 @@
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+			--- 0.0.25 ---
+			[Fixes]
+			Use explicit cast in OwlCore.Extensions.Cast{T}();
+
 			--- 0.0.24 ---
 			[New stuff]
 			Added AbstractFolderExplorer in OwlCore.AbstractUI.Components. This is an AbstractUICollection that acts as a standalone, inbox component. A Folder explorer that interops with OwlCore.AbstractStorage to browse and select subfolders from an IFolderData.
