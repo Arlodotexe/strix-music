@@ -18,8 +18,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <strix:SafeImage Height="128" Width="128"
-                                       Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+            <strix:SafeImage Height="128" Width="128" ImageCollection="{x:Bind}"
+                             Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 
             <TextBlock  Grid.Row="1" Text="{x:Bind Name}" FontWeight="SemiBold" Margin="0,20,0,0"
                         HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>

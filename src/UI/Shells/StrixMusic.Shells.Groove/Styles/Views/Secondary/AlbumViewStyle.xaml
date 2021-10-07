@@ -58,7 +58,7 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <strix:SafeImage Grid.RowSpan="2" Margin="32"/>
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind}" />
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
                             <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"

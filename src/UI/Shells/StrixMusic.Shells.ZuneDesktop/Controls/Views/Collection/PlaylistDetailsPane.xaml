@@ -18,7 +18,7 @@
                    a:TextHelpers.CharacterCasing="Upper"/>
 
         <strix:SafeImage Width="144" Height="144" HorizontalAlignment="Left" Margin="0,0,0,16"
-                         DataContext="{x:Bind ViewModel}"/>
+                         ImageCollection="{x:Bind ViewModel}"/>
 
         <TextBlock Text="{x:Bind ViewModel.Name}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,12"/>
 

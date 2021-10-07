@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.ViewModels;
@@ -29,34 +30,24 @@ namespace StrixMusic.Sdk.Uno.Controls
             DefaultStyleKey = typeof(SafeImage);
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="ImageCollection"/>.
+        /// </summary>
+        public static readonly DependencyProperty ImageCollectionProperty =
+            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().RequestImages().Forget()));
+
+        /// <summary>
+        /// The image collection to load and display.
+        /// </summary>
+        public IImageCollectionViewModel? ImageCollection
+        {
+            get { return (IImageCollectionViewModel?)GetValue(ImageCollectionProperty); }
+            set { SetValue(ImageCollectionProperty, value); }
+        }
+
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
-            Loaded += SafeImage_Loaded;
-        }
-
-        private Rectangle? PART_ImageRectangle { get; set; }
-
-        private ImageBrush? PART_ImageBrush { get; set; }
-
-        private void AttachHandlers()
-        {
-            Unloaded += SafeImage_Unloaded;
-            DataContextChanged += SafeImage_DataContextChanged;
-        }
-
-        private void DetachHandlers()
-        {
-            Unloaded -= SafeImage_Unloaded;
-            DataContextChanged -= SafeImage_DataContextChanged;
-        }
-
-        private async void SafeImage_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= SafeImage_Loaded;
-
             // Find Parts
             PART_ImageRectangle = GetTemplateChild(nameof(PART_ImageRectangle)) as Rectangle;
 
@@ -65,29 +56,23 @@ namespace StrixMusic.Sdk.Uno.Controls
             else
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
-            await RequestImages();
-            AttachHandlers();
+            RequestImages();
+            base.OnApplyTemplate();
         }
 
-        private void SafeImage_Unloaded(object sender, RoutedEventArgs e)
-        {
-            DetachHandlers();
-        }
+        private Rectangle? PART_ImageRectangle { get; set; }
 
-        private async void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
-        {
-            await RequestImages();
-        }
+        private ImageBrush? PART_ImageBrush { get; set; }
 
         private async Task RequestImages()
         {
-            if (!(DataContext is IImageCollectionViewModel viewModel))
+            if (ImageCollection is null)
                 return;
 
             if (PART_ImageBrush is null)
                 return;
 
-            var images = await viewModel.GetImagesAsync(1, 0);
+            var images = await ImageCollection.GetImagesAsync(1, 0);
             if (images.Count == 0)
                 return;
 

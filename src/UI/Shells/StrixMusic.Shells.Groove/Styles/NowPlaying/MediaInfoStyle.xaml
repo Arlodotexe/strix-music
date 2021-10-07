@@ -33,7 +33,8 @@
                 <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
             
-            <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center" DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
+            <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center"
+                             ImageCollection="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
         </Grid>
     </DataTemplate>
 

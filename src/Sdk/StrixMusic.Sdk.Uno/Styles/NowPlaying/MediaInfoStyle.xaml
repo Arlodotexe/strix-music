@@ -20,7 +20,7 @@
             </StackPanel>
 
             <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
-                             DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
+                             ImageCollection="{x:Bind ActiveDevice.NowPlaying, Mode=OneWay}"/>
         </Grid>
     </DataTemplate>
 

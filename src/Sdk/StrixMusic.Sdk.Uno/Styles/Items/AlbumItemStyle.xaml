@@ -14,7 +14,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <strix:SafeImage Height="128" Width="128"/>
+            <strix:SafeImage Height="128" Width="128" ImageCollection="{x:Bind}"/>
 
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
