@@ -9,19 +9,24 @@ namespace StrixMusic.Shells.Groove.Controls.Views
     /// <summary>
     /// An AlbumView control for Groove Shell.
     /// </summary>
-    public class GrooveAlbumView : Control
+    public partial class GrooveAlbumView : Control
     {
         /// <summary>
         /// The backing dependency property for <see cref="Album"/>.
         /// </summary>
         public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(GrooveAlbumView), new PropertyMetadata(null, (s, e) => e.Cast<GrooveAlbumView>().OnAlbumChanged()));
+            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(GrooveAlbumView), new PropertyMetadata(null, (s, e) => s.Cast<GrooveAlbumView>().OnAlbumChanged()));
 
         /// <summary>
         /// The backing dependency property for <see cref="ViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register(nameof(ViewModel), typeof(AlbumViewViewModel), typeof(GrooveAlbumView), new PropertyMetadata(null));
+
+        public GrooveAlbumView()
+        {
+            this.DefaultStyleKey = typeof(GrooveAlbumView);
+        }
 
         /// <summary>
         /// The <see cref="AlbumViewModel"/> being displayed.
@@ -35,7 +40,11 @@ namespace StrixMusic.Shells.Groove.Controls.Views
         /// <summary>
         /// The <see cref="AlbumViewViewModel"/> for the <see cref="GrooveAlbumView"/> template.
         /// </summary>
-        public AlbumViewViewModel? ViewModel { get; private set; }
+        public AlbumViewViewModel? ViewModel
+        {
+            get { return (AlbumViewViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
 
         private void OnAlbumChanged()
         {

@@ -8,12 +8,15 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
+    xmlns:convert="using:OwlCore.Uno.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Views.Secondary.AlbumViewStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../../Resources/Brushes.xaml"/>
         <ResourceDictionary Source="../../../Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+    <convert:DebugPassThroughConverter x:Key="DebugPassThroughConverter"/>
 
     <DataTemplate x:Key="GrooveAlbumViewTemplate" x:DataType="vms:AlbumViewViewModel">
         <ScrollViewer>
@@ -50,7 +53,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">
-                        <Grid.Resources>
+                        <!--<Grid.Resources>
                             <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
                                         Storyboard.TargetName="TitleGrid" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
                                 <ColorAnimation To="{x:Bind BackgroundColor, Mode=OneWay}">
@@ -59,7 +62,7 @@
                                     </ColorAnimation.EasingFunction>
                                 </ColorAnimation>
                             </Storyboard>
-                        </Grid.Resources>
+                        </Grid.Resources>-->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
                             <ColumnDefinition/>
@@ -69,7 +72,7 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind Album, Mode=OneWay}" />
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind Album, Converter={StaticResource DebugPassThroughConverter}, Mode=OneWay}" />
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
                             <TextBlock Text="{x:Bind Album.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"

@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Uno.Controls.Views.Secondary;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Controls;
+using StrixMusic.Shells.Groove.Controls.Views;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace StrixMusic.Shells.Groove
             _pageHeaderMapping = new Dictionary<Type, string>
             {
                 { typeof(HomeView), "MyMusic" },
-                { typeof(AlbumView), "Album" },
+                { typeof(GrooveAlbumView), "Album" },
                 { typeof(ArtistView), "Artist" },
                 { typeof(PlaylistView), "Playlist" },
                 { typeof(PlaylistsPage), "Playlists" },

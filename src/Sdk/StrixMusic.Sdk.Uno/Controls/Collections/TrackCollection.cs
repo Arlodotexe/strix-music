@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <summary>
         /// The <see cref="ITrackCollectionViewModel"/> for the control.
         /// </summary>
-        public ITrackCollectionViewModel ViewModel => (DataContext as ITrackCollectionViewModel)!;
+        public ITrackCollectionViewModel? ViewModel => DataContext as ITrackCollectionViewModel;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -40,6 +40,9 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
+            if (ViewModel == null)
+                return;
+
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
                 await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
@@ -47,6 +50,9 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
+            if (ViewModel == null)
+                return;
+
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning &&
                 ViewModel.TotalTrackCount == 0)
                 
