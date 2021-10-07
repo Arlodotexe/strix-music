@@ -12,7 +12,7 @@ namespace OwlCore.Uno.Converters.Numerical
         /// <summary>
         /// Converts a <see cref="long"/> to a <see cref="double"/>.
         /// </summary>
-        /// <param name="value">The <see cref="long"/>  to convert</param>
+        /// <param name="value">The <see cref="long"/> to convert</param>
         /// <returns>The converted value.</returns>
         [Pure]
         public static double Convert(long value) => value;
