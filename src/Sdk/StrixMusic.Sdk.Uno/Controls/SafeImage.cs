@@ -2,10 +2,12 @@
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Helpers;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
 namespace StrixMusic.Sdk.Uno.Controls
@@ -17,7 +19,6 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// This control takes an <see cref="IImageCollection"/> and displays only the first, or none if none exist.
     /// </remarks>
     [TemplatePart(Name = nameof(PART_ImageRectangle), Type = typeof(Rectangle))]
-    [TemplatePart(Name = nameof(PART_Fallback), Type = typeof(FrameworkElement))]
     public sealed partial class SafeImage : Control
     {
         /// <summary>
@@ -36,33 +37,20 @@ namespace StrixMusic.Sdk.Uno.Controls
             Loaded += SafeImage_Loaded;
         }
 
-        /// <summary>
-        /// The <see cref="IImageCollection"/> ViewModel of the control.
-        /// </summary>
-        public IImageCollectionViewModel ViewModel => (IImageCollectionViewModel)DataContext;
-
         private Rectangle? PART_ImageRectangle { get; set; }
 
         private ImageBrush? PART_ImageBrush { get; set; }
-
-        private FrameworkElement? PART_Fallback { get; set; }
 
         private void AttachHandlers()
         {
             Unloaded += SafeImage_Unloaded;
             DataContextChanged += SafeImage_DataContextChanged;
-
-            Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush.ImageFailed += SafeImage_ImageFailed;
         }
 
         private void DetachHandlers()
         {
             Unloaded -= SafeImage_Unloaded;
             DataContextChanged -= SafeImage_DataContextChanged;
-
-            Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush.ImageFailed -= SafeImage_ImageFailed;
         }
 
         private async void SafeImage_Loaded(object sender, RoutedEventArgs e)
@@ -70,8 +58,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             Loaded -= SafeImage_Loaded;
 
             // Find Parts
-            PART_ImageRectangle = VisualTreeHelpers.GetDataTemplateChild<Rectangle>(this, nameof(PART_ImageRectangle));
-            PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<FrameworkElement>(this, nameof(PART_Fallback));
+            PART_ImageRectangle = GetTemplateChild(nameof(PART_ImageRectangle)) as Rectangle;
 
             if (PART_ImageRectangle?.Fill is ImageBrush imgBrush)
                 PART_ImageBrush = imgBrush;
@@ -92,25 +79,25 @@ namespace StrixMusic.Sdk.Uno.Controls
             await RequestImages();
         }
 
-        private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            // Go to fallback if the image failed to load.
-            OverrideToFallback();
-        }
-
         private async Task RequestImages()
         {
-            if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
-        }
+            if (!(DataContext is IImageCollectionViewModel viewModel))
+                return;
 
-        /// <summary>
-        /// Set to Fallback regardless of if there's an image present.
-        /// </summary>
-        private void OverrideToFallback()
-        {
-            Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
-            PART_Fallback.Visibility = Visibility.Visible;
+            if (PART_ImageBrush is null)
+                return;
+
+            var images = await viewModel.GetImagesAsync(1, 0);
+            if (images.Count == 0)
+                return;
+
+            var image = images[0];
+
+            PART_ImageBrush.ImageSource = new BitmapImage(image.Uri)
+            {
+                DecodePixelHeight = (int)image.Height,
+                DecodePixelWidth = (int)image.Width,
+            };
         }
     }
 }
