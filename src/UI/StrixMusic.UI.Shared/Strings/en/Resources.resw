@@ -129,4 +129,7 @@
   <data name="AppDescription" xml:space="preserve">
     <value>StrixMusic</value>
   </data>
+  <data name="AppNameTB.Text" xml:space="preserve">
+    <value>Strix Music</value>
+  </data>
 </root>
