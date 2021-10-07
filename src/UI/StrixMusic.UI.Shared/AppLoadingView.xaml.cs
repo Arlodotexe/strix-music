@@ -101,9 +101,10 @@ namespace StrixMusic.Shared
             {
                 FileName = logPath,
                 Layout = defaultLayout,
+                EnableArchiveFileCompression = true,
                 MaxArchiveDays = 7,
-                ArchiveNumbering = ArchiveNumberingMode.Date,
-                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                ArchiveOldFileOnStartup = true,
                 KeepFileOpen = true,
                 OpenFileCacheTimeout = 10,
                 AutoFlush = false,
@@ -111,7 +112,6 @@ namespace StrixMusic.Shared
                 ConcurrentWrites = false,
                 CleanupFileName = false,
                 OptimizeBufferReuse = true,
-                EnableArchiveFileCompression = true,
             };
 
             config.AddTarget(fileTarget);
