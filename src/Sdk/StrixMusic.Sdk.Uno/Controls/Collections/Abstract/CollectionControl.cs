@@ -130,10 +130,10 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
         private void CollectionControl_Loaded(object sender, RoutedEventArgs e)
         {
             // Find and set Selector
-            PART_Selector = GetTemplateChild(nameof(PART_Selector)) as Control;
+            PART_Selector = VisualTreeHelpers.GetDataTemplateChild<Selector>(this, nameof(PART_Selector));
             if (PART_Selector == null)
             {
-                PART_Selector = GetTemplateChild(nameof(PART_Selector)) as Control;
+                PART_Selector = VisualTreeHelpers.GetDataTemplateChild<DataGrid>(this, nameof(PART_Selector));
             }
 
             // Find and set Scroller
