@@ -102,7 +102,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <!--Hamburger Button-->
                         <Button Width="48" Style="{StaticResource GrooveButton}" Click="HamburgerToggled"
                                 Grid.Row="1">
@@ -130,12 +130,16 @@
                 </Grid>
             </SplitView.Content>
             <SplitView.Pane>
-                <Grid Padding="0,36,0,104">
+                <Grid Padding="0,0,0,104">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="36"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <StackPanel>
+
+                    <TextBlock x:Uid="/Resources/AppNameTB" FontSize="12" FontWeight="SemiLight" Margin="48,0,0,0" VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Row="1">
                         <!--Hamburger Button-->
                         <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Click="HamburgerToggled">
                             <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -226,7 +230,7 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="1" Style="{StaticResource PanePlaylistCollectionStyle}"
+                    <collections:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"
                                                         SelectionChanged="PlaylistClicked"/>
                 </Grid>
             </SplitView.Pane>
