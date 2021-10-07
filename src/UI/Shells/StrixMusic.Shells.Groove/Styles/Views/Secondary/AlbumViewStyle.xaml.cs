@@ -53,13 +53,19 @@ namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
             if (!(grid.DataContext is AlbumViewModel albumViewModel))
                 return;
 
-            Color? color = await Task.Run(async () => await UpdateBackgroundColor(albumViewModel.Images[0].Uri.AbsoluteUri));
+            if (albumViewModel.Images.Count == 0)
+                await albumViewModel.PopulateMoreImagesAsync(1);
+
+            if (albumViewModel.Images.Count == 0)
+                return;
+
+            Color? color = await Task.Run(() => UpdateBackgroundColor(albumViewModel.Images[0].Uri.AbsoluteUri));
 
             if (color.HasValue)
                 AnimateBackgroundChange(color.Value, grid);
             else
                 AnimateBackgroundChange(Color.FromArgb(255, 51, 51, 51), grid);
-                //grid.Background = new SolidColorBrush(color.Value);
+            //grid.Background = new SolidColorBrush(color.Value);
         }
 
         private async Task<Color?> UpdateBackgroundColor(string url)
@@ -68,7 +74,6 @@ namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
 
             if (image is null)
                 return null;
-
 
             FilterCollection filters = new FilterCollection();
             filters.Add(new WhiteFilter(.4f));
@@ -86,11 +91,13 @@ namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
             GaussianKernel kernel = new GaussianKernel(.15);
             var palette = ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
             RGBColor primary = clamps.Clamp(palette[0].Item1);
-            Color finalColor = Color.FromArgb(
-                255,
+
+            Color finalColor = Color.FromArgb(255,
                 (byte)(primary.R * 255),
                 (byte)(primary.G * 255),
-                (byte)(primary.B * 255));
+                (byte)(primary.B * 255)
+            );
+
             return finalColor;
         }
 
