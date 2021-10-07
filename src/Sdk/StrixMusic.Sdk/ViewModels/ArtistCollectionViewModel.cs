@@ -539,6 +539,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public Task InitArtistCollectionAsync() => InitAsync();
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
 
         /// <inheritdoc />

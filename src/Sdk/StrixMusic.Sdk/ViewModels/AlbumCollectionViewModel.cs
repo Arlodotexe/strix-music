@@ -522,6 +522,12 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
+        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
 
         /// <inheritdoc />

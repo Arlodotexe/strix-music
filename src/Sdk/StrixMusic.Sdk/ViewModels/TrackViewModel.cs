@@ -787,6 +787,18 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
+        /// <inheritdoc/>
+        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+
+        /// <inheritdoc/>
+        public Task InitGenreCollectionAsync() => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc/>
+        public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
+
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => Model.Equals(other);
 
