@@ -4,9 +4,10 @@
     xmlns:local="using:StrixMusic.Shells.Groove.Controls"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
-    xmlns:secondaryviews="using:StrixMusic.Sdk.Uno.Controls.Views.Secondary"
+    xmlns:grooveviews="using:StrixMusic.Shells.Groove.Controls.Views"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
+    xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     x:Class="StrixMusic.Shells.Groove.Styles.Views.Secondary.AlbumViewStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -14,7 +15,7 @@
         <ResourceDictionary Source="../../../Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="GrooveAlbumViewTemplate" x:DataType="viewModels:AlbumViewModel">
+    <DataTemplate x:Key="GrooveAlbumViewTemplate" x:DataType="vms:AlbumViewViewModel">
         <ScrollViewer>
             <UserControl>
                 <Grid>
@@ -48,7 +49,17 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Grid Background="{ThemeResource LowBackgroundBrush}" Loaded="Grid_Loaded">
+                    <Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">
+                        <Grid.Resources>
+                            <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
+                                        Storyboard.TargetName="TitleGrid" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
+                                <ColorAnimation To="{x:Bind BackgroundColor, Mode=OneWay}">
+                                    <ColorAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
+                                    </ColorAnimation.EasingFunction>
+                                </ColorAnimation>
+                            </Storyboard>
+                        </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
                             <ColumnDefinition/>
@@ -58,28 +69,28 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind}" />
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind Album, Mode=OneWay}" />
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                            <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                            <TextBlock Text="{x:Bind Album.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
                                        LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
 
-                            <ItemsControl ItemsSource="{x:Bind Artists}">
+                            <ItemsControl ItemsSource="{x:Bind Album.Artists, Mode=OneWay}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="viewModels:ArtistViewModel">
+                                    <DataTemplate x:DataType="sdkvms:ArtistViewModel">
                                         <HyperlinkButton Content="{x:Bind Name}" Margin="0,4,0,0"
                                                          Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
                                                          Click="GoToArtist" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            
-                            <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
+
+                            <TextBlock Text="{x:Bind Album.DatePublished.Value.Year, Mode=OneWay}" Opacity=".5"/>
                         </StackPanel>
 
                         <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
@@ -97,17 +108,17 @@
                         </CommandBar>
                     </Grid>
 
-                    <collections:TrackCollection Grid.Row="1"/>
+                    <collections:TrackCollection Grid.Row="1" DataContext="{x:Bind Album, Mode=OneWay}"/>
                 </Grid>
             </UserControl>
         </ScrollViewer>
     </DataTemplate>
 
-    <Style x:Key="GrooveAlbumViewControlStyle" TargetType="secondaryviews:AlbumView">
+    <Style x:Key="GrooveAlbumViewControlStyle" TargetType="grooveviews:GrooveAlbumView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="secondaryviews:AlbumView">
+                    <ControlTemplate TargetType="grooveviews:GrooveAlbumView">
                         <ContentControl ContentTemplate="{StaticResource GrooveAlbumViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -116,6 +127,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource GrooveAlbumViewControlStyle}" TargetType="secondaryviews:AlbumView"/>
+    <Style BasedOn="{StaticResource GrooveAlbumViewControlStyle}" TargetType="grooveviews:GrooveAlbumView"/>
 
 </ResourceDictionary>
