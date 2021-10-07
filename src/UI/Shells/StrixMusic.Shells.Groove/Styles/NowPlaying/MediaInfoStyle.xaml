@@ -17,9 +17,8 @@
                 <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice}">
                     <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
                 </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            
-            <core:EventTriggerBehavior EventName="Loaded">
+
+                <core:EventTriggerBehavior EventName="Loaded">
                 <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
