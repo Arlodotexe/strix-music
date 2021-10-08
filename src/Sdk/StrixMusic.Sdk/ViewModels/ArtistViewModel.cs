@@ -836,7 +836,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
 
         /// <inheritdoc />
-        public Task InitGenreCollectionAsync() => throw new NotImplementedException();
+        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _artist.Equals(other);
