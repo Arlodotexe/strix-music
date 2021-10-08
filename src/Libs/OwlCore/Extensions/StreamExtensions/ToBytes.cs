@@ -13,12 +13,17 @@ namespace OwlCore.Extensions
         /// Converts the <paramref name="input"/> <see cref="Stream"/> to a byte array.
         /// </summary>
         /// <remarks>
-        /// The method will keep reading (and copying into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
+        /// The method will seek to the start of the stream, read (and copy into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
         /// </remarks>
         public static byte[] ToBytes(this Stream input)
         {
+            var originalPosition = input.Position;
+            input.Position = 0;
+
             using var memStream = new MemoryStream();
             input.CopyTo(memStream);
+
+            input.Position = originalPosition;
             return memStream.ToArray();
         }
 
@@ -26,12 +31,17 @@ namespace OwlCore.Extensions
         /// Converts the <paramref name="input"/> <see cref="Stream"/> to a byte array.
         /// </summary>
         /// <remarks>
-        /// The method will keep reading (and copying into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
+        /// The method will seek to the start of the stream, read (and copy into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
         /// </remarks>
         public static async Task<byte[]> ToBytesAsync(this Stream input)
         {
+            var originalPosition = input.Position;
+            input.Position = 0;
+
             using var memStream = new MemoryStream();
             await input.CopyToAsync(memStream);
+
+            input.Position = originalPosition;
             return memStream.ToArray();
         }
     }
