@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying an <see cref="PlaylistViewModel"/> in a list.
     /// </summary>
-    public sealed partial class PlaylistItem : ItemControl
+    public partial class PlaylistItem : ItemControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistItem"/> class.

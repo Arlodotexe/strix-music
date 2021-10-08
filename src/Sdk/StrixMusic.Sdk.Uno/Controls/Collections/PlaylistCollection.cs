@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
     /// <remarks>
     /// This class temporarily only displays <see cref="PlaylistViewModel"/>s.
     /// </remarks>
-    public sealed partial class PlaylistCollection : CollectionControl<PlaylistViewModel, PlaylistItem>
+    public partial class PlaylistCollection : CollectionControl<PlaylistViewModel, PlaylistItem>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistCollection"/> class.

@@ -1,11 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.Controls.Views;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.Groove.Styles.Collections
 {
@@ -20,12 +13,6 @@ namespace StrixMusic.Shells.Groove.Styles.Collections
         public AlbumCollectionStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void OpenAlbum(object sender, ItemClickEventArgs e)
-        {
-            INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>(); ;
-            navigationService.NavigateTo(new GrooveAlbumView() { Album = e.ClickedItem.Cast<AlbumViewModel>() });
         }
     }
 }

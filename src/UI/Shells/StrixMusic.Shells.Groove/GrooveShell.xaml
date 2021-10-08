@@ -2,13 +2,14 @@
     x:Class="StrixMusic.Shells.Groove.GrooveShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
 
     <shells:Shell.Resources>
         <ResourceDictionary>
@@ -59,7 +60,7 @@
                         <Setter Target="Seperator.Width" Value="auto"/>
                         <Setter Target="Seperator.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Collapsed"/>
-                        <Setter Target="PlaylistList.Visibility" Value="Visible"/>
+                        <!--<Setter Target="PlaylistList.Visibility" Value="Visible"/>-->
                         <Setter Target="SearchButton.Visibility" Value="Collapsed"/>
                         <Setter Target="SearchBox.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -72,14 +73,14 @@
                         <Setter Target="Seperator.Width" Value="24"/>
                         <Setter Target="Seperator.HorizontalAlignment" Value="Left"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Visible"/>
-                        <Setter Target="PlaylistList.Visibility" Value="Collapsed"/>
+                        <!--<Setter Target="PlaylistList.Visibility" Value="Collapsed"/>-->
                         <Setter Target="SearchButton.Visibility" Value="Visible"/>
                         <Setter Target="SearchBox.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
                    PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
                    PaneOpening="OnPaneOpening" PaneClosing="OnPaneClosing"
@@ -104,13 +105,12 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Hamburger Button-->
-                        <Button Width="48" Style="{StaticResource GrooveButton}" Click="HamburgerToggled"
-                                Grid.Row="1">
+                        <Button Width="48" Style="{StaticResource GrooveButton}" Grid.Row="1" Click="HamburgerToggled">
                             <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
                         <!--Small Header text-->
-                        <TextBlock x:Name="SmallHeaderText" Text="Header" FontSize="18" FontWeight="SemiBold"
+                        <TextBlock x:Name="SmallHeaderText" Text="{x:Bind Title, Mode=OneWay}" FontSize="18" FontWeight="SemiBold"
                                    Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0"/>
 
                         <!--Search button-->
@@ -122,11 +122,10 @@
 
                     <!--Large Header-->
                     <Grid x:Name="LargeHeaderWrapper">
-                        <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
+                        <TextBlock x:Name="LargeHeaderText" Text="{x:Bind Title, Mode=OneWay}" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
                     </Grid>
 
-                    <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
-                        HorizontalContentAlignment="Stretch" Grid.Row="1"/>
+                    <ContentControl x:Name="MainContent" HorizontalContentAlignment="Stretch" Grid.Row="1"/>
                 </Grid>
             </SplitView.Content>
             <SplitView.Pane>
@@ -141,7 +140,7 @@
 
                     <StackPanel Grid.Row="1">
                         <!--Hamburger Button-->
-                        <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Click="HamburgerToggled">
+                        <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
                             <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
@@ -150,12 +149,10 @@
                             <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                         <AutoSuggestBox x:Name="SearchBox" x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
-                                        QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="8"
-                                        QueryIcon="Find" BorderThickness="0"/>
+                                        Margin="8" QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
-                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
+                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -167,8 +164,7 @@
                                 <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
-                                      Click="NavigationButtonClicked">
+                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -181,8 +177,7 @@
                                 <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
+                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -205,8 +200,7 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
+                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>
@@ -230,17 +224,13 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"
-                                                        SelectionChanged="PlaylistClicked"/>
+                    <!--<collections:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"
+                                                        SelectionChanged="PlaylistClicked"/>-->
                 </Grid>
             </SplitView.Pane>
         </SplitView>
 
         <shells:NowPlayingBar Height="96" VerticalAlignment="Bottom"/>
-
-        <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                        Visibility="Collapsed" Grid.RowSpan="2"/>
 
         <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
@@ -264,5 +254,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
     </Grid>
 </shells:Shell>
