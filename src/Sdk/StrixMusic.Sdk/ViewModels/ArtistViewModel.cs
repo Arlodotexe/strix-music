@@ -84,6 +84,11 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreGenresCommand = new AsyncRelayCommand<int>(PopulateMoreGenresAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitAlbumCollectionAsyncCommand = new AsyncRelayCommand(InitAlbumCollectionAsync);
+            InitGenreCollectionAsyncCommand = new AsyncRelayCommand(InitGenreCollectionAsync);
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+
             ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(x => SortAlbumCollection(x, CurrentAlbumSortingDirection));
             ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType, x));
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
@@ -828,6 +833,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc />
         public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);

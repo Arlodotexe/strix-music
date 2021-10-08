@@ -59,6 +59,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
             ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType, x));
 
+            InitArtistCollectionAsyncCommand = new AsyncRelayCommand(InitArtistCollectionAsync);
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
@@ -582,6 +585,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);

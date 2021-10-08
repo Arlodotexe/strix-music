@@ -67,6 +67,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitPlaylistCollectionAsyncCommand = new AsyncRelayCommand(InitPlaylistCollectionAsync);
+
             AttachEvents();
         }
 
@@ -561,6 +564,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitPlaylistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollectionItem other) => _collection.Equals(other);

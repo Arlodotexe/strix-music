@@ -77,6 +77,12 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+            InitArtistCollectionAsyncCommand = new AsyncRelayCommand(InitArtistCollectionAsync);
+            InitAlbumCollectionAsyncCommand = new AsyncRelayCommand(InitAlbumCollectionAsync);
+            InitPlaylistCollectionAsyncCommand = new AsyncRelayCommand(InitPlaylistCollectionAsync);
+
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
             ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
@@ -1195,6 +1201,36 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitPlaylistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+
+        /// <inheritdoc />
+        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+
+        /// <inheritdoc />
+        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collectionGroup.Equals(other);

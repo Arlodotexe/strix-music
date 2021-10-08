@@ -63,6 +63,9 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
@@ -580,6 +583,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollectionItem other) => _playlist.Equals(other);

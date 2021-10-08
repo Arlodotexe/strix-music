@@ -67,6 +67,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
@@ -558,6 +561,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc/>
         public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc/>
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc/>
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc/>
         public Task InitTrackCollectionAsync() => InitAsync();

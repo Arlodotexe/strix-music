@@ -12,6 +12,7 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -39,6 +40,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
+
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
 
             using (Threading.PrimaryContext)
             {
@@ -239,6 +242,12 @@ namespace StrixMusic.Sdk.ViewModels
                 }
             });
         }
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }

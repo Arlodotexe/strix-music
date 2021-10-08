@@ -26,5 +26,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="PopulateMoreImagesAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <summary>
+        /// Loads the collection of <see cref="IImage"/> for the first time.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitImageCollectionAsync();
+
+        /// <summary>
+        /// Initializes the list of the <see cref="IImage"/>.
+        /// </summary>
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
     }
 }

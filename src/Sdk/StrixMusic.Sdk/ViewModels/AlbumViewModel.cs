@@ -83,6 +83,11 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreGenresCommand = new AsyncRelayCommand<int>(PopulateMoreGenresAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+            InitGenreCollectionAsyncCommand = new AsyncRelayCommand(InitGenreCollectionAsync);
+            InitArtistCollectionAsyncCommand = new AsyncRelayCommand(InitArtistCollectionAsync);
+
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
             ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
@@ -839,6 +844,30 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+
+        /// <inheritdoc />
+        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
+
+        /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _album.Equals(other);
 
         /// <inheritdoc />
@@ -875,7 +904,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
-
         private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
         {
             Guard.IsNotNull(artistItem, nameof(artistItem));
