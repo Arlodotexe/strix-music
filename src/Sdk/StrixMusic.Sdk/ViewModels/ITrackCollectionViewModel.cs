@@ -50,6 +50,17 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="sortDirection">The direction by which to sort.</param>
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection);
 
+        /// <summary>
+        /// Loads the collection of <see cref="ITrack"/> for the first time.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitTrackCollectionAsync();
+
+        /// <summary>
+        /// Initializes the list of the <see cref="ITrack"/>.
+        /// </summary>
+        public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 

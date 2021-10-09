@@ -111,5 +111,53 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 lastItemCount = playlistCollection.Playlists.Count;
             }
         }
+
+        /// <summary>
+        /// Initialize a genre collection view model.
+        /// </summary>
+        /// <param name="genreCollectionViewModel">The collection to initialize.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task GenreCollection(IGenreCollectionViewModel genreCollectionViewModel)
+        {
+            var lastItemCount = genreCollectionViewModel.Genres.Count;
+
+            while (genreCollectionViewModel.Genres.Count < genreCollectionViewModel.TotalGenreCount)
+            {
+                await genreCollectionViewModel.PopulateMoreGenresAsync(genreCollectionViewModel.TotalGenreCount);
+
+                // nothing was returned
+                if (lastItemCount == genreCollectionViewModel.Genres.Count)
+                {
+                    Debug.WriteLine($"Warning: Collection init for {nameof(genreCollectionViewModel)} {genreCollectionViewModel.Genres} failed. Not all items were returned.");
+                    return;
+                }
+
+                lastItemCount = genreCollectionViewModel.Genres.Count;
+            }
+        }
+
+        /// <summary>
+        /// Initialize a image collection view model.
+        /// </summary>
+        /// <param name="imageCollectionViewModel">The collection to initialize.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel)
+        {
+            var lastItemCount = imageCollectionViewModel.Images.Count;
+
+            while (imageCollectionViewModel.Images.Count < imageCollectionViewModel.TotalImageCount)
+            {
+                await imageCollectionViewModel.PopulateMoreImagesAsync(imageCollectionViewModel.TotalImageCount);
+
+                // nothing was returned
+                if (lastItemCount == imageCollectionViewModel.Images.Count)
+                {
+                    Debug.WriteLine($"Warning: Collection init for {nameof(imageCollectionViewModel)} {imageCollectionViewModel.Images} failed. Not all items were returned.");
+                    return;
+                }
+
+                lastItemCount = imageCollectionViewModel.Images.Count;
+            }
+        }
     }
 }
