@@ -130,7 +130,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
             void Combine(HashSet<string> originalData, HashSet<string> newIds)
             {
-                foreach (var newId in newIds)
+                foreach (var newId in newIds.ToArray())
                     originalData.Add(newId);
             }
         }
