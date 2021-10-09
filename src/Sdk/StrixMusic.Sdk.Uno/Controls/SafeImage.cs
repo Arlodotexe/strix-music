@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             else
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
-            RequestImages();
+            _ = RequestImages();
             base.OnApplyTemplate();
         }
 
@@ -66,15 +66,21 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private async Task RequestImages()
         {
-            if (ImageCollection is null)
-                return;
-
             if (PART_ImageBrush is null)
                 return;
 
+            if (ImageCollection is null)
+            {
+                PART_ImageBrush.ImageSource = null;
+                return;
+            }
+
             var images = await ImageCollection.GetImagesAsync(1, 0);
             if (images.Count == 0)
+            {
+                PART_ImageBrush.ImageSource = null;
                 return;
+            }
 
             var image = images[0];
 
