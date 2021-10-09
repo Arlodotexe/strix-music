@@ -51,6 +51,17 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public Task InitAsync()
+        {
+            if (IsInitialized)
+                return Task.CompletedTask;
+
+            IsInitialized = true;
+
+            return InitImageCollectionAsync();
+        }
+
+        /// <inheritdoc />
         public event EventHandler<string>? DisplayNameChanged
         {
             add => _userProfile.DisplayNameChanged += value;
@@ -145,6 +156,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public DateTime? Birthdate => _userProfile.Birthdate;
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }

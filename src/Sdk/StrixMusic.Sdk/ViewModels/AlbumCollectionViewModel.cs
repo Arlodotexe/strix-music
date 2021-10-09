@@ -527,6 +527,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
 
+        /// <inheritdoc/>
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
         /// <inheritdoc />
         public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
 
@@ -572,9 +575,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc/>
         public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
-        /// <inheritdoc/>
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
-
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collection.Equals(other);
 
@@ -604,14 +604,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.AlbumCollection(this);
+            return Task.WhenAll(InitAlbumCollectionAsync(), InitImageCollectionAsync());
         }
 
         /// <inheritdoc />

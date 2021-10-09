@@ -899,11 +899,12 @@ namespace StrixMusic.Sdk.ViewModels
 
             IsInitialized = true;
 
-            return Task.WhenAll(CollectionInit.TrackCollection(this), CollectionInit.ArtistCollection(this));
+            return Task.WhenAll(InitImageCollectionAsync(), InitTrackCollectionAsync(), InitGenreCollectionAsync(), InitArtistCollectionAsync());
         }
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
         private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
         {
             Guard.IsNotNull(artistItem, nameof(artistItem));

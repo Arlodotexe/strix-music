@@ -1106,6 +1106,22 @@ namespace StrixMusic.Sdk.ViewModels
             CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
         }
 
+
+        /// <inheritdoc />
+        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+
+        /// <inheritdoc />
+        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+
+        /// <inheritdoc />
+        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
+
         /// <summary>
         /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
         /// </summary>
@@ -1218,21 +1234,6 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitPlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
-
-        /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
-
-        /// <inheritdoc />
-        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
-
-        /// <inheritdoc />
-        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
-
-        /// <inheritdoc />
-        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
-
-        /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
@@ -1273,7 +1274,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             IsInitialized = true;
 
-            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this), CollectionInit.PlaylistCollection(this), CollectionInit.TrackCollection(this));
+            return Task.WhenAll(InitImageCollectionAsync(), InitPlaylistCollectionAsync(), InitTrackCollectionAsync(), InitAlbumCollectionAsync(), InitArtistCollectionAsync());
         }
 
         private Task ChangeNameInternalAsync(string? name)

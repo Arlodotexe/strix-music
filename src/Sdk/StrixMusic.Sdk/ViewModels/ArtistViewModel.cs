@@ -474,6 +474,9 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _artist.AddedAt;
 
         /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
@@ -823,9 +826,6 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
-
-        /// <inheritdoc />
         public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
@@ -881,7 +881,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             IsInitialized = true;
 
-            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this));
+            return Task.WhenAll(InitAlbumCollectionAsync(), InitGenreCollectionAsync(), InitImageCollectionAsync(), InitTrackCollectionAsync());
         }
 
         private Task ChangeNameInternalAsync(string? name)

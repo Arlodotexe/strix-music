@@ -847,12 +847,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (!IsInitialized)
-                return;
+                return Task.CompletedTask;
 
-            await CollectionInit.ArtistCollection(this);
+            return Task.WhenAll(InitImageCollectionAsync(), InitArtistCollectionAsync(), InitArtistCollectionAsync());
         }
 
         /// <inheritdoc />

@@ -77,14 +77,14 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.ArtistCollection(this);
+            return Task.WhenAll(InitArtistCollectionAsync(), InitImageCollectionAsync());
         }
 
         private void AttachEvents()
@@ -542,7 +542,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitArtistCollectionAsync() => InitAsync();
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
 
         /// <inheritdoc />
         public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
@@ -588,9 +591,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);

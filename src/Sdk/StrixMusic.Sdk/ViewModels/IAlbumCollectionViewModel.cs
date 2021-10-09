@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
         public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection);
 
         /// <summary>
-        /// Loads the collection of <see cref="IAlbum"/> for the first time.
+        /// Loads the entire collection of <see cref="IAlbumCollectionItem"/> s and ensures all sources are merged.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task InitAlbumCollectionAsync();
