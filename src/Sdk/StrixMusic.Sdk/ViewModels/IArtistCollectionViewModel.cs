@@ -49,6 +49,17 @@ namespace StrixMusic.Sdk.ViewModels
         public SortDirection CurrentArtistSortingDirection { get; }
 
         /// <summary>
+        /// Loads the entire collection of <see cref="IArtistCollectionItem"/>s and ensures all sources are merged.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitArtistCollectionAsync();
+
+        /// <summary>
+        /// Initializes the list of the <see cref="IArtist"/>.
+        /// </summary>
+        public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
+
+        /// <summary>
         /// <inheritdoc cref="PopulateMoreArtistsAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }

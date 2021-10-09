@@ -67,6 +67,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(x => SortAlbumCollection(x, CurrentAlbumSortingDirection));
             ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType, x));
 
+            InitAlbumCollectionAsyncCommand = new AsyncRelayCommand(InitAlbumCollectionAsync);
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
 
             AttachEvents();
@@ -522,6 +525,15 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
+        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+
+        /// <inheritdoc/>
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
 
         /// <inheritdoc />
@@ -560,6 +572,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
+        /// <inheritdoc/>
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collection.Equals(other);
 
@@ -589,14 +604,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.AlbumCollection(this);
+            return Task.WhenAll(InitAlbumCollectionAsync(), InitImageCollectionAsync());
         }
 
         /// <inheritdoc />
