@@ -43,7 +43,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         }
 
         /// <summary>
-        /// The <see cref="GrooveAlbumCollectionViewModel"/> for the <see cref="Controls.Collections.GrooveAlbumCollection"/> on display in the home page.
+        /// The <see cref="GrooveAlbumCollectionViewModel"/> for the <see cref="Controls.Collections.GrooveAlbumCollection"/> on display in the <see cref="Controls.Pages.GrooveHomePage"/>.
         /// </summary>
         public GrooveAlbumCollectionViewModel? AlbumCollectionViewModel
         {

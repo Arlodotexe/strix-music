@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.ViewModels.Collections;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System;
 using Windows.UI;
@@ -12,6 +13,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
     public class GrooveArtistPageViewModel : ObservableObject, IGroovePageViewModel
     {
         private ArtistViewModel? _artistViewModel;
+        private GrooveAlbumCollectionViewModel? _albumCollectionViewModel;
         private Color? _backgroundColor;
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         public GrooveArtistPageViewModel(ArtistViewModel viewModel)
         {
             ViewModel = viewModel;
+            AlbumCollectionViewModel = new GrooveAlbumCollectionViewModel(viewModel);
         }
 
         /// <inheritdoc/>
@@ -36,6 +39,15 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         {
             get => _artistViewModel;
             set => SetProperty(ref _artistViewModel, value);
+        }
+
+        /// <summary>
+        /// The <see cref="GrooveAlbumCollectionViewModel"/> for the <see cref="Controls.Collections.GrooveAlbumCollection"/> in the <see cref="Controls.Pages.GrooveArtistPage"/>.
+        /// </summary>
+        public GrooveAlbumCollectionViewModel? AlbumCollectionViewModel
+        {
+            get => _albumCollectionViewModel;
+            set => SetProperty(ref _albumCollectionViewModel, value);
         }
 
         /// <summary>
