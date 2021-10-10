@@ -1,42 +1,24 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
-using Windows.UI.Xaml;
+﻿using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls.Collections
 {
+    /// <summary>
+    /// A <see cref="Control"/> for displaying <see cref="Sdk.ViewModels.TrackCollectionViewModel"/>s in the Groove Shell.
+    /// </summary>
     public partial class GrooveTrackCollection : Control
     {
-        public static readonly DependencyProperty TrackCollectionProperty =
-            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => d.Cast<GrooveTrackCollection>().OnTrackCollectionChanged()));
-
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(GrooveTrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null));
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrooveTrackCollection"/> class.
+        /// </summary>
         public GrooveTrackCollection()
         {
             this.DefaultStyleKey = typeof(GrooveTrackCollection);
         }
 
-        public ITrackCollectionViewModel? TrackCollection
-        {
-            get { return (ITrackCollectionViewModel?)GetValue(TrackCollectionProperty); }
-            set { SetValue(TrackCollectionProperty, value); }
-        }
-
-        public GrooveTrackCollectionViewModel? ViewModel
-        {
-            get { return (GrooveTrackCollectionViewModel?)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
-        }
-
-        private void OnTrackCollectionChanged()
-        {
-            if (TrackCollection != null)
-                ViewModel = new GrooveTrackCollectionViewModel(TrackCollection);
-            
-            //DataContext = ViewModel;
-        } 
+        /// <summary>
+        /// The ViewModel for a <see cref="GrooveTrackCollection"/>
+        /// </summary>
+        public GrooveTrackCollectionViewModel ViewModel => (GrooveTrackCollectionViewModel)DataContext;
     }
 }

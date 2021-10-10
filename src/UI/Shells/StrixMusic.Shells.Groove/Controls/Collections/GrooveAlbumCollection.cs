@@ -1,36 +1,24 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.Data.Merged;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
-using Windows.UI.Xaml;
+﻿using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls.Collections
 {
+    /// <summary>
+    /// A <see cref="Control"/> for displaying <see cref="Sdk.ViewModels.AlbumCollectionViewModel"/>s in the Groove Shell.
+    /// </summary>
     public partial class GrooveAlbumCollection : Control
     {
-        public static readonly DependencyProperty AlbumCollectionProperty =
-            DependencyProperty.Register(nameof(AlbumCollection), typeof(IAlbumCollectionViewModel), typeof(GrooveAlbumCollection), new PropertyMetadata(null, (d, e) => d.Cast<GrooveAlbumCollection>().OnAlbumCollectionChanged()));
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrooveAlbumCollection"/> class.
+        /// </summary>
         public GrooveAlbumCollection()
         {
             this.DefaultStyleKey = typeof(GrooveAlbumCollection);
-            DataContext = new GrooveAlbumCollectionViewModel();
         }
 
-        public IAlbumCollectionViewModel? AlbumCollection
-        {
-            get => (IAlbumCollectionViewModel)GetValue(AlbumCollectionProperty);
-            set => SetValue(AlbumCollectionProperty, value);
-        }
-
+        /// <summary>
+        /// The ViewModel for a <see cref="GrooveAlbumCollection"/>
+        /// </summary>
         public GrooveAlbumCollectionViewModel ViewModel => (GrooveAlbumCollectionViewModel)DataContext;
-
-        private void OnAlbumCollectionChanged()
-        {
-            if (AlbumCollection != null && ViewModel != null)
-                ViewModel.ViewModel = AlbumCollection;
-        }
     }
 }

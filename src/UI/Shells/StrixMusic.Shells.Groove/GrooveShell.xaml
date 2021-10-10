@@ -5,7 +5,7 @@
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vms="using:StrixMusic.Sdk.ViewModels"
+    xmlns:groovepvms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
@@ -22,13 +22,13 @@
 
             <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
-                    <DataTemplate x:DataType="vms:AlbumViewModel">
-                        <pages:GrooveAlbumPage Album="{x:Bind}"/>
+                    <DataTemplate x:DataType="groovepvms:GrooveAlbumPageViewModel">
+                        <pages:GrooveAlbumPage/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
-                    <DataTemplate x:DataType="vms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{x:Bind}"/>
+                    <DataTemplate x:DataType="groovepvms:GrooveHomePageViewModel">
+                        <pages:GrooveHomePage/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
             </selectors:MainContentTemplateSelector>
@@ -99,8 +99,8 @@
 
         <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
                    PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
-                   PaneOpening="OnPaneOpening" PaneClosing="OnPaneClosing"
-                   PaneClosed="OnPaneClosed">
+                   PaneOpening="OnPaneStateChanged" PaneClosing="OnPaneStateChanged"
+                   PaneClosed="OnPaneStateChanged">
             <SplitView.Content>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -121,7 +121,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Hamburger Button-->
-                        <Button Width="48" Style="{StaticResource GrooveButton}" Grid.Row="1" Click="HamburgerToggled">
+                        <Button Width="48" Style="{StaticResource GrooveButton}" Grid.Row="1" Command="{x:Bind HamburgerPressedCommand}">
                             <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
@@ -137,7 +137,7 @@
                     </Grid>
 
                     <!--Large Header-->
-                    <Grid x:Name="LargeHeaderWrapper">
+                    <Grid x:Name="LargeHeaderWrapper" Visibility="{x:Bind ShowLargeHeader, Mode=OneWay}">
                         <TextBlock x:Name="LargeHeaderText" Text="{x:Bind Title, Mode=OneWay}" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
                     </Grid>
 
@@ -156,7 +156,7 @@
 
                     <StackPanel Grid.Row="1">
                         <!--Hamburger Button-->
-                        <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
+                        <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Command="{x:Bind HamburgerPressedCommand}">
                             <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
@@ -168,7 +168,7 @@
                                         Margin="8" QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
-                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}">
+                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked" Tag="{x:Bind ViewModel.Library}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -180,7 +180,7 @@
                                 <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}">
+                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -193,7 +193,7 @@
                                 <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}">
+                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -216,7 +216,7 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}">
+                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>
@@ -270,6 +270,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
     </Grid>
 </shells:Shell>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
@@ -7,6 +8,7 @@ using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
+using StrixMusic.Shells.Groove.ViewModels.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -15,26 +17,41 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace StrixMusic.Shells.Groove
 {
     public sealed partial class GrooveShell : Shell
     {
+        /// <summary>
+        /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
+        /// </summary>
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(GrooveShell), new PropertyMetadata(null));
+
+        /// <summary>
+        /// A backing <see cref="DependencyProperty"/> for the <see cref="ShowLargeHeader"/> property.
+        /// </summary>
+        public static readonly DependencyProperty ShowLargeHeaderProperty =
+            DependencyProperty.Register(nameof(ShowLargeHeader), typeof(bool), typeof(GrooveShell), new PropertyMetadata(true));
 
         private ILocalizationService? _localizationService;
 
         private NotificationsViewModel? _notificationsViewModel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrooveShell"/> class.
+        /// </summary>
         public GrooveShell()
         {
             this.InitializeComponent();
 
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
-                (s, e) => NavigatePage(e.PageData));
+                (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData))); 
             WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this,
-                (s, e) => NavigatePage(e.PageData));
+                (s, e) => NavigatePage(new GrooveAlbumPageViewModel(e.PageData)));
+
+            HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
             DataContextChanged += GrooveShell_DataContextChanged;
         }
@@ -51,11 +68,28 @@ namespace StrixMusic.Shells.Groove
 
         private NotificationsViewModel? NotificationsViewModel => _notificationsViewModel;
 
+        /// <summary>
+        /// Gets or sets the Title text for the Groove Shell.
+        /// </summary>
+        public bool ShowLargeHeader
+        {
+            get { return (bool)GetValue(ShowLargeHeaderProperty); }
+            set { SetValue(ShowLargeHeaderProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the Title text for the Groove Shell.
+        /// </summary>
         public string Title
         {
             get { return (string)GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
         }
+
+        /// <summary>
+        /// Gets a Command that handles a Hamburger button press.
+        /// </summary>
+        public RelayCommand HamburgerPressedCommand { get; }
 
         /// <inheritdoc/>
         protected override void SetupTitleBar()
@@ -97,25 +131,25 @@ namespace StrixMusic.Shells.Groove
             return notificationsViewModel;
         }
 
-        private void HamburgerToggled(object sender, RoutedEventArgs e)
+        private void NavigationButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is ToggleButton button)
+            {
+                switch (button.Tag)
+                {
+                    case LibraryViewModel library:
+                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequested(library));
+                        break;
+                }
+            }
+        }
+
+        private void HamburgerToggled()
         {
             MainSplitView.IsPaneOpen = !MainSplitView.IsPaneOpen;
         }
 
-        private void OnPaneOpening(SplitView sender, object e)
-        {
-            UpdatePaneState();
-        }
-
-        private void OnPaneClosing(SplitView sender, object e)
-        {
-            UpdatePaneState();
-        }
-
-        private void OnPaneClosed(SplitView sender, object e)
-        {
-            UpdatePaneState();
-        }
+        private void OnPaneStateChanged(SplitView sender, object e) => UpdatePaneState();
 
         private void UpdatePaneState()
         {
@@ -130,21 +164,37 @@ namespace StrixMusic.Shells.Groove
         }
 
         private void NavigatePage<T>(T viewModel)
-            where T : class
+            where T : IGroovePageViewModel
         {
-            string titleResource = viewModel switch
-            {
-                AlbumViewModel _ => "Album",
-                ArtistViewModel _ => "Artist",
-                LibraryViewModel _ => "MyMusic",
-                PlaylistViewModel _ => "Playlist",
-                _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(),
-            };
-
             MainContent.Content = viewModel;
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
-            Title = _localizationService["Music", titleResource];
+            Title = _localizationService["Music", viewModel.PageTitleResource];
+            ShowLargeHeader = viewModel.ShowLargeHeader;
+
+            UpdateSelectedNavigationButton(viewModel);
+        }
+
+        private void UpdateSelectedNavigationButton<T>(T viewModel)
+        {
+            ToggleButton? button = viewModel switch
+            {
+                GrooveHomePageViewModel _ => MyMusicButton,
+                _ => null,
+            };
+
+            // Check if a new navigation button will be set
+            if (button != null)
+            {
+                // Reset all toggled 
+                MyMusicButton.IsChecked = false;
+                RecentButton.IsChecked = false;
+                NowPlayingButton.IsChecked = false;
+                PlaylistsButton.IsChecked = false;
+
+                // Set the active navigation button
+                button.IsChecked = true;
+            }
         }
     }
 }

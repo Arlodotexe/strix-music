@@ -16,6 +16,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.0.0" />
     <PackageReference Include="Uno.UI" Version="3.10.11" />
   </ItemGroup>
@@ -30,6 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="GrooveShell.xaml" />
+    <None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
+    <None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
     <None Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
     <None Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <None Remove="Style\AlbumViewStyle.xaml" />
@@ -40,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="GrooveShell.xaml" />
+    <UpToDateCheckInput Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Style\AlbumViewStyle.xaml" />
@@ -55,6 +63,9 @@
     <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Styles\Shells\NowPlayingBarStyle.xaml.cs">
       <DependentUpon>NowPlayingBarStyle.xaml</DependentUpon>
     </Compile>
@@ -84,5 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Styles\NowPlaying\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\stylecop.json" />
   </ItemGroup>
 </Project>
