@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
+using Newtonsoft.Json;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
@@ -190,7 +191,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             if (bytes.Length == 0)
                 return;
 
-            var data = MessagePackSerializer.Deserialize<List<ImageMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var str = System.Text.Encoding.UTF8.GetString(bytes);
+            var data = JsonConvert.DeserializeObject<List<ImageMetadata>>(str);
 
             await _storageMutex.WaitAsync();
 
@@ -213,10 +215,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             await _storageMutex.WaitAsync();
 
             Guard.IsNotNull(_folderData, nameof(_folderData));
-            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var json = JsonConvert.SerializeObject(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList());
 
             var fileData = await _folderData.CreateFileAsync(IMAGE_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
-            await fileData.WriteAllBytesAsync(bytes);
+            await fileData.WriteAllBytesAsync(System.Text.Encoding.UTF8.GetBytes(json));
 
             _storageMutex.Release();
         }
