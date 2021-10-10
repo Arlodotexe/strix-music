@@ -6,26 +6,26 @@ using Windows.UI;
 
 namespace StrixMusic.Shells.Groove.ViewModels.Pages
 {
-    public class GrooveAlbumPageViewModel : ObservableObject, IGroovePageViewModel
+    public class GroovePlaylistPageViewModel : ObservableObject, IGroovePageViewModel
     {
-        private AlbumViewModel? _albumViewModel;
+        private PlaylistViewModel? _playlistViewModel;
         private Color? _backgroundColor;
 
-        public GrooveAlbumPageViewModel(AlbumViewModel viewModel)
+        public GroovePlaylistPageViewModel(PlaylistViewModel viewModel)
         {
             ViewModel = viewModel;
         }
 
         public event EventHandler? ViewModelSet;
 
-        public string PageTitleResource => "Album";
+        public string PageTitleResource => "MyMusic";
 
-        public AlbumViewModel? ViewModel
+        public PlaylistViewModel? ViewModel
         {
-            get => _albumViewModel;
+            get => _playlistViewModel;
             set
             {
-                SetProperty(ref _albumViewModel, value);
+                SetProperty(ref _playlistViewModel, value);
                 ViewModelSet?.Invoke(this, EventArgs.Empty);
             }
         }

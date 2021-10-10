@@ -27,14 +27,16 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
 
         public GrooveTrackCollectionViewModel? ViewModel
         {
-            get { return (GrooveTrackCollectionViewModel?)GetValue(TrackCollectionProperty); }
-            set { SetValue(TrackCollectionProperty, value); }
+            get { return (GrooveTrackCollectionViewModel?)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
         private void OnTrackCollectionChanged()
         {
             if (TrackCollection != null)
                 ViewModel = new GrooveTrackCollectionViewModel(TrackCollection);
+            
+            //DataContext = ViewModel;
         } 
     }
 }

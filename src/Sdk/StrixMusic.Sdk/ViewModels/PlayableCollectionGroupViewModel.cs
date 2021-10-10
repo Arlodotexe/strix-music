@@ -1106,7 +1106,6 @@ namespace StrixMusic.Sdk.ViewModels
             CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
         }
 
-
         /// <inheritdoc />
         public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
 

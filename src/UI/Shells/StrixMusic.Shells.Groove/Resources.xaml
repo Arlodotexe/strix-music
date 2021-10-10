@@ -21,11 +21,11 @@
 
 
         <!--Collection related styles-->
-        <!--<collectionstyles:AlbumCollectionStyle/>
+        <collectionstyles:AlbumCollectionStyle/>
         <collectionstyles:PanePlaylistCollectionStyle/>
         <collectionstyles:PlaylistCollectionStyle/>
         <collectionstyles:TrackCollectionStyle/>
-        <collectionstyles:ArtistCollectionStyle/>-->
+        <!--<collectionstyles:ArtistCollectionStyle/>-->
 
 
         <!--Item related styles-->
