@@ -46,7 +46,7 @@
         <!--Page related styles-->
         <pagestyles:GrooveHomePageStyle/>
         <pagestyles:GrooveAlbumPageStyle/>
-        <!--<pagestyles:GrooveArtistPageStyle/>-->
+        <pagestyles:GrooveArtistPageStyle/>
         <!--<dviewstyles:SettingsViewStyle/>-->
 
 

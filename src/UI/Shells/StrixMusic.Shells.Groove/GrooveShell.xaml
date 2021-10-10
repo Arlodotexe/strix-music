@@ -26,6 +26,11 @@
                         <pages:GrooveAlbumPage/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
+                <selectors:MainContentTemplateSelector.ArtistPageTemplate>
+                    <DataTemplate x:DataType="groovepvms:GrooveArtistPageViewModel">
+                        <pages:GrooveArtistPage/>
+                    </DataTemplate>
+                </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="groovepvms:GrooveHomePageViewModel">
                         <pages:GrooveHomePage/>

@@ -36,6 +36,7 @@
     <None Remove="GrooveShell.xaml" />
     <None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
     <None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
+    <None Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
     <None Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
     <None Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <None Remove="Style\AlbumViewStyle.xaml" />
@@ -48,6 +49,7 @@
     <UpToDateCheckInput Remove="GrooveShell.xaml" />
     <UpToDateCheckInput Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Style\AlbumViewStyle.xaml" />

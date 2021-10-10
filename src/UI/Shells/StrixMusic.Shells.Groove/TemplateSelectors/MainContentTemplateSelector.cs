@@ -9,6 +9,8 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
     {
         public DataTemplate? AlbumPageTemplate { get; set; }
 
+        public DataTemplate? ArtistPageTemplate { get; set; }
+
         public DataTemplate? HomePageTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
@@ -18,6 +20,9 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
                 case GrooveAlbumPageViewModel _:
                     Guard.IsNotNull(AlbumPageTemplate, nameof(AlbumPageTemplate));
                     return AlbumPageTemplate;
+                case GrooveArtistPageViewModel _:
+                    Guard.IsNotNull(ArtistPageTemplate, nameof(ArtistPageTemplate));
+                    return ArtistPageTemplate;
                 case GrooveHomePageViewModel _:
                     Guard.IsNotNull(HomePageTemplate, nameof(HomePageTemplate));
                     return HomePageTemplate;

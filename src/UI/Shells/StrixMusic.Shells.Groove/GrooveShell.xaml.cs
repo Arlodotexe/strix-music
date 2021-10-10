@@ -47,9 +47,11 @@ namespace StrixMusic.Shells.Groove
             this.InitializeComponent();
 
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData))); 
+                (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData)));
             WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this,
                 (s, e) => NavigatePage(new GrooveAlbumPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequested>(this,
+                (s, e) => NavigatePage(new GrooveArtistPageViewModel(e.PageData)));
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 

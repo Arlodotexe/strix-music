@@ -1,0 +1,142 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:groovepages="using:StrixMusic.Shells.Groove.Controls.Pages"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
+    xmlns:pagevms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveArtistPageStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="../../Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="GrooveArtistPageTemplate" x:DataType="pagevms:GrooveArtistPageViewModel">
+        <ScrollViewer>
+            <UserControl>
+                <Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="Sizes">
+                            <VisualState x:Name="Small">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="0"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="ArtistCoverColumn.Width" Value="224"/>
+                                    <Setter Target="ArtistCoverRow.Height" Value="224"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Mid">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="600"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="ArtistCoverColumn.Width" Value="300"/>
+                                    <Setter Target="ArtistCoverRow.Height" Value="300"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition x:Name="ArtistCoverRow" Height="300"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">
+                        <!--<Grid.Resources>
+                            <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
+                                        Storyboard.TargetName="TitleGrid" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
+                                <ColorAnimation To="{x:Bind BackgroundColor, Mode=OneWay}">
+                                    <ColorAnimation.EasingFunction>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
+                                    </ColorAnimation.EasingFunction>
+                                </ColorAnimation>
+                            </Storyboard>
+                        </Grid.Resources>-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="ArtistCoverColumn" Width="300"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32"
+                                     ImageCollection="{x:Bind ViewModel, Mode=OneWay}"
+                                     HorizontalAlignment="Center"
+                                     Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+
+                        <Grid Grid.Column="1" Margin="0,32,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Text="{x:Bind ViewModel.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                                       LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+                            
+                            <!--TODO: Optional artist bio-->
+                            <!--<TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0" Text="
+                                            Mixing well-read indie rock with joyful, Afro-pop-inspired melodies and rhythms, Vampire Weekend grew from one of the first bands
+                                            to be championed by music bloggers into a chart topping, Grammy Award-winning act that helped define the sound of indie music in the late 2000s and 2010s.
+                                            After establishing the foundations of their bright, intircate style of indie music with 2008's Vampire Weekend, the band soon became hugely successful;
+                                            they're the first indie rock act to have consecutive albums (2010's Contra and 2013's Modern Vampires of the City) enter the Billboard 200 at number one.
+                                            With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style." />-->
+                            <!--<HyperlinkButton x:Name="BioMoreButton" Content="More" Grid.Row="2" Visibility="{Binding BioText.IsTextTrimmed}" HorizontalAlignment="Right" Margin="0,0,32,0" Padding="0,0,0,0"/>-->
+                        </Grid>
+
+                        <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
+                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Background="Transparent">
+                            <AppBarButton x:Uid="/Music/PlayABB" Label="Play" Style="{StaticResource QuickActionButton}">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton x:Uid="/Common/SaveABB" Icon="Save" Label="Save" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton x:Uid="/Common/AddToABB" Icon="Add" Label="Add to" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton x:Uid="/Common/ShareABB" Icon="Share" Label="Share" Style="{StaticResource QuickActionButton}"/>
+                        </CommandBar>
+                    </Grid>
+
+                    <Pivot Grid.Row="1">
+                        <PivotItem x:Uid="/Music/SongsPVI" Header="Songs">
+                            <!--<defaultcontrols:TrackCollection/>-->
+                        </PivotItem>
+                        <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
+                            <collections:AlbumCollection/>
+                        </PivotItem>
+                        <PivotItem x:Uid="/Music/SimilarArtistsPVI" Header="Similar Artists">
+                            <!--<defaultcontrols:AlbumCollection/>-->
+                        </PivotItem>
+                    </Pivot>
+                </Grid>
+            </UserControl>
+        </ScrollViewer>
+    </DataTemplate>
+
+    <Style x:Key="GrooveArtistPageStyle" TargetType="groovepages:GrooveArtistPage">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="groovepages:GrooveArtistPage">
+                        <ContentControl ContentTemplate="{StaticResource GrooveArtistPageTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource GrooveArtistPageStyle}" TargetType="groovepages:GrooveArtistPage"/>
+
+</ResourceDictionary>
