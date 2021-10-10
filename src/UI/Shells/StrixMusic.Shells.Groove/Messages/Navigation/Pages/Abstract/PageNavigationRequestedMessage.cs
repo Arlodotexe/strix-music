@@ -1,10 +1,12 @@
 ﻿namespace StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract
 {
-    public abstract class PageNavigationRequestedMessage<T>
-        where T : class
+    public abstract class PageNavigationRequestedMessage
     {
-        protected PageNavigationRequestedMessage(T data) => PageData = data;
+        public PageNavigationRequestedMessage(bool record = true)
+        {
+            RecordNavigation = record;
+        }
 
-        public T PageData { get; }
+        public bool RecordNavigation { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
+using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
@@ -54,6 +55,8 @@ namespace StrixMusic.Shells.Groove
                 (s, e) => NavigatePage(new GrooveArtistPageViewModel(e.PageData)));
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
+
+            NavigationTracker.Instance.Initialize();
 
             DataContextChanged += GrooveShell_DataContextChanged;
         }
@@ -107,6 +110,12 @@ namespace StrixMusic.Shells.Groove
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            currentView.BackRequested += CurrentView_BackRequested;
+        }
+
+        private void CurrentView_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            NavigationTracker.Instance.NavigateBackwards();
         }
 
         /// <inheritdoc />
