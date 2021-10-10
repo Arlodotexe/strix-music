@@ -1,16 +1,16 @@
-﻿using StrixMusic.Shells.Groove.Controls.Pages.Abstract;
-using StrixMusic.Shells.Groove.ViewModels.Pages;
+﻿using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls.Pages
 {
-    public partial class GrooveArtistPage : GroovePageControl<ArtistViewViewModel>
+    public partial class GrooveArtistPage : Control
     {
         /// <summary>
         /// The backing dependency property for <see cref="ViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(ArtistViewViewModel), typeof(GrooveArtistPage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ViewModel), typeof(GrooveArtistPageViewModel), typeof(GrooveArtistPage), new PropertyMetadata(null));
 
         public GrooveArtistPage()
         {
@@ -18,11 +18,11 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         }
 
         /// <summary>
-        /// The <see cref="ArtistViewViewModel"/> for the <see cref="GrooveArtistPage"/> template.
+        /// The <see cref="GrooveArtistPageViewModel"/> for the <see cref="GrooveArtistPage"/> template.
         /// </summary>
-        public ArtistViewViewModel? ViewModel
+        public GrooveArtistPageViewModel? ViewModel
         {
-            get { return (ArtistViewViewModel)GetValue(ViewModelProperty); }
+            get { return (GrooveArtistPageViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
     }

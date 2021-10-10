@@ -1,15 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
-using StrixMusic.Shells.Groove.Controls.Pages;
-using StrixMusic.Shells.Groove.Controls.Pages.Abstract;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
-using StrixMusic.Shells.Groove.ViewModels.Pages;
-using StrixMusic.Shells.Groove.ViewModels.Pages.Abstract;
+using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -26,6 +24,7 @@ namespace StrixMusic.Shells.Groove
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(GrooveShell), new PropertyMetadata(null));
 
         private ILocalizationService? _localizationService;
+
         private NotificationsViewModel? _notificationsViewModel;
 
         public GrooveShell()
@@ -33,9 +32,9 @@ namespace StrixMusic.Shells.Groove
             this.InitializeComponent();
 
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
-                (s, e) => NavigatePage<HomeViewViewModel, LibraryViewModel, GrooveHomePage>(new HomeViewViewModel(e.PageData), new GrooveHomePage()));
+                (s, e) => NavigatePage(e.PageData));
             WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this,
-                (s, e) => NavigatePage<AlbumViewViewModel, AlbumViewModel, GrooveAlbumPage>(new AlbumViewViewModel(e.PageData), new GrooveAlbumPage()));
+                (s, e) => NavigatePage(e.PageData));
 
             DataContextChanged += GrooveShell_DataContextChanged;
         }
@@ -45,7 +44,7 @@ namespace StrixMusic.Shells.Groove
             DataContextChanged -= GrooveShell_DataContextChanged;
 
             if (ViewModel?.Library != null)
-                _ = WeakReferenceMessenger.Default.Send(HomeViewNavigationRequested.To(ViewModel.Library));
+                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequested(ViewModel.Library));
         }
 
         private MainViewModel ViewModel => (MainViewModel)DataContext;
@@ -130,18 +129,22 @@ namespace StrixMusic.Shells.Groove
             }
         }
 
-        private void NavigatePage<T, TData, TControl>(T viewModel, TControl control)
-            where T : GroovePageViewModel<TData>
-            where TData : class
-            where TControl : GroovePageControl<T>
+        private void NavigatePage<T>(T viewModel)
+            where T : class
         {
-            control.DataContext = viewModel;
-            MainContent.Content = control;
-
-            if (_localizationService != null)
+            string titleResource = viewModel switch
             {
-                Title = _localizationService["Music", viewModel.PageTitleResource];
-            }
+                AlbumViewModel _ => "Album",
+                ArtistViewModel _ => "Artist",
+                LibraryViewModel _ => "MyMusic",
+                PlaylistViewModel _ => "Playlist",
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(),
+            };
+
+            MainContent.Content = viewModel;
+
+            Guard.IsNotNull(_localizationService, nameof(_localizationService));
+            Title = _localizationService["Music", titleResource];
         }
     }
 }

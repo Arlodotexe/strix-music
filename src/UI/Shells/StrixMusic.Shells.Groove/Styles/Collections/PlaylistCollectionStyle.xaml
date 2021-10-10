@@ -6,11 +6,19 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:OwlCore.Uno.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PlaylistCollectionStyle">
+    
+    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
     <DataTemplate x:Key="GroovePlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists}" Padding="16,16,16,112"
                   HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+            <!--<interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="ItemClicked">
+                    <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>-->
             <GridView.Header>
                 <Grid>
                     <ProgressRing IsActive="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
@@ -19,13 +27,7 @@
             </GridView.Header>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <items:GroovePlaylistItem x:Name="PlaylistItem">
-                        <!--<interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Tapped">
-                                <core:InvokeCommandAction Command="{Binding ElementName=PlaylistItem, Path=NavigateToPlaylistCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                            </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>-->
-                    </items:GroovePlaylistItem>
+                    <items:GroovePlaylistItem/>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

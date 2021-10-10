@@ -6,10 +6,5 @@ namespace StrixMusic.Shells.Groove.Messages.Navigation.Pages
     public sealed class ArtistViewNavigationRequested : PageNavigationRequestedMessage<ArtistViewModel>
     {
         public ArtistViewNavigationRequested(ArtistViewModel viewModel) : base(viewModel) { }
-
-        public static ArtistViewNavigationRequested To(ArtistViewModel viewModel)
-        {
-            return new ArtistViewNavigationRequested(viewModel);
-        }
     }
 }

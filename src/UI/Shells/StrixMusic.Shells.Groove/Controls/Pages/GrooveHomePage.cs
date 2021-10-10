@@ -1,16 +1,25 @@
-﻿using StrixMusic.Shells.Groove.Controls.Pages.Abstract;
+﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls.Pages
 {
-    public partial class GrooveHomePage : GroovePageControl<HomeViewViewModel>
+    public partial class GrooveHomePage : Control
     {
         /// <summary>
         /// The backing dependency property for <see cref="ViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(HomeViewViewModel), typeof(GrooveHomePage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ViewModel), typeof(GrooveHomePageViewModel), typeof(GrooveHomePage), new PropertyMetadata(null));
+
+        /// <summary>
+        /// The backing dependency property for <see cref="Library"/>.
+        /// </summary>
+        public static readonly DependencyProperty LibraryProperty =
+            DependencyProperty.Register(nameof(Library), typeof(AlbumViewModel), typeof(GrooveAlbumPage), new PropertyMetadata(null, (d, e) => d.Cast<GrooveHomePage>().OnLibraryChanged()));
 
         public GrooveHomePage()
         {
@@ -18,12 +27,27 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         }
 
         /// <summary>
-        /// The <see cref="HomeViewViewModel"/> for the <see cref="GrooveHomePage"/> template.
+        /// The <see cref="LibraryViewModel"/> for the <see cref="GrooveHomePage"/> template.
         /// </summary>
-        public HomeViewViewModel? ViewModel
+        public LibraryViewModel? Library
         {
-            get { return (HomeViewViewModel)GetValue(ViewModelProperty); }
+            get { return (LibraryViewModel)GetValue(LibraryProperty); }
+            set { SetValue(LibraryProperty, value); }
+        }
+
+        /// <summary>
+        /// The <see cref="GrooveHomePageViewModel"/> for the <see cref="GrooveHomePage"/> template.
+        /// </summary>
+        public GrooveHomePageViewModel? ViewModel
+        {
+            get { return (GrooveHomePageViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
+        }
+
+        private void OnLibraryChanged()
+        {
+            Guard.IsNotNull(Library, nameof(Library));
+            ViewModel = new GrooveHomePageViewModel(Library);
         }
     }
 }

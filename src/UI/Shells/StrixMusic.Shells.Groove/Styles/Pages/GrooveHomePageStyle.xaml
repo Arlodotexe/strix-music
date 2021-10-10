@@ -6,7 +6,7 @@
     xmlns:vmpages="using:StrixMusic.Shells.Groove.ViewModels.Pages"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveHomePageStyle">
 
-    <DataTemplate x:Key="GrooveHomePageTemplate" x:DataType="vmpages:HomeViewViewModel">
+    <DataTemplate x:Key="GrooveHomePageTemplate" x:DataType="vmpages:GrooveHomePageViewModel">
         <shells:PlayableCollectionGroupPivot RestoreSelectedPivot="True" DataContext="{x:Bind ViewModel}">
             <shells:PlayableCollectionGroupPivot.AllEmptyContent>
                 <TextBlock Text="Nothing to show!" />

@@ -6,10 +6,5 @@ namespace StrixMusic.Shells.Groove.Messages.Navigation.Pages
     public class HomeViewNavigationRequested : PageNavigationRequestedMessage<LibraryViewModel>
     {
         public HomeViewNavigationRequested(LibraryViewModel viewModel) : base(viewModel) { }
-
-        public static HomeViewNavigationRequested To(LibraryViewModel viewModel)
-        {
-            return new HomeViewNavigationRequested(viewModel);
-        }
     }
 }

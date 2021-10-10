@@ -6,7 +6,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
     {
         public GroovePlaylistCollection()
         {
-            this.DefaultStyleKey = typeof(GrooveArtistCollection);
+            this.DefaultStyleKey = typeof(GroovePlaylistCollection);
         }
     }
 }
