@@ -8,6 +8,7 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
     xmlns:pagevms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    xmlns:colorconvert="using:OwlCore.Uno.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveAlbumPageStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -49,7 +50,8 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">
+                    <Grid x:Name="TitleGrid" Background="{x:Bind colorconvert:ColorToSolidColorBrushConverter.Convert(BackgroundColor), Mode=OneWay}">
+                    <!--<Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">-->
                         <!--<Grid.Resources>
                             <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
                                         Storyboard.TargetName="TitleGrid" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">

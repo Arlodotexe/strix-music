@@ -1,7 +1,10 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
+using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.Groove.ViewModels.Pages
 {
@@ -20,6 +23,8 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         public GrooveAlbumPageViewModel(AlbumViewModel viewModel)
         {
             ViewModel = viewModel;
+
+            GetColor();
         }
 
         /// <inheritdoc/>
@@ -44,6 +49,29 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         {
             get => _backgroundColor;
             set => SetProperty(ref _backgroundColor, value);
+        }
+
+        private async void GetColor()
+        {
+            BackgroundColor = await Task.Run(async () =>
+            {
+                if (ViewModel != null)
+                {
+                    // Load images if there aren't images loaded.
+                    if (ViewModel.Images.Count == 0)
+                    {
+                        await ViewModel.InitImageCollectionAsync();
+                    }
+
+                    // If there are now images, grab the color from the first image.
+                    if (ViewModel.Images.Count != 0)
+                    {
+                         return await DynamicColorHelper.GetImageAccentColorAsync(ViewModel.Images[0]);
+                    }
+                }
+
+                return Colors.Transparent;
+            });
         }
     }
 }
