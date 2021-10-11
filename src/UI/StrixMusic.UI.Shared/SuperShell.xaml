@@ -62,8 +62,8 @@
 
     <Grid x:Name="RootGrid" Background="{ThemeResource SuperShellBackgroundBrush}" BorderBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}" BorderThickness="2" CornerRadius="4">
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="WindowSizesLogo">
-                <VisualState x:Name="WindowSizesLogoNormal">
+            <VisualStateGroup x:Name="WindowSizes">
+                <VisualState x:Name="Normal">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowHeight="755" />
                     </VisualState.StateTriggers>
@@ -72,7 +72,7 @@
                         <Setter Target="MainPivot.MinHeight" Value="550" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="WindowSizesLogoShort">
+                <VisualState x:Name="Minimum">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowHeight="0" />
                     </VisualState.StateTriggers>
