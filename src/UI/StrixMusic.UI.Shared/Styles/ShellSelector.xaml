@@ -32,7 +32,7 @@
 
     <DataTemplate x:Key="DefaultShellSelector" x:DataType="viewModels1:ShellSelectorViewModel">
         <ScrollViewer>
-            <StackPanel MinHeight="500" Spacing="10">
+            <StackPanel MinHeight="350" Spacing="10">
                 <Grid>
                     <UserControl>
                         <Grid Visibility="{x:Bind visibilityConverters:InverseBoolToVisibilityConverter.Convert(PreferredShell.IsFullyResponsive), Mode=OneWay}">
