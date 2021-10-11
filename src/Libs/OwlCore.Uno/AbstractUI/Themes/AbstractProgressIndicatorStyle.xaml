@@ -32,6 +32,7 @@
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
+                       TextWrapping="WrapWholeWords"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <ProgressBar Value="{x:Bind Value, Mode=OneWay}" Minimum="{x:Bind Minimum, Mode=OneWay}" Maximum="{x:Bind Maximum, Mode=OneWay}" IsIndeterminate="{x:Bind IsIndeterminate, Mode=OneWay}"/>

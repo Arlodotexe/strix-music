@@ -96,23 +96,24 @@
                         </Grid>
 
                         <Border Grid.Column="1" Grid.RowSpan="2" Margin="0,0,5,0" Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(IconCode)}"
-                                    Height="65" Width="60">
+                                Height="65" Width="60">
                             <FontIcon Glyph="{Binding IconCode, Mode=OneWay}" FontFamily="Segoe MDL2 Assets" FontSize="42" />
                         </Border>
 
                         <Image Grid.Column="1" Grid.RowSpan="2" Margin="0,0,5,0" Visibility="{x:Bind convertvis:BoolToVisibilityConverter.Convert(ImageSourceIsValid)}"
-                                   x:Name="Thumbnail"
-                                   MaxHeight="60" MaxWidth="60"
-                                   Source="{Binding ImageSource, Mode=OneWay}" />
+                               x:Name="Thumbnail"
+                               MaxHeight="60" MaxWidth="60"
+                               Source="{Binding ImageSource, Mode=OneWay}" />
 
                         <TextBlock Grid.Column="2" Text="{Binding Title, Mode=OneWay}" FontSize="20" VerticalAlignment="Center"
                                    Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
 
                         <TextBlock x:Name="SubtitleTextBlock" Grid.Column="2" Grid.Row="1"
-                                       VerticalAlignment="Center"
-                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"
-                                       Text="{Binding Subtitle, Mode=OneWay}"
-                                       FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
+                                   VerticalAlignment="Center"
+                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"
+                                   Text="{Binding Subtitle, Mode=OneWay}"
+                                   TextWrapping="WrapWholeWords"
+                                   FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

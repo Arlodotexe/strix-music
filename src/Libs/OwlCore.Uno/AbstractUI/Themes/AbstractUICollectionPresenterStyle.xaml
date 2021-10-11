@@ -89,6 +89,7 @@
 
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" 
                        FontSize="16" Opacity="0.7"
+                       TextWrapping="WrapWholeWords"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <ItemsControl ItemsSource="{x:Bind Items}"
