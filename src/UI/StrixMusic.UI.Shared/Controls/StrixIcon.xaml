@@ -26,14 +26,14 @@
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
                 <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="1.1"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
                 <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="1.1"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
                 <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
