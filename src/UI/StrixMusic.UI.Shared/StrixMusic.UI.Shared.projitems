@@ -75,6 +75,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Bonkers.otf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SegoeMDL2.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />

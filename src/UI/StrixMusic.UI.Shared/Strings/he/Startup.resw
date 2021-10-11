@@ -141,4 +141,10 @@
   <data name="SplashScreenImageSVGIS.UriSource" xml:space="preserve">
     <value>ms-appx:///Assets/Strix/he/Splash Screen.svg</value>
   </data>
+  <data name="StrixMusicMusicTB.Text" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="StrixMusicStrixTB.Text" xml:space="preserve">
+    <value>סטריקס</value>
+  </data>
 </root>

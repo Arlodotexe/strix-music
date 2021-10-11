@@ -70,6 +70,9 @@ namespace StrixMusic.Shared
         public AppLoadingView()
         {
             this.InitializeComponent();
+
+            Animation.Begin();
+
             _textStorageService = new TextStorageService();
             _settingsService = new DefaultSettingsService(_textStorageService);
 

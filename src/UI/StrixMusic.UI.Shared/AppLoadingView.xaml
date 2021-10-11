@@ -7,17 +7,113 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <Storyboard x:Name="Animation" RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.025"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.025"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
     <Grid Background="#1E1E23">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Viewbox Grid.Row="1" Height="315" MaxWidth="612" Stretch="Uniform" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Margin="0" Height="150" Width="740" RenderTransformOrigin="0.5,0.5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-        <Image Stretch="UniformToFill" Height="315" MaxWidth="612">
-            <Image.Source>
-                <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Splash Screen.svg"
-                                RasterizePixelHeight="315" RasterizePixelWidth="612" />
-            </Image.Source>
-        </Image>
+                <TextBlock x:Uid="/Startup/StrixMusicStrixTB" Text="Strix" FontSize="72" Margin="20,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       FontFamily="ms-appx://Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
+                       Foreground="#9F9F9F"/>
 
-        <StackPanel VerticalAlignment="Center" Margin="0,315,0,0">
+                <!--Icon-->
+                <Canvas Canvas.Left="450" Width="100" Grid.Column="1" FlowDirection="LeftToRight">
+                    <Rectangle x:Name="TopRect" Height="27.39" Width="55.14" RadiusX="4" RadiusY="4"
+                       Canvas.Left="28.211" Canvas.Top="17.303" RenderTransformOrigin="0.5,0.5">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFAD44E1"/>
+                                <GradientStop Color="#FFCC37E4" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.RenderTransform>
+                            <CompositeTransform Rotation="45.45"/>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                    <Rectangle x:Name="MidRect" Height="27.39" Width="105.4" RadiusX="4" RadiusY="4"
+                       Canvas.Left="-5.895" Canvas.Top="61.056" RenderTransformOrigin="0.5,0.5">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFC94EDD"/>
+                                <GradientStop Color="#FFAD44E1" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.RenderTransform>
+                            <CompositeTransform Rotation="45.45"/>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                    <Rectangle x:Name="BotRect" Height="27.39" Width="58.1" RadiusX="4" RadiusY="4"
+                       Canvas.Left="8.55" Canvas.Top="102.695" RenderTransformOrigin="0.5,0.5" >
+                        <Rectangle.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFCC37E4"/>
+                                <GradientStop Color="#FFAD44E1" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.RenderTransform>
+                            <CompositeTransform Rotation="45.45"/>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                </Canvas>
 
+                <TextBlock x:Uid="/Startup/StrixMusicMusicTB" Text="Music" FontSize="72" Margin="20,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       FontFamily="ms-appx://Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
+                       Foreground="#9F9F9F"/>
+            </Grid>
+        </Viewbox>
+
+        <StackPanel Grid.Row="2" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ProgressRing IsActive="True" Margin="15,0" />
                 <TextBlock x:Name="PART_Status" Text="Starting up..." FontSize="20" Foreground="White" />
@@ -40,7 +136,7 @@
             </GridView>
         </StackPanel>
 
-        <Grid MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
+        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
             <Border Background="Black" Opacity="0.8"/>
             <StackPanel Spacing="25" Padding="40,0,40,40">
                 <Image Stretch="UniformToFill" Height="160" HorizontalAlignment="Center" CacheMode="BitmapCache">
@@ -71,6 +167,5 @@
                 <Button Content="I understand" Click="AppLoadingView_OnLoaded" />
             </StackPanel>
         </Grid>
-
     </Grid>
 </UserControl>
