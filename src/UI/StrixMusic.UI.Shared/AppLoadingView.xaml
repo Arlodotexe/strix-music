@@ -15,9 +15,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <controls:StrixIcon Grid.Row="1" Height="315" MaxWidth="612"
+        <controls:StrixIcon x:Name="StrixIcon" Grid.Row="1" Height="315" MaxWidth="612"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ShowText="True" IsAnimated="True"/>
+                            ShowText="True" PlayIntro="True" IsAnimated="True"
+                            AnimationFinished="StrixIconAnimation_Finished"/>
 
         <StackPanel Grid.Row="2" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -45,7 +46,7 @@
         <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
             <Border Background="Black" Opacity="0.8"/>
             <StackPanel Spacing="25" Padding="40,0,40,40">
-                <controls:StrixIcon Height="128" ShowText="True" IsAnimated="True"
+                <controls:StrixIcon Height="128" ShowText="True" PlayIntro="False" IsAnimated="True"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 <StackPanel Spacing="10" Margin="0,-45,0,0">
