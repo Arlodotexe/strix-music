@@ -29,9 +29,17 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 			--- 0.0.25 ---
+			[Breaking changes]
+			OwlCore.Remoting.RemoteOptionsAttribute can no longer be used on Events (was never supported by MemberRemote).
+			Removed OwlCore.Remoting.Transfer.MessageConverters.MessagePackRemoteMessageConverter as it was untested and compatibility is uncertain.
+
+			[Improvements]
+			OwlCore.Remoting.Transfer.MessageConverter.NewtonsoftRemoteMessageConverter is MASSIVELY improved. This version has all primitives, common structs and several classes unit tested with property changes and method call messages.
+			OwlCore.Remoting.RemoteOptionsAttribute can now be used on fields. [RemoteProperty] applies to fields when put on a class, and [RemoteOptions] now lets you disable specific fields.
+			Use explicit cast in OwlCore.Extensions.Cast{T}();
+
 			[Fixes]
 			Fixed an issue where StreamExtensions.ToBytes() and StreamExtensions.ToBytesAsync() would return an empty byte array when stream isn't seeked to beginning.
-			Use explicit cast in OwlCore.Extensions.Cast{T}();
 
 			--- 0.0.24 ---
 			[New stuff]
