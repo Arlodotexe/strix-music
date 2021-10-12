@@ -29,86 +29,86 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
-			--- 0.0.26 ---
-			[Improvements]
-			Added examples and improved documentation for Flow.EventAsTask.
+--- 0.0.26 ---
+[Improvements]
+Added examples and improved documentation for Flow.EventAsTask.
 			
-			--- 0.0.25 ---
-			[Breaking changes]
-			OwlCore.Remoting.RemoteOptionsAttribute can no longer be used on Events (was never supported by MemberRemote).
-			OwlCore.Remoting.Transfer.MessageConverters.MessagePackRemoteMessageConverter was removed as it was untested and compatibility is uncertain.
+--- 0.0.25 ---
+[Breaking changes]
+OwlCore.Remoting.RemoteOptionsAttribute can no longer be used on Events (was never supported by MemberRemote).
+OwlCore.Remoting.Transfer.MessageConverters.MessagePackRemoteMessageConverter was removed as it was untested and compatibility is uncertain.
 
-			[Improvements]
-			OwlCore.Remoting.Transfer.MessageConverter.NewtonsoftRemoteMessageConverter is MASSIVELY improved. This version has all primitives, common structs and several classes unit tested with property changes and method call messages.
-			OwlCore.Remoting.RemoteOptionsAttribute can now be used on fields. [RemoteProperty] applies to fields when put on a class, and [RemoteOptions] now lets you disable specific fields.
-			Use explicit cast in OwlCore.Extensions.Cast{T}();
+[Improvements]
+OwlCore.Remoting.Transfer.MessageConverter.NewtonsoftRemoteMessageConverter is MASSIVELY improved. This version has all primitives, common structs and several classes unit tested with property changes and method call messages.
+OwlCore.Remoting.RemoteOptionsAttribute can now be used on fields. [RemoteProperty] applies to fields when put on a class, and [RemoteOptions] now lets you disable specific fields.
+Use explicit cast in OwlCore.Extensions.Cast{T}();
 
-			[Fixes]
-			Fixed an issue where StreamExtensions.ToBytes() and StreamExtensions.ToBytesAsync() would return an empty byte array when stream isn't seeked to beginning.
+[Fixes]
+Fixed an issue where StreamExtensions.ToBytes() and StreamExtensions.ToBytesAsync() would return an empty byte array when stream isn't seeked to beginning.
 
-			--- 0.0.24 ---
-			[New stuff]
-			Added AbstractFolderExplorer in OwlCore.AbstractUI.Components. This is an AbstractUICollection that acts as a standalone, inbox component. A Folder explorer that interops with OwlCore.AbstractStorage to browse and select subfolders from an IFolderData.
+--- 0.0.24 ---
+[New stuff]
+Added AbstractFolderExplorer in OwlCore.AbstractUI.Components. This is an AbstractUICollection that acts as a standalone, inbox component. A Folder explorer that interops with OwlCore.AbstractStorage to browse and select subfolders from an IFolderData.
 
-			[Breaking changes]
-			Removed cancellation token overload from InParallel. For cancellation, pass the token to the inner tasks.
-			Swapped enum value order for OwlCore.AbstractUI.Models.PreferredOrientation so Vertical is first and default.
+[Breaking changes]
+Removed cancellation token overload from InParallel. For cancellation, pass the token to the inner tasks.
+Swapped enum value order for OwlCore.AbstractUI.Models.PreferredOrientation so Vertical is first and default.
 
-			[Fixes]
-			Fixed issue where "isIndeterminate" parameter of AbstractProgressIndicator wasn't being set from the ctor.
-			Fixed an issue where AbstractUICollectionViewModel wasn't relaying underlying item to the public Items property.
-			Fixed an issue where setting state in AbstractBooleanViewModel caused a StackOverflow.
+[Fixes]
+Fixed issue where "isIndeterminate" parameter of AbstractProgressIndicator wasn't being set from the ctor.
+Fixed an issue where AbstractUICollectionViewModel wasn't relaying underlying item to the public Items property.
+Fixed an issue where setting state in AbstractBooleanViewModel caused a StackOverflow.
 
-			--- 0.0.23 ---
-			[Breaking changes]
-			Renamed OwlCore.AbstractUI.Models.AbstractProgress to OwlCore.AbstractUI.Models.AbstractProgressIndicator.
-			Renamed OwlCore.AbstractUI.Models.AbstractProgressViewModel to OwlCore.AbstractUI.Models.AbstractProgressIndictatorViewModel.
+--- 0.0.23 ---
+[Breaking changes]
+Renamed OwlCore.AbstractUI.Models.AbstractProgress to OwlCore.AbstractUI.Models.AbstractProgressIndicator.
+Renamed OwlCore.AbstractUI.Models.AbstractProgressViewModel to OwlCore.AbstractUI.Models.AbstractProgressIndictatorViewModel.
 
-			--- 0.0.22 ---
-			[Breaking changes]
-			Moved EventAsTask from Threading to Flow.
-			Removed ExclusiveSynchronizationContext.
-			Removed "UIElement" from class names of all AbstractUI elements and ViewModels.
-			Renamed AbstractUIElementGroup to AbstractUICollection.
-			Refactored CachedHttpClientHandler to use events instead of Action callbacks in the constructor. Added CachedRequestFound and CachedRequestSaving events. Set e.Handled on these instead of returning true or false.
+--- 0.0.22 ---
+[Breaking changes]
+Moved EventAsTask from Threading to Flow.
+Removed ExclusiveSynchronizationContext.
+Removed "UIElement" from class names of all AbstractUI elements and ViewModels.
+Renamed AbstractUIElementGroup to AbstractUICollection.
+Refactored CachedHttpClientHandler to use events instead of Action callbacks in the constructor. Added CachedRequestFound and CachedRequestSaving events. Set e.Handled on these instead of returning true or false.
 
-			[Improvements]
-			AbstractUI now works with OwlCore.Remoting when you pass an instance to a MemberRemote.
-			AbstractUICollection now implements ICollection{AbstractUIElement}.
-			Added CancellationToken parameter to EventAsTask.
+[Improvements]
+AbstractUI now works with OwlCore.Remoting when you pass an instance to a MemberRemote.
+AbstractUICollection now implements ICollection{AbstractUIElement}.
+Added CancellationToken parameter to EventAsTask.
 
-			[Fixes]
-			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
-			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
+[Fixes]
+Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
+Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
 
-			--- 0.0.21 ---
-			Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
+--- 0.0.21 ---
+Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
 
-			--- 0.0.20 ---
-			Fixed threading issue with OwlCore.Remoting introduced in 0.0.19.
+--- 0.0.20 ---
+Fixed threading issue with OwlCore.Remoting introduced in 0.0.19.
 
-			--- 0.0.19 ---
-			Fixed a crash with OwlCore.Remoting when compiled with optimizations.
+--- 0.0.19 ---
+Fixed a crash with OwlCore.Remoting when compiled with optimizations.
 
-			--- 0.0.18 ---
-			Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
+--- 0.0.18 ---
+Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
 
-			--- 0.0.17 ---
-			Re-release of 0.0.16 to fix freezing visual studio when building.
+--- 0.0.17 ---
+Re-release of 0.0.16 to fix freezing visual studio when building.
 
-			--- 0.0.16 ---
-			Hardened the fix introduced in 0.0.15.
+--- 0.0.16 ---
+Hardened the fix introduced in 0.0.15.
 
-			--- 0.0.15 ---
-			Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
+--- 0.0.15 ---
+Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
 
-			--- 0.0.14 ---
-			Added empty constructors to classes in OwlCore.Remoting.Transfer.Messages for deserializers.
+--- 0.0.14 ---
+Added empty constructors to classes in OwlCore.Remoting.Transfer.Messages for deserializers.
 
-			--- 0.0.13 ---
-			Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
-			Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
-			Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.
+--- 0.0.13 ---
+Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
+Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
+Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
