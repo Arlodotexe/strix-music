@@ -38,6 +38,7 @@ OwlCore.AbstractStorage.DepthFirstFileScanner was moved to the namespace OwlCore
 OwlCore.AbstractStorage.FileScanStateEventArgs was unused and has been removed.
 
 [Improvements]
+Embedded PBD information to help with debugging.
 Added examples and improved documentation for Flow.EventAsTask.
 Added optional Id to IFolderData, same as the Id for IFileData.
 OwlCore.Remoting.RemoteProperty can now be used on fields (weaving fields was previously supported)
@@ -120,6 +121,8 @@ Added additional checks, exceptions and instructions for mismatched data types i
 Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
 Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.
 		</PackageReleaseNotes>
+		<DebugType>embedded</DebugType>
+		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
