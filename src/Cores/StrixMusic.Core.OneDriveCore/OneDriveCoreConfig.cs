@@ -366,7 +366,7 @@ namespace StrixMusic.Cores.OneDrive
             if (result is null)
                 return null;
 
-            await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().OneDriveFolderId);
+            await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().Id);
 
             void OnDirectoryChanged(object sender, IFolderData e)
             {

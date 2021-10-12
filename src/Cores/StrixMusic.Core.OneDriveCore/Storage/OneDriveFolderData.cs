@@ -29,7 +29,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         /// <summary>
         /// A unique identifier returned from OneDrive api, a folder can be uniquely identified by this id. Helpful during record reads.
         /// </summary>
-        public string OneDriveFolderId => _driveItem.Id;
+        public string? Id => _driveItem.Id;
 
         ///<inheritdoc />
         public string Name => _driveItem.Name;
@@ -76,7 +76,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public async Task<IFileData?> GetFileAsync(string name)
         {
-            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+            var driveItem = await _graphClient.Drive.Items[Id].Request().Expand(EXPAND_STRING).GetAsync();
 
             foreach (var item in driveItem.Children)
             {
@@ -93,7 +93,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public async Task<IEnumerable<IFileData>> GetFilesAsync()
         {
-            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+            var driveItem = await _graphClient.Drive.Items[Id].Request().Expand(EXPAND_STRING).GetAsync();
 
             var results = new List<IFileData>();
 
@@ -111,7 +111,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public async Task<IFolderData?> GetFolderAsync(string name)
         {
-            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+            var driveItem = await _graphClient.Drive.Items[Id].Request().Expand(EXPAND_STRING).GetAsync();
 
             foreach (var item in driveItem.Children)
             {
@@ -128,7 +128,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
         {
-            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+            var driveItem = await _graphClient.Drive.Items[Id].Request().Expand(EXPAND_STRING).GetAsync();
 
             var results = new List<IFolderData>();
 
