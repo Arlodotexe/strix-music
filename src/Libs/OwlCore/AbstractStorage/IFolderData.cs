@@ -4,10 +4,15 @@ using System.Threading.Tasks;
 namespace OwlCore.AbstractStorage
 {
     /// <summary>
-    /// Holds information about a folder
+    /// Represents a folder that resides on a file system.
     /// </summary>
     public interface IFolderData
     {
+        /// <summary>
+        /// An optional, consistent, unique identifier for this file.
+        /// </summary>
+        public string? Id { get; }
+
         /// <summary>
         /// The name of the folder.
         /// </summary>
