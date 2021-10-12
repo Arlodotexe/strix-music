@@ -39,6 +39,9 @@ OwlCore.AbstractStorage.FileScanStateEventArgs was unused and has been removed.
 
 [Improvements]
 Added examples and improved documentation for Flow.EventAsTask.
+Added optional Id to IFolderData, same as the Id for IFileData.
+OwlCore.Remoting.RemoteProperty can now be used on fields (weaving fields was previously supported)
+Added setup and help documentation for OwlCore.Remoting (MemberRemote, RemoteMethodAttribute, RemotePropertyAttribute).
 			
 --- 0.0.25 ---
 [Breaking changes]
