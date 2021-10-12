@@ -8,26 +8,31 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.25</Version>
+		<Version>0.0.26</Version>
 		<Product>OwlCore</Product>
 		<Description>
-			Have you ever seen an owl do a barrel roll? Me neither.
+Have you ever seen an owl do a barrel roll? Me neither.
 
-			OwlCore is a constant work in progress. Until a stable release, breaking changes can happen any time. Comprehensive changelogs always included.
+OwlCore is a constant work in progress. Until a stable release, breaking changes can happen any time. Comprehensive changelogs always included.
 
-			- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
-			- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
-			- OwlCore.Remoting - Painlessly sync member changes in C# with an external source via magic (reflection + IL weaving).
-			- Provisos - IAsyncInit, C# 9-in-8 features.
-			- Debouncer - For when something fires repeatedly. but you only care about when it stops.
-			- CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
-			- CachedHttpClientHandler - Cache http requests to disk and return them as needed.
-			- RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
-			- Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.
+- OwlCore.Remoting - Painlessly sync member changes in C# with an external source via magic (reflection + IL weaving).
+- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display and interact with it.
+- AbstractStorage - Abstract away your storage needs for easy implementation switching and unit test mocking. Based on the UWP StorageFile APIs.
+- Provisos - IAsyncInit, C# 9-in-8 features.
+- Flow.Debouncer - For when something fires repeatedly. but you only care about when it stops.
+- Flow.EventAsTask - Wait for an event to fire with cancellation support.
+- CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
+- CachedHttpClientHandler - Cache http requests to disk and return them as needed.
+- RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
+- Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.
 		</Description>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+			--- 0.0.26 ---
+			[Improvements]
+			Added examples and improved documentation for Flow.EventAsTask.
+			
 			--- 0.0.25 ---
 			[Breaking changes]
 			OwlCore.Remoting.RemoteOptionsAttribute can no longer be used on Events (was never supported by MemberRemote).
