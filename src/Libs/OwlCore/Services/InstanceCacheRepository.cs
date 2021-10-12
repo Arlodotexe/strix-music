@@ -27,6 +27,15 @@ namespace OwlCore.Services
         }
 
         /// <inheritdoc />
+        public bool Exists(string id)
+        {
+            lock (_instanceCache)
+            {
+                return _instanceCache.TryGetValue(id, out var value);
+            }
+        }
+
+        /// <inheritdoc />
         public void Replace(string id, T newValue)
         {
             lock (_instanceCache)
@@ -38,7 +47,7 @@ namespace OwlCore.Services
         /// <inheritdoc />
         public T Remove(string id)
         {
-            lock(_instanceCache)
+            lock (_instanceCache)
             {
                 var val = _instanceCache[id];
                 _instanceCache.Remove(id);

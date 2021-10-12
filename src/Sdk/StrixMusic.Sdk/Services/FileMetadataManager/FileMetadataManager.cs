@@ -114,12 +114,66 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             _fileScanner.FilesDiscovered += OnFilesDiscovered;
             _audioMetadataScanner.FileMetadataAdded += AudioMetadataScanner_FileMetadataAdded;
+            _fileScanner.FileDiscoveryCompleted += FileScanner_FileScanCompleted;
         }
 
         private void DetachEvents()
         {
             _fileScanner.FilesDiscovered -= OnFilesDiscovered;
             _audioMetadataScanner.FileMetadataAdded -= AudioMetadataScanner_FileMetadataAdded;
+            _fileScanner.FileDiscoveryCompleted -= FileScanner_FileScanCompleted;
+        }
+
+        private void FileScanner_FileScanCompleted(object sender, IEnumerable<IFileData> e)
+        {
+            RemoveMissingMetadatas(e).Forget();
+        }
+
+        private async Task RemoveMissingMetadatas(IEnumerable<IFileData> e)
+        {
+            var tracks = await Tracks.GetItemsAsync(0, -1);
+            var removedTracks = new List<TrackMetadata>();
+
+            var discoveredFiles = e;
+
+            foreach (var track in tracks)
+            {
+                if (!discoveredFiles.Any(c => new Uri(c.Path).AbsoluteUri == track.Url?.AbsoluteUri))
+                {
+                    removedTracks.Add(track);
+                }
+            }
+
+            foreach (var removedTrack in removedTracks)
+            {
+                await Tracks.RemoveAsync(removedTrack);
+
+                if (removedTrack.ArtistIds != null)
+                {
+                    foreach (var artistId in removedTrack.ArtistIds)
+                    {
+                        var relatedArtist = await Artists.GetByIdAsync(artistId);
+
+                        if (relatedArtist == null)
+                            continue;
+
+                        // Do not remove artists if it has more than 1 tracks.
+                        if (relatedArtist.TrackIds?.Count == 1)
+                            await Artists.RemoveAsync(relatedArtist);
+                    }
+                }
+
+                if (removedTrack.AlbumId == null)
+                    return;
+
+                var relatedAlbum = await Albums.GetByIdAsync(removedTrack.AlbumId);
+                if (relatedAlbum != null)
+                {
+                    // Do not remove album if it has more than 1 tracks.
+                    if (relatedAlbum.TrackIds?.Count == 1)
+                        await Albums.RemoveAsync(relatedAlbum);
+                }
+            }
         }
 
         private void OnFilesDiscovered(object sender, System.Collections.Generic.IEnumerable<IFileData> e)

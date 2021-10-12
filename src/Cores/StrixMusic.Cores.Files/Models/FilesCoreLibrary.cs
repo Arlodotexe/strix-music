@@ -17,7 +17,7 @@ namespace StrixMusic.Cores.Files.Models
     public sealed class FilesCoreLibrary : FilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private IFileMetadataManager? _fileMetadataManager;
-        private SemaphoreSlim _initSemaphore = new SemaphoreSlim(1, 1); 
+        private SemaphoreSlim _initSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCoreLibrary"/> class.
@@ -160,20 +160,71 @@ namespace StrixMusic.Cores.Files.Models
 
         private void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
         {
-            // TODO. Need to get the index of each item being removed.
-            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+            // ReSharper disable once CollectionNeverUpdated.Local
+            var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
+            var removedItems = new List<CollectionChangedItem<ICoreTrack>>();
+
+            foreach (var item in e)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                TotalTrackCount--;
+                TracksCountChanged?.Invoke(this, TotalTrackCount);
+
+                if (!InstanceCache.Tracks.Exists(item.Id))
+                    continue;
+
+                removedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));
+                TracksChanged?.Invoke(this, addedItems, removedItems);
+
+                InstanceCache.Tracks.Remove(item.Id);
+            }
         }
 
         private void Artists_MetadataRemoved(object sender, IEnumerable<ArtistMetadata> e)
         {
-            // TODO. Need to get the index of each item being removed.
-            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+            // ReSharper disable once CollectionNeverUpdated.Local
+            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+            var removedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+
+            foreach (var item in e)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                TotalArtistItemsCount--;
+                ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
+
+                if (!InstanceCache.Artists.Exists(item.Id))
+                    continue;
+
+                removedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));
+                ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
+
+                InstanceCache.Artists.Remove(item.Id);
+            }
         }
 
         private void Albums_MetadataRemoved(object sender, IEnumerable<AlbumMetadata> e)
         {
-            // TODO. Need to get the index of each item being removed.
-            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+            // ReSharper disable once CollectionNeverUpdated.Local
+            var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
+            var removedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
+
+            foreach (var item in e)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                TotalAlbumItemsCount--;
+                AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
+
+                if (!InstanceCache.Albums.Exists(item.Id))
+                    continue;
+
+                removedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(InstanceCache.Albums.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));
+               
+                AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
+                InstanceCache.Albums.Remove(item.Id);
+            }
         }
 
         private void Playlists_MetadataRemoved(object sender, IEnumerable<PlaylistMetadata> e)
