@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace OwlCore.AbstractStorage
 {
     /// <summary>
-    /// Holds information about a file
+    /// Represents a file on a file system.
     /// </summary>
     public interface IFileData
     {

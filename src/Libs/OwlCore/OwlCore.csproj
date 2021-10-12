@@ -30,6 +30,13 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 --- 0.0.26 ---
+[Breaking changes]
+OwlCore.AbstractStorage.IFileScanner was moved to the namespace OwlCore.AbstractStorage.Scanners.
+OwlCore.AbstractStorage.IFileScanner.ScanFolder was renamed to ScanFolderAsync
+OwlCore.AbstractStorage.IFileScanner.ScanFolder's IFolderData parameter was redundant and removed. Implementors should pass this into the class constructor.
+OwlCore.AbstractStorage.DepthFirstFileScanner was moved to the namespace OwlCore.AbstractStorage.Scanners.
+OwlCore.AbstractStorage.FileScanStateEventArgs was unused and has been removed.
+
 [Improvements]
 Added examples and improved documentation for Flow.EventAsTask.
 			
