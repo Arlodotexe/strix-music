@@ -18,7 +18,7 @@ namespace OwlCore
         /// <para/>
         /// <example>
         /// <c lang="csharp">
-        /// var (sender, result) = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, cancellationToken); 
+        /// var eventResult = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, cancellationToken); 
         /// </c>
         /// </example>
         /// </remarks>
@@ -59,7 +59,7 @@ namespace OwlCore
         /// <para/>
         /// <example>
         /// <c lang="csharp">
-        /// var (sender, eventArgs) = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, cancellationToken); 
+        /// var eventResult = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, cancellationToken); 
         /// </c>
         /// </example>
         /// </remarks>
@@ -100,7 +100,7 @@ namespace OwlCore
         /// <para/>
         /// <example>
         /// <c lang="csharp">
-        /// var (sender, result) = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, TimeSpan.FromSeconds(2)); 
+        /// var eventResult = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, TimeSpan.FromSeconds(2)); 
         /// </c>
         /// </example>
         /// </remarks>
@@ -143,7 +143,7 @@ namespace OwlCore
         /// <para/>
         /// <example>
         /// <c lang="csharp">
-        /// var (sender, eventArgs) = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, TimeSpan.FromSeconds(2)); 
+        /// var eventResult = Flow.EventAsTask&lt;TResult>(x => someClass.ThingHappened += x, x => someClass.ThingHappened -= x, TimeSpan.FromSeconds(2)); 
         /// </c>
         /// </example>
         /// </remarks>
