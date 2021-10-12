@@ -6,7 +6,7 @@ namespace OwlCore.Remoting.Attributes
     /// Attribute used in conjuction with <see cref="MemberRemote"/>.
     /// Mark any member with this to control the data flow direction when changes are relayed remotely.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Event | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Class)]
     public class RemoteOptionsAttribute : Attribute
     {
         /// <summary>

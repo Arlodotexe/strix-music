@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractStorage.Scanners;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
@@ -237,7 +238,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             FilesFound = 0;
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
-            var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder, currentToken);
+            var discoveredFiles = await _fileScanner.ScanFolderAsync(currentToken);
             var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
             findingFilesNotif.Dismiss();
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OwlCore.AbstractStorage
+namespace OwlCore.AbstractStorage.Scanners
 {
     /// <summary>
     /// A <see cref="IFileScanner"/> that scans for all files in a folder and subfolders with a depth-first search.
@@ -50,19 +50,19 @@ namespace OwlCore.AbstractStorage
         public IFolderData RootFolder { get; }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<IFileData>> ScanFolder(IFolderData rootFolder)
+        public Task<IEnumerable<IFileData>> ScanFolderAsync()
         {
-            return ScanFolder(rootFolder, new CancellationToken());
+            return ScanFolderAsync(CancellationToken.None);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<IFileData>> ScanFolder(IFolderData rootFolder, CancellationToken cancellationToken)
+        public async Task<IEnumerable<IFileData>> ScanFolderAsync(CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
                 cancellationToken.ThrowIfCancellationRequested();
 
             var foldersToScan = new Stack<IFolderData>();
-            foldersToScan.Push(rootFolder);
+            foldersToScan.Push(RootFolder);
 
             try
             {
@@ -105,31 +105,31 @@ namespace OwlCore.AbstractStorage
 
             while (foldersToCrawl.Count > 0)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    cancellationToken.ThrowIfCancellationRequested();
+                if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                    _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 var folderData = foldersToCrawl.Pop();
 
-                var files = await folderData.GetFilesAsync();
-                var filesList = files.ToList();
+                var filesData = await folderData.GetFilesAsync();
+                var files = filesData.ToList();
 
-                foreach (var file in filesList)
+                foreach (var file in files)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        cancellationToken.ThrowIfCancellationRequested();
+                    if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                        _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                     filesToScan.Enqueue(file);
                 }
 
-                if(filesList.Count > 0)
-                    FilesDiscovered?.Invoke(this, filesList);
+                if(files.Count > 0)
+                    FilesDiscovered?.Invoke(this, files);
 
                 var folders = await folderData.GetFoldersAsync();
 
                 foreach (var folder in folders)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                        cancellationToken.ThrowIfCancellationRequested();
+                    if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                        _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                     foldersToCrawl.Push(folder);
                 }
@@ -144,6 +144,7 @@ namespace OwlCore.AbstractStorage
         public void Dispose()
         {
             DetachEvents();
+            _scanningCancellationTokenSource?.Dispose();
         }
     }
 }

@@ -31,6 +31,9 @@ namespace StrixMusic.Sdk.Uno.Models
         public string Path => StorageFolder.Path;
 
         /// <inheritdoc/>
+        public string? Id { get; set; }
+
+        /// <inheritdoc/>
         public async Task<IEnumerable<IFileData>> GetFilesAsync()
         {
             var files = await StorageFolder.GetFilesAsync();
