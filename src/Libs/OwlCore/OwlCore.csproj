@@ -31,7 +31,7 @@
 			--- 0.0.25 ---
 			[Breaking changes]
 			OwlCore.Remoting.RemoteOptionsAttribute can no longer be used on Events (was never supported by MemberRemote).
-			Removed OwlCore.Remoting.Transfer.MessageConverters.MessagePackRemoteMessageConverter as it was untested and compatibility is uncertain.
+			OwlCore.Remoting.Transfer.MessageConverters.MessagePackRemoteMessageConverter was removed as it was untested and compatibility is uncertain.
 
 			[Improvements]
 			OwlCore.Remoting.Transfer.MessageConverter.NewtonsoftRemoteMessageConverter is MASSIVELY improved. This version has all primitives, common structs and several classes unit tested with property changes and method call messages.
