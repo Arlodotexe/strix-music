@@ -92,7 +92,7 @@
                         <Setter Target="Seperator.Width" Value="auto"/>
                         <Setter Target="Seperator.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Collapsed"/>
-                        <!--<Setter Target="PlaylistList.Visibility" Value="Visible"/>-->
+                        <Setter Target="PlaylistList.Visibility" Value="Visible"/>
                         <Setter Target="SearchButton.Visibility" Value="Collapsed"/>
                         <Setter Target="SearchBox.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -105,7 +105,7 @@
                         <Setter Target="Seperator.Width" Value="24"/>
                         <Setter Target="Seperator.HorizontalAlignment" Value="Left"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Visible"/>
-                        <!--<Setter Target="PlaylistList.Visibility" Value="Collapsed"/>-->
+                        <Setter Target="PlaylistList.Visibility" Value="Collapsed"/>
                         <Setter Target="SearchButton.Visibility" Value="Visible"/>
                         <Setter Target="SearchBox.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
