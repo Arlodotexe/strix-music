@@ -31,7 +31,8 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageReleaseNotes>
 
 --- 0.0.28 ---
-No code changes. Fixed release notes for a previous version.
+[Fixes]
+No code changes. Fixed release notes for a previous versions.
 
 --- 0.0.27 ---
 [Fixes]
@@ -101,32 +102,43 @@ Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEvent
 Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
 
 --- 0.0.21 ---
+[Fixes]
 Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
 
 --- 0.0.20 ---
+[Fixes]
 Fixed threading issue with OwlCore.Remoting introduced in 0.0.19.
 
 --- 0.0.19 ---
+[Fixes]
 Fixed a crash with OwlCore.Remoting when compiled with optimizations.
 
 --- 0.0.18 ---
+[Fixes]
 Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
 
 --- 0.0.17 ---
+[Fixes]
 Re-release of 0.0.16 to fix freezing visual studio when building.
 
 --- 0.0.16 ---
+[Improvements]
 Hardened the fix introduced in 0.0.15.
 
 --- 0.0.15 ---
+[Fixes]
 Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
 
 --- 0.0.14 ---
+[Improvements]
 Added empty constructors to classes in OwlCore.Remoting.Transfer.Messages for deserializers.
 
 --- 0.0.13 ---
-Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
+[Fixes]
 Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
+
+[Improvements]
+Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
 Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.
 		</PackageReleaseNotes>
 		<DebugType>embedded</DebugType>
