@@ -36,6 +36,11 @@
                         <pages:GrooveHomePage/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
+                <selectors:MainContentTemplateSelector.PlaylistsPageTemplate>
+                    <DataTemplate x:DataType="groovepvms:GroovePlaylistsPageViewModel">
+                        <pages:GroovePlaylistsPage/>
+                    </DataTemplate>
+                </selectors:MainContentTemplateSelector.PlaylistsPageTemplate>
             </selectors:MainContentTemplateSelector>
         </ResourceDictionary>
     </shells:Shell.Resources>
@@ -173,7 +178,8 @@
                                         Margin="8" QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
-                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked" Tag="{x:Bind ViewModel.Library}">
+                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked"
+                                      Tag="MyMusic">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -185,7 +191,8 @@
                                 <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
+                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked"
+                                      Tag="Recent">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -198,7 +205,8 @@
                                 <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
                         </ToggleButton>
-                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
+                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked"
+                                      Tag="NowPlaying">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -221,7 +229,8 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked">
+                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}" Click="NavigationButtonClicked"
+                                          Tag="Playlists">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>

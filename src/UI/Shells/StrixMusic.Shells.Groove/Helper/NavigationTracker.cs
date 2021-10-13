@@ -29,6 +29,8 @@ namespace StrixMusic.Shells.Groove.Helper
                 (s, e) => RecordNavigation(e));
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
                 (s, e) => RecordNavigation(e));
+            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this,
+                (s, e) => RecordNavigation(e));
         }
 
         /// <summary>
@@ -60,6 +62,9 @@ namespace StrixMusic.Shells.Groove.Helper
                     break;
                 case HomeViewNavigationRequested homeViewNavigationRequest:
                     WeakReferenceMessenger.Default.Send(homeViewNavigationRequest);
+                    break;
+                case PlaylistsViewNavigationRequested playlistViewNavigationRequest:
+                    WeakReferenceMessenger.Default.Send(playlistViewNavigationRequest);
                     break;
             }
         }

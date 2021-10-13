@@ -26,7 +26,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         public bool ShowLargeHeader => false;
 
         /// <inheritdoc/>
-        public string PageTitleResource => "MyMusic";
+        public string PageTitleResource => "Playlist";
 
         /// <summary>
         /// The <see cref="PlaylistViewModel"/> inside this ViewModel on display.

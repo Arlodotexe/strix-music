@@ -25,6 +25,11 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
         /// </summary>
         public DataTemplate? HomePageTemplate { get; set; }
 
+        /// <summary>
+        /// The <see cref="DataTemplate"/> to use if the ViewModel is a <see cref="GroovePlaylistsPageViewModel"/>.
+        /// </summary>
+        public DataTemplate? PlaylistsPageTemplate { get; set; }
+
         /// <inheritdoc/>
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -39,6 +44,9 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
                 case GrooveHomePageViewModel _:
                     Guard.IsNotNull(HomePageTemplate, nameof(HomePageTemplate));
                     return HomePageTemplate;
+                case GroovePlaylistsPageViewModel _:
+                    Guard.IsNotNull(PlaylistsPageTemplate, nameof(PlaylistsPageTemplate));
+                    return PlaylistsPageTemplate;
                 default:
                     return base.SelectTemplateCore(item);
             }

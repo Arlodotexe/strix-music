@@ -39,6 +39,7 @@
     <None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
     <None Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
     <None Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
+    <None Remove="Styles\Pages\GroovePlaylistsPageStyle.xaml" />
     <None Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <None Remove="Style\AlbumViewStyle.xaml" />
     <None Remove="Style\HomeStyle.xaml" />
@@ -52,6 +53,7 @@
     <UpToDateCheckInput Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Pages\GrooveHomePageStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\Pages\GroovePlaylistsPageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\Shells\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Style\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
@@ -68,6 +70,9 @@
   <ItemGroup>
     <Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\Pages\GroovePlaylistsPageStyle.xaml.cs">
+      <DependentUpon>GroovePlaylistsPageStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\Shells\NowPlayingBarStyle.xaml.cs">
       <DependentUpon>NowPlayingBarStyle.xaml</DependentUpon>
