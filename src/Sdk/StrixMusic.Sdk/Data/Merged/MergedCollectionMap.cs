@@ -375,7 +375,6 @@ namespace StrixMusic.Sdk.Data.Merged
                 var addedMergedItems = ItemsAdded_CheckAddedItems(addedItems, sender);
                 var removedMergedItems = ItemsChanged_CheckRemovedItems(removedItems);
 
-                Guard.IsGreaterThan(_mergedMappedData.Count, 0, nameof(_mergedMappedData.Count));
 
                 ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
                 ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
@@ -416,6 +415,9 @@ namespace StrixMusic.Sdk.Data.Merged
             where T : class, ICollectionItemBase, ICoreMember
         {
             var removed = new List<CollectionChangedItem<TCollectionItem>>();
+
+            if (_sortedMap.Count == 0)
+                return removed;
 
             foreach (var item in removedItems)
             {
@@ -529,22 +531,22 @@ namespace StrixMusic.Sdk.Data.Merged
                 switch (sourceCollection)
                 {
                     case ICorePlayableCollectionGroup playableCollection:
-                            await playableCollection.RemoveChildAsync(mappedData.OriginalIndex);
+                        await playableCollection.RemoveChildAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreAlbumCollection albumCollection:
-                            await albumCollection.RemoveAlbumItemAsync(mappedData.OriginalIndex);
+                        await albumCollection.RemoveAlbumItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreArtistCollection artistCollection:
-                            await artistCollection.RemoveArtistItemAsync(mappedData.OriginalIndex);
+                        await artistCollection.RemoveArtistItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICorePlaylistCollection playlistCollection:
-                            await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex);
+                        await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreTrackCollection trackCollection:
-                            await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex);
+                        await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreImageCollection imageCollection:
-                            await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
+                        await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreGenreCollection genreCollection:
                         await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
@@ -786,7 +788,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
-          
+
             foreach (var item in mergedItemMaps)
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
 

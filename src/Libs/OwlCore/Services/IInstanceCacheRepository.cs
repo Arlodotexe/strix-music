@@ -16,6 +16,13 @@ namespace OwlCore.Services
         T GetOrCreate(string id, Func<T> creationHandler);
 
         /// <summary>
+        /// Gets an instance of an object.
+        /// </summary>
+        /// <param name="id">A unique identifier for this object.</param>
+        /// <returns>An existing instance.</returns>
+        bool HasId(string id);
+
+        /// <summary>
         /// Overwrite an item that already exists in the cache.
         /// </summary>
         /// <param name="id">The ID of the item to replace.</param>
