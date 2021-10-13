@@ -160,7 +160,7 @@ namespace StrixMusic.Cores.Files.Models
 
         private void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
         {
-            var addedItems = Enumerable.Empty<CollectionChangedItem<ICoreTrack>>().ToList();
+            var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
             var removedItems = new List<CollectionChangedItem<ICoreTrack>>();
 
             foreach (var item in e)
@@ -182,7 +182,7 @@ namespace StrixMusic.Cores.Files.Models
 
         private void Artists_MetadataRemoved(object sender, IEnumerable<ArtistMetadata> e)
         {
-            var addedItems = Enumerable.Empty<CollectionChangedItem<ICoreArtistCollectionItem>>().ToList();
+            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
             var removedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
 
             foreach (var item in e)
@@ -204,8 +204,7 @@ namespace StrixMusic.Cores.Files.Models
 
         private void Albums_MetadataRemoved(object sender, IEnumerable<AlbumMetadata> e)
         {
-            // ReSharper disable once CollectionNeverUpdated.Local
-            var addedItems = Enumerable.Empty<CollectionChangedItem<ICoreAlbumCollectionItem>>().ToList();
+            var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
             var removedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
 
             foreach (var item in e)
