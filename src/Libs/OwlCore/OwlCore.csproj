@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.26</Version>
+		<Version>0.0.27</Version>
 		<Product>OwlCore</Product>
 		<Description>
 Have you ever seen an owl do a barrel roll? Me neither.
@@ -29,6 +29,10 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+--- 0.0.26 ---
+[Fixes]
+Fixed a major issue with OwlCore.Remoting.MemberRemote where ignoring an invalid remoting direction resulted in the next message causing a throw.
+
 --- 0.0.26 ---
 [Breaking changes]
 OwlCore.AbstractStorage.IFileScanner was moved to the namespace OwlCore.AbstractStorage.Scanners.

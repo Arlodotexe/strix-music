@@ -25,6 +25,7 @@ namespace OwlCore.Remoting
     public class MemberRemote : IDisposable
     {
         private static IRemoteMessageHandler? _defaultRemoteMessageHandler;
+        private readonly SemaphoreSlim _messageReceivedSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Used to internally indicated when a member operation is performed by a <see cref="MemberRemote"/> on a given thread.
@@ -87,17 +88,22 @@ namespace OwlCore.Remoting
 
         internal void MessageHandler_DataReceived(object sender, IRemoteMessage message)
         {
+            _messageReceivedSemaphore.Wait();
+
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
+            {
+                _messageReceivedSemaphore.Release();
                 return;
+            }
 
             var receivedArgs = new RemoteMessageReceivingEventArgs(message);
             MessageReceiving?.Invoke(this, receivedArgs);
 
             if (receivedArgs.Handled)
+            {
+                _messageReceivedSemaphore.Release();
                 return;
-
-            lock (MemberHandleExpectancyMap)
-                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+            }
 
             if (message is RemoteMethodCallMessage methodCallMsg)
                 HandleIncomingRemoteMethodCall(methodCallMsg);
@@ -106,6 +112,7 @@ namespace OwlCore.Remoting
                 HandleIncomingRemotePropertyChange(propertyChangeMsg);
 
             MessageReceived?.Invoke(this, message);
+            _messageReceivedSemaphore.Release();
         }
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
@@ -215,8 +222,16 @@ namespace OwlCore.Remoting
         {
             var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
 
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+
             if (!IsValidRemotingDirection(propertyInfo, isReceiving: true))
+            {
+                lock (MemberHandleExpectancyMap)
+                    MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+
                 return;
+            }
 
             var type = Type.GetType(propertyChangeMessage.TargetMemberSignature);
             var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
@@ -244,8 +259,16 @@ namespace OwlCore.Remoting
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+
             if (!IsValidRemotingDirection(methodInfo, isReceiving: true))
+            {
+                lock (MemberHandleExpectancyMap)
+                    MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+
                 return;
+            }
 
             var parameterValues = new List<object?>();
 
@@ -314,7 +337,7 @@ namespace OwlCore.Remoting
             var targetOutbound = (attribute.Direction.HasFlag(RemotingDirection.OutboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.OutboundHost) && isHost);
             var targetInbound = (attribute.Direction.HasFlag(RemotingDirection.InboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.InboundHost) && isHost);
 
-            return (!isReceiving && targetInbound) || (isReceiving && targetOutbound);
+            return (isReceiving && targetInbound) || (!isReceiving && targetOutbound);
         }
 
         /// <summary>
