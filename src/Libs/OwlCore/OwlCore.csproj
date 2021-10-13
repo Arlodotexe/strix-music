@@ -25,11 +25,14 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 - CachedHttpClientHandler - Cache http requests to disk and return them as needed.
 - RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
 - Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.
-- OwlCore.Services.IInstanceCacheRepository - Added support know if an instance exists in InstanceCache or not.
 		</Description>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+
+--- 0.0.29 ---
+[Improvements]
+OwlCore.Services.IInstanceCacheRepository.HasId() was added for checking if a specific instance Id exists in the repository.
 
 --- 0.0.28 ---
 [Fixes]
