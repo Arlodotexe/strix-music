@@ -5,10 +5,10 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
+using StrixMusic.Shells.Groove.ViewModels.Collections;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
@@ -36,8 +36,13 @@ namespace StrixMusic.Shells.Groove
         public static readonly DependencyProperty ShowLargeHeaderProperty =
             DependencyProperty.Register(nameof(ShowLargeHeader), typeof(bool), typeof(GrooveShell), new PropertyMetadata(true));
 
-        private ILocalizationService? _localizationService;
+        /// <summary>
+        /// A backing <see cref="DependencyProperty"/> for the <see cref="ShowLargeHeader"/> property.
+        /// </summary>
+        public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
+            DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveShell), new PropertyMetadata(null));
 
+        private ILocalizationService? _localizationService;
         private NotificationsViewModel? _notificationsViewModel;
 
         /// <summary>
@@ -74,6 +79,8 @@ namespace StrixMusic.Shells.Groove
         {
             DataContextChanged -= GrooveShell_DataContextChanged;
 
+            PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel(ViewModel.Library);
+
             if (ViewModel?.Library != null)
                 _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequested(ViewModel.Library));
         }
@@ -98,6 +105,15 @@ namespace StrixMusic.Shells.Groove
         {
             get { return (string)GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
+        }
+
+        /// <summary>
+        /// The <see cref="GroovePlaylistCollectionViewModel"/> for the <see cref="Controls.Collections.GroovePlaylistCollection"/> on display in the pane.
+        /// </summary>
+        public GroovePlaylistCollectionViewModel? PlaylistCollectionViewModel
+        {
+            get => (GroovePlaylistCollectionViewModel?)GetValue(PlaylistCollectionViewModelProperty);
+            set => SetValue(PlaylistCollectionViewModelProperty, value);
         }
 
         /// <summary>
@@ -209,14 +225,15 @@ namespace StrixMusic.Shells.Groove
                 _ => null,
             };
 
-            // Check if a new navigation button will be set
+            // Reset all buttons, but not the PlaylistList
+            MyMusicButton.IsChecked = false;
+            RecentButton.IsChecked = false;
+            NowPlayingButton.IsChecked = false;
+            PlaylistsButton.IsChecked = false;
+
             if (button != null)
             {
-                // Reset all toggled 
-                MyMusicButton.IsChecked = false;
-                RecentButton.IsChecked = false;
-                NowPlayingButton.IsChecked = false;
-                PlaylistsButton.IsChecked = false;
+                PlaylistList.ClearSelected();
 
                 // Set the active navigation button
                 button.IsChecked = true;

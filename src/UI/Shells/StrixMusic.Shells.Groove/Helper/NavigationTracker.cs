@@ -29,6 +29,8 @@ namespace StrixMusic.Shells.Groove.Helper
                 (s, e) => RecordNavigation(e));
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
                 (s, e) => RecordNavigation(e));
+            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequested>(this,
+                (s, e) => RecordNavigation(e));
             WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this,
                 (s, e) => RecordNavigation(e));
         }

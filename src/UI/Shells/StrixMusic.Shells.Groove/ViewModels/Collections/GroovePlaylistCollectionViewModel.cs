@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 
@@ -12,6 +13,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
     public class GroovePlaylistCollectionViewModel : ObservableObject
     {
         private IPlaylistCollectionViewModel? _playlistCollectionViewModel;
+        private PlaylistViewModel? _selectedPlaylist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveArtistCollectionViewModel"/> class.
@@ -29,6 +31,15 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         {
             get => _playlistCollectionViewModel;
             set => SetProperty(ref _playlistCollectionViewModel, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the selected playlist
+        /// </summary>
+        public PlaylistViewModel SelectedPlaylist
+        {
+            get => _selectedPlaylist!; // XAML is weird about nullables
+            set => SetProperty(ref _selectedPlaylist, value);
         }
 
         /// <summary>

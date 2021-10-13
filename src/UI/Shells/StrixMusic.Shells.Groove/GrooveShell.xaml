@@ -10,6 +10,7 @@
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -36,6 +37,11 @@
                         <pages:GrooveHomePage/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
+                <selectors:MainContentTemplateSelector.PlaylistPageTemplate>
+                    <DataTemplate x:DataType="groovepvms:GroovePlaylistPageViewModel">
+                        <pages:GroovePlaylistPage/>
+                    </DataTemplate>
+                </selectors:MainContentTemplateSelector.PlaylistPageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistsPageTemplate>
                     <DataTemplate x:DataType="groovepvms:GroovePlaylistsPageViewModel">
                         <pages:GroovePlaylistsPage/>
@@ -254,8 +260,7 @@
                         </Button>
                     </StackPanel>
 
-                    <!--<collections:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"
-                                                        SelectionChanged="PlaylistClicked"/>-->
+                    <collections:GroovePlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind PlaylistCollectionViewModel, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>

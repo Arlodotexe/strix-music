@@ -20,5 +20,13 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The ViewModel for a <see cref="GroovePlaylistCollection"/>
         /// </summary>
         public GroovePlaylistCollectionViewModel ViewModel => (GroovePlaylistCollectionViewModel)DataContext;
+
+        /// <summary>
+        /// Clears the selected item in the <see cref="GroovePlaylistCollection"/>.
+        /// </summary>
+        public void ClearSelected()
+        {
+            ViewModel.SelectedPlaylist = null!;
+        }
     }
 }
