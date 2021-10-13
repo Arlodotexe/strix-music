@@ -160,7 +160,6 @@ namespace StrixMusic.Cores.Files.Models
 
         private void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
         {
-            // ReSharper disable once CollectionNeverUpdated.Local
             var addedItems = Enumerable.Empty<CollectionChangedItem<ICoreTrack>>().ToList();
             var removedItems = new List<CollectionChangedItem<ICoreTrack>>();
 
