@@ -130,12 +130,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await RemoveMissingMetadatasAsync(e);
         }
 
-        private async Task RemoveMissingMetadatasAsync(IEnumerable<IFileData> e)
+        private async Task RemoveMissingMetadatasAsync(IEnumerable<IFileData> discoveredFiles)
         {
             var tracks = await Tracks.GetItemsAsync(0, -1);
             var removedTracks = new List<TrackMetadata>();
-
-            var discoveredFiles = e;
 
             foreach (var track in tracks)
             {
