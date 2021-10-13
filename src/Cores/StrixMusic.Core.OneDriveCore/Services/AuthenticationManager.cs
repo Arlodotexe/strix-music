@@ -1,10 +1,9 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractUI.Models;
 using System;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OneDrive.Services
@@ -18,6 +17,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         private readonly string[] _scopes = { "Files.Read.All", "User.Read", "Files.ReadWrite" };
 
         private readonly IPublicClientApplication _clientApp;
+        private readonly OneDriveCoreConfig _coreConfig;
 
         /// <summary>
         /// The access token used to authenticate with OneDrive.
@@ -34,8 +34,10 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <param name="clientId">The client id of the app in azure portal.</param>
         /// <param name="tenantId">The tenant id generated.</param>
         /// <param name="redirectUri">The redirect URI to use with the connected application, if any.</param>
-        public AuthenticationManager(string clientId, string tenantId, string? redirectUri = null)
+        public AuthenticationManager(OneDriveCoreConfig coreConfig, string clientId, string tenantId, string? redirectUri = null)
         {
+            _coreConfig = coreConfig;
+
             var authority = new Uri($"{_authorityUri}/{tenantId}");
 
             var builder = PublicClientApplicationBuilder
@@ -80,8 +82,11 @@ namespace StrixMusic.Cores.OneDrive.Services
             {
                 try
                 {
-                    result = await _clientApp.AcquireTokenInteractive(_scopes)
-                       .ExecuteAsync(CancellationToken.None);
+                    result = await _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
+                    {
+                        _coreConfig.DisplayDeviceCodeResult(dcr);
+                        return Task.CompletedTask;
+                    }).ExecuteAsync();
 
                     if (result != null && !string.IsNullOrWhiteSpace(result.AccessToken))
                     {
@@ -107,6 +112,5 @@ namespace StrixMusic.Cores.OneDrive.Services
 
             return graphClient;
         }
-
     }
 }

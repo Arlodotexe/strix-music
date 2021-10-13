@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
@@ -272,7 +273,7 @@ namespace StrixMusic.Cores.OneDrive
             var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
             var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
-            _authenticationManager = new AuthenticationManager(clientId, tenantId, redirectUri);
+            _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
             _graphClient = await _authenticationManager.GenerateGraphToken();
 
             if (_graphClient is null)
@@ -385,6 +386,23 @@ namespace StrixMusic.Cores.OneDrive
         public void SaveAbstractUI(AbstractUICollection collection)
         {
             AbstractUIElements = collection.IntoList();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        internal void DisplayDeviceCodeResult(DeviceCodeResult dcr)
+        {
+            var authenticateButton = new AbstractButton("codeButton", "Authenticate")
+            {
+                Title = $"Your code is {dcr.UserCode}.",
+                Subtitle = $"Click the button to open {dcr.VerificationUrl}, or open it on a mobile device. Once there, enter the code shown above.",
+                IconCode = "\xE8A7"
+            };
+
+            // TODO:
+            // * Authenticate button should launch browser.
+            // * Needs cancel button to return to config UI.
+
+            AbstractUIElements = new AbstractUICollection("deviceCodeResult") { authenticateButton }.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
