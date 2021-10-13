@@ -1,11 +1,14 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Helpers;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
 namespace StrixMusic.Sdk.Uno.Controls
@@ -17,7 +20,6 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// This control takes an <see cref="IImageCollection"/> and displays only the first, or none if none exist.
     /// </remarks>
     [TemplatePart(Name = nameof(PART_ImageRectangle), Type = typeof(Rectangle))]
-    [TemplatePart(Name = nameof(PART_Fallback), Type = typeof(FrameworkElement))]
     public sealed partial class SafeImage : Control
     {
         /// <summary>
@@ -28,89 +30,65 @@ namespace StrixMusic.Sdk.Uno.Controls
             DefaultStyleKey = typeof(SafeImage);
         }
 
+        /// <summary>
+        /// Dependency property for <see cref="ImageCollection"/>.
+        /// </summary>
+        public static readonly DependencyProperty ImageCollectionProperty =
+            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().RequestImages().Forget()));
+
+        /// <summary>
+        /// The image collection to load and display.
+        /// </summary>
+        public IImageCollectionViewModel? ImageCollection
+        {
+            get { return (IImageCollectionViewModel?)GetValue(ImageCollectionProperty); }
+            set { SetValue(ImageCollectionProperty, value); }
+        }
+
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-
-            Loaded += SafeImage_Loaded;
-        }
-
-        /// <summary>
-        /// The <see cref="IImageCollection"/> ViewModel of the control.
-        /// </summary>
-        public IImageCollectionViewModel ViewModel => (IImageCollectionViewModel)DataContext;
-
-        private Rectangle? PART_ImageRectangle { get; set; }
-
-        private ImageBrush? PART_ImageBrush { get; set; }
-
-        private FrameworkElement? PART_Fallback { get; set; }
-
-        private void AttachHandlers()
-        {
-            Unloaded += SafeImage_Unloaded;
-            DataContextChanged += SafeImage_DataContextChanged;
-
-            Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush.ImageFailed += SafeImage_ImageFailed;
-        }
-
-        private void DetachHandlers()
-        {
-            Unloaded -= SafeImage_Unloaded;
-            DataContextChanged -= SafeImage_DataContextChanged;
-
-            Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush.ImageFailed -= SafeImage_ImageFailed;
-        }
-
-        private async void SafeImage_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= SafeImage_Loaded;
-
             // Find Parts
-            PART_ImageRectangle = VisualTreeHelpers.GetDataTemplateChild<Rectangle>(this, nameof(PART_ImageRectangle));
-            PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<FrameworkElement>(this, nameof(PART_Fallback));
+            PART_ImageRectangle = GetTemplateChild(nameof(PART_ImageRectangle)) as Rectangle;
 
             if (PART_ImageRectangle?.Fill is ImageBrush imgBrush)
                 PART_ImageBrush = imgBrush;
             else
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
-            await RequestImages();
-            AttachHandlers();
+            _ = RequestImages();
+            base.OnApplyTemplate();
         }
 
-        private void SafeImage_Unloaded(object sender, RoutedEventArgs e)
-        {
-            DetachHandlers();
-        }
+        private Rectangle? PART_ImageRectangle { get; set; }
 
-        private async void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
-        {
-            await RequestImages();
-        }
-
-        private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-        {
-            // Go to fallback if the image failed to load.
-            OverrideToFallback();
-        }
+        private ImageBrush? PART_ImageBrush { get; set; }
 
         private async Task RequestImages()
         {
-            if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
-        }
+            if (PART_ImageBrush is null)
+                return;
 
-        /// <summary>
-        /// Set to Fallback regardless of if there's an image present.
-        /// </summary>
-        private void OverrideToFallback()
-        {
-            Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
-            PART_Fallback.Visibility = Visibility.Visible;
+            if (ImageCollection is null)
+            {
+                PART_ImageBrush.ImageSource = null;
+                return;
+            }
+
+            var images = await ImageCollection.GetImagesAsync(1, 0);
+            if (images.Count == 0)
+            {
+                PART_ImageBrush.ImageSource = null;
+                return;
+            }
+
+            var image = images[0];
+
+            PART_ImageBrush.ImageSource = new BitmapImage(image.Uri)
+            {
+                DecodePixelHeight = (int)image.Height,
+                DecodePixelWidth = (int)image.Width,
+            };
         }
     }
 }

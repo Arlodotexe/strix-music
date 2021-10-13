@@ -84,6 +84,11 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreGenresCommand = new AsyncRelayCommand<int>(PopulateMoreGenresAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitAlbumCollectionAsyncCommand = new AsyncRelayCommand(InitAlbumCollectionAsync);
+            InitGenreCollectionAsyncCommand = new AsyncRelayCommand(InitGenreCollectionAsync);
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+            InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
+
             ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(x => SortAlbumCollection(x, CurrentAlbumSortingDirection));
             ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType, x));
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
@@ -302,35 +307,35 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _artist.UrlsCountChanged -= value;
         }
 
-        private void ArtistNameChanged(object sender, string e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
+        private void ArtistNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
-        private void ArtistDescriptionChanged(object sender, string? e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
+        private void ArtistDescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
 
-        private void ArtistPlaybackStateChanged(object sender, PlaybackState e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
+        private void ArtistPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
-        private void ArtistOnTrackItemsCountChanged(object sender, int e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTrackCount)));
+        private void ArtistOnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTrackCount)));
 
-        private void Artist_AlbumItemsCountChanged(object sender, int e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalAlbumItemsCount)));
+        private void Artist_AlbumItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalAlbumItemsCount)));
 
-        private void ArtistViewModel_ImagesCountChanged(object sender, int e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+        private void ArtistViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
 
-        private void ArtistViewModel_UrlsCountChanged(object sender, int e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
+        private void ArtistViewModel_UrlsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
 
-        private void ArtistViewModel_GenresCountChanged(object sender, int e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalGenreCount)));
+        private void ArtistViewModel_GenresCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalGenreCount)));
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
+        private void OnLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)));
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)));
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)));
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)));
 
-        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)));
+        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)));
 
-        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
+        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
-        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) =>  _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseAlbumCollectionAsyncAvailable)));
+        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseAlbumCollectionAsyncAvailable)));
 
         private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable)));
 
@@ -467,6 +472,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public DateTime? AddedAt => _artist.AddedAt;
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
@@ -818,6 +826,30 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+
+        /// <inheritdoc />
+        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+
+        /// <inheritdoc />
+        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
+
+        /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _artist.Equals(other);
 
         /// <inheritdoc />
@@ -849,11 +881,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             IsInitialized = true;
 
-            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this));
+            return Task.WhenAll(InitAlbumCollectionAsync(), InitGenreCollectionAsync(), InitImageCollectionAsync(), InitTrackCollectionAsync());
         }
-
-        /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
 
         private Task ChangeNameInternalAsync(string? name)
         {

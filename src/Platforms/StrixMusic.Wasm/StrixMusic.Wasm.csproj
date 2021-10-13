@@ -26,6 +26,9 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="C:\Users\arlog\.nuget\packages\nlog.config\4.7.11\contentFiles\any\any\NLog.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
   </ItemGroup>
   <ItemGroup>
@@ -53,10 +56,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="NLog" Version="4.7.11" />
+		<PackageReference Include="NLog.Config" Version="4.7.11" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
 		<PackageReference Include="Refit" Version="5.2.4" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>

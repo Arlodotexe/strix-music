@@ -5,22 +5,22 @@ using Windows.UI.Xaml.Data;
 namespace OwlCore.Uno.Converters.Numerical
 {
     /// <summary>
-    /// A converter that converts a given <see cref="long"/> to a <see cref="double"/>.
+    /// A converter that converts a given <see cref="string"/> to an <see cref="int"/>.
     /// </summary>
-    public class LongToDoubleConverter : IValueConverter
+    public class StringToIntConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a <see cref="long"/> to a <see cref="double"/>.
+        /// Converts a <see cref="string"/> to an <see cref="int"/>.
         /// </summary>
-        /// <param name="value">The <see cref="long"/> to convert</param>
+        /// <param name="value">The <see cref="string"/> to convert</param>
         /// <returns>The converted value.</returns>
         [Pure]
-        public static double Convert(long value) => value;
+        public static int Convert(string value) => int.Parse(value);
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert((long)value);
+            return Convert((string)value);
         }
 
         /// <inheritdoc/>

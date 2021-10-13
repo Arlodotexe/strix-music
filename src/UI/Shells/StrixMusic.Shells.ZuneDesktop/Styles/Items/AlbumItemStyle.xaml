@@ -13,7 +13,7 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <strix:SafeImage Height="86" Width="86" />
+        <strix:SafeImage Height="86" Width="86" ImageCollection="{x:Bind}" />
     </DataTemplate>
 
     <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>

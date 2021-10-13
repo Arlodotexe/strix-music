@@ -18,7 +18,7 @@
 
     <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">
         <!--<Rectangle Fill="#353535"/>-->
-        <strix:SafeImage/>
+        <strix:SafeImage ImageCollection="{x:Bind}"/>
     </DataTemplate>
 
     <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">

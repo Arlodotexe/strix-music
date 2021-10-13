@@ -12,6 +12,9 @@ namespace OwlCore.Remoting.Attributes
     /// Attribute used in conjuction with <see cref="MemberRemote"/>.
     /// Mark a method with this attribute to opt into remote method changes.
     /// </summary>
+    /// <remarks>
+    /// For IL weaving to take effect, you must install and add a reference to <see href="https://www.nuget.org/packages/Cauldron.BasicInterceptors/3.2.3">Cauldron.BasicInterceptors</see> directly in the project that uses this attribute.
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RemoteMethodAttribute : Attribute, IMethodInterceptor
     {

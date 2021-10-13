@@ -12,6 +12,7 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -40,11 +41,24 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
+            InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
+
             using (Threading.PrimaryContext)
             {
                 Images = new ObservableCollection<IImage>();
                 Urls = new ObservableCollection<IUrl>();
             }
+        }
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            if (IsInitialized)
+                return Task.CompletedTask;
+
+            IsInitialized = true;
+
+            return InitImageCollectionAsync();
         }
 
         /// <inheritdoc />
@@ -144,6 +158,9 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
@@ -239,6 +256,12 @@ namespace StrixMusic.Sdk.ViewModels
                 }
             });
         }
+
+        /// <inheritdoc />
+        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }

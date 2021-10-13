@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using NLog;
+using NLog.Config;
+using NLog.Extensions.Logging;
+using NLog.Targets;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
@@ -29,6 +36,7 @@ using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Shared.Services;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -73,34 +81,58 @@ namespace StrixMusic.Shared
 #endif
         }
 
-        private void ShowQuip()
+        /// <summary>
+        /// Keeps the logger type available in the <paramref name="services"/> but without any output functionality.
+        /// </summary>
+        private static void AddLoggerBlackHole(IServiceCollection services)
         {
-            if (_localizationService == null)
+            services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
+            services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+        }
+
+        private static void AddNLog(IServiceCollection services)
+        {
+            var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
+            var defaultLayout = @"${date} [Thread ${threadname:whenEmpty=${threadid}}] ${logger} [${level}] | ${message} ${exception:format=ToString}";
+
+            var config = new LoggingConfiguration();
+
+            var fileTarget = new FileTarget("filelog")
             {
-                PART_Status.Text = "Localization Error";
-                return;
-            }
+                FileName = logPath,
+                Layout = defaultLayout,
+                EnableArchiveFileCompression = true,
+                MaxArchiveDays = 7,
+                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                ArchiveOldFileOnStartup = true,
+                KeepFileOpen = true,
+                OpenFileCacheTimeout = 10,
+                AutoFlush = false,
+                OpenFileFlushTimeout = 10,
+                ConcurrentWrites = false,
+                CleanupFileName = false,
+                OptimizeBufferReuse = true,
+            };
 
-            var quip = new QuipLoader(Language).GetGroupIndexQuip();
+            config.AddTarget(fileTarget);
+            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
 
-            PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
-            _showingQuip = true;
-        }
+            var debuggerTarget = new DebuggerTarget("debuggerTarget")
+            {
+                Layout = defaultLayout,
+                OptimizeBufferReuse = true,
+            };
 
-        private void UpdateStatus(string text)
-        {
-            if (_showingQuip)
-                return;
+            config.AddTarget(debuggerTarget);
+            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
 
-            if (_localizationService != null)
-                text = _localizationService[Constants.Localization.StartupResource, text];
-
-            PART_Status.Text = text;
-        }
-
-        private void UpdateStatusRaw(string text)
-        {
-            PART_Status.Text = text;
+            services.AddLogging(loggingBuilder =>
+            {
+                // configure Logging exclusively with NLog
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                loggingBuilder.AddNLog(config);
+            });
         }
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
@@ -109,11 +141,9 @@ namespace StrixMusic.Shared
 
             InitializeCoreRegistry();
             InitializeShellRegistry();
-
             await InitializeServices();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeCoreRanking();
-            await InitializeInstanceRegistry();
             await InitializeConfiguredCores();
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
@@ -148,12 +178,6 @@ namespace StrixMusic.Shared
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(CoreRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
                 return;
             }
-        }
-
-        private async Task InitializeInstanceRegistry()
-        {
-            UpdateStatus("InitCoreReg");
-
         }
 
         private async Task InitializeCoreRanking()
@@ -195,6 +219,13 @@ namespace StrixMusic.Shared
             UpdateStatus("...");
 
             IServiceCollection services = new ServiceCollection();
+
+            var isLoggingEnabled = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
+
+            if (isLoggingEnabled)
+                AddNLog(services);
+            else
+                AddLoggerBlackHole(services);
 
             _playbackHandlerService = new PlaybackHandlerService();
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
@@ -331,6 +362,36 @@ namespace StrixMusic.Shared
             {
                 SetupMediaPlayer(core);
             }
+        }
+
+        private void ShowQuip()
+        {
+            if (_localizationService == null)
+            {
+                PART_Status.Text = "Localization Error";
+                return;
+            }
+
+            var quip = new QuipLoader(Language).GetGroupIndexQuip();
+
+            PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
+            _showingQuip = true;
+        }
+
+        private void UpdateStatus(string text)
+        {
+            if (_showingQuip)
+                return;
+
+            if (_localizationService != null)
+                text = _localizationService[Constants.Localization.StartupResource, text];
+
+            PART_Status.Text = text;
+        }
+
+        private void UpdateStatusRaw(string text)
+        {
+            PART_Status.Text = text;
         }
 
         private void SetupMediaPlayer(ICore core)

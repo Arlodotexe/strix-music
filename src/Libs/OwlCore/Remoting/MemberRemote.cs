@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +13,19 @@ using OwlCore.Remoting.Transfer;
 namespace OwlCore.Remoting
 {
     /// <summary>
-    /// Automatically sync events, properties, method calls and fields remotely between two object instances, even if the code runs on another machine.
+    /// Automatically sync properties, method calls and fields between two object instances, even if the code runs on another machine.
     /// </summary>
+    /// <remarks>
+    /// The instance passed into the constructor must use the <see cref="RemoteMethodAttribute"/> or <see cref="RemotePropertyAttribute"/> and <see cref="RemoteOptionsAttribute"/> to configure class members for remoting.
+    /// <para/>
+    /// Note that the <see cref="Id"/> of two <see cref="MemberRemote"/>s must match or received member change messages will be ignored.
+    /// <para/>
+    /// Failing to call <see cref="Dispose"/> may result in the passed instance not being cleaned up by the Garbage Collector.
+    /// </remarks>
     public class MemberRemote : IDisposable
     {
         private static IRemoteMessageHandler? _defaultRemoteMessageHandler;
+        private readonly SemaphoreSlim _messageReceivedSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Used to internally indicated when a member operation is performed by a <see cref="MemberRemote"/> on a given thread.
@@ -37,8 +44,12 @@ namespace OwlCore.Remoting
         /// <param name="classInstance">The instance to remote.</param>
         /// <param name="id">A unique identifier for this instance, consistent between hosts and clients.</param>
         /// <param name="messageHandler">The message handler to use when communicating changes. If not given, the handler given to <see cref="SetDefaultMessageHandler(IRemoteMessageHandler)"/> will be used instead.</param>
+        /// <exception cref="ArgumentNullException">An argument is unexpectedly null or the default message handler has not been defined.</exception>
         public MemberRemote(object classInstance, string id, IRemoteMessageHandler? messageHandler = null)
         {
+            Guard.IsNotNull(classInstance, nameof(classInstance));
+            Guard.IsNotNull(id, nameof(id));
+
             Type = classInstance.GetType();
             Instance = classInstance;
             Id = id;
@@ -77,17 +88,22 @@ namespace OwlCore.Remoting
 
         internal void MessageHandler_DataReceived(object sender, IRemoteMessage message)
         {
+            _messageReceivedSemaphore.Wait();
+
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
+            {
+                _messageReceivedSemaphore.Release();
                 return;
+            }
 
             var receivedArgs = new RemoteMessageReceivingEventArgs(message);
             MessageReceiving?.Invoke(this, receivedArgs);
 
             if (receivedArgs.Handled)
+            {
+                _messageReceivedSemaphore.Release();
                 return;
-
-            lock (MemberHandleExpectancyMap)
-                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+            }
 
             if (message is RemoteMethodCallMessage methodCallMsg)
                 HandleIncomingRemoteMethodCall(methodCallMsg);
@@ -96,6 +112,7 @@ namespace OwlCore.Remoting
                 HandleIncomingRemotePropertyChange(propertyChangeMsg);
 
             MessageReceived?.Invoke(this, message);
+            _messageReceivedSemaphore.Release();
         }
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
@@ -205,8 +222,16 @@ namespace OwlCore.Remoting
         {
             var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
 
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+
             if (!IsValidRemotingDirection(propertyInfo, isReceiving: true))
+            {
+                lock (MemberHandleExpectancyMap)
+                    MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+
                 return;
+            }
 
             var type = Type.GetType(propertyChangeMessage.TargetMemberSignature);
             var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
@@ -234,8 +259,16 @@ namespace OwlCore.Remoting
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
+
             if (!IsValidRemotingDirection(methodInfo, isReceiving: true))
+            {
+                lock (MemberHandleExpectancyMap)
+                    MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+
                 return;
+            }
 
             var parameterValues = new List<object?>();
 
@@ -304,7 +337,7 @@ namespace OwlCore.Remoting
             var targetOutbound = (attribute.Direction.HasFlag(RemotingDirection.OutboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.OutboundHost) && isHost);
             var targetInbound = (attribute.Direction.HasFlag(RemotingDirection.InboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.InboundHost) && isHost);
 
-            return (!isReceiving && targetInbound) || (isReceiving && targetOutbound);
+            return (isReceiving && targetInbound) || (!isReceiving && targetOutbound);
         }
 
         /// <summary>

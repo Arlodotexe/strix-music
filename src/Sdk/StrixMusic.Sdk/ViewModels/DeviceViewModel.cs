@@ -100,6 +100,7 @@ namespace StrixMusic.Sdk.ViewModels
             _nowPlaying = new TrackViewModel(e);
 
             OnPropertyChanged(nameof(NowPlaying));
+            NowPlayingChanged?.Invoke(sender, e);
         });
 
         /// <summary>
@@ -205,12 +206,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged
-        {
-            add => Model.NowPlayingChanged += value;
-
-            remove => Model.NowPlayingChanged -= value;
-        }
+        public event EventHandler<ITrack>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged

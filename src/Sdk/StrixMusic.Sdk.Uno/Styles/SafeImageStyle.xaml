@@ -9,66 +9,38 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
-    <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch">
-            <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind convertvis:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
-                <Image.Source>
-                    <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
-                                    RasterizePixelHeight="150" RasterizePixelWidth="150"/>
-                </Image.Source>
-            </Image>
-
-            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}"
-                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
-                                Stretch="UniformToFill"/>
-                </Rectangle.Fill>
-            </Rectangle>
-        </Grid>
-    </DataTemplate>
-
     <Style x:Key="DefaultSafeImageStyle" TargetType="controls:SafeImage">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:SafeImage">
-                        <ContentControl ContentTemplate="{StaticResource DefaultSafeImageTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch">
+                            <Rectangle x:Name="PART_ImageRectangle"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Rectangle.Fill>
+                                    <ImageBrush Stretch="UniformToFill"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
 
-    <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid FlowDirection="LeftToRight">
-            <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind convertvis:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Image.Source>
-                    <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
-                                    RasterizePixelHeight="150" RasterizePixelWidth="150"/>
-                </Image.Source>
-            </Image>
-
-            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}"
-                       RadiusX="10000" RadiusY="10000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
-                                Stretch="UniformToFill"/>
-                </Rectangle.Fill>
-            </Rectangle>
-        </Grid>
-    </DataTemplate>
-
     <Style x:Key="DefaultRoundSafeImageStyle" TargetType="controls:SafeImage">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:SafeImage">
-                        <ContentControl ContentTemplate="{StaticResource DefaultRoundSafeImageTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <Grid FlowDirection="LeftToRight">
+                            <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Rectangle.Fill>
+                                    <ImageBrush Stretch="UniformToFill"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

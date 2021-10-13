@@ -25,6 +25,11 @@ namespace StrixMusic.Sdk.Services.Settings
         public static IReadOnlyList<string> CoreRanking => new List<string>();
 
         /// <summary>
+        /// If true, the app will log information about the app while its running.
+        /// </summary>
+        public static bool IsLoggingEnabled => false;
+
+        /// <summary>
         /// The user's preference for how items in a collection from multiple sources are sorted. 
         /// </summary>
         public static MergedCollectionSorting MergedCollectionSorting => MergedCollectionSorting.Ranked;
@@ -40,6 +45,7 @@ namespace StrixMusic.Sdk.Services.Settings
                 nameof(CoreInstanceRegistry) => CoreInstanceRegistry,
                 nameof(CoreRanking) => CoreRanking,
                 nameof(MergedCollectionSorting) => MergedCollectionSorting,
+                nameof(IsLoggingEnabled) => IsLoggingEnabled,
                 nameof(PlayCollectionBehavior) => PlayCollectionBehavior,
                 _ => ThrowHelper.ThrowArgumentOutOfRangeException<object>(nameof(settingKey)),
             };

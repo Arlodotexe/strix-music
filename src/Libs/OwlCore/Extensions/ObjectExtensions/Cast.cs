@@ -16,7 +16,7 @@ namespace OwlCore.Extensions
         public static TTarget Cast<TTarget>(this object obj)
          where TTarget : class
         {
-            return obj as TTarget ?? throw new InvalidCastException($"Cannot cast from to {typeof(TTarget)}");
+            return (TTarget)obj;
         }
     }
 }

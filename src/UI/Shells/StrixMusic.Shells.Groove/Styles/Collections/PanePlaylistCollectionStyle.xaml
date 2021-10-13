@@ -153,7 +153,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <strix:SafeImage Height="20" Width="20" Margin="14,0"/>
+                        <strix:SafeImage Height="20" Width="20" Margin="14,0" ImageCollection="{x:Bind}" />
                         <TextBlock Text="{x:Bind Name}" Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>

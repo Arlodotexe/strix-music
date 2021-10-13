@@ -25,6 +25,10 @@ using Windows.UI.Xaml;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Notifications;
+using OwlCore.AbstractUI.ViewModels;
+using NLog;
+using NLog.Targets;
+using System.IO;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -36,11 +40,13 @@ namespace StrixMusic.Shared.ViewModels
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
         private readonly ICoreManagementService _coreManagementService;
+        private readonly ISettingsService _settingsService;
         private readonly INotificationService _notificationService;
         private readonly ILocalizationService _localizationResourceLoader;
         private bool _isShowingAddNew;
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
+        private AbstractBoolean _loggingToggle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShellViewModel"/> class.
@@ -49,12 +55,20 @@ namespace StrixMusic.Shared.ViewModels
         {
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _localizationResourceLoader = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
             AvailableServices = new ObservableCollection<AvailableServicesItemViewModel>();
+
+            _loggingToggle = new AbstractBoolean("loggingToggle", "Use logging")
+            {
+                Subtitle = "Requires restart. When enabled, the app will save debug information to disk while running.",
+            };
+
+            AdvancedSettings = new AbstractUICollectionViewModel(CreateAdvancedSettings());
 
             // TODO nuke when switching to NavView for SuperShell.
             CancelAddNewCommand = new RelayCommand(() => IsShowingAddNew = false);
@@ -71,20 +85,23 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <inheritdoc/>
-        public Task InitAsync()
+        public async Task InitAsync()
         {
             if (IsInitialized)
-                return Task.CompletedTask;
+                return;
 
             IsInitialized = true;
 
-            return Task.WhenAll(SetupCores(), ShellSelectorViewModel.InitAsync());
+            _loggingToggle.State = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
+
+            await Task.WhenAll(SetupCores(), ShellSelectorViewModel.InitAsync());
         }
 
         private void AttachEvents()
         {
             _addNewItem.NewItemRequested += AddNewItem_NewItemRequested;
             _mainViewModel.Cores.CollectionChanged += Cores_CollectionChanged;
+            _loggingToggle.StateChanged += LoggingToggle_StateChanged;
 
             foreach (var loadedService in Services)
             {
@@ -104,6 +121,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             _addNewItem.NewItemRequested -= AddNewItem_NewItemRequested;
             _mainViewModel.Cores.CollectionChanged -= Cores_CollectionChanged;
+            _loggingToggle.StateChanged -= LoggingToggle_StateChanged;
 
             foreach (var loadedService in Services)
             {
@@ -146,6 +164,11 @@ namespace StrixMusic.Shared.ViewModels
 
             CurrentCoreConfig = null;
             IsShowingAddNew = false;
+        }
+
+        private async void LoggingToggle_StateChanged(object sender, bool e)
+        {
+            await _settingsService.SetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled), e);
         }
 
         private void AddNewItem_NewItemRequested(object sender, EventArgs e)
@@ -221,6 +244,11 @@ namespace StrixMusic.Shared.ViewModels
         /// The services that are available to be added.
         /// </summary>
         public ObservableCollection<AvailableServicesItemViewModel> AvailableServices { get; }
+
+        /// <summary>
+        /// The advanced settings for the app.
+        /// </summary>
+        public AbstractUICollectionViewModel AdvancedSettings { get; }
 
         /// <inheritdoc cref="ShellSelectorViewModel" />
         public ShellSelectorViewModel ShellSelectorViewModel { get; }
@@ -355,13 +383,58 @@ namespace StrixMusic.Shared.ViewModels
                         }
                         catch
                         {
-                             /* ignored */
+                            /* ignored */
                         }
                     }
                 }
             }
 
             return taskCompletionSource.Task;
+        }
+
+        private AbstractUICollection CreateAdvancedSettings()
+        {
+            return new AbstractUICollection("advancedSettings")
+            {
+                CreateAdvancedSettings_Logging(),
+                CreateAdvancedSettings_Recovery(),
+            };
+        }
+
+        private AbstractUICollection CreateAdvancedSettings_Logging()
+        {
+            var openLogFolderButton = new AbstractButton("openLogFolder", "View logs");
+            openLogFolderButton.Clicked += OpenLogFolderButton_Clicked;
+
+            return new AbstractUICollection("loggingSettings")
+            {
+                Title = "Logging",
+                Items = new List<AbstractUIElement> { _loggingToggle, openLogFolderButton }
+            };
+        }
+
+        private async void OpenLogFolderButton_Clicked(object sender, EventArgs e)
+        {
+            var logFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Logs", CreationCollisionOption.OpenIfExists);
+
+            await Windows.System.Launcher.LaunchFolderAsync(logFolder).AsTask();
+        }
+
+        private AbstractUICollection CreateAdvancedSettings_Recovery()
+        {
+            var resetButton = new AbstractButton("resetButton", "Reset everything");
+            resetButton.Clicked += ResetButton_Clicked;
+
+            return new AbstractUICollection("recoverySettings")
+            {
+                Title = "App recovery",
+                Items = new List<AbstractUIElement> { resetButton }
+            };
+        }
+
+        private void ResetButton_Clicked(object sender, EventArgs e)
+        {
+            _ = ResetAppAsync();
         }
 
         private async Task SetupCores()

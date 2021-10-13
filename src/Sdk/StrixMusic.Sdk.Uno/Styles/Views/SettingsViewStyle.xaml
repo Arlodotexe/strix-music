@@ -4,7 +4,10 @@
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:base="using:StrixMusic.Sdk.Data.Base"
+    xmlns:sdktemplsel="using:StrixMusic.Sdk.Uno.TemplateSelectors"
     x:Class="StrixMusic.Sdk.Uno.Styles.Views.SettingsViewStyle">
+
+    <sdktemplsel:CollectionSelector x:Key="CollectionSelector"/>
 
     <DataTemplate x:Key="DefaultSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">
         <UserControl>
