@@ -124,12 +124,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _fileScanner.FileDiscoveryCompleted -= FileScanner_FileScanCompleted;
         }
 
-        private void FileScanner_FileScanCompleted(object sender, IEnumerable<IFileData> e)
+        private async void FileScanner_FileScanCompleted(object sender, IEnumerable<IFileData> e)
         {
-            RemoveMissingMetadatas(e).Forget();
+            await RemoveMissingMetadatasAsync(e);
         }
 
-        private async Task RemoveMissingMetadatas(IEnumerable<IFileData> e)
+        private async Task RemoveMissingMetadatasAsync(IEnumerable<IFileData> e)
         {
             var tracks = await Tracks.GetItemsAsync(0, -1);
             var removedTracks = new List<TrackMetadata>();
