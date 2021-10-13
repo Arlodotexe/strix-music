@@ -170,7 +170,7 @@ namespace StrixMusic.Cores.Files.Models
                 TotalTrackCount--;
                 TracksCountChanged?.Invoke(this, TotalTrackCount);
 
-                if (!InstanceCache.Tracks.Exists(item.Id))
+                if (!InstanceCache.Tracks.HasId(item.Id))
                     continue;
 
                 removedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));
@@ -192,7 +192,7 @@ namespace StrixMusic.Cores.Files.Models
                 TotalArtistItemsCount--;
                 ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
 
-                if (!InstanceCache.Artists.Exists(item.Id))
+                if (!InstanceCache.Artists.HasId(item.Id))
                     continue;
 
                 removedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));
@@ -214,7 +214,7 @@ namespace StrixMusic.Cores.Files.Models
                 TotalAlbumItemsCount--;
                 AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
 
-                if (!InstanceCache.Albums.Exists(item.Id))
+                if (!InstanceCache.Albums.HasId(item.Id))
                     continue;
 
                 removedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(InstanceCache.Albums.GetOrCreate(item.Id, SourceCore, item), removedItems.Count));

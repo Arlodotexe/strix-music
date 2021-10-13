@@ -27,7 +27,7 @@ namespace OwlCore.Services
         }
 
         /// <inheritdoc />
-        public bool Exists(string id)
+        public bool HasId(string id)
         {
             lock (_instanceCache)
             {

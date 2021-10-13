@@ -20,7 +20,7 @@ namespace OwlCore.Services
         /// </summary>
         /// <param name="id">A unique identifier for this object.</param>
         /// <returns>An existing instance.</returns>
-        bool Exists(string id);
+        bool HasId(string id);
 
         /// <summary>
         /// Overwrite an item that already exists in the cache.
