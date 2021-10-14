@@ -5,7 +5,6 @@
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
     xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
-    xmlns:shellstyles="using:StrixMusic.Shells.Groove.Styles.Shells"
     xmlns:pagestyles="using:StrixMusic.Shells.Groove.Styles.Pages"
     xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
     xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
@@ -40,8 +39,7 @@
 
         <!--Shell related styles-->
         <!--<shellstyles:NotificationAbstractUICollectionStyle/>-->
-        <shellstyles:NowPlayingBarStyle/>
-
+        <styles:GrooveNowPlayingBarStyle/>
 
         <!--Page related styles-->
         <pagestyles:GrooveHomePageStyle/>

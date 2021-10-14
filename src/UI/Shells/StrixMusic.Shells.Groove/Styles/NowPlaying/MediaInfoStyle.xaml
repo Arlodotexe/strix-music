@@ -5,21 +5,22 @@
     xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:convertnum="using:OwlCore.Uno.Converters.Numerical"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaInfoStyle">
 
-    <DataTemplate x:Key="GrooveMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
+    <DataTemplate x:Key="GrooveMediaInfoDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
         <Grid>
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice}">
-                    <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
+                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ViewModel.ActiveDevice}">
+                    <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
                 </core:EventTriggerBehavior>
 
                 <core:EventTriggerBehavior EventName="Loaded">
-                <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
+                    <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             
@@ -29,12 +30,12 @@
             </Grid.ColumnDefinitions>
             
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
-                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
+                <TextBlock Text="{Binding ViewModel.ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
+                <TextBlock Text="{Binding ViewModel.ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
             
             <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center"
-                             ImageCollection="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
+                             ImageCollection="{Binding ViewModel.ActiveDevice.NowPlaying, Mode=OneWay}"/>
         </Grid>
     </DataTemplate>
 

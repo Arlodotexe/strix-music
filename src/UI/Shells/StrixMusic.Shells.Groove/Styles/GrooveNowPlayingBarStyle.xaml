@@ -5,26 +5,31 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    x:Class="StrixMusic.Shells.Groove.Styles.Shells.NowPlayingBarStyle">
+    xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
+    xmlns:colorconvert="using:OwlCore.Uno.Converters.Color"
+    x:Class="StrixMusic.Shells.Groove.Styles.GrooveNowPlayingBarStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/NowPlaying/MediaSliderStyle.xaml" />
-        <ResourceDictionary>
-            <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter" />
-        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
+    
+    <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter"/>
+    <colorconvert:NullableBackupColorConverter x:Key="NullableBackupColorConverter" BackupColor="{ThemeResource SystemAccentColorDark3}"/>
 
-    <AcrylicBrush x:Key="NowPlayingBackgroundBrush" TintColor="{ThemeResource SystemAccentColorDark3}"
-                  TintOpacity=".7" 
-                  BackgroundSource="Backdrop"/>
-
-    <DataTemplate x:Key="GrooveNowPlayingBarDataTemplate" x:DataType="sdk:MainViewModel">
-        <UserControl Background="Transparent">
-            <Grid VerticalAlignment="Center" Height="96" Background="{ThemeResource NowPlayingBackgroundBrush}">
+    <DataTemplate x:Key="GrooveNowPlayingBarDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
+        <UserControl>
+            <Grid VerticalAlignment="Center" Height="96">
+                <Grid.Background>
+                    <AcrylicBrush TintColor="{ThemeResource SystemAccentColorDark3}"
+                                  TintOpacity=".7" BackgroundSource="Backdrop"/>
+                    <!--<AcrylicBrush TintColor="{x:Bind BackgroundColor, Converter={StaticResource NullableBackupColorConverter}, Mode=OneWay}"
+                                  TintOpacity=".7" BackgroundSource="Backdrop"/>-->
+                </Grid.Background>
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="Sizes">
                         <VisualState x:Name="Small">
@@ -73,12 +78,12 @@
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                        IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
-                                        Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}">
+                                        IsAdvancing="{x:Bind ViewModel.ActiveDevice.IsPlaying, Mode=OneWay}"
+                                        Value="{x:Bind ViewModel.ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                        Maximum="{x:Bind ViewModel.ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                            <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                 </nowplaying:MediaSlider>
@@ -86,11 +91,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="GrooveNowPlayingBarStyle" TargetType="shells:NowPlayingBar">
+    <Style x:Key="GrooveNowPlayingBarStyle" TargetType="controls:GrooveNowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shells:NowPlayingBar">
+                    <ControlTemplate TargetType="controls:GrooveNowPlayingBar">
                         <ContentControl ContentTemplate="{StaticResource GrooveNowPlayingBarDataTemplate}"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -99,6 +104,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource GrooveNowPlayingBarStyle}" TargetType="shells:NowPlayingBar"/>
+    <Style BasedOn="{StaticResource GrooveNowPlayingBarStyle}" TargetType="controls:GrooveNowPlayingBar"/>
 
 </ResourceDictionary>
