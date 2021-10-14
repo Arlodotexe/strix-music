@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractLauncher;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
 using OwlCore.AbstractUI.Models;
@@ -398,12 +399,22 @@ namespace StrixMusic.Cores.OneDrive
                 IconCode = "\xE8A7"
             };
 
+            authenticateButton.Clicked += OnAuthenticateButtonClicked;
+
             // TODO:
-            // * Authenticate button should launch browser.
             // * Needs cancel button to return to config UI.
 
             AbstractUIElements = new AbstractUICollection("deviceCodeResult") { authenticateButton }.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+
+            async void OnAuthenticateButtonClicked(object sender, EventArgs e)
+            {
+                var task = Services?.GetRequiredService<ILauncher>()?.LaunchUriAsync(new Uri(dcr.VerificationUrl));
+                if (task is not null)
+				{
+                    await task;
+				}
+            }
         }
 
         private async void UseFilePropsScannerToggleOnStateChanged(object sender, bool e)
