@@ -245,7 +245,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Rectangle x:Name="SeekBar" Height="4" Width="400" RadiusX="2" RadiusY="2" Grid.Column="1" Grid.Row="1" Fill="White" Margin="16, 0"/>
+                                <Rectangle x:Name="SeekBar" Height="4" MaxWidth="400" RadiusX="2" RadiusY="2" Grid.Column="1" Grid.Row="1" Fill="White" Margin="16,0" HorizontalAlignment="Stretch"/>
 
                                 <!--Mock extra controls-->
                                 <StackPanel x:Name="ExtraControls" Grid.Column="2" HorizontalAlignment="Right" Margin="0,0,24,0" Orientation="Horizontal" Spacing="16">
