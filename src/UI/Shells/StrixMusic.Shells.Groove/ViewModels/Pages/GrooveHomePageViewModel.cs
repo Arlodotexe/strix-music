@@ -11,7 +11,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
     public class GrooveHomePageViewModel : ObservableObject, IGroovePageViewModel
     {
         private LibraryViewModel? _libraryViewModel;
-        private GrooveAlbumCollectionViewModel? _albumCollectionViewModel;
+        private IAlbumCollectionViewModel? _albumCollectionViewModel;
         private GrooveArtistCollectionViewModel? _artistCollectionViewModel;
         private GrooveTrackCollectionViewModel? _trackCollectionViewModel;
 
@@ -22,7 +22,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         public GrooveHomePageViewModel(LibraryViewModel viewModel)
         {
             ViewModel = viewModel;
-            AlbumCollectionViewModel = new GrooveAlbumCollectionViewModel(viewModel);
+            AlbumCollection = viewModel;
             ArtistCollectionViewModel = new GrooveArtistCollectionViewModel(viewModel);
             TrackCollectionViewModel = new GrooveTrackCollectionViewModel(viewModel);
         }
@@ -45,7 +45,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         /// <summary>
         /// The <see cref="GrooveAlbumCollectionViewModel"/> for the <see cref="Controls.Collections.GrooveAlbumCollection"/> on display in the <see cref="Controls.Pages.GrooveHomePage"/>.
         /// </summary>
-        public GrooveAlbumCollectionViewModel? AlbumCollectionViewModel
+        public IAlbumCollectionViewModel? AlbumCollection
         {
             get => _albumCollectionViewModel;
             set => SetProperty(ref _albumCollectionViewModel, value);

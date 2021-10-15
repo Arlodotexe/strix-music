@@ -26,7 +26,8 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public void ClearSelected()
         {
-            ViewModel.SelectedPlaylist = null!;
+            if (!(ViewModel is null))
+                ViewModel.SelectedPlaylist = null!;
         }
     }
 }

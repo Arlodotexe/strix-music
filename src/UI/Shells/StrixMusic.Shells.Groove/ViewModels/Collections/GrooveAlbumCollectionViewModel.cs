@@ -16,16 +16,24 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveAlbumCollectionViewModel"/> class.
         /// </summary>
-        public GrooveAlbumCollectionViewModel(IAlbumCollectionViewModel viewModel)
+        public GrooveAlbumCollectionViewModel()
         {
-            ViewModel = viewModel;
             NavigateToAlbumCommand = new RelayCommand<AlbumViewModel>(NavigateToAlbum);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrooveAlbumCollectionViewModel"/> class.
+        /// </summary>
+        public GrooveAlbumCollectionViewModel(IAlbumCollectionViewModel viewModel)
+            : this()
+        {
+            AlbumCollection = viewModel;
         }
 
         /// <summary>
         /// The <see cref="IAlbumCollectionViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public IAlbumCollectionViewModel? ViewModel
+        public IAlbumCollectionViewModel? AlbumCollection
         {
             get => _albumCollectionViewModel;
             set => SetProperty(ref _albumCollectionViewModel, value);

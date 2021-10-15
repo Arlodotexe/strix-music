@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,7 +41,7 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
         {
             switch (item)
             {
-                case GrooveAlbumPageViewModel _:
+                case IAlbumCollectionViewModel _:
                     Guard.IsNotNull(AlbumPageTemplate, nameof(AlbumPageTemplate));
                     return AlbumPageTemplate;
                 case GrooveArtistPageViewModel _:

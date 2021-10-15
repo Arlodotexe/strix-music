@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:groovepvms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
@@ -25,7 +26,7 @@
             <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
                     <DataTemplate x:DataType="groovepvms:GrooveAlbumPageViewModel">
-                        <pages:GrooveAlbumPage/>
+                        <pages:GrooveAlbumPage />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
                 <selectors:MainContentTemplateSelector.ArtistPageTemplate>

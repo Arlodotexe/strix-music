@@ -60,20 +60,15 @@ namespace StrixMusic.Shells.Groove
             this.InitializeComponent();
 
             // Register home page navigation
-            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this, (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData)));
 
             // Register album, artist, and playlist page navigation
-            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GrooveAlbumPageViewModel(e.PageData)));
-            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GrooveArtistPageViewModel(e.PageData)));
-            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GroovePlaylistPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this, (s, e) => NavigatePage(new GrooveAlbumPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequested>(this, (s, e) => NavigatePage(new GrooveArtistPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequested>(this, (s, e) => NavigatePage(new GroovePlaylistPageViewModel(e.PageData)));
 
             // Register playlists page navigation
-            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this,
-                (s, e) => NavigatePage(new GroovePlaylistsPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this, (s, e) => NavigatePage(new GroovePlaylistsPageViewModel(e.PageData)));
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
