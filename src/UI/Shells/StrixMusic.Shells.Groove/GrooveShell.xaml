@@ -25,8 +25,8 @@
 
             <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
-                    <DataTemplate x:DataType="groovepvms:GrooveAlbumPageViewModel">
-                        <pages:GrooveAlbumPage />
+                    <DataTemplate x:DataType="sdkvms:AlbumViewModel">
+                        <pages:GrooveAlbumPage Album="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
                 <selectors:MainContentTemplateSelector.ArtistPageTemplate>

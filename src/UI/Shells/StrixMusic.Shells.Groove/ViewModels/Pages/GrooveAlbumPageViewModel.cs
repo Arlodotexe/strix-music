@@ -1,10 +1,10 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.Groove.ViewModels.Pages
 {
@@ -21,10 +21,17 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         /// </summary>
         /// <param name="viewModel">The <see cref="AlbumViewModel"/> inside this ViewModel on display.</param>
         public GrooveAlbumPageViewModel(AlbumViewModel viewModel)
+            : this()
         {
-            ViewModel = viewModel;
+            Album = viewModel;
+        }
 
-            GetColor();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrooveAlbumPageViewModel"/> class.
+        /// </summary>
+        /// <param name="viewModel">The <see cref="AlbumViewModel"/> inside this ViewModel on display.</param>
+        public GrooveAlbumPageViewModel()
+        {
         }
 
         /// <inheritdoc/>
@@ -36,10 +43,16 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         /// <summary>
         /// The <see cref="AlbumViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public AlbumViewModel? ViewModel
+        public AlbumViewModel? Album
         {
             get => _albumViewModel;
-            set => SetProperty(ref _albumViewModel, value);
+            set
+            {
+                SetProperty(ref _albumViewModel, value);
+
+                if (!(value is null))
+                    _ = ProcessAlbumArtColorAsync(value);
+            }
         }
 
         /// <summary>
@@ -51,27 +64,15 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
             set => SetProperty(ref _backgroundColor, value);
         }
 
-        private async void GetColor()
+        private async Task ProcessAlbumArtColorAsync(AlbumViewModel album)
         {
-            BackgroundColor = await Task.Run(async () =>
-            {
-                if (ViewModel != null)
-                {
-                    // Load images if there aren't images loaded.
-                    if (ViewModel.Images.Count == 0)
-                    {
-                        await ViewModel.InitImageCollectionAsync();
-                    }
+            // Load images if there aren't images loaded.
+            await album.InitImageCollectionAsync();
 
-                    // If there are now images, grab the color from the first image.
-                    if (ViewModel.Images.Count != 0)
-                    {
-                         return await DynamicColorHelper.GetImageAccentColorAsync(ViewModel.Images[0]);
-                    }
-                }
-
-                return Colors.Transparent;
-            });
+            if (album.Images.Count > 0)
+                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(album.Images[0]));
+            else
+                BackgroundColor = Colors.Transparent;
         }
     }
 }

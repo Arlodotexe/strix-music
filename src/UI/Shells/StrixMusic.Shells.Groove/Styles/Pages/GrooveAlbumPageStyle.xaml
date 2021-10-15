@@ -71,13 +71,13 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind ViewModel, Mode=OneWay}" />
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{x:Bind Album, Mode=OneWay}" />
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                            <TextBlock Text="{x:Bind ViewModel.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                            <TextBlock Text="{x:Bind Album.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
                                        LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
 
-                            <ItemsControl ItemsSource="{x:Bind ViewModel.Artists, Mode=OneWay}">
+                            <ItemsControl ItemsSource="{x:Bind Album.Artists, Mode=OneWay}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -91,7 +91,7 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                            <TextBlock Text="{x:Bind ViewModel.DatePublished.Value.Year, Mode=OneWay}" Opacity=".5"/>
+                            <TextBlock Text="{x:Bind Album.DatePublished.Value.Year, Mode=OneWay}" Opacity=".5"/>
                         </StackPanel>
 
                         <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
@@ -109,7 +109,7 @@
                         </CommandBar>
                     </Grid>
 
-                    <collections:TrackCollection Grid.Row="1" DataContext="{x:Bind ViewModel, Mode=OneWay}"/>
+                    <collections:TrackCollection Grid.Row="1" DataContext="{x:Bind Album, Mode=OneWay}"/>
                 </Grid>
             </UserControl>
         </ScrollViewer>
