@@ -23,15 +23,15 @@ namespace StrixMusic.Shells.Groove.Helper
             WeakReferenceMessenger.Default.Register<BackNavigationRequested>(this,
                 (s, e) => NavigateBackwards());
 
-            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this,
+            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequestMessage>(this,
                 (s, e) => RecordNavigation(e));
-            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequested>(this,
+            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequestMessage>(this,
                 (s, e) => RecordNavigation(e));
-            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this,
+            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this,
                 (s, e) => RecordNavigation(e));
-            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequested>(this,
+            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequestMessage>(this,
                 (s, e) => RecordNavigation(e));
-            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this,
+            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequestMessage>(this,
                 (s, e) => RecordNavigation(e));
         }
 
@@ -56,16 +56,16 @@ namespace StrixMusic.Shells.Groove.Helper
 
             switch (previous)
             {
-                case AlbumViewNavigationRequested albumViewNavigationRequest:
+                case AlbumViewNavigationRequestMessage albumViewNavigationRequest:
                     WeakReferenceMessenger.Default.Send(albumViewNavigationRequest);
                     break;
-                case ArtistViewNavigationRequested artistViewNavigationRequest:
+                case ArtistViewNavigationRequestMessage artistViewNavigationRequest:
                     WeakReferenceMessenger.Default.Send(artistViewNavigationRequest);
                     break;
-                case HomeViewNavigationRequested homeViewNavigationRequest:
+                case HomeViewNavigationRequestMessage homeViewNavigationRequest:
                     WeakReferenceMessenger.Default.Send(homeViewNavigationRequest);
                     break;
-                case PlaylistsViewNavigationRequested playlistViewNavigationRequest:
+                case PlaylistsViewNavigationRequestMessage playlistViewNavigationRequest:
                     WeakReferenceMessenger.Default.Send(playlistViewNavigationRequest);
                     break;
             }

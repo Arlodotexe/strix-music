@@ -47,7 +47,7 @@ namespace StrixMusic.Shells.Groove.TemplateSelectors
                 case GrooveArtistPageViewModel _:
                     Guard.IsNotNull(ArtistPageTemplate, nameof(ArtistPageTemplate));
                     return ArtistPageTemplate;
-                case GrooveHomePageViewModel _:
+                case LibraryViewModel _:
                     Guard.IsNotNull(HomePageTemplate, nameof(HomePageTemplate));
                     return HomePageTemplate;
                 case GroovePlaylistPageViewModel _:

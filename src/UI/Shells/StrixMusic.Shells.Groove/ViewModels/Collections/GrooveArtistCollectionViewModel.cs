@@ -39,7 +39,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         private void NavigateToArtist(ArtistViewModel? viewModel)
         {
             if (viewModel != null)
-                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequested(viewModel));
+                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequestMessage(viewModel));
         }
     }
 }

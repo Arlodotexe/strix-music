@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Styles\NowPlaying\" />
+    <Folder Include="ViewModels\Pages\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\stylecop.json" />

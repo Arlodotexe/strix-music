@@ -21,7 +21,7 @@ namespace StrixMusic.Shells.Groove.Controls.Items
         private void NavigateToAlbum(TrackViewModel? viewModel)
         {
             if (viewModel != null && viewModel.Album != null)
-                WeakReferenceMessenger.Default.Send(new AlbumViewNavigationRequested(viewModel.Album));
+                WeakReferenceMessenger.Default.Send(new AlbumViewNavigationRequestMessage(viewModel.Album));
         }
     }
 }

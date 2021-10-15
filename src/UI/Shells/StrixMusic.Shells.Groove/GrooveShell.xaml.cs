@@ -8,10 +8,10 @@ using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
+using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
 using StrixMusic.Shells.Groove.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
-using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -60,15 +60,15 @@ namespace StrixMusic.Shells.Groove
             this.InitializeComponent();
 
             // Register home page navigation
-            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequested>(this, (s, e) => NavigatePage(new GrooveHomePageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
             // Register album, artist, and playlist page navigation
-            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequested>(this, (s, e) => NavigatePage(e.PageData));
-            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequested>(this, (s, e) => NavigatePage(new GrooveArtistPageViewModel(e.PageData)));
-            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequested>(this, (s, e) => NavigatePage(new GroovePlaylistPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<AlbumViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
+            WeakReferenceMessenger.Default.Register<ArtistViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
+            WeakReferenceMessenger.Default.Register<PlaylistViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
             // Register playlists page navigation
-            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequested>(this, (s, e) => NavigatePage(new GroovePlaylistsPageViewModel(e.PageData)));
+            WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
@@ -85,7 +85,7 @@ namespace StrixMusic.Shells.Groove
             PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel(ViewModel.Library);
 
             if (ViewModel?.Library != null)
-                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequested(ViewModel.Library));
+                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));
         }
 
         private MainViewModel ViewModel => (MainViewModel)DataContext;
@@ -187,11 +187,11 @@ namespace StrixMusic.Shells.Groove
                 {
                     case "MyMusic":
                         Guard.IsNotNull(ViewModel?.Library, nameof(ViewModel.Library));
-                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequested(ViewModel.Library));
+                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));
                         break;
                     case "Playlists":
                         Guard.IsNotNull(ViewModel?.Library, nameof(ViewModel.Library));
-                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequested(ViewModel.Library));
+                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage(ViewModel.Library));
                         break;
                 }
             }
@@ -207,32 +207,28 @@ namespace StrixMusic.Shells.Groove
         private void UpdatePaneState()
         {
             if (MainSplitView.IsPaneOpen)
-            {
                 VisualStateManager.GoToState(this, "Full", true);
-            }
             else
-            {
                 VisualStateManager.GoToState(this, "Compact", true);
-            }
         }
 
-        private void NavigatePage<T>(T viewModel)
+        private void NavigatePage<T>(PageNavigationRequestMessage<T> viewModel)
         {
-            MainContent.Content = viewModel;
+            MainContent.Content = viewModel.PageData;
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
-            //Title = _localizationService["Music", viewModel.PageTitleResource];
-            //ShowLargeHeader = viewModel.ShowLargeHeader;
+            Title = _localizationService["Music", viewModel.PageTitleResource];
+            ShowLargeHeader = viewModel.ShowLargeHeader;
 
             UpdateSelectedNavigationButton(viewModel);
         }
 
-        private void UpdateSelectedNavigationButton<T>(T viewModel)
+        private void UpdateSelectedNavigationButton<T>(PageNavigationRequestMessage<T> viewModel)
         {
             ToggleButton? button = viewModel switch
             {
-                GrooveHomePageViewModel _ => MyMusicButton,
-                GroovePlaylistsPageViewModel _ => PlaylistsButton,
+                HomeViewNavigationRequestMessage _ => MyMusicButton,
+                PlaylistViewNavigationRequestMessage _ => PlaylistsButton,
                 _ => null,
             };
 

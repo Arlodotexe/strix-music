@@ -2,7 +2,6 @@
 using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Helper;
-using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using System.Threading.Tasks;
 using Windows.UI;
 
@@ -11,7 +10,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
     /// <summary>
     /// A ViewModel for a <see cref="Controls.Pages.GrooveAlbumPage"/>.
     /// </summary>
-    public class GrooveAlbumPageViewModel : ObservableObject, IGroovePageViewModel
+    public class GrooveAlbumPageViewModel : ObservableObject
     {
         private AlbumViewModel? _albumViewModel;
         private Color? _backgroundColor;
@@ -33,12 +32,6 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         public GrooveAlbumPageViewModel()
         {
         }
-
-        /// <inheritdoc/>
-        public bool ShowLargeHeader => false;
-
-        /// <inheritdoc/>
-        public string PageTitleResource => "Album";
 
         /// <summary>
         /// The <see cref="AlbumViewModel"/> inside this ViewModel on display.

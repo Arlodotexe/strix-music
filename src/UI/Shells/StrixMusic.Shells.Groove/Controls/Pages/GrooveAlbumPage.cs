@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shells.Groove.Controls.Pages
 {
     /// <summary>
-    /// A <see cref="Control"/> to display a <see cref="Sdk.ViewModels.AlbumViewModel"/> on a page.
+    /// A <see cref="Control"/> to display a <see cref="AlbumViewModel"/> on a page.
     /// </summary>
     public partial class GrooveAlbumPage : Control
     {

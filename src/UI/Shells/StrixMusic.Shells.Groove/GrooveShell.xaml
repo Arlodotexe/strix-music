@@ -35,8 +35,8 @@
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
-                    <DataTemplate x:DataType="groovepvms:GrooveHomePageViewModel">
-                        <pages:GrooveHomePage/>
+                    <DataTemplate x:DataType="sdkvms:LibraryViewModel">
+                        <pages:GrooveHomePage Library="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>

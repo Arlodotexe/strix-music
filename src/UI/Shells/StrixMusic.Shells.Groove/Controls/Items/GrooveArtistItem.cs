@@ -21,7 +21,7 @@ namespace StrixMusic.Shells.Groove.Controls.Items
         private void NavigateToArtist(ArtistViewModel? viewModel)
         {
             if (viewModel != null)
-                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequested(viewModel));
+                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequestMessage(viewModel));
         }
     }
 }

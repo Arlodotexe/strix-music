@@ -21,13 +21,13 @@
                 </Pivot.HeaderTemplate>
 
                 <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
-                    <collections:GrooveTrackCollection DataContext="{x:Bind TrackCollectionViewModel}"/>
+                    <collections:GrooveTrackCollection DataContext="{x:Bind Library}"/>
                 </PivotItem>
                 <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
-                    <collections:GrooveArtistCollection DataContext="{x:Bind ArtistCollectionViewModel}"/>
+                    <collections:GrooveArtistCollection DataContext="{x:Bind Library}"/>
                 </PivotItem>
                 <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums" Margin="8,0,0,0">
-                    <collections:GrooveAlbumCollection AlbumCollection="{x:Bind AlbumCollection}"/>
+                    <collections:GrooveAlbumCollection AlbumCollection="{x:Bind Library}"/>
                 </PivotItem>
             </Pivot>
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
-using StrixMusic.Shells.Groove.ViewModels.Pages.Interfaces;
 using Windows.UI;
 
 namespace StrixMusic.Shells.Groove.ViewModels.Pages
@@ -9,7 +8,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
     /// <summary>
     /// A ViewModel for an <see cref="Controls.Pages.GroovePlaylistPage"/>.
     /// </summary>
-    public class GroovePlaylistPageViewModel : ObservableObject, IGroovePageViewModel
+    public class GroovePlaylistPageViewModel : ObservableObject
     {
         private PlaylistViewModel? _playlistViewModel;
         private GrooveTrackCollectionViewModel? _trackCollectionViewModel;
@@ -24,12 +23,6 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
             ViewModel = viewModel;
             TrackCollectionViewModel = new GrooveTrackCollectionViewModel(viewModel);
         }
-
-        /// <inheritdoc/>
-        public bool ShowLargeHeader => false;
-
-        /// <inheritdoc/>
-        public string PageTitleResource => "Playlist";
 
         /// <summary>
         /// The <see cref="PlaylistViewModel"/> inside this ViewModel on display.
