@@ -11,7 +11,7 @@ namespace StrixMusic.Shells.Groove.Messages.Navigation.Pages
         /// <summary>
         /// Creates a new instance of <see cref="HomeViewNavigationRequestMessage"/>.
         /// </summary>
-        /// <param name="library">The library instance to use in the home view.</param>
+        /// <param name="library">The library to display in the home view.</param>
         /// <param name="record">If true, navigation will be added to the navigation stack.</param>
         public HomeViewNavigationRequestMessage(LibraryViewModel library, bool record = true)
             : base(library, record)
