@@ -45,6 +45,7 @@
         <pagestyles:GrooveHomePageStyle/>
         <pagestyles:GrooveAlbumPageStyle/>
         <pagestyles:GrooveArtistPageStyle/>
+        <pagestyles:GroovePlaylistPageStyle/>
         <!--<dviewstyles:SettingsViewStyle/>-->
 
 
