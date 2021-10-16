@@ -326,6 +326,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 },
             };
 
+            if (details.Image != null)
+            {
+                Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
+
+                var stream = new List<Stream>() { details.Image };
+                Task.Run(() => ProcessImagesAsync(fileData, relatedMetadata, stream), _scanningCancellationTokenSource.Token).Forget();
+            }
+
             return relatedMetadata;
         }
 
