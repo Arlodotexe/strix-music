@@ -11,14 +11,14 @@ namespace StrixMusic.Shells.Groove.Helper
     /// </summary>
     public class NavigationTracker
     {
-        private Stack<PageNavigationRequestedMessage>? _navigationStack;
+        private Stack<PageNavigationRequestMessage>? _navigationStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationTracker"/> class.
         /// </summary>
         public void Initialize()
         {
-            _navigationStack = new Stack<PageNavigationRequestedMessage>();
+            _navigationStack = new Stack<PageNavigationRequestMessage>();
 
             WeakReferenceMessenger.Default.Register<BackNavigationRequested>(this,
                 (s, e) => NavigateBackwards());
@@ -51,7 +51,7 @@ namespace StrixMusic.Shells.Groove.Helper
                 return;
 
             _navigationStack.Pop();
-            PageNavigationRequestedMessage previous = _navigationStack.Peek();
+            PageNavigationRequestMessage previous = _navigationStack.Peek();
             previous.RecordNavigation = false;
 
             switch (previous)
@@ -72,7 +72,7 @@ namespace StrixMusic.Shells.Groove.Helper
         }
 
         private void RecordNavigation<T>(T viewModel)
-            where T : PageNavigationRequestedMessage
+            where T : PageNavigationRequestMessage
         {
             if (_navigationStack == null)
                 return;

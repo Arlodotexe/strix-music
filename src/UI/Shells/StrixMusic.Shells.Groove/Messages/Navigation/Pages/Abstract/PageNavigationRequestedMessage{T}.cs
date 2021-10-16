@@ -4,10 +4,10 @@
     /// A base class for navigation requests with parameter data.
     /// </summary>
     /// <typeparam name="T">The type of the data being held.</typeparam>
-    public abstract class PageNavigationRequestMessage<T> : PageNavigationRequestedMessage
+    public abstract class PageNavigationRequestMessage<T> : PageNavigationRequestMessage
     {
         /// <summary>
-        /// Creates a new instance of <see cref="PageNavigationRequestedMessage"/>
+        /// Creates a new instance of <see cref="PageNavigationRequestMessage"/>
         /// </summary>
         /// <param name="data">Parameter data used for page navigation.</param>
         /// <param name="record">If true, navigation will be added to the navigation stack.</param>

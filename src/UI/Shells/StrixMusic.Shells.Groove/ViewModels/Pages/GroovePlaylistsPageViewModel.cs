@@ -14,15 +14,14 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
         /// Initializes a new instance of the <see cref="GroovePlaylistPageViewModel"/> class.
         /// </summary>
         /// <param name="viewModel">The <see cref="PlaylistViewModel"/> inside this ViewModel on display.</param>
-        public GroovePlaylistsPageViewModel(IPlaylistCollectionViewModel viewModel)
+        public GroovePlaylistsPageViewModel()
         {
-            ViewModel = viewModel;
         }
 
         /// <summary>
         /// The <see cref="PlaylistViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public IPlaylistCollectionViewModel? ViewModel
+        public IPlaylistCollectionViewModel? PlaylistCollection
         {
             get => _playlistCollectionViewModel;
             set => SetProperty(ref _playlistCollectionViewModel, value);

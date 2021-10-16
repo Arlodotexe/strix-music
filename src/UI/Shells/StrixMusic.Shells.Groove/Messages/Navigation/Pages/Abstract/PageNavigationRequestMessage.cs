@@ -3,13 +3,13 @@
     /// <summary>
     /// A base class for navigation requests.
     /// </summary>
-    public abstract class PageNavigationRequestedMessage
+    public abstract class PageNavigationRequestMessage
     {
         /// <summary>
-        /// Create a new instance of <see cref="PageNavigationRequestedMessage"/>.
+        /// Create a new instance of <see cref="PageNavigationRequestMessage"/>.
         /// </summary>
         /// <param name="record">If true, navigation will be added to the navigation stack.</param>
-        public PageNavigationRequestedMessage(bool record = true)
+        public PageNavigationRequestMessage(bool record = true)
         {
             RecordNavigation = record;
         }

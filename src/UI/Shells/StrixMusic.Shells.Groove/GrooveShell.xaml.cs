@@ -4,8 +4,10 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.ViewModels.Notifications;
+using StrixMusic.Shells.Groove.Controls.Pages;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
@@ -215,6 +217,14 @@ namespace StrixMusic.Shells.Groove
         private void NavigatePage<T>(PageNavigationRequestMessage<T> viewModel)
         {
             MainContent.Content = viewModel.PageData;
+
+            if (viewModel is PlaylistsViewNavigationRequestMessage playlistsNavReq)
+            {
+                if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
+                    MainContent.ContentTemplate = (DataTemplate)dataTemplate;
+                else
+                    Ioc.GetRequiredService<INotificationService>().RaiseNotification("Error", "Unable to show page.");
+            }
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
             Title = _localizationService["Music", viewModel.PageTitleResource];

@@ -4,6 +4,7 @@
     xmlns:local="using:StrixMusic.Shells.Groove.Controls"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:groovecol="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:groovepages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
@@ -17,7 +18,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="GroovePlaylistsPageTemplate" x:DataType="pagevms:GroovePlaylistsPageViewModel">
-        <Grid/>
+        <groovecol:GroovePlaylistCollection PlaylistCollection="{x:Bind PlaylistCollection}"/>
     </DataTemplate>
 
     <Style x:Key="GroovePlaylistsPageStyle" TargetType="groovepages:GroovePlaylistsPage">

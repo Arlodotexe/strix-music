@@ -23,7 +23,11 @@
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector">
+            <DataTemplate x:Key="GroovePlaylistsPageDataTemplate" x:DataType="sdkvms:IPlaylistCollectionViewModel">
+                <pages:GroovePlaylistsPage PlaylistCollection="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
+            </DataTemplate>
+
+            <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector" PlaylistsPageTemplate="{StaticResource GroovePlaylistsPageDataTemplate}">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
                     <DataTemplate x:DataType="sdkvms:AlbumViewModel">
                         <pages:GrooveAlbumPage Album="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
@@ -44,11 +48,6 @@
                         <pages:GroovePlaylistPage Playlist="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.PlaylistPageTemplate>
-                <selectors:MainContentTemplateSelector.PlaylistsPageTemplate>
-                    <DataTemplate x:DataType="groovepvms:GroovePlaylistsPageViewModel">
-                        <pages:GroovePlaylistsPage/>
-                    </DataTemplate>
-                </selectors:MainContentTemplateSelector.PlaylistsPageTemplate>
             </selectors:MainContentTemplateSelector>
         </ResourceDictionary>
     </shells:Shell.Resources>
@@ -159,7 +158,8 @@
                         <TextBlock x:Name="LargeHeaderText" Text="{x:Bind Title, Mode=OneWay}" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
                     </Grid>
 
-                    <ContentControl x:Name="MainContent" HorizontalContentAlignment="Stretch" Grid.Row="1" ContentTemplateSelector="{StaticResource MainContentTemplateSelector}"/>
+                    <ContentControl x:Name="MainContent" HorizontalContentAlignment="Stretch" Grid.Row="1"
+                                      ContentTemplateSelector="{StaticResource MainContentTemplateSelector}"/>
                 </Grid>
             </SplitView.Content>
             <SplitView.Pane>
