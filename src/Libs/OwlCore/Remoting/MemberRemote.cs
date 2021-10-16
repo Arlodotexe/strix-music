@@ -124,7 +124,7 @@ namespace OwlCore.Remoting
                 return;
 
             var paramData = CreateMethodParameterData(e.MethodBase, e.Values);
-            var memberSignature = CreateMemberSignature(e.MethodBase);
+            var memberSignature = CreateMemberSignature(e.MethodBase, MemberSignatureScope);
 
             var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
@@ -135,7 +135,7 @@ namespace OwlCore.Remoting
         {
             var message = exception.Message;
             var stackTrace = exception.StackTrace;
-            var targetSiteSignature = exception.TargetSite is null ? "Unknown" : CreateMemberSignature(exception.TargetSite);
+            var targetSiteSignature = exception.TargetSite is null ? "Unknown" : CreateMemberSignature(exception.TargetSite, MemberSignatureScope);
 
             var exceptionMessage = new RemoteExceptionDataMessage(message, stackTrace, targetSiteSignature);
             await SendRemotingMessageAsync(exceptionMessage);
@@ -151,8 +151,8 @@ namespace OwlCore.Remoting
             if (!IsValidRemotingDirection(propertyInfo, false))
                 return;
 
-            var memberSignature = CreateMemberSignature(propertyInfo);
-            var remoteMessage = new RemotePropertyChangeMessage(Id, memberSignature, e.NewValue, e.OldValue);
+            var memberSignature = CreateMemberSignature(propertyInfo, MemberSignatureScope);
+            var remoteMessage = new RemotePropertyChangeMessage(Id, memberSignature, propertyInfo.PropertyType.AssemblyQualifiedName, e.NewValue, e.OldValue);
 
             await SendRemotingMessageAsync(remoteMessage);
         }
@@ -184,6 +184,14 @@ namespace OwlCore.Remoting
 
         /// <inheritdoc cref="RemotingMode" />
         public RemotingMode Mode => MessageHandler.Mode;
+
+        /// <summary>
+        /// Indicates the matching mode used when generating and comparing a <see cref="IRemoteMemberMessage.TargetMemberSignature"/>. 
+        /// In addition to the options specified here, the <see cref="MemberRemote.Id"/> must match for messages to be received.
+        /// <para/>
+        /// If you're unsure which option to use, stick with <see cref="MemberSignatureScope.AssemblyQualifiedName"/>.
+        /// </summary>
+        public MemberSignatureScope MemberSignatureScope => MessageHandler.MemberSignatureScope;
 
         /// <summary>
         /// The <see cref="IRemoteMessageHandler"/> used by this <see cref="MemberRemote"/> instance to transfer member states.
@@ -220,7 +228,10 @@ namespace OwlCore.Remoting
 
         private void HandleIncomingRemotePropertyChange(RemotePropertyChangeMessage propertyChangeMessage)
         {
-            var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
+            var propertyInfo = Properties.FirstOrDefault(x => CreateMemberSignature(x, MemberSignatureScope) == propertyChangeMessage.TargetMemberSignature);
+
+            if (propertyInfo == default)
+                return;
 
             lock (MemberHandleExpectancyMap)
                 MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
@@ -233,23 +244,6 @@ namespace OwlCore.Remoting
                 return;
             }
 
-            var type = Type.GetType(propertyChangeMessage.TargetMemberSignature);
-            var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
-
-            if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
-            {
-                if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
-                {
-                    throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
-                                                    $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
-                                                    $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
-                                                    $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
-                                                    $"or use a primitive type that implements {nameof(IConvertible)}. ");
-                }
-
-                propertyChangeMessage.NewValue = Convert.ChangeType(propertyChangeMessage.NewValue, type);
-            }
-
             var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
 
             propertyInfo.SetValue(Instance, castValue);
@@ -257,7 +251,10 @@ namespace OwlCore.Remoting
 
         internal void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
         {
-            var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
+            var methodInfo = Methods.FirstOrDefault(x => CreateMemberSignature(x, MemberSignatureScope) == methodCallMsg.TargetMemberSignature);
+
+            if (methodInfo == default)
+                return;
 
             lock (MemberHandleExpectancyMap)
                 MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
@@ -271,27 +268,17 @@ namespace OwlCore.Remoting
             }
 
             var parameterValues = new List<object?>();
+            var paramInfos = methodInfo.GetParameters();
+            var paramDatas = methodCallMsg.Parameters.ToArray();
 
-            foreach (var param in methodCallMsg.Parameters)
+            for (var i = 0; i < paramInfos.Length;i++)
             {
-                var type = Type.GetType(param.AssemblyQualifiedName);
-                var mostDerivedType = param.Value?.GetType();
+                var paramInfo = paramInfos[i];
+                var parameterData = paramDatas[i];
 
-                if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
-                {
-                    if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
-                    {
-                        throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
-                                                        $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
-                                                        $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
-                                                        $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
-                                                        $"or use a primitive type that implements {nameof(IConvertible)}. ");
-                    }
+                var convertedValue = Convert.ChangeType(paramDatas[i].Value, paramInfo.ParameterType);
 
-                    param.Value = Convert.ChangeType(param.Value, type);
-                }
-
-                parameterValues.Add(param.Value);
+                parameterValues.Add(convertedValue);
             }
 
             methodInfo?.Invoke(Instance, parameterValues.ToArray());
@@ -344,18 +331,73 @@ namespace OwlCore.Remoting
         /// Creates a member signature that is internally used to identify members in a type when sending/receiving data.
         /// </summary>
         /// <param name="memberInfo">The <see cref="MemberInfo"/> to generate a signature for.</param>
+        /// <param name="matchingKind">The <see cref="Remoting.MemberSignatureScope"/> to use for generating a signature.</param>
         /// <returns>A unique member signature for the given <see cref="MemberInfo"/>.</returns>
         /// <remarks>
         /// Useful in scenarios where you need to construct your own <see cref="IRemoteMemberMessage"/> instance.
         /// </remarks>
-        public static string CreateMemberSignature(MemberInfo memberInfo)
+        public static string CreateMemberSignature(MemberInfo memberInfo, MemberSignatureScope matchingKind)
+        {
+            return matchingKind switch
+            {
+                MemberSignatureScope.AssemblyQualifiedName => CreateAssemblyMemberSignature(memberInfo),
+                MemberSignatureScope.FullName => CreateFullNameMemberSignature(memberInfo),
+                MemberSignatureScope.DeclaringType => CreateDeclaringTypeMemberSignature(memberInfo),
+                MemberSignatureScope.MemberName => CreateMemberNameMemberSignature(memberInfo),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(),
+            };
+        }
+
+        private static string CreateMemberNameMemberSignature(MemberInfo memberInfo)
         {
             if (memberInfo is MethodBase methodBase)
-                return methodBase.ToString();
+                return $"{methodBase.Name} {string.Join(" ", methodBase.GetParameters().Select(x => $"{x.ParameterType.Name}.{x.Name}"))}";
+
+            if (memberInfo is PropertyInfo propertyInfo)
+                return $"{propertyInfo.PropertyType.Name} {propertyInfo.Name}";
+
+            if (memberInfo is Type type)
+                return $"{type.Name}";
+
+            throw new NotSupportedException();
+        }
+
+        private static string CreateDeclaringTypeMemberSignature(MemberInfo memberInfo)
+        {
+            if (memberInfo is MethodBase methodBase)
+                return $"{methodBase.DeclaringType.Name} {methodBase.Name} {string.Join(" ", methodBase.GetParameters().Select(x => $"{x.ParameterType.Name}.{x.Name}"))}";
+
+            if (memberInfo is PropertyInfo propertyInfo)
+                return $"{propertyInfo.DeclaringType.Name} {propertyInfo.PropertyType.Name} {propertyInfo.Name}";
+
+            if (memberInfo is Type type)
+                return $"{type.DeclaringType.Name} {type.Name}";
+
+            throw new NotSupportedException();
+        }
+
+        private static string CreateFullNameMemberSignature(MemberInfo memberInfo)
+        {
+            if (memberInfo is MethodBase methodBase)
+                return $"{methodBase.DeclaringType.FullName} {methodBase.Name} {string.Join(" ", methodBase.GetParameters().Select(x => $"{x.ParameterType.Name}.{x.Name}"))}";
+
+            if (memberInfo is PropertyInfo propertyInfo)
+                return $"{propertyInfo.DeclaringType.FullName} {propertyInfo.PropertyType.Name} {propertyInfo.Name}";
+
+            if (memberInfo is Type type)
+                return $"{type.DeclaringType.FullName} {type.Name}";
+
+            throw new NotSupportedException();
+        }
+
+        private static string CreateAssemblyMemberSignature(MemberInfo memberInfo)
+        {
+            if (memberInfo is MethodBase methodBase)
+                return $"{methodBase.DeclaringType.AssemblyQualifiedName} {methodBase.Name} {string.Join(" ", methodBase.GetParameters().Select(x => $"{x.ParameterType.Name}.{x.Name}"))}";
 
             if (memberInfo is PropertyInfo propertyInfo)
             {
-                return $"{propertyInfo.DeclaringType} {propertyInfo.PropertyType} {propertyInfo.Name}";
+                return $"{propertyInfo.DeclaringType.AssemblyQualifiedName} {propertyInfo.PropertyType.Name} {propertyInfo.Name}";
             }
 
             if (memberInfo is Type type)

@@ -14,6 +14,16 @@ namespace OwlCore.Remoting.Transfer
         public RemotingMode Mode { get; set; }
 
         /// <summary>
+        /// Indicates the member signature used when generating outgoing and processing incoming <see cref="IRemoteMemberMessage"/>s.
+        /// <para/>
+        /// Allows for sending/receiving member changes in different assemblies, namespaces, or class names.
+        /// In addition to the options specified here, the <see cref="MemberRemote.Id"/> must still match for messages to be received on each instance.
+        /// <para/>
+        /// If you're unsure which option to use, stick with <see cref="MemberSignatureScope.AssemblyQualifiedName"/>.
+        /// </summary>
+        public MemberSignatureScope MemberSignatureScope { get; set; }
+
+        /// <summary>
         /// Emit a remoting message to all connected nodes.
         /// </summary>
         /// <param name="memberMessage">The message being sent.</param>
