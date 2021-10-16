@@ -21,7 +21,7 @@
                 </Pivot.HeaderTemplate>
 
                 <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
-                    <collections:GrooveTrackCollection DataContext="{x:Bind Library}"/>
+                    <collections:GrooveTrackCollection TrackCollection="{x:Bind Library}"/>
                 </PivotItem>
                 <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
                     <collections:GrooveArtistCollection ArtistCollection="{x:Bind Library}"/>

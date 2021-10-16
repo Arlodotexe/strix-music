@@ -13,15 +13,14 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveTrackCollectionViewModel"/> class.
         /// </summary>
-        public GrooveTrackCollectionViewModel(ITrackCollectionViewModel? viewModel)
+        public GrooveTrackCollectionViewModel()
         {
-            ViewModel = viewModel;
         }
 
         /// <summary>
         /// The <see cref="ITrackCollectionViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public ITrackCollectionViewModel? ViewModel
+        public ITrackCollectionViewModel? TrackCollection
         {
             get => _trackCollectionViewModel;
             set => SetProperty(ref _trackCollectionViewModel, value);

@@ -12,18 +12,18 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.TrackCollectionStyle">
 
     <DataTemplate x:Key="GrooveTrackListTemplate" x:DataType="groovevms:GrooveTrackCollectionViewModel">
-        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind TrackCollection.Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                   ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
                   Padding="16,16,16,112" HorizontalAlignment="Stretch"
                   SelectionMode="None" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.InitTrackCollectionAsyncCommand}"/>
+                    <core:InvokeCommandAction Command="{x:Bind TrackCollection.InitTrackCollectionAsyncCommand}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.Header>
                 <Grid>
-                    <ProgressRing IsActive="{x:Bind ViewModel.PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressRing IsActive="{x:Bind TrackCollection.PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </ListView.Header>
@@ -32,7 +32,7 @@
                     <ditems:TrackItem>
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="DoubleTapped">
-                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.ViewModel.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.TrackCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                     </ditems:TrackItem>
