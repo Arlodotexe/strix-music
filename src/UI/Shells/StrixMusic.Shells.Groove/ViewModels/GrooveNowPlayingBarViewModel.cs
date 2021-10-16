@@ -13,29 +13,33 @@ namespace StrixMusic.Shells.Groove.ViewModels
     /// </summary>
     public class GrooveNowPlayingBarViewModel : ObservableObject
     {
-        private MainViewModel? _mainViewModel;
+        private DeviceViewModel? _activeDevice;
         private Color? _backgroundColor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveNowPlayingBarViewModel"/> class.
         /// </summary>
-        /// <param name="viewModel">The <see cref="MainViewModel"/> inside this ViewModel on display.</param>
-        public GrooveNowPlayingBarViewModel(MainViewModel viewModel)
+        public GrooveNowPlayingBarViewModel()
         {
             _backgroundColor = null;
-            ViewModel = viewModel;
         }
 
         /// <summary>
         /// The <see cref="MainViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public MainViewModel? ViewModel
+        public DeviceViewModel? ActiveDevice
         {
-            get => _mainViewModel;
+            get => _activeDevice;
             set
             {
-                SetProperty(ref _mainViewModel, value);
-                RegisterViewModelEvents();
+
+                if (!(_activeDevice is null))
+                    DetachEvents(_activeDevice);
+
+                if (!(value is null))
+                    AttachEvents(value);
+
+                SetProperty(ref _activeDevice, value);
             }
         }
 
@@ -48,42 +52,30 @@ namespace StrixMusic.Shells.Groove.ViewModels
             set => SetProperty(ref _backgroundColor, value);
         }
 
-        private void RegisterViewModelEvents()
+        private void AttachEvents(DeviceViewModel device)
         {
-            Guard.IsNotNull(_mainViewModel, nameof(_mainViewModel));
-            _mainViewModel.DevicesChanged += RegisterDeviceEvents;
+            device.NowPlayingChanged += ActiveDevice_NowPlayingChanged;
         }
 
-        private void RegisterDeviceEvents(object sender, System.Collections.Generic.IReadOnlyList<OwlCore.Events.CollectionChangedItem<Sdk.Data.IDevice>> addedItems, System.Collections.Generic.IReadOnlyList<OwlCore.Events.CollectionChangedItem<Sdk.Data.IDevice>> removedItems)
+        private void DetachEvents(DeviceViewModel device)
         {
-            Guard.IsNotNull(_mainViewModel?.ActiveDevice, nameof(_mainViewModel.ActiveDevice));
-
-            // TODO: Handle active device change
-            _mainViewModel.ActiveDevice.NowPlayingChanged += ActiveDevice_NowPlayingChanged;
+            device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
         private async void ActiveDevice_NowPlayingChanged(object sender, Sdk.Data.ITrack e)
         {
-            BackgroundColor = await Task.Run<Color?>(async () =>
+            TrackViewModel? nowPlaying = ActiveDevice?.NowPlaying;
+            if (nowPlaying != null)
             {
-                TrackViewModel? nowPlaying = ViewModel?.ActiveDevice?.NowPlaying;
-                if (nowPlaying != null)
-                {
-                    // Load images if there aren't images loaded.
-                    if (nowPlaying.Images.Count == 0)
-                    {
-                        await nowPlaying.InitImageCollectionAsync();
-                    }
+                // Load images if there aren't images loaded.
+                await nowPlaying.InitImageCollectionAsync();
 
-                    // If there are now images, grab the color from the first image.
-                    if (nowPlaying.Images.Count != 0)
-                    {
-                        return await DynamicColorHelper.GetImageAccentColorAsync(nowPlaying.Images[0]);
-                    }
-                }
-
-                return null;
-            });
+                // If there are now images, grab the color from the first image.
+                if (nowPlaying.Images.Count != 0)
+                    BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(nowPlaying.Images[0]));
+                else
+                    BackgroundColor = null;
+            }
         }
     }
 }

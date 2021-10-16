@@ -45,12 +45,6 @@ namespace StrixMusic.Shells.Groove
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveShell), new PropertyMetadata(null));
 
-        /// <summary>
-        /// A backing <see cref="DependencyProperty"/> for the <see cref="NowPlayingBarViewModel"/> property.
-        /// </summary>
-        public static readonly DependencyProperty NowPlayingBarViewModelProperty =
-            DependencyProperty.Register(nameof(NowPlayingBarViewModel), typeof(GrooveNowPlayingBarViewModel), typeof(GrooveShell), new PropertyMetadata(null));
-
         private ILocalizationService? _localizationService;
         private NotificationsViewModel? _notificationsViewModel;
 
@@ -83,11 +77,13 @@ namespace StrixMusic.Shells.Groove
         {
             DataContextChanged -= GrooveShell_DataContextChanged;
 
-            NowPlayingBarViewModel = new GrooveNowPlayingBarViewModel(ViewModel);
             PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel() { PlaylistCollection = ViewModel.Library };
 
             if (ViewModel?.Library != null)
+            {
+                Bindings.Update();
                 _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));
+            }
         }
 
         private MainViewModel ViewModel => (MainViewModel)DataContext;
@@ -108,17 +104,8 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        /// <summary>
-        /// The <see cref="GrooveNowPlayingBarViewModel"/> for the <see cref="Controls.GrooveNowPlayingBar"/>.
-        /// </summary>
-        public GrooveNowPlayingBarViewModel? NowPlayingBarViewModel
-        {
-            get => (GrooveNowPlayingBarViewModel?)GetValue(NowPlayingBarViewModelProperty);
-            set => SetValue(NowPlayingBarViewModelProperty, value);
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
         }
 
         /// <summary>

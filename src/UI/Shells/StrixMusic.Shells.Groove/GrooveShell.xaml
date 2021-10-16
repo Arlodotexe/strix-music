@@ -27,7 +27,8 @@
                 <pages:GroovePlaylistsPage PlaylistCollection="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
             </DataTemplate>
 
-            <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector" PlaylistsPageTemplate="{StaticResource GroovePlaylistsPageDataTemplate}">
+            <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector"
+                                                   PlaylistsPageTemplate="{StaticResource GroovePlaylistsPageDataTemplate}">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
                     <DataTemplate x:DataType="sdkvms:AlbumViewModel">
                         <pages:GrooveAlbumPage Album="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
@@ -262,12 +263,12 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:GroovePlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind PlaylistCollectionViewModel, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                    <collections:GroovePlaylistCollection x:Name="PlaylistList" PlaylistCollection="{x:Bind ViewModel.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>
 
-        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" DataContext="{x:Bind NowPlayingBarViewModel, Mode=OneWay}"/>
+        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" ActiveDevice="{x:Bind ViewModel.ActiveDevice, Mode=OneWay}"/>
 
         <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>

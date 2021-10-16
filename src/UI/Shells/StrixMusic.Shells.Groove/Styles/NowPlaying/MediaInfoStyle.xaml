@@ -15,12 +15,12 @@
     <DataTemplate x:Key="GrooveMediaInfoDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
         <Grid>
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ViewModel.ActiveDevice}">
-                    <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
+                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice}">
+                    <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.InitArtistCollectionAsyncCommand}" />
                 </core:EventTriggerBehavior>
 
                 <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.NowPlaying.PopulateMoreArtistsCommand}" CommandParameter="{x:Bind convertnum:StringToIntConverter.Convert('1')}"/>
+                    <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.InitArtistCollectionAsyncCommand}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             
@@ -30,12 +30,27 @@
             </Grid.ColumnDefinitions>
             
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{Binding ViewModel.ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
-                <TextBlock Text="{Binding ViewModel.ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
+                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
+                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
-            
-            <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center"
-                             ImageCollection="{Binding ViewModel.ActiveDevice.NowPlaying, Mode=OneWay}"/>
+
+            <Image x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice}">
+                        <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.InitImageCollectionAsyncCommand}" />
+                    </core:EventTriggerBehavior>
+
+                    <core:EventTriggerBehavior EventName="Loaded">
+                        <core:InvokeCommandAction Command="{Binding ActiveDevice.NowPlaying.InitImageCollectionAsyncCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+                
+                <Image.Source>
+                    <BitmapImage UriSource="{Binding ActiveDevice.NowPlaying.Images[0].Uri}"
+                                 DecodePixelHeight="{Binding ActiveDevice.NowPlaying.Images[0].Height}"
+                                 DecodePixelWidth="{Binding ActiveDevice.NowPlaying.Images[0].Width}"/>
+                </Image.Source>
+            </Image>
         </Grid>
     </DataTemplate>
 

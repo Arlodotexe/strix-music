@@ -1,4 +1,8 @@
-﻿using StrixMusic.Shells.Groove.ViewModels;
+﻿using OwlCore.Extensions;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls
@@ -13,12 +17,33 @@ namespace StrixMusic.Shells.Groove.Controls
         /// </summary>
         public GrooveNowPlayingBar()
         {
-            this.DefaultStyleKey = typeof(GrooveNowPlayingBar);
+            DefaultStyleKey = typeof(GrooveNowPlayingBar);
+            DataContext = new GrooveNowPlayingBarViewModel();
         }
+
+        /// <summary>
+        /// Backing dependency property for <see cref="MainViewModel"/>.
+        /// </summary>
+        public static readonly DependencyProperty ActiveDeviceProperty =
+            DependencyProperty.Register(nameof(DeviceViewModel), typeof(DeviceViewModel), typeof(GrooveNowPlayingBar), new PropertyMetadata(null, (d, e) => d.Cast<GrooveNowPlayingBar>().OnActiveDeviceChanged()));
 
         /// <summary>
         /// The <see cref="GrooveNowPlayingBarViewModel"/> for the <see cref="GrooveNowPlayingBar"/> template.
         /// </summary>
         public GrooveNowPlayingBarViewModel ViewModel => (GrooveNowPlayingBarViewModel)DataContext;
+
+        /// <summary>
+        /// Holds active devices and track playback information.
+        /// </summary>
+        public DeviceViewModel? ActiveDevice
+        {
+            get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
+            set => SetValue(ActiveDeviceProperty, value);
+        }
+
+        private void OnActiveDeviceChanged()
+        {
+            ViewModel.ActiveDevice = ActiveDevice;
+        }
     }
 }

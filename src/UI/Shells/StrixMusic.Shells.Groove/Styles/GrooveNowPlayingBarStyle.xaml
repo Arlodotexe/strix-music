@@ -78,12 +78,13 @@
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                        IsAdvancing="{x:Bind ViewModel.ActiveDevice.IsPlaying, Mode=OneWay}"
-                                        Value="{x:Bind ViewModel.ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                        Maximum="{x:Bind ViewModel.ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}">
+                                        IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
+                                        Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{Binding ViewModel.ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
+                                                      CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                 </nowplaying:MediaSlider>

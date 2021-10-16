@@ -22,7 +22,7 @@
 
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="Click">
-                        <core:InvokeCommandAction Command="{x:Bind ViewModel.ActiveDevice.ToggleShuffleCommandAsync, Mode=OneWay}" />
+                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleShuffleCommandAsync, Mode=OneWay}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </ToggleButton>
@@ -31,15 +31,15 @@
                 <Button Style="{StaticResource MediaButton}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ViewModel.ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </Button>
-                <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{x:Bind ViewModel.ActiveDevice.IsPlaying, Mode=OneWay}">
+                <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ViewModel.ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                     <owlcoreuno:ToggleContentButton.CheckedContent>
@@ -50,7 +50,7 @@
                 <Button Style="{StaticResource MediaButton}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ViewModel.ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -61,7 +61,7 @@
 
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="Click">
-                        <core:InvokeCommandAction Command="{x:Bind ViewModel.ActiveDevice.ToggleRepeatCommandAsync, Mode=OneWay}" />
+                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleRepeatCommandAsync, Mode=OneWay}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
 
