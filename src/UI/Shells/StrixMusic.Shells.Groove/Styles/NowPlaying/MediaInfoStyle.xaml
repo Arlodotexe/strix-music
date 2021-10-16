@@ -4,6 +4,7 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    xmlns:owlnumconv="using:OwlCore.Uno.Converters.Numerical"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -11,6 +12,8 @@
     xmlns:convertnum="using:OwlCore.Uno.Converters.Numerical"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaInfoStyle">
+
+    <owlnumconv:DoubleToIntConverter x:Key="DoubleToIntConverter"/>
 
     <DataTemplate x:Key="GrooveMediaInfoDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
         <Grid>
@@ -31,7 +34,7 @@
             
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
                 <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
-                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name}" FontSize="15" FontWeight="Bold"/>
+                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name, Mode=OneWay}" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
 
             <Image x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center">
