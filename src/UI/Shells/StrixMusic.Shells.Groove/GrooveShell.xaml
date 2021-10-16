@@ -26,22 +26,22 @@
             <selectors:MainContentTemplateSelector x:Key="MainContentTemplateSelector">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
                     <DataTemplate x:DataType="sdkvms:AlbumViewModel">
-                        <pages:GrooveAlbumPage Album="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <pages:GrooveAlbumPage Album="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
                 <selectors:MainContentTemplateSelector.ArtistPageTemplate>
-                    <DataTemplate x:DataType="groovepvms:GrooveArtistPageViewModel">
-                        <pages:GrooveArtistPage/>
+                    <DataTemplate x:DataType="sdkvms:ArtistViewModel">
+                        <pages:GrooveArtistPage Artist="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}"/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="sdkvms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <pages:GrooveHomePage Library="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>
-                    <DataTemplate x:DataType="groovepvms:GroovePlaylistPageViewModel">
-                        <pages:GroovePlaylistPage/>
+                    <DataTemplate x:DataType="sdkvms:PlaylistViewModel">
+                        <pages:GroovePlaylistPage Playlist="{Binding Path=DataContext, RelativeSource={RelativeSource TemplatedParent}, Mode=OneTime}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.PlaylistPageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistsPageTemplate>

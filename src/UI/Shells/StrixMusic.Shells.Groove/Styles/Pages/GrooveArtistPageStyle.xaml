@@ -69,7 +69,7 @@
                         </Grid.RowDefinitions>
 
                         <strix:SafeImage Grid.RowSpan="2" Margin="32"
-                                     ImageCollection="{x:Bind ViewModel, Mode=OneWay}"
+                                     ImageCollection="{x:Bind Artist, Mode=OneWay}"
                                      HorizontalAlignment="Center"
                                      Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 
@@ -79,8 +79,8 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Text="{x:Bind ViewModel.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+
+                            <TextBlock Text="{x:Bind Artist.Name, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
                                        LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
                             
                             <!--TODO: Optional artist bio-->
@@ -113,7 +113,7 @@
                             <!--<defaultcontrols:TrackCollection/>-->
                         </PivotItem>
                         <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
-                            <groovecollections:GrooveAlbumCollection DataContext="{x:Bind AlbumCollectionViewModel}"/>
+                            <groovecollections:GrooveAlbumCollection AlbumCollection="{x:Bind Artist}" />
                         </PivotItem>
                         <PivotItem x:Uid="/Music/SimilarArtistsPVI" Header="Similar Artists">
                             <!--<defaultcontrols:AlbumCollection/>-->

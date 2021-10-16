@@ -11,35 +11,22 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
     public class GroovePlaylistPageViewModel : ObservableObject
     {
         private PlaylistViewModel? _playlistViewModel;
-        private GrooveTrackCollectionViewModel? _trackCollectionViewModel;
         private Color? _backgroundColor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroovePlaylistPageViewModel"/> class.
         /// </summary>
-        /// <param name="viewModel">The <see cref="PlaylistViewModel"/> inside this ViewModel on display.</param>
-        public GroovePlaylistPageViewModel(PlaylistViewModel viewModel)
+        public GroovePlaylistPageViewModel()
         {
-            ViewModel = viewModel;
-            TrackCollectionViewModel = new GrooveTrackCollectionViewModel(viewModel);
         }
 
         /// <summary>
         /// The <see cref="PlaylistViewModel"/> inside this ViewModel on display.
         /// </summary>
-        public PlaylistViewModel? ViewModel
+        public PlaylistViewModel? Playlist
         {
             get => _playlistViewModel;
             set => SetProperty(ref _playlistViewModel, value);
-        }
-
-        /// <summary>
-        /// The <see cref="GrooveTrackCollectionViewModel"/> for the <see cref="Controls.Collections.GrooveTrackCollection"/> on display in the <see cref="Controls.Pages.GroovePlaylistPage"/>.
-        /// </summary>
-        public GrooveTrackCollectionViewModel? TrackCollectionViewModel
-        {
-            get => _trackCollectionViewModel;
-            set => SetProperty(ref _trackCollectionViewModel, value);
         }
 
         /// <summary>

@@ -1,4 +1,7 @@
-﻿using StrixMusic.Shells.Groove.ViewModels.Pages;
+﻿using OwlCore.Extensions;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.ViewModels.Pages;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls.Pages
@@ -13,12 +16,33 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// </summary>
         public GroovePlaylistPage()
         {
-            this.DefaultStyleKey = typeof(GroovePlaylistPage);
+            DefaultStyleKey = typeof(GroovePlaylistPage);
+            DataContext = new GroovePlaylistPageViewModel();
         }
+
+        /// <summary>
+        /// The backing depenency property for <see cref="Playlist"/>.s
+        /// </summary>
+        public static readonly DependencyProperty PlaylistProperty =
+            DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(GroovePlaylistPage), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistPage>().OnPlaylistChanged()));
 
         /// <summary>
         /// The <see cref="GroovePlaylistPageViewModel"/> for the <see cref="GrooveHomePage"/> template.
         /// </summary>
         public GroovePlaylistPageViewModel ViewModel => (GroovePlaylistPageViewModel)DataContext;
+
+        /// <summary>
+        /// The playlist to display.
+        /// </summary>
+        public PlaylistViewModel Playlist
+        {
+            get { return (PlaylistViewModel)GetValue(PlaylistProperty); }
+            set { SetValue(PlaylistProperty, value); }
+        }
+
+        private void OnPlaylistChanged()
+        {
+            ViewModel.Playlist = Playlist;
+        }
     }
 }

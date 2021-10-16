@@ -78,11 +78,11 @@
                         </Grid.RowDefinitions>
 
                         <strix:SafeImage x:Name="PlaylistImage" Grid.RowSpan="2" Margin="38,0,22,0"
-                                         ImageCollection="{x:Bind ViewModel}"
+                                         ImageCollection="{x:Bind Playlist}"
                                          Height="300" Width="300" HorizontalAlignment="Center"/>
 
                         <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
-                            <TextBlock Text="{x:Bind ViewModel.Name}" FontSize="32" FontWeight="SemiBold"/>
+                            <TextBlock Text="{x:Bind Playlist.Name}" FontSize="32" FontWeight="SemiBold"/>
                         </StackPanel>
 
                         <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
@@ -100,7 +100,7 @@
                         </CommandBar>
                     </Grid>
 
-                    <collections:TrackCollection Grid.Row="1" DataContext="{x:Bind ViewModel}"/>
+                    <collections:TrackCollection Grid.Row="1" DataContext="{x:Bind Playlist}"/>
                 </Grid>
             </UserControl>
         </ScrollViewer>

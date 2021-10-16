@@ -16,6 +16,7 @@ namespace StrixMusic.Shells.Groove.Controls.Items
             NavigateToArtistCommand = new RelayCommand<ArtistViewModel>(new Action<ArtistViewModel?>(NavigateToArtist));
         }
 
+#warning Move this to a ViewModel
         public RelayCommand<ArtistViewModel> NavigateToArtistCommand { get; private set; }
 
         private void NavigateToArtist(ArtistViewModel? viewModel)

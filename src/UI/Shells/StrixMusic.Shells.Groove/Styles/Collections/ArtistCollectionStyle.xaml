@@ -13,11 +13,11 @@
     <converter:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter"/>
 
     <DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="groovevms:GrooveArtistCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{Binding ViewModel.Artists, Mode=OneWay}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
+        <GridView x:Name="PART_Selector" ItemsSource="{Binding ArtistCollection.Artists, Mode=OneWay}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16,16,16,112" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.InitArtistCollectionAsyncCommand}"/>
+                    <core:InvokeCommandAction Command="{x:Bind ArtistCollection.InitArtistCollectionAsyncCommand}"/>
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="ItemClick">
                     <core:InvokeCommandAction Command="{x:Bind NavigateToArtistCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
@@ -25,7 +25,7 @@
             </interactivity:Interaction.Behaviors>
             <GridView.Header>
                 <Grid>
-                    <ProgressRing IsActive="{x:Bind ViewModel.PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressRing IsActive="{x:Bind ArtistCollection.PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </GridView.Header>

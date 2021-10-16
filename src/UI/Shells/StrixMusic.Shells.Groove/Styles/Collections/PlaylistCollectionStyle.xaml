@@ -7,12 +7,13 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:converters="using:OwlCore.Uno.Converters"
+    xmlns:groovecolvms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PlaylistCollectionStyle">
     
     <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
-    <DataTemplate x:Key="GroovePlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists}" Padding="16,16,16,112"
+    <DataTemplate x:Key="GroovePlaylistCollectionDataTemplate" x:DataType="groovecolvms:GroovePlaylistCollectionViewModel">
+        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind PlaylistCollection.Playlists}" Padding="16,16,16,112"
                   HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
             <!--<interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClicked">
@@ -21,7 +22,7 @@
             </interactivity:Interaction.Behaviors>-->
             <GridView.Header>
                 <Grid>
-                    <ProgressRing IsActive="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressRing IsActive="{x:Bind PlaylistCollection.PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </GridView.Header>

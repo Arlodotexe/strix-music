@@ -7,8 +7,10 @@ using System;
 
 namespace StrixMusic.Shells.Groove.Controls.Items
 {
+    /// <inheritdoc/>
     public class GrooveAlbumItem : AlbumItem
     {
+        /// <inheritdoc/>
         public GrooveAlbumItem()
         {
             this.DefaultStyleKey = typeof(GrooveAlbumItem);
@@ -16,6 +18,7 @@ namespace StrixMusic.Shells.Groove.Controls.Items
             NavigateToAlbumCommand = new RelayCommand<AlbumViewModel>(new Action<AlbumViewModel?>(NavigateToAlbum));
         }
 
+#warning Move this to a ViewModel
         public RelayCommand<AlbumViewModel> NavigateToAlbumCommand { get; private set; }
 
         private void NavigateToAlbum(AlbumViewModel? viewModel)

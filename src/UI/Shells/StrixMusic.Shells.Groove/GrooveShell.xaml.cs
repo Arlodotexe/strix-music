@@ -82,7 +82,7 @@ namespace StrixMusic.Shells.Groove
             DataContextChanged -= GrooveShell_DataContextChanged;
 
             NowPlayingBarViewModel = new GrooveNowPlayingBarViewModel(ViewModel);
-            PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel(ViewModel.Library);
+            PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel() { PlaylistCollection = ViewModel.Library };
 
             if (ViewModel?.Library != null)
                 _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));

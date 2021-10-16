@@ -19,7 +19,6 @@ namespace StrixMusic.Shells.Groove.ViewModels.Pages
             ViewModel = viewModel;
         }
 
-
         /// <summary>
         /// The <see cref="PlaylistViewModel"/> inside this ViewModel on display.
         /// </summary>
