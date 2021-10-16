@@ -5,8 +5,7 @@
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
     xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
-    xmlns:shellstyles="using:StrixMusic.Shells.Groove.Styles.Shells"
-    xmlns:viewstyles="using:StrixMusic.Shells.Groove.Styles.Views"
+    xmlns:pagestyles="using:StrixMusic.Shells.Groove.Styles.Pages"
     xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
     xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
     xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
@@ -17,7 +16,7 @@
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="Resources/TextBoxStyles.xaml"/>
         <ResourceDictionary Source="Styles/NowPlaying/MediaSliderStyle.xaml"/>
-        <ResourceDictionary Source="Styles/PivotStyle.xaml" />
+        <ResourceDictionary Source="Styles/PivotStyle.xaml"/>
 
 
         <!--Collection related styles-->
@@ -25,13 +24,13 @@
         <collectionstyles:PanePlaylistCollectionStyle/>
         <collectionstyles:PlaylistCollectionStyle/>
         <collectionstyles:TrackCollectionStyle/>
-        <dcollectionstyles:ArtistCollectionStyle/>
+        <collectionstyles:ArtistCollectionStyle/>
 
 
         <!--Item related styles-->
-        <ditemstyles:AlbumItemStyle/>
+        <!--<ditemstyles:AlbumItemStyle/>
         <ditemstyles:ArtistItemStyle/>
-        <ditemstyles:TrackItemStyle/>
+        <ditemstyles:TrackItemStyle/>-->
 
         
         <!--NowPlaying related style-->
@@ -39,19 +38,20 @@
         <nowplayingstyles:MediaTransportStyle/>
 
         <!--Shell related styles-->
-        <shellstyles:NotificationAbstractUICollectionStyle/>
-        <shellstyles:NowPlayingBarStyle/>
-        <shellstyles:PlayableCollectionGroupPivotStyle/>
+        <!--<shellstyles:NotificationAbstractUICollectionStyle/>-->
+        <styles:GrooveNowPlayingBarStyle/>
 
-        
-        <!--View related styles-->
-        <viewstyles:HomeStyle/>
-        <dviewstyles:SettingsViewStyle/>
+        <!--Page related styles-->
+        <pagestyles:GrooveHomePageStyle/>
+        <pagestyles:GrooveAlbumPageStyle/>
+        <pagestyles:GrooveArtistPageStyle/>
+        <pagestyles:GroovePlaylistPageStyle/>
+        <!--<dviewstyles:SettingsViewStyle/>-->
 
 
         <!--Secondary view related styles-->
-        <secondaryviewstyles:AlbumViewStyle/>
-        <dsecondaryviewstyles:ArtistViewStyle/>
+        <!--<secondaryviewstyles:AlbumViewStyle/>
+        <dsecondaryviewstyles:ArtistViewStyle/>-->
 
     </ResourceDictionary.MergedDictionaries>
     

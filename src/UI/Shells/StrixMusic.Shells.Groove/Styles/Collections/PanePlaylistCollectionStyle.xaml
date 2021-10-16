@@ -2,21 +2,32 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
+    xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PanePlaylistCollectionStyle">
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="PanePlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
-        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists, Mode=OneWay}"
-                  HorizontalAlignment="Stretch"
-                  SelectionMode="Single" IsItemClickEnabled="True" ItemClick="OpenPlaylist">
+    <DataTemplate x:Key="PanePlaylistCollectionDataTemplate" x:DataType="groovevms:GroovePlaylistCollectionViewModel">
+        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind PlaylistCollection.Playlists, Mode=OneWay}"
+                  HorizontalAlignment="Stretch" SelectedItem="{x:Bind SelectedPlaylist, Mode=TwoWay}"
+                  SelectionMode="Single" IsItemClickEnabled="True">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Loaded">
+                    <core:InvokeCommandAction Command="{x:Bind PlaylistCollection.InitPlaylistCollectionAsyncCommand}"/>
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ItemClick">
+                    <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
             <ListView.Header>
                 <Grid>
-                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PlaylistCollection.PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </ListView.Header>
@@ -161,11 +172,11 @@
         </ListView>
     </DataTemplate>
 
-    <Style x:Key="PanePlaylistCollectionStyle" TargetType="collections:PlaylistCollection">
+    <Style x:Key="PanePlaylistCollectionStyle" TargetType="collections:GroovePlaylistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="collections:PlaylistCollection">
+                    <ControlTemplate TargetType="collections:GroovePlaylistCollection">
                         <ContentControl ContentTemplate="{StaticResource PanePlaylistCollectionDataTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>

@@ -5,6 +5,7 @@
     xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -13,8 +14,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/ButtonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
-    <DataTemplate x:Key="GrooveMediaTransportsDataTemplate" x:DataType="sdk:MainViewModel">
+
+    <DataTemplate x:Key="GrooveMediaTransportsDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
         <StackPanel Orientation="Horizontal">
             <ToggleButton Style="{StaticResource MediaToggleButton}">
                 <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>

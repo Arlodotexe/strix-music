@@ -70,6 +70,7 @@ namespace StrixMusic.Shared
         public AppLoadingView()
         {
             this.InitializeComponent();
+
             _textStorageService = new TextStorageService();
             _settingsService = new DefaultSettingsService(_textStorageService);
 
@@ -148,9 +149,7 @@ namespace StrixMusic.Shared
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
 
-            Guard.IsNotNull(_mainPage, nameof(_mainPage));
-
-            CurrentWindow.NavigationService.NavigateTo(_mainPage);
+            StrixIcon.FinishAnimation();
         }
 
         private void InitializeShellRegistry()
@@ -392,6 +391,12 @@ namespace StrixMusic.Shared
         private void UpdateStatusRaw(string text)
         {
             PART_Status.Text = text;
+        }
+
+        private void StrixIconAnimation_Finished(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(_mainPage, nameof(_mainPage));
+            CurrentWindow.NavigationService.NavigateTo(_mainPage);
         }
 
         private void SetupMediaPlayer(ICore core)
