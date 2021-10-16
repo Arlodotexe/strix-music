@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
     /// <summary>
     /// A Templated <see cref="Control"/> for showing an <see cref="TrackViewModel"/> in a list.
     /// </summary>
-    public sealed partial class TrackItem : ItemControl
+    public partial class TrackItem : ItemControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackItem"/> class.

@@ -1,18 +1,31 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
+    xmlns:converter="using:OwlCore.Uno.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.AlbumCollectionStyle">
 
-    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
-                  Padding="16,16,16,112" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenAlbum">
+    <converter:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter"/>
+
+    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="groovevms:GrooveAlbumCollectionViewModel">
+        <GridView x:Name="PART_Selector" ItemsSource="{Binding AlbumCollection.Albums, Mode=OneWay}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
+                  Padding="16,16,16,112" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Loaded">
+                    <core:InvokeCommandAction Command="{x:Bind AlbumCollection.InitAlbumCollectionAsyncCommand}"/>
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ItemClick">
+                    <core:InvokeCommandAction Command="{x:Bind NavigateToAlbumCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
             <GridView.Header>
                 <Grid>
-                    <ProgressRing IsActive="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressRing IsActive="{x:Bind AlbumCollection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </GridView.Header>
@@ -20,14 +33,14 @@
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
-        <items:AlbumItem />
+        <items:AlbumItem/>
     </DataTemplate>
 
-    <Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:AlbumCollection">
+    <Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:GrooveAlbumCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="collections:AlbumCollection">
+                    <ControlTemplate TargetType="collections:GrooveAlbumCollection">
                         <ContentControl ContentTemplate="{StaticResource DefaultAlbumCollectionDataTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -36,6 +49,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="collections:AlbumCollection"/>
+    <Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="collections:GrooveAlbumCollection"/>
 
 </ResourceDictionary>

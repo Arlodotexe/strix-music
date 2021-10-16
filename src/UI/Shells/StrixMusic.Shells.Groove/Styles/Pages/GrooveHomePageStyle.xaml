@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
+    xmlns:vmpages="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveHomePageStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../PivotStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="GrooveHomePageTemplate" x:DataType="vmpages:GrooveHomePageViewModel">
+        <Grid>
+            <Pivot x:Name="PART_Pivot" Style="{StaticResource GroovePivot}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="20" Margin="0,0,0,-8"/>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+
+                <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
+                    <collections:GrooveTrackCollection TrackCollection="{x:Bind Library}"/>
+                </PivotItem>
+                <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
+                    <collections:GrooveArtistCollection ArtistCollection="{x:Bind Library}"/>
+                </PivotItem>
+                <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums" Margin="8,0,0,0">
+                    <collections:GrooveAlbumCollection AlbumCollection="{x:Bind Library}"/>
+                </PivotItem>
+            </Pivot>
+
+            <ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="GrooveHomePageStyle" TargetType="pages:GrooveHomePage">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="pages:GrooveHomePage">
+                        <ContentControl ContentTemplate="{StaticResource GrooveHomePageTemplate}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource GrooveHomePageStyle}" TargetType="pages:GrooveHomePage"/>
+
+</ResourceDictionary>
