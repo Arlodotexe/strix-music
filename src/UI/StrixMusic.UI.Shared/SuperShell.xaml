@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:StrixMusic.Controls"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
     xmlns:styles="using:StrixMusic.Shared.Styles"
     xmlns:templateSelectors="using:StrixMusic.Shared.TemplateSelectors"
@@ -89,12 +90,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Image x:Name="StrixLogo" MaxHeight="135" MaxWidth="300" Margin="0, -15,0,-25" Visibility="Collapsed">
-            <Image.Source>
-                <SvgImageSource x:Uid="/SuperShell/StrixImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
-                                RasterizePixelHeight="135" RasterizePixelWidth="300"/>
-            </Image.Source>
-        </Image>
+        <controls:StrixIcon x:Name="StrixLogo" ShowText="True" MaxHeight="96" MaxWidth="288" Margin="0,12,0,8"/>
 
         <!-- Will be replaced with NavigationView eventually -->
         <Pivot x:Name="MainPivot" Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}" MinHeight="0">
