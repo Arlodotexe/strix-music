@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -60,6 +61,7 @@ namespace OwlCore.Remoting
 
             Properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>();
             Methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
+            Events = members.Where(x => x.MemberType == MemberTypes.Event).Cast<EventInfo>();
 
             AttachEvents();
         }
@@ -84,6 +86,86 @@ namespace OwlCore.Remoting
 
             RemotePropertyAttribute.SetEntered -= OnPropertySetEntered;
             RemotePropertyAttribute.ExceptionRaised -= OnInterceptExceptionRaised;
+        }
+
+        /// <summary>
+        /// This is functional prototype code and should not be used.
+        /// </summary>
+        private void SetupEventInterception()
+        {
+            var eventsToRemote = Events.Where(x => x.GetCustomAttribute<RemoteEventAttribute>() != null);
+
+            foreach (var eventInfo in eventsToRemote)
+            {
+                var tDelegate = eventInfo.EventHandlerType;
+
+                var returnType = GetDelegateReturnType(tDelegate);
+                if (returnType != typeof(void))
+                    ThrowHelper.ThrowInvalidOperationException($"Event {eventInfo.Name} has a return type.");
+
+                var paramTypes = GetDelegateParameterTypes(tDelegate);
+                var handler = new DynamicMethod("", null, paramTypes, eventInfo.DeclaringType);
+
+                ILGenerator ilgen = handler.GetILGenerator();
+
+                var methodInfo = ((Action<object[]>)RemoteEventAttribute.HandleEventInvocation).Method;
+
+                var arr = ilgen.DeclareLocal(typeof(object[]));
+
+                ilgen.Emit(OpCodes.Ldc_I4, paramTypes.Length);
+                ilgen.Emit(OpCodes.Newarr, typeof(object));
+                ilgen.Emit(OpCodes.Stloc, arr);
+
+                for (var i = 0; i < paramTypes.Length; i++)
+                {
+                    ilgen.Emit(OpCodes.Ldloc, arr);
+                    ilgen.Emit(OpCodes.Ldc_I4, i);
+                    ilgen.Emit(OpCodes.Ldarg, i);
+                    ilgen.Emit(OpCodes.Stelem_Ref);
+                }
+
+                ilgen.Emit(OpCodes.Ldloc, arr);
+                ilgen.EmitCall(OpCodes.Call, methodInfo, null);
+
+                ilgen.Emit(OpCodes.Nop);
+                ilgen.Emit(OpCodes.Ret);
+
+                Delegate dEmitted = handler.CreateDelegate(tDelegate);
+
+                var addHandler = eventInfo.GetAddMethod();
+
+                addHandler.Invoke(Instance, new object[] { dEmitted });
+            }
+
+            Type[] GetDelegateParameterTypes(Type d)
+            {
+                if (d.BaseType != typeof(MulticastDelegate))
+                    throw new ArgumentException("Not a delegate.", nameof(d));
+
+                var invoke = d.GetMethod("Invoke");
+                if (invoke == null)
+                    throw new ArgumentException("Not a delegate.", nameof(d));
+
+                var parameters = invoke.GetParameters();
+                var typeParameters = new Type[parameters.Length];
+
+                for (int i = 0; i < parameters.Length; i++)
+                    typeParameters[i] = parameters[i].ParameterType;
+
+                return typeParameters;
+            }
+
+            Type GetDelegateReturnType(Type d)
+            {
+                if (d.BaseType != typeof(MulticastDelegate))
+                    throw new ArgumentException("Not a delegate.", nameof(d));
+
+                MethodInfo invoke = d.GetMethod("Invoke");
+                if (invoke == null)
+                    throw new ArgumentException("Not a delegate.", nameof(d));
+
+                return invoke.ReturnType;
+            }
         }
 
         internal void MessageHandler_DataReceived(object sender, IRemoteMessage message)
@@ -206,6 +288,8 @@ namespace OwlCore.Remoting
 
         internal IEnumerable<PropertyInfo> Properties { get; }
 
+        internal IEnumerable<EventInfo> Events { get; }
+
         /// <summary>
         /// Prepares and sends the given <paramref name="message"/> outbound.
         /// </summary>
@@ -271,7 +355,7 @@ namespace OwlCore.Remoting
             var paramInfos = methodInfo.GetParameters();
             var paramDatas = methodCallMsg.Parameters.ToArray();
 
-            for (var i = 0; i < paramInfos.Length;i++)
+            for (var i = 0; i < paramInfos.Length; i++)
             {
                 var paramInfo = paramInfos[i];
                 var parameterData = paramDatas[i];
