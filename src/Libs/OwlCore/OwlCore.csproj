@@ -39,6 +39,7 @@ The static method MemberRemote.CreateMemberSignature() now requires a second par
 OwlCore.Services.IInstanceCacheRepository.HasId() was added for checking if a specific instance Id exists in the repository.
 
 [Fixes]
+Fixed an issue with OwlCore.Remoting non-primitive property changes were treated as primitive during internal type conversion and throwing
 Fixed an issue where placing RemoteMethod on a class would attempt to remote calls to the Add and Remove methods for events.
 
 --- 0.0.28 ---

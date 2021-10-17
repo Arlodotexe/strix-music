@@ -328,9 +328,26 @@ namespace OwlCore.Remoting
                 return;
             }
 
-            var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
+            var originalType = Type.GetType(propertyChangeMessage.AssemblyQualifiedName);
+            var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
 
-            propertyInfo.SetValue(Instance, castValue);
+            // If the received value's type doesn't match the original type.
+            if (!(propertyChangeMessage.NewValue == null && !originalType.IsPrimitive) && !(originalType?.IsAssignableFrom(mostDerivedType) ?? false))
+            {
+                // If the original type cannot be converted automatically.
+                if (!originalType?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                {
+                    throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not compatible with received type {originalType?.FullName ?? "null"} " +
+                                                    $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                    $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
+                                                    $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
+                                                    $"or use a type that implements {nameof(IConvertible)}. ");
+                }
+
+                propertyChangeMessage.NewValue = Convert.ChangeType(propertyChangeMessage.NewValue, originalType);
+            }
+
+            propertyInfo.SetValue(Instance, propertyChangeMessage.NewValue);
         }
 
         internal void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
@@ -360,9 +377,26 @@ namespace OwlCore.Remoting
                 var paramInfo = paramInfos[i];
                 var parameterData = paramDatas[i];
 
-                var convertedValue = Convert.ChangeType(paramDatas[i].Value, paramInfo.ParameterType);
+                var originalType = Type.GetType(parameterData.AssemblyQualifiedName);
+                var mostDerivedType = parameterData.Value?.GetType();
 
-                parameterValues.Add(convertedValue);
+                // If the received value's type doesn't match the original type.
+                if (!originalType?.IsAssignableFrom(mostDerivedType) ?? false)
+                {
+                    // If the original type cannot be converted automatically.
+                    if (!originalType?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                    {
+                        throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not compatible with received type {originalType?.FullName ?? "null"} " +
+                                                        $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                        $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
+                                                        $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
+                                                        $"or use a type that implements {nameof(IConvertible)}. ");
+                    }
+
+                    parameterData.Value = Convert.ChangeType(parameterData.Value, originalType);
+                }
+
+                parameterValues.Add(parameterData.Value);
             }
 
             methodInfo?.Invoke(Instance, parameterValues.ToArray());
