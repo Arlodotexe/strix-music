@@ -30,6 +30,10 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 
+--- 0.0.30 ---
+[Improvements]
+OwlCore.AbstractStorage.IFileData.GetThumbnailAsync added for getting the thumbnail images from a file according to specified settings or with default settings.
+
 --- 0.0.29 ---
 [Improvements]
 OwlCore.Services.IInstanceCacheRepository.HasId() was added for checking if a specific instance Id exists in the repository.

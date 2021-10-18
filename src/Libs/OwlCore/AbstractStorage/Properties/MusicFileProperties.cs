@@ -88,10 +88,5 @@ namespace OwlCore.AbstractStorage
         /// Gets or sets the year that the song was released.
         /// </summary>
         public uint? Year { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thumbnail image stream of the track.
-        /// </summary>
-        public System.IO.Stream? Image { get; set; }
     }
 }

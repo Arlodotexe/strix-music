@@ -27,9 +27,6 @@ namespace StrixMusic.Sdk.Uno.Models
         {
             var storageFileMusicProps = await _storageFile.Properties.GetMusicPropertiesAsync();
 
-            var itemThumbnail = await _storageFile.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.MusicView,256);
-            var imageStream = await Convert(itemThumbnail);
-
             var musicFileProps = new MusicFileProperties()
             {
                 Album = storageFileMusicProps.Album,
@@ -48,25 +45,9 @@ namespace StrixMusic.Sdk.Uno.Models
                 TrackNumber = storageFileMusicProps.TrackNumber,
                 Writers = storageFileMusicProps.Writers.ToArray(),
                 Year = storageFileMusicProps.Year,
-                Image = imageStream
             };
 
             return musicFileProps;
-        }
-
-        private async Task<Stream> Convert(IRandomAccessStream straem)
-        {
-            using (straem)
-            {
-                var dr = new DataReader(straem.GetInputStreamAt(0));
-                var bytes = new byte[straem.Size];
-                await dr.LoadAsync((uint)straem.Size);
-                dr.ReadBytes(bytes);
-
-                var stream = new MemoryStream(bytes);
-
-                return stream;
-            }
         }
     }
 }

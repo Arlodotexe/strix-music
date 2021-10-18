@@ -299,6 +299,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
+            Stream? imageStream = null;
+            try
+            {
+                imageStream = await fileData.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
+            }
+            catch (NotSupportedException)
+            {
+                imageStream = await fileData.GetThumbnailAsync();
+            }
+
             if (details is null)
                 return null;
 
@@ -326,11 +336,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 },
             };
 
-            if (details.Image != null)
+            if (imageStream != null && imageStream.Length > 0)
             {
                 Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
 
-                var stream = new List<Stream>() { details.Image };
+                var stream = new List<Stream>() { imageStream };
                 Task.Run(() => ProcessImagesAsync(fileData, relatedMetadata, stream), _scanningCancellationTokenSource.Token).Forget();
             }
 

@@ -71,5 +71,23 @@ namespace StrixMusic.Cores.OneDrive.Storage
         {
             throw new NotSupportedException();
         }
+
+        /// <inheritdoc />
+        public Task<Stream?> GetThumbnailAsync()
+        {
+            var thumbnails = _driveItem.Thumbnails;
+
+            if (thumbnails == null || thumbnails.Count == 0)
+                return Task.FromResult<Stream?>(null);
+
+
+            return Task.FromResult<Stream?>(thumbnails[0].Source.Content);
+        }
+
+        /// <inheritdoc />
+        public Task<Stream?> GetThumbnailAsync(ThumbnailMode thumbnailMode, uint requiredSize)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
