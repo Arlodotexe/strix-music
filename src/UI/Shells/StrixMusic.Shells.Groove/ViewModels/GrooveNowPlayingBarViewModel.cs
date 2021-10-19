@@ -68,7 +68,9 @@ namespace StrixMusic.Shells.Groove.ViewModels
             if (nowPlaying != null)
             {
                 // Load images if there aren't images loaded.
-                await nowPlaying.InitImageCollectionAsync();
+                // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.
+                // MAybe just ask the api for the first image directly, glhf.
+                // await nowPlaying.InitImageCollectionAsync();
 
                 // If there are now images, grab the color from the first image.
                 if (nowPlaying.Images.Count != 0)
