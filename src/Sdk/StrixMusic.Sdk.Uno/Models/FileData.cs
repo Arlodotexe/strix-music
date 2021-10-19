@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Uno.Models
         /// <inheritdoc />
         public async Task<Stream> GetThumbnailAsync(OwlCore.AbstractStorage.ThumbnailMode thumbnailMode, uint requiredSize)
         {
-            var thumbnail = await StorageFile.GetThumbnailAsync((Windows.Storage.FileProperties.ThumbnailMode)thumbnailMode, 256);
+            var thumbnail = await StorageFile.GetThumbnailAsync((Windows.Storage.FileProperties.ThumbnailMode)thumbnailMode, requiredSize);
 
             return thumbnail.AsStream();
         }
