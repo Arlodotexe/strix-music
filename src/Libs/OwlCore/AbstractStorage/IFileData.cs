@@ -65,11 +65,5 @@ namespace OwlCore.AbstractStorage
         /// </summary>
         /// <returns></returns>
         public Task<Stream> GetThumbnailAsync(ThumbnailMode thumbnailMode, uint requiredSize);
-
-        /// <summary>
-        /// Retrieves an adjusted thumbnail image for the file.
-        /// </summary>
-        /// <returns></returns>
-        public Task<Stream> GetThumbnailAsync();
     }
 }

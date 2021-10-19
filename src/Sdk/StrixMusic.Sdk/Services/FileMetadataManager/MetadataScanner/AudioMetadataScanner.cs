@@ -300,14 +300,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
             Stream? imageStream = null;
-            try
-            {
-                imageStream = await fileData.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
-            }
-            catch (NotSupportedException)
-            {
-                imageStream = await fileData.GetThumbnailAsync();
-            }
+
+            imageStream = await fileData.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
 
             if (details is null)
                 return null;

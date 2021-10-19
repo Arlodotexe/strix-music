@@ -82,12 +82,6 @@ namespace StrixMusic.Sdk.Uno.Models
 
             return thumbnail.AsStream();
         }
-
-        /// <inheritdoc />
-        public Task<Stream> GetThumbnailAsync()
-        {
-            throw new NotSupportedException();
-        }
     }
 
 }
