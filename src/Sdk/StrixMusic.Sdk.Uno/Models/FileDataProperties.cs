@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace StrixMusic.Sdk.Uno.Models
 {
