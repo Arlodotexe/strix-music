@@ -31,6 +31,9 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageReleaseNotes>
 
 --- 0.0.29 ---
+[Improvements]
+Added CachedRequestFound and CachedRequestSaving relay from CachedHttpClientHandlerAction to CachedHttpClientHandler.
+
 [Improvements, Breaking changes]
 Added MemberSignatureScope to OwlCore.Remoting.Transfer.IRemoteMessageHandler to allow sending/receiving member changes in different assemblies, namespaces, or class names. Previously restricted to 1:1 matches of assembly, namespace and class name.
 Added AssemblyQualifiedName property to RemotePropertyChangeMessage and adjusted constructor signature.
