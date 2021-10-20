@@ -1,7 +1,8 @@
-﻿using System;
+﻿using OwlCore.AbstractLauncher;
+using System;
 using System.Threading.Tasks;
 
-namespace OwlCore.AbstractLauncher
+namespace StrixMusic.Services
 {
     /// <inheritdoc/>
     public class Launcher : ILauncher

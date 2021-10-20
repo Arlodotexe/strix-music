@@ -35,6 +35,7 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Services;
 using StrixMusic.Shared.Services;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
