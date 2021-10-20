@@ -392,10 +392,9 @@ namespace StrixMusic.Cores.OneDrive
 
         internal void DisplayDeviceCodeResult(DeviceCodeResult dcr)
         {
-            var authenticateButton = new AbstractButton("codeButton", "Authenticate")
+            var authenticateButton = new AbstractButton("codeButton", dcr.VerificationUrl)
             {
-                Title = $"Your code is {dcr.UserCode}.",
-                Subtitle = $"Click the button to open {dcr.VerificationUrl}, or open it on a mobile device. Once there, enter the code shown above.",
+                Title = $"Go to this URL and enter the code {dcr.UserCode}",
                 IconCode = "\xE8A7"
             };
 
@@ -404,16 +403,24 @@ namespace StrixMusic.Cores.OneDrive
             // TODO:
             // * Needs cancel button to return to config UI.
 
-            AbstractUIElements = new AbstractUICollection("deviceCodeResult") { authenticateButton }.IntoList();
+            AbstractUIElements = new AbstractUICollection("deviceCodeResult")
+            {
+                Title = "Let's login",
+                Subtitle = "You'll need your phone or computer",
+                Items = new List<AbstractUIElement>
+                {
+                    authenticateButton
+                },
+            }.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
             {
                 var task = Services?.GetRequiredService<ILauncher>()?.LaunchUriAsync(new Uri(dcr.VerificationUrl));
                 if (task is not null)
-				{
+                {
                     await task;
-				}
+                }
             }
         }
 
