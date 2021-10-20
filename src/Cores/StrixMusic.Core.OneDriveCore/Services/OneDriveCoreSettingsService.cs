@@ -26,9 +26,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// </summary>
         public async Task ResetAllAsync()
         {
-            await SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), OneDriveCoreSettingsKeys.ClientId);
             await SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), OneDriveCoreSettingsKeys.SelectedFolderId);
-            await SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), OneDriveCoreSettingsKeys.TenantId);
         }
 
         /// <inheritdoc/>
