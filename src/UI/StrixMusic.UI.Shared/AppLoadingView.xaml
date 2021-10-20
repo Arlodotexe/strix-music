@@ -23,7 +23,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StrixIcon.Visibility" Value="Visible" />
-                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0,315,0,0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimum">
@@ -32,7 +31,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StrixIcon.Visibility" Value="Collapsed" />
-                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
