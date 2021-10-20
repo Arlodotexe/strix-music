@@ -271,10 +271,6 @@
       <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
       <Name>StrixMusic.Cores.OneDrive</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.External\StrixMusic.Cores.External.csproj">
-      <Project>{605fe63c-ca63-4f47-b27d-b36e4b0e6211}</Project>
-      <Name>StrixMusic.Cores.External</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
       <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
       <Name>StrixMusic.Cores.Files</Name>
