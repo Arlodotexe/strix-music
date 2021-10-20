@@ -75,7 +75,7 @@ namespace OwlCore.Remoting
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the exact data given to <paramref name="data"/>.</returns>
         public static async Task<T?> PublishDataAsync<T>(this MemberRemote memberRemote, T? data, string token, CancellationToken? cancellationToken = null)
         {
-            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T?));
+            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T?), memberRemote.MemberSignatureScope);
 
             await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage(memberRemote.Id, token, memberSignature, data), cancellationToken);
             return data;

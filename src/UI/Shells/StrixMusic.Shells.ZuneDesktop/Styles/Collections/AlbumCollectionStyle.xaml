@@ -47,6 +47,7 @@
             </GridView>
         </Grid>
     </DataTemplate>
+    
     <Style x:Key="ZuneDesktopAlbumCollectionStyle" TargetType="collections:AlbumCollection">
         <Style.Setters>
             <Setter Property="Template">

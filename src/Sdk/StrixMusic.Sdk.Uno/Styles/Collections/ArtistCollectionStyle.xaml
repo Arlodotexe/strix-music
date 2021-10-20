@@ -20,7 +20,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-        <items:ArtistItem />
+        <items:ArtistItem/>
     </DataTemplate>
 
     <Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:ArtistCollection">

@@ -1,5 +1,4 @@
-﻿using StrixMusic.Sdk.Uno.Controls;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.Groove.Styles.Collections
 {

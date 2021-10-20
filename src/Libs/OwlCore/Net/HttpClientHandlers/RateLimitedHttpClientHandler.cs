@@ -15,9 +15,11 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <summary>
         /// Creates an instance of the <see cref="RateLimitedHttpClientHandler"/>.
         /// </summary>
-        public RateLimitedHttpClientHandler(TimeSpan limitCooldown, int maxNumberOfRequests)
+        /// <param name="cooldownWindowTimeSpan">The amount of time before the cooldown window resets. Requests that are this old no longer count towards <paramref name="maxNumberOfRequestsPerCooldownWindow"/>.</param>
+        /// <param name="maxNumberOfRequestsPerCooldownWindow">The maximum number of requests allowed per cooldown window.</param>
+        public RateLimitedHttpClientHandler(TimeSpan cooldownWindowTimeSpan, int maxNumberOfRequestsPerCooldownWindow)
         {
-            _rateLimiterAction = new RateLimitedHttpClientHandlerAction(limitCooldown, maxNumberOfRequests);
+            _rateLimiterAction = new RateLimitedHttpClientHandlerAction(cooldownWindowTimeSpan, maxNumberOfRequestsPerCooldownWindow);
         }
 
         /// <inheritdoc />

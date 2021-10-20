@@ -56,6 +56,7 @@
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
+                       TextWrapping="WrapWholeWords"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}, Mode=OneWay}" Command="{x:Bind ClickCommand}" Padding="0" MinWidth="50">

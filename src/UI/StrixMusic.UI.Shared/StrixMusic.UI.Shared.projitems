@@ -21,6 +21,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml.cs">
+      <DependentUpon>StrixIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
@@ -59,6 +62,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -75,6 +82,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Bonkers.otf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SegoeMDL2.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
@@ -102,12 +110,9 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Time.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\he\Splash Screen.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalFiles\Logo.svg" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\en\Wide.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo-badge-white.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\en\Splash Screen.svg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\MusicBrainz\logo.svg" />

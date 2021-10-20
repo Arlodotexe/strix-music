@@ -7,17 +7,21 @@ using OwlCore.Remoting.EventArgs;
 
 namespace OwlCore.Remoting.Attributes
 {
-
     /// <summary>
-    /// Attribute used in conjuction with <see cref="MemberRemote"/>.
-    /// Mark a method with this attribute to opt into remote method changes.
+    /// Mark a method or class with this attribute to opt into remote method invocation via <see cref="MemberRemote"/>.
     /// </summary>
+    /// <remarks>
+    /// For IL weaving to take effect, you must install and add a reference to <see href="https://www.nuget.org/packages/Cauldron.BasicInterceptors/3.2.3">Cauldron.BasicInterceptors</see> directly in the project that uses this attribute.
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RemoteMethodAttribute : Attribute, IMethodInterceptor
     {
         /// <inheritdoc/>
         public void OnEnter(Type declaringType, object instance, MethodBase methodbase, object[] values)
         {
+            if (MethodIsEventHandlerAdd(methodbase) || MethodIsEventHandlerRemove(methodbase))
+                return;
+
             // Check if the invoker was the OwlCore.Remoting library.
             // Don't re-emit "entered" to the library if so.
             lock (MemberRemote.MemberHandleExpectancyMap)
@@ -69,5 +73,27 @@ namespace OwlCore.Remoting.Attributes
         /// Since this event emits the same instance we pass to <see cref="MemberRemote"/>, we can still use this.
         /// </remarks>
         public static event EventHandler<Exception>? ExceptionRaised;
+
+        private bool MethodIsEventHandlerAdd(MethodBase methodbase)
+        {
+            var events = methodbase.DeclaringType.GetEvents();
+
+            foreach (var ev in events)
+                if (ev.GetAddMethod() == methodbase)
+                    return true;
+
+            return false;
+        }
+
+        private bool MethodIsEventHandlerRemove(MethodBase methodbase)
+        {
+            var events = methodbase.DeclaringType.GetEvents();
+
+            foreach (var ev in events)
+                if (ev.GetRemoveMethod() == methodbase)
+                    return true;
+
+            return false;
+        }
     }
 }

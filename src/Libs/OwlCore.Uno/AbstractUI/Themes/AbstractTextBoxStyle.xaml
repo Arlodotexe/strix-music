@@ -35,6 +35,7 @@
                        FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
+                       TextWrapping="WrapWholeWords"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

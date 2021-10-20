@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace OwlCore.AbstractStorage
 {
     /// <summary>
-    /// Holds information about a file
+    /// Represents a file that resides on a file system.
     /// </summary>
     public interface IFileData
     {
@@ -59,5 +59,11 @@ namespace OwlCore.AbstractStorage
         /// </summary>
         /// <returns></returns>
         public Task WriteAllBytesAsync(byte[] bytes);
+
+        /// <summary>
+        /// Retrieves an adjusted thumbnail image for the file, determined by the purpose of the thumbnail, the requested size, and the specified options.
+        /// </summary>
+        /// <returns></returns>
+        public Task<Stream> GetThumbnailAsync(ThumbnailMode thumbnailMode, uint requiredSize);
     }
 }

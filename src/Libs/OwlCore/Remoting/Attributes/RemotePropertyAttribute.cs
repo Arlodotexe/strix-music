@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
 using Cauldron.Interception;
 using OwlCore.Remoting.EventArgs;
@@ -8,10 +6,12 @@ using OwlCore.Remoting.EventArgs;
 namespace OwlCore.Remoting.Attributes
 {
     /// <summary>
-    /// Attribute used in conjuction with <see cref="MemberRemote"/>.
-    /// Mark a property with this attribute to opt into remote method changes.
+    /// Mark a property, field or class with this attribute to opt into remote property changes via <see cref="MemberRemote"/>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+    /// <remarks>
+    /// For IL weaving to take effect, you must install and add a reference to <see href="https://www.nuget.org/packages/Cauldron.BasicInterceptors/3.2.3">Cauldron.BasicInterceptors</see> directly in the project that uses this attribute.
+    /// </remarks>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Field)]
     public class RemotePropertyAttribute : Attribute, IPropertySetterInterceptor
     {
         /// <inheritdoc/>

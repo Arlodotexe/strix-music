@@ -128,6 +128,7 @@ namespace StrixMusic.Core.External
         }
 
         /// <inheritdoc/>
+        [RemoteMethod]
         public ValueTask DisposeAsync()
         {
             // Dispose any resources not known to the SDK.
@@ -136,6 +137,7 @@ namespace StrixMusic.Core.External
         }
 
         /// <inheritdoc/>
+        [RemoteMethod]
         public async Task InitAsync(IServiceCollection services)
         {
 
@@ -177,7 +179,7 @@ namespace StrixMusic.Core.External
             // Should the dev need to create their own ExternalCore from scratch every time, or can we reduce the work?
             // Base classes?
             //   - Would allow us to update core/remoting functionality with a nuget package (!!)
-            //   - Remoting may not work if the name of the derived classes are different in host/client.
+            //   - Remoting may not work if the name of the derived classes are different in host/client (fixed)
             //       - Need to adjust OwlCore.Remoting to have a "loose" mode option where only the ID and property/method names need to match.
             //   - Use the same ExternalCore project for both host/client, or create a new project with separate code for host / client?
 

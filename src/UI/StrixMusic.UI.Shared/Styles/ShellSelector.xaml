@@ -31,8 +31,8 @@
     </ResourceDictionary.ThemeDictionaries>
 
     <DataTemplate x:Key="DefaultShellSelector" x:DataType="viewModels1:ShellSelectorViewModel">
-        <ScrollViewer MaxHeight="600">
-            <StackPanel>
+        <ScrollViewer>
+            <StackPanel MinHeight="350" Spacing="10">
                 <Grid>
                     <UserControl>
                         <Grid Visibility="{x:Bind visibilityConverters:InverseBoolToVisibilityConverter.Convert(PreferredShell.IsFullyResponsive), Mode=OneWay}">
@@ -147,7 +147,7 @@
                     </UserControl>
 
                     <UserControl>
-                        <Grid Visibility="{x:Bind PreferredShell.IsFullyResponsive, Mode=OneWay}" MaxHeight="475">
+                        <Grid Visibility="{x:Bind PreferredShell.IsFullyResponsive, Mode=OneWay}">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup>
                                     <VisualState x:Name="FullyResponsive_Wide">
@@ -229,7 +229,7 @@
                     </UserControl>
                 </Grid>
 
-                <Button x:Uid="/SuperShell/SaveAndApplyBTN" Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" />
+                <Button x:Uid="/SuperShell/SaveAndApplyBTN" Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
             </StackPanel>
         </ScrollViewer>
     </DataTemplate>

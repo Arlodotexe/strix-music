@@ -4,19 +4,46 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:StrixMusic.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     mc:Ignorable="d">
 
     <Grid Background="#1E1E23">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowSizes">
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="500" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StrixIcon.Visibility" Value="Visible" />
+                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0,315,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Minimum">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StrixIcon.Visibility" Value="Collapsed" />
+                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-        <Image Stretch="UniformToFill" Height="315" MaxWidth="612">
-            <Image.Source>
-                <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Splash Screen.svg"
-                                RasterizePixelHeight="315" RasterizePixelWidth="612" />
-            </Image.Source>
-        </Image>
+        <controls:StrixIcon x:Name="StrixIcon" Grid.Row="1" Height="315" MaxWidth="612"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            ShowText="True" PlayIntro="True" IsAnimated="True"
+                            AnimationFinished="StrixIconAnimation_Finished"/>
 
-        <StackPanel VerticalAlignment="Center" Margin="0,315,0,0">
+        <StackPanel Grid.Row="2" VerticalAlignment="Top">
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ProgressRing IsActive="True" Margin="15,0" />
@@ -26,7 +53,7 @@
             <GridView ItemsSource="{x:Bind ViewModel.Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:CoreViewModel">
-                        <StackPanel Spacing="8" Width="65">
+                        <StackPanel Spacing="8" Width="75">
                             <Image Height="50" Width="50" HorizontalAlignment="Center">
                                 <Image.Source>
                                     <SvgImageSource UriSource="{x:Bind LogoUri, Mode=OneWay}"/>
@@ -40,37 +67,33 @@
             </GridView>
         </StackPanel>
 
-        <Grid MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
+        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
             <Border Background="Black" Opacity="0.8"/>
-            <StackPanel Spacing="25" Padding="40,0,40,40">
-                <Image Stretch="UniformToFill" Height="160" HorizontalAlignment="Center" CacheMode="BitmapCache">
-                    <Image.Source>
-                        <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
-                                    RasterizePixelHeight="160" RasterizePixelWidth="425" />
-                    </Image.Source>
-                </Image>
+            <ScrollViewer>
+                <StackPanel Spacing="25" Padding="40,0,40,40">
+                    <controls:StrixIcon Height="128" ShowText="True" PlayIntro="False" IsAnimated="True"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                <StackPanel Spacing="10" Margin="0,-45,0,0">
-                    <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
-                        <FontIcon FontSize="23" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE98F;" />
-                        <TextBlock Text="Unfinished software ahead" FontWeight="SemiLight" FontSize="24" TextAlignment="Center" Foreground="White" />
+                    <StackPanel Spacing="10" Margin="0,-45,0,0">
+                        <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                            <FontIcon FontSize="23" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE98F;" />
+                            <TextBlock Text="Unfinished software ahead" FontWeight="SemiLight" FontSize="24" TextAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                        <Border BorderBrush="White" Opacity="0.5" BorderThickness="1" />
                     </StackPanel>
-                    <Border BorderBrush="White" Opacity="0.5" BorderThickness="1" />
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                            <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                            <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                            <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" />
+                        </StackPanel>
+
+                    <Button Content="I understand" Click="AppLoadingView_OnLoaded" />
                 </StackPanel>
-
-                <StackPanel Spacing="15">
-                    <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" />
-
-                    <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" />
-
-                    <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" />
-
-                    <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" />
-                </StackPanel>
-
-                <Button Content="I understand" Click="AppLoadingView_OnLoaded" />
-            </StackPanel>
+            </ScrollViewer>
         </Grid>
-
     </Grid>
 </UserControl>
