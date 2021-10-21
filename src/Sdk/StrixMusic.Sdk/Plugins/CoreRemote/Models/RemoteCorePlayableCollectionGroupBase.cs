@@ -26,7 +26,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private int _totalImageCount;
         private int _totalUrlCount;
 
-        private Uri? _url;
         private string _name;
         private string? _description;
         private PlaybackState _playbackState;
