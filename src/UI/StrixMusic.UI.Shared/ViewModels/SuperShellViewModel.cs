@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using NLog;
+using NLog.Targets;
 using OwlCore;
+using OwlCore.AbstractUI.Models;
+using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Provisos;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -22,13 +29,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Services.Localization;
-using StrixMusic.Sdk.Services.Notifications;
-using OwlCore.AbstractUI.ViewModels;
-using NLog;
-using NLog.Targets;
-using System.IO;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -94,7 +94,8 @@ namespace StrixMusic.Shared.ViewModels
 
             _loggingToggle.State = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
 
-            await Task.WhenAll(SetupCores(), ShellSelectorViewModel.InitAsync());
+            SetupCores();
+            await ShellSelectorViewModel.InitAsync();
         }
 
         private void AttachEvents()
@@ -437,7 +438,7 @@ namespace StrixMusic.Shared.ViewModels
             _ = ResetAppAsync();
         }
 
-        private async Task SetupCores()
+        private void SetupCores()
         {
             foreach (var metadata in CoreRegistry.MetadataRegistry)
                 AvailableServices.Add(new AvailableServicesItemViewModel(metadata));

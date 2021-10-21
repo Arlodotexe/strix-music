@@ -276,9 +276,6 @@ namespace StrixMusic.Shared
 
             UpdateStatus("SetupServices");
 
-            // Hack. Ioc doesn't resolve services immediately after building the service provider.
-            // await Task.Delay(100);
-
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
             await coreManagementService.InitAsync();

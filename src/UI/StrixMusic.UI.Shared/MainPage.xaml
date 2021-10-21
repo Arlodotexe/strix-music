@@ -25,7 +25,7 @@
                     <!--Unknown tag: mask-->
                     <Rectangle xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="19.5142" Canvas.Top="28.1078" Width="105.403" Height="27.3852" RadiusX="2" RadiusY="2" Name="rect5" StrokeThickness="7" Stroke="#ffffff">
                         <Rectangle.RenderTransform>
-                            <RotateTransform Angle="45.4452 19.5142 28.1078" CenterX="2"/>
+                            <RotateTransform Angle="45.4452" CenterX="2"/>
                         </Rectangle.RenderTransform>
                     </Rectangle>
                     <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path7" StrokeThickness="7" Stroke="#ffffff" Data="M10.8895 108.635L25.4156 94.3329L61.2694 130.748L46.7433 145.05L10.8895 108.635Z"/>
