@@ -9,7 +9,7 @@ namespace StrixMusic.Helpers.TimeSpanRules
     {
         private int _startDay;
         private int _endDay;
-        private bool _wrapped = false;
+        private bool _wrapped;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DailyRangeRule"/> class.
