@@ -67,8 +67,9 @@ namespace OwlCore.AbstractStorage
             if (pickedFolder == null)
                 return null;
 
+#if NETFX_CORE
             StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
-
+#endif
             var folderData = new FolderData(pickedFolder);
 
             _registeredFolders.Add(folderData);
@@ -82,10 +83,12 @@ namespace OwlCore.AbstractStorage
             if (!_registeredFolders.Contains(folder) || !(folder is FolderData folderData))
                 return Task.CompletedTask;
 
+#if NETFX_CORE
             var targetFutureAccessListFile = StorageApplicationPermissions.FutureAccessList.Entries
                 .FirstOrDefault(x => x.Metadata == folderData.StorageFolder.Path);
 
             StorageApplicationPermissions.FutureAccessList.Remove(targetFutureAccessListFile.Token);
+#endif
 
             _registeredFolders.Remove(folder);
 
@@ -155,6 +158,7 @@ namespace OwlCore.AbstractStorage
         {
             await RootFolder.EnsureExists();
 
+#if NETFX_CORE
             var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries;
 
             if (persistentAccessEntries == null || !persistentAccessEntries.Any())
@@ -181,6 +185,7 @@ namespace OwlCore.AbstractStorage
 
                 _registeredFolders.Add(folderData);
             }
+#endif
 
             IsInitialized = true;
         }

@@ -227,7 +227,11 @@ namespace StrixMusic.Shared
                 AddLoggerBlackHole(services);
 
             _playbackHandlerService = new PlaybackHandlerService();
+
+#if NETFX_CORE
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
+#endif
+
             _mainPage = new MainPage();
 
             var strixDevice = new StrixDevice(_playbackHandlerService);
@@ -235,7 +239,11 @@ namespace StrixMusic.Shared
 
             services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
             services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+
+#if NETFX_CORE
             services.AddSingleton(_smtpHandler);
+#endif
+
             services.AddSingleton(strixDevice);
             services.AddSingleton<MainViewModel>();
             services.AddSingleton(_mainPage);
