@@ -36,6 +36,7 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
+        
         <Storyboard x:Name="HideAnimation" Completed="HideAnimation_Completed">
             <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
                              Storyboard.TargetName="BackgroundFill" Storyboard.TargetProperty="Opacity">
