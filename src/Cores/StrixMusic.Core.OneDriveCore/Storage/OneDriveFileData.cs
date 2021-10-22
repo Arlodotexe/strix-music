@@ -73,7 +73,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         /// <inheritdoc />
-        public Task<Stream?> GetThumbnailAsync(ThumbnailMode thumbnailMode, uint requiredSize)
+        public Task<Stream> GetThumbnailAsync(ThumbnailMode thumbnailMode, uint requiredSize)
         {
             switch (thumbnailMode)
             {
@@ -81,9 +81,9 @@ namespace StrixMusic.Cores.OneDrive.Storage
 
                     var thumbnails = _driveItem.Thumbnails;
                     if (thumbnails == null || thumbnails.Count == 0)
-                        return Task.FromResult<Stream?>(null);
+                        return Task.FromResult<Stream>(new MemoryStream());
 
-                    return Task.FromResult<Stream?>(thumbnails[0].Source.Content);
+                    return Task.FromResult(thumbnails[0].Source.Content);
 
                 default:
                     throw new ArgumentOutOfRangeException();
