@@ -326,12 +326,12 @@ namespace StrixMusic.Shared
             notification.Dismissed += OnNotificationDismissed;
             doneButton.Clicked += OnDoneButtonClicked;
 
-            void OnNotificationDismissed(object sender, EventArgs e)
+            void OnNotificationDismissed(object? sender, EventArgs e)
             {
                 setupFinishedSemaphore.Release();
             }
 
-            void OnDoneButtonClicked(object sender, EventArgs e)
+            void OnDoneButtonClicked(object? sender, EventArgs e)
             {
                 setupFinishedSemaphore.Release();
             }

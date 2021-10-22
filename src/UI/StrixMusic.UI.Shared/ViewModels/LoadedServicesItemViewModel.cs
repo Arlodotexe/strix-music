@@ -49,7 +49,7 @@ namespace StrixMusic.Shared.ViewModels
             _mainViewModel.Cores.CollectionChanged -= Cores_CollectionChanged;
         }
 
-        private void Cores_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             CanDeleteCore = _mainViewModel.Cores.Count > 1;
         }

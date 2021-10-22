@@ -1,7 +1,7 @@
-﻿var UnoAppManifest = {
+var UnoAppManifest = {
 
     splashScreenImage: "Assets/SplashScreen.png",
-    splashScreenColor: "#0078D7",
+    splashScreenColor: "#fff",
     displayName: "StrixMusic"
 
 }
