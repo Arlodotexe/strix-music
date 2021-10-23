@@ -230,6 +230,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
+            _originalTrackOrder.Clear();
             for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
                 var item = trackCollection.Tracks[i];

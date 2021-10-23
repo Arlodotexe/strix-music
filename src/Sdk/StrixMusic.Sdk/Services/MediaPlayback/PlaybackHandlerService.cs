@@ -19,6 +19,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
         private List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
+        private List<IMediaSourceConfig> _originalTrackOrder;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
@@ -34,6 +35,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
+            _originalTrackOrder = new List<IMediaSourceConfig>();
         }
 
         /// <summary>
@@ -393,8 +395,35 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             ShuffleStateChanged?.Invoke(this, _shuffleState);
 
-            if (!_shuffleState) 
+            if (!_shuffleState)
+            {
+                var itemsArray = _originalTrackOrder.ToArray();
+                _originalTrackOrder = itemsArray.ToList();
+
+                if (CurrentItem == null)
+                {
+                    _nextItems = _originalTrackOrder;
+                    _prevItems.Clear();
+                }
+                else
+                {
+                    var index = _originalTrackOrder.IndexOf(CurrentItem);
+                    _nextItems.Clear();
+                    _prevItems.Clear();
+
+                    for (int i = index + 1; i < _originalTrackOrder.Count; i++)
+                    {
+                        _nextItems.Add(_originalTrackOrder[i]);
+                    }
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        _prevItems.Push(_originalTrackOrder[i]);
+                    }
+                }
+
                 return Task.CompletedTask;
+            }
 
             return ShuffleInternalAsync();
         }
@@ -405,9 +434,18 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             itemsToShuffle.AddRange(_prevItems);
             itemsToShuffle.AddRange(_nextItems);
 
+            if (!_originalTrackOrder.Any())
+            {
+                _originalTrackOrder.AddRange(_prevItems);
+
+                if (CurrentItem != null)
+                    _originalTrackOrder.Add(CurrentItem);
+
+                _originalTrackOrder.AddRange(_nextItems);
+            }
+
             var itemsArray = itemsToShuffle.ToArray();
             itemsArray.Shuffle();
-
             itemsToShuffle = itemsArray.ToList();
 
             _nextItems = itemsToShuffle;
