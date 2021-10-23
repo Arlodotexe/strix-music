@@ -22,6 +22,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         // It should only be used to resture _nextItems and _prevItems when turning off shuffle.
         private List<IMediaSourceConfig> _unshuffledItemsHolder;
+        private Dictionary<int, IMediaSourceConfig> _shuffledMap;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
@@ -38,6 +39,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
             _unshuffledItemsHolder = new List<IMediaSourceConfig>();
+            _shuffledMap = new Dictionary<int, IMediaSourceConfig>();
         }
 
         /// <summary>
@@ -173,6 +175,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public double PlaybackSpeed => _currentPlayerService?.PlaybackSpeed ?? 1;
 
         /// <inheritdoc />
+        public int CurrentIndex { get; private set; }
+
+        /// <inheritdoc />
         public void RegisterAudioPlayer(IAudioPlayerService audioPlayer, ICore core) => _audioPlayerRegistry.Add(core.InstanceId, audioPlayer);
 
         /// <inheritdoc />
@@ -289,7 +294,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
 
             await _currentPlayerService.Play(nextItem);
+
             CurrentItem = nextItem;
+
+            if (_prevItems.Count > 0 && _shuffledMap.Count > 0)
+                CurrentIndex = _shuffledMap.ElementAt(_prevItems.Count - 1).Key;
+
             CurrentItemChanged?.Invoke(this, nextItem);
         }
 
@@ -409,9 +419,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 }
                 else
                 {
-                    Guard.IsNotNull(CurrentItem.CurrentIndex, nameof(CurrentItem.CurrentIndex));
+                    if (_shuffledMap.Count == 0)
+                        return Task.CompletedTask;
 
-                    var index = CurrentItem.CurrentIndex.Value;
+                    var index = CurrentIndex;
+                    _shuffledMap.Clear();
+
                     _nextItems.Clear();
                     _prevItems.Clear();
 
@@ -434,25 +447,66 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         private Task ShuffleInternalAsync()
         {
-            var itemsToShuffle = new List<IMediaSourceConfig>();
-            itemsToShuffle.AddRange(_prevItems);
-            itemsToShuffle.AddRange(_nextItems);
+            var shuffledList = new List<IMediaSourceConfig>();
+            var tempMap = new Dictionary<int, IMediaSourceConfig>();
 
-            if (_unshuffledItemsHolder.Count == 0)
+            _unshuffledItemsHolder.Clear();
+            _unshuffledItemsHolder.AddRange(_prevItems);
+
+            if (CurrentItem != null)
+                _unshuffledItemsHolder.Add(CurrentItem);
+
+            _unshuffledItemsHolder.AddRange(_nextItems);
+
+            // Populate all available items to the temp map.
+
+            for (int i = 0; i < _prevItems.Count; i++)
             {
-                _unshuffledItemsHolder.AddRange(_prevItems);
-
-                if (CurrentItem != null)
-                    _unshuffledItemsHolder.Add(CurrentItem);
-
-                _unshuffledItemsHolder.AddRange(_nextItems);
+                tempMap.Add(i, _prevItems.ElementAt(i));
             }
 
-            var itemsArray = itemsToShuffle.ToArray();
-            itemsArray.Shuffle();
-            itemsToShuffle = itemsArray.ToList();
+            var nextStartIndex = _prevItems.Count;
 
-            _nextItems = itemsToShuffle;
+            // Save the currentItem index so it can be removed from the shuffledList.
+            int? currentItemIndex = null;
+            if (CurrentItem != null)
+            {
+                tempMap.Add(_prevItems.Count, CurrentItem);
+                currentItemIndex = _prevItems.Count;
+
+                nextStartIndex++;
+            }
+
+            for (int i = 0; i < _nextItems.Count; i++)
+            {
+                tempMap.Add(nextStartIndex, _nextItems.ElementAt(i));
+
+                nextStartIndex++;
+            }
+
+            // Shuffle the keys (unshuffled indexes), in the list.
+            var keysArray = tempMap.Keys.ToList().ToArray();
+            keysArray.Shuffle();
+
+            for (int i = 1; i < keysArray.Length; i++)
+            {
+                // Populate the shuffled map according to the new index order.
+                _shuffledMap.Add(keysArray[i], tempMap[keysArray[i]]);
+
+                if (currentItemIndex != null)
+                {
+                    // Skip the currentItem because it will go to the previous items anyway.
+                    if (keysArray[i] == currentItemIndex)
+                    {
+                        CurrentIndex = currentItemIndex.Value;
+                        continue;
+                    }
+                }
+
+                shuffledList.Add(tempMap[keysArray[i]]);
+            }
+
+            _nextItems = shuffledList;
 
             _prevItems.Clear();
 

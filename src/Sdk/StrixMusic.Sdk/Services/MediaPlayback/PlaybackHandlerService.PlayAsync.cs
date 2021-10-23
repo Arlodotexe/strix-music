@@ -242,8 +242,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (mediaSource is null)
                     continue;
 
-                mediaSource.CurrentIndex = i;
-
                 if (item.Id == track.Id)
                 {
                     reachedTargetTrack = true;
@@ -297,8 +295,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
                 if (mediaSource is null)
                     continue;
-
-                mediaSource.CurrentIndex = i;
 
                 if (item.Id == track.Id)
                 {
