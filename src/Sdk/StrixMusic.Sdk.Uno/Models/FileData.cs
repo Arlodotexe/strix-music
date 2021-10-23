@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using FileAccessMode = OwlCore.AbstractStorage.FileAccessMode;
 
 namespace StrixMusic.Sdk.Uno.Models
@@ -72,6 +73,14 @@ namespace StrixMusic.Sdk.Uno.Models
         public Task WriteAllBytesAsync(byte[] bytes)
         {
             return FileIO.WriteBytesAsync(StorageFile, bytes).AsTask();
+        }
+
+        /// <inheritdoc />
+        public async Task<Stream> GetThumbnailAsync(OwlCore.AbstractStorage.ThumbnailMode thumbnailMode, uint requiredSize)
+        {
+            var thumbnail = await StorageFile.GetThumbnailAsync((Windows.Storage.FileProperties.ThumbnailMode)thumbnailMode, requiredSize);
+
+            return thumbnail.AsStream();
         }
     }
 

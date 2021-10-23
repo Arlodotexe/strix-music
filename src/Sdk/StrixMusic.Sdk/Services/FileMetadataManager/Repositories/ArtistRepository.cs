@@ -249,7 +249,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
             await _storageMutex.WaitAsync();
 
-            foreach (var item in data)
+            foreach (var item in data ?? Enumerable.Empty<ArtistMetadata>())
             {
                 Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
 

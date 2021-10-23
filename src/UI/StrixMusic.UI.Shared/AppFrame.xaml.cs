@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
@@ -44,6 +45,8 @@ namespace StrixMusic.Shared
         public AppFrame()
         {
             this.InitializeComponent();
+
+            Guard.IsNotNull(SynchronizationContext.Current, nameof(SynchronizationContext.Current));
 
             Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
             Threading.SetPrimaryThreadInvokeHandler(a => Window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
@@ -131,7 +134,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// For displaying the UI for a <see cref="Sdk.Data.CoreState.NeedsSetup"/> core state.
         /// </summary>
-        private void Cores_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (!(e.NewItems is null))
             {
@@ -156,7 +159,7 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async void Core_CoreStateChanged(object sender, Sdk.Data.CoreState e)
+        private async void Core_CoreStateChanged(object? sender, Sdk.Data.CoreState e)
         {
             var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
@@ -178,25 +181,25 @@ namespace StrixMusic.Shared
             }
         }
 
-        private void NotificationService_NotificationMarginChanged(object sender, Thickness e)
+        private void NotificationService_NotificationMarginChanged(object? sender, Thickness e)
         {
             NotificationItems.Margin = e;
         }
 
-        private void NotificationService_NotificationAlignmentChanged(object sender, (HorizontalAlignment Horizontal, VerticalAlignment Vertical) e)
+        private void NotificationService_NotificationAlignmentChanged(object? sender, (HorizontalAlignment Horizontal, VerticalAlignment Vertical) e)
         {
             NotificationItems.HorizontalAlignment = e.Horizontal;
             NotificationItems.VerticalAlignment = e.Vertical;
         }
 
-        private void AppFrame_Unloaded(object sender, RoutedEventArgs e) => DetachEvents();
+        private void AppFrame_Unloaded(object? sender, RoutedEventArgs e) => DetachEvents();
 
-        private void AppFrame_OnLoaded(object sender, RoutedEventArgs e)
+        private void AppFrame_OnLoaded(object? sender, RoutedEventArgs e)
         {
             NavigateTo(new AppLoadingView());
         }
 
-        private void NavServiceOnNavigationRequested(object sender, NavigateEventArgs<Control> e)
+        private void NavServiceOnNavigationRequested(object? sender, NavigateEventArgs<Control> e)
         {
             var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 

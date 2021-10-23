@@ -108,7 +108,7 @@ namespace StrixMusic.Sdk.Services.Settings
         {
             string? result = await _textStorageService.GetValueAsync(key, identifier);
 
-            T obj;
+            T? obj;
             try
             {
                 obj = JsonConvert.DeserializeObject<T>(result!);
@@ -123,6 +123,8 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 return GetDefaultSettingValue();
             }
+
+            return obj;
 
             T GetDefaultSettingValue()
             {
@@ -141,8 +143,6 @@ namespace StrixMusic.Sdk.Services.Settings
 
                 return ThrowHelper.ThrowArgumentOutOfRangeException<T>(nameof(key), $"{key} not found in the provided defaults.");
             }
-
-            return obj!;
         }
 
         /// <summary>

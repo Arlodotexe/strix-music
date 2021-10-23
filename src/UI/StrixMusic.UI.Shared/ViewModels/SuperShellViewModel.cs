@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using NLog;
+using NLog.Targets;
 using OwlCore;
+using OwlCore.AbstractUI.Models;
+using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Provisos;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -22,13 +29,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Services.Localization;
-using StrixMusic.Sdk.Services.Notifications;
-using OwlCore.AbstractUI.ViewModels;
-using NLog;
-using NLog.Targets;
-using System.IO;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -94,7 +94,8 @@ namespace StrixMusic.Shared.ViewModels
 
             _loggingToggle.State = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
 
-            await Task.WhenAll(SetupCores(), ShellSelectorViewModel.InitAsync());
+            SetupCores();
+            await ShellSelectorViewModel.InitAsync();
         }
 
         private void AttachEvents()
@@ -137,8 +138,10 @@ namespace StrixMusic.Shared.ViewModels
             core.CoreStateChanged -= Core_CoreStateChanged;
         }
 
-        private async void LoadedService_ConfigRequested(object sender, EventArgs e)
+        private async void LoadedService_ConfigRequested(object? sender, EventArgs e)
         {
+            Guard.IsNotNull(sender, nameof(sender));
+
             var viewModel = (LoadedServicesItemViewModel)sender;
             Guard.IsNotNull(viewModel.Core, nameof(viewModel.Core));
 
@@ -151,7 +154,7 @@ namespace StrixMusic.Shared.ViewModels
             CurrentCoreConfig = viewModel.Core;
         }
 
-        private async void ContentOverlay_Closed(object sender, EventArgs e)
+        private async void ContentOverlay_Closed(object? sender, EventArgs e)
         {
             foreach (var core in _mainViewModel.Cores.ToArray())
             {
@@ -166,18 +169,20 @@ namespace StrixMusic.Shared.ViewModels
             IsShowingAddNew = false;
         }
 
-        private async void LoggingToggle_StateChanged(object sender, bool e)
+        private async void LoggingToggle_StateChanged(object? sender, bool e)
         {
             await _settingsService.SetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled), e);
         }
 
-        private void AddNewItem_NewItemRequested(object sender, EventArgs e)
+        private void AddNewItem_NewItemRequested(object? sender, EventArgs e)
         {
             IsShowingAddNew = true;
         }
 
-        private async void Core_CoreStateChanged(object sender, CoreState e)
+        private async void Core_CoreStateChanged(object? sender, CoreState e)
         {
+            Guard.IsNotNull(sender, nameof(sender));
+
             var core = (ICore)sender;
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
@@ -198,7 +203,7 @@ namespace StrixMusic.Shared.ViewModels
                 return;
         }
 
-        private void Cores_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Cores_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
@@ -320,14 +325,14 @@ namespace StrixMusic.Shared.ViewModels
             confirmButton.Clicked += OnConfirmButtonClicked;
             notification.Dismissed += OnNotificationDismissed;
 
-            void OnNotificationDismissed(object sender, EventArgs e)
+            void OnNotificationDismissed(object? sender, EventArgs e)
             {
                 notification.Dismissed -= OnNotificationDismissed;
                 confirmButton.Clicked -= OnConfirmButtonClicked;
                 taskCompletionSource.SetResult(null);
             }
 
-            async void OnConfirmButtonClicked(object sender, EventArgs e)
+            async void OnConfirmButtonClicked(object? sender, EventArgs e)
             {
                 notification.Dismissed -= OnNotificationDismissed;
                 confirmButton.Clicked -= OnConfirmButtonClicked;
@@ -413,7 +418,7 @@ namespace StrixMusic.Shared.ViewModels
             };
         }
 
-        private async void OpenLogFolderButton_Clicked(object sender, EventArgs e)
+        private async void OpenLogFolderButton_Clicked(object? sender, EventArgs e)
         {
             var logFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Logs", CreationCollisionOption.OpenIfExists);
 
@@ -432,12 +437,12 @@ namespace StrixMusic.Shared.ViewModels
             };
         }
 
-        private void ResetButton_Clicked(object sender, EventArgs e)
+        private void ResetButton_Clicked(object? sender, EventArgs e)
         {
             _ = ResetAppAsync();
         }
 
-        private async Task SetupCores()
+        private void SetupCores()
         {
             foreach (var metadata in CoreRegistry.MetadataRegistry)
                 AvailableServices.Add(new AvailableServicesItemViewModel(metadata));

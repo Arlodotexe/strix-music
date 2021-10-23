@@ -227,7 +227,11 @@ namespace StrixMusic.Shared
                 AddLoggerBlackHole(services);
 
             _playbackHandlerService = new PlaybackHandlerService();
+
+#if NETFX_CORE
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
+#endif
+
             _mainPage = new MainPage();
 
             var strixDevice = new StrixDevice(_playbackHandlerService);
@@ -235,7 +239,11 @@ namespace StrixMusic.Shared
 
             services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
             services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+
+#if NETFX_CORE
             services.AddSingleton(_smtpHandler);
+#endif
+
             services.AddSingleton(strixDevice);
             services.AddSingleton<MainViewModel>();
             services.AddSingleton(_mainPage);
@@ -275,9 +283,6 @@ namespace StrixMusic.Shared
             Ioc.Default.ConfigureServices(serviceProvider);
 
             UpdateStatus("SetupServices");
-
-            // Hack. Ioc doesn't resolve services immediately after building the service provider.
-            // await Task.Delay(100);
 
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
@@ -329,12 +334,12 @@ namespace StrixMusic.Shared
             notification.Dismissed += OnNotificationDismissed;
             doneButton.Clicked += OnDoneButtonClicked;
 
-            void OnNotificationDismissed(object sender, EventArgs e)
+            void OnNotificationDismissed(object? sender, EventArgs e)
             {
                 setupFinishedSemaphore.Release();
             }
 
-            void OnDoneButtonClicked(object sender, EventArgs e)
+            void OnDoneButtonClicked(object? sender, EventArgs e)
             {
                 setupFinishedSemaphore.Release();
             }

@@ -381,7 +381,7 @@ namespace OwlCore.Remoting
                 var mostDerivedType = parameterData.Value?.GetType();
 
                 // If the received value's type doesn't match the original type.
-                if (!originalType?.IsAssignableFrom(mostDerivedType) ?? false)
+                if (!(parameterData.Value == null && !originalType.IsPrimitive) && !(originalType?.IsAssignableFrom(mostDerivedType) ?? false))
                 {
                     // If the original type cannot be converted automatically.
                     if (!originalType?.IsSubclassOf(typeof(IConvertible)) ?? false)

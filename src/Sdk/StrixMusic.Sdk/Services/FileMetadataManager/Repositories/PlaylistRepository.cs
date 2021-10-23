@@ -273,7 +273,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             var str = System.Text.Encoding.UTF8.GetString(bytes);
             var data = JsonConvert.DeserializeObject<List<PlaylistMetadata>>(str);
 
-            foreach (var item in data)
+            foreach (var item in data ?? Enumerable.Empty<PlaylistMetadata>())
             {
                 Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
 

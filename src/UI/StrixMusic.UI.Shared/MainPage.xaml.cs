@@ -73,7 +73,7 @@ namespace StrixMusic.Shared
             shell.InitServices(services);
         }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        private async void MainPage_Loaded(object? sender, RoutedEventArgs e)
         {
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
@@ -93,7 +93,7 @@ namespace StrixMusic.Shared
             await Ioc.Default.GetRequiredService<IFileSystemService>().InitAsync();
         }
 
-        private void MainPage_Unloaded(object sender, RoutedEventArgs e)
+        private void MainPage_Unloaded(object? sender, RoutedEventArgs e)
         {
             DetachEvents();
         }
@@ -101,7 +101,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// Fires when the Super buttons is clicked. Temporary until a proper trigger mechanism is found for touch devices.
         /// </summary>
-        public void Button_Click(object sender, RoutedEventArgs e)
+        public void Button_Click(object? sender, RoutedEventArgs e)
         {
             CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
         }
@@ -114,7 +114,7 @@ namespace StrixMusic.Shared
             Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceRegistered += ShowEditCoresWarning;
             Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceUnregistered += ShowEditCoresWarning;
 
-            void ShowEditCoresWarning(object sender, CoreInstanceEventArgs args)
+            void ShowEditCoresWarning(object? sender, CoreInstanceEventArgs args)
             {
                 Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Restart recommended",
                     "Editing cores while the app is running is not stable yet");
@@ -128,7 +128,7 @@ namespace StrixMusic.Shared
             Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
         }
 
-        private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
+        private async void SettingsService_SettingChanged(object? sender, SettingChangedEventArgs e)
         {
             if (e.Key == nameof(SettingsKeysUI.FallbackShell) || e.Key == nameof(SettingsKeysUI.PreferredShell))
             {
@@ -216,7 +216,7 @@ namespace StrixMusic.Shared
             return widthIsInRange && heightIsInRange;
         }
 
-        private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        private async void MainPage_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (ActiveShellModel is null || PreferredShell is null || FallbackShell is null)
             {

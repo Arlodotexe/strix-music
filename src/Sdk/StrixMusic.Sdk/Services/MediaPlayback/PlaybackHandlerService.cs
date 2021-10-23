@@ -17,8 +17,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
-        private List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
+        private List<IMediaSourceConfig> _nextItems;
         private List<IMediaSourceConfig> _originalTrackOrder;
 
         private StrixDevice? _strixDevice;

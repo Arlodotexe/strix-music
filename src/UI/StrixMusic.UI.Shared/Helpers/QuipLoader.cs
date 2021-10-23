@@ -141,7 +141,7 @@ namespace StrixMusic.Helpers
             },
         };
 
-        private int _sumWeight = 0;
+        private int _sumWeight;
 
         private List<QuipGroup> _activeQuipGroups = new List<QuipGroup>();
 
@@ -152,7 +152,7 @@ namespace StrixMusic.Helpers
         public QuipLoader(string languageCode)
         {
             QuipGroup[] groups = _languageSpecialDayMap[languageCode.Substring(0, 2)];
-            QuipGroup[] regionalGroup = new QuipGroup[0];
+            QuipGroup[] regionalGroup = Array.Empty<QuipGroup>();
 
             if (_languageSpecialDayMap.ContainsKey(languageCode))
             {

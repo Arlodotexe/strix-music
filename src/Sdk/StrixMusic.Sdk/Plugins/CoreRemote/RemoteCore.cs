@@ -8,54 +8,75 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
 using OwlCore.Remoting.Attributes;
-using StrixMusic.Core.External.Models;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Plugins.CoreRemote.Models;
 using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Core.External
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <inheritdoc />
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public class ExternalCore : ICore
+    public class RemoteCore : ICore
     {
-        private static readonly ConcurrentDictionary<string, ExternalCore> _externalCoreInstances
-            = new ConcurrentDictionary<string, ExternalCore>();
+        private static readonly ConcurrentDictionary<string, RemoteCore> _externalCoreInstances
+            = new ConcurrentDictionary<string, RemoteCore>();
 
         private readonly MemberRemote _memberRemote;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ExternalCore"/>.
+        /// Creates a new instance of <see cref="RemoteCore"/>.
         /// </summary>
         /// <param name="instanceId"></param>
-        public ExternalCore(string instanceId)
+        public RemoteCore(string instanceId)
         {
             _externalCoreInstances.TryAdd(instanceId, this);
 
             InstanceId = instanceId;
 
             Devices = new List<ICoreDevice>();
-            RecentlyPlayed = new ExternalCoreRecentlyPlayed(instanceId);
-            Discoverables = new ExternalCoreDiscoverables(instanceId);
-            Library = new ExternalCoreLibrary(instanceId);
-            Pins = new ExternalCorePins(instanceId);
+            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId);
+            Discoverables = new RemoteCoreDiscoverables(instanceId);
+            Library = new RemoteCoreLibrary(instanceId);
+            Pins = new RemoteCorePins(instanceId);
 
-            CoreConfig = new ExternalCoreConfig(instanceId);
+            CoreConfig = new RemoteCoreConfig(instanceId);
 
-            _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(ExternalCore)}"); // finish implementing remote methods, props and locks
+            _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(RemoteCore)}", RemoteCoreRemoteMessageHandler.Singleton); 
         }
 
         /// <summary>
-        /// Gets a created <see cref="ExternalCore"/> instance by instance ID.
+        /// Wraps around and remotely relays a core instance.
+        /// </summary>
+        /// <param name="core"></param>
+        public RemoteCore(ICore core)
+        {
+            _externalCoreInstances.TryAdd(core.InstanceId, this);
+
+            InstanceId = core.InstanceId;
+            InstanceDescriptor = core.InstanceDescriptor;
+
+            Devices = core.Devices;
+            RecentlyPlayed = core.RecentlyPlayed;
+            Library = core.Library;
+            Pins = core.Pins;
+
+            CoreConfig = core.CoreConfig;
+
+            _memberRemote = new MemberRemote(this, $"{InstanceId}.{nameof(RemoteCore)}", RemoteCoreRemoteMessageHandler.Singleton);
+        }
+
+        /// <summary>
+        /// Gets a created <see cref="RemoteCore"/> instance by instance ID.
         /// </summary>
         /// <returns>The core instance.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public static ExternalCore GetInstance(string instanceId)
+        public static RemoteCore GetInstance(string instanceId)
         {
             if (!_externalCoreInstances.TryGetValue(instanceId, out var value))
-                return ThrowHelper.ThrowInvalidOperationException<ExternalCore>($"Could not find a registered {nameof(ExternalCore)} with {nameof(instanceId)} of {instanceId}");
+                return ThrowHelper.ThrowInvalidOperationException<RemoteCore>($"Could not find a registered {nameof(RemoteCore)} with {nameof(instanceId)} of {instanceId}");
 
             return value;
         }
@@ -64,15 +85,18 @@ namespace StrixMusic.Core.External
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public string CoreRegistryId => nameof(ExternalCore);
+        public string CoreRegistryId => nameof(RemoteCore);
 
         /// <inheritdoc />
+        [RemoteProperty]
         public string? DisplayName { get; } // TODO
 
         /// <inheritdoc />
+        [RemoteProperty]
         public Uri? LogoPath { get; } // TODO
 
         /// <inheritdoc/>
+        [RemoteProperty]
         public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc />
@@ -88,24 +112,30 @@ namespace StrixMusic.Core.External
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public ICoreUser? User { get; }
+        public ICoreUser? User { get; set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<ICoreDevice> Devices { get; }
+        [RemoteProperty]
+        public IReadOnlyList<ICoreDevice> Devices { get; set; }
 
         /// <inheritdoc/>
-        public ICoreLibrary Library { get; }
+        [RemoteProperty]
+        public ICoreLibrary Library { get; set; }
 
         /// <inheritdoc />
-        public ICoreSearch? Search { get; }
+        [RemoteProperty]
+        public ICoreSearch? Search { get; set; }
 
         /// <inheritdoc/>
+        [RemoteProperty]
         public ICoreRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <inheritdoc/>
+        [RemoteProperty]
         public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
+        [RemoteProperty]
         public ICorePlayableCollectionGroup? Pins { get; }
 
         /// <inheritdoc/>
@@ -116,16 +146,6 @@ namespace StrixMusic.Core.External
 
         /// <inheritdoc />
         public event EventHandler<string>? InstanceDescriptorChanged;
-
-        /// <summary>
-        /// Change the <see cref="CoreState"/>.
-        /// </summary>
-        /// <param name="state">The new state.</param>
-        internal void ChangeCoreState(CoreState state)
-        {
-            CoreState = state;
-            CoreStateChanged?.Invoke(this, state);
-        }
 
         /// <inheritdoc/>
         [RemoteMethod]
@@ -201,7 +221,7 @@ namespace StrixMusic.Core.External
         /// <inheritdoc/>
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            return null;
+            return Task.FromResult<IMediaSourceConfig?>(null);
         }
     }
 }

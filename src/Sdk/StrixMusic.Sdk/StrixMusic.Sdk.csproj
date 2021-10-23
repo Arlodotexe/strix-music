@@ -16,27 +16,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
+    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageReference Include="Refit" Version="5.2.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 
