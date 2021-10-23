@@ -19,7 +19,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
         private readonly Stack<IMediaSourceConfig> _prevItems;
         private List<IMediaSourceConfig> _nextItems;
-        private List<IMediaSourceConfig> _originalTrackOrder;
+
+        // It should only be used to resture _nextItems and _prevItems when turning off shuffle.
+        private List<IMediaSourceConfig> _unshuffledItemsHolder;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
@@ -35,7 +37,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
-            _originalTrackOrder = new List<IMediaSourceConfig>();
+            _unshuffledItemsHolder = new List<IMediaSourceConfig>();
         }
 
         /// <summary>
@@ -397,28 +399,30 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             if (!_shuffleState)
             {
-                var itemsArray = _originalTrackOrder.ToArray();
-                _originalTrackOrder = itemsArray.ToList();
+                var itemsArray = _unshuffledItemsHolder.ToArray();
+                _unshuffledItemsHolder = itemsArray.ToList();
 
                 if (CurrentItem == null)
                 {
-                    _nextItems = _originalTrackOrder;
+                    _nextItems = _unshuffledItemsHolder;
                     _prevItems.Clear();
                 }
                 else
                 {
-                    var index = _originalTrackOrder.IndexOf(CurrentItem);
+                    Guard.IsNotNull(CurrentItem.CurrentIndex, nameof(CurrentItem.CurrentIndex));
+
+                    var index = CurrentItem.CurrentIndex.Value;
                     _nextItems.Clear();
                     _prevItems.Clear();
 
-                    for (int i = index + 1; i < _originalTrackOrder.Count; i++)
+                    for (int i = index + 1; i < _unshuffledItemsHolder.Count; i++)
                     {
-                        _nextItems.Add(_originalTrackOrder[i]);
+                        _nextItems.Add(_unshuffledItemsHolder[i]);
                     }
 
                     for (int i = 0; i < index; i++)
                     {
-                        _prevItems.Push(_originalTrackOrder[i]);
+                        _prevItems.Push(_unshuffledItemsHolder[i]);
                     }
                 }
 
@@ -434,14 +438,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             itemsToShuffle.AddRange(_prevItems);
             itemsToShuffle.AddRange(_nextItems);
 
-            if (!_originalTrackOrder.Any())
+            if (_unshuffledItemsHolder.Count == 0)
             {
-                _originalTrackOrder.AddRange(_prevItems);
+                _unshuffledItemsHolder.AddRange(_prevItems);
 
                 if (CurrentItem != null)
-                    _originalTrackOrder.Add(CurrentItem);
+                    _unshuffledItemsHolder.Add(CurrentItem);
 
-                _originalTrackOrder.AddRange(_nextItems);
+                _unshuffledItemsHolder.AddRange(_nextItems);
             }
 
             var itemsArray = itemsToShuffle.ToArray();

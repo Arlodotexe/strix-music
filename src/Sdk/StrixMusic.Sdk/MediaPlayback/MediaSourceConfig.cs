@@ -54,5 +54,8 @@ namespace StrixMusic.Sdk.MediaPlayback
 
         /// <inheritdoc/>
         public string? FileStreamContentType { get; }
+
+        /// <inheritdoc/>
+        public int? CurrentIndex { get; set; }
     }
 }

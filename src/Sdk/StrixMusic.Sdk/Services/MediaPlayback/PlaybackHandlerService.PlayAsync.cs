@@ -230,7 +230,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
-            _originalTrackOrder.Clear();
+            _unshuffledItemsHolder.Clear();
             for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
                 var item = trackCollection.Tracks[i];
@@ -238,8 +238,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
 
                 var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
+
                 if (mediaSource is null)
                     continue;
+
+                mediaSource.CurrentIndex = i;
 
                 if (item.Id == track.Id)
                 {
@@ -284,6 +287,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
+            _unshuffledItemsHolder.Clear();
             for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
                 var item = trackCollection.Tracks[i];
@@ -293,6 +297,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
                 if (mediaSource is null)
                     continue;
+
+                mediaSource.CurrentIndex = i;
 
                 if (item.Id == track.Id)
                 {

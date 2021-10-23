@@ -65,5 +65,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// The URI used to acquire the PlayReady license.
         /// </summary>
         public Uri LicenseAcquisitionUri { get; }
+
+        /// <inheritdoc/>
+        public int? CurrentIndex { get; set; }
     }
 }

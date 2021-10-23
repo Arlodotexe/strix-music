@@ -25,6 +25,11 @@ namespace StrixMusic.Sdk.MediaPlayback
         public Uri? MediaSourceUri { get; }
 
         /// <summary>
+        /// Holds the index of the <see cref="IMediaSourceConfig"/> in the list.
+        /// </summary>
+        public int? CurrentIndex { get; set; }
+
+        /// <summary>
         /// A stream to a media file to be played.
         /// </summary>
         public Stream? FileStreamSource { get; }
