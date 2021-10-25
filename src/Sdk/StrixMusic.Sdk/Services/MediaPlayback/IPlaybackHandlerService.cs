@@ -39,11 +39,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         IMediaSourceConfig? CurrentItem { get; }
 
         /// <summary>
-        /// The current index of the <see cref="CurrentItem"/> in the unshuffled <see cref="IMediaSourceConfig" /> list.
-        /// </summary>
-        int CurrentIndex { get; }
-
-        /// <summary>
         /// True if the player is using a shuffled track list.
         /// </summary>
         bool ShuffleState { get; }

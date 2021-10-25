@@ -20,9 +20,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private readonly Stack<IMediaSourceConfig> _prevItems;
         private List<IMediaSourceConfig> _nextItems;
 
-        // It should only be used to resture _nextItems and _prevItems when turning off shuffle.
-        private List<IMediaSourceConfig> _unshuffledItemsHolder;
-        private Dictionary<int, IMediaSourceConfig> _shuffledMap;
+        private List<int> _shuffledMap;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
@@ -38,8 +36,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
-            _unshuffledItemsHolder = new List<IMediaSourceConfig>();
-            _shuffledMap = new Dictionary<int, IMediaSourceConfig>();
+            _shuffledMap = new List<int>();
         }
 
         /// <summary>
@@ -175,9 +172,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public double PlaybackSpeed => _currentPlayerService?.PlaybackSpeed ?? 1;
 
         /// <inheritdoc />
-        public int CurrentIndex { get; private set; }
-
-        /// <inheritdoc />
         public void RegisterAudioPlayer(IAudioPlayerService audioPlayer, ICore core) => _audioPlayerRegistry.Add(core.InstanceId, audioPlayer);
 
         /// <inheritdoc />
@@ -295,11 +289,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             await _currentPlayerService.Play(nextItem);
 
-            CurrentItem = nextItem;
-
-            if (_prevItems.Count > 0 && _shuffledMap.Count > 0)
-                CurrentIndex = _shuffledMap.ElementAt(_prevItems.Count - 1).Key;
-
             CurrentItemChanged?.Invoke(this, nextItem);
         }
 
@@ -409,35 +398,47 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             if (!_shuffleState)
             {
-                var itemsArray = _unshuffledItemsHolder.ToArray();
-                _unshuffledItemsHolder = itemsArray.ToList();
+                if (_shuffledMap.Count == 0)
+                    return Task.CompletedTask;
 
-                if (CurrentItem == null)
+                var unshuffledItems = new IMediaSourceConfig[_shuffledMap.Count];
+
+                for (int i = _prevItems.Count - 1; i >= 0; i--)
                 {
-                    _nextItems = _unshuffledItemsHolder;
-                    _prevItems.Clear();
+                    var originalIndex = _shuffledMap[i];
+
+                    unshuffledItems[originalIndex] = _prevItems.ToList()[i];
                 }
-                else
+
+                int nextItemIndex = 0;
+                int currentItemIndex = 0;
+                if (CurrentItem != null)
                 {
-                    if (_shuffledMap.Count == 0)
-                        return Task.CompletedTask;
-
-                    var index = CurrentIndex;
-                    _shuffledMap.Clear();
-
-                    _nextItems.Clear();
-                    _prevItems.Clear();
-
-                    for (int i = index + 1; i < _unshuffledItemsHolder.Count; i++)
-                    {
-                        _nextItems.Add(_unshuffledItemsHolder[i]);
-                    }
-
-                    for (int i = 0; i < index; i++)
-                    {
-                        _prevItems.Push(_unshuffledItemsHolder[i]);
-                    }
+                    currentItemIndex = _shuffledMap[_prevItems.Count];
+                    unshuffledItems[currentItemIndex] = CurrentItem;
+                    nextItemIndex++;
                 }
+
+                for (int i = nextItemIndex; i < _nextItems.Count; i++)
+                {
+                    var originalIndex = _shuffledMap[_prevItems.Count + i];
+
+                    unshuffledItems[originalIndex] = _nextItems[i];
+                }
+
+                _nextItems.Clear();
+                _prevItems.Clear();
+
+                for (int i = 0; i < unshuffledItems.Length; i++)
+                {
+                    if (i < currentItemIndex)
+                        _prevItems.Push(unshuffledItems[i]);
+                    else if (i == currentItemIndex)
+                        CurrentItem = unshuffledItems[i];
+                    else _nextItems.Add(unshuffledItems[i]);
+                }
+
+                _shuffledMap.Clear();
 
                 return Task.CompletedTask;
             }
@@ -447,68 +448,50 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         private Task ShuffleInternalAsync()
         {
-            var shuffledList = new List<IMediaSourceConfig>();
-            var tempMap = new Dictionary<int, IMediaSourceConfig>();
-
-            _unshuffledItemsHolder.Clear();
-            _unshuffledItemsHolder.AddRange(_prevItems);
-
-            if (CurrentItem != null)
-                _unshuffledItemsHolder.Add(CurrentItem);
-
-            _unshuffledItemsHolder.AddRange(_nextItems);
-
-            // Populate all available items to the temp map.
-
-            for (int i = 0; i < _prevItems.Count; i++)
+            _shuffledMap.Clear();
+            for (var i = 0; i < _prevItems.Count; i++)
             {
-                tempMap.Add(i, _prevItems.ElementAt(i));
+                _shuffledMap.Add(i);
             }
 
             var nextStartIndex = _prevItems.Count;
 
-            // Save the currentItem index so it can be removed from the shuffledList.
-            int? currentItemIndex = null;
             if (CurrentItem != null)
             {
-                tempMap.Add(_prevItems.Count, CurrentItem);
-                currentItemIndex = _prevItems.Count;
-
-                nextStartIndex++;
+                _shuffledMap.Add(nextStartIndex);
             }
 
             for (int i = 0; i < _nextItems.Count; i++)
             {
-                tempMap.Add(nextStartIndex, _nextItems.ElementAt(i));
-
-                nextStartIndex++;
+                _shuffledMap.Add(nextStartIndex++);
             }
 
-            // Shuffle the keys (unshuffled indexes), in the list.
-            var keysArray = tempMap.Keys.ToList().ToArray();
-            keysArray.Shuffle();
+            var shuffleArray = _shuffledMap.ToArray();
+            shuffleArray.Shuffle();
 
-            for (int i = 1; i < keysArray.Length; i++)
+            var tempList = new List<IMediaSourceConfig>();
+            tempList.AddRange(_prevItems.Reverse());
+
+            if (CurrentItem != null)
             {
-                // Populate the shuffled map according to the new index order.
-                _shuffledMap.Add(keysArray[i], tempMap[keysArray[i]]);
-
-                if (currentItemIndex != null)
-                {
-                    // Skip the currentItem because it will go to the previous items anyway.
-                    if (keysArray[i] == currentItemIndex)
-                    {
-                        CurrentIndex = currentItemIndex.Value;
-                        continue;
-                    }
-                }
-
-                shuffledList.Add(tempMap[keysArray[i]]);
+                tempList.Add(CurrentItem);
             }
 
-            _nextItems = shuffledList;
+            tempList.AddRange(_nextItems);
 
             _prevItems.Clear();
+            _nextItems.Clear();
+
+            var allNextItems = new IMediaSourceConfig[_shuffledMap.Count];
+
+            _shuffledMap = shuffleArray.ToList();
+
+            for (int i = 0; i < _shuffledMap.Count; i++)
+            {
+                allNextItems[i] = tempList[_shuffledMap[i]];
+            }
+
+            _nextItems = allNextItems.ToList();
 
             return Task.CompletedTask;
         }

@@ -230,7 +230,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
-            _unshuffledItemsHolder.Clear();
             for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
                 var item = trackCollection.Tracks[i];
@@ -285,7 +284,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
-            _unshuffledItemsHolder.Clear();
             for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
                 var item = trackCollection.Tracks[i];
