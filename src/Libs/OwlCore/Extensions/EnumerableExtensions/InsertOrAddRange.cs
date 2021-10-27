@@ -14,10 +14,7 @@ namespace OwlCore.Extensions
         /// <typeparam name="T">The type of the item being added.</typeparam>
         public static void InsertOrAddRange<T>(this IList<T> source, int index, IEnumerable<T> itemsToAdd)
         {
-            if (index < 0)
-                return;
-
-            if (index > source.Count)
+            if (index < 0 || index > source.Count)
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
 
             foreach (var item in itemsToAdd)

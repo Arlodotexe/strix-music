@@ -14,10 +14,7 @@ namespace OwlCore.Extensions
         /// <typeparam name="T">The type of the item being added.</typeparam>
         public static void InsertOrAdd<T>(this IList<T> source, int index, T itemToAdd)
         {
-            if (index < 0)
-                return;
-
-            if (index > source.Count)
+            if (index < 0 || index > source.Count)
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
 
             if (source.Count == index)
