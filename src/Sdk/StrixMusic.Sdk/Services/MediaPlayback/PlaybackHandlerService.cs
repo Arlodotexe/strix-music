@@ -172,7 +172,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public double PlaybackSpeed => _currentPlayerService?.PlaybackSpeed ?? 1;
 
         /// <inheritdoc />
-        public void RegisterAudioPlayer(IAudioPlayerService audioPlayer, ICore core) => _audioPlayerRegistry.Add(core.InstanceId, audioPlayer);
+        public void RegisterAudioPlayer(IAudioPlayerService audioPlayer, string instanceId) => _audioPlayerRegistry.Add(instanceId, audioPlayer);
 
         /// <inheritdoc />
         public Task SeekAsync(TimeSpan position) => _currentPlayerService?.SeekAsync(position) ?? Task.CompletedTask;

@@ -492,7 +492,7 @@ namespace StrixMusic.Shared
             {
                 var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 
-                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
+                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core.InstanceId);
             }
         }
     }
