@@ -27,7 +27,11 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// If true, the app will log information about the app while its running.
         /// </summary>
+#if DEBUG
+        public static bool IsLoggingEnabled => true;
+#else
         public static bool IsLoggingEnabled => false;
+#endif
 
         /// <summary>
         /// The user's preference for how items in a collection from multiple sources are sorted. 

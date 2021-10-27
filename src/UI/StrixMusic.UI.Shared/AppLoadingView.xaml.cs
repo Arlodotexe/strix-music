@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -41,6 +42,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace StrixMusic.Shared
 {
@@ -58,6 +60,7 @@ namespace StrixMusic.Shared
         private SystemMediaTransportControlsHandler? _smtpHandler;
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
+        private ILogger? _logger;
 
         /// <summary>
         /// The ViewModel for this page.
@@ -85,75 +88,114 @@ namespace StrixMusic.Shared
         /// <summary>
         /// Keeps the logger type available in the <paramref name="services"/> but without any output functionality.
         /// </summary>
-        private static void AddLoggerBlackHole(IServiceCollection services)
+        private static ILogger AddLoggerBlackHole(IServiceCollection services)
         {
-            services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
-            services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+            var tempServices = new ServiceCollection();
+
+            Setup(services);
+            Setup(tempServices);
+
+            var provider = tempServices.BuildServiceProvider();
+            return provider.GetRequiredService<ILogger<AppLoadingView>>();
+
+            void Setup(IServiceCollection services)
+            {
+                services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
+                services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+            }
         }
 
-        private static void AddNLog(IServiceCollection services)
+        private static ILogger AddNLog(IServiceCollection services)
         {
             var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
             var defaultLayout = @"${date} [Thread ${threadname:whenEmpty=${threadid}}] ${logger} [${level}] | ${message} ${exception:format=ToString}";
 
-            var config = new LoggingConfiguration();
+            // This temp logger will be used first, so it needs to archive logs from the previous run.
+            var tempConfig = CreateConfig(shouldArchive: true);
 
-            var fileTarget = new FileTarget("filelog")
+            // This logger will run after the temp logger, so it shouldn't archive logs or we won't get one continuous log.
+            var primaryConfig = CreateConfig(shouldArchive: false);
+
+            SetupLogger(services, primaryConfig);
+
+            var tempServices = new ServiceCollection();
+            SetupLogger(tempServices, tempConfig);
+
+            var provider = tempServices.BuildServiceProvider();
+            return provider.GetRequiredService<ILogger<AppLoadingView>>();
+
+            LoggingConfiguration CreateConfig(bool shouldArchive)
             {
-                FileName = logPath,
-                Layout = defaultLayout,
-                EnableArchiveFileCompression = true,
-                MaxArchiveDays = 7,
-                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
-                ArchiveOldFileOnStartup = true,
-                KeepFileOpen = true,
-                OpenFileCacheTimeout = 10,
-                AutoFlush = false,
-                OpenFileFlushTimeout = 10,
-                ConcurrentWrites = false,
-                CleanupFileName = false,
-                OptimizeBufferReuse = true,
-            };
+                var config = new LoggingConfiguration();
 
-            config.AddTarget(fileTarget);
-            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
+                var fileTarget = new FileTarget("filelog")
+                {
+                    FileName = logPath,
+                    Layout = defaultLayout,
+                    EnableArchiveFileCompression = shouldArchive,
+                    MaxArchiveDays = 7,
+                    ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                    ArchiveOldFileOnStartup = shouldArchive,
+                    KeepFileOpen = true,
+                    OpenFileCacheTimeout = 10,
+                    AutoFlush = false,
+                    OpenFileFlushTimeout = 10,
+                    ConcurrentWrites = false,
+                    CleanupFileName = false,
+                    OptimizeBufferReuse = true,
+                };
 
-            var debuggerTarget = new DebuggerTarget("debuggerTarget")
+                config.AddTarget(fileTarget);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
+
+                var debuggerTarget = new DebuggerTarget("debuggerTarget")
+                {
+                    Layout = defaultLayout,
+                    OptimizeBufferReuse = true,
+                };
+
+                config.AddTarget(debuggerTarget);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
+
+                return config;
+            }
+
+            void SetupLogger(IServiceCollection services, LoggingConfiguration config)
             {
-                Layout = defaultLayout,
-                OptimizeBufferReuse = true,
-            };
-
-            config.AddTarget(debuggerTarget);
-            config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
-
-            services.AddLogging(loggingBuilder =>
-            {
-                // configure Logging exclusively with NLog
-                loggingBuilder.ClearProviders();
-                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                loggingBuilder.AddNLog(config);
-            });
+                services.AddLogging(loggingBuilder =>
+                {
+                    // configure Logging exclusively with NLog
+                    loggingBuilder.ClearProviders();
+                    loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    loggingBuilder.AddNLog(config);
+                });
+            }
         }
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
             PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
 
+            await InitializeServices();
             InitializeCoreRegistry();
             InitializeShellRegistry();
-            await InitializeServices();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeCoreRanking();
             await InitializeConfiguredCores();
 
-            UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
+            Guard.IsNotNull(_logger, nameof(_logger));
+
+            _logger?.LogInformation($"{nameof(AppLoadingView_OnLoaded)} completed, navigating to shell.");
+            UpdateStatusRaw($"Done loading");
 
             StrixIcon.FinishAnimation();
         }
 
         private void InitializeShellRegistry()
         {
+            Guard.IsNotNull(_logger, nameof(_logger));
+            _logger?.LogInformation($"Initializing shell registry");
+
             // TODO: Create a way to load these dynamically (no reflection).
             Shells.Sandbox.Registration.Execute();
             Shells.ZuneDesktop.Registration.Execute();
@@ -168,6 +210,9 @@ namespace StrixMusic.Shared
 
         private void InitializeCoreRegistry()
         {
+            Guard.IsNotNull(_logger, nameof(_logger));
+            _logger?.LogInformation($"Initializing core registry");
+
             // TODO: Create a way to load these dynamically (no reflection).
             Cores.LocalFiles.Registration.Execute();
             Cores.OneDrive.Registration.Execute();
@@ -181,6 +226,9 @@ namespace StrixMusic.Shared
 
         private async Task InitializeCoreRanking()
         {
+            Guard.IsNotNull(_logger, nameof(_logger));
+            _logger?.LogInformation($"Initializing core ranking");
+
             var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
             var coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
 
@@ -205,26 +253,36 @@ namespace StrixMusic.Shared
             // If no cores exist in ranking, initialize with all loaded cores.
             if (coreRanking.Count == 0)
             {
+                _logger?.LogInformation($"No existing core rankings found, setting up...");
+
                 // TODO: Show abstractUI and let the user rank the cores manually.
                 foreach (var instance in coreInstanceRegistry)
                     coreRanking.Add(instance.Key);
             }
 
+            Guard.IsGreaterThan(coreRanking.Count, 0, nameof(coreRanking.Count));
+
             await _settingsService.SetValue<List<string>>(nameof(SettingsKeys.CoreRanking), coreRanking);
+            _logger?.LogInformation($"Core ranking initialized with {coreRanking.Count} instances.");
         }
 
         private async Task InitializeServices()
         {
-            UpdateStatus("...");
+            UpdateStatus("> ...");
 
             IServiceCollection services = new ServiceCollection();
 
             var isLoggingEnabled = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
 
-            if (isLoggingEnabled)
-                AddNLog(services);
-            else
-                AddLoggerBlackHole(services);
+            UpdateStatus("InitServices");
+
+            _logger = isLoggingEnabled ? AddNLog(services) : AddLoggerBlackHole(services);
+
+            Guard.IsNotNull(_logger, nameof(_logger));
+
+            _logger?.LogInformation("Logger initialized");
+
+            _logger?.LogInformation("Constructing manually instantiated services");
 
             _playbackHandlerService = new PlaybackHandlerService();
 
@@ -237,16 +295,11 @@ namespace StrixMusic.Shared
             var strixDevice = new StrixDevice(_playbackHandlerService);
             _playbackHandlerService.SetStrixDevice(strixDevice);
 
-            services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
-            services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+            var fileSystemService = new FileSystemService();
+            var cacheFileSystemService = new DefaultCacheService();
+            var coreManagementService = new CoreManagementService(_settingsService);
 
-#if NETFX_CORE
-            services.AddSingleton(_smtpHandler);
-#endif
-
-            services.AddSingleton(strixDevice);
-            services.AddSingleton<MainViewModel>();
-            services.AddSingleton(_mainPage);
+            _logger?.LogInformation($"Setting up localization");
 
             _localizationService = new LocalizationResourceLoader();
             _localizationService.RegisterProvider(Constants.Localization.StartupResource);
@@ -258,17 +311,21 @@ namespace StrixMusic.Shared
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
 
             // TODO: Add debug boot mode.
-#if NETFX_CORE
             // #741
             ShowQuip();
+
+            _logger?.LogInformation("Adding services to IoC");
+
+            services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
+            services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+
+#if NETFX_CORE
+            services.AddSingleton(_smtpHandler);
 #endif
 
-            UpdateStatus("InitServices");
-
-            var fileSystemService = new FileSystemService();
-            var cacheFileSystemService = new DefaultCacheService();
-
-            var coreManagementService = new CoreManagementService(_settingsService);
+            services.AddSingleton(strixDevice);
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton(_mainPage);
 
             services.AddSingleton<ILocalizationService>(_localizationService);
             services.AddSingleton<ITextStorageService>(_textStorageService);
@@ -283,6 +340,7 @@ namespace StrixMusic.Shared
             Ioc.Default.ConfigureServices(serviceProvider);
 
             UpdateStatus("SetupServices");
+            _logger?.LogInformation($"Services created and configured, initializing services");
 
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
@@ -299,17 +357,27 @@ namespace StrixMusic.Shared
             _navService.RegisterCommonPage(_mainPage);
             App.AppFrame.SetupMainViewModel(mainViewModel);
             App.AppFrame.SetupNotificationService((NotificationService)notificationService);
+
+            _logger?.LogInformation($"{nameof(InitializeServices)} completed");
         }
 
         private async Task InitializeOutOfBoxSetupIfNeeded()
         {
+            Guard.IsNotNull(_logger, nameof(_logger));
+            _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)} entered");
+
             var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
             var coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
 
             // Todo: If coreRegistry is empty, show out of box setup page.
             if (coreInstanceRegistry.Count != 0)
+            {
+                _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {coreInstanceRegistry.Count} core instances registered, bypassing OOBE.");
                 return;
+            }
+
+            _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: Setting up temporary OOBE");
 
             // Temp out of box setup
             var notifService = Ioc.Default.GetRequiredService<INotificationService>();
@@ -336,15 +404,18 @@ namespace StrixMusic.Shared
 
             void OnNotificationDismissed(object? sender, EventArgs e)
             {
+                _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnNotificationDismissed)}, completing setup");
                 setupFinishedSemaphore.Release();
             }
 
             void OnDoneButtonClicked(object? sender, EventArgs e)
             {
+                _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnDoneButtonClicked)}, completing setup");
                 setupFinishedSemaphore.Release();
             }
 
             await setupFinishedSemaphore.WaitAsync();
+            _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: Setup complete");
 
             notification.Dismissed -= OnNotificationDismissed;
             doneButton.Clicked -= OnDoneButtonClicked;
@@ -355,7 +426,9 @@ namespace StrixMusic.Shared
         private async Task InitializeConfiguredCores()
         {
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
+            Guard.IsNotNull(_logger, nameof(_logger));
 
+            _logger?.LogInformation($"Initializing configured cores");
             UpdateStatus("InitCores");
 
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
@@ -370,13 +443,16 @@ namespace StrixMusic.Shared
 
         private void ShowQuip()
         {
+            Guard.IsNotNull(_logger, nameof(_logger));
+
             if (_localizationService == null)
             {
-                PART_Status.Text = "Localization Error";
+                _logger?.LogWarning($"Localization service not found. Unable to display quip.");
+                PART_Status.Text = string.Empty;
                 return;
             }
 
-            var quip = new QuipLoader(Language).GetGroupIndexQuip();
+            var quip = new QuipLoader(CultureInfo.CurrentCulture.TwoLetterISOLanguageName).GetGroupIndexQuip();
 
             PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
             _showingQuip = true;
@@ -408,6 +484,9 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_playbackHandlerService, nameof(_playbackHandlerService));
             Guard.IsNotNull(_mainPage, nameof(_mainPage));
+            Guard.IsNotNull(_logger, nameof(_logger));
+
+            _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
             if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
             {

@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Data
         ICoreDevice? Source { get; }
 
         /// <summary>
-        /// Tracks that have been queued to play next after the current track. Once this queue is exhausted, the next track in the <see cref="IDeviceBase.PlaybackContext"/> will play.
+        /// The complete list of tracks that are queued to play.
         /// </summary>
         ITrackCollection? PlaybackQueue { get; }
 
