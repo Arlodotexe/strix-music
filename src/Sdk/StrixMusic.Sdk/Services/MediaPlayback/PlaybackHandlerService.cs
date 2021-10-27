@@ -17,10 +17,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
-        private readonly Stack<IMediaSourceConfig> _prevItems;
+        private readonly List<IMediaSourceConfig> _prevItems;
         private List<IMediaSourceConfig> _nextItems;
 
-        private List<int> _shuffledMap;
+        private int[] _shuffleMap;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
@@ -34,9 +34,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>();
 
-            _prevItems = new Stack<IMediaSourceConfig>();
+            _prevItems = new List<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
-            _shuffledMap = new List<int>();
+            _shuffleMap = Array.Empty<int>();
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 nextItem = NextItems[nextIndex];
 
                 // Move NowPlaying into previous
-                _prevItems.Push(_currentPlayerService.CurrentSource);
+                _prevItems.Add(_currentPlayerService.CurrentSource);
 
                 // Take the next item out of the queue (becomes NowPlaying)
                 _nextItems.Remove(nextItem);
@@ -337,7 +337,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
-            _prevItems.Push(sourceConfig);
+            _prevItems.Add(sourceConfig);
 
             PreviousItemsChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -373,7 +373,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _nextItems.Insert(0, currentItem);
 
-            var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Peek();
+            var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Last();
 
             _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore.InstanceId];
             AttachEvents();
@@ -394,106 +394,122 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _shuffleState = !_shuffleState;
 
+            if (ShuffleState)
+                ShuffleOnInternal();
+            else
+                ShuffleOffInternal();
+
             ShuffleStateChanged?.Invoke(this, _shuffleState);
 
-            if (!_shuffleState)
-            {
-                if (_shuffledMap.Count == 0)
-                    return Task.CompletedTask;
-
-                var unshuffledItems = new IMediaSourceConfig[_shuffledMap.Count];
-
-                for (int i = _prevItems.Count - 1; i >= 0; i--)
-                {
-                    var originalIndex = _shuffledMap[i];
-
-                    unshuffledItems[originalIndex] = _prevItems.ToList()[i];
-                }
-
-                int nextItemIndex = 0;
-                int currentItemIndex = 0;
-                if (CurrentItem != null)
-                {
-                    currentItemIndex = _shuffledMap[_prevItems.Count];
-                    unshuffledItems[currentItemIndex] = CurrentItem;
-                    nextItemIndex++;
-                }
-
-                for (int i = nextItemIndex; i < _nextItems.Count; i++)
-                {
-                    var originalIndex = _shuffledMap[_prevItems.Count + i];
-
-                    unshuffledItems[originalIndex] = _nextItems[i];
-                }
-
-                _nextItems.Clear();
-                _prevItems.Clear();
-
-                for (int i = 0; i < unshuffledItems.Length; i++)
-                {
-                    if (i < currentItemIndex)
-                        _prevItems.Push(unshuffledItems[i]);
-                    else if (i == currentItemIndex)
-                        CurrentItem = unshuffledItems[i];
-                    else _nextItems.Add(unshuffledItems[i]);
-                }
-
-                _shuffledMap.Clear();
-
-                return Task.CompletedTask;
-            }
-
-            return ShuffleInternalAsync();
+            return Task.CompletedTask;
         }
 
-        private Task ShuffleInternalAsync()
+        private void ShuffleOffInternal()
         {
-            _shuffledMap.Clear();
-            for (var i = 0; i < _prevItems.Count; i++)
+            _shuffleState = false;
+
+            if (_shuffleMap.Length == 0)
+                return;
+
+            var originalCurrentItemIndex = _shuffleMap[_prevItems.Count];
+
+            // Does unshuffle in O(n)
+            UnshuffleInternal();
+
+            void UnshuffleInternal(int i = 0)
             {
-                _shuffledMap.Add(i);
+                var originalIndex = _shuffleMap[i];
+
+                if (originalIndex == -1)
+                    return;
+
+                // Sentinal value, lets us know we've handled that index.
+                _shuffleMap[i] = -1;
+
+                if (originalIndex < originalCurrentItemIndex)
+                {
+                    // Previous items
+                    // Hold onto current item so we don't overwrite a reference.
+                    var itemToSave = _prevItems[i];
+
+                    // Look ahead to the index we're overwriting 
+                    // Unshuffle the existing item at that index
+                    UnshuffleInternal(originalIndex);
+
+                    // Restore the item to it's original index.
+                    _prevItems[originalIndex] = itemToSave;
+                }
+                else if (originalIndex == originalCurrentItemIndex)
+                {
+                    // Current item is unaffected when unshuffling.
+                    return;
+                }
+                else if (originalIndex > originalCurrentItemIndex)
+                {
+                    // Next items
+                    // Hold onto current item so we don't overwrite a reference.
+                    var itemToSave = _nextItems[i];
+
+                    // Look ahead to the index we're overwriting 
+                    // Unshuffle the existing item at that index
+                    UnshuffleInternal(originalIndex);
+
+                    // Restore the item to it's original index.
+                    _nextItems[originalIndex] = itemToSave;
+                }
             }
+        }
 
-            var nextStartIndex = _prevItems.Count;
+        private void ShuffleOnInternal()
+        {
+            _shuffleState = true;
+            _shuffleMap = Array.Empty<int>();
 
-            if (CurrentItem != null)
+            // Count all tracks that are queued.
+            var totalTracks = _prevItems.Count + _nextItems.Count;
+            if (!(CurrentItem is null))
+                totalTracks++;
+
+            Guard.IsGreaterThanOrEqualTo(_nextItems.Capacity, totalTracks, nameof(_nextItems.Capacity));
+
+            // Create and shuffle a list of indexes (shuffle map).
+            // Can be used to restore original indexes later.
+            var shuffleMap = new int[totalTracks];
+
+            for (int i = 0; i < totalTracks; i++)
+                shuffleMap[i] = i;
+
+            shuffleMap.Shuffle();
+
+            // Populate and shuffle next items using shuffle map
+            for (int i = 0; i < _shuffleMap.Length; i++)
             {
-                _shuffledMap.Add(nextStartIndex);
+                if (i < _prevItems.Count)
+                {
+                    // Insert all previous items (reversed).
+                    var reversedIndex = _prevItems.Count - i;
+                    _prevItems.ReplaceOrAdd(i, _prevItems.ElementAt(reversedIndex)); // make better?
+                }
+
+                if (i == _prevItems.Count)
+                {
+                    // Don't insert CurrentItem into next.
+                    continue;
+                }
+
+                // if greater than prevItems
+                if (i > _prevItems.Count)
+                {
+                    // Since we don't insert the CurrentItem
+                    // everything in _nextItems must be shifted to prevent skipping / going out of range. 
+                    var itemOffset = i - 1;
+
+                    // Insert remaining next items.
+                    _nextItems.ReplaceOrAdd(itemOffset, _nextItems[itemOffset]);
+                }
             }
-
-            for (int i = 0; i < _nextItems.Count; i++)
-            {
-                _shuffledMap.Add(nextStartIndex++);
-            }
-
-            var shuffleArray = _shuffledMap.ToArray();
-            shuffleArray.Shuffle();
-
-            var tempList = new List<IMediaSourceConfig>();
-            tempList.AddRange(_prevItems.Reverse());
-
-            if (CurrentItem != null)
-            {
-                tempList.Add(CurrentItem);
-            }
-
-            tempList.AddRange(_nextItems);
 
             _prevItems.Clear();
-            _nextItems.Clear();
-
-            var allNextItems = new IMediaSourceConfig[_shuffledMap.Count];
-
-            _shuffledMap = shuffleArray.ToList();
-
-            for (int i = 0; i < _shuffledMap.Count; i++)
-            {
-                allNextItems[i] = tempList[_shuffledMap[i]];
-            }
-
-            _nextItems = allNextItems.ToList();
-
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
