@@ -476,19 +476,21 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             // Can be used to restore original indexes later.
             var shuffleMap = new int[totalTracks];
 
+            // Could be improved, shuffle could happen inside loop below.
             for (int i = 0; i < totalTracks; i++)
                 shuffleMap[i] = i;
 
             shuffleMap.Shuffle();
 
             // Populate and shuffle next items using shuffle map
-            for (int i = 0; i < _shuffleMap.Length; i++)
+            for (int i = 0; i < totalTracks; i++)
             {
                 if (i < _prevItems.Count)
                 {
-                    // Insert all previous items (reversed).
+                    // Insert all previous items into next (last to first).
+                    // Needed in order to restore shuffled items correctly.
                     var reversedIndex = _prevItems.Count - i;
-                    _prevItems.ReplaceOrAdd(i, _prevItems.ElementAt(reversedIndex)); // make better?
+                    _nextItems.ReplaceOrAdd(i, _prevItems[reversedIndex]);
                 }
 
                 if (i == _prevItems.Count)
@@ -507,9 +509,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     // Insert remaining next items.
                     _nextItems.ReplaceOrAdd(itemOffset, _nextItems[itemOffset]);
                 }
-            }
 
-            _prevItems.Clear();
+                // Previous items no longer needed past this point.
+                _prevItems.Clear();
+            }
         }
 
         /// <inheritdoc />
