@@ -192,7 +192,7 @@ namespace StrixMusic.Helpers
                 {
                     i /= group.Weight;
                     return (group.Name, i);
-                } 
+                }
                 else
                 {
                     i -= group.Weight * group.Count;
