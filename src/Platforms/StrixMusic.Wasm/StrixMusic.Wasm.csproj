@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net5.0</TargetFramework>
-		<NoWarn>NU1701</NoWarn>
+		<NoWarn>NU1701;NU1605;</NoWarn>
 		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
@@ -56,8 +56,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
 		<PackageReference Include="NLog" Version="4.7.11" />
 		<PackageReference Include="NLog.Config" Version="4.7.11" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
