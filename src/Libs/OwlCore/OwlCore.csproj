@@ -36,6 +36,7 @@ Added InsertOrAddRange extension method. Behaves the same as InsertOrAdd, but al
 
 [Improvements]
 Added CachedRequestFound and CachedRequestSaving relay from CachedHttpClientHandlerAction to CachedHttpClientHandler.
+NotNullIfNotNullAttribute and NotNullAttribute are now transitive dependencies from Microsoft.Toolkit.Mvvm
 
 [Improvements, Breaking changes]
 Added MemberSignatureScope to OwlCore.Remoting.Transfer.IRemoteMessageHandler to allow sending/receiving member changes in different assemblies, namespaces, or class names. Previously restricted to 1:1 matches of assembly, namespace and class name.
