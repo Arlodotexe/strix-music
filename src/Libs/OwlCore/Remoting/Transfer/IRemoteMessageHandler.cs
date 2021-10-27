@@ -36,6 +36,6 @@ namespace OwlCore.Remoting.Transfer
         public event EventHandler<IRemoteMessage>? MessageReceived;
 
         /// <inheritdoc cref="IRemoteMessageConverter"/>
-        public IRemoteMessageConverter MessageConverter { get; }
+        public IRemoteMessageConverter? MessageConverter { get; }
     }
 }
