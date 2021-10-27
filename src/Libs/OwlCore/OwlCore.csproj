@@ -34,6 +34,9 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 Added ReplaceOrAdd extension method for IList{T}. Behaves the same as InsertOrAdd, but replaces at the given index if it exists.
 Added Pop extension method for IList{T}. Removes and returns the last item in the list.
 
+[Breaking changes]
+InsertOrAdd and InsertOrAddRange now properly throw ArgumentOutOfRangeException when index is less than -1.
+
 --- 0.0.29 ---
 [New]
 Added InsertOrAddRange extension method. Behaves the same as InsertOrAdd, but allows an adding or inserting an enumerable at a specific index.
