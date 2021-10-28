@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using System;
 using System.Collections.Generic;
@@ -11,39 +12,46 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
     [TestClass]
     public class PlaybackHandlerServiceTest
     {
-        private PlaybackHandlerService _handlerService;
 
-        [TestInitialize]
-        public void Setup()
+        [TestMethod]
+        [DataRow(0, 11)]
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
+        [DataRow(3, 8)]
+        [DataRow(4, 7)]
+        [DataRow(5, 6)]
+        [DataRow(6, 5)]
+        [DataRow(7, 4)]
+        [DataRow(8, 3)]
+        [DataRow(9, 2)]
+        [DataRow(10, 1)]
+        [DataRow(11, 0)]
+        [Timeout(800)]
+        public async Task Shuffle_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {
-            // Create handler service, pass in mock audio player, mock IMediaSourceConfig, mock coretrack as needed.
-        }
+            var prevItems = new List<IMediaSourceConfig>();
+            for (int i = 0; i < numberOfPreviousItems; i++)
+            {
+                prevItems.Add(new MockMediaSourceConfig());
+            }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            // dispose media players, handler services, tracks, etc.
-        }
+            var nextItems = new List<IMediaSourceConfig>();
+            for (int i = 0; i < numberOfNextItems; i++)
+            {
+                nextItems.Add(new MockMediaSourceConfig());
+            }
 
-        public void ShuffleQueue_AddMoreOfMe()
-        {
-            // TODO
-            // Create playback handler instance
+            var handlerService = new PlaybackHandlerService(prevItems, nextItems, new MockAudioPlayerService());
 
-            // Turning on shuffle
-            // Make sure previous items are emptied
-            // Make sure all items from previous and next exist in next after shuffle
-            // Make sure shuffle actually shuffles (no sequential items)
-            // Needs to complete within 800ms
-            // etc
+            using (handlerService)
+            {
+                // Shuffle is on.
+                await handlerService.ToggleShuffleAsync();
 
-            // Turning off shuffle
-            // Needs to restore the queue exactly how it was
-            // Needs to complete within 800ms
-            // etc
+                Assert.AreEqual(prevItems.Count, 0);
+                // TODO: more assertions.
+            }
 
-            // Both on / off
-            // Make sure current item doesn't change when toggling shuffle.
         }
     }
 }
