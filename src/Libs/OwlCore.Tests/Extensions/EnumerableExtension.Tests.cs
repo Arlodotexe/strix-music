@@ -28,6 +28,7 @@ namespace OwlCore.Tests.Extensions
         [DataRow(0, 1, 0, 1)]
         [DataRow(1, 10, 5, 6, 7)]
         [DataRow(3, 0, 100, 500, 1000, 9999)]
+        [DataRow(10, 0, 100, 500, 1000, 9999)]
         [TestMethod]
         public void ReplaceOrAdd(int indexToReplace, int newValue, params int[] items)
         {
