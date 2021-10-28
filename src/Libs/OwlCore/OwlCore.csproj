@@ -37,6 +37,9 @@ Added Pop extension method for IList{T}. Removes and returns the last item in th
 [Breaking changes]
 InsertOrAdd and InsertOrAddRange now properly throw ArgumentOutOfRangeException when index is less than -1.
 
+[Improvements]
+We've started adding unit tests to OwlCore behind the scenes. Development of [New] features is now test driven and existing code will get tests added over time.
+
 --- 0.0.29 ---
 [New]
 Added InsertOrAddRange extension method. Behaves the same as InsertOrAdd, but allows an adding or inserting an enumerable at a specific index.
