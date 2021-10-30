@@ -5,10 +5,12 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using NLog;
 using NLog.Targets;
 using OwlCore;
@@ -18,6 +20,7 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Messages;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Notifications;
@@ -35,7 +38,7 @@ namespace StrixMusic.Shared.ViewModels
     /// <summary>
     /// ViewModel used by the <see cref="SuperShell"/>.
     /// </summary>
-    public class SuperShellViewModel : ObservableObject, IAsyncInit, IDisposable
+    public class SuperShellViewModel : ObservableRecipient, IRecipient<LogMessage>, IAsyncInit, IDisposable
     {
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
@@ -47,6 +50,7 @@ namespace StrixMusic.Shared.ViewModels
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
         private AbstractBoolean _loggingToggle;
+        private ILogger<SuperShellViewModel> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShellViewModel"/> class.
@@ -58,10 +62,12 @@ namespace StrixMusic.Shared.ViewModels
             _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _localizationResourceLoader = Ioc.Default.GetRequiredService<ILocalizationService>();
+            _logger = Ioc.Default.GetRequiredService<ILogger<SuperShellViewModel>>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
             AvailableServices = new ObservableCollection<AvailableServicesItemViewModel>();
+            LogMessages = new ObservableCollection<LogMessage>();
 
             _loggingToggle = new AbstractBoolean("loggingToggle", "Use logging")
             {
@@ -90,12 +96,16 @@ namespace StrixMusic.Shared.ViewModels
             if (IsInitialized)
                 return;
 
+            _logger.LogInformation($"Started {nameof(InitAsync)}");
+
             IsInitialized = true;
 
             _loggingToggle.State = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
 
             SetupCores();
             await ShellSelectorViewModel.InitAsync();
+
+            _logger.LogInformation($"Completed {nameof(InitAsync)}");
         }
 
         private void AttachEvents()
@@ -249,6 +259,11 @@ namespace StrixMusic.Shared.ViewModels
         /// The services that are available to be added.
         /// </summary>
         public ObservableCollection<AvailableServicesItemViewModel> AvailableServices { get; }
+
+        /// <summary>
+        /// Messages logged by the app for debug purposes. 
+        /// </summary>
+        public ObservableCollection<LogMessage> LogMessages { get; set; }
 
         /// <summary>
         /// The advanced settings for the app.
@@ -442,10 +457,23 @@ namespace StrixMusic.Shared.ViewModels
             _ = ResetAppAsync();
         }
 
+        /// <inheritdoc/>
+        public void Receive(LogMessage message)
+        {
+            LogMessages.Add(message);
+        }
+
         private void SetupCores()
         {
-            foreach (var metadata in CoreRegistry.MetadataRegistry)
-                AvailableServices.Add(new AvailableServicesItemViewModel(metadata));
+
+            var registry = CoreRegistry.MetadataRegistry;
+            _logger.LogInformation($"Setting up {nameof(CoreRegistry)}. Total {registry.Count} items.");
+
+            foreach (var metadata in registry)
+            {
+                _logger.LogInformation($"Adding {metadata.Id} to {nameof(AvailableServices)} (contains {AvailableServices.Count} items)");
+                AvailableServices.Add(new AvailableServicesItemViewModel(metadata)); // Adding to this ObservableCollect kills the thread with no thrown exception?
+            }
 
             foreach (var core in _mainViewModel.Cores)
                 AttachEvents(core);

@@ -26,7 +26,14 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
         {
             _metadataRegistry.Add(metadata);
             _coreFactories.Add(metadata, coreFactory);
+
+            ShellRegistered?.Invoke(null, metadata);
         }
+
+        /// <summary>
+        /// Raised when a new shell is registered.
+        /// </summary>
+        public static event EventHandler<ShellMetadata>? ShellRegistered;
 
         /// <summary>
         /// Creates a shell instance using a registered factory.

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
@@ -23,6 +24,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Messages;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
@@ -108,7 +110,7 @@ namespace StrixMusic.Shared
         private static ILogger AddNLog(IServiceCollection services)
         {
             var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
-            var defaultLayout = @"${date} [Thread ${threadname:whenEmpty=${threadid}}] ${logger} [${level}] | ${message} ${exception:format=ToString}";
+            var defaultLayoutStr = @"${date} [Thread ${threadname:whenEmpty=${threadid}}] ${logger} [${level}] | ${message} ${exception:format=ToString}";
 
             // This temp logger will be used first, so it needs to archive logs from the previous run.
             var tempConfig = CreateConfig(shouldArchive: true);
@@ -131,7 +133,7 @@ namespace StrixMusic.Shared
                 var fileTarget = new FileTarget("filelog")
                 {
                     FileName = logPath,
-                    Layout = defaultLayout,
+                    Layout = defaultLayoutStr,
                     EnableArchiveFileCompression = shouldArchive,
                     MaxArchiveDays = 7,
                     ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
@@ -150,12 +152,23 @@ namespace StrixMusic.Shared
 
                 var debuggerTarget = new DebuggerTarget("debuggerTarget")
                 {
-                    Layout = defaultLayout,
+                    Layout = defaultLayoutStr,
                     OptimizeBufferReuse = true,
                 };
 
-                config.AddTarget(debuggerTarget);
                 config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
+                config.AddTarget(debuggerTarget);
+
+                var customTarget = new MethodCallTarget("customTarget", (logInfo, parameters) =>
+                {
+                    var formattedMessage = $"{DateTime.UtcNow} [Thread {Thread.CurrentThread.ManagedThreadId}] {logInfo.LoggerName} [{logInfo.Level}] | {logInfo.Message}";
+                    Console.WriteLine(formattedMessage);
+
+                    WeakReferenceMessenger.Default.Send(new LogMessage(formattedMessage, (Microsoft.Extensions.Logging.LogLevel)logInfo.Level.Ordinal, logInfo.StackTrace));
+                });
+
+                config.AddTarget(customTarget);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, customTarget);
 
                 return config;
             }
@@ -196,15 +209,21 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_logger, nameof(_logger));
             _logger?.LogInformation($"Initializing shell registry");
 
+            ShellRegistry.ShellRegistered += OnShellRegistered;
+
             // TODO: Create a way to load these dynamically (no reflection).
             Shells.Sandbox.Registration.Execute();
             Shells.ZuneDesktop.Registration.Execute();
             Shells.Groove.Registration.Execute();
 
             if (ShellRegistry.MetadataRegistry.Count == 0)
-            {
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(ShellRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 shell.");
-                return;
+
+            ShellRegistry.ShellRegistered -= OnShellRegistered;
+
+            void OnShellRegistered(object? sender, ShellMetadata metadata)
+            {
+                _logger.LogInformation($"Shell registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
             }
         }
 
@@ -213,14 +232,20 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_logger, nameof(_logger));
             _logger?.LogInformation($"Initializing core registry");
 
+            CoreRegistry.CoreRegistered += OnCoreRegistered;
+
             // TODO: Create a way to load these dynamically (no reflection).
             Cores.LocalFiles.Registration.Execute();
             Cores.OneDrive.Registration.Execute();
 
             if (CoreRegistry.MetadataRegistry.Count == 0)
-            {
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(CoreRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
-                return;
+
+            CoreRegistry.CoreRegistered -= OnCoreRegistered;
+
+            void OnCoreRegistered(object? sender, CoreMetadata metadata)
+            {
+                _logger.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
             }
         }
 
@@ -253,7 +278,7 @@ namespace StrixMusic.Shared
             // If no cores exist in ranking, initialize with all loaded cores.
             if (coreRanking.Count == 0)
             {
-                _logger?.LogInformation($"No existing core rankings found, setting up...");
+                _logger?.LogInformation($"No existing core rankings found, creating default ranking...");
 
                 // TODO: Show abstractUI and let the user rank the cores manually.
                 foreach (var instance in coreInstanceRegistry)

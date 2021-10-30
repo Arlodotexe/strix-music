@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Services;
+using Microsoft.Extensions.Logging;
 
 namespace StrixMusic.Shared.ViewModels
 {
