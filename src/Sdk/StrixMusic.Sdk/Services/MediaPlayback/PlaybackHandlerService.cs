@@ -471,8 +471,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (!(CurrentItem is null))
                 totalTracks++;
 
-            Guard.IsGreaterThanOrEqualTo(_nextItems.Capacity, totalTracks, nameof(_nextItems.Capacity));
-
             // Create and shuffle a list of indexes (shuffle map).
             // Can be used to restore original indexes later.
             var shuffleMap = new int[totalTracks];
@@ -483,15 +481,24 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             shuffleMap.Shuffle();
 
+            _nextItems.AddRange(_prevItems);
+
+            // Make room for the previous Items, so they can be inserted in the start without overwriting the next items.
+            if (_prevItems.Count > 0)
+            {
+                for (int i = _nextItems.Count - 1; i >= 0; i--)
+                {
+                    if (i - 1 > 0)
+                        _nextItems[i] = _nextItems[i - 1];
+                }
+            }
+
             // Populate and shuffle next items using shuffle map
             for (int i = 0; i < totalTracks; i++)
             {
                 if (i < _prevItems.Count)
                 {
-                    // Insert all previous items into next (last to first).
-                    // Needed in order to restore shuffled items correctly.
-                    var reversedIndex = _prevItems.Count - i;
-                    _nextItems.ReplaceOrAdd(i, _prevItems[reversedIndex]);
+                    _nextItems.ReplaceOrAdd(i, _prevItems[i]);
                 }
 
                 if (i == _prevItems.Count)
@@ -507,13 +514,22 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     // everything in _nextItems must be shifted to prevent skipping / going out of range. 
                     var itemOffset = i - 1;
 
-                    // Insert remaining next items.
                     _nextItems.ReplaceOrAdd(itemOffset, _nextItems[itemOffset]);
                 }
-
-                // Previous items no longer needed past this point.
-                _prevItems.Clear();
             }
+
+            // Previous items no longer needed past this point.
+            _prevItems.Clear();
+
+            // Temporary storage for the unshuffled list, This doesn't increase the Time/Space complexity of the method above O(n).
+            var tempShuffledList = new IMediaSourceConfig[_nextItems.Count];
+
+            for (int i = 0; i < shuffleMap.Length; i++)
+            {
+                tempShuffledList[i] = _nextItems[shuffleMap[i]];
+            }
+
+            _nextItems = tempShuffledList.ToList();
         }
 
         /// <inheritdoc />
