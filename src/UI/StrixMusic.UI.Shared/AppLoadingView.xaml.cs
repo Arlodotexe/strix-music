@@ -310,7 +310,7 @@ namespace StrixMusic.Shared
             _logger?.LogInformation("Constructing manually instantiated services");
 
             var audioPlayerService = new AudioPlayerService(new MediaPlayerElement());
-            _playbackHandlerService = new PlaybackHandlerService(new List<IMediaSourceConfig>(), new List<IMediaSourceConfig>(), audioPlayerService);
+            _playbackHandlerService = new PlaybackHandlerService(new List<IMediaSourceConfig>(), new List<IMediaSourceConfig>(), audioPlayerService, new Dictionary<string, IAudioPlayerService>());
 
 #if NETFX_CORE
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);

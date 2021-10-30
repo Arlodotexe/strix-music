@@ -10,15 +10,15 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 {
     internal class MockAudioPlayerService : IAudioPlayerService
     {
-        public IMediaSourceConfig CurrentSource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IMediaSourceConfig CurrentSource { get; set; } = new MockMediaSourceConfig();
 
-        public TimeSpan Position => throw new NotImplementedException();
+        public TimeSpan Position => TimeSpan.FromSeconds(10);
 
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => PlaybackState.None;
 
-        public double Volume => throw new NotImplementedException();
+        public double Volume => 100;
 
-        public double PlaybackSpeed => throw new NotImplementedException();
+        public double PlaybackSpeed => 1;
 
         public event EventHandler<IMediaSourceConfig> CurrentSourceChanged;
         public event EventHandler<float[]> QuantumProcessed;
@@ -29,42 +29,42 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
         public Task ChangePlaybackSpeedAsync(double speed)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task ChangeVolumeAsync(double volume)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task PauseAsync()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task Play(string id)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task Play(IMediaSourceConfig sourceConfig)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task Preload(IMediaSourceConfig sourceConfig)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task ResumeAsync()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task SeekAsync(TimeSpan position)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

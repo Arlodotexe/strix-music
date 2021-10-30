@@ -30,11 +30,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
         /// </summary>
-        public PlaybackHandlerService(List<IMediaSourceConfig> prevItems, List<IMediaSourceConfig> nextItems, IAudioPlayerService currentPlayerService)
+        public PlaybackHandlerService(List<IMediaSourceConfig> prevItems, List<IMediaSourceConfig> nextItems, IAudioPlayerService currentPlayerService
+            , Dictionary<string, IAudioPlayerService> audioPlayerRegistry)
         {
             _currentPlayerService = currentPlayerService;
 
-            _audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>();
+            _audioPlayerRegistry = audioPlayerRegistry;
             _prevItems = prevItems;
             _nextItems = nextItems;
             _shuffleMap = Array.Empty<int>();

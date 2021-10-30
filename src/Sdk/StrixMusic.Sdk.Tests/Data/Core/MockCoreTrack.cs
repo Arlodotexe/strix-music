@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.Tests.Data.Core
 
         public int TotalGenreCount => throw new NotImplementedException();
 
-        public ICore SourceCore => throw new NotImplementedException();
+        public ICore SourceCore => new MockCore();
 
         public event EventHandler<ICoreAlbum> AlbumChanged;
         public event EventHandler<ICoreLyrics> LyricsChanged;
