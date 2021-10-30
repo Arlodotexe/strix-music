@@ -24,6 +24,9 @@
 		<UpToDateCheckInput Include="..\StrixMusic.Shared\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="Assets\SplashScreen.png" />
+	</ItemGroup>
+	<ItemGroup>
 		<EmbeddedResource Include="WasmCSS\Fonts.css" />
 		<EmbeddedResource Include="WasmScripts\AppManifest.js" />
 	</ItemGroup>
