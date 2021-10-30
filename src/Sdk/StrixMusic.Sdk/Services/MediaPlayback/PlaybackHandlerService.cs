@@ -530,6 +530,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             }
 
             _nextItems = tempShuffledList.ToList();
+
+            _shuffleMap = shuffleMap;
         }
 
         /// <inheritdoc />
