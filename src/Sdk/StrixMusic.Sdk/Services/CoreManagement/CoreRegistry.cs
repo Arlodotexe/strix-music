@@ -26,7 +26,14 @@ namespace StrixMusic.Sdk.Services
         {
             _metadataRegistry.Add(metadata);
             _coreFactories.Add(metadata.Id, coreFactory);
+
+            CoreRegistered?.Invoke(null, metadata);
         }
+
+        /// <summary>
+        /// Raised when a new core is registered.
+        /// </summary>
+        public static event EventHandler<CoreMetadata>? CoreRegistered;
 
         /// <summary>
         /// Creates a core instance using a registered core factory.

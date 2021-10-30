@@ -243,7 +243,9 @@ namespace StrixMusic.Shared
             var mediaPlayerElement = new MediaPlayerElement();
             mediaPlayerElement.SetMediaPlayer(mediaSource);
 
+#if !__WASM__
             mediaSource.CommandManager.IsEnabled = false;
+#endif
 
             _mediaPlayerElements.Add(mediaPlayerElement);
 
