@@ -400,6 +400,13 @@ namespace StrixMusic.Cores.OneDrive
 
             authenticateButton.Clicked += OnAuthenticateButtonClicked;
 
+            var cancelButton = new AbstractButton("cancelButton", "Cancel")
+            {
+                IconCode = "\xE711"
+            };
+
+            cancelButton.Clicked += OnCancelButtonClicked;
+
             // TODO:
             // * Needs cancel button to return to config UI.
 
@@ -409,7 +416,8 @@ namespace StrixMusic.Cores.OneDrive
                 Subtitle = "You'll need your phone or computer",
                 Items = new List<AbstractUIElement>
                 {
-                    authenticateButton
+                    authenticateButton,
+                    cancelButton
                 },
             }.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
@@ -421,6 +429,11 @@ namespace StrixMusic.Cores.OneDrive
                 {
                     await task;
                 }
+            }
+
+            void OnCancelButtonClicked(object sender, EventArgs e)
+            {
+                _authenticationManager?.CurrentCts?.Cancel();
             }
         }
 

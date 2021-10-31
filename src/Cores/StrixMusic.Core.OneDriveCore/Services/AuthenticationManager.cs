@@ -4,6 +4,7 @@ using OwlCore.AbstractUI.Models;
 using System;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OneDrive.Services
@@ -27,6 +28,8 @@ namespace StrixMusic.Cores.OneDrive.Services
         public string? EmailAddress { get; private set; }
 
         public string? DisplayName {  get; private set; }
+
+        internal CancellationTokenSource? CurrentCts { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AuthenticationManager"/>.
@@ -82,11 +85,13 @@ namespace StrixMusic.Cores.OneDrive.Services
             {
                 try
                 {
+                    CurrentCts = new CancellationTokenSource();
+
                     result = await _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
                     {
                         _coreConfig.DisplayDeviceCodeResult(dcr);
                         return Task.CompletedTask;
-                    }).ExecuteAsync();
+                    }).ExecuteAsync(CurrentCts.Token);
 
                     if (result != null && !string.IsNullOrWhiteSpace(result.AccessToken))
                     {
@@ -101,12 +106,22 @@ namespace StrixMusic.Cores.OneDrive.Services
 
                         graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
                     }
-
+                }
+                catch (TaskCanceledException ex)
+                {
+                    // Dodge the catch-all below.
+                    // TaskCanceledException should be handled by the caller, unlike other exceptions.
+                    throw ex;
                 }
                 catch (Exception)
                 {
                     // TODO: Show a dialog with the error.
                     return graphClient;
+                }
+                finally
+                {
+                    CurrentCts?.Dispose();
+                    CurrentCts = null;
                 }
             }
 
