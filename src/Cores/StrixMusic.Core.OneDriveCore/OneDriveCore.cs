@@ -52,7 +52,7 @@ namespace StrixMusic.Cores.OneDrive
         {
             ChangeCoreState(CoreState.Loading);
 
-            if (!(CoreConfig is OneDriveCoreConfig coreConfig))
+            if (CoreConfig is not OneDriveCoreConfig coreConfig)
                 return;
 
             _settingsService = new OneDriveCoreSettingsService(InstanceId);

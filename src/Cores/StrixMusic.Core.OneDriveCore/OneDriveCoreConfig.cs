@@ -433,6 +433,8 @@ namespace StrixMusic.Cores.OneDrive
 
             void OnCancelButtonClicked(object sender, EventArgs e)
             {
+                cancelButton.Clicked -= OnCancelButtonClicked;
+                authenticateButton.Clicked -= OnAuthenticateButtonClicked;
                 _authenticationManager?.CurrentCts?.Cancel();
             }
         }
