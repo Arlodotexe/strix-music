@@ -129,9 +129,14 @@ namespace OwlCore.AbstractStorage
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException();
 
-            var folderData = await StorageFolder.GetFolderFromPathAsync(path);
+            var folderData = _registeredFolders.FirstOrDefault(x => x.Path == path);
+            if (folderData is null)
+                return null;
+            else
+                return folderData;
 
-            return new FolderData(folderData);
+            // https://github.com/unoplatform/uno/issues/7401
+            // var folderData = await StorageFolder.GetFolderFromPathAsync(path);
         }
 
         /// <inheritdoc/>
