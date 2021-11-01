@@ -511,6 +511,11 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_mainPage, nameof(_mainPage));
             Guard.IsNotNull(_logger, nameof(_logger));
 
+#if __WASM__
+            _logger?.LogInformation($"WASM detected, skipping mediaplayer setup");
+            return;
+#endif
+
             _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
             if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
