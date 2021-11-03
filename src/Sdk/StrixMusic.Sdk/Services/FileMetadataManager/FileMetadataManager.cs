@@ -93,12 +93,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
 
-            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
+            var folderData = await primaryFileSystemService.RootFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
