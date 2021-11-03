@@ -122,9 +122,9 @@ namespace StrixMusic.Shells.ZuneDesktop
         private async void ChangeBackgroundImage()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                HideBackground.Begin();
-            });
+               {
+                   HideBackground.Begin();
+               });
         }
 
         /// <inheritdoc/>
