@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Sdk.Uno.Services
 {
     /// <inheritdoc/>
     public class Launcher : ILauncher

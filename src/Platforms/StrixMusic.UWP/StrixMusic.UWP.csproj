@@ -206,7 +206,6 @@
     <None Include="..\..\..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
-    <Compile Include="Services\Launcher.UWP.cs" />
     <None Include="StrixMusic.UWP_TemporaryKey.pfx" />
     <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
