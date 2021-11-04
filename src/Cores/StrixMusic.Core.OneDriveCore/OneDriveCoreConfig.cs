@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractLauncher;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
 using OwlCore.AbstractUI.Models;
@@ -272,7 +274,7 @@ namespace StrixMusic.Cores.OneDrive
             var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
             var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
-            _authenticationManager = new AuthenticationManager(clientId, tenantId, redirectUri);
+            _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
             _graphClient = await _authenticationManager.GenerateGraphToken();
 
             if (_graphClient is null)
@@ -386,6 +388,51 @@ namespace StrixMusic.Cores.OneDrive
         {
             AbstractUIElements = collection.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        internal void DisplayDeviceCodeResult(DeviceCodeResult dcr)
+        {
+            var authenticateButton = new AbstractButton("codeButton", dcr.VerificationUrl)
+            {
+                Title = $"Go to this URL and enter the code {dcr.UserCode}",
+                IconCode = "\xE8A7"
+            };
+
+            authenticateButton.Clicked += OnAuthenticateButtonClicked;
+
+            var cancelButton = new AbstractButton("cancelButton", "Cancel")
+            {
+                IconCode = "\xE711"
+            };
+
+            cancelButton.Clicked += OnCancelButtonClicked;
+
+            AbstractUIElements = new AbstractUICollection("deviceCodeResult")
+            {
+                Title = "Let's login",
+                Subtitle = "You'll need your phone or computer",
+                Items = new List<AbstractUIElement>
+                {
+                    authenticateButton,
+                    cancelButton
+                },
+            }.IntoList();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+
+            async void OnAuthenticateButtonClicked(object sender, EventArgs e)
+            {
+                Guard.IsNotNull(Services, nameof(Services));
+                
+                var launcher = Services.GetRequiredService<ILauncher>();
+                await launcher.LaunchUriAsync(new Uri(dcr.VerificationUrl));
+            }
+
+            void OnCancelButtonClicked(object sender, EventArgs e)
+            {
+                cancelButton.Clicked -= OnCancelButtonClicked;
+                authenticateButton.Clicked -= OnAuthenticateButtonClicked;
+                _authenticationManager?.CurrentCts?.Cancel();
+            }
         }
 
         private async void UseFilePropsScannerToggleOnStateChanged(object sender, bool e)

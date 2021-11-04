@@ -16,6 +16,7 @@ using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
+using OwlCore.AbstractLauncher;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
@@ -37,6 +38,7 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Services;
 using StrixMusic.Shared.Services;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -360,6 +362,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService>(new NotificationService());
             services.AddSingleton<ICoreManagementService>(coreManagementService);
+            services.AddSingleton<ILauncher>(new Launcher());
 
             var serviceProvider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(serviceProvider);

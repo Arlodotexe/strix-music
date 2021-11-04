@@ -1,6 +1,6 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractUI.Models;
 using System;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -18,6 +18,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         private readonly string[] _scopes = { "Files.Read.All", "User.Read", "Files.ReadWrite" };
 
         private readonly IPublicClientApplication _clientApp;
+        private readonly OneDriveCoreConfig _coreConfig;
 
         /// <summary>
         /// The access token used to authenticate with OneDrive.
@@ -28,14 +29,18 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public string? DisplayName {  get; private set; }
 
+        internal CancellationTokenSource? CurrentCts { get; private set; }
+
         /// <summary>
         /// Creates a new instance of <see cref="AuthenticationManager"/>.
         /// </summary>
         /// <param name="clientId">The client id of the app in azure portal.</param>
         /// <param name="tenantId">The tenant id generated.</param>
         /// <param name="redirectUri">The redirect URI to use with the connected application, if any.</param>
-        public AuthenticationManager(string clientId, string tenantId, string? redirectUri = null)
+        public AuthenticationManager(OneDriveCoreConfig coreConfig, string clientId, string tenantId, string? redirectUri = null)
         {
+            _coreConfig = coreConfig;
+
             var authority = new Uri($"{_authorityUri}/{tenantId}");
 
             var builder = PublicClientApplicationBuilder
@@ -80,8 +85,13 @@ namespace StrixMusic.Cores.OneDrive.Services
             {
                 try
                 {
-                    result = await _clientApp.AcquireTokenInteractive(_scopes)
-                       .ExecuteAsync(CancellationToken.None);
+                    CurrentCts = new CancellationTokenSource();
+
+                    result = await _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
+                    {
+                        _coreConfig.DisplayDeviceCodeResult(dcr);
+                        return Task.CompletedTask;
+                    }).ExecuteAsync(CurrentCts.Token);
 
                     if (result != null && !string.IsNullOrWhiteSpace(result.AccessToken))
                     {
@@ -96,17 +106,26 @@ namespace StrixMusic.Cores.OneDrive.Services
 
                         graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
                     }
-
+                }
+                catch (TaskCanceledException ex)
+                {
+                    // Dodge the catch-all below.
+                    // TaskCanceledException should be handled by the caller, unlike other exceptions.
+                    throw ex;
                 }
                 catch (Exception)
                 {
                     // TODO: Show a dialog with the error.
                     return graphClient;
                 }
+                finally
+                {
+                    CurrentCts?.Dispose();
+                    CurrentCts = null;
+                }
             }
 
             return graphClient;
         }
-
     }
 }

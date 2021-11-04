@@ -52,7 +52,7 @@ namespace StrixMusic.Cores.OneDrive
         {
             ChangeCoreState(CoreState.Loading);
 
-            if (!(CoreConfig is OneDriveCoreConfig coreConfig))
+            if (CoreConfig is not OneDriveCoreConfig coreConfig)
                 return;
 
             _settingsService = new OneDriveCoreSettingsService(InstanceId);
@@ -107,11 +107,20 @@ namespace StrixMusic.Cores.OneDrive
                 }
             }
 
-            var loggedIn = await coreConfig.TryLoginAsync();
-            if (!loggedIn)
+            try
             {
-                ChangeInstanceDescriptor("Login failed");
-                ChangeCoreState(CoreState.Faulted);
+                var loggedIn = await coreConfig.TryLoginAsync();
+                if (!loggedIn)
+                {
+                    ChangeInstanceDescriptor("Login failed");
+                    ChangeCoreState(CoreState.Faulted);
+                    return;
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete), false);
+                await InitAsync(services);
                 return;
             }
 
