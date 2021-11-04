@@ -407,9 +407,6 @@ namespace StrixMusic.Cores.OneDrive
 
             cancelButton.Clicked += OnCancelButtonClicked;
 
-            // TODO:
-            // * Needs cancel button to return to config UI.
-
             AbstractUIElements = new AbstractUICollection("deviceCodeResult")
             {
                 Title = "Let's login",
@@ -424,11 +421,10 @@ namespace StrixMusic.Cores.OneDrive
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
             {
-                var task = Services?.GetRequiredService<ILauncher>()?.LaunchUriAsync(new Uri(dcr.VerificationUrl));
-                if (task is not null)
-                {
-                    await task;
-                }
+                Guard.IsNotNull(Services, nameof(Services));
+                
+                var launcher = Services.GetRequiredService<ILauncher>();
+                await launcher.LaunchUriAsync(new Uri(dcr.VerificationUrl));
             }
 
             void OnCancelButtonClicked(object sender, EventArgs e)
