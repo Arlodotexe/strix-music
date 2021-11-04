@@ -1,11 +1,16 @@
-﻿using Microsoft.Graph;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractUI.Models;
 using System;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Services;
+using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Data;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -21,15 +26,19 @@ namespace StrixMusic.Cores.OneDrive.Services
         private readonly OneDriveCoreConfig _coreConfig;
 
         /// <summary>
-        /// The access token used to authenticate with OneDrive.
+        /// The user's email address, if known.
         /// </summary>
-        internal string? AccessToken { get; private set; }
-
         public string? EmailAddress { get; private set; }
 
-        public string? DisplayName {  get; private set; }
+        /// <summary>
+        /// The user's display name, if known.
+        /// </summary>
+        public string? DisplayName { get; private set; }
 
-        internal CancellationTokenSource? CurrentCts { get; private set; }
+        /// <summary>
+        /// The method used to log the user in.
+        /// </summary>
+        public LoginMethod LoginMethod { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AuthenticationManager"/>.
@@ -41,6 +50,15 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             _coreConfig = coreConfig;
 
+            LoginMethod = Sdk.Helpers.PlatformHelper.Current switch
+            {
+                Platform.UWP => LoginMethod.DeviceCode,
+                Platform.WASM => LoginMethod.Interactive,
+                Platform.Droid => LoginMethod.Interactive,
+                Platform.Unknown => LoginMethod.None,
+                _ => ThrowHelper.ThrowNotSupportedException<LoginMethod>(),
+            };
+
             var authority = new Uri($"{_authorityUri}/{tenantId}");
 
             var builder = PublicClientApplicationBuilder
@@ -50,82 +68,93 @@ namespace StrixMusic.Cores.OneDrive.Services
             if (!string.IsNullOrWhiteSpace(redirectUri))
                 builder.WithRedirectUri(redirectUri);
 
+            builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
+
             _clientApp = builder.Build();
         }
 
         /// <summary>
-        /// Performs user authorization and returns the a graph client with access token setup.
+        /// Generate a <see cref="GraphServiceClient"/> and handles login if needed.
         /// </summary>
         /// <returns></returns>
-        public async Task<GraphServiceClient?> GenerateGraphToken()
+        public async Task<GraphServiceClient?> TryLogin()
         {
-            GraphServiceClient? graphClient = null;
-            var accounts = await _clientApp.GetAccountsAsync();
-            AuthenticationResult result;
+            var authenticationResult = await TryAcquireCachedToken();
 
+            if (authenticationResult is null)
+            {
+                var cancellationTokenSource = new CancellationTokenSource();
+                authenticationResult = await TryAcquireTokenViaLogin(cancellationTokenSource);
+            }
+
+            if (authenticationResult is null)
+                return null;
+
+            var graphClient = CreateGraphClient(authenticationResult.AccessToken);
+            var user = await graphClient.Users.Request().GetAsync();
+
+            EmailAddress = authenticationResult.Account.Username;
+            DisplayName = user.FirstOrDefault()?.DisplayName;
+
+            return graphClient;
+        }
+
+        private async Task<AuthenticationResult?> TryAcquireCachedToken()
+        {
+            // TODO: Cache and encrypt the token ourselves, and add manual token refreshing.
+            // Using AcquireTokenSilent means we're restricted to only 1 account per device.
+            // Maybe multiple accounts are supported by default? Needs investigation.
             try
             {
-                result = await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault()).ExecuteAsync();
-
-                AccessToken = result.AccessToken;
-                EmailAddress = result.Account.Username;
-
-                var authProvider = new DelegateAuthenticationProvider(requestMessage =>
-                {
-                    requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
-                    return Task.CompletedTask;
-                });
-
-                graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
-
-                var x = await graphClient.Users.Request().GetAsync();
-                DisplayName = x.FirstOrDefault()?.DisplayName;
+                var accounts = await _clientApp.GetAccountsAsync();
+                return await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault()).ExecuteAsync();
             }
             catch (MsalUiRequiredException)
             {
-                try
-                {
-                    CurrentCts = new CancellationTokenSource();
+                return null;
+            }
+        }
 
-                    result = await _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
-                    {
-                        _coreConfig.DisplayDeviceCodeResult(dcr);
-                        return Task.CompletedTask;
-                    }).ExecuteAsync(CurrentCts.Token);
+        private async Task<AuthenticationResult?> TryAcquireTokenViaLogin(CancellationTokenSource cancellationTokenSource)
+        {
+            if (LoginMethod == LoginMethod.Interactive)
+            {
+                var builder = _clientApp.AcquireTokenInteractive(_scopes)
+                    .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount);
 
-                    if (result != null && !string.IsNullOrWhiteSpace(result.AccessToken))
-                    {
-                        AccessToken = result.AccessToken;
-                        EmailAddress = result.Account.Username;
+                builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
 
-                        var authProvider = new DelegateAuthenticationProvider(requestMessage =>
-                        {
-                            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
-                            return Task.CompletedTask;
-                        });
-
-                        graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
-                    }
-                }
-                catch (TaskCanceledException ex)
-                {
-                    // Dodge the catch-all below.
-                    // TaskCanceledException should be handled by the caller, unlike other exceptions.
-                    throw ex;
-                }
-                catch (Exception)
-                {
-                    // TODO: Show a dialog with the error.
-                    return graphClient;
-                }
-                finally
-                {
-                    CurrentCts?.Dispose();
-                    CurrentCts = null;
-                }
+                return await builder.ExecuteAsync(cancellationTokenSource.Token);
             }
 
-            return graphClient;
+            if (LoginMethod == LoginMethod.DeviceCode)
+            {
+                var builder = _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
+                {
+                    _coreConfig.DisplayDeviceCodeResult(dcr, cancellationTokenSource);
+                    return Task.CompletedTask;
+                });
+
+                return await builder.ExecuteAsync(cancellationTokenSource.Token);
+            }
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<AuthenticationResult?>("Invalid login method specified");
+        }
+
+        private static GraphServiceClient CreateGraphClient(string accessToken)
+        {
+            var httpHandler = Ioc.Default.GetRequiredService<ISharedFactory>().GetPlatformSpecificHttpClientHandler();
+
+            var authProvider = new DelegateAuthenticationProvider(requestMessage =>
+            {
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
+                return Task.CompletedTask;
+            });
+
+            var handlers = GraphClientFactory.CreateDefaultHandlers(authProvider);
+            var httpClient = GraphClientFactory.Create(handlers, finalHandler: httpHandler);
+
+            return new GraphServiceClient(httpClient);
         }
     }
 }

@@ -275,7 +275,7 @@ namespace StrixMusic.Cores.OneDrive
             var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
             _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
-            _graphClient = await _authenticationManager.GenerateGraphToken();
+            _graphClient = await _authenticationManager.TryLogin();
 
             if (_graphClient is null)
             {
@@ -390,7 +390,7 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        internal void DisplayDeviceCodeResult(DeviceCodeResult dcr)
+        internal void DisplayDeviceCodeResult(DeviceCodeResult dcr, CancellationTokenSource cancellationTokenSource)
         {
             var authenticateButton = new AbstractButton("codeButton", dcr.VerificationUrl)
             {
@@ -417,6 +417,7 @@ namespace StrixMusic.Cores.OneDrive
                     cancelButton
                 },
             }.IntoList();
+
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
@@ -431,7 +432,7 @@ namespace StrixMusic.Cores.OneDrive
             {
                 cancelButton.Clicked -= OnCancelButtonClicked;
                 authenticateButton.Clicked -= OnAuthenticateButtonClicked;
-                _authenticationManager?.CurrentCts?.Cancel();
+                cancellationTokenSource.Cancel();
             }
         }
 
