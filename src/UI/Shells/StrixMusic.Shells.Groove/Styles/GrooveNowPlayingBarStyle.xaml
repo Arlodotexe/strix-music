@@ -32,23 +32,26 @@
                 </Grid.Background>
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="Sizes">
-                        <VisualState x:Name="Small">
+                        
+                        <!--Commented out for WASM, we'll need to find another way-->
+                        
+                        <!--<VisualState x:Name="Small">
                             <VisualState.StateTriggers>
                                 <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
                             </VisualState.StateTriggers>
                             <VisualState.Setters>
-                                <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
+                                <Setter Target="sliderGrid.Visibility" Value="Collapsed"/>
                                 <Setter Target="sliderRow.Height" Value="26"/>
                                 <Setter Target="slider.(Grid.Column)" Value="0"/>
                                 <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
                                 <Setter Target="sliderColumn.Width" Value="0"/>
-                                <!--Fix removing album-->
-                                <!--<Setter Target="mediaInfo.(nowplaying:MediaInfo.IsAlbumVisible)" Value="False"/>-->
+                                Fix removing album
+                                <Setter Target="mediaInfo.(nowplaying:MediaInfo.IsAlbumVisible)" Value="False"/>
                                 <Setter Target="NowPlayingButton.(Grid.RowSpan)" Value="1"/>
                                 <Setter Target="MediaTransports.(Grid.Column)" Value="2"/>
                                 <Setter Target="MediaTransports.HorizontalAlignment" Value="Right"/>
                             </VisualState.Setters>
-                        </VisualState>
+                        </VisualState>-->
                         <VisualState x:Name="Large">
                             <VisualState.StateTriggers>
                                 <AdaptiveTrigger MinWindowWidth="600"/>
