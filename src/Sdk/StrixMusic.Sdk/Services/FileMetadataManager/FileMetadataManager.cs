@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractStorage.Scanners;
 using OwlCore.AbstractUI.Models;

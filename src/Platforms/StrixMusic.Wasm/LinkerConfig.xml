@@ -1,6 +1,7 @@
 <linker>
 	<assembly fullname="StrixMusic.Wasm" />
 	<assembly fullname="Uno.UI" />
+	<assembly fullname="System.Text.Json" />
 	<assembly fullname="Microsoft.Extensions.Options" />
 
 	<assembly fullname="System.Core">
@@ -10,6 +11,10 @@
 
 	<assembly fullname="Microsoft.Toolkit.Diagnostics">
 		<type fullname="Microsoft.Toolkit.Diagnostics*" />
+	</assembly>
+
+	<assembly fullname="Microsoft.Graph">
+		<type fullname="Microsoft.Graph*" />
 	</assembly>
 
 	<assembly fullname="StrixMusic.Sdk">

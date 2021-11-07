@@ -395,6 +395,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 stream.Seek(0, SeekOrigin.Begin);
 
+                TagLibHelper.TryAddManualFileTypeResolver();
+
                 using var tagFile = TagLibFile.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
                 var tag = tagFile.Tag;
 
