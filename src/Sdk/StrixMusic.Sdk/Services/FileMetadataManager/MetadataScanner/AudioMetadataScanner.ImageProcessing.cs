@@ -50,6 +50,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
+            if (Sdk.Helpers.PlatformHelper.Current == Data.Platform.WASM)
+                return;
+
             _logger.LogInformation($"Started {nameof(ProcessImagesAsync)} for {nameof(IFileData)} at {fileData.Path}");
 
             var results = new List<ImageMetadata>();
