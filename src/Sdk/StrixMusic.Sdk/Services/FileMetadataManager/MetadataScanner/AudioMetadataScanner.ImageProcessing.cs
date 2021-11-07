@@ -12,6 +12,7 @@ using OwlCore.Extensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Helpers;
 using ImageMetadata = StrixMusic.Sdk.Services.FileMetadataManager.Models.ImageMetadata;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
@@ -223,7 +224,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // Use the maximum of the width and height for the ceiling to handle cases where the image isn't a 1:1 aspect ratio.
             var ceiling = Math.Max(image.Width, image.Height);
 
-            var imageSizes = Helpers.PlatformHelper.Current == Data.Platform.WASM ? _highPerfImageSizes : _standardImageSizes;
+            var imageSizes = PlatformHelper.Current == Platform.WASM ? _highPerfImageSizes : _standardImageSizes;
 
             // Loop through the image sizes (in ascending order)
             // and determine the maximum size that the original image is larger than.

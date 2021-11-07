@@ -8,6 +8,7 @@ using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
@@ -121,7 +122,7 @@ namespace StrixMusic.Cores.Files
             Guard.IsNotNullOrWhiteSpace(t.LocalTrackPath, nameof(t.LocalTrackPath));
 
             // TODO: Open stream on WebAssembly. File paths will not work.
-            if (Sdk.Helpers.PlatformHelper.Current == Platform.WASM)
+            if (PlatformHelper.Current == Platform.WASM)
                 return Task.FromResult<IMediaSourceConfig?>(null);
 
             var mediaSource = new MediaSourceConfig(track, track.Id, new Uri(t.LocalTrackPath));

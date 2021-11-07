@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Data
+﻿namespace StrixMusic.Sdk.Helpers
 {
     /// <summary>
     /// The platforms that Strix can run on.
