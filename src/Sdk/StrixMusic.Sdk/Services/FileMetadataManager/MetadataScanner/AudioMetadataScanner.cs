@@ -215,7 +215,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Url?.OriginalString, nameof(metadata.TrackMetadata.Url));
+            Guard.IsNotNull(metadata.TrackMetadata?.Url, nameof(metadata.TrackMetadata.Url));
 
             _logger.LogInformation($"Cross-linking IDs for metadata ID {metadata.Id} located at {metadata.TrackMetadata.Url}");
 
@@ -320,7 +320,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     Title = details.Title,
                     Genres = new HashSet<string>(details.Genres?.PruneNull()),
                     Duration = details.Duration,
-                    Url = new Uri(fileData.Path),
+                    Url = fileData.Path,
                     Year = details.Year,
                 },
                 ArtistMetadata = new ArtistMetadata
@@ -424,7 +424,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         },
                         TrackMetadata = new TrackMetadata
                         {
-                            Url = new Uri(fileData.Path),
+                            Url = fileData.Path,
                             Description = tag.Description,
                             Title = tag.Title,
                             DiscNumber = tag.Disc,

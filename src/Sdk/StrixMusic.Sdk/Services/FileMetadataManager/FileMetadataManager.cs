@@ -140,7 +140,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             foreach (var track in tracks)
             {
-                if (!discoveredFiles.Any(c => new Uri(c.Path).AbsoluteUri == track.Url?.AbsoluteUri))
+                if (!discoveredFiles.Any(c => c.Path == track.Url))
                 {
                     removedTracks.Add(track);
                 }

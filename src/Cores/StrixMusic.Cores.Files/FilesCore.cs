@@ -118,9 +118,13 @@ namespace StrixMusic.Cores.Files
             if (!(track is FilesCoreTrack t))
                 return Task.FromResult<IMediaSourceConfig?>(null);
 
-            Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));
+            Guard.IsNotNullOrWhiteSpace(t.LocalTrackPath, nameof(t.LocalTrackPath));
 
-            var mediaSource = new MediaSourceConfig(track, track.Id, t.LocalTrackPath);
+            // TODO: Open stream on WebAssembly. File paths will not work.
+            if (Sdk.Helpers.PlatformHelper.Current == Platform.WASM)
+                return Task.FromResult<IMediaSourceConfig?>(null);
+
+            var mediaSource = new MediaSourceConfig(track, track.Id, new Uri(t.LocalTrackPath));
             return Task.FromResult<IMediaSourceConfig?>(mediaSource);
         }
     }
