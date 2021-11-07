@@ -14,8 +14,6 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using TagLib;
 
-using TagLibFile = TagLib.File;
-
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
@@ -397,57 +395,72 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 TagLibHelper.TryAddManualFileTypeResolver();
 
-                using var tagFile = TagLibFile.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
-                var tag = tagFile.Tag;
+                _logger.LogInformation($"Creating {nameof(TagLib.File)} instance.");
 
-                // If there's no metadata to read, return null
-                if (tag == null)
-                    return null;
-
-                var fileMetadata = new FileMetadata
+                try
                 {
-                    AlbumMetadata = new AlbumMetadata
-                    {
-                        Description = tag.Description,
-                        Title = tag.Album,
-                        Duration = tagFile.Properties.Duration,
-                        Genres = new HashSet<string>(tag.Genres),
-                        DatePublished = tag.DateTagged,
-                        ArtistIds = new HashSet<string>(),
-                        TrackIds = new HashSet<string>(),
-                        ImageIds = new HashSet<string>(),
-                    },
-                    TrackMetadata = new TrackMetadata
-                    {
-                        Url = new Uri(fileData.Path),
-                        Description = tag.Description,
-                        Title = tag.Title,
-                        DiscNumber = tag.Disc,
-                        Duration = tagFile.Properties.Duration,
-                        Genres = new HashSet<string>(tag.Genres),
-                        TrackNumber = tag.Track,
-                        Year = tag.Year,
-                        ArtistIds = new HashSet<string>(),
-                        ImageIds = new HashSet<string>(),
-                    },
-                    ArtistMetadata = new ArtistMetadata
-                    {
-                        Name = tag.FirstAlbumArtist,
-                        Genres = new HashSet<string>(tag.Genres),
-                        AlbumIds = new HashSet<string>(),
-                        TrackIds = new HashSet<string>(),
-                        ImageIds = new HashSet<string>(),
-                    },
-                };
+                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+                    var tag = tagFile.Tag;
 
-                if (tag.Pictures != null)
-                {
-                    var imageStreams = tag.Pictures.Select(x => x.Data.Data).Select(x => new MemoryStream(x));
+                    // If there's no metadata to read, return null
+                    if (tag == null)
+                    {
+                        _logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: no metadata found.");
+                        return null;
+                    }
 
-                    Task.Run(() => ProcessImagesAsync(fileData, fileMetadata, imageStreams), _scanningCancellationTokenSource.Token).Forget();
+                    var fileMetadata = new FileMetadata
+                    {
+                        AlbumMetadata = new AlbumMetadata
+                        {
+                            Description = tag.Description,
+                            Title = tag.Album,
+                            Duration = tagFile.Properties.Duration,
+                            Genres = new HashSet<string>(tag.Genres),
+                            DatePublished = tag.DateTagged,
+                            ArtistIds = new HashSet<string>(),
+                            TrackIds = new HashSet<string>(),
+                            ImageIds = new HashSet<string>(),
+                        },
+                        TrackMetadata = new TrackMetadata
+                        {
+                            Url = new Uri(fileData.Path),
+                            Description = tag.Description,
+                            Title = tag.Title,
+                            DiscNumber = tag.Disc,
+                            Duration = tagFile.Properties.Duration,
+                            Genres = new HashSet<string>(tag.Genres),
+                            TrackNumber = tag.Track,
+                            Year = tag.Year,
+                            ArtistIds = new HashSet<string>(),
+                            ImageIds = new HashSet<string>(),
+                        },
+                        ArtistMetadata = new ArtistMetadata
+                        {
+                            Name = tag.FirstAlbumArtist,
+                            Genres = new HashSet<string>(tag.Genres),
+                            AlbumIds = new HashSet<string>(),
+                            TrackIds = new HashSet<string>(),
+                            ImageIds = new HashSet<string>(),
+                        },
+                    };
+
+                    if (tag.Pictures != null)
+                    {
+                        _logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: Images found");
+                        var imageStreams = tag.Pictures.Select(x => x.Data.Data).Select(x => new MemoryStream(x));
+
+                        Task.Run(() => ProcessImagesAsync(fileData, fileMetadata, imageStreams), _scanningCancellationTokenSource.Token).Forget();
+                    }
+
+                    _logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: Metadata scan completed.");
+                    return fileMetadata;
                 }
-
-                return fileMetadata;
+                catch (Exception ex)
+                {
+                    _logger.LogError($"{ex}");
+                    return null;
+                }
             }
             catch (CorruptFileException ex)
             {
