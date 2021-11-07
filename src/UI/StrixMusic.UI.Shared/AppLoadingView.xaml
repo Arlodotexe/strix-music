@@ -65,7 +65,7 @@
             </GridView>
         </StackPanel>
 
-        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
+        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer" RequestedTheme="Dark">
             <Border Background="Black" Opacity="0.8"/>
             <ScrollViewer>
                 <StackPanel Spacing="25" Padding="40,0,40,40">
