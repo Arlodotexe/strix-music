@@ -384,7 +384,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 // Some underlying libs without nullable checks may return null by mistake.
