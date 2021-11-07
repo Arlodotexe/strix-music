@@ -24,6 +24,7 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         private readonly IPublicClientApplication _clientApp;
         private readonly OneDriveCoreConfig _coreConfig;
+        private readonly ILogger<AuthenticationManager> _logger;
 
         /// <summary>
         /// The user's email address, if known.
@@ -49,6 +50,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         public AuthenticationManager(OneDriveCoreConfig coreConfig, string clientId, string tenantId, string? redirectUri = null)
         {
             _coreConfig = coreConfig;
+            _logger = Ioc.Default.GetRequiredService<ILogger<AuthenticationManager>>();
 
             LoginMethod = Sdk.Helpers.PlatformHelper.Current switch
             {
@@ -56,8 +58,10 @@ namespace StrixMusic.Cores.OneDrive.Services
                 Platform.WASM => LoginMethod.Interactive,
                 Platform.Droid => LoginMethod.Interactive,
                 Platform.Unknown => LoginMethod.None,
-                _ => ThrowHelper.ThrowNotSupportedException<LoginMethod>(),
+                _ => ThrowHelper.ThrowNotSupportedException<LoginMethod>($"Current platform {Sdk.Helpers.PlatformHelper.Current} not supported."),
             };
+
+            _logger.LogInformation($"Creating {nameof(PublicClientApplicationBuilder)}");
 
             var authority = new Uri($"{_authorityUri}/{tenantId}");
 
@@ -68,8 +72,10 @@ namespace StrixMusic.Cores.OneDrive.Services
             if (!string.IsNullOrWhiteSpace(redirectUri))
                 builder.WithRedirectUri(redirectUri);
 
+            _logger.LogInformation($"Adding uno helpers to {nameof(PublicClientApplicationBuilder)}");
             builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
 
+            _logger.LogInformation($"Building {nameof(IPublicClientApplication)}");
             _clientApp = builder.Build();
         }
 
@@ -77,36 +83,67 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// Generate a <see cref="GraphServiceClient"/> and handles login if needed.
         /// </summary>
         /// <returns></returns>
-        public async Task<GraphServiceClient?> TryLogin()
+        public async Task<GraphServiceClient?> TryLoginAsync()
         {
-            var authenticationResult = await TryAcquireCachedToken();
+            _logger.LogInformation($"Entered {nameof(TryLoginAsync)}");
 
+            var authenticationResult = await TryAcquireCachedTokenAsync();
             if (authenticationResult is null)
             {
                 var cancellationTokenSource = new CancellationTokenSource();
-                authenticationResult = await TryAcquireTokenViaLogin(cancellationTokenSource);
+                authenticationResult = await TryAcquireTokenViaLoginAsync(cancellationTokenSource);
             }
 
             if (authenticationResult is null)
                 return null;
 
             var graphClient = CreateGraphClient(authenticationResult.AccessToken);
-            var user = await graphClient.Users.Request().GetAsync();
 
+            _logger.LogInformation($"Got username: {authenticationResult.Account.Username}");
             EmailAddress = authenticationResult.Account.Username;
-            DisplayName = user.FirstOrDefault()?.DisplayName;
 
+            DisplayName = await GetDisplayNameAsync(graphClient);
+
+            _logger.LogInformation($"{nameof(TryLoginAsync)} completed.");
             return graphClient;
         }
 
-        private async Task<AuthenticationResult?> TryAcquireCachedToken()
+        private async Task<string> GetDisplayNameAsync(GraphServiceClient graphClient)
         {
+            try
+            {
+                _logger.LogInformation($"Getting user");
+                var user = await graphClient.Users.Request().GetAsync();
+
+                if (user.Count == 0)
+                {
+                    _logger.LogInformation($"No available users");
+                    return string.Empty;
+                }
+
+                _logger.LogInformation($"Got user. Display name {user.FirstOrDefault()?.DisplayName}");
+                return user[0].DisplayName;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get user: {ex}");
+                return string.Empty;
+            }
+        }
+
+        private async Task<AuthenticationResult?> TryAcquireCachedTokenAsync()
+        {
+            _logger.LogInformation($"Acquiring token from cache.");
+
             // TODO: Cache and encrypt the token ourselves, and add manual token refreshing.
             // Using AcquireTokenSilent means we're restricted to only 1 account per device.
             // Maybe multiple accounts are supported by default? Needs investigation.
             try
             {
+                _logger.LogInformation($"Getting accounts");
                 var accounts = await _clientApp.GetAccountsAsync();
+
+                _logger.LogInformation($"Executing via {nameof(_clientApp.AcquireTokenSilent)}");
                 return await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault()).ExecuteAsync();
             }
             catch (MsalUiRequiredException)
@@ -115,34 +152,46 @@ namespace StrixMusic.Cores.OneDrive.Services
             }
         }
 
-        private async Task<AuthenticationResult?> TryAcquireTokenViaLogin(CancellationTokenSource cancellationTokenSource)
+        private async Task<AuthenticationResult?> TryAcquireTokenViaLoginAsync(CancellationTokenSource cancellationTokenSource)
         {
             if (LoginMethod == LoginMethod.Interactive)
             {
+                _logger.LogInformation($"Acquiring token via interactive login");
+
+                _logger.LogInformation($"Building via {nameof(_clientApp.AcquireTokenInteractive)}");
                 var builder = _clientApp.AcquireTokenInteractive(_scopes)
                     .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount);
 
+                _logger.LogInformation($"Adding Uno helpers");
                 builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
 
+                _logger.LogInformation($"Executing builder");
                 return await builder.ExecuteAsync(cancellationTokenSource.Token);
             }
 
             if (LoginMethod == LoginMethod.DeviceCode)
             {
+                _logger.LogInformation($"Acquiring token via device code");
+
+                _logger.LogInformation($"Building via {nameof(_clientApp.AcquireTokenWithDeviceCode)}");
                 var builder = _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
                 {
+                    _logger.LogInformation($"Displaying device code result");
                     _coreConfig.DisplayDeviceCodeResult(dcr, cancellationTokenSource);
                     return Task.CompletedTask;
                 });
 
+                _logger.LogInformation($"Executing builder");
                 return await builder.ExecuteAsync(cancellationTokenSource.Token);
             }
 
             return ThrowHelper.ThrowArgumentOutOfRangeException<AuthenticationResult?>("Invalid login method specified");
         }
 
-        private static GraphServiceClient CreateGraphClient(string accessToken)
+        private GraphServiceClient CreateGraphClient(string accessToken)
         {
+            _logger.LogInformation($"Creating graph client");
+
             var httpHandler = Ioc.Default.GetRequiredService<ISharedFactory>().GetPlatformSpecificHttpClientHandler();
 
             var authProvider = new DelegateAuthenticationProvider(requestMessage =>

@@ -107,6 +107,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is all discovered metadata from the scanned files.</returns>
         public async Task<IEnumerable<FileMetadata>> ScanMusicFilesAsync(IEnumerable<IFileData> filesToScan, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"{nameof(ScanMusicFilesAsync)} started");
+
             _filesProcessed = 0;
 
             if (cancellationToken.IsCancellationRequested)

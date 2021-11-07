@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractLauncher;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
@@ -46,6 +48,8 @@ namespace StrixMusic.Cores.OneDrive
         {
             SourceCore = sourceCore;
 
+            _logger = Ioc.Default.GetRequiredService<ILogger<OneDriveCoreConfig>>();
+
             _useTagLibScannerToggle = new AbstractBoolean("useTagLibScannerToggle", "Use TagLib")
             {
                 Subtitle = "TagLib is more accurate and supports more formats, but is slower (not recommended).",
@@ -82,27 +86,38 @@ namespace StrixMusic.Cores.OneDrive
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
+        private readonly ILogger<OneDriveCoreConfig> _logger;
+
         /// <inheritdoc />
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
         public event EventHandler? AbstractUIElementsChanged;
 
-        public async Task SetupConfigurationServices(IServiceCollection services)
+        public async Task SetupConfigurationServices(IServiceCollection services, OneDriveCoreSettingsService? settingsService = null)
         {
+            _logger.LogInformation("Setting up configuration services");
+
+            // _isConfigServicesSetup is a flag that tells us if setup is happening or needs to happen.
+            // AttachEvents and DetachEvents here are only for changed settings that are reflected in abstractui.
+            // TODO: improve this flow. The event sub/unsub shouldn't be loosely tied to a bool like this.
             if (_isConfigServicesSetup)
                 DetachEvents();
 
             _isConfigServicesSetup = false;
 
-            _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
+            _logger.LogInformation("Setting up settings service");
+            _settingsService = settingsService ?? new OneDriveCoreSettingsService(SourceCore.InstanceId);
             services.AddSingleton(_settingsService);
 
+            _logger.LogInformation("Getting initial setting states");
             _useFilePropsScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties));
             _useTagLibScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib));
 
+            _logger.LogInformation("Building service provider");
             Services = services.BuildServiceProvider();
 
+            _logger.LogInformation("Getting notification service");
             _notificationService = Services.GetRequiredService<INotificationService>();
 
             AttachEvents();
@@ -265,21 +280,26 @@ namespace StrixMusic.Cores.OneDrive
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         public async Task<bool> TryLoginAsync()
         {
+            _logger.LogInformation($"Entered {nameof(TryLoginAsync)}");
+
             Guard.IsNotNull(Services, nameof(Services));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            var notificationService = Services.GetRequiredService<INotificationService>();
+            _logger.LogInformation($"Getting client/tenant/redirect settings");
 
             var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
             var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
             var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
+            _logger.LogInformation($"Initializing authentication manager");
             _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
-            _graphClient = await _authenticationManager.TryLogin();
+            
+            _logger.LogInformation($"Trying login");
+            _graphClient = await _authenticationManager.TryLoginAsync();
 
             if (_graphClient is null)
             {
-                notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
+                _notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
                 return false;
             }
 
@@ -423,7 +443,7 @@ namespace StrixMusic.Cores.OneDrive
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
             {
                 Guard.IsNotNull(Services, nameof(Services));
-                
+
                 var launcher = Services.GetRequiredService<ILauncher>();
                 await launcher.LaunchUriAsync(new Uri(dcr.VerificationUrl));
             }

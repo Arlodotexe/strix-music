@@ -16,6 +16,14 @@
 		<type fullname="StrixMusic.Sdk*" />
 	</assembly>
 
+	<assembly fullname="StrixMusic.Sdk.Uno">
+		<type fullname="StrixMusic.Sdk.Uno*" />
+	</assembly>
+
+	<assembly fullname="OwlCore">
+		<type fullname="OwlCore*" />
+	</assembly>
+
 	<assembly fullname="OwlCore.Uno">
 		<type fullname="OwlCore.Uno*" />
 	</assembly>
