@@ -181,7 +181,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void OnFilesDiscovered(object sender, IEnumerable<IFileData> e)
         {
             var count = e.Count();
-            _logger.LogInformation($"{count} files discovered: {string.Join(", ", e.Select(x => $"{x.Name}{x.FileExtension}"))}");
+            _logger.LogInformation($"{count} files discovered");
 
             FilesFound += count;
         }
