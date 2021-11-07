@@ -10,7 +10,6 @@ namespace StrixMusic.Sdk.Helpers
         /// <summary>
         /// Sets up the platform helper.
         /// </summary>
-        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Should be externally settable but not accessible as part of normal usage.")]
         public PlatformHelper(Platform platform)
         {
