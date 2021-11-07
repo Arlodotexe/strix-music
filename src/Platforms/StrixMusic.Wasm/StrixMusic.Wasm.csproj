@@ -15,8 +15,10 @@
 		IL Linking is disabled in Debug configuration.
 		When building in Release, see https://platform.uno/docs/articles/features/using-il-linker-webassembly.html
 		-->
-		<WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
 	</PropertyGroup>
+	<ItemGroup>
+		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1024m,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
+	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.png" />
 	</ItemGroup>
