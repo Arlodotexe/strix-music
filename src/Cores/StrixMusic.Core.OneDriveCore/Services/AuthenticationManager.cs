@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Services;
 using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Helpers;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -52,7 +52,7 @@ namespace StrixMusic.Cores.OneDrive.Services
             _coreConfig = coreConfig;
             _logger = Ioc.Default.GetRequiredService<ILogger<AuthenticationManager>>();
 
-            LoginMethod = Sdk.Helpers.PlatformHelper.Current switch
+            LoginMethod = PlatformHelper.Current switch
             {
                 Platform.UWP => LoginMethod.DeviceCode,
                 Platform.WASM => LoginMethod.Interactive,
