@@ -4,6 +4,7 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<NoWarn>NU1701;NU1605;</NoWarn>
 		<Nullable>enable</Nullable>
+		<WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
 		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -17,7 +18,7 @@
 		-->
 	</PropertyGroup>
 	<ItemGroup>
-		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="max-heap-size=1024m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
+		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1024m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.png" />
