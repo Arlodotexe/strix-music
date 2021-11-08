@@ -64,6 +64,9 @@
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>1.0.5-dev.13</Version>
     </PackageReference>
+    <PackageReference Include="Uno.UI.MSAL">
+      <Version>3.10.11</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>

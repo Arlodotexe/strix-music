@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.30</Version>
+		<Version>0.0.31</Version>
 		<Product>OwlCore</Product>
 		<Description>
 Have you ever seen an owl do a barrel roll? Me neither.
@@ -29,6 +29,10 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+--- 0.0.31 ---
+[New]
+Added ILauncher interface.
+
 --- 0.0.30 ---
 [New]
 Added ReplaceOrAdd extension method for IList{T}. Behaves the same as InsertOrAdd, but replaces at the given index if it exists.

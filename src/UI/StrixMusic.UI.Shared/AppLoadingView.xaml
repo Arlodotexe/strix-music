@@ -23,7 +23,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StrixIcon.Visibility" Value="Visible" />
-                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0,315,0,0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimum">
@@ -32,7 +31,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StrixIcon.Visibility" Value="Collapsed" />
-                        <Setter Target="CoreLoadingStatusPanel.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -67,7 +65,7 @@
             </GridView>
         </StackPanel>
 
-        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
+        <Grid Grid.RowSpan="3" MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer" RequestedTheme="Dark">
             <Border Background="Black" Opacity="0.8"/>
             <ScrollViewer>
                 <StackPanel Spacing="25" Padding="40,0,40,40">
@@ -82,16 +80,16 @@
                         <Border BorderBrush="White" Opacity="0.5" BorderThickness="1" />
                     </StackPanel>
                         <StackPanel Spacing="15">
-                            <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
 
-                            <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
 
-                            <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
 
-                            <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" />
+                            <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" Foreground="White" />
                         </StackPanel>
 
-                    <Button Content="I understand" Click="AppLoadingView_OnLoaded" />
+                    <Button Content="I understand" Click="AppLoadingView_OnLoaded" Foreground="White" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>

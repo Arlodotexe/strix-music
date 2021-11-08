@@ -12,6 +12,7 @@ using OwlCore.Extensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Helpers;
 using ImageMetadata = StrixMusic.Sdk.Services.FileMetadataManager.Models.ImageMetadata;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
@@ -19,11 +20,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public partial class AudioMetadataScanner
     {
         private static readonly IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512 };
+        private static readonly IReadOnlyList<int> _highPerfImageSizes = new int[] { 64, 128 };
+
         private readonly ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>> _ongoingImageProcessingTasks;
         private readonly SemaphoreSlim _ongoingImageProcessingTasksSemaphore;
         private readonly SemaphoreSlim _ongoingImageProcessingSemaphore;
 
-        private static string GenerateImageId(Stream imageStream)
+        private static async Task<string> GenerateImageId(Stream imageStream)
         {
             // Create a unique ID for the image by collecting every 32nd byte in the data
             // and calculating a rough hash for it.
@@ -35,9 +38,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             for (var i = 0; i < hashData.Length; i++)
             {
-                imageStream.Position = i * 32;
+                var buffer = new byte[1];
 
-                hashData[i] = (byte)imageStream.ReadByte();
+                await imageStream.ReadAsync(buffer, i * 32, buffer.Length);
+                hashData[i] = buffer[0];
             }
 
             return hashData.HashMD5Fast();
@@ -57,7 +61,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             await imageStreams.InParallel(async image =>
             {
                 // Image IDs are unique to the content of the image.
-                var imageId = GenerateImageId(image);
+                var imageId = await GenerateImageId(image);
 
                 // Check if the data has already been emitted.
                 await _batchLock.WaitAsync();
@@ -220,19 +224,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // Use the maximum of the width and height for the ceiling to handle cases where the image isn't a 1:1 aspect ratio.
             var ceiling = Math.Max(image.Width, image.Height);
 
-            // Loop through the standard image sizes (in ascending order) and determine the maximum size
-            // that the original image is larger than. We'll scale it down to that size and all the sizes smaller than it.
+            var imageSizes = PlatformHelper.Current == Platform.WASM ? _highPerfImageSizes : _standardImageSizes;
+
+            // Loop through the image sizes (in ascending order)
+            // and determine the maximum size that the original image is larger than.
+            // We'll scale it down to that size and all the sizes smaller than it.
             var useOriginal = false;
             var ceilingSizeIndex = -1;
-            for (var i = 0; i < _standardImageSizes.Count; i++)
+            for (var i = 0; i < imageSizes.Count; i++)
             {
-                if (ceiling > _standardImageSizes[i])
+                if (ceiling > imageSizes[i])
                 {
                     ceilingSizeIndex = i;
                 }
                 else
                 {
-                    if (ceiling == _standardImageSizes[i])
+                    if (ceiling == imageSizes[i])
                     {
                         // If the size of the image is equal to one of the standard image sizes,
                         // we can skip the expensive resize operation and just copy the original image.
@@ -271,7 +278,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             for (var i = ceilingSizeIndex; i >= 0; i--)
             {
-                var resizedSize = _standardImageSizes[i];
+                var resizedSize = imageSizes[i];
                 var resizedWidth = image.Width > image.Height ? 0 : resizedSize;
                 var resizedHeight = image.Height > image.Width ? 0 : resizedSize;
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 
@@ -11,6 +13,23 @@ namespace StrixMusic.Sdk.Services
     /// </summary>
     public interface ISharedFactory
     {
+        /// <summary>
+        /// Creates an <see cref="HttpClientHandler"/> that is guarunteed to work under the current platform.
+        /// </summary>
+        public HttpMessageHandler GetPlatformSpecificHttpClientHandler();
+
+        /// <summary>
+        /// Adds Uno helpers to an MSAL <see cref="AcquireTokenInteractiveParameterBuilder"/>.
+        /// </summary>
+        /// <returns>The given <paramref name="builder"/> with Uno helpers attached.</returns>
+        public AcquireTokenInteractiveParameterBuilder WithUnoHelpers(AcquireTokenInteractiveParameterBuilder builder);
+
+        /// <summary>
+        /// Adds Uno helpers to an MSAL <see cref="PublicClientApplicationBuilder"/>.
+        /// </summary>
+        /// <returns>The given <paramref name="builder"/> with Uno helpers attached.</returns>
+        public PublicClientApplicationBuilder WithUnoHelpers(PublicClientApplicationBuilder builder);
+
         /// <summary>
         /// Constructs a new IncrementalLoadingCollection given the parameters.
         /// </summary>

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
+using System.IO;
+using Microsoft.Identity.Client;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Uno.Collections;
 using StrixMusic.Sdk.Services;
+using System.Net.Http;
+using Uno.UI.MSAL;
 using Windows.Storage;
 using CreationCollisionOption = Windows.Storage.CreationCollisionOption;
 
@@ -15,6 +18,22 @@ namespace StrixMusic.Shared.Services
     /// <inheritdoc cref="ISharedFactory" />
     public class SharedFactory : ISharedFactory
     {
+        /// <inheritdoc />
+        public HttpMessageHandler GetPlatformSpecificHttpClientHandler()
+        {
+#if __WASM__
+            return new Uno.UI.Wasm.WasmHttpHandler();
+#else
+            return new HttpClientHandler();
+#endif
+        }
+
+        /// <inheritdoc />
+        public AcquireTokenInteractiveParameterBuilder WithUnoHelpers(AcquireTokenInteractiveParameterBuilder builder) => builder.WithUnoHelpers();
+
+        /// <inheritdoc />
+        public PublicClientApplicationBuilder WithUnoHelpers(PublicClientApplicationBuilder builder) => builder.WithUnoHelpers();
+
         /// <inheritdoc />
         public SynchronizedObservableCollection<T> GetIncrementalCollection<T>(int take, Func<int, Task<List<T>>> loadMoreItems, Action onBatchStart, Action<List<T>> onBatchComplete)
         {

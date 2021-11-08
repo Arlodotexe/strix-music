@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Services.Localization;
@@ -51,7 +52,21 @@ namespace StrixMusic.Shared
             Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
             Threading.SetPrimaryThreadInvokeHandler(a => Window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
 
+            SetupPlatformHelper();
+
             AttachEvents();
+        }
+
+        private static void SetupPlatformHelper()
+        {
+            // TODO: Droid.
+
+#if __WASM__
+            var currentPlatform = Platform.WASM;
+#elif NETFX_CORE
+            var currentPlatform = Platform.UWP;
+#endif
+            new PlatformHelper(currentPlatform);
         }
 
         /// <summary>
