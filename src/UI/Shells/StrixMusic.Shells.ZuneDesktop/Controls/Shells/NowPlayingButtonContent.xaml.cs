@@ -1,4 +1,5 @@
 ﻿using System;
+using StrixMusic.Sdk.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -40,6 +41,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
         public NowPlayingButtonContent()
         {
             this.InitializeComponent();
+
             _activeScale = new double[0];
             _rectangles = new Rectangle[0];
             _rectScaleTransforms = new ScaleTransform[0];
@@ -79,7 +81,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 
         private void CreateLayout()
         {
-            ColumnDefinitionCollection columns = RootGrid.ColumnDefinitions;
+            // Temporarily disabled. Causes major issues on WASM.
+            if (PlatformHelper.Current == Platform.WASM)
+                return;
+
+            var columns = RootGrid.ColumnDefinitions;
             columns.Clear();
             _rectangles = new Rectangle[BarCount];
             _rectScaleTransforms = new ScaleTransform[BarCount];
@@ -91,8 +97,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
             {
                 columns.Add(new ColumnDefinition());
 
-                Rectangle rect = CreateRectangle(rectWidth);
-                ScaleTransform scaleTransform = SetRectangleRenderTransform(rect);
+                var rect = CreateRectangle(rectWidth);
+                var scaleTransform = SetRectangleRenderTransform(rect);
+
                 scaleTransform.ScaleY = _random.NextDouble();
                 Grid.SetColumn(rect, i);
 
@@ -105,14 +112,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
         private void CreateAndBeginStoryboard()
         {
             _storyboard = new Storyboard();
-            TimelineCollection timelines = _storyboard.Children;
+            var timelines = _storyboard.Children;
+
             _dAnimations = new DoubleAnimation[_rectangles.Length];
             _activeScale = new double[_rectangles.Length];
+
             for (int i = 0; i < _rectScaleTransforms.Length; i++)
             {
                 _activeScale[i] = _random.NextDouble();
 
-                DoubleAnimation dAnimation = new DoubleAnimation();
+                var dAnimation = new DoubleAnimation();
                 Storyboard.SetTarget(dAnimation, _rectScaleTransforms[i]);
                 Storyboard.SetTargetProperty(dAnimation, "ScaleY");
                 _dAnimations[i] = dAnimation;
@@ -126,7 +135,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 
         private Rectangle CreateRectangle(double width)
         {
-            Rectangle rect = new Rectangle();
+            var rect = new Rectangle();
 
             rect.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 219, 13, 148));
             rect.Width = width;
@@ -136,7 +145,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 
         private ScaleTransform SetRectangleRenderTransform(Rectangle rect)
         {
-            ScaleTransform scaleTransform = new ScaleTransform();
+            var scaleTransform = new ScaleTransform();
 
             rect.RenderTransformOrigin = new Windows.Foundation.Point(.5, 1);
             rect.RenderTransform = scaleTransform;
