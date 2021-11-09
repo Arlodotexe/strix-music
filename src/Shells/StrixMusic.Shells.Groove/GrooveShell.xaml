@@ -183,7 +183,7 @@
                         <Button x:Name="SearchButton" Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
                             <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
-                        <AutoSuggestBox x:Name="SearchBox" x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
+                        <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search..." x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
                                         Margin="8" QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
