@@ -48,19 +48,7 @@
                     <StackPanel />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
+                <ListView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
                     <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Height="60">
                         <Grid.RowDefinitions>
@@ -127,19 +115,6 @@
                     <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-            <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="GridViewItem">
-                                <Grid x:Name="ContentBorder">
-                                    <ContentPresenter x:Name="ContentPresenter" />
-                                </Grid>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
                     <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Width="125" Margin="5">
