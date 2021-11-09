@@ -80,10 +80,10 @@
     <PackageReference Include="Uno.UI" Version="3.8.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\AlbumCollectionStyle - Copy.xaml.cs">

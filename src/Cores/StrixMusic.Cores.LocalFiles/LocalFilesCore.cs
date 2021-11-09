@@ -75,47 +75,47 @@ namespace StrixMusic.Cores.LocalFiles
             var ui = coreConfig.CreateGenericConfig();
             var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
 
-            var configuredFolder = await coreConfig.GetConfiguredFolder();
-            if (configuredFolder is null)
-            {
-                var fileSystem = SourceCore.GetService<IFileSystemService>();
-                var pickedFolder = await fileSystem.PickFolder();
+            /*            var configuredFolder = await coreConfig.GetConfiguredFolder();
+                        if (configuredFolder is null)
+                        {
+                            var fileSystem = SourceCore.GetService<IFileSystemService>();
+                            var pickedFolder = await fileSystem.PickFolder();
 
-                // No folder selected.
-                if (pickedFolder is null)
-                {
-                    ChangeCoreState(CoreState.Unloaded);
-                    return;
-                }
+                            // No folder selected.
+                            if (pickedFolder is null)
+                            {
+                                ChangeCoreState(CoreState.Unloaded);
+                                return;
+                            }
 
-                await SourceCore.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
-                ui.Subtitle = pickedFolder.Path;
+                            await SourceCore.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+                            ui.Subtitle = pickedFolder.Path;
 
-                coreConfig.SaveAbstractUI(ui);
+                            coreConfig.SaveAbstractUI(ui);
 
-                // Let the user change settings for the selected folder before first scan.
-                ChangeCoreState(CoreState.NeedsSetup);
+                            // Let the user change settings for the selected folder before first scan.
+                            ChangeCoreState(CoreState.NeedsSetup);
 
-                _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
+                            _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
-                ChangeCoreState(CoreState.Configured);
-                await InitAsync(services);
-                return;
-            } 
+                            ChangeCoreState(CoreState.Configured);
+                            await InitAsync(services);
+                            return;
+                        }
 
-            ui.Subtitle = configuredFolder.Path;
+                        ui.Subtitle = configuredFolder.Path;
 
-            coreConfig.SaveAbstractUI(ui);
+                        coreConfig.SaveAbstractUI(ui);
 
-            ChangeCoreState(CoreState.Configured);
+                        ChangeCoreState(CoreState.Configured);
 
-            InstanceDescriptor = configuredFolder.Path;
-            InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
+                        InstanceDescriptor = configuredFolder.Path;
+                        InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
-            await coreConfig.SetupServices(services);
-            await Library.Cast<FilesCoreLibrary>().InitAsync();
+                        await coreConfig.SetupServices(services);
+                        await Library.Cast<FilesCoreLibrary>().InitAsync(); 
 
-            Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));
+                        Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));*/
             ChangeCoreState(CoreState.Loaded);
         }
 

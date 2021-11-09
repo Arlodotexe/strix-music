@@ -24,7 +24,7 @@
 		<Content Include="Assets\SplashScreen.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<UpToDateCheckInput Include="..\StrixMusic.Shared\**\*.xaml" />
+		<UpToDateCheckInput Include="..\Shared\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="Assets\SplashScreen.png" />
@@ -87,10 +87,11 @@
 	  <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj" />
 	  <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
 	  <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
+	  <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
 	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
-	  <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
-	  <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
+	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
+	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
 	</ItemGroup>
-	<Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>

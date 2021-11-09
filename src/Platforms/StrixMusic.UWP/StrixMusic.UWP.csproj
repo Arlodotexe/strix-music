@@ -296,11 +296,11 @@
       <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>
       <Name>StrixMusic.Sdk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj">
+    <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj">
       <Project>{38b5b005-64c0-4bce-a4b8-df7b8358182f}</Project>
       <Name>StrixMusic.Shells.Groove</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
+    <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
@@ -308,7 +308,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

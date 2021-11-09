@@ -21,7 +21,7 @@
     <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidUseIntermediateDesignerFile>True</AndroidUseIntermediateDesignerFile>
-    <ResourcesDirectory>..\StrixMusic.Shared\Strings</ResourcesDirectory>
+    <ResourcesDirectory>..\..\Shared\Strings</ResourcesDirectory>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -125,9 +125,13 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj">
-      <Project>{617F1778-92F9-454A-B041-D71B4B63A221}</Project>
-      <Name>StrixMusic.Core.LocalFiles</Name>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
+      <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
+      <Name>StrixMusic.Cores.OneDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
+      <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
+      <Name>StrixMusic.Cores.LocalFiles</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
@@ -145,12 +149,12 @@
       <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>
       <Name>StrixMusic.Sdk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
+    <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />

@@ -65,10 +65,10 @@
     <UpToDateCheckInput Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
@@ -109,6 +109,6 @@
     <Folder Include="ViewModels\Pages\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\stylecop.json" />
+    <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
 </Project>
