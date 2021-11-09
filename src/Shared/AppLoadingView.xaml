@@ -6,7 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:StrixMusic.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    mc:Ignorable="d">
+	xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d android ios wasm">
 
     <Grid Background="#1E1E23">
         <Grid.RowDefinitions>
@@ -82,14 +85,17 @@
                         <StackPanel Spacing="15">
                             <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
 
-                            <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
+                            <TextBlock Text="We've spent over a year to get here, and it's only the beginning." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
 
-                            <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
-
-                            <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" Foreground="White" />
+                            <not_wasm:TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps us keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
+                            
+                            <wasm:TextBlock Text="The native version is available to Patreon supporters. It's more stable, more performant, and is capable of more advanced features." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
+                            
+                            <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="14" FontWeight="Bold" TextWrapping="WrapWholeWords" Foreground="White" />
+                            <wasm:TextBlock Text="Running with IL Interpreter in debug mode. Performance not reflective of final product." FontSize="14" FontWeight="SemiLight" TextWrapping="WrapWholeWords" Foreground="White" Opacity="0.5" />
                         </StackPanel>
 
-                    <Button Content="I understand" Click="AppLoadingView_OnLoaded" Foreground="White" />
+                    <Button Content="I understand" Click="AppLoadingView_OnLoaded" Foreground="White" BorderBrush="White" BorderThickness="1" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>

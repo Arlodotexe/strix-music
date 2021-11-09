@@ -101,7 +101,7 @@ namespace StrixMusic.Cores.LocalFiles
                 ChangeCoreState(CoreState.Configured);
                 await InitAsync(services);
                 return;
-            } 
+            }
 
             ui.Subtitle = configuredFolder.Path;
 

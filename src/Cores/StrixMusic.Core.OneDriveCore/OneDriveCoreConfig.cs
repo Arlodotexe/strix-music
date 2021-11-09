@@ -293,7 +293,7 @@ namespace StrixMusic.Cores.OneDrive
 
             _logger.LogInformation($"Initializing authentication manager");
             _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
-            
+
             _logger.LogInformation($"Trying login");
             _graphClient = await _authenticationManager.TryLoginAsync();
 
@@ -338,15 +338,20 @@ namespace StrixMusic.Cores.OneDrive
 
         public async Task<IFolderData?> PickSingleFolderAsync()
         {
+            _logger.LogInformation($"Started setup for folder picker");
             Guard.IsNotNull(_graphClient, nameof(_graphClient));
             Guard.IsNotNull(_authenticationManager, nameof(_authenticationManager));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             // Get root OneDrive folder.
+            _logger.LogInformation($"Getting root folder");
             var driveItem = await _graphClient.Drive.Root.Request().Expand("children").GetAsync();
+
             _rootFolder = new OneDriveFolderData(_graphClient, driveItem);
+            _logger.LogInformation($"Root AbstractStorage folder created {_rootFolder.Id}");
 
             // Setup folder explorer
+            _logger.LogInformation($"Creating abstract folder explorer");
             var fileExplorer = new AbstractFolderExplorer(_rootFolder);
 
             if (!string.IsNullOrWhiteSpace(_authenticationManager.DisplayName))
@@ -363,9 +368,11 @@ namespace StrixMusic.Cores.OneDrive
                 fileExplorer.Title = $"OneDrive";
             }
 
+            _logger.LogInformation($"Initializing abstract folder explorer");
             await fileExplorer.InitAsync();
 
             // Show folder explorer
+            _logger.LogInformation($"Displaying abstract folder explorer");
             AbstractUIElements = fileExplorer.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
@@ -380,7 +387,9 @@ namespace StrixMusic.Cores.OneDrive
             fileExplorer.FolderSelected += OnFolderSelected;
             fileExplorer.Canceled += OnFileExplorerCanceled;
 
+            _logger.LogInformation($"Waiting for the user to pick a file.");
             var result = await taskCompletionSource.Task;
+            _logger.LogInformation($"Folder picked: {result?.Id ?? "none"}");
 
             fileExplorer.DirectoryChanged -= OnDirectoryChanged;
             fileExplorer.Dispose();
@@ -388,11 +397,14 @@ namespace StrixMusic.Cores.OneDrive
             if (result is null)
                 return null;
 
+            _logger.LogInformation($"Saving {nameof(OneDriveCoreSettingsKeys.SelectedFolderId)}");
             await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().Id);
 
             void OnDirectoryChanged(object sender, IFolderData e)
             {
                 var folderExplorer = (AbstractFolderExplorer)sender;
+
+                _logger.LogInformation($"Directory changed: {e.Id}");
 
                 AbstractUIElements = folderExplorer.IntoList();
                 AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
