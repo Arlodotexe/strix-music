@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using Cauldron.Interception;
-using OwlCore.Remoting.EventArgs;
 
-namespace OwlCore.Remoting.Attributes
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Mark a method or class with this attribute to opt into remote method invocation via <see cref="MemberRemote"/>.

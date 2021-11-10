@@ -1,6 +1,6 @@
 ﻿using OwlCore.Remoting.Transfer;
 
-namespace OwlCore.Remoting.EventArgs
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// <see cref="System.EventArgs"/> for <see cref="MemberRemote.MessageReceiving"/>.

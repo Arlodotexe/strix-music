@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using Cauldron.Interception;
-using OwlCore.Remoting.EventArgs;
 
-namespace OwlCore.Remoting.Attributes
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Mark a property, field or class with this attribute to opt into remote property changes via <see cref="MemberRemote"/>.

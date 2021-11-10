@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Nito.AsyncEx;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using OwlCore.Remoting.Attributes;
+using OwlCore.Remoting;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 

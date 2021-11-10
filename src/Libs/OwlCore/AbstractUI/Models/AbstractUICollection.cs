@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
-using OwlCore.Remoting.Attributes;
+using OwlCore.Remoting;
 
 namespace OwlCore.AbstractUI.Models
 {

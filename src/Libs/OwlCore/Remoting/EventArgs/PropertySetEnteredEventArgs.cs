@@ -1,7 +1,6 @@
 ﻿using Cauldron.Interception;
-using OwlCore.Remoting.Attributes;
 
-namespace OwlCore.Remoting.EventArgs
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// <see cref="System.EventArgs"/> for <see cref="RemotePropertyAttribute.SetEntered"/>.

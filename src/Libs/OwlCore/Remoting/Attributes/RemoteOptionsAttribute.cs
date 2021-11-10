@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwlCore.Remoting.Attributes
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Attribute used in conjuction with <see cref="MemberRemote"/>.

@@ -1,8 +1,7 @@
-﻿using OwlCore.Remoting.Attributes;
-using System;
+﻿using System;
 using System.Reflection;
 
-namespace OwlCore.Remoting.EventArgs
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// <see cref="System.EventArgs"/> for <see cref="RemoteMethodAttribute.Entered"/>.

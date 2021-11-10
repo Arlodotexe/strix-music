@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwlCore.Remoting.Attributes
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Mark a method or class with this attribute to opt into remote event raising via <see cref="MemberRemote"/>.

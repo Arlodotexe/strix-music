@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using OwlCore.Remoting.Attributes;
+using OwlCore.Remoting;
 
 namespace OwlCore.AbstractUI.Models
 {

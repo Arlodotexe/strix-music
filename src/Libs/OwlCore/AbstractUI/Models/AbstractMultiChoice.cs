@@ -1,4 +1,4 @@
-﻿using OwlCore.Remoting.Attributes;
+﻿using OwlCore.Remoting;
 using System;
 using System.Collections.Generic;
 

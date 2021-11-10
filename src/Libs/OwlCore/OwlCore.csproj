@@ -33,6 +33,9 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 [New]
 Added ILauncher interface.
 
+[Breaking changes]
+To keep things clean for devs, classes in OwlCore.Remoting.Attributes and OwlCore.Remoting.EventArgs have been moved to OwlCore.Remoting.
+
 --- 0.0.30 ---
 [New]
 Added ReplaceOrAdd extension method for IList{T}. Behaves the same as InsertOrAdd, but replaces at the given index if it exists.
