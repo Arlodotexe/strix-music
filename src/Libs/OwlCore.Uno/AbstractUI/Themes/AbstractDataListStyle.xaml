@@ -43,6 +43,19 @@
             <ListView.ItemContainerTransitions>
                 <TransitionCollection />
             </ListView.ItemContainerTransitions>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <!-- https://github.com/unoplatform/uno/issues/7446 -->
+                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />
@@ -115,6 +128,19 @@
                     <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
+            <GridView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <!-- https://github.com/unoplatform/uno/issues/7446 -->
+                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
                     <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Width="125" Margin="5">
