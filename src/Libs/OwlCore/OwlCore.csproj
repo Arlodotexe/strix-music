@@ -33,6 +33,10 @@ OwlCore is a constant work in progress. Until a stable release, breaking changes
 [New]
 Added ILauncher interface.
 
+[Improvements]
+Added Unit Testing to OwlCore.Remoting.MemberRemote - about 5,520 possible usage combinations (~30% coverage).
+Added Unit Testing to OwlCore.Remoting.Transfer.MessageConverters.NewtonsoftRemoteMessageConverter - about 150 combinations (~70% coverage).
+
 [Breaking changes]
 To keep things clean for devs, classes in OwlCore.Remoting.Attributes and OwlCore.Remoting.EventArgs have been moved to OwlCore.Remoting.
 
