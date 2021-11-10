@@ -26,6 +26,11 @@
                             <Grid Margin="28,0,28,28" VerticalAlignment="Bottom">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1000"/>
+                                            </VisualState.StateTriggers>
+                                        </VisualState>
                                         <VisualState x:Name="Small">
                                             <VisualState.StateTriggers>
                                                 <AdaptiveTrigger MinWindowWidth="700"/>
@@ -35,11 +40,6 @@
                                                 <Setter Target="NowPlaying.HorizontalAlignment" Value="Stretch"/>
                                                 <Setter Target="NowPlaying.Width" Value="auto"/>
                                             </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="Large">
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="1000"/>
-                                            </VisualState.StateTriggers>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
