@@ -56,15 +56,12 @@
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Sizes">
-                <VisualState x:Name="Small">
+                <VisualState x:Name="Large">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                        <AdaptiveTrigger MinWindowWidth="1200"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainSplitView.DisplayMode" Value="Overlay"/>
-                        <Setter Target="MainSplitView.PaneBackground" Value="{ThemeResource PaneBackgroundBrush}"/>
-                        <Setter Target="LargeHeaderText.Visibility" Value="Collapsed"/>
-                        <Setter Target="SmallHeader.Visibility" Value="Visible"/>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Medium">
@@ -76,12 +73,15 @@
                         <Setter Target="MainSplitView.PaneBackground" Value="{ThemeResource PaneBackgroundBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Large">
+                <VisualState x:Name="Small">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1200"/>
+                        <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainSplitView.IsPaneOpen" Value="True"/>
+                        <Setter Target="MainSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="MainSplitView.PaneBackground" Value="{ThemeResource PaneBackgroundBrush}"/>
+                        <Setter Target="LargeHeaderText.Visibility" Value="Collapsed"/>
+                        <Setter Target="SmallHeader.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -183,7 +183,7 @@
                         <Button x:Name="SearchButton" Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
                             <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
-                        <AutoSuggestBox x:Name="SearchBox" x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
+                        <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search..." x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
                                         Margin="8" QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
