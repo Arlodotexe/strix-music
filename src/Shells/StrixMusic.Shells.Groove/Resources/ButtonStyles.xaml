@@ -84,9 +84,9 @@
 
                                 <VisualState x:Name="Checked">
                                     <VisualState.Setters>
-                                        <Setter Target="SelectionIndicator.Fill" Value="Black" />
+                                        <Setter Target="SelectionIndicator.Fill" Value="{ThemeResource ToggleButtonRevealBackgroundChecked}" />
                                         <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ToggleButtonRevealBorderBrushChecked}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="Black" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ToggleButtonForegroundChecked}" />
                                     </VisualState.Setters>
 
                                     <Storyboard>
@@ -96,9 +96,9 @@
                                 <VisualState x:Name="CheckedPointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="RootGrid.(RevealBrush.State)" Value="PointerOver" />
-                                        <Setter Target="SelectionIndicator.Fill" Value="Black" />
+                                        <Setter Target="SelectionIndicator.Fill" Value="{ThemeResource ToggleButtonRevealBackgroundCheckedPointerOver}" />
                                         <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ToggleButtonRevealBorderBrushCheckedPointerOver}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="Black" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ToggleButtonForegroundCheckedPointerOver}" />
                                     </VisualState.Setters>
 
                                     <Storyboard>
@@ -108,9 +108,9 @@
                                 <VisualState x:Name="CheckedPressed">
                                     <VisualState.Setters>
                                         <Setter Target="RootGrid.(RevealBrush.State)" Value="Pressed" />
-                                        <Setter Target="SelectionIndicator.Fill" Value="Black" />
+                                        <Setter Target="SelectionIndicator.Fill" Value="{ThemeResource ToggleButtonRevealBackgroundCheckedPressed}" />
                                         <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ToggleButtonRevealBorderBrushCheckedPressed}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="Black" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ToggleButtonForegroundCheckedPressed}" />
                                     </VisualState.Setters>
 
                                     <Storyboard>
@@ -119,9 +119,9 @@
                                 </VisualState>
                                 <VisualState x:Name="CheckedDisabled">
                                     <VisualState.Setters>
-                                        <Setter Target="SelectionIndicator.Fill" Value="Black" />
+                                        <Setter Target="SelectionIndicator.Fill" Value="{ThemeResource ToggleButtonRevealBackgroundCheckedDisabled}" />
                                         <Setter Target="ContentPresenter.BorderBrush" Value="{ThemeResource ToggleButtonRevealBorderBrushCheckedDisabled}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="Black" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ToggleButtonForegroundCheckedDisabled}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Indeterminate">
