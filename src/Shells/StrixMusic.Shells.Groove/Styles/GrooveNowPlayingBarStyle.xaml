@@ -32,6 +32,11 @@
                 </Grid.Background>
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="Sizes">
+                        <VisualState x:Name="Large">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="600"/>
+                            </VisualState.StateTriggers>
+                        </VisualState>
                         <VisualState x:Name="Small">
                             <VisualState.StateTriggers>
                                 <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
@@ -48,11 +53,6 @@
                                 <Setter Target="MediaTransports.(Grid.Column)" Value="2"/>
                                 <Setter Target="MediaTransports.HorizontalAlignment" Value="Right"/>
                             </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Large">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="600"/>
-                            </VisualState.StateTriggers>
                         </VisualState>
                     </VisualStateGroup>
                 </VisualStateManager.VisualStateGroups>
