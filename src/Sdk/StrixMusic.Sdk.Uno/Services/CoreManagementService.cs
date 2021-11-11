@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractLauncher;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;

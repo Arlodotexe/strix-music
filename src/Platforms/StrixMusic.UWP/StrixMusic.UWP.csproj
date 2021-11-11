@@ -47,6 +47,9 @@
     <PackageReference Include="NLog.Extensions.Logging">
       <Version>1.7.4</Version>
     </PackageReference>
+    <PackageReference Include="OwlCore">
+      <Version>0.0.32</Version>
+    </PackageReference>
     <PackageReference Include="Refit">
       <Version>5.2.4</Version>
     </PackageReference>
@@ -279,10 +282,6 @@
     <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
       <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
       <Name>StrixMusic.Cores.LocalFiles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
-      <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
-      <Name>OwlCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>

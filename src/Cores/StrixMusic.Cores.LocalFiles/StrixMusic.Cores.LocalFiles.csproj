@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+    <PackageReference Include="OwlCore" Version="0.0.32" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
     <ProjectReference Include="..\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj" />
   </ItemGroup>

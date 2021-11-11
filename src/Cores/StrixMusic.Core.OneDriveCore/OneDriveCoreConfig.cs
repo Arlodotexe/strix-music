@@ -9,7 +9,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractLauncher;
+using OwlCore.Provisos;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
 using OwlCore.AbstractUI.Models;
@@ -299,6 +299,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (_graphClient is null)
             {
+                Guard.IsNotNull(_notificationService, nameof(_notificationService));
                 _notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
                 return false;
             }

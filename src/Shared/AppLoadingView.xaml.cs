@@ -16,7 +16,7 @@ using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
-using OwlCore.AbstractLauncher;
+using OwlCore.Provisos;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
