@@ -39,8 +39,9 @@
 
             <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{x:Bind ActiveDevice.NowPlaying, Mode=OneWay}"/>
 
-            <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
-            <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
+            <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+
+            <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
             <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
                                     IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"

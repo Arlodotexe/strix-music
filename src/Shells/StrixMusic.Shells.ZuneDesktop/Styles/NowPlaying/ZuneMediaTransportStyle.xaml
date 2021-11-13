@@ -69,10 +69,10 @@
                         </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
 
-                    <FontIcon x:Name="RepeatFontIcon" Glyph="&#xE1CD;" FontSize="12"/>
+                    <FontIcon x:Name="RepeatFontIcon" Glyph="&#xE1CD;" FontSize="12"  Foreground="{ThemeResource Foreground}"/>
                 </Grid>
 
-                <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="4,0,8,0" VerticalAlignment="Center">
+                <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="4,0,8,0" VerticalAlignment="Center" Foreground="{ThemeResource Foreground}">
 
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
@@ -124,7 +124,7 @@
                 </Button>
             </StackPanel>
 
-            <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>
+            <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"  Foreground="{ThemeResource Foreground}"/>
         </Grid>
     </DataTemplate>
 
