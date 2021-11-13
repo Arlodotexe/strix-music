@@ -99,7 +99,7 @@
                                     Background="Transparent">
                             <AppBarButton x:Uid="/Music/PlayABB" Label="Play" Style="{StaticResource QuickActionButton}">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx:///Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
                             <AppBarButton x:Uid="/Common/SaveABB" Icon="Save" Label="Save" Style="{StaticResource QuickActionButton}"/>
