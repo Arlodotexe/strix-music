@@ -206,16 +206,16 @@
     </UserControl.Resources>
 
     <Viewbox Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
-        <Grid Margin="0" Height="150" not_wasm:Width="740" wasm:Width="Auto" RenderTransformOrigin="0.5,0.5">
+        <Grid Margin="0" Height="150" Width="740" RenderTransformOrigin="0.5,0.5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <!--Strix Text-->
             <TextBlock x:Uid="/Startup/StrixMusicStrixTB" x:Name="StrixMusicStrixText" Text="Strix" FontSize="72" Margin="20,0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                       FontFamily="/Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
+                       FontFamily="ms-appx:///Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
                        Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
 
             <!--Icon-->
@@ -264,7 +264,7 @@
 
             <!--Music Text-->
             <TextBlock x:Uid="/Startup/StrixMusicMusicTB" x:Name="StrixMusicMusicText" Text="Music" FontSize="72" Margin="20,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       FontFamily="/Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
+                       FontFamily="ms-appx:///Assets/Fonts/Bonkers.oft#Bonkers" CharacterSpacing="50"
                        Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
         </Grid>
     </Viewbox>
