@@ -17,13 +17,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public GrooveArtistPage()
         {
             DefaultStyleKey = typeof(GrooveArtistPage);
-            DataContext = new GrooveArtistPageViewModel();
         }
-
-        /// <summary>
-        /// The <see cref="GrooveArtistPageViewModel"/> for the <see cref="GrooveArtistPage"/> template.
-        /// </summary>
-        public GrooveArtistPageViewModel ViewModel => (GrooveArtistPageViewModel)DataContext;
 
         /// <summary>
         /// The artist to display in this control.
@@ -42,7 +36,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
 
         private void OnArtistChanged()
         {
-            ViewModel.Artist = Artist;
         }
     }
 }

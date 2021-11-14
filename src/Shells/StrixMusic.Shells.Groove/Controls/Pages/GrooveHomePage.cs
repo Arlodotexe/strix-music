@@ -17,7 +17,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public GrooveHomePage()
         {
             DefaultStyleKey = typeof(GrooveHomePage);
-            DataContext = new GrooveHomePageViewModel();
         }
 
         /// <summary>
@@ -35,14 +34,8 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
             set { SetValue(LibraryProperty, value); }
         }
 
-        /// <summary>
-        /// The <see cref="GrooveHomePageViewModel"/> for the <see cref="GrooveHomePage"/> template.
-        /// </summary>
-        public GrooveHomePageViewModel ViewModel => (GrooveHomePageViewModel)DataContext;
-
         private void OnLibraryChanged()
         {
-            ViewModel.Library = Library;
         }
     }
 }
