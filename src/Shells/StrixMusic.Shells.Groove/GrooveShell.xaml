@@ -31,22 +31,22 @@
                                                    PlaylistsPageTemplate="{StaticResource GroovePlaylistsPageDataTemplate}">
                 <selectors:MainContentTemplateSelector.AlbumPageTemplate>
                     <DataTemplate x:DataType="sdkvms:AlbumViewModel">
-                        <pages:GrooveAlbumPage Album="{Binding DataContext, Mode=OneTime}" />
+                        <pages:GrooveAlbumPage Album="{Binding}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.AlbumPageTemplate>
                 <selectors:MainContentTemplateSelector.ArtistPageTemplate>
                     <DataTemplate x:DataType="sdkvms:ArtistViewModel">
-                        <pages:GrooveArtistPage Artist="{Binding DataContext, Mode=OneTime}"/>
+                        <pages:GrooveArtistPage Artist="{Binding}"/>
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="sdkvms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{Binding DataContext, Mode=OneTime}" />
+                        <pages:GrooveHomePage Library="{Binding}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>
                     <DataTemplate x:DataType="sdkvms:PlaylistViewModel">
-                        <pages:GroovePlaylistPage Playlist="{Binding DataContext, Mode=OneTime}" />
+                        <pages:GroovePlaylistPage Playlist="{Binding}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.PlaylistPageTemplate>
             </selectors:MainContentTemplateSelector>

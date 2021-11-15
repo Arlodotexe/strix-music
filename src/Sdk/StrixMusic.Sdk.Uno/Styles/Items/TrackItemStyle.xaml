@@ -7,35 +7,33 @@
     xmlns:converttime="using:OwlCore.Uno.Converters.Time"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.TrackItemStyle">
 
-    <DataTemplate x:Key="DefaultTrackTemplate" x:DataType="viewModels:TrackViewModel">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Text="{x:Bind TrackNumber}" Margin="16,0"/> <!--Track Number-->
-            <TextBlock Text="{x:Bind Name}" Margin="16,0" Grid.Column="1"/>
-
-            <TextBlock Text="{x:Bind Album.Artists[0].Name}" Margin="16,0" Grid.Column="2"/>
-            <TextBlock Text="{x:Bind Album.Name}" Margin="16,0" Grid.Column="3"/>
-            <!--TODO: Investigate error binding DatePublished-->
-            <!--<TextBlock Text="{x:Bind converttime:DateTimeToYearTextConverter.Convert(Album.DatePublished)}" Margin="16,0" Grid.Column="4"/> --><!--Year-->
-            <TextBlock Text="{x:Bind converttime:TimeSpanToTextConverter.Convert(Duration)}" Margin="16,0" Grid.Column="5"/> <!--Duration-->
-        </Grid>
-    </DataTemplate>
+    <converttime:TimeSpanToTextConverter x:Key="TimeSpanToTextConverter"/>
 
     <Style x:Key="DefaultTrackControlStyle" TargetType="items:TrackItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:TrackItem">
-                        <ContentControl ContentTemplate="{StaticResource DefaultTrackTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding Track.TrackNumber, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="16,0"/>
+                            
+                            <TextBlock Text="{Binding Track.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="16,0" Grid.Column="1"/>
+
+                            <TextBlock Text="{Binding Track.Album.Artists[0].Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="16,0" Grid.Column="2"/>
+                            
+                            <TextBlock Text="{Binding Track.Album.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" Margin="16,0" Grid.Column="3"/>
+
+                            <TextBlock Text="{Binding Track.Duration, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TimeSpanToTextConverter}}" Margin="16,0" Grid.Column="5"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

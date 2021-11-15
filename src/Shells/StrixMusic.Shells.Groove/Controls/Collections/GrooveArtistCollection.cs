@@ -1,5 +1,8 @@
-﻿using OwlCore.Extensions;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +20,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         public GrooveArtistCollection()
         {
             DefaultStyleKey = typeof(GrooveArtistCollection);
-            DataContext = new GrooveArtistCollectionViewModel();
+            NavigateToArtistCommand = new RelayCommand<ArtistViewModel>(NavigateToArtist);
         }
 
         /// <summary>
@@ -36,13 +39,18 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         }
 
         /// <summary>
-        /// The ViewModel for a <see cref="GrooveArtistCollection"/>
+        /// A Command that requests a navigation to an artist page.
         /// </summary>
-        public GrooveArtistCollectionViewModel ViewModel => (GrooveArtistCollectionViewModel)DataContext;
+        public RelayCommand<ArtistViewModel> NavigateToArtistCommand { get; private set; }
+
+        private void NavigateToArtist(ArtistViewModel? viewModel)
+        {
+            if (viewModel != null)
+                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequestMessage(viewModel));
+        }
 
         private void OnArtistCollectionChanged()
         {
-            ViewModel.ArtistCollection = ArtistCollection;
         }
     }
 }

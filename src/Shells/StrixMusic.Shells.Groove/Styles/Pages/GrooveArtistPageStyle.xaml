@@ -84,7 +84,7 @@
                                             </Grid.RowDefinitions>
 
                                             <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
-                                       LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+                                                       LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
 
                                             <!--TODO: Optional artist bio-->
                                             <!--<TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0" Text="
@@ -97,9 +97,9 @@
                                         </Grid>
 
                                         <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
-                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                                    Grid.Column="1" Grid.Row="1"
-                                    Background="Transparent">
+                                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                                    Grid.Column="1" Grid.Row="1"
+                                                    Background="Transparent">
                                             <AppBarButton x:Uid="/Music/PlayABB" Label="Play" Style="{StaticResource QuickActionButton}">
                                                 <AppBarButton.Icon>
                                                     <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>

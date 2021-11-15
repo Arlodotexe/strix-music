@@ -1,4 +1,8 @@
-﻿using OwlCore.Extensions;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using OwlCore.Extensions;
+using System.Threading.Tasks;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
@@ -17,32 +21,43 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         public GrooveTrackCollection()
         {
             DefaultStyleKey = typeof(GrooveTrackCollection);
-            DataContext = new GrooveTrackCollectionViewModel();
-        }
 
-        /// <summary>
-        /// The ViewModel for a <see cref="GrooveTrackCollection"/>
-        /// </summary>
-        public GrooveTrackCollectionViewModel ViewModel => (GrooveTrackCollectionViewModel)DataContext;
+            Tracks = new ObservableCollection<GrooveTrackViewModel>();
+        }
 
         /// <summary>
         /// The backing dependency propery for <see cref="TrackCollection"/>.
         /// </summary>
         public static readonly DependencyProperty TrackCollectionProperty =
-            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => d.Cast<GrooveTrackCollection>().OnTrackCollectionChanged()));
+            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => _ = d.Cast<GrooveTrackCollection>().OnTrackCollectionChangedAsync()));
 
         /// <summary>
         /// The track collection to display.
         /// </summary>
-        public ITrackCollectionViewModel TrackCollection
+        public ITrackCollectionViewModel? TrackCollection
         {
             get { return (ITrackCollectionViewModel)GetValue(TrackCollectionProperty); }
             set { SetValue(TrackCollectionProperty, value); }
         }
 
-        private void OnTrackCollectionChanged()
+        /// <summary>
+        /// The tracks displayed in the collection, with additional properties.
+        /// </summary>
+        public ObservableCollection<GrooveTrackViewModel> Tracks { get; set; }
+
+        private async Task OnTrackCollectionChangedAsync()
         {
-            ViewModel.TrackCollection = TrackCollection;
+            Tracks.Clear();
+
+            if (TrackCollection is null)
+                return;
+
+            await TrackCollection.InitTrackCollectionAsync();
+
+            foreach (var track in TrackCollection.Tracks)
+            {
+                Tracks.Add(new GrooveTrackViewModel(TrackCollection, track));
+            }
         }
     }
 }

@@ -7,47 +7,40 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.TrackCollectionStyle">
-
-    <DataTemplate x:Key="GrooveTrackListTemplate" x:DataType="groovevms:GrooveTrackCollectionViewModel">
-        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind TrackCollection.Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
-                  ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
-                  Padding="16,16,16,112" HorizontalAlignment="Stretch"
-                  SelectionMode="None" IsItemClickEnabled="True">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind TrackCollection.InitTrackCollectionAsyncCommand}"/>
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-            <ListView.Header>
-                <Grid>
-                    <ProgressRing IsActive="{x:Bind TrackCollection.PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
-                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                </Grid>
-            </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:TrackViewModel">
-                    <ditems:TrackItem>
-                        <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.TrackCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                            </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-                    </ditems:TrackItem>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </DataTemplate>
 
     <Style x:Key="GrooveTrackListControlStyle" TargetType="collections:GrooveTrackCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:GrooveTrackCollection">
-                        <ContentControl ContentTemplate="{StaticResource GrooveTrackListTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                        <ListView x:Name="PART_Selector" ItemsSource="{Binding Tracks, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+                                  ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
+                                  Padding="16,16,16,112" HorizontalAlignment="Stretch"
+                                  SelectionMode="None" IsItemClickEnabled="True">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Loaded">
+                                    <core:InvokeCommandAction Command="{Binding TrackCollection.InitTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                            <ListView.Header>
+                                <Grid>
+                                    <ProgressRing IsActive="{Binding TrackCollection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                </Grid>
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ditems:TrackItem Track="{Binding Track}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                <core:InvokeCommandAction Command="{Binding Context.PlayTrackAsyncCommand}" CommandParameter="{Binding Track}" />
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </ditems:TrackItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

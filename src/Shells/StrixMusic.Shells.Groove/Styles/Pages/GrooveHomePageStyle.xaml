@@ -5,10 +5,14 @@
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:vmpages="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    xmlns:owlconv="using:OwlCore.Uno.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveHomePageStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../PivotStyle.xaml"/>
+        <ResourceDictionary>
+            <owlconv:DebugPassThroughConverter x:Key="DebugPassThroughConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="GrooveHomePageStyle" TargetType="pages:GrooveHomePage">
@@ -25,7 +29,7 @@
                                 </Pivot.HeaderTemplate>
 
                                 <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
-                                    <collections:GrooveTrackCollection TrackCollection="{TemplateBinding Library}"/>
+                                    <collections:GrooveTrackCollection TrackCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource DebugPassThroughConverter}}"/>
                                 </PivotItem>
                                 <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
                                     <collections:GrooveArtistCollection ArtistCollection="{TemplateBinding Library}"/>

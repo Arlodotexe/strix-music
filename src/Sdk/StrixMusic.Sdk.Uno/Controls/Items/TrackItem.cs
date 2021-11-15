@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.MediaPlayback;
+﻿using OwlCore.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Uno.Controls.Items.Abstract;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
@@ -16,13 +17,24 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         /// </summary>
         public TrackItem()
         {
-            this.DefaultStyleKey = typeof(TrackItem);
+            DefaultStyleKey = typeof(TrackItem);
         }
 
         /// <summary>
-        /// The <see cref="TrackViewModel"/> for the control.
+        /// Backing dependency property for <see cref="Track"/>.
         /// </summary>
-        public TrackViewModel ViewModel => (TrackViewModel)DataContext;
+        public static readonly DependencyProperty TrackProperty =
+            DependencyProperty.Register(nameof(Track), typeof(TrackViewModel), typeof(TrackItem),
+                new PropertyMetadata(null, (d, e) => d.Cast<TrackItem>().OnTrackChanged((TrackViewModel?)e.OldValue, (TrackViewModel)e.NewValue)));
+
+        /// <summary>
+        /// The track to display.
+        /// </summary>
+        public TrackViewModel Track
+        {
+            get { return (TrackViewModel)GetValue(TrackProperty); }
+            set { SetValue(TrackProperty, value); }
+        }
 
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
@@ -34,43 +46,31 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
 
         private void AttachHandlers()
         {
-            this.Unloaded += TrackItem_Unloaded;
-            this.DataContextChanged += TrackItem_DataContextChanged;
+            Unloaded += TrackItem_Unloaded;
         }
 
         private void DetachHandlers()
         {
-            this.Unloaded -= TrackItem_Unloaded;
-            this.DataContextChanged -= TrackItem_DataContextChanged;
+            Unloaded -= TrackItem_Unloaded;
 
-            if (ViewModel != null)
-            {
-                ViewModel.PlaybackStateChanged -= ViewModel_PlaybackStateChanged;
-            }
+            if (!(Track is null))
+                Track.PlaybackStateChanged -= OnPlaybackStateChanged;
         }
 
-        private void TrackItem_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        private void TrackItem_Unloaded(object sender, RoutedEventArgs e) => DetachHandlers();
+
+        private void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
         {
-            if (DataContext != null)
-            {
-                ViewModel.PlaybackStateChanged -= ViewModel_PlaybackStateChanged;
-            }
+            if (oldValue != null)
+                oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;
 
-            if (args.NewValue is TrackViewModel viewModel)
-            {
-                viewModel.PlaybackStateChanged += ViewModel_PlaybackStateChanged;
-                PlaybackState = viewModel.PlaybackState;
-            }
+            newValue.PlaybackStateChanged += OnPlaybackStateChanged;
+            PlaybackState = newValue.PlaybackState;
         }
 
-        private void ViewModel_PlaybackStateChanged(object sender, PlaybackState e)
+        private void OnPlaybackStateChanged(object sender, PlaybackState e)
         {
             PlaybackState = e;
-        }
-
-        private void TrackItem_Unloaded(object sender, RoutedEventArgs e)
-        {
-            DetachHandlers();
         }
     }
 }

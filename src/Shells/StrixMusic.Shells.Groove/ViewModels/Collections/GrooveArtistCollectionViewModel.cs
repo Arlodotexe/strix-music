@@ -18,7 +18,6 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         /// </summary>
         public GrooveArtistCollectionViewModel()
         {
-            NavigateToArtistCommand = new RelayCommand<ArtistViewModel>(NavigateToArtist);
         }
 
         /// <summary>
@@ -28,17 +27,6 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         {
             get => _artistCollectionViewModel;
             set => SetProperty(ref _artistCollectionViewModel, value);
-        }
-
-        /// <summary>
-        /// A Command that requests a navigation to an artist page.
-        /// </summary>
-        public RelayCommand<ArtistViewModel> NavigateToArtistCommand { get; private set; }
-
-        private void NavigateToArtist(ArtistViewModel? viewModel)
-        {
-            if (viewModel != null)
-                WeakReferenceMessenger.Default.Send(new ArtistViewNavigationRequestMessage(viewModel));
         }
     }
 }
