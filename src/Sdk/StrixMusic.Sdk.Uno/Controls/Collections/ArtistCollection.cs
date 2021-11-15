@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Uno.Controls.Collections.Abstract;
+﻿using OwlCore.Extensions;
+using StrixMusic.Sdk.Uno.Controls.Collections.Abstract;
 using StrixMusic.Sdk.Uno.Controls.Items;
 using StrixMusic.Sdk.ViewModels;
 using System.Threading.Tasks;
@@ -24,9 +25,19 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         }
 
         /// <summary>
-        /// The <see cref="IArtistCollectionViewModel"/> for the control.
+        /// Backing dependency property for <see cref="Collection/>.
         /// </summary>
-        public IArtistCollectionViewModel ViewModel => (IArtistCollectionViewModel)DataContext;
+        public static readonly DependencyProperty ArtistCollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IArtistCollectionViewModel), typeof(ArtistCollection), new PropertyMetadata(null));
+
+        /// <summary>
+        /// The artist collection to display.
+        /// </summary>
+        public IArtistCollectionViewModel? Collection
+        {
+            get { return (IArtistCollectionViewModel?)GetValue(ArtistCollectionProperty); }
+            set { SetValue(ArtistCollectionProperty, value); }
+        }
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -40,22 +51,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
             AttachHandlers();
         }
 
-        /// <inheritdoc/>
-        protected override async Task LoadMore()
-        {
-            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
-                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(25);
-        }
-
-        /// <inheritdoc/>
-        protected override void CheckAndToggleEmpty()
-        {
-            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning &&
-                ViewModel.TotalArtistItemsCount == 0)
-            
-            SetEmptyVisibility(Visibility.Visible);
-        }
-
         private void AttachHandlers()
         {
             Unloaded += ArtistCollection_Unloaded;
@@ -64,6 +59,20 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         private void DetachHandlers()
         {
             Unloaded -= ArtistCollection_Unloaded;
+        }
+
+        /// <inheritdoc/>
+        protected override async Task LoadMore()
+        {
+            if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning)
+                await Collection.PopulateMoreArtistsCommand.ExecuteAsync(25);
+        }
+
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning && Collection.TotalArtistItemsCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
         }
 
         private void ArtistCollection_Unloaded(object sender, RoutedEventArgs e)

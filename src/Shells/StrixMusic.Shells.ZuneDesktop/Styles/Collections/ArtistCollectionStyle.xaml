@@ -14,54 +14,53 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
     
-    <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <StackPanel Margin="24,0,0,12">
-                <TextBlock Text="{x:Bind unitconvert:CountToArtistsConverter.Convert(TotalArtistItemsCount), Mode=OneWay}"
-                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
-
-                <ProgressBar IsIndeterminate="True"
-                        Visibility="{x:Bind PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}" />
-            </StackPanel>
-            <ListView x:Name="PART_Selector"
-                    ItemsSource="{x:Bind Artists, Mode=OneWay}"
-                    ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}"
-                    HorizontalAlignment="Stretch" SelectionMode="Extended"
-                    IsItemClickEnabled="True" Grid.Row="1">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <items:ArtistItem>
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior
-                                        EventName="DoubleTapped">
-                                    <core:InvokeCommandAction
-                                            Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayArtistAsyncCommand, Mode=OneWay}"
-                                            CommandParameter="{Binding}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </items:ArtistItem>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
-    </DataTemplate>
     <DataTemplate x:Key="ZuneDesktopArtistCollectionItemStyle">
         <items:ArtistItem />
     </DataTemplate>
+
+    <unitconvert:CountToArtistsConverter x:Key="CountToArtistsConverter" />
+
     <Style x:Key="ZuneDesktopArtistCollectionStyle"
             TargetType="collections:ArtistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:ArtistCollection">
-                        <ContentControl
-                                ContentTemplate="{StaticResource ZuneDesktopArtistCollectionDataTemplate}"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Stretch" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <ContentControl x:Name="RelativeSourceRelay" Visibility="Collapsed" Content="{Binding Collection, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+
+                            <StackPanel Margin="24,0,0,12">
+                                <TextBlock Text="{Binding Collection.TotalArtistItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CountToArtistsConverter}, Mode=OneWay}"
+                                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+
+                                <ProgressBar IsIndeterminate="True"
+                                             Visibility="{Binding Collection.PopulateMoreArtistsCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                            </StackPanel>
+                            <ListView x:Name="PART_Selector"
+                                      ItemsSource="{Binding Collection.Artists, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                      ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}"
+                                      HorizontalAlignment="Stretch" SelectionMode="Extended"
+                                      IsItemClickEnabled="True" Grid.Row="1">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <items:ArtistItem>
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <core:InvokeCommandAction
+                                                        Command="{Binding ElementName=RelativeSourceRelay, Path=Content.PlayArtistAsyncCommand, Mode=OneWay}"
+                                                        CommandParameter="{Binding}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </items:ArtistItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

@@ -206,7 +206,7 @@
                 <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
             </Grid.ColumnDefinitions>
 
-            <collections:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}"
+            <collections:ArtistCollection x:Name="ArtistCollection" Collection="{x:Bind ViewModel.Library}"
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
