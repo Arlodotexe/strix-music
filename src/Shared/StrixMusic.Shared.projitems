@@ -83,7 +83,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Bonkers.otf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Bonkers.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\SegoeMDL2.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />

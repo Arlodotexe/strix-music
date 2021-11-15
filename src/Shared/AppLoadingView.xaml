@@ -73,7 +73,7 @@
             <ScrollViewer>
                 <StackPanel Spacing="25" Padding="40,0,40,40">
                     <controls:StrixIcon Height="128" ShowText="True" PlayIntro="False" IsAnimated="True"
-                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <StackPanel Spacing="10" Margin="0,-45,0,0">
                         <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
