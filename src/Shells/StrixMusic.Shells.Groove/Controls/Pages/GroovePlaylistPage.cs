@@ -17,7 +17,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public GroovePlaylistPage()
         {
             DefaultStyleKey = typeof(GroovePlaylistPage);
-            DataContext = new GroovePlaylistPageViewModel();
         }
 
         /// <summary>
@@ -25,11 +24,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// </summary>
         public static readonly DependencyProperty PlaylistProperty =
             DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(GroovePlaylistPage), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistPage>().OnPlaylistChanged()));
-
-        /// <summary>
-        /// The <see cref="GroovePlaylistPageViewModel"/> for the <see cref="GrooveHomePage"/> template.
-        /// </summary>
-        public GroovePlaylistPageViewModel ViewModel => (GroovePlaylistPageViewModel)DataContext;
 
         /// <summary>
         /// The playlist to display.
@@ -42,7 +36,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
 
         private void OnPlaylistChanged()
         {
-            ViewModel.Playlist = Playlist;
         }
     }
 }

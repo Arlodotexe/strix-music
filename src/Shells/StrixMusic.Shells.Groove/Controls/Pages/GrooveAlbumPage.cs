@@ -17,7 +17,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public GrooveAlbumPage()
         {
             DefaultStyleKey = typeof(GrooveAlbumPage);
-            DataContext = new GrooveAlbumPageViewModel();
         }
 
         /// <summary>
@@ -25,11 +24,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// </summary>
         public static readonly DependencyProperty AlbumProperty =
             DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(GrooveAlbumPage), new PropertyMetadata(null, (d, e) => d.Cast<GrooveAlbumPage>().OnAlbumChanged()));
-
-        /// <summary>
-        /// The <see cref="GrooveAlbumPageViewModel"/> for the <see cref="GrooveAlbumPage"/> template.
-        /// </summary>
-        public GrooveAlbumPageViewModel ViewModel => (GrooveAlbumPageViewModel)DataContext;
 
         /// <summary>
         /// The album being displayed.
@@ -42,7 +36,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
 
         private void OnAlbumChanged()
         {
-            ViewModel.Album = Album;
         }
     }
 }
