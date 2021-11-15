@@ -38,7 +38,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
 
         private void OnLibraryChanged()
         {
-            Ioc.Default.GetRequiredService<ILogger<GrooveHomePage>>().LogInformation($"Library changed");
         }
     }
 }
