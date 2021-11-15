@@ -42,21 +42,6 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\Backgrounds\AuroraBorealis.png" />
-		<None Remove="Assets\Backgrounds\Bloom.png" />
-		<None Remove="Assets\Backgrounds\Bubbles.png" />
-		<None Remove="Assets\Backgrounds\Cells.png" />
-		<None Remove="Assets\Backgrounds\Hero.png" />
-		<None Remove="Assets\Backgrounds\Meadow.png" />
-		<None Remove="Assets\Backgrounds\RobotOwl.png" />
-		<None Remove="Assets\Backgrounds\Shards.png" />
-		<None Remove="Assets\Backgrounds\Smooth.png" />
-		<None Remove="Assets\Backgrounds\Wired.png" />
-		<None Remove="Assets\Hover.png" />
-		<None Remove="Assets\Quickplay-Background.png" />
-		<None Remove="Assets\ZuneStrixLogo-gray.svg" />
-		<None Remove="Assets\ZuneStrixLogo-white.svg" />
-		<None Remove="Assets\ZuneStrixLogo.svg" />
 		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
@@ -92,11 +77,6 @@
 		<None Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
 		<None Remove="Styles\ZuneSettingsListViewItem.xaml" />
 		<None Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Remove="Assets\svg\Next.xaml" />
-	  <Page Remove="Assets\svg\Play.xaml" />
-	  <Page Remove="Assets\svg\Previous.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 		<UpToDateCheckInput Remove="Controls\AlbumWall.xaml" />
@@ -135,22 +115,6 @@
 		<UpToDateCheckInput Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
 		<UpToDateCheckInput Remove="Styles\ZuneSettingsListViewItem.xaml" />
 		<UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="Assets\Backgrounds\AuroraBorealis.png" />
-	  <Content Include="Assets\Backgrounds\Bubbles.png" />
-	  <Content Include="Assets\Backgrounds\Cells.png" />
-	  <Content Include="Assets\Backgrounds\Hero.png" />
-	  <Content Include="Assets\Backgrounds\Meadow.png" />
-	  <Content Include="Assets\Backgrounds\RobotOwl.png" />
-	  <Content Include="Assets\Backgrounds\Shards.png" />
-	  <Content Include="Assets\Backgrounds\Smooth.png" />
-	  <Content Include="Assets\Backgrounds\Wired.png" />
-	  <Content Include="Assets\Hover.png" />
-	  <Content Include="Assets\Quickplay-Background.png" />
-	  <Content Include="Assets\ZuneStrixLogo-gray.svg" />
-	  <Content Include="Assets\ZuneStrixLogo-white.svg" />
-	  <Content Include="Assets\ZuneStrixLogo.svg" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />

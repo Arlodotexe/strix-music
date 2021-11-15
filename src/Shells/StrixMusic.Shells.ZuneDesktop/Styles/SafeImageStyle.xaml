@@ -19,7 +19,7 @@
                                 <Rectangle.Fill>
                                     <ImageBrush Stretch="UniformToFill">
                                         <ImageBrush.ImageSource>
-                                            <SvgImageSource UriSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/ZuneStrixLogo-gray.svg"
+                                            <SvgImageSource UriSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/ZuneStrixLogo-gray.svg"
                                                             RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                                         </ImageBrush.ImageSource>
                                     </ImageBrush>

@@ -28,7 +28,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings.Models
         /// <param name="stretch">The stretch of the image.</param>
         public ZuneDesktopBackgroundImage(string name, AlignmentY alignment = AlignmentY.Bottom, Stretch stretch = Stretch.UniformToFill)
         {
-            Path = new Uri("ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Backgrounds/" + name + ".png");
+            Path = new Uri("ms-appx:///Assets/Shells/Zune.Desktop.4.8/Backgrounds/" + name + ".png");
             Name = name;
             YAlignment = alignment;
             Stretch = stretch;

@@ -91,6 +91,20 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\GrooveMusic.10.21061.10121.0\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\Zune.Desktop.4.8\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\Zune.Desktop.4.8\2.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\AuroraBorealis.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Bubbles.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Cells.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Hero.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Meadow.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwl.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Shards.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Smooth.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Wired.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Hover.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Quickplay-Background.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-gray.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-white.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo.svg" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />
@@ -116,12 +130,21 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo-badge-white.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\MusicBrainz\logo.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo-hallow.svg" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Assets\Fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Play.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Previous.xaml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

@@ -109,7 +109,7 @@
 
                                                 <Rectangle x:Name="ImageHover" Opacity="0">
                                                     <Rectangle.Fill>
-                                                        <ImageBrush ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Hover.png"/>
+                                                        <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Hover.png"/>
                                                     </Rectangle.Fill>
                                                 </Rectangle>
                                             </Grid>

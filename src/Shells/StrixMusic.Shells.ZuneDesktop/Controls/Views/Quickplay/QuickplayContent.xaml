@@ -556,7 +556,7 @@
                     <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/PinsTB" x:Name="PinsText" Text="pins"
                                a:TextHelpers.CharacterCasing="Lower" FontWeight="Light" FontSize="52" HorizontalAlignment="Right"
                                Foreground="{ThemeResource Foreground}"
-                               Grid.ColumnSpan="100" Margin="0,-52,16,0" Opacity=".5">
+                               Grid.ColumnSpan="100" Margin="0,-52,16,0" Opacity=".5" Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="PinsTextTransform"/>
                         </TextBlock.RenderTransform>
@@ -574,7 +574,8 @@
                     <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/NewTB" x:Name="NewText" Text="new"
                                FontWeight="Light" FontSize="52" HorizontalAlignment="Left"
                                Foreground="{ThemeResource Foreground}"
-                               a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5">
+                               a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5"
+                               Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="NewTextTransform"/>
                         </TextBlock.RenderTransform>
@@ -614,7 +615,8 @@
                     <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/HistoryTB" x:Name="HistoryText" Text="history"
                                FontWeight="Light" FontSize="52" HorizontalAlignment="Left"
                                Foreground="{ThemeResource Foreground}"
-                               a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5">
+                               a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5"
+                               Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="HistoryTextTransform"/>
                         </TextBlock.RenderTransform>

@@ -102,7 +102,7 @@
 
             <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Quickplay-Background.png" AlignmentY="Center"/>
+                    <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Quickplay-Background.png" AlignmentY="Center"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
@@ -126,7 +126,7 @@
                     <Border Background="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right">
                         <Image Margin="4">
                             <Image.Source>
-                                <SvgImageSource UriSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/ZuneStrixLogo-white.svg"
+                                <SvgImageSource UriSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/ZuneStrixLogo-white.svg"
                                                 RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                             </Image.Source>
                         </Image>
