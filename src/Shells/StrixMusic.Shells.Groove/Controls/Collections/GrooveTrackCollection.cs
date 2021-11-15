@@ -1,7 +1,9 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using OwlCore.Extensions;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
@@ -23,6 +25,8 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
             DefaultStyleKey = typeof(GrooveTrackCollection);
 
             Tracks = new ObservableCollection<GrooveTrackViewModel>();
+
+            AttachEvents();
         }
 
         /// <summary>
@@ -45,8 +49,33 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public ObservableCollection<GrooveTrackViewModel> Tracks { get; set; }
 
+        private void AttachEvents()
+        {
+            Unloaded += OnUnloaded;
+        }
+
+        private void DetachEvents()
+        {
+            if (TrackCollection != null)
+                DetachEvents(TrackCollection.Tracks);
+
+            Unloaded -= OnUnloaded;
+        }
+
+        private void AttachEvents(ObservableCollection<TrackViewModel> tracks)
+        {
+            tracks.CollectionChanged += Tracks_CollectionChanged;
+        }
+
+        private void DetachEvents(ObservableCollection<TrackViewModel> tracks)
+        {
+            tracks.CollectionChanged += Tracks_CollectionChanged;
+        }
+
         private async Task OnTrackCollectionChangedAsync()
         {
+            Ioc.Default.GetRequiredService<ILogger<GrooveTrackCollection>>().LogInformation($"Track collection change");
+
             Tracks.Clear();
 
             if (TrackCollection is null)
@@ -58,6 +87,36 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
             {
                 Tracks.Add(new GrooveTrackViewModel(TrackCollection, track));
             }
+
+            AttachEvents(TrackCollection.Tracks);
+        }
+
+        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+
+                    if (TrackCollection is null)
+                        return;
+
+                    foreach (var track in e.NewItems)
+                        Tracks.Add(new GrooveTrackViewModel(TrackCollection, (TrackViewModel)track));
+
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    for (int i = e.OldStartingIndex; i < e.OldItems.Count; i++)
+                        Tracks.RemoveAt(i);
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            DetachEvents();
         }
     }
 }

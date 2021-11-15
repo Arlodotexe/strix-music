@@ -13,6 +13,7 @@
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
+    xmlns:owlconv="using:OwlCore.Uno.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -22,6 +23,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <owlconv:DebugPassThroughConverter x:Key="DebugPassThroughConverter" />
 
             <DataTemplate x:Key="GroovePlaylistsPageDataTemplate" x:DataType="sdkvms:IPlaylistCollectionViewModel">
                 <pages:GroovePlaylistsPage PlaylistCollection="{Binding DataContext, Mode=OneTime}" />
@@ -41,7 +44,7 @@
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="sdkvms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{Binding}" />
+                        <pages:GrooveHomePage Library="{Binding Converter={StaticResource DebugPassThroughConverter}}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>

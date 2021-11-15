@@ -29,7 +29,7 @@
                                 </Pivot.HeaderTemplate>
 
                                 <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
-                                    <collections:GrooveTrackCollection TrackCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource DebugPassThroughConverter}}"/>
+                                    <collections:GrooveTrackCollection TrackCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </PivotItem>
                                 <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
                                     <collections:GrooveArtistCollection ArtistCollection="{TemplateBinding Library}"/>
