@@ -83,7 +83,7 @@
                                                 <RowDefinition Height="auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Text="{TemplateBinding Artist.Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                                            <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
                                        LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
 
                                             <!--TODO: Optional artist bio-->
