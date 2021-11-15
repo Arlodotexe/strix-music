@@ -10,9 +10,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../PivotStyle.xaml"/>
-        <ResourceDictionary>
-            <owlconv:DebugPassThroughConverter x:Key="DebugPassThroughConverter" />
-        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="GrooveHomePageStyle" TargetType="pages:GrooveHomePage">

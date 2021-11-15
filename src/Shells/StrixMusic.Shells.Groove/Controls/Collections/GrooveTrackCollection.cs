@@ -74,8 +74,6 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
 
         private async Task OnTrackCollectionChangedAsync()
         {
-            Ioc.Default.GetRequiredService<ILogger<GrooveTrackCollection>>().LogInformation($"Track collection change");
-
             Tracks.Clear();
 
             if (TrackCollection is null)
