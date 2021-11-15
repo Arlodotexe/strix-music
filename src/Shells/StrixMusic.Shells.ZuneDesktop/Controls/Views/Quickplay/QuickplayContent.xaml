@@ -10,7 +10,10 @@
     xmlns:collectionstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay.QuickplayContent"
     x:Name="RootControl"
-    mc:Ignorable="d">
+	xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d wasm">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -556,7 +559,8 @@
                     <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/PinsTB" x:Name="PinsText" Text="pins"
                                a:TextHelpers.CharacterCasing="Lower" FontWeight="Light" FontSize="52" HorizontalAlignment="Right"
                                Foreground="{ThemeResource Foreground}"
-                               Grid.ColumnSpan="100" Margin="0,-52,16,0" Opacity=".5" Height="100">
+                               Grid.ColumnSpan="100" Margin="0,-52,16,0" Opacity=".5"
+                               wasm:Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="PinsTextTransform"/>
                         </TextBlock.RenderTransform>
@@ -575,7 +579,7 @@
                                FontWeight="Light" FontSize="52" HorizontalAlignment="Left"
                                Foreground="{ThemeResource Foreground}"
                                a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5"
-                               Height="100">
+                               wasm:Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="NewTextTransform"/>
                         </TextBlock.RenderTransform>
@@ -616,7 +620,7 @@
                                FontWeight="Light" FontSize="52" HorizontalAlignment="Left"
                                Foreground="{ThemeResource Foreground}"
                                a:TextHelpers.CharacterCasing="Lower" Grid.ColumnSpan="100" Margin="16,-52,16,0" Opacity=".5"
-                               Height="100">
+                               wasm:Height="100">
                         <TextBlock.RenderTransform>
                             <CompositeTransform x:Name="HistoryTextTransform"/>
                         </TextBlock.RenderTransform>
