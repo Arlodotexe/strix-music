@@ -217,6 +217,7 @@
 
             <!--Strix Text-->
             <TextBlock x:Uid="/Startup/StrixMusicStrixTB" x:Name="StrixMusicStrixText" Text="Strix" FontSize="72" Margin="20,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Width="230"
                        FontFamily="{StaticResource StrixLogoFont}" CharacterSpacing="50"
                        Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
 
@@ -266,6 +267,7 @@
 
             <!--Music Text-->
             <TextBlock x:Uid="/Startup/StrixMusicMusicTB" x:Name="StrixMusicMusicText" Text="Music" FontSize="72" Margin="20,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Width="240"
                        FontFamily="{StaticResource StrixLogoFont}" CharacterSpacing="50"
                        Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
         </Grid>
