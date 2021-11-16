@@ -11,8 +11,8 @@ using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Helpers;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using ImageMetadata = StrixMusic.Sdk.Services.FileMetadataManager.Models.ImageMetadata;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
@@ -21,6 +21,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private static readonly IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512 };
         private static readonly IReadOnlyList<int> _highPerfImageSizes = new int[] { 64, 128 };
+        private static readonly IReadOnlyList<int> _ultraHighPerfImageSizes = new int[] { 64 };
 
         private readonly ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>> _ongoingImageProcessingTasks;
         private readonly SemaphoreSlim _ongoingImageProcessingTasksSemaphore;
@@ -47,6 +48,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task ProcessImagesAsync(IFileData fileData, FileMetadata fileMetadata, IEnumerable<Stream> imageStreams)
         {
+            // Image processing is extremely slow on WASM and makes the app borderline unusable. 
+            // Until WASM gets multithreading, we need to disable images.
+            if (PlatformHelper.Current == Platform.WASM)
+                return;
+
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
 
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
@@ -222,7 +228,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // Use the maximum of the width and height for the ceiling to handle cases where the image isn't a 1:1 aspect ratio.
             var ceiling = Math.Max(image.Width, image.Height);
 
-            var imageSizes = PlatformHelper.Current == Platform.WASM ? _highPerfImageSizes : _standardImageSizes;
+            var imageSizes = _standardImageSizes;
 
             // Loop through the image sizes (in ascending order)
             // and determine the maximum size that the original image is larger than.
