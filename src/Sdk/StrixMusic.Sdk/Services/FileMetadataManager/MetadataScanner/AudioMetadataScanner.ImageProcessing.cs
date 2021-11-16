@@ -26,22 +26,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly SemaphoreSlim _ongoingImageProcessingTasksSemaphore;
         private readonly SemaphoreSlim _ongoingImageProcessingSemaphore;
 
-        private static async Task<string> GenerateImageId(Stream imageStream)
+        private static async Task<string> GenerateImageIdAsync(Stream imageStream)
         {
-            // Create a unique ID for the image by collecting every 32nd byte in the data
+            // Create a unique ID for the image by
+            // collecting every 64th byte in the data
             // and calculating a rough hash for it.
-            // This will form the base file name for the image.
-            // Each resized version will use this name with its size appended.
-            var hashData = new byte[imageStream.Length / 32];
+            // Each resized version will use this as the name
+            // with its size appended.
+            var hashData = new byte[imageStream.Length / 64];
 
-            imageStream.Position = 0;
+            var imageBytes = await imageStream.ToBytesAsync();
 
             for (var i = 0; i < hashData.Length; i++)
             {
-                var buffer = new byte[1];
-
-                await imageStream.ReadAsync(buffer, i * 32, buffer.Length);
-                hashData[i] = buffer[0];
+                hashData[i] = imageBytes[i * 64];
             }
 
             return hashData.HashMD5Fast();
@@ -61,7 +59,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             await imageStreams.InParallel(async image =>
             {
                 // Image IDs are unique to the content of the image.
-                var imageId = await GenerateImageId(image);
+                var imageId = await GenerateImageIdAsync(image);
 
                 // Check if the data has already been emitted.
                 await _batchLock.WaitAsync();
@@ -215,7 +213,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             using var image = img;
 
-            var imageId = GenerateImageId(imageStream);
+            var imageId = await GenerateImageIdAsync(imageStream);
             imageStream.Position = 0;
 
             // We don't want to scale the image up (only scale down if necessary), so we have to determine which of the
