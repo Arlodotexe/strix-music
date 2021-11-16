@@ -64,8 +64,11 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
             if (oldValue != null)
                 oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;
 
-            newValue.PlaybackStateChanged += OnPlaybackStateChanged;
-            PlaybackState = newValue.PlaybackState;
+            if (!(newValue is null))
+            {
+                newValue.PlaybackStateChanged += OnPlaybackStateChanged;
+                PlaybackState = newValue.PlaybackState;
+            }
         }
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e)
