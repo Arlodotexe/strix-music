@@ -92,7 +92,7 @@
                             <wasm:TextBlock Text="The native version is available to Patreon supporters. It's more stable, more performant, and is capable of more advanced features." FontSize="16" TextWrapping="WrapWholeWords" Foreground="White" />
                             
                             <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="14" FontWeight="Bold" TextWrapping="WrapWholeWords" Foreground="White" />
-                            <wasm:TextBlock Text="Running with IL Interpreter in debug mode. Performance not reflective of final product." FontSize="14" FontWeight="SemiLight" TextWrapping="WrapWholeWords" Foreground="White" Opacity="0.5" />
+                            <wasm:TextBlock Text="Running single-threaded in IL Interpreter mode. Performance not reflective of final product." FontSize="14" FontWeight="SemiLight" TextWrapping="WrapWholeWords" Foreground="White" Opacity="0.5" />
                         </StackPanel>
 
                     <Button Content="I understand" Click="AppLoadingView_OnLoaded" Foreground="White" BorderBrush="White" BorderThickness="1" />
