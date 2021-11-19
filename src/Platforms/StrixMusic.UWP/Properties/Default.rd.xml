@@ -22,6 +22,11 @@
       the application package. The asterisks are not wildcards.
     -->
 		<Assembly Name="*Application*" Dynamic="Required All" />
+		<Assembly Name="Microsoft.Extensions.Logging.Abstractions" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="Microsoft.Extensions.Logging" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="Microsoft.Extensions.Options" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Namespace Name="Microsoft.Graph" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="Microsoft.Graph.Core" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 
 		<!-- Previous attempt at including only required binaries. Settings serialization fails.
 		<Assembly Name="System" Serialize="Auto" />
