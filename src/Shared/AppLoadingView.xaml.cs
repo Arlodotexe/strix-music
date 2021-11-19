@@ -224,7 +224,7 @@ namespace StrixMusic.Shared
 
             void OnShellRegistered(object? sender, ShellMetadata metadata)
             {
-                _logger.LogInformation($"Shell registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
+                _logger?.LogInformation($"Shell registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
             }
         }
 
@@ -246,7 +246,7 @@ namespace StrixMusic.Shared
 
             void OnCoreRegistered(object? sender, CoreMetadata metadata)
             {
-                _logger.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
+                _logger?.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
             }
         }
 
