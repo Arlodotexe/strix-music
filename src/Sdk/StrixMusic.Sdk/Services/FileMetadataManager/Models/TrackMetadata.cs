@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The location of the file.
         /// </summary>
-        public Uri? Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// The unique identifier for this track's album.

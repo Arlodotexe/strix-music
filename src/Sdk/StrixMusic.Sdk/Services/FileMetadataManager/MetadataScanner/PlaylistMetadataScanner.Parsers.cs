@@ -302,7 +302,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     case "filename":
                         var fullPath = ResolveFilePath(components["val"].Value, playlistFile.Path);
-                        trackMetadata.Url = new Uri(fullPath);
+                        trackMetadata.Url = fullPath;
 
                         var idx = int.Parse(components["idx"].Value, CultureInfo.InvariantCulture);
                         if (idx >= tracks.Count)

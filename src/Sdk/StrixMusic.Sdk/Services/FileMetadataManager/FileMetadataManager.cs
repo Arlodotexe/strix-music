@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly string _instanceId;
         private readonly IFileScanner _fileScanner;
+        private readonly ILogger<FileMetadataManager> _logger;
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly INotificationService? _notificationService;
@@ -48,6 +49,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _instanceId = instanceId;
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+            _logger = Ioc.Default.GetRequiredService<ILogger<FileMetadataManager>>();
             _fileScanner = new DepthFirstFileScanner(rootFolder);
             _audioMetadataScanner = new AudioMetadataScanner(this);
             _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
@@ -67,8 +69,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
+            _logger.LogInformation($"Getting data storage folder (instanceId {_instanceId})");
             var dataFolder = await GetDataStorageFolder(_instanceId);
 
+            _logger.LogInformation($"Setting up repository data location to {dataFolder.Path}");
             _audioMetadataScanner.CacheFolder = dataFolder;
 
             Albums.SetDataFolder(dataFolder);
@@ -79,6 +83,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             if (!SkipRepoInit)
             {
+                _logger.LogInformation($"Initializing repositories.");
                 await Albums.InitAsync();
                 await Artists.InitAsync();
                 await Tracks.InitAsync();
@@ -87,18 +92,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             }
 
             AttachEvents();
+            _logger.LogInformation($"{nameof(InitAsync)} completed.");
         }
 
         private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
         {
             var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
 
-            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
+            var folderData = await primaryFileSystemService.RootFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
@@ -127,17 +128,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private async void FileScanner_FileScanCompleted(object sender, IEnumerable<IFileData> e)
         {
+            _logger.LogInformation($"File scan completed");
             await RemoveMissingMetadatasAsync(e);
         }
 
         private async Task RemoveMissingMetadatasAsync(IEnumerable<IFileData> discoveredFiles)
         {
+            _logger.LogInformation($"Pruning missing metadata.");
             var tracks = await Tracks.GetItemsAsync(0, -1);
             var removedTracks = new List<TrackMetadata>();
 
             foreach (var track in tracks)
             {
-                if (!discoveredFiles.Any(c => new Uri(c.Path).AbsoluteUri == track.Url?.AbsoluteUri))
+                if (!discoveredFiles.Any(c => c.Path == track.Url))
                 {
                     removedTracks.Add(track);
                 }
@@ -175,9 +178,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             }
         }
 
-        private void OnFilesDiscovered(object sender, System.Collections.Generic.IEnumerable<IFileData> e)
+        private void OnFilesDiscovered(object sender, IEnumerable<IFileData> e)
         {
-            FilesFound += e.Count();
+            var count = e.Count();
+            _logger.LogInformation($"{count} files discovered");
+
+            FilesFound += count;
         }
 
         private async void AudioMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
@@ -261,6 +267,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task StartScan()
         {
+            _logger.LogInformation($"Scan started");
+
             if (!(_inProgressScanCancellationTokenSource is null))
             {
                 _inProgressScanCancellationTokenSource.Cancel();
@@ -279,6 +287,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             if (!SkipRepoInit)
             {
+                _logger.LogInformation($"Initializing repositories");
                 await Albums.InitAsync();
                 await Artists.InitAsync();
                 await Tracks.InitAsync();
@@ -289,6 +298,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             CancelIfNeeded();
             FilesFound = 0;
 
+            _logger.LogInformation($"Starting recursive file discovery in {_rootFolder.Path}");
+
             var findingFilesNotif = RaiseFileDiscoveryNotification();
             var discoveredFiles = await _fileScanner.ScanFolderAsync(currentToken);
             var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
@@ -297,12 +308,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             CancelIfNeeded();
             FilesProcessed = 0;
 
+            _logger.LogInformation($"Starting metadata scan of audio files");
+
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
             var fileMetadata = await _audioMetadataScanner.ScanMusicFilesAsync(filesToScan, currentToken);
             scanningMusicNotif.Dismiss();
 
             CancelIfNeeded();
+
+            _logger.LogInformation($"Starting metadata scan of playlist files");
 
             _currentScanningType = FileScanningType.Playlists;
             var scanningPlaylistsNotif = RaiseProcessingNotification();

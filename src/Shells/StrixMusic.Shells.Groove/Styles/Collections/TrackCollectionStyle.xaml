@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
+    xmlns:ditems="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:items="using:StrixMusic.Shells.Groove.Controls.Items"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    x:Class="StrixMusic.Shells.Groove.Styles.Collections.TrackCollectionStyle">
+
+    <Style x:Key="GrooveTrackListControlStyle" TargetType="collections:GrooveTrackCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="collections:GrooveTrackCollection">
+                        <ListView x:Name="PART_Selector" ItemsSource="{Binding Tracks, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+                                  ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
+                                  Padding="16,16,16,112" HorizontalAlignment="Stretch"
+                                  SelectionMode="None" IsItemClickEnabled="True">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Loaded">
+                                    <core:InvokeCommandAction Command="{Binding TrackCollection.InitTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                            <ListView.Header>
+                                <Grid>
+                                    <ProgressRing IsActive="{Binding TrackCollection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                </Grid>
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ditems:TrackItem Track="{Binding Track}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                <core:InvokeCommandAction Command="{Binding Context.PlayTrackAsyncCommand}" CommandParameter="{Binding Track}" />
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </ditems:TrackItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource GrooveTrackListControlStyle}" TargetType="collections:GrooveTrackCollection"/>
+
+</ResourceDictionary>

@@ -1,0 +1,236 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:a="using:OwlCore.Uno.Attached"
+    xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
+    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
+    xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections.CollectionContent"
+    KeyDown="Grid_KeyDown">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDesktopSearchTextBoxStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ThinGridSplitterStyle.xaml"/>
+
+
+                <!--Collection related style-->
+                <collectionstyles:AlbumCollectionStyle/>
+                <collectionstyles:ArtistCollectionStyle/>
+                <collectionstyles:PlaylistCollectionStyle/>
+                <collectionstyles:TrackCollectionStyle/>
+                <collectionstyles:TrackTableStyle/>
+
+
+                <!--Item related style-->
+                <itemstyles:AlbumItemStyle/>
+                <itemstyles:ArtistItemStyle/>
+                <itemstyles:TrackItemStyle/>
+                <itemstyles:PlaylistItemStyle/>
+
+
+                <!--Shell related style-->
+                <shellstyles:NowPlayingBarStyle/>
+
+
+                <!--View related style-->
+                <viewstyles:NowPlayingViewStyle/>
+                <viewstyles:SettingsViewStyle/>
+                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Padding="32,-16,32,16">
+        <Grid.Resources>
+            <Storyboard x:Name="PageTransition">
+                <DoubleAnimation Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="X" From="-20" To="0" Duration="0:0:0.5">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </Grid.Resources>
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="PageStates">
+                <VisualState x:Name="Artists">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="200"/>
+
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.Visibility" Value="Collapsed"/>
+                        <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="AlbumCollection.Visibility" Value="Visible"/>
+                        <Setter Target="TrackCollection.Visibility" Value="Visible"/>
+                        <Setter Target="ArtistCollection.Visibility" Value="Visible"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Albums">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="0"/>
+
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.Visibility" Value="Collapsed"/>
+                        <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="AlbumCollection.Visibility" Value="Visible"/>
+                        <Setter Target="TrackCollection.Visibility" Value="Visible"/>
+                        <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Songs">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="0"/>
+
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="0"/>
+                        <Setter Target="TrackTable.Visibility" Value="Visible"/>
+                        <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="AlbumCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="TrackCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playlists">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="200"/>
+
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackTable.Visibility" Value="Visible"/>
+                        <Setter Target="DetailsPane.Visibility" Value="Visible"/>
+                        <Setter Target="PlaylistCollection.Visibility" Value="Visible"/>
+                        <Setter Target="AlbumCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="TrackCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="DetailsPane.(Grid.Column)" Value="2"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Media Types-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-11,0,0,0">
+            <RadioButton x:Uid="/Music/MusicBTN" Content="MUSIC" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" IsChecked="True" GroupName="MediaType"/>
+            <RadioButton x:Uid="/Music/PodcastsBTN" Content="PODCASTS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
+            <RadioButton x:Uid="/Music/AudiobooksBTN" Content="AUDIOBOOKS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
+        </StackPanel>
+
+        <!--Search box-->
+        <TextBox x:Uid="/Common/SearchTBox" PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0" Style="{StaticResource ZuneDesktopSearchTextBoxStyle}"
+                 a:TextHelpers.CharacterCasing="Upper"/>
+
+        <!--Page Selector-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
+            <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/AlbumsBTN" Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="PlaylistPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+        </StackPanel>
+
+        <!--Collection Grid-->
+        <Grid Grid.Row="2">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="ContentTransform"/>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="PrimaryColumn" MinWidth="200"/>
+                <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
+                <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
+                <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
+            </Grid.ColumnDefinitions>
+
+            <collections:ArtistCollection x:Name="ArtistCollection" Collection="{x:Bind ViewModel.Library}"
+                                          Margin="8,0,-3,0" Grid.Column="0"
+                                          SelectionChanged="ArtistSelected"/>
+
+            <collections:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}"
+                                         Margin="8,0" Grid.Column="1"
+                                         SelectionChanged="AlbumSelected"/>
+
+            <collections:PlaylistCollection x:Name="PlaylistCollection" DataContext="{x:Bind ViewModel.Library}"
+                                            Margin="8,0" Grid.Column="3" Visibility="Collapsed"
+                                            SelectionChanged="PlaylistSelected"/>
+
+            <collections:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}"
+                                         Style="{StaticResource ZuneDesktopTrackListControlStyle}"
+                                         Margin="0,0,8,0" Grid.Column="2"/>
+            
+            <collections:TrackCollection x:Name="TrackTable" DataContext="{x:Bind ViewModel.Library}"
+                                         Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
+                                         Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
+
+            <local:PlaylistDetailsPane x:Name="DetailsPane" Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
+
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,29,0,12"
+                                     Style="{StaticResource ThinGridSplitterStyle}"/>
+            
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2" Margin="0,29,0,12"
+                                     Style="{StaticResource ThinGridSplitterStyle}"/>
+        </Grid>
+    </Grid>
+</UserControl>

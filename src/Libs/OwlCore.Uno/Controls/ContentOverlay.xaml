@@ -6,7 +6,10 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:owltriggers="using:OwlCore.Uno.Triggers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+	xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d wasm"
     Visibility="Collapsed">
 
     <UserControl.Resources>
@@ -87,14 +90,18 @@
                         <owltriggers:ViewExtendedIntoTitleBarTrigger IsExtended="True" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="CloseButton.Margin" Value="0,32,0,0" />
+                        <!--
+                        Temporarily set to 0 instead of 0,32,0,0 to appear normal during 95% of usage.
+                        until we have a "composite" trigger that IsActive when all child triggers are active.
+                        -->
+                        <Setter Target="CloseButton.Margin" Value="0,0,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <Rectangle x:Name="BackgroundFill"
-                   Fill="{ThemeResource SystemControlAcrylicElementBrush}"
+                   Fill="#d6d1d5"
                    Tapped="Background_OnTapped"/>
 
         <Grid x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"

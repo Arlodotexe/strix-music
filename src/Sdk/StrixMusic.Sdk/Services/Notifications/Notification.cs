@@ -1,7 +1,7 @@
 ﻿using System;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using OwlCore.Remoting.Attributes;
+using OwlCore.Remoting;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {

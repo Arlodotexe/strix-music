@@ -11,6 +11,7 @@ using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using ImageMetadata = StrixMusic.Sdk.Services.FileMetadataManager.Models.ImageMetadata;
 
@@ -19,25 +20,27 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public partial class AudioMetadataScanner
     {
         private static readonly IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512 };
+        private static readonly IReadOnlyList<int> _highPerfImageSizes = new int[] { 64, 128 };
+        private static readonly IReadOnlyList<int> _ultraHighPerfImageSizes = new int[] { 64 };
+
         private readonly ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>> _ongoingImageProcessingTasks;
         private readonly SemaphoreSlim _ongoingImageProcessingTasksSemaphore;
         private readonly SemaphoreSlim _ongoingImageProcessingSemaphore;
 
-        private static string GenerateImageId(Stream imageStream)
+        private static async Task<string> GenerateImageIdAsync(Stream imageStream)
         {
-            // Create a unique ID for the image by collecting every 32nd byte in the data
+            // Create a unique ID for the image by
+            // collecting every 64th byte in the data
             // and calculating a rough hash for it.
-            // This will form the base file name for the image.
-            // Each resized version will use this name with its size appended.
-            var hashData = new byte[imageStream.Length / 32];
+            // Each resized version will use this as the name
+            // with its size appended.
+            var hashData = new byte[imageStream.Length / 64];
 
-            imageStream.Position = 0;
+            var imageBytes = await imageStream.ToBytesAsync();
 
             for (var i = 0; i < hashData.Length; i++)
             {
-                imageStream.Position = i * 32;
-
-                hashData[i] = (byte)imageStream.ReadByte();
+                hashData[i] = imageBytes[i * 64];
             }
 
             return hashData.HashMD5Fast();
@@ -45,6 +48,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task ProcessImagesAsync(IFileData fileData, FileMetadata fileMetadata, IEnumerable<Stream> imageStreams)
         {
+            // Image processing is extremely slow on WASM and makes the app borderline unusable. 
+            // Until WASM gets multithreading, we need to disable images.
+            if (PlatformHelper.Current == Platform.WASM)
+                return;
+
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
 
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
@@ -57,7 +65,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             await imageStreams.InParallel(async image =>
             {
                 // Image IDs are unique to the content of the image.
-                var imageId = GenerateImageId(image);
+                var imageId = await GenerateImageIdAsync(image);
 
                 // Check if the data has already been emitted.
                 await _batchLock.WaitAsync();
@@ -211,7 +219,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             using var image = img;
 
-            var imageId = GenerateImageId(imageStream);
+            var imageId = await GenerateImageIdAsync(imageStream);
             imageStream.Position = 0;
 
             // We don't want to scale the image up (only scale down if necessary), so we have to determine which of the
@@ -220,19 +228,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // Use the maximum of the width and height for the ceiling to handle cases where the image isn't a 1:1 aspect ratio.
             var ceiling = Math.Max(image.Width, image.Height);
 
-            // Loop through the standard image sizes (in ascending order) and determine the maximum size
-            // that the original image is larger than. We'll scale it down to that size and all the sizes smaller than it.
+            var imageSizes = _standardImageSizes;
+
+            // Loop through the image sizes (in ascending order)
+            // and determine the maximum size that the original image is larger than.
+            // We'll scale it down to that size and all the sizes smaller than it.
             var useOriginal = false;
             var ceilingSizeIndex = -1;
-            for (var i = 0; i < _standardImageSizes.Count; i++)
+            for (var i = 0; i < imageSizes.Count; i++)
             {
-                if (ceiling > _standardImageSizes[i])
+                if (ceiling > imageSizes[i])
                 {
                     ceilingSizeIndex = i;
                 }
                 else
                 {
-                    if (ceiling == _standardImageSizes[i])
+                    if (ceiling == imageSizes[i])
                     {
                         // If the size of the image is equal to one of the standard image sizes,
                         // we can skip the expensive resize operation and just copy the original image.
@@ -271,7 +282,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             for (var i = ceilingSizeIndex; i >= 0; i--)
             {
-                var resizedSize = _standardImageSizes[i];
+                var resizedSize = imageSizes[i];
                 var resizedWidth = image.Width > image.Height ? 0 : resizedSize;
                 var resizedHeight = image.Height > image.Width ? 0 : resizedSize;
 

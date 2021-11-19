@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;
@@ -107,9 +108,11 @@ namespace StrixMusic.Sdk.Uno.Services
             // The same INotificationService instance should be used across all core instances.
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             var sharedFactory = Ioc.Default.GetRequiredService<ISharedFactory>();
+            var launcherService = Ioc.Default.GetRequiredService<ILauncher>();
 
             services.AddSingleton(await sharedFactory.CreateFileSystemServiceAsync(rootStorageFolder.Path));
             services.AddSingleton(notificationService);
+            services.AddSingleton(launcherService);
 
             return services;
         }

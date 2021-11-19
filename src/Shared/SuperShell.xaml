@@ -1,0 +1,232 @@
+﻿<UserControl
+    x:Class="StrixMusic.Shared.SuperShell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:StrixMusic.Controls"
+    xmlns:messages="using:StrixMusic.Sdk.Messages"
+    xmlns:models="using:StrixMusic.Sdk.Uno.Models"
+    xmlns:styles="using:StrixMusic.Shared.Styles"
+    xmlns:templateSelectors="using:StrixMusic.Shared.TemplateSelectors"
+    xmlns:sharedVms="using:StrixMusic.Shared.ViewModels"
+    xmlns:visibilityConverters="using:OwlCore.Uno.Converters.Bools.Visible"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
+    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
+    xmlns:auic="using:OwlCore.Uno.AbstractUI.Controls"
+	xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d wasm"
+    MaxHeight="1000"
+    MaxWidth="1000"
+    HorizontalAlignment="Center">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:CoreItemStyle />
+                <styles:ShellSelector />
+                <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Themes/CenteredPivotHeadersStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#E5E5E5"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#171717"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#171717"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <templateSelectors:ServicesItemTemplateSelector x:Key="ServicesItemTemplateSelector">
+                <templateSelectors:ServicesItemTemplateSelector.CoreItemTemplate>
+                    <DataTemplate x:DataType="sharedVms:LoadedServicesItemViewModel">
+                        <ContentControl ContentTemplate="{StaticResource CoreItemTemplate}" />
+                    </DataTemplate>
+                </templateSelectors:ServicesItemTemplateSelector.CoreItemTemplate>
+                <templateSelectors:ServicesItemTemplateSelector.NewItemTemplate>
+                    <DataTemplate>
+                        <ContentControl ContentTemplate="{StaticResource AddNewCoreItemTemplate}" />
+                    </DataTemplate>
+                </templateSelectors:ServicesItemTemplateSelector.NewItemTemplate>
+            </templateSelectors:ServicesItemTemplateSelector>
+
+            <visibilityConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <visibilityConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+            <visibilityConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="{ThemeResource SuperShellBackgroundBrush}" wasm:BorderBrush="#77323232" not_wasm:BorderBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}" BorderThickness="2" CornerRadius="4">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowSizes">
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="755" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StrixLogo.Visibility" Value="Visible" />
+                        <Setter Target="MainPivot.MinHeight" Value="550" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Minimum">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowHeight="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StrixLogo.Visibility" Value="Collapsed" />
+                        <Setter Target="MainPivot.MinHeight" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:StrixIcon x:Name="StrixLogo" ShowText="True" MaxHeight="96" MaxWidth="288" Margin="0,12,0,8"/>
+
+        <!-- Will be replaced with NavigationView eventually -->
+        <Pivot x:Name="MainPivot" Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}" MinHeight="0">
+            <PivotItem x:Uid="/SuperShell/AppSkinPVI" Header="Skins" Padding="30,20">
+                <ContentControl ContentTemplate="{StaticResource DefaultShellSelector}" DataContext="{x:Bind ViewModel.ShellSelectorViewModel}"
+                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+            </PivotItem>
+            <PivotItem x:Uid="/SuperShell/ServicesPVI" Header="Services">
+                <ScrollViewer>
+                    <Grid HorizontalAlignment="Center">
+                        <!-- TODO A bit messy, clean up or use a better approach -->
+                        <Grid x:Name="ExistingOrNewCoreGrid" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}">
+                            <GridView ItemTemplateSelector="{StaticResource ServicesItemTemplateSelector}" ItemsSource="{x:Bind ViewModel.Services}" SelectionMode="None"
+                                      Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                                      Padding="20,30">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="FrameworkElement">
+                                        <Setter Property="Margin" Value="0 0 20 20"/>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                            </GridView>
+
+                            <StackPanel Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay}" Padding="20,30">
+
+                                <GridView ItemsSource="{x:Bind ViewModel.AvailableServices}" ItemTemplate="{StaticResource NewCoreItemTemplate}"
+                                          HorizontalAlignment="Center"
+                                          SelectionMode="None">
+                                    <GridView.ItemContainerStyle>
+                                        <Style TargetType="FrameworkElement">
+                                            <Setter Property="Margin" Value="0 0 20 20"/>
+                                        </Style>
+                                    </GridView.ItemContainerStyle>
+                                </GridView>
+
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Spacing="10">
+                                    <Button Command="{x:Bind ViewModel.CancelAddNewCommand}" HorizontalAlignment="Left" Opacity="0.7"
+                                            Background="Transparent" BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2" Width="38" Padding="8">
+                                        <Button.Content>
+                                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" FontSize="16"/>
+                                        </Button.Content>
+                                    </Button>
+
+                                    <TextBlock x:Uid="/SuperShell/ConnectANewServiceTB" Text="CONNECT A NEW SERVICE" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" FontWeight="SemiBold" CharacterSpacing="60"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Spacing="0" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}">
+                            <!--<StackPanel Orientation="Horizontal" Spacing="15">
+                                <Button HorizontalAlignment="Left" Command="{x:Bind ViewModel.CancelConfigCoreCommand}">
+                                    <Button.Content>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" />
+                                    </Button.Content>
+                                </Button>
+
+                                <Image Height="35" Width="35">
+                                    <Image.Source>
+                                        <SvgImageSource UriSource="{x:Bind ViewModel.CurrentCoreConfig.LogoSvgUrl, Mode=OneWay}" />
+                                    </Image.Source>
+                                </Image>
+
+                                <TextBlock FontSize="18" VerticalAlignment="Center">
+                                    <Run Text="Configure" />
+                                    <Run Text="{x:Bind ViewModel.CurrentCoreConfig.Name, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>-->
+                                <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentCoreConfig.CoreConfig.AbstractUIElements, Mode=OneWay}" Margin="0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <auic:AbstractUICollectionPresenter />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem x:Uid="/SuperShell/AboutPVI" Header="About">
+                <ScrollViewer>
+                    <Grid HorizontalAlignment="Center" Margin="0,12,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Margin="0,12" HorizontalAlignment="Center" Spacing="20" Grid.Row="0">
+                            <TextBlock FontSize="16" HorizontalAlignment="Center">
+                                <Run Text="Strix Music Version:" FontWeight="SemiBold"/>
+                                <Run Text="{x:Bind ViewModel.AppVersion}" FontWeight="SemiLight"/>
+                            </TextBlock>
+
+                            <TextBlock Text="Thank you for supporting the prerelease of Strix Music v2."/>
+                            <StackPanel>
+                                <TextBlock Text="Some helpful tips" FontSize="16" />
+
+                                <TextBlock Text="- Live adding/removing services is not yet stable." Margin="0,6,0,0"/>
+                                <TextBlock Text="  Restart the app after changing these."/>
+                            
+                                <TextBlock Text="- The various skins are a work in progress." Margin="0,10,0,0"/>
+                                <TextBlock Text="  We recommend sticking to Zune Desktop for now."/>
+                            
+                                <TextBlock Text="- There will be bugs!" Margin="0,10,0,0"/>
+                                <TextBlock Text="  We know about most of them and are actively fixing and adding things."/>
+                            
+                                <TextBlock Text="- Don't click the help link in the Zune Desktop skin." Margin="0,10,0,0"/>
+                                <TextBlock Text="  You have been warned."/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,5,0,0" Grid.Row="1">
+                            <HyperlinkButton Foreground="#FFFFFF" Background="Transparent" NavigateUri="https://github.com/Arlodotexe/strix-music">
+                                <StackPanel Orientation="Horizontal">
+                                    <PathIcon Data="M 8 0 C 3.58 0 0 3.58 0 8 c 0 3.54 2.29 6.53 5.47 7.59 c 0.4 0.07 0.55 -0.17 0.55 -0.38 c 0 -0.19 -0.01 -0.82 -0.01 -1.49 c -2.01 0.37 -2.53 -0.49 -2.69 -0.94 c -0.09 -0.23 -0.48 -0.94 -0.82 -1.13 c -0.28 -0.15 -0.68 -0.52 -0.01 -0.53 c 0.63 -0.01 1.08 0.58 1.23 0.82 c 0.72 1.21 1.87 0.87 2.33 0.66 c 0.07 -0.52 0.28 -0.87 0.51 -1.07 c -1.78 -0.2 -3.64 -0.89 -3.64 -3.95 c 0 -0.87 0.31 -1.59 0.82 -2.15 c -0.08 -0.2 -0.36 -1.02 0.08 -2.12 c 0 0 0.67 -0.21 2.2 0.82 c 0.64 -0.18 1.32 -0.27 2 -0.27 c 0.68 0 1.36 0.09 2 0.27 c 1.53 -1.04 2.2 -0.82 2.2 -0.82 c 0.44 1.1 0.16 1.92 0.08 2.12 c 0.51 0.56 0.82 1.27 0.82 2.15 c 0 3.07 -1.87 3.75 -3.65 3.95 c 0.29 0.25 0.54 0.73 0.54 1.48 c 0 1.07 -0.01 1.93 -0.01 2.2 c 0 0.21 0.15 0.46 0.55 0.38 A 8.013 8.013 0 0 0 16 8 c 0 -4.42 -3.58 -8 -8 -8 Z"
+                                              Margin="0,2,0,0"/>
+                                    <TextBlock Text="View code on GitHub" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <!--In case we want to add the Feedback Hub link-->
+                            <!--<HyperlinkButton Opacity="0.75">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Glyph="&#xE939;" Width="20" Height="20" FontSize="16" Margin="0,-2,0,-2"/>
+                                    <TextBlock Text="Leave Feedback" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </HyperlinkButton>-->
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
+                <StackPanel Spacing="15" HorizontalAlignment="Center" Padding="0,0,0,10">
+                    <auic:AbstractUICollectionPresenter ViewModel="{x:Bind ViewModel.AdvancedSettings}" />
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</UserControl>

@@ -15,7 +15,7 @@ namespace OwlCore.Uno.Converters.Bools.Visible
         /// Gets a <see cref="Visibility"/> based on the opposite of a bool.
         /// </summary>
         /// <param name="data">The bool to represented.</param>
-        /// <returns><see cref="Visibility.Collapsed"/> if <see cref="true"/>, <see cref="Visibility.Visible"/> if <see cref="false"/></returns>
+        /// <returns><see cref="Visibility.Collapsed"/> if <see langword="true"/>, <see cref="Visibility.Visible"/> if <see langword="false"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Visibility Convert(bool data) => BoolToVisibilityConverter.Convert(!data);

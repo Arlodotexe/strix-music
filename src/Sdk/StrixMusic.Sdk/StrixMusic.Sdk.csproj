@@ -24,12 +24,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.36.2" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+    <PackageReference Include="OwlCore" Version="0.0.32" />
     <PackageReference Include="Refit" Version="5.2.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -42,10 +44,6 @@
 
   <ItemGroup>
     <None Include="..\..\..\stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,275 @@
+﻿ <UserControl
+    x:Class="StrixMusic.Controls.StrixIcon"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:wasm="http://uno.ui/wasm"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    mc:Ignorable="d wasm">
+    
+    <UserControl.Resources>
+        <FontFamily x:Key="StrixLogoFont">ms-appx:///Assets/Fonts/Bonkers.ttf#Bonkers</FontFamily> 
+        
+        <Storyboard x:Name="StartingAnimation" Completed="StartingAnimation_Completed">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.65" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.65" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.1" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.75" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.05" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.45" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.7" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.05" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.45" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.7" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="RepeatedAnimation" Completed="RepeatedAnimation_Completed">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.05"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="EndingAnimation" Completed="EndingAnimation_Completed">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="1.1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="1.2"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StrixMusicStrixText" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="StrixMusicMusicText" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IconCanvas" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)">
+                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="45.45"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="1000">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopRect" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.15" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.2" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.4" Value="-1000">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MidRect" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.25" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.4" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.5" Value="1000">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BotRect" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="0:0:2.35" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2.5" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Viewbox Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+        <Grid Margin="0" Height="150" Width="740" RenderTransformOrigin="0.5,0.5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!--Strix Text-->
+            <TextBlock x:Uid="/Startup/StrixMusicStrixTB" x:Name="StrixMusicStrixText" Text="Strix" FontSize="72" Margin="20,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Width="230"
+                       FontFamily="{StaticResource StrixLogoFont}" CharacterSpacing="50"
+                       Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
+
+            <!--Icon-->
+            <Canvas x:Name="IconCanvas" Canvas.Left="450" Width="100" Grid.Column="1" FlowDirection="LeftToRight"
+                    RenderTransformOrigin="0.5,0.5">
+                <Canvas.RenderTransform>
+                    <CompositeTransform Rotation="45.45"/>
+                </Canvas.RenderTransform>
+                <Rectangle x:Name="TopRect" Height="27.39" Width="55.14" RadiusX="4" RadiusY="4"
+                       Canvas.Left="-5" Canvas.Top="17" RenderTransformOrigin="0.5,0.5">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFAD44E1"/>
+                            <GradientStop Color="#FFCC37E4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Rectangle x:Name="MidRect" Height="27.39" Width="105.4" RadiusX="4" RadiusY="4"
+                       Canvas.Left="-5.895" Canvas.Top="61.056" RenderTransformOrigin="0.5,0.5">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFC94EDD"/>
+                            <GradientStop Color="#FFAD44E1" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Rectangle x:Name="BotRect" Height="27.39" Width="58.1" RadiusX="4" RadiusY="4"
+                       Canvas.Left="42" Canvas.Top="100" RenderTransformOrigin="0.5,0.5" >
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFCC37E4"/>
+                            <GradientStop Color="#FFAD44E1" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                        <CompositeTransform/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+            </Canvas>
+
+            <!--Music Text-->
+            <TextBlock x:Uid="/Startup/StrixMusicMusicTB" x:Name="StrixMusicMusicText" Text="Music" FontSize="72" Margin="20,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Width="240"
+                       FontFamily="{StaticResource StrixLogoFont}" CharacterSpacing="50"
+                       Foreground="#9F9F9F" Visibility="{x:Bind ShowText, Mode=OneWay}"/>
+        </Grid>
+    </Viewbox>
+</UserControl>

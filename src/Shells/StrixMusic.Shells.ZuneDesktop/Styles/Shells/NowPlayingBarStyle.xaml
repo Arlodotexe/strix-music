@@ -1,0 +1,73 @@
+﻿<ResourceDictionary
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Shells.NowPlayingBarStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
+    xmlns:zunenowplaying="using:StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="ZuneNowPlayingBarStyle" TargetType="shells:NowPlayingBar">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="shells:NowPlayingBar">
+                        <UserControl>
+                            <Grid Margin="28,0,28,28" VerticalAlignment="Bottom">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1000"/>
+                                            </VisualState.StateTriggers>
+                                        </VisualState>
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="700"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="QuickLinksColumn.Width" Value="auto"/>
+                                                <Setter Target="NowPlaying.HorizontalAlignment" Value="Stretch"/>
+                                                <Setter Target="NowPlaying.Width" Value="auto"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="QuickLinksColumn" Width="244"/>
+                                    <ColumnDefinition x:Name="NowPlayingColumn"/>
+                                    <ColumnDefinition x:Name="PlaybackControlsColumn" Width="244"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,-24">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8EA;" Margin="8,0" FontSize="46" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF000;" Margin="8,0" FontSize="46" Opacity=".5" Foreground="{ThemeResource Foreground}"/>
+                                </StackPanel>
+
+                                <!--Media info-->
+                                <nowplaying:MediaInfo x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" Height="64" VerticalAlignment="Bottom" Margin="0,0,0,-8"/>
+
+                                <!--Transport controls-->
+                                <zunenowplaying:ZuneMediaTransports Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </UserControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneNowPlayingBarStyle}" TargetType="shells:NowPlayingBar"/>
+
+</ResourceDictionary>

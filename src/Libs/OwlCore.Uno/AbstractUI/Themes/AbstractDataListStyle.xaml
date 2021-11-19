@@ -43,24 +43,25 @@
             <ListView.ItemContainerTransitions>
                 <TransitionCollection />
             </ListView.ItemContainerTransitions>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter />
+                                <!-- https://github.com/unoplatform/uno/issues/7446 -->
+                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
                     <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Height="60">
                         <Grid.RowDefinitions>
@@ -128,13 +129,13 @@
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="GridViewItem">
-                                <Grid x:Name="ContentBorder">
-                                    <ContentPresenter x:Name="ContentPresenter" />
-                                </Grid>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <!-- https://github.com/unoplatform/uno/issues/7446 -->
+                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
