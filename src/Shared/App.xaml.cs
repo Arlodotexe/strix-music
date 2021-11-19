@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using StrixMusic.Shared;
-using System;
-using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -27,10 +24,9 @@ namespace StrixMusic
         /// </summary>
         public App()
         {
-#if NETFX_CORE
-#if !DEBUG
-            Microsoft.AppCenter.Start("SECRET_HERE", typeof(Microsoft.AppCenter.Analytics), typeof(Microsoft.AppCenter.Crashes));
-#endif
+#if WINDOWS_UWP
+            if (!string.IsNullOrWhiteSpace(Sdk.Helpers.Secrets.AppCenterId))
+                Microsoft.AppCenter.AppCenter.Start(Sdk.Helpers.Secrets.AppCenterId, typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
 #endif
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
 
