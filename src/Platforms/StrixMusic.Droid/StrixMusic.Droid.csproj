@@ -125,7 +125,7 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
       <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
       <Name>StrixMusic.Cores.OneDrive</Name>
     </ProjectReference>

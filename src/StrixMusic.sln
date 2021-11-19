@@ -36,7 +36,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StrixMusic.Shared", "Shared
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shells.Groove", "Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj", "{38B5B005-64C0-4BCE-A4B8-DF7B8358182F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.OneDrive", "Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj", "{113FD74A-31A3-4180-BDB0-F0FC27F1339C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.OneDrive", "Cores\StrixMusic.Cores.OneDriveCore\StrixMusic.Cores.OneDrive.csproj", "{113FD74A-31A3-4180-BDB0-F0FC27F1339C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.LocalFiles", "Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj", "{8C8F6E30-AB41-41A1-8172-9C237E0AC592}"
 EndProject

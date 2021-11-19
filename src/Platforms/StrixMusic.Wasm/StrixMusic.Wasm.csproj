@@ -85,7 +85,7 @@
     </PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj" />
+	  <ProjectReference Include="..\..\Cores\StrixMusic.Cores.OneDriveCore\StrixMusic.Cores.OneDrive.csproj" />
 	  <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
 	  <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
 	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />

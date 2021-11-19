@@ -2,7 +2,7 @@
   "solution": {
     "path": "StrixMusic.sln",
     "projects": [
-      "src\\Cores\\StrixMusic.Core.OneDriveCore\\StrixMusic.Cores.OneDrive.csproj",
+      "src\\Cores\\StrixMusic.Cores.OneDriveCore\\StrixMusic.Cores.OneDrive.csproj",
       "src\\Cores\\StrixMusic.Cores.Files\\StrixMusic.Cores.Files.csproj",
       "src\\Cores\\StrixMusic.Cores.LocalFiles\\StrixMusic.Cores.LocalFiles.csproj",
       "src\\Libs\\OwlCore\\OwlCore.csproj",
