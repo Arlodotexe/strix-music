@@ -31,17 +31,17 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <summary>
         /// Tenant ID for authenticating the user against a registered MS Graph application.
         /// </summary>
-        public static string TenantId => string.Empty;
+        public static string TenantId => Secrets.TenantId;
 
         /// <summary>
         /// Redirect URI used for authenticating the user against a registered MS Graph application.
         /// </summary>
-        public static string RedirectUri => string.Empty;
+        public static string RedirectUri => Secrets.RedirectUrl;
 
         /// <summary>
         /// Client ID of a registered MS Graph application that the user will be authenticated against.
         /// </summary>
-        public static string ClientId => string.Empty;
+        public static string ClientId => Secrets.ClientId;
 
         /// <inheritdoc />
         public override object GetDefaultValue(string settingKey)
