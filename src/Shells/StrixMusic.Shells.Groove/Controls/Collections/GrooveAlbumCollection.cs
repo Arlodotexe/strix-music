@@ -1,5 +1,8 @@
-﻿using OwlCore.Extensions;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,8 +20,13 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         public GrooveAlbumCollection()
         {
             DefaultStyleKey = typeof(GrooveAlbumCollection);
-            DataContext = new GrooveAlbumCollectionViewModel();
+            NavigateToAlbumCommand = new RelayCommand<AlbumViewModel>(NavigateToAlbum);
         }
+
+        /// <summary>
+        /// A Command that requests a navigation to an album page.
+        /// </summary>
+        public RelayCommand<AlbumViewModel> NavigateToAlbumCommand { get; private set; }
 
         /// <summary>
         /// The ViewModel for a <see cref="GrooveAlbumCollection"/>.
@@ -42,7 +50,12 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
 
         private void OnAlbumCollectionChanged()
         {
-            ViewModel.AlbumCollection = AlbumCollection;
+        }
+
+        private void NavigateToAlbum(AlbumViewModel? viewModel)
+        {
+            if (viewModel != null)
+                WeakReferenceMessenger.Default.Send(new AlbumViewNavigationRequestMessage(viewModel));
         }
     }
 }
