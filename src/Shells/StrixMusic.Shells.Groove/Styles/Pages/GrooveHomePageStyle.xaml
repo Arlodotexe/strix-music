@@ -29,10 +29,10 @@
                                     <collections:GrooveTrackCollection TrackCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </PivotItem>
                                 <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
-                                    <collections:GrooveArtistCollection ArtistCollection="{TemplateBinding Library}"/>
+                                    <collections:GrooveArtistCollection ArtistCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </PivotItem>
                                 <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums" Margin="8,0,0,0">
-                                    <collections:GrooveAlbumCollection AlbumCollection="{TemplateBinding Library}"/>
+                                    <collections:GrooveAlbumCollection AlbumCollection="{Binding Library, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </PivotItem>
                             </Pivot>
 
