@@ -7,7 +7,6 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
-using OwlCore.Remoting;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -160,7 +159,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         [RemoteMethod]
         public async Task InitAsync(IServiceCollection services)
         {
-
             // ==========================
             // WARNING
             // ==========================
