@@ -72,7 +72,7 @@
                                         </Grid.RowDefinitions>
 
                                         <strix:SafeImage Grid.RowSpan="2" Margin="32"
-                                     ImageCollection="{TemplateBinding Artist}"
+                                     ImageCollection="{Binding Artist,RelativeSource={RelativeSource TemplatedParent}}"
                                      HorizontalAlignment="Center"
                                      Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 
@@ -116,7 +116,7 @@
                                             <!--<defaultcontrols:TrackCollection/>-->
                                         </PivotItem>
                                         <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
-                                            <groovecollections:GrooveAlbumCollection AlbumCollection="{TemplateBinding Artist}" />
+                                            <groovecollections:GrooveAlbumCollection AlbumCollection="{Binding Artist, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </PivotItem>
                                         <PivotItem x:Uid="/Music/SimilarArtistsPVI" Header="Similar Artists">
                                             <!--<defaultcontrols:AlbumCollection/>-->
