@@ -113,7 +113,7 @@
 
                                     <Pivot Grid.Row="1">
                                         <PivotItem x:Uid="/Music/SongsPVI" Header="Songs">
-                                            <!--<defaultcontrols:TrackCollection/>-->
+                                            <groovecollections:GrooveTrackCollection TrackCollection="{Binding Artist, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </PivotItem>
                                         <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
                                             <groovecollections:GrooveAlbumCollection AlbumCollection="{Binding Artist, RelativeSource={RelativeSource TemplatedParent}}" />
