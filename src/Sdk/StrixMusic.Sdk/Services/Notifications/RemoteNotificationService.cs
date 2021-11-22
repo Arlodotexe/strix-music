@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using OwlCore.Remoting;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
@@ -13,6 +12,7 @@ namespace StrixMusic.Sdk.Services.Notifications
     /// A remoting-enabled wrapper for <see cref="INotificationService"/>.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
+    // TODO Implement INotificationService and figure out async compatability
     public sealed class RemoteNotificationService : IDisposable
     {
         private readonly INotificationService? _notificationService;
@@ -96,7 +96,7 @@ namespace StrixMusic.Sdk.Services.Notifications
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async Task<Notification?> RaiseNotification(string title, string message = "")
+        public async Task<Notification> RaiseNotification(string title, string message = "")
         {
             if (_memberRemote.Mode == RemotingMode.Client)
             {
@@ -105,22 +105,26 @@ namespace StrixMusic.Sdk.Services.Notifications
 
                 _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
-                await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
+                await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
 
                 return notification;
             }
             else if (_memberRemote.Mode == RemotingMode.Host)
             {
-                var data = await _memberRemote.ReceiveDataAsync<Notification?>($"{_notificationTick++}");
+                var data = await _memberRemote.ReceiveDataAsync<Notification>($"{_notificationTick++}");
+
+                Guard.IsNotNull(data, nameof(data));
                 return data;
             }
-
-            return null;
+            else
+            {
+                return ThrowHelper.ThrowNotSupportedException<Notification>();
+            }
         }
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async Task<Notification?> RaiseNotification(AbstractUICollection elementGroup)
+        public async Task<Notification> RaiseNotification(AbstractUICollection elementGroup)
         {
             if (_memberRemote.Mode == RemotingMode.Client)
             {
@@ -129,17 +133,21 @@ namespace StrixMusic.Sdk.Services.Notifications
 
                 _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
-                await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
+                await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
 
                 return notification;
             }
             else if (_memberRemote.Mode == RemotingMode.Host)
             {
                 var data = await _memberRemote.ReceiveDataAsync<Notification?>($"{_notificationTick++}");
+
+                Guard.IsNotNull(data, nameof(data));
                 return data;
             }
-
-            return null;
+            else
+            {
+                return ThrowHelper.ThrowNotSupportedException<Notification>();
+            }
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>

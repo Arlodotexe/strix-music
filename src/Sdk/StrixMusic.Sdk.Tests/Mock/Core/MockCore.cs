@@ -5,15 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Tests.Mock.Core.Library;
+using StrixMusic.Sdk.Tests.Mock.Core.Search;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
 {
     internal class MockCore : ICore
     {
         private List<ICoreDevice> _devices = new List<ICoreDevice>();
+        private string instanceDescriptor = "For testing only";
+        private CoreState coreState;
 
         public MockCore(string instanceId)
         {
@@ -28,9 +34,9 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             Search = new MockCoreSearch(this);
         }
 
-        public Task InitAsync(IServiceCollection services)
+        public async Task InitAsync(IServiceCollection services)
         {
-            throw new NotImplementedException();
+            await Task.Delay(100);
         }
 
         public event EventHandler<CoreState>? CoreStateChanged;
@@ -39,11 +45,19 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public event EventHandler<string>? InstanceDescriptorChanged;
 
-        public string CoreRegistryId => "MockCore";
+        public CoreMetadata Registration { get; } = new CoreMetadata(nameof(MockCore), "Mock core", new Uri("https://strixmusic.com/"));
 
         public string InstanceId { get; set; }
 
-        public string InstanceDescriptor { get; set; } = "For testing only";
+        public string InstanceDescriptor
+        {
+            get => instanceDescriptor;
+            set
+            {
+                instanceDescriptor = value;
+                InstanceDescriptorChanged?.Invoke(this, value);
+            }
+        }
 
         public ICoreConfig CoreConfig { get; set; }
 
@@ -61,7 +75,15 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public ICoreDiscoverables? Discoverables { get; set; }
 
-        public CoreState CoreState { get; set; }
+        public CoreState CoreState
+        {
+            get => coreState;
+            set
+            {
+                coreState = value;
+                CoreStateChanged?.Invoke(this, value);
+            }
+        }
 
         public ICore SourceCore { get; set; }
 
@@ -73,6 +95,26 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
             return Task.FromResult<IMediaSourceConfig?>(null);
+        }
+
+        public void AddMockDevice()
+        {
+            var newDevice = new MockCoreDevice(SourceCore);
+            _devices.Add(newDevice);
+
+            DevicesChanged?.Invoke(this,
+                new CollectionChangedItem<ICoreDevice>(newDevice, _devices.Count - 1).IntoList(),
+                new List<CollectionChangedItem<ICoreDevice>>());
+        }
+
+        public void RemoveMockDevice()
+        {
+            var device = _devices[0];
+            _devices.RemoveAt(0);
+
+            DevicesChanged?.Invoke(this,
+                new List<CollectionChangedItem<ICoreDevice>>(),
+                new CollectionChangedItem<ICoreDevice>(device, 0).IntoList());
         }
 
         public ValueTask DisposeAsync()

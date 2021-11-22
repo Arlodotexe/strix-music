@@ -8,8 +8,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     public class RemoteCoreDiscoverables : RemoteCorePlayableCollectionGroupBase, ICoreDiscoverables
     {
         /// <inheritdoc />
-        public RemoteCoreDiscoverables(string sourceCoreInstanceId)
-            : base(sourceCoreInstanceId, "Discoverables")
+        public RemoteCoreDiscoverables(string sourceCoreInstanceId, string remotingId)
+            : base(sourceCoreInstanceId, remotingId)
         {
         }
     }
