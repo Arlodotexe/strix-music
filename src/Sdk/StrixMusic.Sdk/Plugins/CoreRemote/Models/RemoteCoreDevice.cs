@@ -18,25 +18,24 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <summary>
         /// Creates a new instance of a <see cref="RemoteCoreDevice"/>.
         /// </summary>
-        internal RemoteCoreDevice(string sourceCoreInstanceId, string remotingId)
+        internal RemoteCoreDevice(string sourceCoreInstanceId, string id)
         {
             SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
 
-            Id = string.Empty;
+            Id = id;
             Name = string.Empty;
 
-            _memberRemote = new MemberRemote(this, remotingId, RemoteCoreMessageHandler.SingletonClient);
+            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCoreDevice)}.{id}", RemoteCoreMessageHandler.SingletonClient);
         }
-
 
         /// <summary>
         /// Creates a new instance of a <see cref="RemoteCoreDevice"/>.
         /// </summary>
-        internal RemoteCoreDevice(ICoreDevice device, string remotingId)
+        internal RemoteCoreDevice(ICoreDevice device)
         {
             SourceCore = RemoteCore.GetInstance(device.SourceCore.InstanceId);
 
-            _memberRemote = new MemberRemote(this, remotingId, RemoteCoreMessageHandler.SingletonHost);
+            _memberRemote = new MemberRemote(this, $"{device.SourceCore.InstanceId}.{nameof(RemoteCoreDevice)}.{device.Id}", RemoteCoreMessageHandler.SingletonHost);
 
             Id = device.Id;
             Name = device.Name;

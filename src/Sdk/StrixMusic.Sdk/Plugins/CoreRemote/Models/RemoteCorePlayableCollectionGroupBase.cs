@@ -58,13 +58,13 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="corePlayableCollection">The collection to wrap around and remotely interact with.</param>
         /// <param name="remotingId">A unique identifier for this playable collection instance. Used to </param>
         /// 
-        protected RemoteCorePlayableCollectionGroupBase(ICorePlayableCollectionGroup corePlayableCollection, string remotingId)
+        protected RemoteCorePlayableCollectionGroupBase(ICorePlayableCollectionGroup corePlayableCollection)
         {
             _corePlayableCollection = corePlayableCollection;
 
             SourceCore = RemoteCore.GetInstance(corePlayableCollection.SourceCore.InstanceId);
 
-            var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{remotingId}";
+            var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{corePlayableCollection.Id}";
             _memberRemote = new MemberRemote(this, fullRemoteId, RemoteCoreMessageHandler.SingletonHost);
 
             // Remotely update with the actual ID.

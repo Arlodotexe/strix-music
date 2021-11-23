@@ -34,7 +34,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         private readonly ICore? _core;
 
         private readonly List<ICoreDevice> _devices = new List<ICoreDevice>();
-        private CoreState coreState = CoreState.Unloaded;
+        private CoreState _coreState = CoreState.Unloaded;
+        private string _instanceDescriptor = string.Empty;
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCore"/>.
@@ -46,14 +47,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             InstanceId = instanceId;
 
-            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId);
+            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId, CommonRemoteIds.RootRecentlyPlayed);
             Discoverables = new RemoteCoreDiscoverables(instanceId, CommonRemoteIds.RootDiscoverables);
             Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
-            Pins = new RemoteCorePins(instanceId, CommonRemoteIds.Pins);
+            Pins = new RemoteCorePlayableCollectionGroup(instanceId, CommonRemoteIds.Pins);
 
             CoreConfig = new RemoteCoreConfig(instanceId);
 
-            // Registration is set remotely.
+            // Registration is set remotely, use placeholder data here.
             Registration = new CoreMetadata(string.Empty, string.Empty, new Uri("/", UriKind.Relative));
 
             _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonClient);
@@ -71,7 +72,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             _core = core;
 
             RecentlyPlayed = core.RecentlyPlayed;
-            Library = new RemoteCoreLibrary(core.Library, CommonRemoteIds.RootLibrary);
+            Library = new RemoteCoreLibrary(core.Library);
             Pins = core.Pins;
 
             CoreConfig = core.CoreConfig;
@@ -117,7 +118,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         private void OnInstanceDescriptorChanged(object sender, string e)
         {
             InstanceDescriptor = e;
-            InstanceDescriptorChanged?.Invoke(this, e);
         }
 
         private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
@@ -128,8 +128,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
         private void ChangeDevices(IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var remoteAddedItems = addedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data, $"{x.Index}"), x.Index)).ToList();
-            var remoteRemovedItems = removedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data, $"{x.Index}"), x.Index)).ToList();
+            var remoteAddedItems = addedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+            var remoteRemovedItems = removedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
 
             _devices.ChangeCollection(remoteAddedItems, remoteRemovedItems);
             DevicesChanged?.Invoke(this, remoteAddedItems, remoteRemovedItems);
@@ -152,17 +152,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         [RemoteProperty]
         public CoreState CoreState
         {
-            get => coreState;
+            get => _coreState;
             set
             {
-                coreState = value;
+                _coreState = value;
                 CoreStateChanged?.Invoke(this, value);
             }
         }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public string InstanceDescriptor { get; set; } = string.Empty;
+        public string InstanceDescriptor
+        {
+            get => _instanceDescriptor;
+            set
+            {
+                _instanceDescriptor = value;
+                InstanceDescriptorChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteProperty]
@@ -237,9 +245,44 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
+        [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
         public async Task<ICoreMember?> GetContextById(string id)
         {
-            return null;
+            var methodCallToken = $"{nameof(GetContextById)}.{id}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_core, nameof(_core));
+
+                var result = await _core.GetContextById(id);
+
+                ICoreMember? remoteEnabledResult = result switch
+                {
+                    ICore core => GetInstance(core.InstanceId),
+                    ICoreAlbum album => new RemoteCoreAlbum(album),
+                    ICoreArtist artist => new RemoteCoreArtist(artist),
+                    ICoreTrack track => new RemoteCoreTrack(track),
+                    ICorePlaylist playlist => new RemoteCorePlaylist(playlist),
+                    ICoreDevice device => new RemoteCoreDevice(device),
+                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables),
+                    ICoreImage image => new RemoteCoreImage(image),
+                    ICoreLibrary library => new RemoteCoreLibrary(library),
+                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed),
+                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory),
+                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup),
+                    _ => throw new NotImplementedException(),
+                };
+
+                return await _memberRemote.PublishDataAsync(methodCallToken, result);
+            }
+            else if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                return await _memberRemote.ReceiveDataAsync<ICoreMember?>(methodCallToken);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <inheritdoc/>
