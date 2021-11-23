@@ -286,9 +286,26 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
+        public async Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            return Task.FromResult<IMediaSourceConfig?>(null);
+            var methodCallToken = $"{nameof(GetMediaSource)}.{track.Id}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_core, nameof(_core));
+
+                var result = await _core.GetMediaSource(track);
+                return await _memberRemote.PublishDataAsync(methodCallToken, result);
+            }
+            else if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                return await _memberRemote.ReceiveDataAsync<IMediaSourceConfig?>(methodCallToken);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static void SetupRemoteServices(IServiceCollection clientServices, string remotingId)
