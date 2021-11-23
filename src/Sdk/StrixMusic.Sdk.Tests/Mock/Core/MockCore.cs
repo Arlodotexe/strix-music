@@ -111,7 +111,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            return Task.FromResult<IMediaSourceConfig?>(null);
+            return Task.FromResult<IMediaSourceConfig?>(new MockMediaSourceConfig(track.Id, track));
         }
 
         public void AddMockDevice()

@@ -4,6 +4,7 @@ using StrixMusic.Sdk.Tests.Mock.Core;
 using System.Threading.Tasks;
 using System;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Tests.Mock.Core.Items;
 
 namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
@@ -162,10 +163,27 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.IsNotNull(_remoteHostCore);
 
             var expectedResult = await _core.GetContextById(id);
-
             var wrappedResult = await _remoteHostCore.GetContextById(id);
-
             var remotelyReceivedResult = await _remoteClientCore.GetContextById(id);
+
+            Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), wrappedResult, wrappedResult?.GetType());
+            Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), remotelyReceivedResult, remotelyReceivedResult?.GetType());
+        }
+
+        [TestMethod, Timeout(2000)]
+        [DataRow("TestTrack")]
+        [DataRow("TestTrack1")]
+        public async Task RemoteGetMediaSourceConfig(string id)
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            var track = new MockCoreTrack(_core, id, id);
+
+            var expectedResult = await _core.GetMediaSource(track);
+            var wrappedResult = await _remoteHostCore.GetMediaSource(track);
+            var remotelyReceivedResult = await _remoteClientCore.GetMediaSource(track);
 
             Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), wrappedResult, wrappedResult?.GetType());
             Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), remotelyReceivedResult, remotelyReceivedResult?.GetType());
