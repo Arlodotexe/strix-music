@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.LocalFiles
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.Files", "Cores\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj", "{18F15E5E-9E8A-4F97-89CF-DB66F568F075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrixMusic.Sdk.Tests", "Sdk\StrixMusic.Sdk.Tests\StrixMusic.Sdk.Tests.csproj", "{9982B33E-D0FB-4F52-A822-E096EEC97A12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Sdk.Tests", "Sdk\StrixMusic.Sdk.Tests\StrixMusic.Sdk.Tests.csproj", "{9982B33E-D0FB-4F52-A822-E096EEC97A12}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

@@ -55,14 +55,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.IsNotNull(_remoteClientCore);
             Assert.IsNotNull(_remoteHostCore);
 
-            // Simulate network conditions.
-            await Task.Delay(200);
+            // Wait for changes to finish
+            await Task.Delay(1000);
 
             Assert.AreEqual(_core.Registration.DisplayName, _remoteHostCore.Registration.DisplayName);
             Assert.AreEqual(_core.Registration.DisplayName, _remoteClientCore.Registration.DisplayName);
 
             Assert.AreEqual(_core.Registration.Id, _remoteHostCore.Registration.Id);
-            Assert.AreEqual(_core.Registration.Id, _remoteClientCore.Registration.Id );
+            Assert.AreEqual(_core.Registration.Id, _remoteClientCore.Registration.Id);
 
             Assert.AreEqual(_core.Registration.LogoUri, _remoteHostCore.Registration.LogoUri);
             Assert.AreEqual(_core.Registration.LogoUri, _remoteClientCore.Registration.LogoUri);
@@ -75,9 +75,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.IsNotNull(_remoteClientCore);
             Assert.IsNotNull(_remoteHostCore);
 
+            await Task.Delay(200);
+
             _core.InstanceDescriptor = "So remote, much wow.";
 
-            // Simulate network conditions.
+            // Wait for changes to finish
             await Task.Delay(200);
 
             Assert.AreEqual(_core.InstanceDescriptor, _remoteHostCore.InstanceDescriptor);
@@ -93,8 +95,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             _core.CoreState = Data.CoreState.NeedsSetup;
 
-            // Simulate network conditions.
-            await Task.Delay(200);
+            // Wait for changes to finish
+            await Task.Delay(500);
 
             Assert.AreEqual(_core.CoreState, _remoteHostCore.CoreState);
             Assert.AreEqual(_core.CoreState, _remoteClientCore.CoreState);
@@ -111,8 +113,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             _core.AddMockDevice();
 
-            // Simulate network conditions.
-            await Task.Delay(50);
+            // Wait for changes to finish
+            await Task.Delay(500);
 
             Assert.AreEqual(startingDeviceCount + 1, _core.Devices.Count);
             Assert.AreEqual(startingDeviceCount + 1, _remoteHostCore.Devices.Count);
@@ -131,21 +133,57 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             _core.AddMockDevice();
             _core.RemoveMockDevice();
 
-            // Simulate network conditions.
-            await Task.Delay(50);
+            // Wait for changes to finish
+            await Task.Delay(200);
 
             Assert.AreEqual(startingDeviceCount, _core.Devices.Count);
             Assert.AreEqual(startingDeviceCount, _remoteHostCore.Devices.Count);
             Assert.AreEqual(startingDeviceCount, _remoteClientCore.Devices.Count);
         }
 
-        private static void SingletonHost_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
+        [TestMethod, Timeout(2000)]
+        [DataRow(MockContextIds.Album)]
+        [DataRow(MockContextIds.Artist)]
+        [DataRow(MockContextIds.Device)]
+        [DataRow(MockContextIds.Discoverables)]
+        [DataRow(MockContextIds.Image)]
+        [DataRow(MockContextIds.Library)]
+        [DataRow(MockContextIds.Pins)]
+        [DataRow(MockContextIds.PlayableCollectionGroup)]
+        [DataRow(MockContextIds.Playlist)]
+        [DataRow(MockContextIds.RecentlyPlayed)]
+        [DataRow(MockContextIds.SearchHistory)]
+        [DataRow(MockContextIds.SearchResults)]
+        [DataRow(MockContextIds.Track)]
+        public async Task RemoteGetContextById(string id)
         {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            var expectedResult = await _core.GetContextById(id);
+
+            var wrappedResult = await _remoteHostCore.GetContextById(id);
+
+            var remotelyReceivedResult = await _remoteClientCore.GetContextById(id);
+
+            Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), wrappedResult, wrappedResult?.GetType());
+            Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), remotelyReceivedResult, remotelyReceivedResult?.GetType());
+        }
+
+        private static async void SingletonHost_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
+        {
+            // Simulate network conditions.
+            await Task.Delay(50);
+
             RemoteCoreMessageHandler.SingletonClient.DigestMessageAsync(e);
         }
 
-        private static void SingletonClient_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
+        private static async void SingletonClient_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
         {
+            // Simulate network conditions.
+            await Task.Delay(50);
+
             RemoteCoreMessageHandler.SingletonHost.DigestMessageAsync(e);
         }
     }
