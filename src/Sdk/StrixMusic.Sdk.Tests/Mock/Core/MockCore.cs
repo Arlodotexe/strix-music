@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using StrixMusic.Sdk.Tests.Mock.Core.Library;
 using StrixMusic.Sdk.Tests.Mock.Core.Search;
 
@@ -89,9 +90,25 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public Task<ICoreMember?> GetContextById(string id)
         {
-            return Task.FromResult<ICoreMember?>(null);
+            return Task.FromResult<ICoreMember?>(id switch
+            {
+                MockContextIds.Album => new MockCoreAlbum(this, id, "Album"),
+                MockContextIds.Artist => new MockCoreArtist(this, id, "Artist"),
+                MockContextIds.Device => new MockCoreDevice(this),
+                MockContextIds.Discoverables => new MockCoreDiscoverables(this),
+                MockContextIds.Image => new MockCoreImage(this, new Uri("https://strixmusic.com/favicon.ico")),
+                MockContextIds.Library => Library,
+                MockContextIds.Pins =>  Pins,
+                MockContextIds.PlayableCollectionGroup => new MockCorePlayableCollectionGroup(this, id, "Collection group"),
+                MockContextIds.Playlist => new MockCorePlaylist(this, id, "Playlist"),
+                MockContextIds.RecentlyPlayed => RecentlyPlayed,
+                MockContextIds.SearchHistory => Search?.SearchHistory,
+                MockContextIds.SearchResults => new MockCoreSearchResults(this, id),
+                MockContextIds.Track => new MockCoreTrack(this, id, "Track"),
+                _ => throw new NotImplementedException(),
+            });
         }
-
+        
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
             return Task.FromResult<IMediaSourceConfig?>(null);
