@@ -139,7 +139,7 @@
                         <!--<defaultcontrols:TrackCollection/>-->
                     </PivotItem>
                     <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
-                        <collections:AlbumCollection/>
+                        <collections:AlbumCollection Collection="{Binding }"/>
                     </PivotItem>
                     <PivotItem x:Uid="/Music/SimilarArtistsPVI" Header="Similar Artists">
                         <!--<defaultcontrols:AlbumCollection/>-->
