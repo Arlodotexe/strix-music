@@ -12,6 +12,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -37,7 +38,7 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc/>
-        public override string CoreRegistryId => nameof(OneDriveCore);
+        public override CoreMetadata Registration => OneDrive.Registration.Metadata;
 
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
