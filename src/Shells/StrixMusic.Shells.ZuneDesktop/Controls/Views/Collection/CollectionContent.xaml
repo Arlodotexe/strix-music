@@ -208,7 +208,7 @@
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
-            <collections:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}"
+            <collections:AlbumCollection x:Name="AlbumCollection" Collection="{x:Bind ViewModel.Library}"
                                          Margin="8,0" Grid.Column="1"
                                          SelectionChanged="AlbumSelected"/>
 
