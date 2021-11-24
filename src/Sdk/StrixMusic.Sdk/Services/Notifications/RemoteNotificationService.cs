@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
+using StrixMusic.Sdk.Plugins.CoreRemote;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
@@ -35,6 +36,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         public RemoteNotificationService(string id, INotificationService notificationService)
             : this(id)
         {
+            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}", RemoteCoreMessageHandler.SingletonClient);
             _notificationService = notificationService;
         }
 
@@ -44,7 +46,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <param name="id">A consistent, unique identifier for synchronizing an instance of this service remotely.</param>
         public RemoteNotificationService(string id)
         {
-            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}");
+            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}", RemoteCoreMessageHandler.SingletonHost);
             _notificationMemberRemotes = new List<MemberRemote>();
         }
 
