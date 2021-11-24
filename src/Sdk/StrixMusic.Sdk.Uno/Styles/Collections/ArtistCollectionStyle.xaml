@@ -4,31 +4,36 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Sdk.Uno.Styles.Collections.ArtistCollectionStyle">
-
-    <DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenArtist">
-            <GridView.Header>
-                <Grid>
-                    <ProgressRing IsActive="{x:Bind PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
-                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                </Grid>
-            </GridView.Header>
-        </GridView>
-    </DataTemplate>
-
-    <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-        <items:ArtistItem/>
-    </DataTemplate>
 
     <Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:ArtistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:ArtistCollection">
-						<ContentControl ContentTemplate="{StaticResource DefaultArtistCollectionDataTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Artists, RelativeSource={RelativeSource TemplatedParent}}" 
+                                    Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                                    ItemClick="OpenArtist">
+                            <GridView.ItemTemplate>
+                                <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
+                                    <items:ArtistItem Artist="{Binding }">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.Artist.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </items:ArtistItem>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.Header>
+                                <Grid>
+                                    <ProgressRing IsActive="{Binding PopulateMoreArtistsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                </Grid>
+                            </GridView.Header>
+                        </GridView>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

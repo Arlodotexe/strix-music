@@ -25,19 +25,20 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         }
 
         /// <summary>
-        /// Backing dependency property for <see cref="Collection/>.
+        /// Backing dependency property for <see cref="Collection"/>.
         /// </summary>
-        public static readonly DependencyProperty ArtistCollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IArtistCollectionViewModel), typeof(ArtistCollection), new PropertyMetadata(null));
+        public IArtistCollectionViewModel Collection
+        {
+            get { return (IArtistCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
+        }
 
         /// <summary>
-        /// The artist collection to display.
+        /// Dependency property for <ses cref="IArtistCollectionViewModel" />.
         /// </summary>
-        public IArtistCollectionViewModel? Collection
-        {
-            get { return (IArtistCollectionViewModel?)GetValue(ArtistCollectionProperty); }
-            set { SetValue(ArtistCollectionProperty, value); }
-        }
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IArtistCollectionViewModel), typeof(ArtistCollection), new PropertyMetadata(0));
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()

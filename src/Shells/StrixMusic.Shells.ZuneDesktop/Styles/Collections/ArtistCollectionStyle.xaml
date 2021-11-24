@@ -15,7 +15,7 @@
     </ResourceDictionary.MergedDictionaries>
     
     <DataTemplate x:Key="ZuneDesktopArtistCollectionItemStyle">
-        <items:ArtistItem />
+        <items:ArtistItem  Artist="{Binding }"/>
     </DataTemplate>
 
     <unitconvert:CountToArtistsConverter x:Key="CountToArtistsConverter" />
@@ -48,7 +48,7 @@
                                       IsItemClickEnabled="True" Grid.Row="1">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <items:ArtistItem>
+                                        <items:ArtistItem Artist="{Binding }">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction
