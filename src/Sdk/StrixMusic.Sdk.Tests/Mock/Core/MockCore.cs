@@ -37,7 +37,8 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public async Task InitAsync(IServiceCollection services)
         {
-            await Task.Delay(100);
+            await Task.Delay(500);
+            CoreState = CoreState.Loaded;
         }
 
         public event EventHandler<CoreState>? CoreStateChanged;

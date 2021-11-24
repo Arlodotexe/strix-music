@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
@@ -70,6 +71,22 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [TestMethod, Timeout(2000)]
+        public async Task RemoteInitAsync()
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            await _remoteClientCore.InitAsync(new ServiceCollection());
+
+            var wrappedResult = _remoteHostCore.CoreState;
+            var remotelyReceivedResult = _remoteClientCore.CoreState;
+
+            Assert.AreEqual(_core.CoreState, wrappedResult);
+            Assert.AreEqual(_core.CoreState, remotelyReceivedResult);
+        }
+
+        [TestMethod, Timeout(2000)]
         public async Task RemoteInstanceDescriptor()
         {
             Assert.IsNotNull(_core);
@@ -80,7 +97,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             _core.InstanceDescriptor = "So remote, much wow.";
 
-            // Wait for changes to finish
+            // Wait for changes to propogate
             await Task.Delay(200);
 
             Assert.AreEqual(_core.InstanceDescriptor, _remoteHostCore.InstanceDescriptor);
@@ -96,7 +113,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             _core.CoreState = Data.CoreState.NeedsSetup;
 
-            // Wait for changes to finish
+            // Wait for changes to propogate
             await Task.Delay(500);
 
             Assert.AreEqual(_core.CoreState, _remoteHostCore.CoreState);
@@ -114,7 +131,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             _core.AddMockDevice();
 
-            // Wait for changes to finish
+            // Wait for changes to propogate
             await Task.Delay(500);
 
             Assert.AreEqual(startingDeviceCount + 1, _core.Devices.Count);
@@ -134,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             _core.AddMockDevice();
             _core.RemoveMockDevice();
 
-            // Wait for changes to finish
+            // Wait for changes to propogate
             await Task.Delay(200);
 
             Assert.AreEqual(startingDeviceCount, _core.Devices.Count);
