@@ -12,7 +12,7 @@
 
     <converter:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter"/>
     <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
-        <items:AlbumItem/>
+        <items:AlbumItem Album="{Binding }"/>
     </DataTemplate>
 
     <Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:GrooveAlbumCollection">

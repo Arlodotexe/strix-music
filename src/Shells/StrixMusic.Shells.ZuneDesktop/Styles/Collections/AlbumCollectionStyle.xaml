@@ -35,7 +35,7 @@
                   Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                 <GridView.ItemTemplate>
                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
-                        <items:AlbumItem>
+                        <items:AlbumItem Album="{Binding }">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                     <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />

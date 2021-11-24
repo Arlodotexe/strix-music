@@ -26,8 +26,8 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            
-                            <strix:SafeImage Height="128" Width="128"  ImageCollection="{Binding Album}"/>
+
+                            <strix:SafeImage Height="128" Width="128"  ImageCollection="{Binding Album, RelativeSource={RelativeSource TemplatedParent}}"/>
 
                             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                                 <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
