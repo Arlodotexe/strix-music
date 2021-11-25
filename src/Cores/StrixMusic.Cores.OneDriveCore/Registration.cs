@@ -9,7 +9,8 @@ namespace StrixMusic.Cores.OneDrive
         {
             Metadata = new CoreMetadata(id: nameof(OneDriveCore),
                                         displayName: "OneDrive",
-                                        logoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"));
+                                        logoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
+                                        sdkVersion: Version.Parse("0.0.0.0"));
         }
 
         public static CoreMetadata Metadata { get; }

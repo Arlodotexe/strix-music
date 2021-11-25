@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             CoreConfig = new RemoteCoreConfig(instanceId);
 
             // Registration is set remotely, use placeholder data here.
-            Registration = new CoreMetadata(string.Empty, string.Empty, new Uri("/", UriKind.Relative));
+            Registration = new CoreMetadata(string.Empty, string.Empty, new Uri("/", UriKind.Relative), sdkVersion: new Version(0, 0, 0));
 
             _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonClient);
         }

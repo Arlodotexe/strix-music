@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public event EventHandler<string>? InstanceDescriptorChanged;
 
-        public CoreMetadata Registration { get; } = new CoreMetadata(nameof(MockCore), "Mock core", new Uri("https://strixmusic.com/"));
+        public CoreMetadata Registration { get; } = new CoreMetadata(nameof(MockCore), "Mock core", new Uri("https://strixmusic.com/"), Version.Parse("0.0.0.0"));
 
         public string InstanceId { get; set; }
 

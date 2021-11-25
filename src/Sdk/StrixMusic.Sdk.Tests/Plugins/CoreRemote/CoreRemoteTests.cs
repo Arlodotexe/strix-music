@@ -58,7 +58,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.IsNotNull(_remoteHostCore);
 
             // Wait for changes to finish
-            await Task.Delay(1000);
+            await Task.Delay(500);
 
             Assert.AreEqual(_core.Registration.DisplayName, _remoteHostCore.Registration.DisplayName);
             Assert.AreEqual(_core.Registration.DisplayName, _remoteClientCore.Registration.DisplayName);
