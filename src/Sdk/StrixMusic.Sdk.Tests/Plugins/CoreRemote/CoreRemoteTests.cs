@@ -79,6 +79,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await _remoteClientCore.InitAsync(new ServiceCollection());
 
+            await Task.Delay(200);
+
             var wrappedResult = _remoteHostCore.CoreState;
             var remotelyReceivedResult = _remoteClientCore.CoreState;
 

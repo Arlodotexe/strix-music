@@ -240,7 +240,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             Guard.IsNotNull(_core, nameof(_core));
 
             var services = SetupRemoteServices(InstanceId);
-            await _core.InitAsync(new ServiceCollection());
+            await _core.InitAsync(services);
 
             await _memberRemote.RemoteReleaseAsync(nameof(InitAsync));
         }
@@ -311,18 +311,18 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         private static void SetupRemoteServices(IServiceCollection clientServices, string remotingId)
         {
-          /*  var notificationService = clientServices.FirstOrDefault(x => x.ServiceType == typeof(INotificationService)) as INotificationService;
+            var notificationService = clientServices.FirstOrDefault(x => x.ServiceType == typeof(INotificationService)) as INotificationService;
 
             if (notificationService != null)
-                _ = new RemoteNotificationService(remotingId, notificationService);*/
+                _ = new RemoteNotificationService(remotingId, notificationService);
         }
 
         private static IServiceCollection SetupRemoteServices(string remotingId)
         {
             var services = new ServiceCollection();
-            //var notificationService = new RemoteNotificationService(remotingId);
+            var notificationService = new RemoteNotificationService(remotingId);
 
-            //services.AddSingleton<RemoteNotificationService>(x => notificationService);
+            services.AddSingleton<RemoteNotificationService>(x => notificationService);
 
             return services;
         }
