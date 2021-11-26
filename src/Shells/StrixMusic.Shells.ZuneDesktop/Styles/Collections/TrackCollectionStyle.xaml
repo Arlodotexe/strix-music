@@ -14,6 +14,8 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <unitconvert:CountToSongsConverter x:Key="CountToSongsConverter"/>
+
     <DataTemplate x:Key="ZuneDesktopTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <Grid>
             <Grid.RowDefinitions>
@@ -22,13 +24,13 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="24,0,0,12">
-                <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(TotalTrackCount), Mode=OneWay}"
+                <TextBlock Text="{Binding Collection.TotalTrackCount,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource CountToSongsConverter}, Mode=OneWay}"
                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
-                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
             </StackPanel>
 
-            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                       SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.Header>
                     <Grid Height="6"/>

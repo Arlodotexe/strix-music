@@ -110,7 +110,7 @@
                         </CommandBar>
                     </Grid>
 
-                    <collections:TrackCollection Grid.Row="1" />
+                    <collections:TrackCollection Collection="{Binding }"  Grid.Row="1" />
                 </Grid>
             </UserControl>
         </ScrollViewer>
