@@ -21,10 +21,10 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         }
 
         /// <summary>
-        /// The backing dependency property for <see cref="PlaylistCollection"/>.
+        /// The backing dependency property for <see cref="Collection"/>.
         /// </summary>
-        public static readonly DependencyProperty PlaylistCollectionProperty =
-            DependencyProperty.Register(nameof(PlaylistCollection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
 
         /// <summary>
         /// The ViewModel for a <see cref="GroovePlaylistCollection"/>.
@@ -34,15 +34,15 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// <summary>
         /// The playlist collection to display.
         /// </summary>
-        public IPlaylistCollectionViewModel PlaylistCollection
+        public IPlaylistCollectionViewModel Collection
         {
-            get { return (IPlaylistCollectionViewModel)GetValue(PlaylistCollectionProperty); }
-            set { SetValue(PlaylistCollectionProperty, value); }
+            get { return (IPlaylistCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
         }
 
         private void OnPlaylistCollectionChanged()
         {
-            ViewModel.PlaylistCollection = PlaylistCollection;
+            ViewModel.PlaylistCollection = Collection;
         }
 
         /// <summary>

@@ -7,27 +7,22 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.PlaylistItemStyle">
 
-    <DataTemplate x:Key="DefaultPlaylistItemDataTemplate" x:DataType="viewModels:PlaylistViewModel">
-        <Grid MaxWidth="128">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <strix:SafeImage Height="128" Width="128" ImageCollection="{x:Bind}"/>
-
-            <StackPanel Grid.Row="1" Margin="0,8,0,0">
-                <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-            </StackPanel>
-        </Grid>
-    </DataTemplate>
-
     <Style x:Key="DefaultPlaylistItemStyle" TargetType="items:PlaylistItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:PlaylistItem">
-                        <ContentControl ContentTemplate="{StaticResource DefaultPlaylistItemDataTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                        <Grid MaxWidth="128">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <strix:SafeImage Height="128" Width="128" ImageCollection="{Binding Playlist}"/>
+
+                            <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                                <TextBlock Text="{Binding Playlist.Name,RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

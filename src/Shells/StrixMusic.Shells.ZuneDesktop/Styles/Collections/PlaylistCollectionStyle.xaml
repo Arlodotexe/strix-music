@@ -14,47 +14,44 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="ZuneDesktopPlaylistListTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <StackPanel Margin="24,0,0,12">
-                <TextBlock Text="{x:Bind unitconvert:CountToPlaylistsConverter.Convert(TotalPlaylistItemsCount), Mode=OneWay}"
-                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
-
-                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
-            </StackPanel>
-
-            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
-                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.Header>
-                    <Grid Height="6"/>
-                </ListView.Header>
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:PlaylistViewModel">
-                        <items:PlaylistItem>
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayPlaylistCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </items:PlaylistItem>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
-    </DataTemplate>
+    <!--<unitconvert:CountToPlaylistsConverter x:Key="CountToPlaylistsConverter"/>-->
 
     <Style x:Key="ZuneDesktopPlaylistListControlStyle" TargetType="collections:PlaylistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:PlaylistCollection">
-                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopPlaylistListTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Margin="24,0,0,12">
+                                <!--<TextBlock Text="{Binding Collection.TotalPlaylistItemsCount,Converter={StaticResource CountToPlaylistsConverter},RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>-->
+
+                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                            </StackPanel>
+
+                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+                                        SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                <ListView.Header>
+                                    <Grid Height="6"/>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:PlaylistViewModel">
+                                        <items:PlaylistItem Playlist="{Binding }">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=Collection.PlayPlaylistCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding }" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </items:PlaylistItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

@@ -9,38 +9,33 @@
     xmlns:converters="using:OwlCore.Uno.Converters"
     xmlns:groovecolvms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PlaylistCollectionStyle">
-    
-    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
-    <DataTemplate x:Key="GroovePlaylistCollectionDataTemplate" x:DataType="groovecolvms:GroovePlaylistCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind PlaylistCollection.Playlists}" Padding="16,16,16,112"
-                  HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
-            <!--<interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="ItemClicked">
-                    <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>-->
-            <GridView.Header>
-                <Grid>
-                    <ProgressRing IsActive="{x:Bind PlaylistCollection.PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
-                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                </Grid>
-            </GridView.Header>
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <items:GroovePlaylistItem/>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-    </DataTemplate>
+    <!--<converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />-->
 
     <Style x:Key="GroovePlaylistCollectionStyle" TargetType="collections:GroovePlaylistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:GroovePlaylistCollection">
-                        <ContentControl ContentTemplate="{StaticResource GroovePlaylistCollectionDataTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists,RelativeSource={RelativeSource TemplatedParent}}" Padding="16,16,16,112"
+                                    HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+                            <!--<interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="ItemClicked">
+                                 <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                                </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>-->
+                            <GridView.Header>
+                                <Grid>
+                                    <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                </Grid>
+                            </GridView.Header>
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <items:GroovePlaylistItem Playlist="{Binding }"/>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

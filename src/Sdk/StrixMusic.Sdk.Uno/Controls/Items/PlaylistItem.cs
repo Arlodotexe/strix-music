@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Uno.Controls.Items.Abstract;
 using StrixMusic.Sdk.ViewModels;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Items
@@ -45,13 +46,23 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
 
         private async Task InitAsync()
         {
-            if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
-                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(5);
+            if (!Playlist.PopulateMoreTracksCommand.IsRunning)
+                await Playlist.PopulateMoreTracksCommand.ExecuteAsync(5);
         }
 
         /// <summary>
-        /// The <see cref="PlaylistViewModel"/> for the control.
+        /// Backing dependency property for <see cref="Playlist"/>.
         /// </summary>
-        public PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
+        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistItem),
+                                                                   new PropertyMetadata(null, null));
+
+        /// <summary>
+        /// The playlist to display.
+        /// </summary>
+        public PlaylistViewModel Playlist
+        {
+            get { return (PlaylistViewModel)GetValue(PlaylistProperty); }
+            set { SetValue(PlaylistProperty, value); }
+        }
     }
 }
