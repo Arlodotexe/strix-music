@@ -16,8 +16,12 @@
 
     <unitconvert:CountToSongsConverter x:Key="CountToSongsConverter"/>
 
-    <DataTemplate x:Key="ZuneDesktopTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
-        <Grid>
+    <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="collections:TrackCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="collections:TrackCollection">
+                        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
@@ -37,7 +41,7 @@
                 </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:TrackViewModel">
-                        <items:TrackItem Track="{Binding}">
+                        <items:TrackItem Track="{Binding }">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                     <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
@@ -48,15 +52,6 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-    </DataTemplate>
-
-    <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="collections:TrackCollection">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="collections:TrackCollection">
-                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopTrackListTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
