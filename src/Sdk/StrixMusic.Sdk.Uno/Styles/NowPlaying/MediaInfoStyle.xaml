@@ -8,28 +8,23 @@
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     x:Class="StrixMusic.Sdk.Uno.Styles.NowPlaying.MediaInfoStyle">
 
-    <DataTemplate x:Key="DefaultMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{x:Bind ActiveDevice.NowPlaying.Name, Mode=OneWay}"/>
-                <TextBlock Text="{x:Bind ActiveDevice.NowPlaying.Artists[0].Name, Mode=OneWay}" Opacity=".5"/>
-            </StackPanel>
-
-            <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
-                             ImageCollection="{x:Bind ActiveDevice.NowPlaying, Mode=OneWay}"/>
-        </Grid>
-    </DataTemplate>
-
     <Style x:Key="DefaultMediaInfoStyle" TargetType="nowplaying:MediaInfo">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="nowplaying:MediaInfo">
-                    <ContentControl ContentTemplate="{StaticResource DefaultMediaInfoDataTemplate}"
-                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Name,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                            <TextBlock Text="{Binding Main.NowPlaying.Artists[0].Name,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Opacity=".5"/>
+                        </StackPanel>
+
+                        <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
+                             ImageCollection="{Binding Main.ActiveDevice.NowPlaying,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
