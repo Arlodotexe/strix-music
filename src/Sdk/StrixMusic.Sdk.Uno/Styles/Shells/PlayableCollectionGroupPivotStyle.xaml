@@ -26,7 +26,7 @@
                                         <collections:ArtistCollection x:Uid="NothingToShowCOLC" Collection="{Binding }"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
-                                        <collections:PlaylistCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:PlaylistCollection x:Uid="NothingToShowCOLC" Collection="{Binding }"/>
                                     </PivotItem>
                                 </Pivot>
 

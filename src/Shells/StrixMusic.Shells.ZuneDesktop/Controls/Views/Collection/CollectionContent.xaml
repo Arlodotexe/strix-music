@@ -212,7 +212,7 @@
                                          Margin="8,0" Grid.Column="1"
                                          SelectionChanged="AlbumSelected"/>
 
-            <collections:PlaylistCollection x:Name="PlaylistCollection" DataContext="{x:Bind ViewModel.Library}"
+            <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{x:Bind ViewModel.Library}"
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
                                             SelectionChanged="PlaylistSelected"/>
 
