@@ -17,11 +17,6 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         }
 
         /// <summary>
-        /// The ViewModel for this control.
-        /// </summary>
-        public MainViewModel ViewModel => (MainViewModel)DataContext;
-
-        /// <summary>
         /// The viewmodel that holds application's main data.
         /// </summary>
         public MainViewModel Main
@@ -35,6 +30,6 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         /// </summary>
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MainProperty =
-            DependencyProperty.Register("MainProperty", typeof(MainViewModel), typeof(MediaTransports), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(Main), typeof(MainViewModel), typeof(MediaTransports), new PropertyMetadata(0));
     }
 }

@@ -24,7 +24,7 @@
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>
-                            <owlcoreuno:ToggleContentButton Style="{StaticResource Main.MediaToggleContentButton}" IsChecked="{Binding ActiveDevice.IsPlaying, Mode=OneWay}">
+                            <owlcoreuno:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" IsChecked="{Binding ActiveDevice.IsPlaying, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
                                         <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
