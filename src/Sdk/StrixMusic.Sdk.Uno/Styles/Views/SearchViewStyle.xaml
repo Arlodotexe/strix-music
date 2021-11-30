@@ -6,10 +6,6 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     x:Class="StrixMusic.Sdk.Uno.Styles.Views.SearchViewStyle">
 
-    <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="sdk:MainViewModel">
-       
-    </DataTemplate>
-
     <Style x:Key="DefaultSearchViewStyle" TargetType="views:SearchView">
         <Style.Setters>
             <Setter Property="Template">

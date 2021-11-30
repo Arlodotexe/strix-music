@@ -30,16 +30,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
             Unloaded -= AlbumItem_Unloaded;
         }
 
-        private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            DetachEvents();
-        }
-
-        private void AlbumItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            Loaded -= AlbumItem_Loaded;
-        }
-
         /// <summary>
         /// ViewModel holding the data for <see cref="AlbumItem" />
         /// </summary>
@@ -55,5 +45,15 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AlbumProperty =
             DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(AlbumItem), new PropertyMetadata(0));
+
+        private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            DetachEvents();
+        }
+
+        private void AlbumItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Loaded -= AlbumItem_Loaded;
+        }
     }
 }

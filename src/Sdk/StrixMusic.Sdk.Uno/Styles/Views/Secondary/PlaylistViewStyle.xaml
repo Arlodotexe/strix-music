@@ -8,79 +8,82 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.Views.Secondary.PlaylistViewStyle">
 
-    <DataTemplate x:Key="DefaultPlaylistViewTemplate" x:DataType="viewModels:PlaylistViewModel">
-        <ScrollViewer>
-            <UserControl>
-                <Grid>
-                    <VisualStateManager.VisualStateGroups>
-                        <VisualStateGroup x:Name="Sizes">
-                            <VisualState x:Name="Small">
-                                <VisualState.StateTriggers>
-                                    <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
-                                </VisualState.StateTriggers>
-                                <VisualState.Setters>
-                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="2"/>
-                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="0"/>
-                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="2"/>
-                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Center"/>
-                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="1"/>
-                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="2"/>
-                                    <Setter Target="AlbumImage.Margin" Value="16,32,16,8"/>
-                                    <Setter Target="DetailsStack.(Grid.Row)" Value="1"/>
-                                    <Setter Target="DetailsStack.(Grid.Column)" Value="0"/>
-                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="2"/>
-                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Center"/>
-                                    <Setter Target="DetailsStack.Margin" Value="0,8,0,16"/>
-                                    <Setter Target="DetailsStack.Padding" Value="0,0,0,0"/>
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Mid">
-                                <VisualState.StateTriggers>
-                                    <AdaptiveTrigger MinWindowWidth="600"/>
-                                </VisualState.StateTriggers>
-                                <VisualState.Setters>
-                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="1"/>
-                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="1"/>
-                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="1"/>
-                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Left"/>
-                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="2"/>
-                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="1"/>
-                                    <Setter Target="AlbumImage.Margin" Value="38,0,22,0"/>
-                                    <Setter Target="DetailsStack.(Grid.Row)" Value="0"/>
-                                    <Setter Target="DetailsStack.(Grid.Column)" Value="1"/>
-                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="1"/>
-                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Left"/>
-                                    <Setter Target="DetailsStack.Margin" Value="16,32,0,0"/>
-                                    <Setter Target="DetailsStack.Padding" Value="0,0,64,0"/>
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateManager.VisualStateGroups>
+    <Style x:Key="DefaultPlaylistViewControlStyle" TargetType="secondaryviews:PlaylistView">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="secondaryviews:PlaylistView">
+                        <ScrollViewer>
+                            <UserControl>
+                                <Grid>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="Sizes">
+                                            <VisualState x:Name="Small">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="2"/>
+                                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="0"/>
+                                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="2"/>
+                                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Center"/>
+                                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="1"/>
+                                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="2"/>
+                                                    <Setter Target="AlbumImage.Margin" Value="16,32,16,8"/>
+                                                    <Setter Target="DetailsStack.(Grid.Row)" Value="1"/>
+                                                    <Setter Target="DetailsStack.(Grid.Column)" Value="0"/>
+                                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="2"/>
+                                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Center"/>
+                                                    <Setter Target="DetailsStack.Margin" Value="0,8,0,16"/>
+                                                    <Setter Target="DetailsStack.Padding" Value="0,0,0,0"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Mid">
+                                                <VisualState.StateTriggers>
+                                                    <AdaptiveTrigger MinWindowWidth="600"/>
+                                                </VisualState.StateTriggers>
+                                                <VisualState.Setters>
+                                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="1"/>
+                                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="1"/>
+                                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="1"/>
+                                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Left"/>
+                                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="2"/>
+                                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="1"/>
+                                                    <Setter Target="AlbumImage.Margin" Value="38,0,22,0"/>
+                                                    <Setter Target="DetailsStack.(Grid.Row)" Value="0"/>
+                                                    <Setter Target="DetailsStack.(Grid.Column)" Value="1"/>
+                                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="1"/>
+                                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Left"/>
+                                                    <Setter Target="DetailsStack.Margin" Value="16,32,0,0"/>
+                                                    <Setter Target="DetailsStack.Padding" Value="0,0,64,0"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
 
-                        <strix:SafeImage x:Name="PlaylistImage" Grid.RowSpan="2" Margin="38,0,22,0"
-                                         ImageCollection="{x:Bind}"
-                                         Height="300" Width="300" HorizontalAlignment="Center"/>
+                                        <strix:SafeImage x:Name="PlaylistImage" Grid.RowSpan="2" Margin="38,0,22,0"
+                                         ImageCollection="{Binding Playlist, RelativeSource={RelativeSource Mode=TemplatedParent}}" Height="300" Width="300" HorizontalAlignment="Center"/>
 
-                        <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
-                            <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
+                                        <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
+                                            <TextBlock Text="{Binding Playlist.Name, RelativeSource ={RelativeSource Mode=TemplatedParent}}" FontSize="32" FontWeight="SemiBold"/>
 
-                            <!--<ItemsControl ItemsSource="{x:Bind Artists}">
+                                            <!--<ItemsControl ItemsSource="{x:Bind Artists}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -93,36 +96,27 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>-->
 
-                            <!--<TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>-->
-                        </StackPanel>
+                                            <!--<TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>-->
+                                        </StackPanel>
 
-                        <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
+                                        <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
                                     Grid.Column="1" Grid.Row="1"
                                     Background="Transparent">
-                            <AppBarButton x:Uid="/Music/PlayABB" Label="Play">
-                                <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                </AppBarButton.Icon>
-                            </AppBarButton>
-                            <AppBarButton x:Uid="/Common/SaveABB" Icon="Save" Label="Save"/>
-                            <AppBarButton x:Uid="/Common/AddToABB" Icon="Add" Label="Add to"/>
-                            <AppBarButton x:Uid="/Common/ShareABB" Icon="Share" Label="Share"/>
-                        </CommandBar>
-                    </Grid>
+                                            <AppBarButton x:Uid="/Music/PlayABB" Label="Play">
+                                                <AppBarButton.Icon>
+                                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                                </AppBarButton.Icon>
+                                            </AppBarButton>
+                                            <AppBarButton x:Uid="/Common/SaveABB" Icon="Save" Label="Save"/>
+                                            <AppBarButton x:Uid="/Common/AddToABB" Icon="Add" Label="Add to"/>
+                                            <AppBarButton x:Uid="/Common/ShareABB" Icon="Share" Label="Share"/>
+                                        </CommandBar>
+                                    </Grid>
 
-                    <collections:TrackCollection Collection="{Binding }"  Grid.Row="1" />
-                </Grid>
-            </UserControl>
-        </ScrollViewer>
-    </DataTemplate>
-
-    <Style x:Key="DefaultPlaylistViewControlStyle" TargetType="secondaryviews:PlaylistView">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="secondaryviews:PlaylistView">
-                        <ContentControl ContentTemplate="{StaticResource DefaultPlaylistViewTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                                    <collections:TrackCollection Collection="{Binding Playlist,RelativeSource={RelativeSource Mode=TemplatedParent}}"  Grid.Row="1" />
+                                </Grid>
+                            </UserControl>
+                        </ScrollViewer>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

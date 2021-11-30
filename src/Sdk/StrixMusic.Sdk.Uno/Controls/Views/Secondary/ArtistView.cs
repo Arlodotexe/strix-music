@@ -1,5 +1,6 @@
 ﻿using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
 {
@@ -19,8 +20,19 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         }
 
         /// <summary>
-        /// The <see cref="ArtistViewModel"/> for the control.
+        /// ViewModel holding the data for <see cref="ArtistItem" />
         /// </summary>
-        public ArtistViewModel ViewModel => (ArtistViewModel)DataContext;
+        public ArtistViewModel Artist
+        {
+            get { return (ArtistViewModel)GetValue(ArtistProperty); }
+            set { SetValue(ArtistProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="ArtistViewModel" />.
+        /// </summary>
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ArtistProperty =
+            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistView), new PropertyMetadata(0));
     }
 }
