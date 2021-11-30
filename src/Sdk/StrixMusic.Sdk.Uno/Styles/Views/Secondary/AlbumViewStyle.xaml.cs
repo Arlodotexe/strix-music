@@ -21,23 +21,6 @@ namespace StrixMusic.Sdk.Uno.Styles.Views.Secondary
             this.InitializeComponent();
         }
 
-
-        /// <summary>
-        /// ViewModel holding the data for <see cref="AlbumItem" />
-        /// </summary>
-        public AlbumViewModel Album
-        {
-            get { return (AlbumViewModel)GetValue(AlbumProperty); }
-            set { SetValue(AlbumProperty, value); }
-        }
-
-        /// <summary>
-        /// Dependency property for <ses cref="AlbumViewModel" />.
-        /// </summary>
-        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(AlbumViewStyle), new PropertyMetadata(0));
-
         private void GoToArtist(object sender, RoutedEventArgs e)
         {
             if ((sender as Control)?.DataContext is ArtistViewModel viewModel)

@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         public ArtistView(ArtistViewModel artistViewModel)
         {
             this.DefaultStyleKey = typeof(ArtistView);
-            DataContext = artistViewModel;
+            Artist = artistViewModel;
         }
 
         /// <summary>

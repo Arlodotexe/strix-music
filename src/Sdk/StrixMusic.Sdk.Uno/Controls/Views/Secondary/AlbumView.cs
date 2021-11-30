@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         public AlbumView(AlbumViewModel albumViewModel)
         {
             this.DefaultStyleKey = typeof(AlbumView);
-            DataContext = albumViewModel;
+            Album = albumViewModel;
 
             LoadAsync().Forget();
         }
@@ -37,7 +37,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         /// </summary>
         // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register(nameof(Album), typeof(ArtistViewModel), typeof(ArtistView), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(Album), typeof(ArtistViewModel), typeof(AlbumView), new PropertyMetadata(0));
 
         private async Task LoadAsync()
         {
