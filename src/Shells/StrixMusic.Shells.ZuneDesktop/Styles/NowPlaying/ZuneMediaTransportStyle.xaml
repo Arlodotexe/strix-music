@@ -97,7 +97,7 @@
                                     </interactivity:Interaction.Behaviors>
                                 </Button>
 
-                                <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{Binding Main.ActiveDevice.IsPlaying, Mode=OneWay}"
+                                <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{Binding Main.ActiveDevice.IsPlaying,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="Click">
