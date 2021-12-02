@@ -14,27 +14,30 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:AlbumCollection">
-                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                        <Grid>
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection}" Visibility="Collapsed"/>
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                             Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
                             ItemClick="OpenAlbum">
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
-                                    <items:AlbumItem Album="{Binding }">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.Album.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                                            </core:EventTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                    </items:AlbumItem>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.Header>
-                                <Grid>
-                                    <ProgressRing IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
-                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                                </Grid>
-                            </GridView.Header>
-                        </GridView>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
+                                        <items:AlbumItem Album="{Binding }">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </items:AlbumItem>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                                <GridView.Header>
+                                    <Grid>
+                                        <ProgressRing IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
+                                        <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                    </Grid>
+                                </GridView.Header>
+                            </GridView>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

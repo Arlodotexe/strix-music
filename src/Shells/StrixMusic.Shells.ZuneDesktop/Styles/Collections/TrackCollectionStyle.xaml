@@ -22,36 +22,38 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:TrackCollection">
                         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
 
-            <StackPanel Margin="24,0,0,12">
-                <TextBlock Text="{Binding Collection.TotalTrackCount,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource CountToSongsConverter}, Mode=OneWay}"
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection,RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+
+                            <StackPanel Margin="24,0,0,12">
+                                <TextBlock Text="{Binding Collection.TotalTrackCount,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource CountToSongsConverter}, Mode=OneWay}"
                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
-                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
-            </StackPanel>
+                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                            </StackPanel>
 
-            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
-                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.Header>
-                    <Grid Height="6"/>
-                </ListView.Header>
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TrackViewModel">
-                        <items:TrackItem Track="{Binding }">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </items:TrackItem>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+                                        SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                <ListView.Header>
+                                    <Grid Height="6"/>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:TrackViewModel">
+                                        <items:TrackItem Track="{Binding }">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </items:TrackItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

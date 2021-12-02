@@ -14,28 +14,31 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:TrackCollection">
-                        <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+                        <Grid>
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection,RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                                    ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
                                    Padding="16" HorizontalAlignment="Stretch"
                                    SelectionMode="None" IsItemClickEnabled="True">
-                            <ListView.Header>
-                                <Grid>
-                                    <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
-                                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                                </Grid>
-                            </ListView.Header>
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="viewModels:TrackViewModel">
-                                    <items:TrackItem Track="{Binding}">
-                                        <interactivity:Interaction.Behaviors>
-                                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                            </core:EventTriggerBehavior>
-                                        </interactivity:Interaction.Behaviors>
-                                    </items:TrackItem>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                                <ListView.Header>
+                                    <Grid>
+                                        <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                        <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                    </Grid>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:TrackViewModel">
+                                        <items:TrackItem Track="{Binding}">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                        </items:TrackItem>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

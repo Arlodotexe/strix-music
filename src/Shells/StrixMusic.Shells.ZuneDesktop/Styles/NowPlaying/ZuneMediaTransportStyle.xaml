@@ -92,7 +92,7 @@
                                     <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="Click">
-                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </Button>
@@ -101,7 +101,7 @@
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="Click">
-                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
+                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                     <owlcoreuno:ToggleContentButton.CheckedContent>

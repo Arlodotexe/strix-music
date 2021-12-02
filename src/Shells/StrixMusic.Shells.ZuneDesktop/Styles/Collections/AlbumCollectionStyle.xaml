@@ -28,9 +28,11 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection,RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+
                             <StackPanel Margin="24,0,0,0">
                                 <TextBlock Text="{Binding Collection.TotalAlbumItemsCount,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
-                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+                                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
@@ -43,7 +45,7 @@
                                         <items:AlbumItem Album="{Binding }">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Collection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding }" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </items:AlbumItem>
