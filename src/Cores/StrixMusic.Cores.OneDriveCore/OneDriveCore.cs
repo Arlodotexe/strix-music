@@ -1,19 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Cores.Files;
+using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Services.Notifications;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -139,55 +137,43 @@ namespace StrixMusic.Cores.OneDrive
                 return;
             }
 
-            try
+            if (string.IsNullOrWhiteSpace(folderId))
             {
-                if (string.IsNullOrWhiteSpace(folderId))
+                ChangeCoreState(CoreState.NeedsSetup);
+
+                _logger.LogInformation($"No folder selected, opening picker.");
+                var folder = await coreConfig.PickSingleFolderAsync();
+                if (folder is null)
                 {
-                    ChangeCoreState(CoreState.NeedsSetup);
-
-                    _logger.LogInformation($"No folder selected, opening picker.");
-                    var folder = await coreConfig.PickSingleFolderAsync();
-                    if (folder is null)
-                    {
-                        // User canceled folder picking.
-                        ChangeCoreState(CoreState.Unloaded);
-                        return;
-                    }
-
-                    await InitAsync(services);
+                    // User canceled folder picking.
+                    ChangeCoreState(CoreState.Unloaded);
                     return;
                 }
 
-                _logger.LogInformation($"Getting selected folder {folderId}");
-                var selectedFolder = await coreConfig.GetFolderDataById(folderId);
-                if (selectedFolder is null)
-                {
-                    ChangeCoreState(CoreState.NeedsSetup);
-
-                    selectedFolder = await coreConfig.PickSingleFolderAsync();
-                    if (selectedFolder is null)
-                    {
-                        // User canceled folder picking.
-                        ChangeCoreState(CoreState.Unloaded);
-                        return;
-                    }
-
-                    await InitAsync(services);
-                    return;
-                }
-
-                _logger.LogInformation($"Setting up metadata scanner.");
-                await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
-            }
-            catch (ServiceException)
-            {
-                ChangeCoreState(CoreState.Faulted);
-                Ioc.Default.GetRequiredService<INotificationService>()
-                    .RaiseNotification(
-                        "Failed to reach OneDrive",
-                        "Are you connected to the internet?");
+                await InitAsync(services);
                 return;
             }
+
+            _logger.LogInformation($"Getting selected folder {folderId}");
+            var selectedFolder = await coreConfig.GetFolderDataById(folderId);
+            if (selectedFolder is null)
+            {
+                ChangeCoreState(CoreState.NeedsSetup);
+
+                selectedFolder = await coreConfig.PickSingleFolderAsync();
+                if (selectedFolder is null)
+                {
+                    // User canceled folder picking.
+                    ChangeCoreState(CoreState.Unloaded);
+                    return;
+                }
+
+                await InitAsync(services);
+                return;
+            }
+
+            _logger.LogInformation($"Setting up metadata scanner.");
+            await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
 
             _logger.LogInformation($"Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);
