@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -19,7 +15,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public RemoteCoreConfig(string sourceCoreInstanceId)
         {
             SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
-            AbstractUIElements = new List<AbstractUICollection>();
+            AbstractUIElements = new AbstractUICollection(string.Empty);
         }
 
         /// <inheritdoc />
@@ -29,7 +25,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; private set; }
+        public AbstractUICollection AbstractUIElements { get; private set; }
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType { get; set; }
