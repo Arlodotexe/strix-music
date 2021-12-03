@@ -1,17 +1,19 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Cores.Files;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using StrixMusic.Sdk.Services.Notifications;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -137,43 +139,55 @@ namespace StrixMusic.Cores.OneDrive
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(folderId))
+            try
             {
-                ChangeCoreState(CoreState.NeedsSetup);
-
-                _logger.LogInformation($"No folder selected, opening picker.");
-                var folder = await coreConfig.PickSingleFolderAsync();
-                if (folder is null)
+                if (string.IsNullOrWhiteSpace(folderId))
                 {
-                    // User canceled folder picking.
-                    ChangeCoreState(CoreState.Unloaded);
+                    ChangeCoreState(CoreState.NeedsSetup);
+
+                    _logger.LogInformation($"No folder selected, opening picker.");
+                    var folder = await coreConfig.PickSingleFolderAsync();
+                    if (folder is null)
+                    {
+                        // User canceled folder picking.
+                        ChangeCoreState(CoreState.Unloaded);
+                        return;
+                    }
+
+                    await InitAsync(services);
                     return;
                 }
 
-                await InitAsync(services);
-                return;
-            }
-
-            _logger.LogInformation($"Getting selected folder {folderId}");
-            var selectedFolder = await coreConfig.GetFolderDataById(folderId);
-            if (selectedFolder is null)
-            {
-                ChangeCoreState(CoreState.NeedsSetup);
-
-                selectedFolder = await coreConfig.PickSingleFolderAsync();
+                _logger.LogInformation($"Getting selected folder {folderId}");
+                var selectedFolder = await coreConfig.GetFolderDataById(folderId);
                 if (selectedFolder is null)
                 {
-                    // User canceled folder picking.
-                    ChangeCoreState(CoreState.Unloaded);
+                    ChangeCoreState(CoreState.NeedsSetup);
+
+                    selectedFolder = await coreConfig.PickSingleFolderAsync();
+                    if (selectedFolder is null)
+                    {
+                        // User canceled folder picking.
+                        ChangeCoreState(CoreState.Unloaded);
+                        return;
+                    }
+
+                    await InitAsync(services);
                     return;
                 }
 
-                await InitAsync(services);
+                _logger.LogInformation($"Setting up metadata scanner.");
+                await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
+            }
+            catch (ServiceException)
+            {
+                ChangeCoreState(CoreState.Faulted);
+                Ioc.Default.GetRequiredService<INotificationService>()
+                    .RaiseNotification(
+                        "Failed to reach OneDrive",
+                        "Are you connected to the internet?");
                 return;
             }
-
-            _logger.LogInformation($"Setting up metadata scanner.");
-            await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
 
             _logger.LogInformation($"Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);
