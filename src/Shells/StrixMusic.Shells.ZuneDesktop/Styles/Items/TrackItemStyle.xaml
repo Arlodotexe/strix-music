@@ -8,33 +8,27 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-    <DataTemplate x:Key="ZuneDesktopTrackTemplate" x:DataType="viewModels:TrackViewModel">
-        <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
-            <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
-                   VerticalAlignment="Center"/>
-        </Grid>
-    </DataTemplate>
-
+    
     <Style x:Key="ZuneDesktopTrackControlStyle" TargetType="items:TrackItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:TrackItem">
-                        <ContentControl x:Name="Content" ContentTemplate="{StaticResource ZuneDesktopTrackTemplate}"
-                                        VerticalContentAlignment="Stretch" VerticalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <VisualStateManager.VisualStateGroups>
+                        <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
+                            <TextBlock x:Name="PART_Tb" Text="{Binding Track.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
+                                        VerticalAlignment="Center"/>
+                      
+                        <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="IsPlaying">
                                     <VisualState x:Name="NotPlaying"/>
                                     <VisualState x:Name="Playing">
                                         <VisualState.Setters>
-                                            <Setter Target="Content.Foreground" Value="{StaticResource ZunePink}"/>
+                                            <Setter Target="PART_Tb.Foreground" Value="{StaticResource ZunePink}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                        </ContentControl>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

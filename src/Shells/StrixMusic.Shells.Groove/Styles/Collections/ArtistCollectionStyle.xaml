@@ -13,7 +13,7 @@
     <converter:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter"/>
 
     <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-        <items:ArtistItem/>
+        <items:ArtistItem Artist="{Binding}"/>
     </DataTemplate>
 
     <Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:GrooveArtistCollection">

@@ -18,7 +18,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="GroovePlaylistsPageTemplate" x:DataType="pagevms:GroovePlaylistsPageViewModel">
-        <groovecol:GroovePlaylistCollection PlaylistCollection="{x:Bind PlaylistCollection}"/>
+        <groovecol:GroovePlaylistCollection Collection="{x:Bind PlaylistCollection}"/>
     </DataTemplate>
 
     <Style x:Key="GroovePlaylistsPageStyle" TargetType="groovepages:GroovePlaylistsPage">

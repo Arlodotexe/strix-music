@@ -23,11 +23,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
             this.DefaultStyleKey = typeof(AlbumCollection);
         }
 
-        /// <summary>
-        /// The <see cref="IAlbumCollectionViewModel"/> for the control.
-        /// </summary>
-        public IAlbumCollectionViewModel ViewModel => (IAlbumCollectionViewModel)DataContext;
-
         /// <inheritdoc />
         protected override void OnApplyTemplate()
         {
@@ -43,15 +38,15 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
-                await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
+            if (!Collection.PopulateMoreAlbumsCommand.IsRunning)
+                await Collection.PopulateMoreAlbumsCommand.ExecuteAsync(25);
         }
 
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
-            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning &&
-                ViewModel.TotalAlbumItemsCount == 0)
+            if (!Collection.PopulateMoreAlbumsCommand.IsRunning &&
+                Collection.TotalAlbumItemsCount == 0)
                 SetEmptyVisibility(Visibility.Visible);
         }
 
@@ -69,5 +64,21 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         {
             Unloaded -= AlbumCollection_Unloaded;
         }
+
+        /// <summary>
+        /// Collection holding the data for <see cref="AlbumCollection" />
+        /// </summary>
+        public IAlbumCollectionViewModel Collection
+        {
+            get { return (IAlbumCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
+        /// </summary>
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(0));
     }
 }
