@@ -200,10 +200,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync()
+        public ValueTask DisposeAsync() => new ValueTask(Task.Run(() =>
         {
             _memberRemote.Dispose();
-            return default;
-        }
+            return Task.CompletedTask;
+        }));
     }
 }

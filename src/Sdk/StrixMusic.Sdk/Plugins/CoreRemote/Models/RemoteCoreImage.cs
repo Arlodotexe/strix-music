@@ -49,9 +49,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public double Width { get; set; }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
+        public ValueTask DisposeAsync() => new ValueTask(Task.Run(() =>
         {
-            return default;
-        }
+            return Task.CompletedTask;
+        }));
     }
 }

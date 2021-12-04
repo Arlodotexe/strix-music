@@ -420,9 +420,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync()
+        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
         {
             throw new NotImplementedException();
-        }
+        }));
     }
 }

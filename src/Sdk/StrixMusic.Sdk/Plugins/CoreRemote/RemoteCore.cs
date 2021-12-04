@@ -220,7 +220,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync(IServiceCollection services)
+        public Task InitAsync(IServiceCollection services) => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Host)
                 return;
@@ -229,10 +229,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             await RemoteInitAsync();
 
             await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
-        }
+        });
 
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        private async Task RemoteInitAsync()
+        private Task RemoteInitAsync() => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Client)
                 return;
@@ -243,11 +243,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             await _core.InitAsync(services);
 
             await _memberRemote.RemoteReleaseAsync(nameof(InitAsync));
-        }
+        });
 
         /// <inheritdoc/>
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        public async Task<ICoreMember?> GetContextById(string id)
+        public Task<ICoreMember?> GetContextById(string id) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(GetContextById)}.{id}";
 
@@ -284,11 +284,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             {
                 return null;
             }
-        }
+        });
 
         /// <inheritdoc/>
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        public async Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(GetMediaSource)}.{track.Id}";
 
@@ -307,7 +307,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             {
                 return null;
             }
-        }
+        });
 
         private static void SetupRemoteServices(IServiceCollection clientServices, string remotingId)
         {
