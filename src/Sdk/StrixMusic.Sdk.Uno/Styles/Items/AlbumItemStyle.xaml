@@ -32,14 +32,14 @@
                             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                                 <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
 
-                                <ItemsControl ItemsSource="{Binding Album.Albums, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ItemsControl ItemsSource="{Binding Album.Artists, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="viewModels:AlbumViewModel">
+                                        <DataTemplate x:DataType="viewModels:ArtistViewModel">
                                             <TextBlock Text="{Binding Name}" Opacity=".5"/>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
