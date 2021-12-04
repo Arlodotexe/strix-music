@@ -11,7 +11,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="items:PlaylistItem">
                         <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
-                            <TextBlock Text="{Binding Playlist.Name,RelativeSource={RelativeSource TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
+                            <TextBlock Text="{Binding Playlist.Name, RelativeSource={RelativeSource TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
                                         VerticalAlignment="Center"/>
                         </Grid>
                     </ControlTemplate>

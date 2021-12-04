@@ -20,7 +20,7 @@
                                     ItemClick="OpenArtist">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-                                        <items:ArtistItem Artist="{Binding }">
+                                        <items:ArtistItem Artist="{Binding}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=ContextHolder.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />

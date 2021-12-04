@@ -28,24 +28,24 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection,RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
 
                             <StackPanel Margin="24,0,0,0">
-                                <TextBlock Text="{Binding Collection.TotalAlbumItemsCount,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
+                                <TextBlock Text="{Binding Collection.TotalAlbumItemsCount, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
                                             FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
-                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums,RelativeSource={RelativeSource TemplatedParent}}"
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, RelativeSource={RelativeSource TemplatedParent}}"
                                         ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                                         Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
-                                        <items:AlbumItem Album="{Binding }">
+                                        <items:AlbumItem Album="{Binding}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Collection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding }" />
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Collection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </items:AlbumItem>

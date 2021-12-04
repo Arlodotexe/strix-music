@@ -16,18 +16,18 @@
                     <StackPanel Orientation="Horizontal">
                         <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                            <Button Style="{StaticResource MediaButton}" Command="{Binding Main.ActiveDevice.PreviousAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                            <Button Style="{StaticResource MediaButton}" Command="{Binding Main.ActiveDevice.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>
-                            <owlcoreuno:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" IsChecked="{Binding Main.ActiveDevice.IsPlaying,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                            <owlcoreuno:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" IsChecked="{Binding Main.ActiveDevice.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <owlcoreuno:ToggleContentButton.CheckedContent>
@@ -35,11 +35,11 @@
                                 </owlcoreuno:ToggleContentButton.CheckedContent>
                                 <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                             </owlcoreuno:ToggleContentButton>
-                            <Button Style="{StaticResource MediaButton}" Command="{Binding Main.ActiveDevice.NextAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                            <Button Style="{StaticResource MediaButton}" Command="{Binding Main.ActiveDevice.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>

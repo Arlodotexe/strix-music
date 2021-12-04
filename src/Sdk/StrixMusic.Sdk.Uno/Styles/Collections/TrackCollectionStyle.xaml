@@ -15,14 +15,14 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:TrackCollection">
                         <Grid>
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection,RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                                    ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
                                    Padding="16" HorizontalAlignment="Stretch"
                                    SelectionMode="None" IsItemClickEnabled="True">
                                 <ListView.Header>
                                     <Grid>
-                                        <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                        <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                                         <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                                     </Grid>
                                 </ListView.Header>

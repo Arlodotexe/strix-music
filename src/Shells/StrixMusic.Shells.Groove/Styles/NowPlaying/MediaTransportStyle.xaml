@@ -25,7 +25,7 @@
 
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
-                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleShuffleCommandAsync,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleShuffleCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ToggleButton>
@@ -34,15 +34,15 @@
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                             </Button>
-                            <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{Binding Main.ActiveDevice.IsPlaying,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                            <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{Binding Main.ActiveDevice.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <owlcoreuno:ToggleContentButton.CheckedContent>
@@ -53,7 +53,7 @@
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -64,7 +64,7 @@
 
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
-                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleRepeatCommandAsync,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleRepeatCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
 

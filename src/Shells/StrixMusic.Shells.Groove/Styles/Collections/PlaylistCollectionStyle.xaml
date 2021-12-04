@@ -17,7 +17,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:GroovePlaylistCollection">
-                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists,RelativeSource={RelativeSource TemplatedParent}}" Padding="16,16,16,112"
+                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists, RelativeSource={RelativeSource TemplatedParent}}" Padding="16,16,16,112"
                                     HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
                             <!--<interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="ItemClicked">
@@ -26,13 +26,13 @@
                                 </interactivity:Interaction.Behaviors>-->
                             <GridView.Header>
                                 <Grid>
-                                    <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning,RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                    <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                                 </Grid>
                             </GridView.Header>
                             <GridView.ItemTemplate>
                                 <DataTemplate>
-                                    <items:GroovePlaylistItem Playlist="{Binding }"/>
+                                    <items:GroovePlaylistItem Playlist="{Binding}"/>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>

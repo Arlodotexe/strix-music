@@ -86,7 +86,7 @@
                                             </nowplaying:MediaSlider>
 
                                             <!--Media transport controls-->
-                                            <nowplaying:MediaTransports Main="{Binding }"  Grid.Column="2"/>
+                                            <nowplaying:MediaTransports Main="{Binding}"  Grid.Column="2"/>
                                         </Grid>
                                     </UserControl>
                                 </DataTemplate>

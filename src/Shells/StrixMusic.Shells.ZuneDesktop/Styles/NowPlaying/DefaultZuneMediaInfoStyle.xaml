@@ -40,20 +40,20 @@
                             <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
                         </controls:DropShadowPanel>
 
-                        <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Main.ActiveDevice.NowPlaying, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Main.ActiveDevice.NowPlaying, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
 
-                        <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Name, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+                        <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    IsAdvancing="{Binding Main.ActiveDevice.IsPlaying, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    Value="{Binding Main.ActiveDevice.Position.TotalMilliseconds, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    Maximum="{Binding Main.ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    IsAdvancing="{Binding Main.ActiveDevice.IsPlaying, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    Value="{Binding Main.ActiveDevice.Position.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    Maximum="{Binding Main.ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     FlowDirection="LeftToRight">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.SeekAsyncCommand, Mode=OneWay,RelativeSource={RelativeSource Mode=TemplatedParent}}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.SeekAsyncCommand, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </nowplaying:MediaSlider>

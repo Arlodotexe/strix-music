@@ -56,18 +56,18 @@
 
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Tapped">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleRepeatCommandAsync,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleRepeatCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
 
-                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="All">
+                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="All">
                                         <core:GoToStateAction StateName="All" TargetObject="{Binding ElementName=RepeatStates}"/>
                                     </core:DataTriggerBehavior>
 
-                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="None">
+                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="None">
                                         <core:GoToStateAction StateName="None" TargetObject="{Binding ElementName=RepeatStates}"/>
                                     </core:DataTriggerBehavior>
 
-                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="One">
+                                    <core:DataTriggerBehavior Binding="{Binding Main.ActiveDevice.RepeatState, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="One">
                                         <core:GoToStateAction StateName="One" TargetObject="{Binding ElementName=RepeatStates}"/>
                                     </core:DataTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
@@ -79,7 +79,7 @@
 
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleShuffleCommandAsync,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                        <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.ToggleShuffleCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
 
@@ -97,11 +97,11 @@
                                     </interactivity:Interaction.Behaviors>
                                 </Button>
 
-                                <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{Binding Main.ActiveDevice.IsPlaying,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{Binding Main.ActiveDevice.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="Click">
-                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                     <owlcoreuno:ToggleContentButton.CheckedContent>
@@ -115,7 +115,7 @@
                                     <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0" />
                                     <interactivity:Interaction.Behaviors>
                                         <core:EventTriggerBehavior EventName="Click">
-                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand,RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                            <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                         </core:EventTriggerBehavior>
                                     </interactivity:Interaction.Behaviors>
                                 </Button>

@@ -78,13 +78,13 @@
                                         </Grid.RowDefinitions>
 
                                         <strix:SafeImage x:Name="AlbumImage" Grid.RowSpan="2" Margin="38,0,22,0"
-                                         ImageCollection="{Binding Album ,RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                         ImageCollection="{Binding Album , RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                          Height="300" Width="300" HorizontalAlignment="Center"/>
 
                                         <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
-                                            <TextBlock Text="{Binding Album.Name ,RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="32" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Album.Name , RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="32" FontWeight="SemiBold"/>
 
-                                            <ItemsControl ItemsSource="{Binding Album.Artists,RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                            <ItemsControl ItemsSource="{Binding Album.Artists, RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Horizontal" />
@@ -114,7 +114,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Collection="{Binding Album,RelativeSource={RelativeSource Mode=TemplatedParent}}"  Grid.Row="1" />
+                                    <collections:TrackCollection Collection="{Binding Album, RelativeSource={RelativeSource Mode=TemplatedParent}}"  Grid.Row="1" />
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

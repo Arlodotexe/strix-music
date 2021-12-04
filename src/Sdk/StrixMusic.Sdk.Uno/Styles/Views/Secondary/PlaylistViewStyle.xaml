@@ -113,7 +113,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Collection="{Binding Playlist,RelativeSource={RelativeSource Mode=TemplatedParent}}"  Grid.Row="1" />
+                                    <collections:TrackCollection Collection="{Binding Playlist, RelativeSource={RelativeSource Mode=TemplatedParent}}"  Grid.Row="1" />
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

@@ -20,7 +20,7 @@
                             <strix:SafeImage Height="128" Width="128" ImageCollection="{Binding Playlist}"/>
 
                             <StackPanel Grid.Row="1" Margin="0,8,0,0">
-                                <TextBlock Text="{Binding Playlist.Name,RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Playlist.Name, RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
                             </StackPanel>
                         </Grid>
                     </ControlTemplate>

@@ -42,7 +42,7 @@
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="sdkvms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{Binding }" />
+                        <pages:GrooveHomePage Library="{Binding}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>
