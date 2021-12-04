@@ -17,8 +17,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
-        private readonly List<IMediaSourceConfig> _prevItems;
-        private List<IMediaSourceConfig> _nextItems;
+        private readonly List<IMediaSourceConfig> _prevItems = new List<IMediaSourceConfig>();
+        private List<IMediaSourceConfig> _nextItems = new List<IMediaSourceConfig>();
 
         private int[] _shuffleMap;
 
@@ -30,14 +30,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
         /// </summary>
-        public PlaybackHandlerService(List<IMediaSourceConfig> prevItems, List<IMediaSourceConfig> nextItems, IAudioPlayerService currentPlayerService
-            , Dictionary<string, IAudioPlayerService> audioPlayerRegistry)
+        public PlaybackHandlerService(IAudioPlayerService currentPlayerService, Dictionary<string, IAudioPlayerService> audioPlayerRegistry)
         {
             _currentPlayerService = currentPlayerService;
 
             _audioPlayerRegistry = audioPlayerRegistry;
-            _prevItems = prevItems;
-            _nextItems = nextItems;
             _shuffleMap = Array.Empty<int>();
         }
 
