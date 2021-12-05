@@ -43,10 +43,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             _nextItems = null;
         }
 
-        [TestMethod]/*
+        [TestMethod]
         [DataRow(0, 11)]
-        [DataRow(1, 10)]*/
-        [DataRow(2, 9)]/*
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
         [DataRow(3, 8)]
         [DataRow(4, 7)]
         [DataRow(5, 6)]
@@ -54,7 +54,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(7, 4)]
         [DataRow(8, 3)]
         [DataRow(9, 2)]
-        [DataRow(10, 1)]*/
+        [DataRow(10, 1)]
         [Timeout(800)]
         public async Task Shuffle_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {

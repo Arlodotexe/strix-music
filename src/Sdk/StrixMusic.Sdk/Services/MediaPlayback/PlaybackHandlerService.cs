@@ -479,15 +479,18 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             shuffleMap.Shuffle();
 
+            // Previous items are being inserted at the end of the list.
             _nextItems.AddRange(_prevItems);
 
             // Make room for the previous Items, so they can be inserted in the start without overwriting the next items.
             if (_prevItems.Count > 0)
             {
-                for (int i = _nextItems.Count - 1; i >= 0; i--)
+                for (int i = _nextItems.Count - 1; i > 0; i--)
                 {
-                    if (i - 1 > 0)
-                        _nextItems[i] = _nextItems[i - 1];
+                    if (i - _prevItems.Count < 0)
+                        break;
+
+                    _nextItems[i] = _nextItems[i - _prevItems.Count];
                 }
             }
 
