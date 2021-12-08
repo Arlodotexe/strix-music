@@ -115,7 +115,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Grid.Row="1" DataContext="{TemplateBinding Album}"/>
+                                    <collections:TrackCollection Grid.Row="1" Collection="{TemplateBinding Album}"/>
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

@@ -17,16 +17,16 @@
                             <Grid>
                                 <Pivot x:Name="PART_Pivot">
                                     <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
-                                        <collections:TrackCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:TrackCollection x:Uid="NothingToShowCOLC" Collection="{Binding}"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <collections:AlbumCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:AlbumCollection x:Uid="NothingToShowCOLC" Collection="{Binding}"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
                                         <collections:ArtistCollection x:Uid="NothingToShowCOLC" Collection="{Binding}"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
-                                        <collections:PlaylistCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:PlaylistCollection x:Uid="NothingToShowCOLC" Collection="{Binding}"/>
                                     </PivotItem>
                                 </Pivot>
 

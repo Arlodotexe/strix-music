@@ -78,7 +78,7 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; private set; } = new List<AbstractUICollection>();
+        public AbstractUICollection AbstractUIElements { get; private set; } = new(string.Empty);
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
@@ -374,7 +374,7 @@ namespace StrixMusic.Cores.OneDrive
 
             // Show folder explorer
             _logger.LogInformation($"Displaying abstract folder explorer");
-            AbstractUIElements = fileExplorer.IntoList();
+            AbstractUIElements = fileExplorer;
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             fileExplorer.DirectoryChanged += OnDirectoryChanged;
@@ -407,7 +407,7 @@ namespace StrixMusic.Cores.OneDrive
 
                 _logger.LogInformation($"Directory changed: {e.Id}");
 
-                AbstractUIElements = folderExplorer.IntoList();
+                AbstractUIElements = folderExplorer;
                 AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
             }
 
@@ -419,7 +419,7 @@ namespace StrixMusic.Cores.OneDrive
 
         public void SaveAbstractUI(AbstractUICollection collection)
         {
-            AbstractUIElements = collection.IntoList();
+            AbstractUIElements = collection;
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -449,7 +449,7 @@ namespace StrixMusic.Cores.OneDrive
                     authenticateButton,
                     cancelButton
                 },
-            }.IntoList();
+            };
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 

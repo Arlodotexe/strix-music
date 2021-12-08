@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -27,13 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _coreConfig = coreConfig;
 
-            AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel>();
-            AbstractUIElements.Clear();
-
-            foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
-            {
-                AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
-            }
+            AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel> { new(_coreConfig.AbstractUIElements) };
 
             AttachEvents();
         }
@@ -53,11 +46,7 @@ namespace StrixMusic.Sdk.ViewModels
             await Threading.OnPrimaryThread(() =>
             {
                 AbstractUIElements.Clear();
-
-                foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
-                {
-                    AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
-                }
+                AbstractUIElements.Add(new AbstractUICollectionViewModel(_coreConfig.AbstractUIElements));
             });
         }
 
@@ -65,7 +54,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IServiceProvider? Services => _coreConfig.Services;
 
         /// <inheritdoc/>
-        IReadOnlyList<AbstractUICollection> ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
+        AbstractUICollection ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
 
         /// <inheritdoc cref="ICoreConfigBase.AbstractUIElements" />
         public ObservableCollection<AbstractUICollectionViewModel> AbstractUIElements { get; }

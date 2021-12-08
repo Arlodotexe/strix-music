@@ -21,9 +21,20 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         }
 
         /// <summary>
-        /// The <see cref="ITrackCollectionViewModel"/> for the control.
+        /// Backing dependency property for <see cref="Collection"/>.
         /// </summary>
-        public ITrackCollectionViewModel? ViewModel => DataContext as ITrackCollectionViewModel;
+        public ITrackCollectionViewModel Collection
+        {
+            get { return (ITrackCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="ITrackCollectionViewModel" />.
+        /// </summary>
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(TrackCollection), new PropertyMetadata(0));
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -40,21 +51,21 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (ViewModel == null)
+            if (Collection == null)
                 return;
 
-            if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
-                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
+            if (!Collection.PopulateMoreTracksCommand.IsRunning)
+                await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
 
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
-            if (ViewModel == null)
+            if (Collection == null)
                 return;
 
-            if (!ViewModel.PopulateMoreTracksCommand.IsRunning &&
-                ViewModel.TotalTrackCount == 0)
+            if (!Collection.PopulateMoreTracksCommand.IsRunning &&
+                Collection.TotalTrackCount == 0)
                 
             SetEmptyVisibility(Visibility.Visible);
         }

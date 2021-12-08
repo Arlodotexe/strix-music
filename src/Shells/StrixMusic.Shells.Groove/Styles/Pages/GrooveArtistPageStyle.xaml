@@ -72,7 +72,7 @@
                                         </Grid.RowDefinitions>
 
                                         <strix:SafeImage Grid.RowSpan="2" Margin="32"
-                                     ImageCollection="{Binding Artist,RelativeSource={RelativeSource TemplatedParent}}"
+                                     ImageCollection="{Binding Artist, RelativeSource={RelativeSource TemplatedParent}}"
                                      HorizontalAlignment="Center"
                                      Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 

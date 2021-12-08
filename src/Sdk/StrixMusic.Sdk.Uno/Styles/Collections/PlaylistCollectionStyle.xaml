@@ -6,21 +6,8 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.Collections.PlaylistCollectionStyle">
 
-    <DataTemplate x:Key="DefaultPlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists}" ItemTemplate="{StaticResource DefaultPlaylistCollectionItemStyle}"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenPlaylist">
-            <GridView.Header>
-                <Grid>
-                    <ProgressRing IsActive="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
-                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                </Grid>
-            </GridView.Header>
-        </GridView>
-    </DataTemplate>
-
     <DataTemplate x:Key="DefaultPlaylistCollectionItemStyle">
-        <items:PlaylistItem />
+        <items:PlaylistItem Playlist="{Binding}"/>
     </DataTemplate>
 
     <Style x:Key="DefaultPlaylistCollectionStyle" TargetType="collections:PlaylistCollection">
@@ -28,9 +15,17 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:PlaylistCollection">
-                        <ContentControl ContentTemplate="{StaticResource DefaultPlaylistCollectionDataTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    </ControlTemplate>
+                                <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists, RelativeSource={RelativeSource TemplatedParent}}" ItemTemplate="{StaticResource DefaultPlaylistCollectionItemStyle}"
+                                           Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                                           ItemClick="OpenPlaylist">
+                                <GridView.Header>
+                                    <Grid>
+                                        <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                        <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                                    </Grid>
+                                </GridView.Header>
+                                </GridView>
+                            </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>

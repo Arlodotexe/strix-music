@@ -42,7 +42,7 @@
                 </selectors:MainContentTemplateSelector.ArtistPageTemplate>
                 <selectors:MainContentTemplateSelector.HomePageTemplate>
                     <DataTemplate x:DataType="sdkvms:LibraryViewModel">
-                        <pages:GrooveHomePage Library="{Binding }" />
+                        <pages:GrooveHomePage Library="{Binding}" />
                     </DataTemplate>
                 </selectors:MainContentTemplateSelector.HomePageTemplate>
                 <selectors:MainContentTemplateSelector.PlaylistPageTemplate>
@@ -264,7 +264,7 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:GroovePlaylistCollection x:Name="PlaylistList" PlaylistCollection="{x:Bind ViewModel.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                    <collections:GroovePlaylistCollection x:Name="PlaylistList" Collection="{x:Bind ViewModel.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>
