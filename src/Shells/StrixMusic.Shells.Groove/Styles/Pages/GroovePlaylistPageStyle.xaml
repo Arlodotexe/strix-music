@@ -104,7 +104,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Grid.Row="1" DataContext="{TemplateBinding Playlist}"/>
+                                    <collections:TrackCollection Grid.Row="1" Collection="{TemplateBinding Playlist}"/>
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

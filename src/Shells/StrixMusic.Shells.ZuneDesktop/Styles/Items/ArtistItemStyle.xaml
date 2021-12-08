@@ -5,22 +5,16 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.ArtistItemStyle">
-
-    <DataTemplate x:Key="ZuneDesktopArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
-        <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
-            <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
-                   VerticalAlignment="Center"/>
-        </Grid>
-    </DataTemplate>
-
+    
     <Style x:Key="ZuneDesktopArtistItemStyle" TargetType="items:ArtistItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:ArtistItem">
-                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopArtistItemDataTemplate}"
-                                        VerticalContentAlignment="Stretch" VerticalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
+                            <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

@@ -1,4 +1,5 @@
 ﻿using StrixMusic.Sdk.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Views
@@ -28,8 +29,19 @@ namespace StrixMusic.Sdk.Uno.Controls.Views
         //}
 
         /// <summary>
-        /// The <see cref="MainViewModel"/> for the app.
+        /// The viewmodel that holds application's main data.
         /// </summary>
-        public MainViewModel ViewModel => (DataContext as MainViewModel)!;
+        public MainViewModel Main
+        {
+            get { return (MainViewModel)GetValue(MainProperty); }
+            set { SetValue(MainProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <see cref="MainViewModel"/>.
+        /// </summary>
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MainProperty =
+            DependencyProperty.Register("MainProperty", typeof(MainViewModel), typeof(SearchView), new PropertyMetadata(0));
     }
 }

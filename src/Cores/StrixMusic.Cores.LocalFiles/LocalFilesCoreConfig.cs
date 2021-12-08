@@ -65,7 +65,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             _configDoneButton = new AbstractButton("FilesCoreDoneButton", "Done", null, AbstractButtonType.Confirm);
 
-            AbstractUIElements = CreateGenericConfig().IntoList();
+            AbstractUIElements = CreateGenericConfig();
         }
 
         private void AttachEvents()
@@ -101,7 +101,7 @@ namespace StrixMusic.Cores.LocalFiles
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; private set; }
+        public AbstractUICollection AbstractUIElements { get; private set; }
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
@@ -154,7 +154,7 @@ namespace StrixMusic.Cores.LocalFiles
             var genericConfig = CreateGenericConfig();
             genericConfig.Subtitle = folderData.Path;
 
-            AbstractUIElements = genericConfig.IntoList();
+            AbstractUIElements = genericConfig;
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -242,7 +242,7 @@ namespace StrixMusic.Cores.LocalFiles
 
         public void SaveAbstractUI(AbstractUICollection collection)
         {
-            AbstractUIElements = collection.IntoList();
+            AbstractUIElements = collection;
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 

@@ -36,6 +36,22 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
             }
         }
 
+        /// <summary>
+        /// ViewModel holding the data for <see cref="ArtistItem" />
+        /// </summary>
+        public ArtistViewModel Artist
+        {
+            get { return (ArtistViewModel)GetValue(ArtistProperty); }
+            set { SetValue(ArtistProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="ArtistViewModel" />.
+        /// </summary>
+        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ArtistProperty =
+            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(0));
+
         private void RootGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Normal", true);

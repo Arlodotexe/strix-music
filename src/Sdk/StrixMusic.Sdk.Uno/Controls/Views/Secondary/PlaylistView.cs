@@ -2,6 +2,7 @@
 using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
 {
@@ -23,14 +24,24 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         }
 
         /// <summary>
-        /// The <see cref="PlaylistViewModel"/> for this control.
+        /// Backing dependency property for <see cref="Playlist"/>.
         /// </summary>
-        public PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
+        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistView),
+                                                                   new PropertyMetadata(null, null));
+
+        /// <summary>
+        /// The playlist to display.
+        /// </summary>
+        public PlaylistViewModel Playlist
+        {
+            get { return (PlaylistViewModel)GetValue(PlaylistProperty); }
+            set { SetValue(PlaylistProperty, value); }
+        }
 
         private async Task LoadAsync()
         {
-            if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
-                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(5);
+            if (!Playlist.PopulateMoreTracksCommand.IsRunning)
+                await Playlist.PopulateMoreTracksCommand.ExecuteAsync(5);
         }
     }
 }
