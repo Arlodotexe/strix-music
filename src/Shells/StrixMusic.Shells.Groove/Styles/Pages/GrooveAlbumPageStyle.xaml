@@ -56,7 +56,7 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
-                                    <Grid x:Name="TitleGrid" Background="White">
+                                    <Grid x:Name="TitleGrid" Background="{Binding BackgroundColor, RelativeSource={RelativeSource TemplatedParent}}">
                                         <!--<Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">-->
                                         <!--<Grid.Resources>
                             <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
@@ -115,7 +115,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Grid.Row="1" DataContext="{TemplateBinding Album}"/>
+                                    <collections:TrackCollection Grid.Row="1" Collection="{TemplateBinding Album}"/>
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

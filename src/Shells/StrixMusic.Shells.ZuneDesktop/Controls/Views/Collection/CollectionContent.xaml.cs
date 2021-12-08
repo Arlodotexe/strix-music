@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk;
+﻿using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
 using Windows.System;
@@ -56,23 +57,32 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
-            AlbumCollection.DataContext = e.SelectedItem;
+            if (e.SelectedItem == null)
+                return;
 
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackCollection.DataContext = e.SelectedItem;
+            e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
+            AlbumCollection.Collection = e.SelectedItem;
+
+            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
+            TrackCollection.Collection = e.SelectedItem;
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackCollection.DataContext = e.SelectedItem;
+            if (e.SelectedItem == null)
+                return;
+
+            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
+            TrackCollection.Collection = e.SelectedItem;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
-            e.SelectedItem?.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackTable.DataContext =
+            if (e.SelectedItem == null)
+                return;
+
+            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
+            TrackTable.Collection = e.SelectedItem;
             DetailsPane.DataContext = e.SelectedItem;
         }
 
@@ -90,11 +100,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             // Clears by rebinding
             TrackTable.DataContext = null;
 
-            ArtistCollection.DataContext =
-            AlbumCollection.DataContext =
-            TrackCollection.DataContext =
-            TrackTable.DataContext =
-            PlaylistCollection.DataContext= ViewModel.Library;
+            Guard.IsNotNull(ViewModel.Library, nameof(ViewModel.Library));
+            ArtistCollection.Collection = ViewModel.Library;
+            AlbumCollection.Collection = ViewModel.Library;
+            TrackCollection.Collection = ViewModel.Library;
+            TrackTable.Collection = ViewModel.Library;
+            PlaylistCollection.DataContext = ViewModel.Library;
 
             DetailsPane.DataContext = null;
         }

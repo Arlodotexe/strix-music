@@ -1,6 +1,7 @@
 ﻿using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,6 +18,21 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public GrooveArtistPage()
         {
             DefaultStyleKey = typeof(GrooveArtistPage);
+        }
+
+        /// <summary>
+        /// Backing property for <see cref="BackgroundColor"/>.
+        /// </summary>
+        public static readonly DependencyProperty BackgroundColorProperty =
+            DependencyProperty.Register(nameof(BackgroundColor), typeof(Color?), typeof(GrooveAlbumPage), new PropertyMetadata(null, null));
+
+        /// <summary>
+        /// Gets or sets the color of the background for the <see cref="Controls.Pages.GrooveAlbumPage"/>.
+        /// </summary>
+        public Color? BackgroundColor
+        {
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
         }
 
         /// <summary>

@@ -6,21 +6,16 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     x:Class="StrixMusic.Sdk.Uno.Styles.Views.SearchViewStyle">
 
-    <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="sdk:MainViewModel">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Search results for &quot;"/>
-            <TextBlock Text="Not implemented"/>
-            <TextBlock Text="&quot;"/>
-        </StackPanel>
-    </DataTemplate>
-
     <Style x:Key="DefaultSearchViewStyle" TargetType="views:SearchView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="views:SearchView">
-                        <ContentControl ContentTemplate="{StaticResource DefaultSearchViewTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Search results for &quot;"/>
+                            <TextBlock Text="Not implemented"/>
+                            <TextBlock Text="&quot;"/>
+                        </StackPanel>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
