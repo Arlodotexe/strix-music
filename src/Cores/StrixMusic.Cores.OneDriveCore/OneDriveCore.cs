@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using OwlCore.AbstractUI.Models;
@@ -15,6 +16,7 @@ using StrixMusic.Sdk.Services.Notifications;
 
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +28,7 @@ namespace StrixMusic.Cores.OneDrive
         private readonly AbstractButton _completeGenericSetupButton;
         private readonly ILogger<OneDriveCore> _logger;
         private OneDriveCoreSettingsService? _settingsService;
+        private INotificationService? _notificationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCore"/> class.
@@ -59,6 +62,9 @@ namespace StrixMusic.Cores.OneDrive
         /// <inheritdoc/>
         public override async Task InitAsync(IServiceCollection services)
         {
+#warning TODO: Pass cancellationToken from InitAsync when implemented
+            var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken.None);
+
             ChangeCoreState(CoreState.Loading);
 
             if (CoreConfig is not OneDriveCoreConfig coreConfig)
@@ -76,7 +82,11 @@ namespace StrixMusic.Cores.OneDrive
             _logger.LogInformation($"Setting up configuration services");
             await coreConfig.SetupConfigurationServices(services, _settingsService);
 
-            // Show very first OOBE and allow the user to change settings before picking a folder.
+            Guard.IsNotNull(coreConfig.Services, nameof(coreConfig.Services));
+
+            _notificationService = coreConfig.Services.GetRequiredService<INotificationService>();
+
+            // Step 1: Settings OOBE
             if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(tenantId) || !firstSetupComplete)
             {
                 _logger.LogInformation($"Resetting all settings");
@@ -125,72 +135,89 @@ namespace StrixMusic.Cores.OneDrive
                 }
             }
 
+            // Step 2: Login
             try
             {
-                var loggedIn = await coreConfig.TryLoginAsync();
+                var loggedIn = await coreConfig.TryLoginAsync(cancellationTokenSource.Token);
                 if (!loggedIn)
                 {
+                    Guard.IsNotNull(_notificationService, nameof(_notificationService));
+                    _notificationService.RaiseNotification("Login failed", "An error occurred and we weren't able to log you into OneDrive.");
+
                     ChangeInstanceDescriptor("Login failed");
                     ChangeCoreState(CoreState.Faulted);
                     return;
                 }
             }
-            catch (TaskCanceledException)
+            catch (HttpRequestException)
             {
-                await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete), false);
+                RaiseFailedConnectionState();
+                return;
+            }
+            catch (OperationCanceledException)
+            {
+                await _settingsService.ResetAllAsync();
+                ChangeCoreState(CoreState.Unloaded);
+                return;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Any(x => x is HttpRequestException))
+                {
+                    ex.Handle((ex) =>
+                    {
+                        if (ex is HttpRequestException)
+                        {
+                            RaiseFailedConnectionState();
+                            return true;
+                        }
+
+                        return false;
+                    });
+
+                    cancellationTokenSource.Cancel();
+                    return;
+                }
+            }
+
+            // Step 3: Folder picking
+            if (string.IsNullOrWhiteSpace(folderId))
+            {
+                ChangeCoreState(CoreState.NeedsSetup);
+
+                _logger.LogInformation($"No folder selected, opening picker.");
+                var folder = await coreConfig.PickSingleFolderAsync();
+                if (folder is null)
+                {
+                    // User canceled folder picking.
+                    ChangeCoreState(CoreState.Unloaded);
+                    return;
+                }
+
                 await InitAsync(services);
                 return;
             }
 
-            try
+            _logger.LogInformation($"Getting selected folder {folderId}");
+            var selectedFolder = await coreConfig.GetFolderDataById(folderId);
+            if (selectedFolder is null)
             {
-                if (string.IsNullOrWhiteSpace(folderId))
-                {
-                    ChangeCoreState(CoreState.NeedsSetup);
+                ChangeCoreState(CoreState.NeedsSetup);
 
-                    _logger.LogInformation($"No folder selected, opening picker.");
-                    var folder = await coreConfig.PickSingleFolderAsync();
-                    if (folder is null)
-                    {
-                        // User canceled folder picking.
-                        ChangeCoreState(CoreState.Unloaded);
-                        return;
-                    }
-
-                    await InitAsync(services);
-                    return;
-                }
-
-                _logger.LogInformation($"Getting selected folder {folderId}");
-                var selectedFolder = await coreConfig.GetFolderDataById(folderId);
+                selectedFolder = await coreConfig.PickSingleFolderAsync();
                 if (selectedFolder is null)
                 {
-                    ChangeCoreState(CoreState.NeedsSetup);
-
-                    selectedFolder = await coreConfig.PickSingleFolderAsync();
-                    if (selectedFolder is null)
-                    {
-                        // User canceled folder picking.
-                        ChangeCoreState(CoreState.Unloaded);
-                        return;
-                    }
-
-                    await InitAsync(services);
+                    // User canceled folder picking.
+                    ChangeCoreState(CoreState.Unloaded);
                     return;
                 }
 
-                _logger.LogInformation($"Setting up metadata scanner.");
-                await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
-            }
-            catch (ServiceException)
-            {
-                ChangeCoreState(CoreState.Faulted);
-                Ioc.Default.GetRequiredService<INotificationService>()
-                    .RaiseNotification(
-                        "Failed to reach OneDrive",
-                        "Are you connected to the internet?");
+                await InitAsync(services);
                 return;
             }
+
+            _logger.LogInformation($"Setting up metadata scanner.");
+            await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
 
             _logger.LogInformation($"Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);
@@ -204,6 +231,14 @@ namespace StrixMusic.Cores.OneDrive
 
             _logger.LogInformation($"Initializing library");
             await Library.Cast<FilesCoreLibrary>().InitAsync();
+
+            void RaiseFailedConnectionState()
+            {
+                _notificationService?.RaiseNotification("Connection failed", "We weren't able to contact OneDrive");
+
+                ChangeInstanceDescriptor("Login failed");
+                ChangeCoreState(CoreState.Faulted);
+            }
         }
 
         internal void ChangeCoreState(CoreState state)

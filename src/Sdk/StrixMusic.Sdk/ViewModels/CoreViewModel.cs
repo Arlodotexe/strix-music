@@ -113,6 +113,7 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateFaulted));
             });
         }
+
         /// <inheritdoc />
         public string CoreRegistryId => _core.CoreRegistryId;
 

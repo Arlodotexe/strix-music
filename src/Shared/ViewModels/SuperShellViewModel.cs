@@ -196,7 +196,7 @@ namespace StrixMusic.Shared.ViewModels
             var core = (ICore)sender;
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
-            if (e == CoreState.Configured || e == CoreState.Unloaded)
+            if (e == CoreState.Configured || e == CoreState.Unloaded || e == CoreState.Faulted)
             {
                 await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
                 return;

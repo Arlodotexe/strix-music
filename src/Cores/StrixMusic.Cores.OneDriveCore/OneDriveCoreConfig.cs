@@ -278,7 +278,7 @@ namespace StrixMusic.Cores.OneDrive
         /// Logs the user in.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task<bool> TryLoginAsync()
+        public async Task<bool> TryLoginAsync(CancellationToken? cancellationToken = null)
         {
             _logger.LogInformation($"Entered {nameof(TryLoginAsync)}");
 
@@ -295,14 +295,10 @@ namespace StrixMusic.Cores.OneDrive
             _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
 
             _logger.LogInformation($"Trying login");
-            _graphClient = await _authenticationManager.TryLoginAsync();
+            _graphClient = await _authenticationManager.TryLoginAsync(cancellationToken ?? CancellationToken.None);
 
             if (_graphClient is null)
-            {
-                Guard.IsNotNull(_notificationService, nameof(_notificationService));
-                _notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
                 return false;
-            }
 
             SourceCore.Cast<OneDriveCore>().ChangeInstanceDescriptor(_authenticationManager.EmailAddress ?? string.Empty);
             return true;
@@ -343,6 +339,7 @@ namespace StrixMusic.Cores.OneDrive
             Guard.IsNotNull(_graphClient, nameof(_graphClient));
             Guard.IsNotNull(_authenticationManager, nameof(_authenticationManager));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
             // Get root OneDrive folder.
             _logger.LogInformation($"Getting root folder");
@@ -377,13 +374,14 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElements = fileExplorer;
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
+            var taskCompletionSource = new TaskCompletionSource<IFolderData?>();
+
             fileExplorer.DirectoryChanged += OnDirectoryChanged;
+            fileExplorer.NavigationFailed += OnNavigationFailed;
 
             // Wait until the user has picked a file.
             var folderSelectionCancellationTokenSource = new CancellationTokenSource();
             folderSelectionCancellationTokenSource.CancelAfter(TimeSpan.FromMinutes(30));
-
-            var taskCompletionSource = new TaskCompletionSource<IFolderData?>();
 
             fileExplorer.FolderSelected += OnFolderSelected;
             fileExplorer.Canceled += OnFileExplorerCanceled;
@@ -393,6 +391,7 @@ namespace StrixMusic.Cores.OneDrive
             _logger.LogInformation($"Folder picked: {result?.Id ?? "none"}");
 
             fileExplorer.DirectoryChanged -= OnDirectoryChanged;
+            fileExplorer.NavigationFailed -= OnNavigationFailed;
             fileExplorer.Dispose();
 
             if (result is null)
@@ -400,6 +399,8 @@ namespace StrixMusic.Cores.OneDrive
 
             _logger.LogInformation($"Saving {nameof(OneDriveCoreSettingsKeys.SelectedFolderId)}");
             await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().Id);
+
+            return result;
 
             void OnDirectoryChanged(object sender, IFolderData e)
             {
@@ -411,7 +412,15 @@ namespace StrixMusic.Cores.OneDrive
                 AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
             }
 
-            return result;
+            void OnNavigationFailed(object sender, AbstractFolderExplorerNavigationFailedEventArgs e)
+            {
+                if (e.Exception is ServiceException)
+                    _notificationService.RaiseNotification("Connection lost", "We weren't able to reach OneDrive to load that folder.");
+                else
+                    _notificationService.RaiseNotification("Couldn't open folder", $"An error occured while opening the folder{(e.Exception is not null ? $" ({e.Exception.GetType()})" : "")}");
+
+                taskCompletionSource.SetResult(null);
+            }
 
             void OnFolderSelected(object sender, IFolderData e) => taskCompletionSource.SetResult(e);
             void OnFileExplorerCanceled(object sender, EventArgs e) => taskCompletionSource.SetResult(null);
@@ -451,6 +460,7 @@ namespace StrixMusic.Cores.OneDrive
                 },
             };
 
+            SourceCore?.Cast<OneDriveCore>().ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
@@ -465,6 +475,7 @@ namespace StrixMusic.Cores.OneDrive
             {
                 cancelButton.Clicked -= OnCancelButtonClicked;
                 authenticateButton.Clicked -= OnAuthenticateButtonClicked;
+
                 cancellationTokenSource.Cancel();
             }
         }
