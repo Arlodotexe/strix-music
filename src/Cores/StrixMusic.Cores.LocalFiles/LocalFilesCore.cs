@@ -13,6 +13,7 @@ using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.LocalFiles
@@ -31,7 +32,7 @@ namespace StrixMusic.Cores.LocalFiles
         }
 
         /// <inheritdoc/>
-        public override string CoreRegistryId => nameof(LocalFilesCore);
+        public override CoreMetadata Registration => LocalFiles.Registration.Metadata;
 
         /// <inheritdoc/>
         public override ICoreConfig CoreConfig { get; protected set; }

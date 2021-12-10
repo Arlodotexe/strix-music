@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.32" />
+    <PackageReference Include="OwlCore" Version="0.0.37" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -143,6 +143,6 @@
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.0-build.2.g0e224f133a" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.81" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.5" />
   </ItemGroup>
 </Project>

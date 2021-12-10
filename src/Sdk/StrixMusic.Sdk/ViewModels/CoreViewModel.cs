@@ -13,6 +13,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -113,8 +114,6 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateFaulted));
             });
         }
-        /// <inheritdoc />
-        public string CoreRegistryId => _core.CoreRegistryId;
 
         /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
@@ -226,6 +225,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.Pins" />
         public PlayableCollectionGroupViewModel? Pins { get; }
+
+        /// <inheritdoc cref="CoreMetadata"/>
+        public CoreMetadata Registration => _core.Registration;
 
         /// <inheritdoc cref="IAsyncInit.InitAsync" />
         public Task InitAsync(IServiceCollection services) => _core.InitAsync(services);

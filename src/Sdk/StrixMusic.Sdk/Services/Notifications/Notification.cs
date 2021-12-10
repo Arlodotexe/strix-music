@@ -1,12 +1,11 @@
 ﻿using System;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using OwlCore.Remoting;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
     /// <summary>
-    /// A Notification displayed by a Shell.
+    /// Represents a notification containing basic ui elements that can be dismissed.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public sealed class Notification

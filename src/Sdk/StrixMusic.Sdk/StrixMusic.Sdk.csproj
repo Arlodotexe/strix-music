@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <Authors>Strix Music</Authors>
+    <AssemblyVersion>0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
@@ -31,7 +34,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.32" />
+    <PackageReference Include="OwlCore" Version="0.0.37" />
     <PackageReference Include="Refit" Version="5.2.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

@@ -33,12 +33,12 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// Fires when the <see cref="Album"/> metadata changes.
         /// </summary>
-        event EventHandler<ICoreAlbum?> AlbumChanged;
+        event EventHandler<ICoreAlbum?>? AlbumChanged;
 
         /// <summary>
         /// Fires when the <see cref="Lyrics"/> metadata changes.
         /// </summary>
-        event EventHandler<ICoreLyrics?> LyricsChanged;
+        event EventHandler<ICoreLyrics?>? LyricsChanged;
 
         /// <summary>
         /// Changes the album for this track.
