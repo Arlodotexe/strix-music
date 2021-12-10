@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using OwlCore.Remoting;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
@@ -10,36 +11,47 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     public class RemoteCoreImage : ICoreImage
     {
         /// <summary>
-        /// Creates a new instance of <see cref="RemoteCoreImage"/>.
+        /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.
         /// </summary>
-        /// <param name="sourceCore"><inheritdoc cref="ICoreMember.SourceCore"/></param>
-        /// <param name="uri">A <see cref="System.Uri"/> pointing to the image file.</param>
-        /// <param name="width">The width of the image.</param>
-        /// <param name="height">The height of the image.</param>
-        public RemoteCoreImage(ICore sourceCore, Uri uri, double width, double height)
+        /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
+        /// <param name="id">Uniquely identifies the instance being remoted.</param>
+        internal RemoteCoreImage(string sourceCoreInstanceId, string id)
         {
-            SourceCore = sourceCore;
-            Uri = uri;
-            Width = width;
-            Height = height;
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            Uri = new Uri("https://strixmusic.com/favicon.ico");
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteCoreImage"/>. Wraps around the given <paramref name="image"/> for remote interaction.
+        /// </summary>
+        /// <param name="image">The image to control remotely.</param>
+        internal RemoteCoreImage(ICoreImage image)
+        {
+            SourceCore = RemoteCore.GetInstance(image.SourceCore.InstanceId);
+            Uri = image.Uri;
+            Height = image.Height;
+            Width = image.Width;
         }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public Uri Uri { get; }
+        [RemoteProperty]
+        public Uri Uri { get; set; }
 
         /// <inheritdoc />
-        public double Height { get; }
+        [RemoteProperty]
+        public double Height { get; set; }
 
         /// <inheritdoc />
-        public double Width { get; }
+        [RemoteProperty]
+        public double Width { get; set; }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
+        public ValueTask DisposeAsync() => new ValueTask(Task.Run(() =>
         {
-            return default;
-        }
+            return Task.CompletedTask;
+        }));
     }
 }

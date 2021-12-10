@@ -32,6 +32,7 @@ namespace StrixMusic.Sdk
         private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly ICoreManagementService _coreManagementService;
+        private readonly INotificationService _notificationService;
 
         private MergedLibrary? _mergedLibrary;
         private MergedRecentlyPlayed? _mergedRecentlyPlayed;
@@ -44,6 +45,7 @@ namespace StrixMusic.Sdk
         {
             Singleton = this;
             _coreManagementService = coreManagementService;
+            _notificationService = notificationsService;
             LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
@@ -215,6 +217,13 @@ namespace StrixMusic.Sdk
             // Skip if registered but already set up.
             if (_sources.Any(x => x.InstanceId == instanceId))
                 return null;
+
+            var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
+            if (coreMetadata.SdkVersion != currentSdkVersion)
+            {
+                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVersion}, which is not compatible with the current version {currentSdkVersion}.");
+                return null;
+            }
 
             var core = CoreRegistry.CreateCore(coreMetadata.Id, instanceId);
             _sources.Add(core);

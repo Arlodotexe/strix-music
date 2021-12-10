@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
@@ -13,10 +14,16 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.CoreRemote.Models;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Wraps around an instance of an <see cref="ICore"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
+    /// </summary>
+    /// <remarks>
+    /// Passing a core instance will enable remoting for the ENTIRE core, including library, search, playback, devices and all other feature.
+    /// </remarks>
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class RemoteCore : ICore
     {
@@ -24,6 +31,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             = new ConcurrentDictionary<string, RemoteCore>();
 
         private readonly MemberRemote _memberRemote;
+        private readonly ICore? _core;
+
+        private readonly List<ICoreDevice> _devices = new List<ICoreDevice>();
+        private CoreState _coreState = CoreState.Unloaded;
+        private string _instanceDescriptor = string.Empty;
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCore"/>.
@@ -35,36 +47,43 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             InstanceId = instanceId;
 
-            Devices = new List<ICoreDevice>();
-            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId);
-            Discoverables = new RemoteCoreDiscoverables(instanceId);
-            Library = new RemoteCoreLibrary(instanceId);
-            Pins = new RemoteCorePins(instanceId);
+            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId, CommonRemoteIds.RootRecentlyPlayed);
+            Discoverables = new RemoteCoreDiscoverables(instanceId, CommonRemoteIds.RootDiscoverables);
+            Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
+            Pins = new RemoteCorePlayableCollectionGroup(instanceId, CommonRemoteIds.Pins);
 
             CoreConfig = new RemoteCoreConfig(instanceId);
 
-            _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(RemoteCore)}", RemoteCoreRemoteMessageHandler.Singleton); 
+            // Registration is set remotely, use placeholder data here.
+            Registration = new CoreMetadata(string.Empty, string.Empty, new Uri("/", UriKind.Relative), sdkVersion: new Version(0, 0, 0));
+
+            _memberRemote = new MemberRemote(this, $"{instanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonClient);
         }
 
         /// <summary>
-        /// Wraps around and remotely relays a core instance.
+        /// Wraps around and remotely relays events, property changes and method calls (with return data) from a core instance.
         /// </summary>
         /// <param name="core"></param>
         public RemoteCore(ICore core)
         {
-            _externalCoreInstances.TryAdd(core.InstanceId, this);
+            Guard.IsNotNull(core, nameof(core));
 
-            InstanceId = core.InstanceId;
-            InstanceDescriptor = core.InstanceDescriptor;
+            _ = _externalCoreInstances.TryAdd(core.InstanceId, this);
+            _core = core;
 
-            Devices = core.Devices;
             RecentlyPlayed = core.RecentlyPlayed;
-            Library = core.Library;
+            Library = new RemoteCoreLibrary(core.Library);
             Pins = core.Pins;
 
             CoreConfig = core.CoreConfig;
 
-            _memberRemote = new MemberRemote(this, $"{InstanceId}.{nameof(RemoteCore)}", RemoteCoreRemoteMessageHandler.Singleton);
+            AttachEvents(core);
+
+            _memberRemote = new MemberRemote(this, $"{core.InstanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonHost);
+
+            Registration = core.Registration;
+            InstanceDescriptor = core.InstanceDescriptor;
+            InstanceId = core.InstanceId;
         }
 
         /// <summary>
@@ -80,22 +99,50 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             return value;
         }
 
+        private void AttachEvents(ICore core)
+        {
+            core.InstanceDescriptorChanged += OnInstanceDescriptorChanged;
+            core.DevicesChanged += OnDevicesChanged;
+            core.CoreStateChanged += OnCoreStateChanged;
+        }
+
+        private void DetachEvents(ICore core)
+        {
+            core.InstanceDescriptorChanged -= OnInstanceDescriptorChanged;
+            core.DevicesChanged -= OnDevicesChanged;
+            core.CoreStateChanged -= OnCoreStateChanged;
+        }
+
+        private void OnCoreStateChanged(object sender, CoreState e) => CoreState = e;
+
+        private void OnInstanceDescriptorChanged(object sender, string e)
+        {
+            InstanceDescriptor = e;
+        }
+
+        private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
+        {
+            ChangeDevices(addedItems, removedItems);
+        }
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void ChangeDevices(IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
+        {
+            var remoteAddedItems = addedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+            var remoteRemovedItems = removedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+
+            _devices.ChangeCollection(remoteAddedItems, remoteRemovedItems);
+            DevicesChanged?.Invoke(this, remoteAddedItems, remoteRemovedItems);
+        }
+
+        /// <inheritdoc/>
+        [RemoteProperty]
+        public CoreMetadata Registration { get; set; }
+
         /// <inheritdoc/>
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public string CoreRegistryId => nameof(RemoteCore);
-
-        /// <inheritdoc />
-        [RemoteProperty]
-        public string? DisplayName { get; } // TODO
-
-        /// <inheritdoc />
-        [RemoteProperty]
-        public Uri? LogoPath { get; } // TODO
-
-        /// <inheritdoc/>
-        [RemoteProperty]
         public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc />
@@ -103,11 +150,27 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
+        public CoreState CoreState
+        {
+            get => _coreState;
+            set
+            {
+                _coreState = value;
+                CoreStateChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public string InstanceDescriptor { get; private set; } = string.Empty;
+        public string InstanceDescriptor
+        {
+            get => _instanceDescriptor;
+            set
+            {
+                _instanceDescriptor = value;
+                InstanceDescriptorChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteProperty]
@@ -115,7 +178,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public IReadOnlyList<ICoreDevice> Devices { get; set; }
+        public IReadOnlyList<ICoreDevice> Devices => _devices;
 
         /// <inheritdoc/>
         [RemoteProperty]
@@ -152,75 +215,116 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         {
             // Dispose any resources not known to the SDK.
             // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
+            _externalCoreInstances.TryRemove(InstanceId, out _);
             return default;
         }
 
         /// <inheritdoc/>
-        [RemoteMethod]
-        public async Task InitAsync(IServiceCollection services)
+        public Task InitAsync(IServiceCollection services) => Task.Run(async () =>
         {
+            if (_memberRemote.Mode == RemotingMode.Host)
+                return;
 
-            // ==========================
-            // WARNING
-            // ==========================
-            // This class is still very WIP. Do not attempt to use it
+            SetupRemoteServices(services, InstanceId);
+            await RemoteInitAsync();
 
-            // ==========================
-            // Train of thought for later:
-            // ==========================
-
-            // Services - these are pre-injected and provided by the SDK.
-            // Are they all needed? Should be provided remotely?
-
-            // Any interface would need a Bidirectional-capable remote proxy class available
-            // for all SDK implementors (same class used in client/host from SDK)
-
-            // INotificationsService -- YES! (Done)
-            // ILocalizationService -- No.
-            // IFileSystemService -- No.
-            //  - For picking a file and keeping access.
-            //  - Requires remoting all IFileData and IFolderData implementations
-
-            // ---------------------------
-
-            // Should we call InitAsync manually on every model?
-            // Do we even need InitAsync on everything?
-            // They should be able to call InitAsync when they need it, like when (/if) an item is retrieved from the API but needs extra init beyond the constructor
-            // Their own API should determine if init async is even needed at all
-
-            // answer:
-            // No.
-            // The asynchronous nature of how items returned from an API + remote lock mean they always have the chance to call initasync and we always wait for async calls on their end to finish.
-            // Remote properties mean we don't care how or when it's called or what it even does
-
-            // ---------------------------
-
-            // Should the dev need to create their own ExternalCore from scratch every time, or can we reduce the work?
-            // Base classes?
-            //   - Would allow us to update core/remoting functionality with a nuget package (!!)
-            //   - Remoting may not work if the name of the derived classes are different in host/client (fixed)
-            //       - Need to adjust OwlCore.Remoting to have a "loose" mode option where only the ID and property/method names need to match.
-            //   - Use the same ExternalCore project for both host/client, or create a new project with separate code for host / client?
-
-            // ============
-            // TODO:
-            // Remaining remoting implementation for ExternalCore models
-            // Generic PlayableCollectionGroup implementation for e.g. RelatedItems
-            // Set up remote notification service here.
-            // ============
             await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
-        }
+        });
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
+        private Task RemoteInitAsync() => Task.Run(async () =>
+        {
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return;
+
+            Guard.IsNotNull(_core, nameof(_core));
+
+            var services = SetupRemoteServices(InstanceId);
+            await _core.InitAsync(services);
+
+            await _memberRemote.RemoteReleaseAsync(nameof(InitAsync));
+        });
 
         /// <inheritdoc/>
-        public async Task<ICoreMember?> GetContextById(string id)
+        [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
+        public Task<ICoreMember?> GetContextById(string id) => Task.Run(async () =>
         {
-            return null;
-        }
+            var methodCallToken = $"{nameof(GetContextById)}.{id}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_core, nameof(_core));
+
+                var result = await _core.GetContextById(id);
+
+                ICoreMember? remoteEnabledResult = result switch
+                {
+                    ICore core => GetInstance(core.InstanceId),
+                    ICoreAlbum album => new RemoteCoreAlbum(album),
+                    ICoreArtist artist => new RemoteCoreArtist(artist),
+                    ICoreTrack track => new RemoteCoreTrack(track),
+                    ICorePlaylist playlist => new RemoteCorePlaylist(playlist),
+                    ICoreDevice device => new RemoteCoreDevice(device),
+                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables),
+                    ICoreImage image => new RemoteCoreImage(image),
+                    ICoreLibrary library => new RemoteCoreLibrary(library),
+                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed),
+                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory),
+                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup),
+                    _ => throw new NotImplementedException(),
+                };
+
+                return await _memberRemote.PublishDataAsync(methodCallToken, result);
+            }
+            else if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                return await _memberRemote.ReceiveDataAsync<ICoreMember?>(methodCallToken);
+            }
+            else
+            {
+                return null;
+            }
+        });
 
         /// <inheritdoc/>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
+        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => Task.Run(async () =>
         {
-            return Task.FromResult<IMediaSourceConfig?>(null);
+            var methodCallToken = $"{nameof(GetMediaSource)}.{track.Id}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_core, nameof(_core));
+
+                var result = await _core.GetMediaSource(track);
+                return await _memberRemote.PublishDataAsync(methodCallToken, result);
+            }
+            else if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                return await _memberRemote.ReceiveDataAsync<IMediaSourceConfig?>(methodCallToken);
+            }
+            else
+            {
+                return null;
+            }
+        });
+
+        private static void SetupRemoteServices(IServiceCollection clientServices, string remotingId)
+        {
+            var notificationService = clientServices.FirstOrDefault(x => x.ServiceType == typeof(INotificationService)) as INotificationService;
+
+            if (notificationService != null)
+                _ = new RemoteNotificationService(remotingId, notificationService);
+        }
+
+        private static IServiceCollection SetupRemoteServices(string remotingId)
+        {
+            var services = new ServiceCollection();
+            var notificationService = new RemoteNotificationService(remotingId);
+
+            services.AddSingleton<RemoteNotificationService>(x => notificationService);
+
+            return services;
         }
     }
 }

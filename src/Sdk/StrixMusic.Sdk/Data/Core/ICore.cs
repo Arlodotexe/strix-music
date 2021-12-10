@@ -14,9 +14,9 @@ namespace StrixMusic.Sdk.Data.Core
     public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
     {
         /// <summary>
-        /// A unique identifier for this core, regardless of instance. This should match the ID given during core registration.
+        /// The registered metadata for this core. Contains information to identify the core before creating an instance.
         /// </summary>
-        public string CoreRegistryId { get; }
+        public CoreMetadata Registration { get; }
 
         /// <summary>
         /// Identifies this instance of the core. This is given to each core via the constructor.

@@ -115,9 +115,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public string CoreRegistryId => _core.CoreRegistryId;
-
-        /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
 
         /// <inheritdoc />
@@ -227,6 +224,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.Pins" />
         public PlayableCollectionGroupViewModel? Pins { get; }
+
+        /// <inheritdoc cref="CoreMetadata"/>
+        public CoreMetadata Registration => _core.Registration;
 
         /// <inheritdoc cref="IAsyncInit.InitAsync" />
         public Task InitAsync(IServiceCollection services) => _core.InitAsync(services);

@@ -1,24 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;
-
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -45,7 +42,7 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc/>
-        public override string CoreRegistryId => nameof(OneDriveCore);
+        public override CoreMetadata Registration => OneDrive.Registration.Metadata;
 
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
