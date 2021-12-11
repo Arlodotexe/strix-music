@@ -441,6 +441,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 else if (originalIndex == originalCurrentItemIndex)
                 {
                     // Current item is unaffected when unshuffling.
+                    // Bump to the next unhandled index.
+                    UnshuffleInternal(originalIndex + 1);
                     return;
                 }
                 else if (originalIndex > originalCurrentItemIndex)
