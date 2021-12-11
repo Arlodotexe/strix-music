@@ -429,7 +429,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     // Previous items
                     // Hold onto current item so we don't overwrite a reference.
-                    var itemToSave = _prevItems[i];
+                    // Subtracting the total _prevItems count to get the offset index of the 
+                    var indexOffset = Math.Abs(originalIndex - _prevItems.Count);
+
+                    var itemToSave = _prevItems[indexOffset];
 
                     // Look ahead to the index we're overwriting 
                     // Unshuffle the existing item at that index
@@ -441,20 +444,24 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 else if (originalIndex == originalCurrentItemIndex)
                 {
                     // Current item is unaffected when unshuffling.
+                    // Bump to the next unhandled index.
+                    var itemToSave = _nextItems[i];
+                    UnshuffleInternal(originalIndex + 1);
                     return;
                 }
                 else if (originalIndex > originalCurrentItemIndex)
                 {
                     // Next items
                     // Hold onto current item so we don't overwrite a reference.
-                    var itemToSave = _nextItems[i];
+                    var indexOffset = Math.Abs(originalIndex - _nextItems.Count);
+                    var itemToSave = _nextItems[indexOffset];
 
                     // Look ahead to the index we're overwriting 
                     // Unshuffle the existing item at that index
                     UnshuffleInternal(originalIndex);
 
                     // Restore the item to it's original index.
-                    _nextItems[originalIndex] = itemToSave;
+                    _nextItems[indexOffset] = itemToSave;
                 }
             }
         }
