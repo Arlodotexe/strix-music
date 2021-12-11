@@ -429,7 +429,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     // Previous items
                     // Hold onto current item so we don't overwrite a reference.
-                    var itemToSave = _prevItems[i];
+                    IMediaSourceConfig itemToSave;
+                    if (i >= _prevItems.Count)
+                    {
+                        // Taking Math.Abs to convert any negative value to positive integer index.
+                        var offset = Math.Abs(i - _nextItems.Count);
+                        itemToSave = _nextItems[offset];
+                    }
+                    else itemToSave = _prevItems[i];
 
                     // Look ahead to the index we're overwriting 
                     // Unshuffle the existing item at that index
@@ -449,7 +456,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     // Next items
                     // Hold onto current item so we don't overwrite a reference.
-                    var itemToSave = _nextItems[i];
+                    IMediaSourceConfig itemToSave;
+                    if (i >= _prevItems.Count)
+                    {
+                        // Taking Math.Abs to convert any negative value to positive integer index.
+                        var offset = Math.Abs(i - _nextItems.Count);
+                        itemToSave = _nextItems[offset];
+                    }
+                    else itemToSave = _prevItems[i];
 
                     // Look ahead to the index we're overwriting 
                     // Unshuffle the existing item at that index
