@@ -429,7 +429,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     // Previous items
                     // Hold onto current item so we don't overwrite a reference.
-                    // Subtracting the total _prevItems count to get the offset index of the 
+                    // Subtracting the total _prevItems count to get the offset index to avoid index out of bound.
                     var indexOffset = Math.Abs(originalIndex - _prevItems.Count);
 
                     var itemToSave = _prevItems[indexOffset];
@@ -453,6 +453,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     // Next items
                     // Hold onto current item so we don't overwrite a reference.
+                    // Subtracting the total _nextItems count to get the offset index to avoid index out of bound.
                     var indexOffset = Math.Abs(originalIndex - _nextItems.Count);
                     var itemToSave = _nextItems[indexOffset];
 
