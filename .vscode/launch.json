@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run Tests: StrixMusic.Sdk",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": [ "test" ],
+      "cwd": "${workspaceFolder}\\src\\Sdk\\StrixMusic.Sdk.Tests",
+      "env": {
+      }
+    },
+    {
       "name": ".NET Core Launch (Uno Platform App)",
       "type": "coreclr",
       "request": "launch",
