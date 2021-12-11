@@ -432,7 +432,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     IMediaSourceConfig itemToSave;
                     if (i >= _prevItems.Count)
                     {
-                        // Taking Math.Abs to convert any negative value to positive integer.
+                        // Taking Math.Abs to convert any negative value to positive integer index.
                         var offset = Math.Abs(i - _nextItems.Count);
                         itemToSave = _nextItems[offset];
                     }
@@ -459,7 +459,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     IMediaSourceConfig itemToSave;
                     if (i >= _prevItems.Count)
                     {
-                        // Taking Math.Abs to convert any negative value to positive integer.
+                        // Taking Math.Abs to convert any negative value to positive integer index.
                         var offset = Math.Abs(i - _nextItems.Count);
                         itemToSave = _nextItems[offset];
                     }
