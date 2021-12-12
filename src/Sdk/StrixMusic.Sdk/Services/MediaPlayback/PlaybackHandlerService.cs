@@ -433,7 +433,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     if (i >= _prevItems.Count)
                     {
                         // Taking Math.Abs to convert any negative value to positive integer index.
-                        var offset = Math.Abs(i - _nextItems.Count);
+                        var offset = Math.Abs(i - _prevItems.Count - (CurrentItem == null ? 0 : 1));
                         itemToSave = _nextItems[offset];
                     }
                     else itemToSave = _prevItems[i];
@@ -460,7 +460,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     if (i >= _prevItems.Count)
                     {
                         // Taking Math.Abs to convert any negative value to positive integer index.
-                        var offset = Math.Abs(i - _nextItems.Count);
+                        var offset = Math.Abs(i - _prevItems.Count - (CurrentItem == null ? 0 : 1));
                         itemToSave = _nextItems[offset];
                     }
                     else itemToSave = _prevItems[i];
