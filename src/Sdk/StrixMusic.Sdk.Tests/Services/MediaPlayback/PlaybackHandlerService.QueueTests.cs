@@ -20,12 +20,9 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [TestInitialize]
         public void Setup()
         {
-            var audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>()
-            {
-                { "MockCore", new MockAudioPlayerService() }
-            };
-
-            _handlerService = new PlaybackHandlerService(audioPlayerRegistry.First().Value, audioPlayerRegistry);
+            var player = new MockAudioPlayerService();
+            _handlerService = new PlaybackHandlerService();
+            _handlerService.RegisterAudioPlayer(player, "MockCore");
 
             _previousItems = new List<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();

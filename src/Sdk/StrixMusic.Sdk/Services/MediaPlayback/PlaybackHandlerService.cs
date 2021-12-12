@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     /// <inheritdoc />
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
-        private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
+        private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>();
         private readonly List<IMediaSourceConfig> _prevItems = new List<IMediaSourceConfig>();
         private List<IMediaSourceConfig> _nextItems = new List<IMediaSourceConfig>();
 
@@ -30,11 +30,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
         /// </summary>
-        public PlaybackHandlerService(IAudioPlayerService currentPlayerService, Dictionary<string, IAudioPlayerService> audioPlayerRegistry)
+        public PlaybackHandlerService()
         {
-            _currentPlayerService = currentPlayerService;
-
-            _audioPlayerRegistry = audioPlayerRegistry;
             _shuffleMap = Array.Empty<int>();
         }
 
@@ -47,30 +44,24 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _strixDevice = strixDevice;
         }
 
-        private void AttachEvents()
+        private void AttachEvents(IAudioPlayerService audioPlayerService)
         {
-            if (_currentPlayerService is null)
-                throw new InvalidOperationException();
-
-            _currentPlayerService.PositionChanged += PositionChanged;
-            _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
-            _currentPlayerService.PlaybackStateChanged += CurrentPlayerService_PlaybackStateChanged;
-            _currentPlayerService.CurrentSourceChanged += CurrentPlayerService_CurrentSourceChanged;
-            _currentPlayerService.VolumeChanged += VolumeChanged;
-            _currentPlayerService.QuantumProcessed += QuantumProcessed;
+            audioPlayerService.PositionChanged += PositionChanged;
+            audioPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
+            audioPlayerService.PlaybackStateChanged += CurrentPlayerService_PlaybackStateChanged;
+            audioPlayerService.CurrentSourceChanged += CurrentPlayerService_CurrentSourceChanged;
+            audioPlayerService.VolumeChanged += VolumeChanged;
+            audioPlayerService.QuantumProcessed += QuantumProcessed;
         }
 
-        private void DetachEvents()
+        private void DetachEvents(IAudioPlayerService audioPlayerService)
         {
-            if (_currentPlayerService is null)
-                throw new InvalidOperationException();
-
-            _currentPlayerService.PositionChanged -= PositionChanged;
-            _currentPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
-            _currentPlayerService.PlaybackStateChanged -= CurrentPlayerService_PlaybackStateChanged;
-            _currentPlayerService.CurrentSourceChanged -= CurrentPlayerService_CurrentSourceChanged;
-            _currentPlayerService.VolumeChanged -= VolumeChanged;
-            _currentPlayerService.QuantumProcessed -= QuantumProcessed;
+            audioPlayerService.PositionChanged -= PositionChanged;
+            audioPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
+            audioPlayerService.PlaybackStateChanged -= CurrentPlayerService_PlaybackStateChanged;
+            audioPlayerService.CurrentSourceChanged -= CurrentPlayerService_CurrentSourceChanged;
+            audioPlayerService.VolumeChanged -= VolumeChanged;
+            audioPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
         private void CurrentPlayerService_CurrentSourceChanged(object sender, IMediaSourceConfig? e)
@@ -194,7 +185,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_currentPlayerService != null)
             {
                 await _currentPlayerService.PauseAsync();
-                DetachEvents();
+                DetachEvents(_currentPlayerService);
             }
 
             var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
@@ -203,7 +194,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 return;
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore.InstanceId];
-            AttachEvents();
+            AttachEvents(_currentPlayerService);
 
             // TODO shift queue, move tracks before the played index into previous
             // also account for shuffle
@@ -221,10 +212,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(mediaSource, nameof(mediaSource));
 
             await _currentPlayerService.PauseAsync();
-            DetachEvents();
+            DetachEvents(_currentPlayerService);
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore.InstanceId];
-            AttachEvents();
+            AttachEvents(_currentPlayerService);
 
             // TODO shift queue, move tracks after the played item into next
             await _currentPlayerService.Play(mediaSource);
@@ -238,7 +229,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var nextIndex = 0;
 
             await _currentPlayerService.PauseAsync();
-            DetachEvents();
+            DetachEvents(_currentPlayerService);
 
             if (RepeatState == RepeatState.All && NextItems.Count == 0)
             {
@@ -277,7 +268,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
 
             _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore.InstanceId];
-            AttachEvents();
+            AttachEvents(_currentPlayerService);
 
             // TODO See DeviceViewModel.NowPlaying.
             var track = new TrackViewModel(new MergedTrack(nextItem.Track.IntoList()));
@@ -366,7 +357,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             await _currentPlayerService.PauseAsync();
-            DetachEvents();
+            DetachEvents(_currentPlayerService);
 
             var currentItem = _currentPlayerService.CurrentSource;
 
@@ -375,7 +366,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Last();
 
             _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore.InstanceId];
-            AttachEvents();
+            AttachEvents(_currentPlayerService);
 
             // TODO See DeviceViewModel.NowPlaying.
             var track = new TrackViewModel(new MergedTrack(newItem.Track.IntoList()));
@@ -430,6 +421,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     // Previous items
                     // Hold onto current item so we don't overwrite a reference.
                     IMediaSourceConfig itemToSave;
+
                     if (i >= _prevItems.Count)
                     {
                         // Taking Math.Abs to convert any negative value to positive integer index.
@@ -580,7 +572,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc/>
         public void Dispose()
         {
-            DetachEvents();
+            if (_currentPlayerService is not null)
+                DetachEvents(_currentPlayerService);
         }
     }
 }
