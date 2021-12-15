@@ -18,12 +18,12 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
-                            <TextBlock Text="{Binding Main.NowPlaying.Artists[0].Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Opacity=".5"/>
+                            <TextBlock Text="{Binding Device.NowPlaying.Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                            <TextBlock Text="{Binding Device.NowPlaying.Artists[0].Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Opacity=".5"/>
                         </StackPanel>
 
                         <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
-                             ImageCollection="{Binding Main.ActiveDevice.NowPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                             ImageCollection="{Binding Device.NowPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

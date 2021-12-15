@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using StrixMusic.Sdk.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
@@ -17,19 +18,19 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         }
 
         /// <summary>
-        /// The viewmodel that holds application's main data.
+        /// The ViewModel that holds the active device.
         /// </summary>
-        public MainViewModel Main
+        public DeviceViewModel Device
         {
-            get { return (MainViewModel)GetValue(MainProperty); }
-            set { SetValue(MainProperty, value); }
+            get { return (DeviceViewModel)GetValue(DeviceProperty); }
+            set { SetValue(DeviceProperty, value); }
         }
 
         /// <summary>
-        /// Dependency property for <see cref="MainViewModel"/>.
+        /// Dependency property for <see cref="DeviceViewModel"/>.
         /// </summary>
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MainProperty =
-            DependencyProperty.Register(nameof(Main), typeof(MainViewModel), typeof(MediaTransports), new PropertyMetadata(0));
+        public static readonly DependencyProperty DeviceProperty =
+            DependencyProperty.Register(nameof(Device), typeof(DeviceViewModel), typeof(MediaTransports), new PropertyMetadata(0));
     }
 }

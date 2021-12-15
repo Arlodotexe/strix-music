@@ -22,12 +22,12 @@
                 <ControlTemplate TargetType="nowplaying:MediaInfo">
                     <Grid>
                         <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Main.ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NowPlaying.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <core:InvokeCommandAction Command="{Binding Device.NowPlaying.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                             </core:EventTriggerBehavior>
 
                             <core:EventTriggerBehavior EventName="Loaded">
-                                <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NowPlaying.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                <core:InvokeCommandAction Command="{Binding Device.NowPlaying.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
 
@@ -37,25 +37,25 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="18" FontWeight="SemiLight"/>
-                            <TextBlock Text="{Binding Main.ActiveDevice.NowPlaying.Artists[0].Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="15" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Device.NowPlaying.Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="18" FontWeight="SemiLight"/>
+                            <TextBlock Text="{Binding Device.NowPlaying.Artists[0].Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="15" FontWeight="Bold"/>
                         </StackPanel>
 
                         <Image x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NowPlaying.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                    <core:InvokeCommandAction Command="{Binding Device.NowPlaying.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                 </core:EventTriggerBehavior>
 
                                 <core:EventTriggerBehavior EventName="Loaded">
-                                    <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NowPlaying.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                    <core:InvokeCommandAction Command="{Binding Device.NowPlaying.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
 
                             <Image.Source>
-                                <BitmapImage UriSource="{Binding Main.ActiveDevice.NowPlaying.Images[0].Uri, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                 DecodePixelHeight="{Binding Main.ActiveDevice.NowPlaying.Images[0].Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                 DecodePixelWidth="{Binding Main.ActiveDevice.NowPlaying.Images[0].Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                <BitmapImage UriSource="{Binding Device.NowPlaying.Images[0].Uri, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                 DecodePixelHeight="{Binding Device.NowPlaying.Images[0].Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                 DecodePixelWidth="{Binding Device.NowPlaying.Images[0].Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                             </Image.Source>
                         </Image>
                     </Grid>
