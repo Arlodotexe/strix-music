@@ -82,24 +82,9 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Make sure previous items are emptied.
             Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
 
-            // Maximum number of items that can be at the same place.
-            int shuffleTolerence = 4;
-            int numberOfElementsOnSameIndex = 0;
-
-            for (int i = 0; i < _handlerService.NextItems.Count; i++)
-            {
-                if (_nextItems.Count <= i)
-                    continue;
-
-                string originalNext = _nextItems[i].Id;
-                if (originalNext == _handlerService.NextItems[i].Id)
-                {
-                    numberOfElementsOnSameIndex++;
-                }
-
-                // Make sure it shuffles "enough", and x items don't end up in the same place again.
-                Assert.AreNotEqual(numberOfElementsOnSameIndex, shuffleTolerence);
-            }
+            // Make sure no items end up at the same place.
+            for (int o = 0; o < _nextItems.Count; o++)
+                Assert.AreNotEqual(o, _handlerService.NextItems[o]);
 
             // Make sure all items from previous and next exist in next after shuffle.
             CollectionAssert.IsSubsetOf(_nextItems, _handlerService.NextItems.ToList());
@@ -128,8 +113,14 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
 
-            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
-            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
+            var actualNextItems = _handlerService.NextItems.ToList();
+            var actualPrevItems = _handlerService.PreviousItems.ToList();
+
+            CollectionAssert.AreEqual(_nextItems, actualNextItems);
+            CollectionAssert.AreEqual(_previousItems, actualPrevItems);
+
+            CollectionAssert.AllItemsAreNotNull(actualNextItems);
+            CollectionAssert.AllItemsAreNotNull(actualPrevItems);
         }
     }
 }
