@@ -421,7 +421,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _nextItems.Clear();
             _prevItems.Clear();
-            CurrentItem = null;
 
             // The time complexity will also remain remain at O(n).
             for (int i = 0; i < unshuffledItems.Count; i++)
