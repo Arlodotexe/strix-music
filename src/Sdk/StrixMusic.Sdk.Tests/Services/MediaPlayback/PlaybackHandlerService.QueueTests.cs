@@ -116,8 +116,20 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             var actualNextItems = _handlerService.NextItems.ToList();
             var actualPrevItems = _handlerService.PreviousItems.ToList();
 
-            CollectionAssert.AreEqual(_nextItems, actualNextItems);
-            CollectionAssert.AreEqual(_previousItems, actualPrevItems);
+            var unshufledItems = new List<IMediaSourceConfig>();
+            unshufledItems.AddRange(_previousItems);
+            unshufledItems.AddRange(_nextItems);
+
+            var potentialUnshufledItems = new List<IMediaSourceConfig>();
+            potentialUnshufledItems.AddRange(actualPrevItems);
+            potentialUnshufledItems.Add(_handlerService.CurrentItem);
+            potentialUnshufledItems.AddRange(actualNextItems);
+
+            for (int i = 0; i < unshufledItems.Count; i++)
+            {
+                // Making sure the unshuffled list indexes are correctly restored.
+                Assert.AreEqual(unshufledItems[i].Id, potentialUnshufledItems[i].Id);
+            }
 
             CollectionAssert.AllItemsAreNotNull(actualNextItems);
             CollectionAssert.AllItemsAreNotNull(actualPrevItems);
