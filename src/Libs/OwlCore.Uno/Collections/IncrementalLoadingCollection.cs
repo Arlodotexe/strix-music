@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using OwlCore.Collections;
+using OwlCore.Collections.ObjectModel;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;

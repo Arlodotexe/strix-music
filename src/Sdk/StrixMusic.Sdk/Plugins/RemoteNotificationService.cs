@@ -136,7 +136,7 @@ namespace StrixMusic.Sdk.Plugins
 
                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
-               await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
+                await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
 
                return notification;
            }
