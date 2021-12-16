@@ -430,10 +430,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     // Pushing everything before the originalCurrentItemIndex to previous items.
                     _prevItems.Add(unshuffledItems[i]);
                 }
-                else if (i == originalCurrentItemIndex)
+                else if (i == originalCurrentItemIndex && CurrentItem != null)
                 {
-                    // Setting the current item. 
-                    CurrentItem = unshuffledItems[i];
+                    // We will not add current item to the _nextItems if its already playing.
+                    // We will not set currentItem so the current running track remains unaffected.
                 }
                 else
                 {
