@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreConfig"/>.
         /// </summary>
-        public RemoteCoreConfig(string sourceCoreInstanceId)
+        internal RemoteCoreConfig(string sourceCoreInstanceId)
         {
             SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
             AbstractUIElements = new AbstractUICollection(string.Empty);

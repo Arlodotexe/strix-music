@@ -5,97 +5,124 @@ using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Tests.Data.Core
+namespace StrixMusic.Sdk.Tests.Mock.Core.Items
 {
-    internal class MockCoreTrack : ICoreTrack
+    public class MockCoreTrack : ICoreTrack
     {
-        public ICoreAlbum Album => throw new NotImplementedException();
+        public MockCoreTrack(ICore sourceCore, string id, string name)
+        {
+            Id = id;
+            Name = name;
+            SourceCore = sourceCore;
+        }
 
-        public ICoreLyrics Lyrics => throw new NotImplementedException();
+        public string Id { get; set; }
 
-        public ICorePlayableCollectionGroup RelatedItems => throw new NotImplementedException();
+        public string Name { get; set; }
 
-        public TrackType Type => throw new NotImplementedException();
+        public ICoreAlbum? Album { get; set; }
 
-        public int? TrackNumber => throw new NotImplementedException();
+        public ICoreLyrics? Lyrics { get; set; }
 
-        public int? DiscNumber => throw new NotImplementedException();
+        public ICorePlayableCollectionGroup? RelatedItems { get; set; }
 
-        public CultureInfo Language => throw new NotImplementedException();
+        public TrackType Type { get; set; }
 
-        public bool IsExplicit => throw new NotImplementedException();
+        public int? TrackNumber { get; set; }
 
-        public bool IsChangeAlbumAsyncAvailable => throw new NotImplementedException();
+        public int? DiscNumber { get; set; }
 
-        public bool IsChangeTrackNumberAsyncAvailable => throw new NotImplementedException();
+        public CultureInfo? Language { get; set; }
 
-        public bool IsChangeLanguageAsyncAvailable => throw new NotImplementedException();
+        public bool IsExplicit { get; set; }
 
-        public bool IsChangeLyricsAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeAlbumAsyncAvailable { get; set; }
 
-        public bool IsChangeIsExplicitAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeTrackNumberAsyncAvailable { get; set; }
 
-        public int TotalArtistItemsCount => throw new NotImplementedException();
+        public bool IsChangeLanguageAsyncAvailable { get; set; }
 
-        public bool IsPlayArtistCollectionAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeLyricsAsyncAvailable { get; set; }
 
-        public bool IsPauseArtistCollectionAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeIsExplicitAsyncAvailable { get; set; }
 
-        public DateTime? AddedAt => throw new NotImplementedException();
+        public int TotalArtistItemsCount { get; set; }
 
-        public string Id => throw new NotImplementedException();
+        public bool IsPlayArtistCollectionAsyncAvailable { get; set; }
 
-        public string Name => throw new NotImplementedException();
+        public bool IsPauseArtistCollectionAsyncAvailable { get; set; }
 
-        public string Description => throw new NotImplementedException();
+        public DateTime? AddedAt { get; set; }
 
-        public DateTime? LastPlayed => throw new NotImplementedException();
+        public string? Description { get; set; }
 
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public DateTime? LastPlayed { get; set; }
 
-        public TimeSpan Duration => throw new NotImplementedException();
+        public PlaybackState PlaybackState { get; set; }
 
-        public bool IsChangeNameAsyncAvailable => throw new NotImplementedException();
+        public TimeSpan Duration { get; set; }
 
-        public bool IsChangeDescriptionAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeNameAsyncAvailable { get; set; }
 
-        public bool IsChangeDurationAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeDescriptionAsyncAvailable { get; set; }
 
-        public int TotalImageCount => throw new NotImplementedException();
+        public bool IsChangeDurationAsyncAvailable { get; set; }
 
-        public int TotalUrlCount => throw new NotImplementedException();
+        public int TotalImageCount { get; set; }
 
-        public int TotalGenreCount => throw new NotImplementedException();
+        public int TotalUrlCount { get; set; }
 
-        public ICore SourceCore => new MockCore();
+        public int TotalGenreCount { get; set; }
 
-        public event EventHandler<ICoreAlbum> AlbumChanged;
-        public event EventHandler<ICoreLyrics> LyricsChanged;
-        public event EventHandler<int?> TrackNumberChanged;
-        public event EventHandler<CultureInfo> LanguageChanged;
-        public event EventHandler<bool> IsExplicitChanged;
-        public event CollectionChangedEventHandler<ICoreArtistCollectionItem> ArtistItemsChanged;
-        public event EventHandler<bool> IsPlayArtistCollectionAsyncAvailableChanged;
-        public event EventHandler<bool> IsPauseArtistCollectionAsyncAvailableChanged;
-        public event EventHandler<int> ArtistItemsCountChanged;
-        public event CollectionChangedEventHandler<ICoreImage> ImagesChanged;
-        public event CollectionChangedEventHandler<ICoreUrl> UrlsChanged;
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
-        public event EventHandler<string> NameChanged;
-        public event EventHandler<string> DescriptionChanged;
-        public event EventHandler<TimeSpan> DurationChanged;
-        public event EventHandler<DateTime?> LastPlayedChanged;
-        public event EventHandler<bool> IsChangeNameAsyncAvailableChanged;
-        public event EventHandler<bool> IsChangeDescriptionAsyncAvailableChanged;
-        public event EventHandler<bool> IsChangeDurationAsyncAvailableChanged;
-        public event EventHandler<int> ImagesCountChanged;
-        public event EventHandler<int> UrlsCountChanged;
-        public event CollectionChangedEventHandler<ICoreGenre> GenresChanged;
-        public event EventHandler<int> GenresCountChanged;
+        public ICore SourceCore { get; set; }
+
+        public event EventHandler<ICoreAlbum?>? AlbumChanged;
+
+        public event EventHandler<ICoreLyrics?>? LyricsChanged;
+
+        public event EventHandler<int?>? TrackNumberChanged;
+
+        public event EventHandler<CultureInfo?>? LanguageChanged;
+
+        public event EventHandler<bool>? IsExplicitChanged;
+
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
+
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
+
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        public event EventHandler<string>? NameChanged;
+
+        public event EventHandler<string?>? DescriptionChanged;
+
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+
+        public event EventHandler<int>? ImagesCountChanged;
+
+        public event EventHandler<int>? UrlsCountChanged;
+
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
+
+        public event EventHandler<int>? GenresCountChanged;
 
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
@@ -117,12 +144,12 @@ namespace StrixMusic.Sdk.Tests.Data.Core
             throw new NotImplementedException();
         }
 
-        public Task ChangeAlbumAsync(ICoreAlbum albums)
+        public Task ChangeAlbumAsync(ICoreAlbum? albums)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeDescriptionAsync(string description)
+        public Task ChangeDescriptionAsync(string? description)
         {
             throw new NotImplementedException();
         }
@@ -142,7 +169,7 @@ namespace StrixMusic.Sdk.Tests.Data.Core
             throw new NotImplementedException();
         }
 
-        public Task ChangeLyricsAsync(ICoreLyrics lyrics)
+        public Task ChangeLyricsAsync(ICoreLyrics? lyrics)
         {
             throw new NotImplementedException();
         }

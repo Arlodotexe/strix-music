@@ -1,9 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
-using StrixMusic.Sdk.Tests.Data.Core;
+using StrixMusic.Sdk.Tests.Mock.Core;
+using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +15,9 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
     [TestClass]
     public class PlaybackHandlerServiceQueueTests
     {
-        private PlaybackHandlerService _handlerService;
-        private List<IMediaSourceConfig> _previousItems;
-        private List<IMediaSourceConfig> _nextItems;
+        private PlaybackHandlerService? _handlerService;
+        private List<IMediaSourceConfig>? _previousItems;
+        private List<IMediaSourceConfig>? _nextItems;
 
         [TestInitialize]
         public void Setup()
@@ -31,10 +33,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [TestCleanup]
         public void Teardown()
         {
-            _handlerService.Dispose();
+            _handlerService?.Dispose();
 
-            _previousItems.Clear();
-            _nextItems.Clear();
+            _previousItems?.Clear();
+            _nextItems?.Clear();
 
             _previousItems = null;
             _nextItems = null;
@@ -55,13 +57,18 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [Timeout(800)]
         public async Task Shuffle_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
             Assert.AreEqual(_previousItems.Count, 0);
             Assert.AreEqual(_nextItems.Count, 0);
+
+            var mockTrack = new MockCoreTrack(new MockCore(string.Empty), string.Empty, string.Empty);
 
             // Generate previous items
             for (int i = 0; i < numberOfPreviousItems; i++)
             {
-                var mediaSourceConfig = new MediaSourceConfig(new MockCoreTrack(), i.ToString(), null, "mp3");
+                var mediaSourceConfig = new MediaSourceConfig(mockTrack, i.ToString(), Stream.Null, "mp3");
                 _previousItems.Add(mediaSourceConfig);
                 _handlerService.PushPrevious(mediaSourceConfig);
             }
@@ -69,7 +76,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Generate next items
             for (int i = 0; i < numberOfNextItems; i++)
             {
-                var mediaSourceConfig = new MediaSourceConfig(new MockCoreTrack(), (numberOfPreviousItems + i).ToString(), null, "mp3");
+                var mediaSourceConfig = new MediaSourceConfig(mockTrack, (numberOfPreviousItems + i).ToString(), Stream.Null, "mp3");
                 _nextItems.Add(mediaSourceConfig);
                 _handlerService.InsertNext(i, mediaSourceConfig);
             }
@@ -106,6 +113,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [Timeout(800)]
         public async Task ShuffleAndUnshuffle_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
 
             Assert.IsTrue(_handlerService.ShuffleState);
@@ -122,7 +133,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             var potentialUnshuffledItems = new List<IMediaSourceConfig>();
             potentialUnshuffledItems.AddRange(actualPrevItems);
-            potentialUnshuffledItems.Add(_handlerService.CurrentItem);
+
+            if (_handlerService.CurrentItem != null)
+                potentialUnshuffledItems.Add(_handlerService.CurrentItem);
+
             potentialUnshuffledItems.AddRange(actualNextItems);
 
             for (int i = 0; i < unshuffledItems.Count; i++)

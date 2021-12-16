@@ -32,7 +32,7 @@ namespace StrixMusic.Cores.Files
         }
 
         /// <inheritdoc/>
-        public abstract string CoreRegistryId { get; }
+        public abstract CoreMetadata Registration { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }

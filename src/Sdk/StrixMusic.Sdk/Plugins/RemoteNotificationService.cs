@@ -5,14 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using OwlCore.Remoting;
+using StrixMusic.Sdk.Plugins.CoreRemote;
+using StrixMusic.Sdk.Services.Notifications;
 
-namespace StrixMusic.Sdk.Services.Notifications
+namespace StrixMusic.Sdk.Plugins
 {
     /// <summary>
     /// A remoting-enabled wrapper for <see cref="INotificationService"/>.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
+    // TODO Implement INotificationService and figure out async compatability
     public sealed class RemoteNotificationService : IDisposable
     {
         private readonly INotificationService? _notificationService;
@@ -35,6 +37,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         public RemoteNotificationService(string id, INotificationService notificationService)
             : this(id)
         {
+            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}", RemoteCoreMessageHandler.SingletonClient);
             _notificationService = notificationService;
         }
 
@@ -44,7 +47,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <param name="id">A consistent, unique identifier for synchronizing an instance of this service remotely.</param>
         public RemoteNotificationService(string id)
         {
-            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}");
+            _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}", RemoteCoreMessageHandler.SingletonHost);
             _notificationMemberRemotes = new List<MemberRemote>();
         }
 
@@ -96,7 +99,7 @@ namespace StrixMusic.Sdk.Services.Notifications
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async Task<Notification?> RaiseNotification(string title, string message = "")
+        public Task<Notification> RaiseNotification(string title, string message = "") => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Client)
             {
@@ -111,36 +114,44 @@ namespace StrixMusic.Sdk.Services.Notifications
             }
             else if (_memberRemote.Mode == RemotingMode.Host)
             {
-                var data = await _memberRemote.ReceiveDataAsync<Notification?>($"{_notificationTick++}");
+                var data = await _memberRemote.ReceiveDataAsync<Notification>($"{_notificationTick++}");
+
+                Guard.IsNotNull(data, nameof(data));
                 return data;
             }
-
-            return null;
-        }
+            else
+            {
+                return ThrowHelper.ThrowNotSupportedException<Notification>();
+            }
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async Task<Notification?> RaiseNotification(AbstractUICollection elementGroup)
-        {
-            if (_memberRemote.Mode == RemotingMode.Client)
-            {
-                Guard.IsNotNull(_notificationService, nameof(_notificationService));
-                var notification = _notificationService.RaiseNotification(elementGroup);
+        public Task<Notification> RaiseNotification(AbstractUICollection elementGroup) => Task.Run(async () =>
+       {
+           if (_memberRemote.Mode == RemotingMode.Client)
+           {
+               Guard.IsNotNull(_notificationService, nameof(_notificationService));
+               var notification = _notificationService.RaiseNotification(elementGroup);
 
-                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
+               _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
                 await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
 
-                return notification;
-            }
-            else if (_memberRemote.Mode == RemotingMode.Host)
-            {
-                var data = await _memberRemote.ReceiveDataAsync<Notification?>($"{_notificationTick++}");
-                return data;
-            }
+               return notification;
+           }
+           else if (_memberRemote.Mode == RemotingMode.Host)
+           {
+               var data = await _memberRemote.ReceiveDataAsync<Notification?>($"{_notificationTick++}");
 
-            return null;
-        }
+               Guard.IsNotNull(data, nameof(data));
+               return data;
+           }
+           else
+           {
+               return ThrowHelper.ThrowNotSupportedException<Notification>();
+           }
+       });
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
+using OwlCore;
 using OwlCore.Events;
-using OwlCore.Remoting;
 using OwlCore.Remoting;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -11,11 +11,12 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
     /// <summary>
-    /// An external, remotely synchronized implementation of <see cref="ICoreAlbum"/>
+    /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
     public class RemoteCoreAlbum : ICoreAlbum
     {
         private readonly MemberRemote _memberRemote;
+        private readonly ICoreAlbum? _album;
 
         private int _totalArtistItemsCount;
         private int _totalTrackCount;
@@ -39,18 +40,19 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private bool _isPlayArtistCollectionAsyncAvailable;
         private bool _isChangeDatePublishedAsyncAvailable;
 
-        private AsyncLock _getTracksMutex = new AsyncLock();
-        private AsyncLock _getArtistsMutex = new AsyncLock();
-        private AsyncLock _getImagesMutex = new AsyncLock();
-        private AsyncLock _getUrlsMutex = new AsyncLock();
-        private AsyncLock _getGenresMutex = new AsyncLock();
+        private SemaphoreSlim _getTracksMutex = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _getArtistsMutex = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _getImagesMutex = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _getUrlsMutex = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _getGenresMutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreAlbum"/>.
         /// </summary>
         /// <param name="sourceCoreInstanceId">The instance ID of the core that created this object.</param>
         /// <param name="id">A unique identifier for this instance.</param>
-        public RemoteCoreAlbum(string sourceCoreInstanceId, string name, string id)
+        /// <param name="name">The name of the data.</param>
+        internal RemoteCoreAlbum(string sourceCoreInstanceId, string name, string id)
         {
             _name = name;
             Id = id;
@@ -58,7 +60,21 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             // Properties assigned before MemberRemote is created won't be set remotely.
             SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
 
-            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCoreAlbum)}.{id}");
+            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCoreAlbum)}.{id}", RemoteCoreMessageHandler.SingletonClient);
+        }
+
+        /// <summary>
+        /// Wraps around and remotely relays events, property changes and method calls (with return data) from an album instance.
+        /// </summary>
+        /// <param name="coreAlbum"></param>
+        internal RemoteCoreAlbum(ICoreAlbum coreAlbum)
+        {
+            _album = coreAlbum;
+            _name = coreAlbum.Name;
+            Id = coreAlbum.Id;
+            SourceCore = RemoteCore.GetInstance(coreAlbum.SourceCore.InstanceId);
+
+            _memberRemote = new MemberRemote(this, $"{coreAlbum.SourceCore.InstanceId}.{nameof(RemoteCoreAlbum)}.{coreAlbum.Id}", RemoteCoreMessageHandler.SingletonHost);
         }
 
         [RemoteMethod]
@@ -489,7 +505,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            using (await _getArtistsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_getArtistsMutex))
             {
                 var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreArtistCollectionItem>>(nameof(GetTracksAsync));
 
@@ -505,7 +521,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            using (await _getTracksMutex.LockAsync())
+            using (await Flow.EasySemaphore(_getTracksMutex))
             {
                 var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreTrack>>(nameof(GetTracksAsync));
 
@@ -521,7 +537,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            using (await _getImagesMutex.LockAsync())
+            using (await Flow.EasySemaphore(_getImagesMutex))
             {
                 var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
 
@@ -537,7 +553,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
         {
-            using (await _getUrlsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_getUrlsMutex))
             {
                 var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreUrl>>(nameof(GetUrlsAsync));
 
@@ -553,7 +569,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
         {
-            using (await _getGenresMutex.LockAsync())
+            using (await Flow.EasySemaphore(_getGenresMutex))
             {
                 var res = await _memberRemote.ReceiveDataAsync<IReadOnlyList<ICoreGenre>>(nameof(GetGenresAsync));
 
@@ -607,10 +623,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async ValueTask DisposeAsync()
+        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
         {
             await _memberRemote.RemoteWaitAsync(nameof(DisposeAsync));
             _memberRemote.Dispose();
-        }
+        }));
     }
 }
