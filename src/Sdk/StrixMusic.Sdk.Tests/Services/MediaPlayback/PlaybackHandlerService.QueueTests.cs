@@ -73,6 +73,12 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
                 _handlerService.PushPrevious(mediaSourceConfig);
             }
 
+            // If there is anything in PreviousItems, there must be a CurrentItem.
+            if (numberOfPreviousItems > 0)
+            {
+                _handlerService.CurrentItem = new MediaSourceConfig(mockTrack, "Current", Stream.Null, "mp3");
+            }
+
             // Generate next items
             for (int i = 0; i < numberOfNextItems; i++)
             {
@@ -124,29 +130,11 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
 
-            var actualNextItems = _handlerService.NextItems.ToList();
-            var actualPrevItems = _handlerService.PreviousItems.ToList();
+            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
 
-            var unshuffledItems = new List<IMediaSourceConfig>();
-            unshuffledItems.AddRange(_previousItems);
-            unshuffledItems.AddRange(_nextItems);
-
-            var potentialUnshuffledItems = new List<IMediaSourceConfig>();
-            potentialUnshuffledItems.AddRange(actualPrevItems);
-
-            if (_handlerService.CurrentItem != null)
-                potentialUnshuffledItems.Add(_handlerService.CurrentItem);
-
-            potentialUnshuffledItems.AddRange(actualNextItems);
-
-            for (int i = 0; i < unshuffledItems.Count; i++)
-            {
-                // Making sure the unshuffled list indexes are correctly restored.
-                Assert.AreEqual(unshuffledItems[i].Id, potentialUnshuffledItems[i].Id);
-            }
-
-            CollectionAssert.AllItemsAreNotNull(actualNextItems);
-            CollectionAssert.AllItemsAreNotNull(actualPrevItems);
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
         }
     }
 }

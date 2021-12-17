@@ -143,7 +143,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public IReadOnlyCollection<IMediaSourceConfig> PreviousItems => _prevItems;
 
         /// <inheritdoc />
-        public IMediaSourceConfig? CurrentItem { get; private set; }
+        public IMediaSourceConfig? CurrentItem { get; internal set; }
 
         /// <inheritdoc />
         public bool ShuffleState => _shuffleState;
