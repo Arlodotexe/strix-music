@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using StrixMusic.Sdk.Services;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Helpers;
+using OwlCore.Extensions;
+using TaskStatus = System.Threading.Tasks.TaskStatus;
+using System.Net.Http;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -83,16 +86,16 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// Generate a <see cref="GraphServiceClient"/> and handles login if needed.
         /// </summary>
         /// <returns></returns>
-        public async Task<GraphServiceClient?> TryLoginAsync()
+        public async Task<GraphServiceClient?> TryLoginAsync(CancellationToken? cancellationToken = null)
         {
+            var cancellationTokenInternal = cancellationToken ?? CancellationToken.None;
+
             _logger.LogInformation($"Entered {nameof(TryLoginAsync)}");
 
             var authenticationResult = await TryAcquireCachedTokenAsync();
+
             if (authenticationResult is null)
-            {
-                var cancellationTokenSource = new CancellationTokenSource();
-                authenticationResult = await TryAcquireTokenViaLoginAsync(cancellationTokenSource);
-            }
+                authenticationResult = await TryAcquireTokenViaLoginAsync(cancellationTokenInternal);
 
             if (authenticationResult is null)
                 return null;
@@ -152,8 +155,10 @@ namespace StrixMusic.Cores.OneDrive.Services
             }
         }
 
-        private async Task<AuthenticationResult?> TryAcquireTokenViaLoginAsync(CancellationTokenSource cancellationTokenSource)
+        private async Task<AuthenticationResult?> TryAcquireTokenViaLoginAsync(CancellationToken? cancellationToken = null)
         {
+            var cancellationTokenInternal = cancellationToken ?? CancellationToken.None;
+
             if (LoginMethod == LoginMethod.Interactive)
             {
                 _logger.LogInformation($"Acquiring token via interactive login");
@@ -166,23 +171,55 @@ namespace StrixMusic.Cores.OneDrive.Services
                 builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
 
                 _logger.LogInformation($"Executing builder");
-                return await builder.ExecuteAsync(cancellationTokenSource.Token);
+
+                return await builder.ExecuteAsync(cancellationTokenInternal);
             }
 
             if (LoginMethod == LoginMethod.DeviceCode)
             {
+                // Create a token source we can cancel, that also cancels when the passed token is canceled.
+                var userCancellableTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenInternal);
+                var builderCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenInternal);
+
                 _logger.LogInformation($"Acquiring token via device code");
 
                 _logger.LogInformation($"Building via {nameof(_clientApp.AcquireTokenWithDeviceCode)}");
                 var builder = _clientApp.AcquireTokenWithDeviceCode(_scopes, dcr =>
                 {
                     _logger.LogInformation($"Displaying device code result");
-                    _coreConfig.DisplayDeviceCodeResult(dcr, cancellationTokenSource);
+                    _coreConfig.DisplayDeviceCodeResult(dcr, userCancellableTokenSource);
+
                     return Task.CompletedTask;
                 });
 
                 _logger.LogInformation($"Executing builder");
-                return await builder.ExecuteAsync(cancellationTokenSource.Token);
+
+                // canceledTask will complete first if the token is cancelled by the user.
+                // builderTask will complete first if setup is complete.
+                var builderTask = builder.ExecuteAsync(builderCancellationTokenSource.Token);
+                var canceledTask = userCancellableTokenSource.Token.WhenCancelled();
+
+                await Task.WhenAny(canceledTask, builderTask);
+
+                if (builderTask.IsFaulted)
+                    throw builderTask.Exception;
+
+                // Throw if the user cancelled it manually.
+                if (userCancellableTokenSource.IsCancellationRequested)
+                    userCancellableTokenSource.Token.ThrowIfCancellationRequested();
+
+                // Otherwise, cancel to trigger WhenCancelled cleanup.
+                if (!canceledTask.IsCanceled && !userCancellableTokenSource.IsCancellationRequested)
+                    userCancellableTokenSource.Cancel();
+
+                // If builder hasn't finished, cancel it.
+                if (builderTask.Status != TaskStatus.RanToCompletion)
+                    builderCancellationTokenSource.Cancel();
+
+                userCancellableTokenSource.Dispose();
+                builderCancellationTokenSource.Dispose();
+
+                return !builderTask.IsCanceled ? builderTask.Result : null;
             }
 
             return ThrowHelper.ThrowArgumentOutOfRangeException<AuthenticationResult?>("Invalid login method specified");

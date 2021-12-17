@@ -13,7 +13,6 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels

@@ -500,6 +500,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             // Make sure the file is really a PLS file
             var firstLine = await content.ReadLineAsync();
+
             // Not a valid PLS playlist
             if (firstLine != "[playlist]")
                 return null;
