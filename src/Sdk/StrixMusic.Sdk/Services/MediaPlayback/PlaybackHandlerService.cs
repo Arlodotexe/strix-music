@@ -396,6 +396,34 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             return Task.CompletedTask;
         }
 
+        private static void Unshuffle<T>(List<T> array, int[] shuffleMap)
+        {
+            int index = array.Count - 1;
+
+            while (index > -1)
+            {
+                if (shuffleMap[index] == index)
+                {
+                    // TODO: Need to push this update to OwlCore.
+                    // Decrement the index and keep swapping elements as there maybe more elements at the incorrect place, this might not be required if same map and same list used to unshuffle.
+                    // It is done to handle the case where swapped indexes of shuffleMap and its corresponding list after shuffle and wants to to get the unshuffled list in specific order. 
+                    index--;
+                    continue;
+                }
+
+                var indexToSwap = shuffleMap[index];
+
+                var value = array[indexToSwap];
+                var indexOfValueFromIndexToSwap = shuffleMap[indexToSwap];
+
+                array[indexToSwap] = array[index];
+                shuffleMap[indexToSwap] = shuffleMap[index];
+
+                array[index] = value;
+                shuffleMap[index] = indexOfValueFromIndexToSwap;
+            }
+        }
+
         private void ShuffleOffInternal()
         {
             _shuffleState = false;
@@ -408,16 +436,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             // The space complexity will remain O(n), because we are not cloning any list we are simply references same items each time.
             var unshuffledItems = new List<IMediaSourceConfig>();
 
-            unshuffledItems.AddRange(_prevItems);
-
             if (CurrentItem != null)
-            {
                 unshuffledItems.Add(CurrentItem);
-            }
 
+            unshuffledItems.AddRange(_prevItems);
             unshuffledItems.AddRange(_nextItems);
-
-            unshuffledItems.Unshuffle(_shuffleMap);
+            Unshuffle(unshuffledItems, _shuffleMap);
 
             _nextItems.Clear();
             _prevItems.Clear();
@@ -448,11 +472,41 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _shuffleState = true;
             _shuffleMap = Array.Empty<int>();
 
-            // Insert previous items at the start of the list
-            _nextItems.InsertOrAddRange(0, _prevItems);
-            _prevItems.Clear();
+            // This list is only used for shuffle purpose, at the end we will extract nextitems out of it.
+            var list = new List<IMediaSourceConfig>();
 
-            _shuffleMap = _nextItems.Shuffle();
+            list.AddRange(_prevItems);
+
+            if (CurrentItem != null)
+                list.Add(CurrentItem);
+
+            list.AddRange(_nextItems);
+
+            _shuffleMap = list.Shuffle();
+
+            // Swapping the items to make sure the CurrentItem and its original index in the map and the temp list is 0th index.
+            var temp = _shuffleMap[0];
+            var tempItem = list[0];
+            var orignalCurrentIndex = _prevItems.Count;
+            var newCurrentIndex = Array.IndexOf(_shuffleMap, orignalCurrentIndex);
+
+            if (CurrentItem != null)
+            {
+                list[0] = CurrentItem;
+                _shuffleMap[0] = orignalCurrentIndex;
+
+                _shuffleMap[newCurrentIndex] = temp;
+                list[newCurrentIndex] = tempItem;
+            }
+
+            // Populate everything in the list except the item at 0th index in nextItems because its the CurrentItem.
+            _nextItems.Clear();
+            for (int i = 1; i < list.Count; i++)
+            {
+                _nextItems.Add(list[i]);
+            }
+
+            _prevItems.Clear();
         }
 
         /// <inheritdoc />

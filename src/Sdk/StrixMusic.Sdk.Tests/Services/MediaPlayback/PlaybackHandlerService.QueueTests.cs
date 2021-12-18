@@ -43,7 +43,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         }
 
         [TestMethod]
-        [DataRow(0, 11)]
         [DataRow(1, 10)]
         [DataRow(2, 9)]
         [DataRow(3, 8)]
@@ -76,13 +75,13 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // If there is anything in PreviousItems, there must be a CurrentItem.
             if (numberOfPreviousItems > 0)
             {
-                _handlerService.CurrentItem = new MediaSourceConfig(mockTrack, "Current", Stream.Null, "mp3");
+                _handlerService.CurrentItem = new MediaSourceConfig(mockTrack, numberOfPreviousItems.ToString(), Stream.Null, "mp3");
             }
 
             // Generate next items
             for (int i = 0; i < numberOfNextItems; i++)
             {
-                var mediaSourceConfig = new MediaSourceConfig(mockTrack, (numberOfPreviousItems + i).ToString(), Stream.Null, "mp3");
+                var mediaSourceConfig = new MediaSourceConfig(mockTrack, (numberOfPreviousItems + (i + 1)).ToString(), Stream.Null, "mp3");
                 _nextItems.Add(mediaSourceConfig);
                 _handlerService.InsertNext(i, mediaSourceConfig);
             }
@@ -105,7 +104,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         }
 
         [TestMethod]
-        [DataRow(0, 11)]
         [DataRow(1, 10)]
         [DataRow(2, 9)]
         [DataRow(3, 8)]
