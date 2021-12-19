@@ -396,34 +396,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             return Task.CompletedTask;
         }
 
-        private static void Unshuffle<T>(List<T> array, int[] shuffleMap)
-        {
-            int index = array.Count - 1;
-
-            while (index > -1)
-            {
-                if (shuffleMap[index] == index)
-                {
-                    // TODO: Need to push this update to OwlCore.
-                    // Decrement the index and keep swapping elements as there maybe more elements at the incorrect place, this might not be required if same map and same list used to unshuffle.
-                    // It is done to handle the case where swapped indexes of shuffleMap and its corresponding list after shuffle and wants to to get the unshuffled list in specific order. 
-                    index--;
-                    continue;
-                }
-
-                var indexToSwap = shuffleMap[index];
-
-                var value = array[indexToSwap];
-                var indexOfValueFromIndexToSwap = shuffleMap[indexToSwap];
-
-                array[indexToSwap] = array[index];
-                shuffleMap[indexToSwap] = shuffleMap[index];
-
-                array[index] = value;
-                shuffleMap[index] = indexOfValueFromIndexToSwap;
-            }
-        }
-
         private void ShuffleOffInternal()
         {
             _shuffleState = false;
@@ -441,7 +413,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             unshuffledItems.AddRange(_prevItems);
             unshuffledItems.AddRange(_nextItems);
-            Unshuffle(unshuffledItems, _shuffleMap);
+            unshuffledItems.Unshuffle( _shuffleMap);
 
             _nextItems.Clear();
             _prevItems.Clear();
