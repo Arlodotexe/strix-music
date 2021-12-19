@@ -208,6 +208,22 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), remotelyReceivedResult, remotelyReceivedResult?.GetType());
         }
 
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteLibrarySetup()
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            await _remoteClientCore.InitAsync(new ServiceCollection());
+
+            // Wait for changes to propogate
+            await Task.Delay(500);
+
+            Assert.AreEqual(_core.Library.Id, _remoteHostCore.Library.Id);
+            Assert.AreEqual(_core.Library.Id, _remoteClientCore.Library.Id);
+        }
+
         private static async void SingletonHost_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
         {
             // Simulate network conditions.

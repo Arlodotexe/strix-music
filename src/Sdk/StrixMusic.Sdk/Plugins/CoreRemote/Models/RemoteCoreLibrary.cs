@@ -11,9 +11,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.
         /// </summary>
         /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
-        /// <param name="id">Uniquely identifies the instance being remoted.</param>
-        internal RemoteCoreLibrary(string sourceCoreInstanceId, string id)
-            : base(sourceCoreInstanceId, id)
+        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
+        internal RemoteCoreLibrary(string sourceCoreInstanceId, string remotingId)
+            : base(sourceCoreInstanceId, remotingId)
         {
         }
 
@@ -21,8 +21,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Wraps around the given <paramref name="library"/> for remote interaction.
         /// </summary>
         /// <param name="library">The library to control remotely.</param>
-        internal RemoteCoreLibrary(ICoreLibrary library)
-            : base(library)
+        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
+        internal RemoteCoreLibrary(ICoreLibrary library, string remotingId)
+            : base(library, remotingId)
         {
         }
     }

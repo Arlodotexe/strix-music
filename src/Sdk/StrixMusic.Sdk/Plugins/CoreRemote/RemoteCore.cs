@@ -51,6 +51,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             Discoverables = new RemoteCoreDiscoverables(instanceId, CommonRemoteIds.RootDiscoverables);
             Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
             Pins = new RemoteCorePlayableCollectionGroup(instanceId, CommonRemoteIds.Pins);
+            Library = new RemoteCoreLibrary(InstanceId, string.Empty); 
 
             CoreConfig = new RemoteCoreConfig(instanceId);
 
@@ -72,7 +73,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             _core = core;
 
             RecentlyPlayed = core.RecentlyPlayed;
-            Library = new RemoteCoreLibrary(core.Library);
+            Library = new RemoteCoreLibrary(core.Library, string.Empty);
             Pins = core.Pins;
 
             CoreConfig = core.CoreConfig;
@@ -228,6 +229,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             SetupRemoteServices(services, InstanceId);
             await RemoteInitAsync();
 
+            // Id should be set remotely by this point.
+            Library = new RemoteCoreLibrary(InstanceId, Library.Id);
+
             await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
         });
 
@@ -238,6 +242,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
                 return;
 
             Guard.IsNotNull(_core, nameof(_core));
+
+            Library = new RemoteCoreLibrary(InstanceId, Library.Id);
 
             var services = SetupRemoteServices(InstanceId);
             await _core.InitAsync(services);
@@ -265,12 +271,12 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
                     ICoreTrack track => new RemoteCoreTrack(track),
                     ICorePlaylist playlist => new RemoteCorePlaylist(playlist),
                     ICoreDevice device => new RemoteCoreDevice(device),
-                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables),
+                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables, discoverables.Id),
                     ICoreImage image => new RemoteCoreImage(image),
-                    ICoreLibrary library => new RemoteCoreLibrary(library),
-                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed),
-                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory),
-                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup),
+                    ICoreLibrary library => new RemoteCoreLibrary(library, library.Id),
+                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed, recentlyPlayed.Id),
+                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory, searchHistory.Id),
+                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup, collectionGroup.Id),
                     _ => throw new NotImplementedException(),
                 };
 

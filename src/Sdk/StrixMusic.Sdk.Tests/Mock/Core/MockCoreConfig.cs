@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public IServiceProvider? Services { get; set; }
 
-        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; set; } = new List<AbstractUICollection>();
+        public AbstractUICollection AbstractUIElements { get; set; } = new AbstractUICollection(string.Empty);
 
         public MediaPlayerType PlaybackType { get; internal set; } = MediaPlayerType.None;
 
