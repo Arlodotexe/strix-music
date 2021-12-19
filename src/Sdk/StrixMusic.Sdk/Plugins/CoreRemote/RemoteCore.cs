@@ -49,9 +49,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId, CommonRemoteIds.RootRecentlyPlayed);
             Discoverables = new RemoteCoreDiscoverables(instanceId, CommonRemoteIds.RootDiscoverables);
-            Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
             Pins = new RemoteCorePlayableCollectionGroup(instanceId, CommonRemoteIds.Pins);
-            Library = new RemoteCoreLibrary(InstanceId, string.Empty); 
+            Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
 
             CoreConfig = new RemoteCoreConfig(instanceId);
 
@@ -72,9 +71,16 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             _ = _externalCoreInstances.TryAdd(core.InstanceId, this);
             _core = core;
 
-            RecentlyPlayed = core.RecentlyPlayed;
-            Library = new RemoteCoreLibrary(core.Library, string.Empty);
-            Pins = core.Pins;
+            Library = new RemoteCoreLibrary(core.Library, CommonRemoteIds.RootLibrary);
+
+            if (core.RecentlyPlayed is not null)
+                RecentlyPlayed = new RemoteCoreRecentlyPlayed(core.RecentlyPlayed, CommonRemoteIds.RootRecentlyPlayed);
+
+            if (core.Pins is not null)
+                Pins = new RemoteCorePlayableCollectionGroup(core.Pins, CommonRemoteIds.Pins);
+
+            if (core.Discoverables is not null)
+                Discoverables = new RemoteCoreDiscoverables(core.Discoverables, CommonRemoteIds.RootDiscoverables);
 
             CoreConfig = core.CoreConfig;
 
@@ -191,15 +197,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; set; }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public ICoreDiscoverables? Discoverables { get; }
+        public ICoreDiscoverables? Discoverables { get; set; }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public ICorePlayableCollectionGroup? Pins { get; }
+        public ICorePlayableCollectionGroup? Pins { get; set; }
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
@@ -229,8 +235,17 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             SetupRemoteServices(services, InstanceId);
             await RemoteInitAsync();
 
-            // Id should be set remotely by this point.
+            // Ids should be set remotely by this point.
             Library = new RemoteCoreLibrary(InstanceId, Library.Id);
+
+            if (RecentlyPlayed is not null)
+                RecentlyPlayed = new RemoteCoreRecentlyPlayed(InstanceId, RecentlyPlayed.Id);
+
+            if (Discoverables is not null)
+                Discoverables = new RemoteCoreDiscoverables(InstanceId, Discoverables.Id);
+
+            if (Pins is not null)
+                Pins = new RemoteCorePlayableCollectionGroup(InstanceId, Pins.Id);
 
             await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
         });
@@ -243,7 +258,17 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             Guard.IsNotNull(_core, nameof(_core));
 
+            // Ids should be set remotely by this point.
             Library = new RemoteCoreLibrary(InstanceId, Library.Id);
+
+            if (RecentlyPlayed is not null)
+                RecentlyPlayed = new RemoteCoreRecentlyPlayed(InstanceId, RecentlyPlayed.Id);
+
+            if (Discoverables is not null)
+                Discoverables = new RemoteCoreDiscoverables(InstanceId, Discoverables.Id);
+
+            if (Pins is not null)
+                Pins = new RemoteCorePlayableCollectionGroup(InstanceId, Pins.Id);
 
             var services = SetupRemoteServices(InstanceId);
             await _core.InitAsync(services);

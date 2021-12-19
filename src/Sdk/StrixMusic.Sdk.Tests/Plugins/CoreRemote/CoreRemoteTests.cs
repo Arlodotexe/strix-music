@@ -224,6 +224,54 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreEqual(_core.Library.Id, _remoteClientCore.Library.Id);
         }
 
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteRecentlyPlayedSetup()
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            await _remoteClientCore.InitAsync(new ServiceCollection());
+
+            // Wait for changes to propogate
+            await Task.Delay(500);
+
+            Assert.AreEqual(_core.RecentlyPlayed?.Id, _remoteHostCore.RecentlyPlayed?.Id);
+            Assert.AreEqual(_core.RecentlyPlayed?.Id, _remoteClientCore.RecentlyPlayed?.Id);
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteDiscoverablesSetup()
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            await _remoteClientCore.InitAsync(new ServiceCollection());
+
+            // Wait for changes to propogate
+            await Task.Delay(500);
+
+            Assert.AreEqual(_core.Discoverables?.Id, _remoteHostCore.Discoverables?.Id);
+            Assert.AreEqual(_core.Discoverables?.Id, _remoteClientCore.Discoverables?.Id);
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemotePinsSetup()
+        {
+            Assert.IsNotNull(_core);
+            Assert.IsNotNull(_remoteClientCore);
+            Assert.IsNotNull(_remoteHostCore);
+
+            await _remoteClientCore.InitAsync(new ServiceCollection());
+
+            // Wait for changes to propogate
+            await Task.Delay(500);
+
+            Assert.AreEqual(_core.Pins?.Id, _remoteHostCore.Pins?.Id);
+            Assert.AreEqual(_core.Pins?.Id, _remoteClientCore.Pins?.Id);
+        }
+
         private static async void SingletonHost_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
         {
             // Simulate network conditions.
