@@ -413,7 +413,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             unshuffledItems.AddRange(_prevItems);
             unshuffledItems.AddRange(_nextItems);
-            unshuffledItems.Unshuffle( _shuffleMap);
+            unshuffledItems.Unshuffle(_shuffleMap);
 
             _nextItems.Clear();
             _prevItems.Clear();
