@@ -1,14 +1,25 @@
 ﻿using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
 {
     public abstract class MockCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
+        private List<ICoreAlbumCollectionItem> _albums = new List<ICoreAlbumCollectionItem>();
+        private List<ICoreArtistCollectionItem> _artists = new List<ICoreArtistCollectionItem>();
+        private List<ICorePlaylistCollectionItem> _playlists = new List<ICorePlaylistCollectionItem>();
+        private List<ICoreTrack> _tracks = new List<ICoreTrack>();
+        private List<ICorePlayableCollectionGroup> _children = new List<ICorePlayableCollectionGroup>();
+        private List<ICoreImage> _images = new List<ICoreImage>();
+        private List<ICoreUrl> _urls = new List<ICoreUrl>();
+
         private int totalTrackCount;
         private int totalChildrenCount;
         private int totalImageCount;
@@ -63,6 +74,31 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             TotalChildrenCount = 5;
             TotalImageCount = 5;
             TotalUrlCount = 5;
+        }
+
+        // Must be done outside the ctor to avoid Stackoverflow exceptions.
+        public void PopulateMockItems()
+        {
+            for (int i = _tracks.Count; i < TotalTrackCount; i++)
+                _tracks.Add(new MockCoreTrack(SourceCore, $"{i}", $"Track {i}"));
+
+            for (int i = _albums.Count; i < TotalAlbumItemsCount; i++)
+                _albums.Add(new MockCoreAlbum(SourceCore, $"{i}", $"Album {i}"));
+
+            for (int i = _artists.Count; i < TotalArtistItemsCount; i++)
+                _artists.Add(new MockCoreArtist(SourceCore, $"{i}", $"Artist {i}"));
+
+            for (int i = _playlists.Count; i < TotalPlaylistItemsCount; i++)
+                _playlists.Add(new MockCorePlaylist(SourceCore, $"{i}", $"Playlist {i}"));
+
+            for (int i = _images.Count; i < TotalImageCount; i++)
+                _images.Add(new MockCoreImage(SourceCore, new Uri($"https://picsum.photos/seed/picsum{i}/200/300")));
+
+            for (int i = _urls.Count; i < TotalUrlCount; i++)
+                _urls.Add(new MockCoreUrl(SourceCore, new Uri($"https://picsum.photos/seed/picsum{i}/200/300"), $"Url {i}"));
+
+            for (int i = _children.Count; i < TotalChildrenCount; i++)
+                _children.Add(new MockCorePlayableCollectionGroup(SourceCore, $"{i}", $"Child {i}"));
         }
 
         public int TotalPlaylistItemsCount
@@ -332,41 +368,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public event EventHandler<int>? ImagesCountChanged;
         public event EventHandler<int>? UrlsCountChanged;
 
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddImageAsync(ICoreImage image, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddTrackAsync(ICoreTrack track, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddUrlAsync(ICoreUrl url, int index)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task ChangeDescriptionAsync(string? description)
         {
             Description = description;
@@ -523,39 +524,116 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             throw new NotImplementedException();
         }
 
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
+        {
+            _albums.InsertOrAdd(index, album);
+            TotalAlbumItemsCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        {
+            _artists.InsertOrAdd(index, artist);
+            TotalArtistItemsCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
+        {
+            _children.InsertOrAdd(index, child);
+            TotalChildrenCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            _images.InsertOrAdd(index, image);
+            TotalImageCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
+        {
+            _playlists.InsertOrAdd(index, playlist);
+            TotalPlaylistItemsCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddTrackAsync(ICoreTrack track, int index)
+        {
+            _tracks.InsertOrAdd(index, track);
+            TotalTrackCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task AddUrlAsync(ICoreUrl url, int index)
+        {
+            _urls.InsertOrAdd(index, url);
+            TotalUrlCount++;
+
+            return Task.CompletedTask;
+        }
+
         public Task RemoveAlbumItemAsync(int index)
         {
-            throw new NotImplementedException();
+            _albums.RemoveAt(0);
+            TotalAlbumItemsCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveArtistItemAsync(int index)
         {
-            throw new NotImplementedException();
+            _artists.RemoveAt(index);
+            TotalArtistItemsCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveChildAsync(int index)
         {
-            throw new NotImplementedException();
+            _children.RemoveAt(index);
+            TotalChildrenCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveImageAsync(int index)
         {
-            throw new NotImplementedException();
+            _images.RemoveAt(index);
+            TotalImageCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemovePlaylistItemAsync(int index)
         {
-            throw new NotImplementedException();
+            _playlists.RemoveAt(index);
+            TotalPlaylistItemsCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotImplementedException();
+            _tracks.RemoveAt(index);
+            TotalTrackCount--;
+
+            return Task.CompletedTask;
         }
 
         public Task RemoveUrlAsync(int index)
         {
-            throw new NotImplementedException();
+            _urls.RemoveAt(index);
+            TotalUrlCount--;
+
+            return Task.CompletedTask;
         }
 
         public ValueTask DisposeAsync()

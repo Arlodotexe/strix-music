@@ -1023,60 +1023,312 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreTrack"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
         [RemoteMethod]
-        public Task AddTrackAsync(ICoreTrack track, int index) => _memberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
+        public Task AddTrackAsync(ICoreTrack track, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddTrackAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddTrackAsync(track, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreArtistCollectionItem"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddArtistItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddArtistItemAsync(artist, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreAlbumCollectionItem"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddAlbumItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddAlbumItemAsync(album, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreTrack"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddPlaylistItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddPlaylistItemAsync(playlist, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICorePlayableCollectionGroup"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddChildAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddChildAsync(child, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreImage"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddImageAsync(ICoreImage image, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddImageAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddImageAsync(image, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// Implementations of <see cref="ICoreUrl"/> passed to this method must be in the SDK for deserialization to work.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="Data.IInitialData"/>.
+        /// </remarks>
+        [RemoteMethod]
+        public Task AddUrlAsync(ICoreUrl url, int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(AddUrlAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.AddUrlAsync(url, index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => _memberRemote.RemoteWaitAsync(nameof(AddArtistItemAsync));
+        public Task RemoveTrackAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveTrackAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemoveTrackAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index) => _memberRemote.RemoteWaitAsync(nameof(AddAlbumItemAsync));
+        public Task RemoveArtistItemAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveArtistItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemoveArtistItemAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => _memberRemote.RemoteWaitAsync(nameof(AddPlaylistItemAsync));
+        public Task RemoveAlbumItemAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveAlbumItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemoveAlbumItemAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index) => _memberRemote.RemoteWaitAsync(nameof(AddChildAsync));
+        public Task RemovePlaylistItemAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemovePlaylistItemAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemovePlaylistItemAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddImageAsync(ICoreImage image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
+        public Task RemoveChildAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveChildAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemoveChildAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddUrlAsync(ICoreUrl url, int index) => _memberRemote.RemoteWaitAsync(nameof(AddUrlAsync));
+        public Task RemoveImageAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveImageAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.RemoveImageAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveTrackAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveTrackAsync));
+        public Task RemoveUrlAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(RemoveUrlAsync)}.{index}";
 
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemoveArtistItemAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveArtistItemAsync));
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
 
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemoveAlbumItemAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveAlbumItemAsync));
+                await _corePlayableCollection.RemoveUrlAsync(index);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
 
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemovePlaylistItemAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemovePlaylistItemAsync));
-
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemoveChildAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveChildAsync));
-
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemoveImageAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveImageAsync));
-
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task RemoveUrlAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveUrlAsync));
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]

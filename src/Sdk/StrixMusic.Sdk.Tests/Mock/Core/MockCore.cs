@@ -43,6 +43,9 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public async Task InitAsync(IServiceCollection services)
         {
             await Task.Delay(500);
+
+            Library.Cast<MockCoreLibrary>().PopulateMockItems();
+
             CoreState = CoreState.Loaded;
         }
 

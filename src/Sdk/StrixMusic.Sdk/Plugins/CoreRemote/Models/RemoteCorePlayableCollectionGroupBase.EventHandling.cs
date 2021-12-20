@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.LastPlayedChanged += OnLastPlayedChanged;
 
             collection.TracksCountChanged += OnTracksCountChanged;
-            collection.ArtistItemsCountChanged += OnAlbumItemsCountChanged;
+            collection.ArtistItemsCountChanged += OnArtistItemsCountChanged;
             collection.AlbumItemsCountChanged += OnAlbumItemsCountChanged;
             collection.PlaylistItemsCountChanged += OnPlaylistItemsCountChanged;
             collection.ChildrenCountChanged += OnChildrenCountChanged;
@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.LastPlayedChanged -= OnLastPlayedChanged;
 
             collection.TracksCountChanged -= OnTracksCountChanged;
-            collection.ArtistItemsCountChanged -= OnAlbumItemsCountChanged;
+            collection.ArtistItemsCountChanged -= OnArtistItemsCountChanged;
             collection.AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
             collection.PlaylistItemsCountChanged -= OnPlaylistItemsCountChanged;
             collection.ChildrenCountChanged -= OnChildrenCountChanged;
