@@ -22,12 +22,19 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.ChildrenCountChanged += OnChildrenCountChanged;
             collection.ImagesCountChanged += OnImagesCountChanged;
             collection.UrlsCountChanged += OnUrlsCountChanged;
+
+            collection.IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            collection.IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+            collection.IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
         }
 
         private void DetachEvents(ICorePlayableCollectionGroup collection)
         {
             collection.NameChanged -= OnNameChanged;
             collection.DescriptionChanged -= OnDescriptionChanged;
+            collection.PlaybackStateChanged -= OnPlaybackStateChanged;
+            collection.DurationChanged -= OnDurationChanged;
+            collection.LastPlayedChanged -= OnLastPlayedChanged;
 
             collection.TracksCountChanged -= OnTracksCountChanged;
             collection.ArtistItemsCountChanged -= OnAlbumItemsCountChanged;
@@ -36,6 +43,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.ChildrenCountChanged -= OnChildrenCountChanged;
             collection.ImagesCountChanged -= OnImagesCountChanged;
             collection.UrlsCountChanged -= OnUrlsCountChanged;
+
+            collection.IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            collection.IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+            collection.IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
         }
 
         private void OnNameChanged(object sender, string e) => Name = e;
@@ -47,6 +58,12 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private void OnDurationChanged(object sender, System.TimeSpan e) => Duration = e;
 
         private void OnPlaybackStateChanged(object sender, MediaPlayback.PlaybackState e) => PlaybackState = e;
+
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => IsChangeNameAsyncAvailable = e;
+
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => IsChangeDescriptionAsyncAvailable = e;
+
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => IsChangeDurationAsyncAvailable = e;
 
         private void OnTracksCountChanged(object sender, int e) => TotalTrackCount = e;
 

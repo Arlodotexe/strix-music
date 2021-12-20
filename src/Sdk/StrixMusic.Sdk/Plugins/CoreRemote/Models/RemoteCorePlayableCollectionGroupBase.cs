@@ -42,6 +42,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private SemaphoreSlim _getChildrenMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getImagesMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getUrlsMutex = new SemaphoreSlim(1, 1);
+        private bool _isChangeNameAsyncAvailable;
+        private bool _isChangeDescriptionAsyncAvailable;
+        private bool _isChangeDurationAsyncAvailable;
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCorePlayableCollectionGroupBase"/>, for receiving data.
@@ -85,6 +88,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             TotalChildrenCount = corePlayableCollection.TotalChildrenCount;
             TotalImageCount = corePlayableCollection.TotalImageCount;
             TotalUrlCount = corePlayableCollection.TotalUrlCount;
+
+            IsChangeNameAsyncAvailable = corePlayableCollection.IsChangeNameAsyncAvailable;
+            IsChangeDescriptionAsyncAvailable = corePlayableCollection.IsChangeDescriptionAsyncAvailable;
+            IsChangeDurationAsyncAvailable = corePlayableCollection.IsChangeDurationAsyncAvailable;
 
             AttachEvents(corePlayableCollection);
         }
@@ -234,7 +241,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _duration = value;
-                DurationChanged?.Invoke(this, value);   
+                DurationChanged?.Invoke(this, value);
             }
         }
 
@@ -371,15 +378,39 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeNameAsyncAvailable { get; set; }
+        public bool IsChangeNameAsyncAvailable
+        {
+            get => _isChangeNameAsyncAvailable;
+            set
+            {
+                _isChangeNameAsyncAvailable = value;
+                IsChangeNameAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeDescriptionAsyncAvailable { get; set; }
+        public bool IsChangeDescriptionAsyncAvailable
+        {
+            get => _isChangeDescriptionAsyncAvailable;
+            set
+            {
+                _isChangeDescriptionAsyncAvailable = value;
+                IsChangeDescriptionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public bool IsChangeDurationAsyncAvailable { get; set; }
+        public bool IsChangeDurationAsyncAvailable
+        {
+            get => _isChangeDurationAsyncAvailable;
+            set
+            {
+                _isChangeDurationAsyncAvailable = value;
+                IsChangeDurationAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteMethod]

@@ -21,6 +21,9 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         private DateTime? lastPlayed;
         private PlaybackState playbackState;
         private TimeSpan duration;
+        private bool isChangeDurationAsyncAvailable;
+        private bool isChangeDescriptionAsyncAvailable;
+        private bool isChangeNameAsyncAvailable;
 
         public MockCorePlayableCollectionGroupBase(ICore sourceCore, string id, string name)
         {
@@ -31,6 +34,18 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             PlaybackState = PlaybackState.Paused;
             LastPlayed = DateTime.Today;
             Duration = TimeSpan.FromMinutes(5);
+
+            IsChangeNameAsyncAvailable = true;
+            IsChangeDescriptionAsyncAvailable = true;
+            IsChangeDurationAsyncAvailable = true;
+
+            TotalTrackCount = 5;
+            TotalAlbumItemsCount = 5;
+            TotalArtistItemsCount = 5;
+            TotalPlaylistItemsCount = 5;
+            TotalChildrenCount = 5;
+            TotalImageCount = 5;
+            TotalUrlCount = 5;
         }
 
         public int TotalPlaylistItemsCount
@@ -153,11 +168,35 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             }
         }
 
-        public bool IsChangeNameAsyncAvailable { get; set; }
+        public bool IsChangeNameAsyncAvailable
+        {
+            get => isChangeNameAsyncAvailable;
+            set
+            {
+                isChangeNameAsyncAvailable = value;
+                IsChangeNameAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
-        public bool IsChangeDescriptionAsyncAvailable { get; set; }
+        public bool IsChangeDescriptionAsyncAvailable
+        {
+            get => isChangeDescriptionAsyncAvailable;
+            set
+            {
+                isChangeDescriptionAsyncAvailable = value;
+                IsChangeDescriptionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
-        public bool IsChangeDurationAsyncAvailable { get; set; }
+        public bool IsChangeDurationAsyncAvailable
+        {
+            get => isChangeDurationAsyncAvailable;
+            set
+            {
+                isChangeDurationAsyncAvailable = value;
+                IsChangeDurationAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         public int TotalImageCount
         {

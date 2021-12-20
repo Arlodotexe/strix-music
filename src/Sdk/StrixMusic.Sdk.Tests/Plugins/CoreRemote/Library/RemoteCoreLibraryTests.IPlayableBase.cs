@@ -197,5 +197,146 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteHostCore.DisposeAsync();
             await remoteClientCore.DisposeAsync();
         }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeNameAsyncAvailable()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            // For test to work, must not be a default value.
+            Assert.AreNotEqual(default, core.Library.IsChangeNameAsyncAvailable);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(core.Library.IsChangeNameAsyncAvailable, remoteClientCore.Library.IsChangeNameAsyncAvailable);
+            Assert.AreEqual(core.Library.IsChangeNameAsyncAvailable, remoteHostCore.Library.IsChangeNameAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeNameAsyncAvailable_Changed()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newIsChangeNameAsyncAvailable = false;
+
+            // For test to work, must not be same as current.
+            Assert.AreNotEqual(core.Library.IsChangeNameAsyncAvailable, newIsChangeNameAsyncAvailable);
+
+            core.Library.Cast<MockCoreLibrary>().IsChangeNameAsyncAvailable = newIsChangeNameAsyncAvailable;
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newIsChangeNameAsyncAvailable, core.Library.IsChangeNameAsyncAvailable);
+            Assert.AreEqual(newIsChangeNameAsyncAvailable, remoteClientCore.Library.IsChangeNameAsyncAvailable);
+            Assert.AreEqual(newIsChangeNameAsyncAvailable, remoteHostCore.Library.IsChangeNameAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeDescriptionAsyncAvailable()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            // For test to work, must not be a default value.
+            Assert.AreNotEqual(default, core.Library.IsChangeDescriptionAsyncAvailable);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(core.Library.IsChangeDescriptionAsyncAvailable, remoteClientCore.Library.IsChangeDescriptionAsyncAvailable);
+            Assert.AreEqual(core.Library.IsChangeDescriptionAsyncAvailable, remoteHostCore.Library.IsChangeDescriptionAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeDescriptionAsyncAvailable_Changed()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newIsChangeDescriptionAsyncAvailable = false;
+
+            // For test to work, must not be same as current.
+            Assert.AreNotEqual(core.Library.IsChangeDescriptionAsyncAvailable, newIsChangeDescriptionAsyncAvailable);
+
+            core.Library.Cast<MockCoreLibrary>().IsChangeDescriptionAsyncAvailable = newIsChangeDescriptionAsyncAvailable;
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newIsChangeDescriptionAsyncAvailable, core.Library.IsChangeDescriptionAsyncAvailable);
+            Assert.AreEqual(newIsChangeDescriptionAsyncAvailable, remoteClientCore.Library.IsChangeDescriptionAsyncAvailable);
+            Assert.AreEqual(newIsChangeDescriptionAsyncAvailable, remoteHostCore.Library.IsChangeDescriptionAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeDurationAsyncAvailable()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            // For test to work, must not be a default value.
+            Assert.AreNotEqual(default, core.Library.IsChangeDurationAsyncAvailable);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(core.Library.IsChangeDurationAsyncAvailable, remoteClientCore.Library.IsChangeDurationAsyncAvailable);
+            Assert.AreEqual(core.Library.IsChangeDurationAsyncAvailable, remoteHostCore.Library.IsChangeDurationAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteIsChangeDurationAsyncAvailable_Changed()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newIsChangeDurationAsyncAvailable = false;
+
+            // For test to work, must not be same as current.
+            Assert.AreNotEqual(core.Library.IsChangeDurationAsyncAvailable, newIsChangeDurationAsyncAvailable);
+
+            core.Library.Cast<MockCoreLibrary>().IsChangeDurationAsyncAvailable = newIsChangeDurationAsyncAvailable;
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newIsChangeDurationAsyncAvailable, core.Library.IsChangeDurationAsyncAvailable);
+            Assert.AreEqual(newIsChangeDurationAsyncAvailable, remoteClientCore.Library.IsChangeDurationAsyncAvailable);
+            Assert.AreEqual(newIsChangeDurationAsyncAvailable, remoteHostCore.Library.IsChangeDurationAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
     }
 }

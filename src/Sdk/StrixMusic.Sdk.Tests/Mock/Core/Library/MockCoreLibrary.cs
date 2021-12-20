@@ -9,13 +9,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Library
         public MockCoreLibrary(ICore sourceCore)
             : base(sourceCore, nameof(MockCoreLibrary), "Library")
         {
-            TotalTrackCount = 5;
-            TotalAlbumItemsCount = 5;
-            TotalArtistItemsCount = 5;
-            TotalPlaylistItemsCount = 5;
-            TotalChildrenCount = 5;
-            TotalImageCount = 5;
-            TotalUrlCount = 5;
         }
 
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
