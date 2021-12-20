@@ -23,6 +23,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.ImagesCountChanged += OnImagesCountChanged;
             collection.UrlsCountChanged += OnUrlsCountChanged;
 
+            collection.IsPlayAlbumCollectionAsyncAvailableChanged += OnIsPlayAlbumCollectionAsyncAvailableChanged;
+            collection.IsPauseAlbumCollectionAsyncAvailableChanged += OnIsPauseAlbumCollectionAsyncAvailableChanged;
+            collection.IsPlayArtistCollectionAsyncAvailableChanged += OnIsPlayArtistCollectionAsyncAvailableChanged;
+            collection.IsPauseArtistCollectionAsyncAvailableChanged += OnIsPauseArtistCollectionAsyncAvailableChanged;
+            collection.IsPlayPlaylistCollectionAsyncAvailableChanged += OnIsPlayPlaylistCollectionAsyncAvailableChanged;
+            collection.IsPausePlaylistCollectionAsyncAvailableChanged += OnIsPausePlaylistCollectionAsyncAvailableChanged;
+            collection.IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
+            collection.IsPauseTrackCollectionAsyncAvailableChanged += OnIsPauseTrackCollectionAsyncAvailableChanged;
+
             collection.IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
             collection.IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
             collection.IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
@@ -44,6 +53,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.ImagesCountChanged -= OnImagesCountChanged;
             collection.UrlsCountChanged -= OnUrlsCountChanged;
 
+            collection.IsPlayAlbumCollectionAsyncAvailableChanged -= OnIsPlayAlbumCollectionAsyncAvailableChanged;
+            collection.IsPauseAlbumCollectionAsyncAvailableChanged -= OnIsPauseAlbumCollectionAsyncAvailableChanged;
+            collection.IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
+            collection.IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
+            collection.IsPlayPlaylistCollectionAsyncAvailableChanged -= OnIsPlayPlaylistCollectionAsyncAvailableChanged;
+            collection.IsPausePlaylistCollectionAsyncAvailableChanged -= OnIsPausePlaylistCollectionAsyncAvailableChanged;
+            collection.IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
+            collection.IsPauseTrackCollectionAsyncAvailableChanged -= OnIsPauseTrackCollectionAsyncAvailableChanged;
+
             collection.IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
             collection.IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
             collection.IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
@@ -64,6 +82,22 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => IsChangeDescriptionAsyncAvailable = e;
 
         private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => IsChangeDurationAsyncAvailable = e;
+
+        private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayAlbumCollectionAsyncAvailable = e;
+
+        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseAlbumCollectionAsyncAvailable = e;
+
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayArtistCollectionAsyncAvailable = e;
+
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseArtistCollectionAsyncAvailable = e;
+
+        private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayPlaylistCollectionAsyncAvailable = e;
+
+        private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => IsPausePlaylistCollectionAsyncAvailable = e;
+
+        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayTrackCollectionAsyncAvailable = e;
+
+        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseTrackCollectionAsyncAvailable = e;
 
         private void OnTracksCountChanged(object sender, int e) => TotalTrackCount = e;
 

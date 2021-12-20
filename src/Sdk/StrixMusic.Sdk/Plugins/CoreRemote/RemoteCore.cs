@@ -54,7 +54,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             InstanceId = instanceId;
 
-            // Dummy instances to satisfy nullable. Will be overwritten remotely from other ctor.
+            // Dummy values to satisfy nullable. Will be overwritten remotely from other ctor.
             RecentlyPlayed = null!;
             Discoverables = null!;
             Pins = null!;

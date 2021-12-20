@@ -31,6 +31,18 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private int _totalImageCount;
         private int _totalUrlCount;
 
+        private bool _isChangeNameAsyncAvailable;
+        private bool _isChangeDescriptionAsyncAvailable;
+        private bool _isChangeDurationAsyncAvailable;
+        private bool _isPlayAlbumCollectionAsyncAvailable;
+        private bool _isPauseAlbumCollectionAsyncAvailable;
+        private bool _isPlayArtistCollectionAsyncAvailable;
+        private bool _isPauseArtistCollectionAsyncAvailable;
+        private bool _isPlayPlaylistCollectionAsyncAvailable;
+        private bool _isPausePlaylistCollectionAsyncAvailable;
+        private bool _isPlayTrackCollectionAsyncAvailable;
+        private bool _isPauseTrackCollectionAsyncAvailable;
+
         private PlaybackState _playbackState;
         private TimeSpan _duration;
         private DateTime? _lastPlayed;
@@ -42,9 +54,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private SemaphoreSlim _getChildrenMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getImagesMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getUrlsMutex = new SemaphoreSlim(1, 1);
-        private bool _isChangeNameAsyncAvailable;
-        private bool _isChangeDescriptionAsyncAvailable;
-        private bool _isChangeDurationAsyncAvailable;
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCorePlayableCollectionGroupBase"/>, for receiving data.
@@ -92,6 +101,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             IsChangeNameAsyncAvailable = corePlayableCollection.IsChangeNameAsyncAvailable;
             IsChangeDescriptionAsyncAvailable = corePlayableCollection.IsChangeDescriptionAsyncAvailable;
             IsChangeDurationAsyncAvailable = corePlayableCollection.IsChangeDurationAsyncAvailable;
+
+            IsPlayAlbumCollectionAsyncAvailable = corePlayableCollection.IsPlayAlbumCollectionAsyncAvailable;
+            IsPauseAlbumCollectionAsyncAvailable = corePlayableCollection.IsPauseAlbumCollectionAsyncAvailable;
+            IsPlayArtistCollectionAsyncAvailable = corePlayableCollection.IsPlayArtistCollectionAsyncAvailable;
+            IsPauseArtistCollectionAsyncAvailable = corePlayableCollection.IsPauseArtistCollectionAsyncAvailable;
+            IsPlayPlaylistCollectionAsyncAvailable = corePlayableCollection.IsPlayPlaylistCollectionAsyncAvailable;
+            IsPausePlaylistCollectionAsyncAvailable = corePlayableCollection.IsPausePlaylistCollectionAsyncAvailable;
+            IsPlayTrackCollectionAsyncAvailable = corePlayableCollection.IsPlayTrackCollectionAsyncAvailable;
+            IsPauseTrackCollectionAsyncAvailable = corePlayableCollection.IsPauseTrackCollectionAsyncAvailable;
 
             AttachEvents(corePlayableCollection);
         }
@@ -347,34 +365,99 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayAlbumCollectionAsyncAvailable { get; set; }
+        public bool IsPlayAlbumCollectionAsyncAvailable
+        {
+            get => _isPlayAlbumCollectionAsyncAvailable;
+            set
+            {
+                _isPlayAlbumCollectionAsyncAvailable = value;
+                IsPlayAlbumCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseAlbumCollectionAsyncAvailable { get; set; }
+        public bool IsPauseAlbumCollectionAsyncAvailable
+        {
+            get => _isPauseAlbumCollectionAsyncAvailable;
+            set
+            {
+                _isPauseAlbumCollectionAsyncAvailable = value;
+                IsPauseAlbumCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayArtistCollectionAsyncAvailable { get; set; }
+        public bool IsPlayArtistCollectionAsyncAvailable
+        {
+            get => _isPlayArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPlayArtistCollectionAsyncAvailable = value;
+                IsPlayArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseArtistCollectionAsyncAvailable { get; set; }
+        public bool IsPauseArtistCollectionAsyncAvailable
+        {
+            get => _isPauseArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPauseArtistCollectionAsyncAvailable = value;
+                IsPauseArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayPlaylistCollectionAsyncAvailable { get; set; }
+        public bool IsPlayPlaylistCollectionAsyncAvailable
+        {
+            get => _isPlayPlaylistCollectionAsyncAvailable;
+            set
+            {
+                _isPlayPlaylistCollectionAsyncAvailable = value;
+                IsPlayPlaylistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPausePlaylistCollectionAsyncAvailable { get; set; }
-
-        /// <inheritdoc />
-        public bool IsPlayTrackCollectionAsyncAvailable { get; set; }
+        public bool IsPausePlaylistCollectionAsyncAvailable
+        {
+            get => _isPausePlaylistCollectionAsyncAvailable;
+            set
+            {
+                _isPausePlaylistCollectionAsyncAvailable = value;
+                IsPausePlaylistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseTrackCollectionAsyncAvailable { get; set; }
+        public bool IsPlayTrackCollectionAsyncAvailable
+        {
+            get => _isPlayTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPlayTrackCollectionAsyncAvailable = value;
+                IsPlayTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsPauseTrackCollectionAsyncAvailable
+        {
+            get => _isPauseTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPauseTrackCollectionAsyncAvailable = value;
+                IsPauseTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
