@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalTrackCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalTrackCount, remoteClientCore.Library.TotalTrackCount);
             Assert.AreEqual(core.Library.TotalTrackCount, remoteHostCore.Library.TotalTrackCount);
@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalTrackCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalTrackCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalTrackCount);
@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalAlbumItemsCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalAlbumItemsCount, remoteClientCore.Library.TotalAlbumItemsCount);
             Assert.AreEqual(core.Library.TotalAlbumItemsCount, remoteHostCore.Library.TotalAlbumItemsCount);
@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalAlbumItemsCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalAlbumItemsCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalAlbumItemsCount);
@@ -117,7 +117,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalPlaylistItemsCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalPlaylistItemsCount, remoteClientCore.Library.TotalPlaylistItemsCount);
             Assert.AreEqual(core.Library.TotalPlaylistItemsCount, remoteHostCore.Library.TotalPlaylistItemsCount);
@@ -141,7 +141,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalPlaylistItemsCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalPlaylistItemsCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalPlaylistItemsCount);
@@ -163,7 +163,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalChildrenCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalChildrenCount, remoteClientCore.Library.TotalChildrenCount);
             Assert.AreEqual(core.Library.TotalChildrenCount, remoteHostCore.Library.TotalChildrenCount);
@@ -187,7 +187,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalChildrenCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalChildrenCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalChildrenCount);
@@ -209,7 +209,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalImageCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalImageCount, remoteClientCore.Library.TotalImageCount);
             Assert.AreEqual(core.Library.TotalImageCount, remoteHostCore.Library.TotalImageCount);
@@ -233,7 +233,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalImageCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalImageCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalImageCount);
@@ -255,7 +255,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.TotalUrlCount);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(core.Library.TotalUrlCount, remoteClientCore.Library.TotalUrlCount);
             Assert.AreEqual(core.Library.TotalUrlCount, remoteHostCore.Library.TotalUrlCount);
@@ -279,7 +279,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().TotalUrlCount = amount;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(100);
 
             Assert.AreEqual(amount, core.Library.TotalUrlCount);
             Assert.AreEqual(amount, remoteClientCore.Library.TotalUrlCount);
