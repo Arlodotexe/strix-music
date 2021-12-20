@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Newtonsoft.Json;
+using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
@@ -27,11 +29,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class RemoteCore : ICore
     {
-        private static readonly ConcurrentDictionary<string, RemoteCore> _externalCoreInstances
+        private static readonly ConcurrentDictionary<string, RemoteCore> _hostCoreInstances
+            = new ConcurrentDictionary<string, RemoteCore>();
+
+        private static readonly ConcurrentDictionary<string, RemoteCore> _clientCoreInstances
             = new ConcurrentDictionary<string, RemoteCore>();
 
         private readonly MemberRemote _memberRemote;
         private readonly ICore? _core;
+        private readonly object _devicesChangedLockObj = new object();
 
         private readonly List<ICoreDevice> _devices = new List<ICoreDevice>();
         private CoreState _coreState = CoreState.Unloaded;
@@ -40,17 +46,19 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCore"/>.
         /// </summary>
-        /// <param name="instanceId"></param>
+        [JsonConstructor]
         public RemoteCore(string instanceId)
         {
-            _externalCoreInstances.TryAdd(instanceId, this);
+            if (!_clientCoreInstances.TryAdd(instanceId, this))
+                ThrowHelper.ThrowInvalidOperationException($"An instance with that ID already exists. Use RemoteCore.GetInstance(id) instead.");
 
             InstanceId = instanceId;
 
-            RecentlyPlayed = new RemoteCoreRecentlyPlayed(instanceId, CommonRemoteIds.RootRecentlyPlayed);
-            Discoverables = new RemoteCoreDiscoverables(instanceId, CommonRemoteIds.RootDiscoverables);
-            Pins = new RemoteCorePlayableCollectionGroup(instanceId, CommonRemoteIds.Pins);
-            Library = new RemoteCoreLibrary(instanceId, CommonRemoteIds.RootLibrary);
+            // Dummy instances to satisfy nullable. Will be overwritten remotely from other ctor.
+            RecentlyPlayed = null!;
+            Discoverables = null!;
+            Pins = null!;
+            Library = null!;
 
             CoreConfig = new RemoteCoreConfig(instanceId);
 
@@ -68,29 +76,34 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         {
             Guard.IsNotNull(core, nameof(core));
 
-            _ = _externalCoreInstances.TryAdd(core.InstanceId, this);
+            if (!_hostCoreInstances.TryAdd(core.InstanceId, this))
+                ThrowHelper.ThrowInvalidOperationException($"An instance with that ID already exists. Use RemoteCore.GetInstance(id) instead.");
+
             _core = core;
 
-            Library = new RemoteCoreLibrary(core.Library, CommonRemoteIds.RootLibrary);
+            _memberRemote = new MemberRemote(this, $"{core.InstanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonHost);
+
+            Library = new RemoteCoreLibrary(core.Library);
 
             if (core.RecentlyPlayed is not null)
-                RecentlyPlayed = new RemoteCoreRecentlyPlayed(core.RecentlyPlayed, CommonRemoteIds.RootRecentlyPlayed);
+                RecentlyPlayed = new RemoteCoreRecentlyPlayed(core.RecentlyPlayed);
 
             if (core.Pins is not null)
-                Pins = new RemoteCorePlayableCollectionGroup(core.Pins, CommonRemoteIds.Pins);
+                Pins = new RemoteCorePlayableCollectionGroup(core.Pins);
 
             if (core.Discoverables is not null)
-                Discoverables = new RemoteCoreDiscoverables(core.Discoverables, CommonRemoteIds.RootDiscoverables);
+                Discoverables = new RemoteCoreDiscoverables(core.Discoverables);
 
             CoreConfig = core.CoreConfig;
 
-            AttachEvents(core);
+            ChangeDevices(core.Devices.Select((x, i) => new CollectionChangedItem<ICoreDevice>(x, i)).ToList(), new List<CollectionChangedItem<ICoreDevice>>());
 
-            _memberRemote = new MemberRemote(this, $"{core.InstanceId}.{nameof(RemoteCore)}", RemoteCoreMessageHandler.SingletonHost);
+            AttachEvents(core);
 
             Registration = core.Registration;
             InstanceDescriptor = core.InstanceDescriptor;
             InstanceId = core.InstanceId;
+            User = core.User;
         }
 
         /// <summary>
@@ -98,12 +111,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// </summary>
         /// <returns>The core instance.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public static RemoteCore GetInstance(string instanceId)
+        public static RemoteCore GetInstance(string instanceId, RemotingMode mode)
         {
-            if (!_externalCoreInstances.TryGetValue(instanceId, out var value))
-                return ThrowHelper.ThrowInvalidOperationException<RemoteCore>($"Could not find a registered {nameof(RemoteCore)} with {nameof(instanceId)} of {instanceId}");
+            if (mode is RemotingMode.Client)
+            {
+                if (!_clientCoreInstances.TryGetValue(instanceId, out var value))
+                    return ThrowHelper.ThrowInvalidOperationException<RemoteCore>($"Could not find a registered {nameof(RemoteCore)} with {nameof(instanceId)} of {instanceId}");
 
-            return value;
+                return value;
+            }
+
+            if (mode is RemotingMode.Host)
+            {
+                if (!_hostCoreInstances.TryGetValue(instanceId, out var value))
+                    return ThrowHelper.ThrowInvalidOperationException<RemoteCore>($"Could not find a registered {nameof(RemoteCore)} with {nameof(instanceId)} of {instanceId}");
+
+                return value;
+            }
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<RemoteCore>("Invalid remoting mode specified.");
         }
 
         private void AttachEvents(ICore core)
@@ -135,11 +161,17 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
         private void ChangeDevices(IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var remoteAddedItems = addedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
-            var remoteRemovedItems = removedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+            lock (_devicesChangedLockObj)
+            {
+                if (addedItems.Count + removedItems.Count == 0)
+                    return;
 
-            _devices.ChangeCollection(remoteAddedItems, remoteRemovedItems);
-            DevicesChanged?.Invoke(this, remoteAddedItems, remoteRemovedItems);
+                var remoteAddedItems = addedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+                var remoteRemovedItems = removedItems.Select(x => new CollectionChangedItem<ICoreDevice>(new RemoteCoreDevice(x.Data), x.Index)).ToList();
+
+                _devices.ChangeCollection(remoteAddedItems, remoteRemovedItems);
+                DevicesChanged?.Invoke(this, remoteAddedItems, remoteRemovedItems);
+            }
         }
 
         /// <inheritdoc/>
@@ -188,23 +220,23 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public IReadOnlyList<ICoreDevice> Devices => _devices;
 
         /// <inheritdoc/>
-        [RemoteProperty]
+        [RemoteProperty, RemoteOptions(RemotingDirection.HostToClient)]
         public ICoreLibrary Library { get; set; }
 
         /// <inheritdoc />
-        [RemoteProperty]
+        [RemoteProperty, RemoteOptions(RemotingDirection.HostToClient)]
         public ICoreSearch? Search { get; set; }
 
         /// <inheritdoc/>
-        [RemoteProperty]
+        [RemoteProperty, RemoteOptions(RemotingDirection.HostToClient)]
         public ICoreRecentlyPlayed? RecentlyPlayed { get; set; }
 
         /// <inheritdoc/>
-        [RemoteProperty]
+        [RemoteProperty, RemoteOptions(RemotingDirection.HostToClient)]
         public ICoreDiscoverables? Discoverables { get; set; }
 
         /// <inheritdoc/>
-        [RemoteProperty]
+        [RemoteProperty, RemoteOptions(RemotingDirection.HostToClient)]
         public ICorePlayableCollectionGroup? Pins { get; set; }
 
         /// <inheritdoc/>
@@ -222,7 +254,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         {
             // Dispose any resources not known to the SDK.
             // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
-            _externalCoreInstances.TryRemove(InstanceId, out _);
+            _clientCoreInstances.TryRemove(InstanceId, out _);
             return default;
         }
 
@@ -234,41 +266,18 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             SetupRemoteServices(services, InstanceId);
             await RemoteInitAsync();
-
-            // Ids should be set remotely by this point.
-            Library = new RemoteCoreLibrary(InstanceId, Library.Id);
-
-            if (RecentlyPlayed is not null)
-                RecentlyPlayed = new RemoteCoreRecentlyPlayed(InstanceId, RecentlyPlayed.Id);
-
-            if (Discoverables is not null)
-                Discoverables = new RemoteCoreDiscoverables(InstanceId, Discoverables.Id);
-
-            if (Pins is not null)
-                Pins = new RemoteCorePlayableCollectionGroup(InstanceId, Pins.Id);
-
-            await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
         });
 
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
         private Task RemoteInitAsync() => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
                 return;
+            }
 
             Guard.IsNotNull(_core, nameof(_core));
-
-            // Ids should be set remotely by this point.
-            Library = new RemoteCoreLibrary(InstanceId, Library.Id);
-
-            if (RecentlyPlayed is not null)
-                RecentlyPlayed = new RemoteCoreRecentlyPlayed(InstanceId, RecentlyPlayed.Id);
-
-            if (Discoverables is not null)
-                Discoverables = new RemoteCoreDiscoverables(InstanceId, Discoverables.Id);
-
-            if (Pins is not null)
-                Pins = new RemoteCorePlayableCollectionGroup(InstanceId, Pins.Id);
 
             var services = SetupRemoteServices(InstanceId);
             await _core.InitAsync(services);
@@ -290,22 +299,22 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
                 ICoreMember? remoteEnabledResult = result switch
                 {
-                    ICore core => GetInstance(core.InstanceId),
+                    ICore core => GetInstance(core.InstanceId, _memberRemote.Mode),
                     ICoreAlbum album => new RemoteCoreAlbum(album),
                     ICoreArtist artist => new RemoteCoreArtist(artist),
                     ICoreTrack track => new RemoteCoreTrack(track),
                     ICorePlaylist playlist => new RemoteCorePlaylist(playlist),
                     ICoreDevice device => new RemoteCoreDevice(device),
-                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables, discoverables.Id),
+                    ICoreDiscoverables discoverables => new RemoteCoreDiscoverables(discoverables),
                     ICoreImage image => new RemoteCoreImage(image),
-                    ICoreLibrary library => new RemoteCoreLibrary(library, library.Id),
-                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed, recentlyPlayed.Id),
-                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory, searchHistory.Id),
-                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup, collectionGroup.Id),
+                    ICoreLibrary library => new RemoteCoreLibrary(library),
+                    ICoreRecentlyPlayed recentlyPlayed => new RemoteCoreRecentlyPlayed(recentlyPlayed),
+                    ICoreSearchHistory searchHistory => new RemoteCoreSearchHistory(searchHistory),
+                    ICorePlayableCollectionGroup collectionGroup => new RemoteCorePlayableCollectionGroup(collectionGroup),
                     _ => throw new NotImplementedException(),
                 };
 
-                return await _memberRemote.PublishDataAsync(methodCallToken, result);
+                return await _memberRemote.PublishDataAsync(methodCallToken, remoteEnabledResult);
             }
             else if (_memberRemote.Mode == RemotingMode.Client)
             {

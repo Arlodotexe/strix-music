@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             Id = id;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client); // should be set remotely by the ctor.
 
             _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCorePlaylist)}.{id}", RemoteCoreMessageHandler.SingletonClient);
         }
@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             _playlist = corePlaylist;
             _name = corePlaylist.Name;
             Id = corePlaylist.Id;
-            SourceCore = RemoteCore.GetInstance(corePlaylist.SourceCore.InstanceId);
+            SourceCore = RemoteCore.GetInstance(corePlaylist.SourceCore.InstanceId, RemotingMode.Host);
 
             _memberRemote = new MemberRemote(this, $"{corePlaylist.SourceCore.InstanceId}.{nameof(RemoteCorePlaylist)}.{corePlaylist.Id}", RemoteCoreMessageHandler.SingletonHost);
         }

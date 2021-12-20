@@ -41,33 +41,30 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCorePlayableCollectionGroupBase"/>, for receiving data.
         /// </summary>
-        /// <param name="sourceCoreInstanceId">The ID of the instance of the core this object was created in.</param>
-        /// <param name="remotingId">A unique identifier for the wrapped collection that is consistent between host and clients.</param>
-        protected RemoteCorePlayableCollectionGroupBase(string sourceCoreInstanceId, string remotingId)
+        protected RemoteCorePlayableCollectionGroupBase(string sourceCoreInstanceId, string id)
         {
-            // Properties assigned before MemberRemote is created won't be set remotely, and should be set remotely in the ctor.
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            // These properties are set remotely in the other ctor
+            SourceCoreInstanceId = sourceCoreInstanceId;
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client);
+            Id = id;
 
-            Id = remotingId;
-            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{GetType().Name}.{remotingId}", RemoteCoreMessageHandler.SingletonClient);
+            _memberRemote = new MemberRemote(this, $"{SourceCore.InstanceId}.{GetType().Name}.{Id}", RemoteCoreMessageHandler.SingletonClient);
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCorePlayableCollectionGroupBase"/> and wraps around a <paramref name="corePlayableCollection"/> for sending data.
         /// </summary>
         /// <param name="corePlayableCollection">The collection to wrap around and remotely interact with.</param>
-        /// <param name="remotingId">A unique identifier for the wrapped collection that is consistent between host and clients.</param>
-        protected RemoteCorePlayableCollectionGroupBase(ICorePlayableCollectionGroup corePlayableCollection, string remotingId)
+        protected RemoteCorePlayableCollectionGroupBase(ICorePlayableCollectionGroup corePlayableCollection)
         {
             _corePlayableCollection = corePlayableCollection;
 
-            SourceCore = RemoteCore.GetInstance(corePlayableCollection.SourceCore.InstanceId);
+            SourceCoreInstanceId = corePlayableCollection.SourceCore.InstanceId;
+            SourceCore = RemoteCore.GetInstance(SourceCoreInstanceId, RemotingMode.Host);
+            Id = corePlayableCollection.Id;
 
-            var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{remotingId}";
+            var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{corePlayableCollection.Id}";
             _memberRemote = new MemberRemote(this, fullRemoteId, RemoteCoreMessageHandler.SingletonHost);
-
-            // Remotely update with the actual ID.
-            Id = _corePlayableCollection.Id;
         }
 
         /// <inheritdoc />
@@ -160,6 +157,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
 
+        /// <summary>
+        /// The instance ID of the <see cref="SourceCore" />
+        /// </summary>
+        public string SourceCoreInstanceId { get; set; }
+
         /// <inheritdoc />
         public ICore SourceCore { get; set; }
 
@@ -249,6 +251,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _totalTrackCount = value;
+                TracksCountChanged?.Invoke(this, value);
             }
         }
 
@@ -549,13 +552,16 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
                     }
                 }
 
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreTrack>>(nameof(GetTracksAsync));
+                if (_memberRemote.Mode == RemotingMode.Client)
+                {
+                    var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreTrack>>(nameof(GetTracksAsync));
 
-                if (res is null)
-                    yield break;
+                    if (res is null)
+                        yield break;
 
-                foreach (var item in res)
-                    yield return item;
+                    foreach (var item in res)
+                        yield return item;
+                }
             }
         }
 

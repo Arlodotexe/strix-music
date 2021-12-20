@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using Newtonsoft.Json;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
@@ -11,9 +12,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreDiscoverables"/>. Interacts with a remote core, identified by the given parameters.
         /// </summary>
         /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
-        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
-        internal RemoteCoreDiscoverables(string sourceCoreInstanceId, string remotingId)
-            : base(sourceCoreInstanceId, remotingId)
+        /// <param name="id">Uniquely identifies the instance being remoted.</param>
+        [JsonConstructor]
+        internal RemoteCoreDiscoverables(string sourceCoreInstanceId, string id)
+            : base(sourceCoreInstanceId, id)
         {
         }
 
@@ -21,9 +23,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreDiscoverables"/>. Wraps around the given <paramref name="discoverables"/> for remote interaction.
         /// </summary>
         /// <param name="discoverables">The discoverables to control remotely.</param>
-        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
-        internal RemoteCoreDiscoverables(ICoreDiscoverables discoverables, string remotingId)
-            : base(discoverables, remotingId)
+        internal RemoteCoreDiscoverables(ICoreDiscoverables discoverables)
+            : base(discoverables)
         {
         }
     }

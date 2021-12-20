@@ -11,9 +11,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreRecentlyPlayed"/>. Interacts with a remote core, identified by the given parameters.
         /// </summary>
         /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
-        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
-        internal RemoteCoreRecentlyPlayed(string sourceCoreInstanceId, string remotingId)
-            : base(sourceCoreInstanceId, remotingId)
+        /// <param name="id">Uniquely identifies the instance being remoted.</param>
+        internal RemoteCoreRecentlyPlayed(string sourceCoreInstanceId, string id)
+            : base(sourceCoreInstanceId, id)
         {
         }
 
@@ -21,9 +21,8 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// Creates a new instance of <see cref="RemoteCoreRecentlyPlayed"/>. Wraps around the given <paramref name="recentlyPlayed"/> for remote interaction.
         /// </summary>
         /// <param name="recentlyPlayed">The recently played collection to control remotely.</param>
-        /// <param name="remotingId">Uniquely identifies the instance being remoted.</param>
-        internal RemoteCoreRecentlyPlayed(ICoreRecentlyPlayed recentlyPlayed, string remotingId)
-            : base(recentlyPlayed, remotingId)
+        internal RemoteCoreRecentlyPlayed(ICoreRecentlyPlayed recentlyPlayed)
+            : base(recentlyPlayed)
         {
         }
     }
