@@ -9,6 +9,8 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 {
     public abstract class MockCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
+        private int totalTrackCount;
+
         public MockCorePlayableCollectionGroupBase(ICore sourceCore, string id, string name)
         {
             SourceCore = sourceCore;
@@ -22,7 +24,15 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public bool IsPausePlaylistCollectionAsyncAvailable { get; set; }
 
-        public int TotalTrackCount { get; set; }
+        public int TotalTrackCount
+        {
+            get => totalTrackCount;
+            set
+            {
+                totalTrackCount = value;
+                TracksCountChanged?.Invoke(this, value);
+            }
+        }
 
         public bool IsPlayTrackCollectionAsyncAvailable { get; set; }
 

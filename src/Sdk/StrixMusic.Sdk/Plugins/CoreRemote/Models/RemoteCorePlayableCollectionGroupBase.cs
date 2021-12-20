@@ -65,6 +65,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{corePlayableCollection.Id}";
             _memberRemote = new MemberRemote(this, fullRemoteId, RemoteCoreMessageHandler.SingletonHost);
+
+            TotalTrackCount = corePlayableCollection.TotalTrackCount;
+
+            AttachEvents(corePlayableCollection);
         }
 
         /// <inheritdoc />
@@ -166,7 +170,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public ICore SourceCore { get; set; }
 
         /// <inheritdoc />
-        [RemoteProperty]
         public string Id { get; set; }
 
         /// <inheritdoc />
@@ -229,6 +232,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _totalAlbumItemsCount = value;
+                AlbumItemsCountChanged?.Invoke(this, value);
             }
         }
 
@@ -240,6 +244,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
             }
         }
 
@@ -263,6 +268,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _totalPlaylistItemsCount = value;
+                PlaylistItemsCountChanged?.Invoke(this, value);
             }
         }
 
@@ -274,6 +280,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             internal set
             {
                 _totalChildrenCount = value;
+                ChildrenCountChanged?.Invoke(this, value);
             }
         }
 
@@ -285,6 +292,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             internal set
             {
                 _totalImageCount = value;
+                ImagesCountChanged?.Invoke(this, value);
             }
         }
 
@@ -296,6 +304,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             internal set
             {
                 _totalUrlCount = value;
+                UrlsCountChanged?.Invoke(this, value);
             }
         }
 

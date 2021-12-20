@@ -8,32 +8,34 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     public partial class RemoteCorePlayableCollectionGroupBase
     {
 
-        private void AttachEvents()
+        private void AttachEvents(ICorePlayableCollectionGroup collection)
         {
-            if (_corePlayableCollection is null)
-                return;
-
-            _corePlayableCollection.NameChanged += OnNameChanged;
-            _corePlayableCollection.DescriptionChanged += OnDescriptionChanged;
+            collection.NameChanged += OnNameChanged;
+            collection.DescriptionChanged += OnDescriptionChanged;
+            collection.TracksCountChanged += OnTracksCountChanged;
         }
 
-        private void DetachEvents()
+        private void DetachEvents(ICorePlayableCollectionGroup collection)
         {
-
+            collection.NameChanged -= OnNameChanged;
+            collection.DescriptionChanged -= OnDescriptionChanged;
+            collection.TracksCountChanged -= OnTracksCountChanged;
         }
-
-        private void OnNameChanged(object sender, string e) => RaiseNameChanged(e);
 
         [RemoteMethod]
         private void RaiseNameChanged(string name) => NameChanged?.Invoke(this, name);
 
-        private void OnDescriptionChanged(object sender, string? e) => RaiseDescriptionChanged(e);
+        private void OnNameChanged(object sender, string e) => RaiseNameChanged(e);
 
         [RemoteMethod]
         private void RaiseDescriptionChanged(string? description) => DescriptionChanged?.Invoke(this, description);
 
+        private void OnDescriptionChanged(object sender, string? e) => RaiseDescriptionChanged(e);
+
         [RemoteMethod]
         private void RaiseTracksChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems) => TracksChanged?.Invoke(this, addedItems, removedItems);
+
+        private void OnTracksCountChanged(object sender, int e) => TotalTrackCount = e;
 
         [RemoteMethod]
         private void RaisePlaylistItemsChanged(IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems) => PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
