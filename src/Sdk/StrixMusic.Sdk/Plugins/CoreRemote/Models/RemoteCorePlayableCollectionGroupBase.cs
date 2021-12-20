@@ -497,59 +497,283 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddChildAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailableAsync));
+        public Task<bool> IsAddChildAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddChildAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddChildAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddPlaylistItemAvailableAsync));
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddPlaylistItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddPlaylistItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailableAsync));
+        public Task<bool> IsAddTrackAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddTrackAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddTrackAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailableAsync));
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddArtistItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddArtistItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddAlbumItemAvailableAsync));
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddAlbumItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddAlbumItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailableAsync));
+        public Task<bool> IsAddImageAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddImageAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddImageAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddUrlAvailableAsync));
+        public Task<bool> IsAddUrlAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsAddUrlAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsAddUrlAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailableAsync));
+        public Task<bool> IsRemoveTrackAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveTrackAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveTrackAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailableAsync));
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveImageAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveImageAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveUrlAvailableAsync));
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveUrlAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveUrlAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemovePlaylistItemAvailableAsync));
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemovePlaylistItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemovePlaylistItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveAlbumItemAvailableAsync));
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveAlbumItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveAlbumItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailableAsync));
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveArtistItemAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveArtistItemAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveChildAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveChildAvailableAsync));
+        public Task<bool> IsRemoveChildAvailableAsync(int index) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(IsRemoveChildAvailableAsync)}.{index}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                var res = await _corePlayableCollection.IsRemoveChildAvailableAsync(index);
+                return await _memberRemote.PublishDataAsync(methodCallToken, res);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await _memberRemote.ReceiveDataAsync<bool>(methodCallToken);
+
+            return ThrowHelper.ThrowArgumentOutOfRangeException<bool>("Invalid remoting mode");
+        });
 
         /// <inheritdoc />
         [RemoteMethod]

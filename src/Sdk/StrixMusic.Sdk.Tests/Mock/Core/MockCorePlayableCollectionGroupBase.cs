@@ -420,75 +420,33 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddArtistItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddChildAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddChildAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddImageAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddImageAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddPlaylistItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddTrackAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddTrackAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddUrlAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsAddUrlAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveChildAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveChildAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveTrackAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
 
         public Task PauseAlbumCollectionAsync()
         {
