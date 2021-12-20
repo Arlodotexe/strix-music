@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -333,6 +334,93 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreEqual(newIsChangeDurationAsyncAvailable, core.Library.IsChangeDurationAsyncAvailable);
             Assert.AreEqual(newIsChangeDurationAsyncAvailable, remoteClientCore.Library.IsChangeDurationAsyncAvailable);
             Assert.AreEqual(newIsChangeDurationAsyncAvailable, remoteHostCore.Library.IsChangeDurationAsyncAvailable);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteChangeName()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newName = "NewName";
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
+            // For test to work, must not be a default value or the new value.
+            Assert.AreNotEqual(default, core.Library.Name);
+            Assert.AreNotEqual(newName, core.Library.Name);
+
+            await remoteClientCore.Library.ChangeNameAsync(newName);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newName, remoteClientCore.Library.Name);
+            Assert.AreEqual(newName, remoteHostCore.Library.Name);
+            Assert.AreEqual(newName, core.Library.Name);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteChangeDescription()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newDescription = "NewDescription";
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
+            // For test to work, must not be a default value or the new value.
+            Assert.AreNotEqual(default, core.Library.Description);
+            Assert.AreNotEqual(newDescription, core.Library.Description);
+
+            await remoteClientCore.Library.ChangeDescriptionAsync(newDescription);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newDescription, remoteClientCore.Library.Description);
+            Assert.AreEqual(newDescription, remoteHostCore.Library.Description);
+            Assert.AreEqual(newDescription, core.Library.Description);
+
+            await core.DisposeAsync();
+            await remoteHostCore.DisposeAsync();
+            await remoteClientCore.DisposeAsync();
+        }
+
+        [TestMethod, Timeout(2000)]
+        public async Task RemoteChangeDuration()
+        {
+            var core = new MockCore();
+            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
+            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            var newDuration = TimeSpan.FromMilliseconds(100);
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
+            // For test to work, must not be a default value or the new value.
+            Assert.AreNotEqual(default, core.Library.Duration);
+            Assert.AreNotEqual(newDuration, core.Library.Duration);
+
+            await remoteClientCore.Library.ChangeDurationAsync(newDuration);
+
+            // Wait for changes to propogate
+            await Task.Delay(100);
+
+            Assert.AreEqual(newDuration, remoteClientCore.Library.Duration);
+            Assert.AreEqual(newDuration, remoteHostCore.Library.Duration);
+            Assert.AreEqual(newDuration, core.Library.Duration);
 
             await core.DisposeAsync();
             await remoteHostCore.DisposeAsync();

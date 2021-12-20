@@ -470,15 +470,63 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDescriptionAsync(string? description) => _memberRemote.ReceiveDataAsync<object>(nameof(ChangeDescriptionAsync));
+        public Task ChangeDescriptionAsync(string? description) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(ChangeDescriptionAsync)}.{description}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.ChangeDescriptionAsync(description);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDurationAsync(TimeSpan duration) => _memberRemote.RemoteWaitAsync(nameof(ChangeDurationAsync));
+        public Task ChangeDurationAsync(TimeSpan duration) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(ChangeDurationAsync)}.{duration}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.ChangeDurationAsync(duration);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeNameAsync(string name) => _memberRemote.RemoteWaitAsync(nameof(ChangeNameAsync));
+        public Task ChangeNameAsync(string name) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(ChangeNameAsync)}.{name}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.ChangeNameAsync(name);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]

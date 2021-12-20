@@ -288,17 +288,20 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotImplementedException();
+            Description = description;
+            return Task.CompletedTask;
         }
 
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotImplementedException();
+            Duration = duration;
+            return Task.CompletedTask;
         }
 
         public Task ChangeNameAsync(string name)
         {
-            throw new NotImplementedException();
+            Name = name;
+            return Task.CompletedTask;
         }
 
         public virtual IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
