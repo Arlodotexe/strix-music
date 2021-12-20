@@ -10,6 +10,12 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
     public abstract class MockCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
         private int totalTrackCount;
+        private int totalChildrenCount;
+        private int totalImageCount;
+        private int totalUrlCount;
+        private int totalAlbumItemsCount;
+        private int totalArtistItemsCount;
+        private int totalPlaylistItemsCount;
 
         public MockCorePlayableCollectionGroupBase(ICore sourceCore, string id, string name)
         {
@@ -18,7 +24,15 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             Name = name;
         }
 
-        public int TotalPlaylistItemsCount { get; set; }
+        public int TotalPlaylistItemsCount
+        {
+            get => totalPlaylistItemsCount;
+            set
+            {
+                totalPlaylistItemsCount = value;
+                PlaylistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         public bool IsPlayPlaylistCollectionAsyncAvailable { get; set; }
 
@@ -38,19 +52,43 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public bool IsPauseTrackCollectionAsyncAvailable { get; set; }
 
-        public int TotalAlbumItemsCount { get; set; }
+        public int TotalAlbumItemsCount
+        {
+            get => totalAlbumItemsCount;
+            set
+            {
+                totalAlbumItemsCount = value;
+                AlbumItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         public bool IsPlayAlbumCollectionAsyncAvailable { get; set; }
 
         public bool IsPauseAlbumCollectionAsyncAvailable { get; set; }
 
-        public int TotalArtistItemsCount { get; set; }
+        public int TotalArtistItemsCount
+        {
+            get => totalArtistItemsCount;
+            set
+            {
+                totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         public bool IsPlayArtistCollectionAsyncAvailable { get; set; }
 
         public bool IsPauseArtistCollectionAsyncAvailable { get; set; }
 
-        public int TotalChildrenCount { get; set; }
+        public int TotalChildrenCount
+        {
+            get => totalChildrenCount;
+            set
+            {
+                totalChildrenCount = value;
+                ChildrenCountChanged?.Invoke(this, value);
+            }
+        }
 
         public DateTime? AddedAt { get; set; }
 
@@ -72,9 +110,25 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public bool IsChangeDurationAsyncAvailable { get; set; }
 
-        public int TotalImageCount { get; set; }
+        public int TotalImageCount
+        {
+            get => totalImageCount;
+            set
+            {
+                totalImageCount = value;
+                ImagesCountChanged?.Invoke(this, value);
+            }
+        }
 
-        public int TotalUrlCount { get; set; }
+        public int TotalUrlCount
+        {
+            get => totalUrlCount;
+            set
+            {
+                totalUrlCount = value;
+                UrlsCountChanged?.Invoke(this, value);
+            }
+        }
 
         public ICore SourceCore { get; set; }
 

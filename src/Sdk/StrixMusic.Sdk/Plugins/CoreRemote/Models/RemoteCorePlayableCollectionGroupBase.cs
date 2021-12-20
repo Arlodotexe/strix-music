@@ -67,6 +67,12 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             _memberRemote = new MemberRemote(this, fullRemoteId, RemoteCoreMessageHandler.SingletonHost);
 
             TotalTrackCount = corePlayableCollection.TotalTrackCount;
+            TotalArtistItemsCount = corePlayableCollection.TotalArtistItemsCount;
+            TotalAlbumItemsCount = corePlayableCollection.TotalAlbumItemsCount;
+            TotalPlaylistItemsCount = corePlayableCollection.TotalPlaylistItemsCount;
+            TotalChildrenCount = corePlayableCollection.TotalChildrenCount;
+            TotalImageCount = corePlayableCollection.TotalImageCount;
+            TotalUrlCount = corePlayableCollection.TotalUrlCount;
 
             AttachEvents(corePlayableCollection);
         }

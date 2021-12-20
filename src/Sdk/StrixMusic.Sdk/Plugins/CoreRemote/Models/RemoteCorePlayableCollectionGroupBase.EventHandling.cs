@@ -13,6 +13,12 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.NameChanged += OnNameChanged;
             collection.DescriptionChanged += OnDescriptionChanged;
             collection.TracksCountChanged += OnTracksCountChanged;
+            collection.ArtistItemsCountChanged += OnAlbumItemsCountChanged;
+            collection.AlbumItemsCountChanged += OnAlbumItemsCountChanged;
+            collection.PlaylistItemsCountChanged += OnPlaylistItemsCountChanged;
+            collection.ChildrenCountChanged += OnChildrenCountChanged;
+            collection.ImagesCountChanged += OnImagesCountChanged;
+            collection.UrlsCountChanged += OnUrlsCountChanged;
         }
 
         private void DetachEvents(ICorePlayableCollectionGroup collection)
@@ -20,6 +26,12 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.NameChanged -= OnNameChanged;
             collection.DescriptionChanged -= OnDescriptionChanged;
             collection.TracksCountChanged -= OnTracksCountChanged;
+            collection.ArtistItemsCountChanged -= OnAlbumItemsCountChanged;
+            collection.AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
+            collection.PlaylistItemsCountChanged -= OnPlaylistItemsCountChanged;
+            collection.ChildrenCountChanged -= OnChildrenCountChanged;
+            collection.ImagesCountChanged -= OnImagesCountChanged;
+            collection.UrlsCountChanged -= OnUrlsCountChanged;
         }
 
         [RemoteMethod]
@@ -36,6 +48,18 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private void RaiseTracksChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems) => TracksChanged?.Invoke(this, addedItems, removedItems);
 
         private void OnTracksCountChanged(object sender, int e) => TotalTrackCount = e;
+
+        private void OnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
+
+        private void OnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
+
+        private void OnPlaylistItemsCountChanged(object sender, int e) => TotalPlaylistItemsCount = e;
+
+        private void OnChildrenCountChanged(object sender, int e) => TotalChildrenCount = e;
+
+        private void OnImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void OnUrlsCountChanged(object sender, int e) => TotalUrlCount = e;
 
         [RemoteMethod]
         private void RaisePlaylistItemsChanged(IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems) => PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);

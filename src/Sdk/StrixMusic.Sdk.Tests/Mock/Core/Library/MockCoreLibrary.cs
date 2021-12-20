@@ -12,6 +12,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Library
             TotalTrackCount = 5;
             TotalAlbumItemsCount = 5;
             TotalArtistItemsCount = 5;
+            TotalPlaylistItemsCount = 5;
             TotalChildrenCount = 5;
             TotalImageCount = 5;
             TotalUrlCount = 5;

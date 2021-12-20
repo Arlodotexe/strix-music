@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
     [TestClass]
-    public class RemoteCoreLibraryTests
+    public partial class RemoteCoreLibraryTests
     {
         [ClassInitialize]
         public static void SetupRemoteMessageLoopback(TestContext context)
@@ -27,52 +27,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         {
             RemoteCoreMessageHandler.SingletonClient.MessageOutbound -= SingletonClient_MessageOutbound;
             RemoteCoreMessageHandler.SingletonHost.MessageOutbound -= SingletonHost_MessageOutbound;
-        }
-
-        [TestMethod, Timeout(2000)]
-        public async Task RemoteTotalTrackCount()
-        {
-            var core = new MockCore();
-            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
-            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
-
-            // For test to work, must not be a default value.
-            Assert.AreNotEqual(default, core.Library.TotalTrackCount);
-
-            // Wait for changes to propogate
-            await Task.Delay(500);
-
-            Assert.AreEqual(core.Library.TotalTrackCount, remoteClientCore.Library.TotalTrackCount);
-            Assert.AreEqual(core.Library.TotalTrackCount, remoteHostCore.Library.TotalTrackCount);
-
-            await core.DisposeAsync();
-            await remoteHostCore.DisposeAsync();
-            await remoteClientCore.DisposeAsync();
-        }
-
-        [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
-        public async Task RemoteTotalTrackCount_Changed(int amount)
-        {
-            var core = new MockCore();
-            var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
-            var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
-
-            // For test to work, must not be a default value.
-            Assert.AreNotEqual(default, amount);
-
-            core.Library.Cast<MockCoreLibrary>().TotalTrackCount = amount;
-
-            // Wait for changes to propogate
-            await Task.Delay(500);
-
-            Assert.AreEqual(amount, core.Library.TotalTrackCount);
-            Assert.AreEqual(amount, remoteClientCore.Library.TotalTrackCount);
-            Assert.AreEqual(amount, remoteHostCore.Library.TotalTrackCount);
-
-            await core.DisposeAsync();
-            await remoteHostCore.DisposeAsync();
-            await remoteClientCore.DisposeAsync();
         }
 
         private static async void SingletonHost_MessageOutbound(object? sender, OwlCore.Remoting.Transfer.IRemoteMessage e)
