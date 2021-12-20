@@ -310,6 +310,7 @@ namespace StrixMusic.Shared
 
             _logger?.LogInformation("Constructing manually instantiated services");
 
+            var audioPlayerService = new AudioPlayerService(new MediaPlayerElement());
             _playbackHandlerService = new PlaybackHandlerService();
 
 #if NETFX_CORE
@@ -524,7 +525,7 @@ namespace StrixMusic.Shared
             {
                 var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 
-                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
+                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core.InstanceId);
             }
         }
     }

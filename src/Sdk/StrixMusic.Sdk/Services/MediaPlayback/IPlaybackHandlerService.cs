@@ -20,8 +20,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// Associating an <see cref="IAudioPlayerService"/> with a specific <see cref="ICore"/>.
         /// </summary>
         /// <param name="audioPlayer">The player that will be used exclusively by the given core.</param>
-        /// <param name="core">The core to associate the audio player with.</param>
-        void RegisterAudioPlayer(IAudioPlayerService audioPlayer, ICore core);
+        /// <param name="instanceId">A core instance ID to associate this audio player with.</param>
+        void RegisterAudioPlayer(IAudioPlayerService audioPlayer, string instanceId);
 
         /// <summary>
         /// The items that should be played next.

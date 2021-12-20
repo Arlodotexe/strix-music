@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "formulahendry.dotnet-test-explorer",
+        "visualstudioexptteam.vscodeintellicode",
+        "fernandoescolar.vscode-solution-explorer",
+        "unoplatform.vscode",
+        "ms-vsliveshare.vsliveshare",
+        "ms-dotnettools.csharp",
+        "fudge.auto-using"
+    ]
+}

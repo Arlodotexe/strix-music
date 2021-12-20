@@ -26,7 +26,7 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
-		<PackageReference Include="OwlCore" Version="0.0.39" />
+		<PackageReference Include="OwlCore" Version="0.0.43" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

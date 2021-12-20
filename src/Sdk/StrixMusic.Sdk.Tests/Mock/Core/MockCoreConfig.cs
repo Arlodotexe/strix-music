@@ -1,4 +1,5 @@
 ﻿using OwlCore.AbstractUI.Models;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
@@ -23,6 +24,8 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public MediaPlayerType PlaybackType { get; internal set; } = MediaPlayerType.None;
 
         public ICore SourceCore { get; set; }
+
+        AbstractUICollection ICoreConfigBase.AbstractUIElements => throw new NotImplementedException();
 
         public event EventHandler? AbstractUIElementsChanged;
 

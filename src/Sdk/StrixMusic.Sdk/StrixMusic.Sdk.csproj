@@ -34,7 +34,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.39" />
+    <PackageReference Include="OwlCore" Version="0.0.43" />
     <PackageReference Include="Refit" Version="5.2.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

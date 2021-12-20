@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             await AddTrackCollectionToQueue(track, trackCollection);
 
             if (ShuffleState)
-                await ShuffleInternalAsync();
+                ShuffleOnInternal();
 
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, track);
@@ -87,7 +87,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackInfo = await AddArtistCollectionToQueue(artistCollectionItem, artistCollection);
 
             if (ShuffleState)
-                await ShuffleInternalAsync();
+                ShuffleOnInternal();
 
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var trackInfo = await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
 
             if (ShuffleState)
-                await ShuffleInternalAsync();
+                ShuffleOnInternal();
 
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
@@ -170,10 +170,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearPrevious();
             ClearNext();
 
-            if (ShuffleState)
-                await ShuffleInternalAsync();
-
             var trackInfo = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
+
+            if (ShuffleState)
+                ShuffleOnInternal();
 
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
@@ -237,6 +237,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
 
                 var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
+
                 if (mediaSource is null)
                     continue;
 
