@@ -16,12 +16,21 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         private int totalAlbumItemsCount;
         private int totalArtistItemsCount;
         private int totalPlaylistItemsCount;
+        private string _name = string.Empty;
+        private string? description;
+        private DateTime? lastPlayed;
+        private PlaybackState playbackState;
+        private TimeSpan duration;
 
         public MockCorePlayableCollectionGroupBase(ICore sourceCore, string id, string name)
         {
             SourceCore = sourceCore;
             Id = id;
             Name = name;
+            Description = $"Incredible description of {name}";
+            PlaybackState = PlaybackState.Paused;
+            LastPlayed = DateTime.Today;
+            Duration = TimeSpan.FromMinutes(5);
         }
 
         public int TotalPlaylistItemsCount
@@ -94,15 +103,55 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public string Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                NameChanged?.Invoke(this, value);
+            }
+        }
 
-        public string? Description { get; set; }
+        public string? Description
+        {
+            get => description;
+            set
+            {
+                description = value;
+                DescriptionChanged?.Invoke(this, value);
+            }
+        }
 
-        public DateTime? LastPlayed { get; set; }
+        public DateTime? LastPlayed
+        {
+            get => lastPlayed;
+            set
+            {
+                lastPlayed = value;
+                LastPlayedChanged?.Invoke(this, value);
+            }
+        }
 
-        public PlaybackState PlaybackState { get; set; }
+        public PlaybackState PlaybackState
+        {
+            get => playbackState;
+            set
+            {
+                playbackState = value;
+                PlaybackStateChanged?.Invoke(this, value);
+            }
+        }
 
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration
+        {
+            get => duration;
+            set
+            {
+                duration = value;
+                DurationChanged?.Invoke(this, value);
+            }
+        }
 
         public bool IsChangeNameAsyncAvailable { get; set; }
 

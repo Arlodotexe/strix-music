@@ -19,6 +19,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     {
         private readonly MemberRemote _memberRemote;
         private readonly ICorePlayableCollectionGroup? _corePlayableCollection;
+
+        private string _name = string.Empty;
+        private string? _description;
+
         private int _totalAlbumItemsCount;
         private int _totalArtistItemsCount;
         private int _totalTrackCount;
@@ -26,10 +30,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private int _totalChildrenCount;
         private int _totalImageCount;
         private int _totalUrlCount;
-        private string? _description;
+
         private PlaybackState _playbackState;
         private TimeSpan _duration;
         private DateTime? _lastPlayed;
+
         private SemaphoreSlim _getTracksMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getArtistsMutex = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _getAlbumsMutex = new SemaphoreSlim(1, 1);
@@ -48,7 +53,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client);
             Id = id;
 
-            _memberRemote = new MemberRemote(this, $"{SourceCore.InstanceId}.{GetType().Name}.{Id}", RemoteCoreMessageHandler.SingletonClient);
+            _memberRemote = new MemberRemote(this, $"{SourceCoreInstanceId}.{GetType().Name}.{Id}", RemoteCoreMessageHandler.SingletonClient);
         }
 
         /// <summary>
@@ -63,8 +68,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             SourceCore = RemoteCore.GetInstance(SourceCoreInstanceId, RemotingMode.Host);
             Id = corePlayableCollection.Id;
 
-            var fullRemoteId = $"{corePlayableCollection.SourceCore.InstanceId}.{GetType().Name}.{corePlayableCollection.Id}";
+            var fullRemoteId = $"{SourceCoreInstanceId}.{GetType().Name}.{Id}";
             _memberRemote = new MemberRemote(this, fullRemoteId, RemoteCoreMessageHandler.SingletonHost);
+
+            Name = corePlayableCollection.Name;
+            Description = corePlayableCollection.Description;
+            PlaybackState = corePlayableCollection.PlaybackState;
+            Duration = corePlayableCollection.Duration;
+            LastPlayed = corePlayableCollection.LastPlayed;
+            AddedAt = corePlayableCollection.AddedAt;
 
             TotalTrackCount = corePlayableCollection.TotalTrackCount;
             TotalArtistItemsCount = corePlayableCollection.TotalArtistItemsCount;
@@ -180,7 +192,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public string Name { get; set; } = string.Empty;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                NameChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
@@ -190,6 +210,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _description = value;
+                DescriptionChanged?.Invoke(this, value);
             }
         }
 
@@ -201,6 +222,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _playbackState = value;
+                PlaybackStateChanged?.Invoke(this, value);
             }
         }
 
@@ -212,6 +234,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _duration = value;
+                DurationChanged?.Invoke(this, value);   
             }
         }
 
@@ -223,6 +246,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             set
             {
                 _lastPlayed = value;
+                LastPlayedChanged?.Invoke(this, value);
             }
         }
 

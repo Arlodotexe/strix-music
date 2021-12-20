@@ -7,11 +7,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
     public partial class RemoteCorePlayableCollectionGroupBase
     {
-
         private void AttachEvents(ICorePlayableCollectionGroup collection)
         {
             collection.NameChanged += OnNameChanged;
             collection.DescriptionChanged += OnDescriptionChanged;
+            collection.PlaybackStateChanged += OnPlaybackStateChanged;
+            collection.DurationChanged += OnDurationChanged;
+            collection.LastPlayedChanged += OnLastPlayedChanged;
+
             collection.TracksCountChanged += OnTracksCountChanged;
             collection.ArtistItemsCountChanged += OnAlbumItemsCountChanged;
             collection.AlbumItemsCountChanged += OnAlbumItemsCountChanged;
@@ -25,6 +28,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         {
             collection.NameChanged -= OnNameChanged;
             collection.DescriptionChanged -= OnDescriptionChanged;
+
             collection.TracksCountChanged -= OnTracksCountChanged;
             collection.ArtistItemsCountChanged -= OnAlbumItemsCountChanged;
             collection.AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
@@ -34,18 +38,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.UrlsCountChanged -= OnUrlsCountChanged;
         }
 
-        [RemoteMethod]
-        private void RaiseNameChanged(string name) => NameChanged?.Invoke(this, name);
+        private void OnNameChanged(object sender, string e) => Name = e;
 
-        private void OnNameChanged(object sender, string e) => RaiseNameChanged(e);
+        private void OnDescriptionChanged(object sender, string? e) => Description = e;
 
-        [RemoteMethod]
-        private void RaiseDescriptionChanged(string? description) => DescriptionChanged?.Invoke(this, description);
+        private void OnLastPlayedChanged(object sender, System.DateTime? e) => LastPlayed = e;
 
-        private void OnDescriptionChanged(object sender, string? e) => RaiseDescriptionChanged(e);
+        private void OnDurationChanged(object sender, System.TimeSpan e) => Duration = e;
 
-        [RemoteMethod]
-        private void RaiseTracksChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems) => TracksChanged?.Invoke(this, addedItems, removedItems);
+        private void OnPlaybackStateChanged(object sender, MediaPlayback.PlaybackState e) => PlaybackState = e;
 
         private void OnTracksCountChanged(object sender, int e) => TotalTrackCount = e;
 
@@ -60,6 +61,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private void OnImagesCountChanged(object sender, int e) => TotalImageCount = e;
 
         private void OnUrlsCountChanged(object sender, int e) => TotalUrlCount = e;
+
+        [RemoteMethod]
+        private void RaiseTracksChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems) => TracksChanged?.Invoke(this, addedItems, removedItems);
 
         [RemoteMethod]
         private void RaisePlaylistItemsChanged(IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems) => PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
