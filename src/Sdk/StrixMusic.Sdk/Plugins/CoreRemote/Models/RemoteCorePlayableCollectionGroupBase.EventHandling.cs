@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OwlCore.Events;
 using OwlCore.Remoting;
 using StrixMusic.Sdk.Data.Core;
@@ -14,6 +15,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.PlaybackStateChanged += OnPlaybackStateChanged;
             collection.DurationChanged += OnDurationChanged;
             collection.LastPlayedChanged += OnLastPlayedChanged;
+
+            collection.AlbumItemsChanged += OnAlbumItemsChanged;
+            collection.ArtistItemsChanged += OnArtistItemsChanged;
+            collection.PlaylistItemsChanged += OnPlaylistItemsChanged;
+            collection.TracksChanged += OnTracksChanged;
+            collection.UrlsChanged += OnUrlsChanged;
+            collection.ImagesChanged += OnImagesChanged;
+            collection.ChildItemsChanged += OnChildItemsChanged;
 
             collection.TracksCountChanged += OnTracksCountChanged;
             collection.ArtistItemsCountChanged += OnArtistItemsCountChanged;
@@ -45,6 +54,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.DurationChanged -= OnDurationChanged;
             collection.LastPlayedChanged -= OnLastPlayedChanged;
 
+            collection.AlbumItemsChanged += OnAlbumItemsChanged;
+            collection.ArtistItemsChanged += OnArtistItemsChanged;
+            collection.PlaylistItemsChanged += OnPlaylistItemsChanged;
+            collection.TracksChanged += OnTracksChanged;
+            collection.UrlsChanged += OnUrlsChanged;
+            collection.ImagesChanged += OnImagesChanged;
+            collection.ChildItemsChanged += OnChildItemsChanged;
+
             collection.TracksCountChanged -= OnTracksCountChanged;
             collection.ArtistItemsCountChanged -= OnArtistItemsCountChanged;
             collection.AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
@@ -65,6 +82,69 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             collection.IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
             collection.IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
             collection.IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+        }
+
+        private void OnChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
+            => Remote_OnChildItemsChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnChildItemsChanged(List<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, List<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
+        {
+            ChildItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
+            => Remote_OnImagesChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnImagesChanged(List<CollectionChangedItem<ICoreImage>> addedItems, List<CollectionChangedItem<ICoreImage>> removedItems)
+        {
+            ImagesChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreUrl>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreUrl>> removedItems)
+            => Remote_OnUrlsChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnUrlsChanged(List<CollectionChangedItem<ICoreUrl>> addedItems, List<CollectionChangedItem<ICoreUrl>> removedItems)
+        {
+            UrlsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnTracksChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
+            => Remote_OnTracksChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnTracksChanged(List<CollectionChangedItem<ICoreTrack>> addedItems, List<CollectionChangedItem<ICoreTrack>> removedItems)
+        {
+            TracksChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnPlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems)
+            => Remote_OnPlaylistItemsChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnPlaylistItemsChanged(List<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, List<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems)
+        {
+            PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
+            => Remote_OnArtistItemsChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnArtistItemsChanged(List<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, List<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
+        {
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void OnAlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> removedItems)
+            => Remote_OnAlbumItemsChanged(addedItems.ToList(), removedItems.ToList());
+
+        [RemoteMethod, RemoteOptions(RemotingDirection.HostToClient)]
+        private void Remote_OnAlbumItemsChanged(List<CollectionChangedItem<ICoreAlbumCollectionItem>> addedItems, List<CollectionChangedItem<ICoreAlbumCollectionItem>> removedItems)
+        {
+            AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void OnNameChanged(object sender, string e) => Name = e;

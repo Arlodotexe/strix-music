@@ -569,6 +569,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _albums.InsertOrAdd(index, album);
             TotalAlbumItemsCount++;
+            AlbumItemsChanged?.Invoke(this, new CollectionChangedItem<ICoreAlbumCollectionItem>(album, index).IntoList(), new List<CollectionChangedItem<ICoreAlbumCollectionItem>>());
 
             return Task.CompletedTask;
         }
@@ -577,6 +578,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _artists.InsertOrAdd(index, artist);
             TotalArtistItemsCount++;
+            ArtistItemsChanged?.Invoke(this, new CollectionChangedItem<ICoreArtistCollectionItem>(artist, index).IntoList(), new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
 
             return Task.CompletedTask;
         }
@@ -585,6 +587,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _children.InsertOrAdd(index, child);
             TotalChildrenCount++;
+            ChildItemsChanged?.Invoke(this, new CollectionChangedItem<ICorePlayableCollectionGroup>(child, index).IntoList(), new List<CollectionChangedItem<ICorePlayableCollectionGroup>>());
 
             return Task.CompletedTask;
         }
@@ -593,6 +596,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _images.InsertOrAdd(index, image);
             TotalImageCount++;
+            ImagesChanged?.Invoke(this, new CollectionChangedItem<ICoreImage>(image, index).IntoList(), new List<CollectionChangedItem<ICoreImage>>());
 
             return Task.CompletedTask;
         }
@@ -601,6 +605,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _playlists.InsertOrAdd(index, playlist);
             TotalPlaylistItemsCount++;
+            PlaylistItemsChanged?.Invoke(this, new CollectionChangedItem<ICorePlaylistCollectionItem>(playlist, index).IntoList(), new List<CollectionChangedItem<ICorePlaylistCollectionItem>>());
 
             return Task.CompletedTask;
         }
@@ -609,6 +614,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _tracks.InsertOrAdd(index, track);
             TotalTrackCount++;
+            TracksChanged?.Invoke(this, new CollectionChangedItem<ICoreTrack>(track, index).IntoList(), new List<CollectionChangedItem<ICoreTrack>>());
 
             return Task.CompletedTask;
         }
@@ -617,6 +623,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             _urls.InsertOrAdd(index, url);
             TotalUrlCount++;
+            UrlsChanged?.Invoke(this, new CollectionChangedItem<ICoreUrl>(url, index).IntoList(), new List<CollectionChangedItem<ICoreUrl>>());
 
             return Task.CompletedTask;
         }
