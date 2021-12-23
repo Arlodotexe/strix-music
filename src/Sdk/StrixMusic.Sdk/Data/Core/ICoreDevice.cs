@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Data.Core
     public interface ICoreDevice : IDeviceBase, ICoreMember
     {
         /// <summary>
-        /// Tracks that have been queued to play next after the current track. Once this queue is exhausted, the next track in the <see cref="IDeviceBase.PlaybackContext"/> will play.
+        /// A collection of all tracks that have been queued to play, including <see cref="NowPlaying"/>.
         /// </summary>
         ICoreTrackCollection? PlaybackQueue { get; }
 
