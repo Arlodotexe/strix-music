@@ -11,6 +11,12 @@ namespace StrixMusic.Sdk.Tests
 {
     internal static class Helpers
     {
+
+        public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)
+        {
+            return SmartEquals(originalValue, originalValue?.GetType(), deserValue, deserValue?.GetType(), recursive);
+        }
+
         public static bool SmartEquals(object? originalValue, Type? originalType, object? deserValue, Type? deserType, bool recursive = true, List<object>? crawledObjects = null)
         {
             crawledObjects ??= new List<object>();
@@ -62,6 +68,11 @@ namespace StrixMusic.Sdk.Tests
             {
                 return Equals(originalValue, deserValue);
             }
+        }
+
+        public static void SmartAssertEqual(object? originalValue, object? deserValue, bool recursive = true)
+        {
+            SmartAssertEqual(originalValue, originalValue?.GetType(), deserValue, deserValue?.GetType(), recursive);
         }
 
         public static void SmartAssertEqual(object? originalValue, Type? originalType, object? deserValue, Type? deserType, bool recursive = true, List<object>? crawledObjects = null)
