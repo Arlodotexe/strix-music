@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Remoting;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -19,7 +20,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     public abstract partial class RemoteCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
         private readonly MemberRemote _memberRemote;
-        private readonly ICorePlayableCollectionGroup? _corePlayableCollection;
+        private readonly ICorePlayableCollectionGroup? _playableCollectionGroup;
+        private readonly ICoreArtistCollection? _artistCollection;
+        private readonly ICoreAlbumCollection? _albumCollection;
+        private readonly ICorePlaylistCollection? _playlistCollection;
+        private readonly ICoreTrackCollection? _trackCollection;
+        private readonly ICoreImageCollection? _imageCollection;
+        private readonly ICoreUrlCollection? _urlCollection;
+        private readonly IPlayableBase? _playableBase;
 
         private string _name = string.Empty;
         private string? _description;
@@ -67,7 +75,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="corePlayableCollection">The collection to wrap around and remotely interact with.</param>
         protected RemoteCorePlayableCollectionGroupBase(ICorePlayableCollectionGroup corePlayableCollection)
         {
-            _corePlayableCollection = corePlayableCollection;
+            _playableCollectionGroup = corePlayableCollection;
+            _artistCollection = corePlayableCollection;
+            _albumCollection = corePlayableCollection;
+            _playlistCollection = corePlayableCollection;
+            _trackCollection = corePlayableCollection;
+            _imageCollection = corePlayableCollection;
+            _urlCollection = corePlayableCollection;
+            _playableBase = corePlayableCollection;
 
             SourceCoreInstanceId = corePlayableCollection.SourceCore.InstanceId;
             SourceCore = RemoteCore.GetInstance(SourceCoreInstanceId, RemotingMode.Host);
@@ -496,9 +511,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                var res = await _corePlayableCollection.IsAddChildAvailableAsync(index);
+                var res = await _playableCollectionGroup.IsAddChildAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -516,9 +531,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                var res = await _corePlayableCollection.IsAddPlaylistItemAvailableAsync(index);
+                var res = await _playlistCollection.IsAddPlaylistItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -536,9 +551,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                var res = await _corePlayableCollection.IsAddTrackAvailableAsync(index);
+                var res = await _trackCollection.IsAddTrackAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -556,9 +571,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                var res = await _corePlayableCollection.IsAddArtistItemAvailableAsync(index);
+                var res = await _artistCollection.IsAddArtistItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -576,9 +591,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                var res = await _corePlayableCollection.IsAddAlbumItemAvailableAsync(index);
+                var res = await _albumCollection.IsAddAlbumItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -596,9 +611,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_imageCollection, nameof(_imageCollection));
 
-                var res = await _corePlayableCollection.IsAddImageAvailableAsync(index);
+                var res = await _imageCollection.IsAddImageAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -616,9 +631,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_urlCollection, nameof(_urlCollection));
 
-                var res = await _corePlayableCollection.IsAddUrlAvailableAsync(index);
+                var res = await _urlCollection.IsAddUrlAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -636,9 +651,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                var res = await _corePlayableCollection.IsRemoveTrackAvailableAsync(index);
+                var res = await _trackCollection.IsRemoveTrackAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -656,9 +671,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_imageCollection, nameof(_imageCollection));
 
-                var res = await _corePlayableCollection.IsRemoveImageAvailableAsync(index);
+                var res = await _imageCollection.IsRemoveImageAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -676,9 +691,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_urlCollection, nameof(_urlCollection));
 
-                var res = await _corePlayableCollection.IsRemoveUrlAvailableAsync(index);
+                var res = await _urlCollection.IsRemoveUrlAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -696,9 +711,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                var res = await _corePlayableCollection.IsRemovePlaylistItemAvailableAsync(index);
+                var res = await _playlistCollection.IsRemovePlaylistItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -716,9 +731,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                var res = await _corePlayableCollection.IsRemoveAlbumItemAvailableAsync(index);
+                var res = await _albumCollection.IsRemoveAlbumItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -736,9 +751,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                var res = await _corePlayableCollection.IsRemoveArtistItemAvailableAsync(index);
+                var res = await _artistCollection.IsRemoveArtistItemAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -756,9 +771,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                var res = await _corePlayableCollection.IsRemoveChildAvailableAsync(index);
+                var res = await _playableCollectionGroup.IsRemoveChildAvailableAsync(index);
                 return await _memberRemote.PublishDataAsync(methodCallToken, res);
             }
 
@@ -776,9 +791,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableBase, nameof(_playableBase));
 
-                await _corePlayableCollection.ChangeDescriptionAsync(description);
+                await _playableBase.ChangeDescriptionAsync(description);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -796,9 +811,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableBase, nameof(_playableBase));
 
-                await _corePlayableCollection.ChangeDurationAsync(duration);
+                await _playableBase.ChangeDurationAsync(duration);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -816,9 +831,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableBase, nameof(_playableBase));
 
-                await _corePlayableCollection.ChangeNameAsync(name);
+                await _playableBase.ChangeNameAsync(name);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -836,9 +851,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await _corePlayableCollection.PauseAlbumCollectionAsync();
+                await _albumCollection.PauseAlbumCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -856,9 +871,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await _corePlayableCollection.PlayAlbumCollectionAsync();
+                await _albumCollection.PlayAlbumCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -876,9 +891,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await _corePlayableCollection.PauseArtistCollectionAsync();
+                await _artistCollection.PauseArtistCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -896,9 +911,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await _corePlayableCollection.PlayArtistCollectionAsync();
+                await _artistCollection.PlayArtistCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -916,9 +931,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await _corePlayableCollection.PausePlaylistCollectionAsync();
+                await _playlistCollection.PausePlaylistCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -936,9 +951,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await _corePlayableCollection.PlayPlaylistCollectionAsync();
+                await _playlistCollection.PlayPlaylistCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -956,9 +971,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await _corePlayableCollection.PauseTrackCollectionAsync();
+                await _trackCollection.PauseTrackCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -976,9 +991,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await _corePlayableCollection.PlayTrackCollectionAsync();
+                await _trackCollection.PlayTrackCollectionAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -996,9 +1011,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await _corePlayableCollection.PlayAlbumCollectionAsync(albumItem);
+                await _albumCollection.PlayAlbumCollectionAsync(albumItem);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1016,9 +1031,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await _corePlayableCollection.PlayPlayableCollectionGroupAsync();
+                await _playableCollectionGroup.PlayPlayableCollectionGroupAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1036,9 +1051,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await _corePlayableCollection.PausePlayableCollectionGroupAsync();
+                await _playableCollectionGroup.PausePlayableCollectionGroupAsync();
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1056,9 +1071,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await _corePlayableCollection.PlayPlaylistCollectionAsync(playlistItem);
+                await _playlistCollection.PlayPlaylistCollectionAsync(playlistItem);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1076,9 +1091,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await _corePlayableCollection.PlayArtistCollectionAsync(artistItem);
+                await _artistCollection.PlayArtistCollectionAsync(artistItem);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1096,9 +1111,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await _corePlayableCollection.PlayPlayableCollectionGroupAsync(collectionGroup);
+                await _playableCollectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1116,9 +1131,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await _corePlayableCollection.PlayTrackCollectionAsync(track);
+                await _trackCollection.PlayTrackCollectionAsync(track);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1137,7 +1152,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             if (_memberRemote.Mode == RemotingMode.Client)
             {
                 var res = await _memberRemote.ReceiveDataAsync<ICorePlayableCollectionGroup[]>(callToken);
-                if(res is null)
+                if (res is null)
                     yield break;
 
                 foreach (var item in res)
@@ -1148,9 +1163,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await foreach (var item in _corePlayableCollection.GetChildrenAsync(limit, offset))
+                await foreach (var item in _playableCollectionGroup.GetChildrenAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1175,9 +1190,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await foreach (var item in _corePlayableCollection.GetPlaylistItemsAsync(limit, offset))
+                await foreach (var item in _playlistCollection.GetPlaylistItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1202,9 +1217,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await foreach (var item in _corePlayableCollection.GetAlbumItemsAsync(limit, offset))
+                await foreach (var item in _albumCollection.GetAlbumItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1229,9 +1244,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await foreach (var item in _corePlayableCollection.GetArtistItemsAsync(limit, offset))
+                await foreach (var item in _artistCollection.GetArtistItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1256,9 +1271,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await foreach (var item in _corePlayableCollection.GetTracksAsync(limit, offset))
+                await foreach (var item in _trackCollection.GetTracksAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1283,9 +1298,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_imageCollection, nameof(_imageCollection));
 
-                await foreach (var item in _corePlayableCollection.GetImagesAsync(limit, offset))
+                await foreach (var item in _imageCollection.GetImagesAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1310,9 +1325,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_urlCollection, nameof(_urlCollection));
 
-                await foreach (var item in _corePlayableCollection.GetUrlsAsync(limit, offset))
+                await foreach (var item in _urlCollection.GetUrlsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1329,9 +1344,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await _corePlayableCollection.AddTrackAsync(track, index);
+                await _trackCollection.AddTrackAsync(track, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1353,9 +1368,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await _corePlayableCollection.AddArtistItemAsync(artist, index);
+                await _artistCollection.AddArtistItemAsync(artist, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1377,9 +1392,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await _corePlayableCollection.AddAlbumItemAsync(album, index);
+                await _albumCollection.AddAlbumItemAsync(album, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1401,9 +1416,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await _corePlayableCollection.AddPlaylistItemAsync(playlist, index);
+                await _playlistCollection.AddPlaylistItemAsync(playlist, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1425,9 +1440,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await _corePlayableCollection.AddChildAsync(child, index);
+                await _playableCollectionGroup.AddChildAsync(child, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1449,9 +1464,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_imageCollection, nameof(_imageCollection));
 
-                await _corePlayableCollection.AddImageAsync(image, index);
+                await _imageCollection.AddImageAsync(image, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1473,9 +1488,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_urlCollection, nameof(_urlCollection));
 
-                await _corePlayableCollection.AddUrlAsync(url, index);
+                await _urlCollection.AddUrlAsync(url, index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1493,9 +1508,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_trackCollection, nameof(_trackCollection));
 
-                await _corePlayableCollection.RemoveTrackAsync(index);
+                await _trackCollection.RemoveTrackAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1513,9 +1528,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_artistCollection, nameof(_artistCollection));
 
-                await _corePlayableCollection.RemoveArtistItemAsync(index);
+                await _artistCollection.RemoveArtistItemAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1533,9 +1548,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_albumCollection, nameof(_albumCollection));
 
-                await _corePlayableCollection.RemoveAlbumItemAsync(index);
+                await _albumCollection.RemoveAlbumItemAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1553,9 +1568,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playlistCollection, nameof(_playlistCollection));
 
-                await _corePlayableCollection.RemovePlaylistItemAsync(index);
+                await _playlistCollection.RemovePlaylistItemAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1573,9 +1588,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_playableCollectionGroup, nameof(_playableCollectionGroup));
 
-                await _corePlayableCollection.RemoveChildAsync(index);
+                await _playableCollectionGroup.RemoveChildAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1593,9 +1608,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_imageCollection, nameof(_imageCollection));
 
-                await _corePlayableCollection.RemoveImageAsync(index);
+                await _imageCollection.RemoveImageAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
@@ -1613,9 +1628,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
-                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                Guard.IsNotNull(_urlCollection, nameof(_urlCollection));
 
-                await _corePlayableCollection.RemoveUrlAsync(index);
+                await _urlCollection.RemoveUrlAsync(index);
                 await _memberRemote.RemoteReleaseAsync(methodCallToken);
             }
 
