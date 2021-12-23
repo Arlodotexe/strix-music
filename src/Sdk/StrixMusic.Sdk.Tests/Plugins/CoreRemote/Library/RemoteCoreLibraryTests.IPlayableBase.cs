@@ -80,7 +80,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [DataRow(PlaybackState.Loading), DataRow(PlaybackState.Playing), DataRow(PlaybackState.Failed), DataRow(PlaybackState.Queued)]
+        [DataRow(PlaybackState.Failed), DataRow(PlaybackState.Playing), DataRow(PlaybackState.Paused), DataRow(PlaybackState.Loading)]
         [TestMethod, Timeout(2000)]
         public async Task RemotePlaybackState_Changed(PlaybackState playbackState)
         {
