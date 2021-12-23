@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -46,14 +47,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private PlaybackState _playbackState;
         private TimeSpan _duration;
         private DateTime? _lastPlayed;
-
-        private SemaphoreSlim _getTracksMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getArtistsMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getAlbumsMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getPlaylistsMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getChildrenMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getImagesMutex = new SemaphoreSlim(1, 1);
-        private SemaphoreSlim _getUrlsMutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCorePlayableCollectionGroupBase"/>, for receiving data.
@@ -1139,14 +1132,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
         {
-            using (await Flow.EasySemaphore(_getChildrenMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICorePlayableCollectionGroup>>(nameof(GetTracksAsync));
+            var callToken = $"{nameof(GetChildrenAsync)}.{limit}.{offset}";
 
-                if (res is null)
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICorePlayableCollectionGroup[]>(callToken);
+                if(res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetChildrenAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1155,14 +1159,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
-            using (await Flow.EasySemaphore(_getPlaylistsMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICorePlaylistCollectionItem>>(nameof(GetTracksAsync));
+            var callToken = $"{nameof(GetPlaylistItemsAsync)}.{limit}.{offset}";
 
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICorePlaylistCollectionItem[]>(callToken);
                 if (res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetPlaylistItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1171,14 +1186,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            using (await Flow.EasySemaphore(_getAlbumsMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreAlbumCollectionItem>>(nameof(GetTracksAsync));
+            var callToken = $"{nameof(GetAlbumItemsAsync)}.{limit}.{offset}";
 
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICoreAlbumCollectionItem[]>(callToken);
                 if (res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetAlbumItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1187,14 +1213,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            using (await Flow.EasySemaphore(_getArtistsMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreArtistCollectionItem>>(nameof(GetTracksAsync));
+            var callToken = $"{nameof(GetArtistItemsAsync)}.{limit}.{offset}";
 
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICoreArtistCollectionItem[]>(callToken);
                 if (res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetArtistItemsAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1203,30 +1240,26 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            using (await Flow.EasySemaphore(_getTracksMutex))
+            var callToken = $"{nameof(GetTracksAsync)}.{limit}.{offset}";
+
+            if (_memberRemote.Mode == RemotingMode.Client)
             {
-                if (_memberRemote.Mode == RemotingMode.Host)
-                {
-                    Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+                var res = await _memberRemote.ReceiveDataAsync<ICoreTrack[]>(callToken);
+                if (res is null)
+                    yield break;
 
-                    await foreach (var item in _corePlayableCollection.GetTracksAsync(limit, offset))
-                    {
-                        Guard.IsNotNull(item, nameof(item));
+                foreach (var item in res)
+                    yield return item;
 
-                        yield return await _memberRemote.PublishDataAsync(nameof(GetTracksAsync), item);
-                    }
-                }
+                yield break;
+            }
 
-                if (_memberRemote.Mode == RemotingMode.Client)
-                {
-                    var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreTrack>>(nameof(GetTracksAsync));
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
 
-                    if (res is null)
-                        yield break;
-
-                    foreach (var item in res)
-                        yield return item;
-                }
+                await foreach (var item in _corePlayableCollection.GetTracksAsync(limit, offset))
+                    yield return item;
             }
         }
 
@@ -1234,14 +1267,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            using (await Flow.EasySemaphore(_getImagesMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
+            var callToken = $"{nameof(GetImagesAsync)}.{limit}.{offset}";
 
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICoreImage[]>(callToken);
                 if (res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetImagesAsync(limit, offset))
                     yield return item;
             }
         }
@@ -1250,14 +1294,25 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
         {
-            using (await Flow.EasySemaphore(_getUrlsMutex))
-            {
-                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreUrl>>(nameof(GetUrlsAsync));
+            var callToken = $"{nameof(GetUrlsAsync)}.{limit}.{offset}";
 
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                var res = await _memberRemote.ReceiveDataAsync<ICoreUrl[]>(callToken);
                 if (res is null)
                     yield break;
 
                 foreach (var item in res)
+                    yield return item;
+
+                yield break;
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await foreach (var item in _corePlayableCollection.GetUrlsAsync(limit, offset))
                     yield return item;
             }
         }

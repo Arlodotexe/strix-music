@@ -386,39 +386,60 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public virtual IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreateAlbum(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreateArtist(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreatePlayableCollectionGroup(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreateImage(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreatePlaylist(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreateTrack(SourceCore);
         }
 
-        public virtual IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+
+            for (int i = 0; i < limit; i++)
+                yield return MockItemFactory.CreateUrl(SourceCore);
         }
 
         public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
