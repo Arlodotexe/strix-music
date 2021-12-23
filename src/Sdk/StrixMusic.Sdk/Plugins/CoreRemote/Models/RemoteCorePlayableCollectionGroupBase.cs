@@ -837,63 +837,303 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseAlbumCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseAlbumCollectionAsync));
+        public Task PauseAlbumCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PauseAlbumCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PauseAlbumCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PlayAlbumCollectionAsync));
+        public Task PlayAlbumCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayAlbumCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayAlbumCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseArtistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseArtistCollectionAsync));
+        public Task PauseArtistCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PauseArtistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PauseArtistCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+        public Task PlayArtistCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayArtistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayArtistCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlaylistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PausePlaylistCollectionAsync));
+        public Task PausePlaylistCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PausePlaylistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PausePlaylistCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PlayPlaylistCollectionAsync));
+        public Task PlayPlaylistCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayPlaylistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayPlaylistCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseTrackCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
+        public Task PauseTrackCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PauseTrackCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PauseTrackCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
+        public Task PlayTrackCollectionAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayTrackCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayTrackCollectionAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem) => _memberRemote.RemoteWaitAsync(nameof(PlayAlbumCollectionAsync));
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayAlbumCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayAlbumCollectionAsync(albumItem);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync() => _memberRemote.RemoteWaitAsync(nameof(PlayPlayableCollectionGroupAsync));
+        public Task PlayPlayableCollectionGroupAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayPlayableCollectionGroupAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayPlayableCollectionGroupAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlayableCollectionGroupAsync() => _memberRemote.RemoteWaitAsync(nameof(PausePlayableCollectionGroupAsync));
+        public Task PausePlayableCollectionGroupAsync() => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PausePlayableCollectionGroupAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PausePlayableCollectionGroupAsync();
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem) => _memberRemote.RemoteWaitAsync(nameof(PlayPlaylistCollectionAsync));
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayPlaylistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayPlaylistCollectionAsync(playlistItem);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayArtistCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayArtistCollectionAsync(artistItem);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup) => _memberRemote.RemoteWaitAsync(nameof(PlayPlayableCollectionGroupAsync));
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayPlayableCollectionGroupAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayPlayableCollectionGroupAsync(collectionGroup);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync(ICoreTrack track) => _memberRemote.RemoteWaitAsync(nameof(PlayTrackCollectionAsync));
+        public Task PlayTrackCollectionAsync(ICoreTrack track) => Task.Run(async () =>
+        {
+            var methodCallToken = $"{nameof(PlayTrackCollectionAsync)}";
+
+            if (_memberRemote.Mode == RemotingMode.Host)
+            {
+                Guard.IsNotNull(_corePlayableCollection, nameof(_corePlayableCollection));
+
+                await _corePlayableCollection.PlayTrackCollectionAsync(track);
+                await _memberRemote.RemoteReleaseAsync(methodCallToken);
+            }
+
+            if (_memberRemote.Mode == RemotingMode.Client)
+            {
+                await _memberRemote.RemoteWaitAsync(methodCallToken);
+            }
+        });
 
         /// <inheritdoc/>
         [RemoteMethod]

@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             Id = id;
             Name = name;
             Description = $"Incredible description of {name}";
-            PlaybackState = PlaybackState.Paused;
+            PlaybackState = PlaybackState.Loaded;
             LastPlayed = DateTime.Today;
             Duration = TimeSpan.FromMinutes(5);
 
@@ -451,77 +451,97 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public Task PauseAlbumCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Paused;
+            return Task.CompletedTask;
         }
 
         public Task PauseArtistCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Paused;
+            return Task.CompletedTask;
         }
 
         public Task PausePlayableCollectionGroupAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Paused;
+            return Task.CompletedTask;
         }
 
         public Task PausePlaylistCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Paused;
+            return Task.CompletedTask;
         }
 
         public Task PauseTrackCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Paused;
+            return Task.CompletedTask;
         }
 
         public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            Name = albumItem.Name;
+            return Task.CompletedTask;
         }
 
         public Task PlayAlbumCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            return Task.CompletedTask;
         }
 
         public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            Name = artistItem.Name;
+            return Task.CompletedTask;
         }
 
         public Task PlayArtistCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            return Task.CompletedTask;
         }
 
         public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            Name = collectionGroup.Name;
+            return Task.CompletedTask;
         }
 
         public Task PlayPlayableCollectionGroupAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            return Task.CompletedTask;
         }
 
         public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            Name = playlistItem.Name;
+            return Task.CompletedTask;
         }
 
         public Task PlayPlaylistCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            return Task.CompletedTask;
         }
 
         public Task PlayTrackCollectionAsync(ICoreTrack track)
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            Name = track.Name;
+            return Task.CompletedTask;
         }
 
         public Task PlayTrackCollectionAsync()
         {
-            throw new NotImplementedException();
+            PlaybackState = PlaybackState.Playing;
+            return Task.CompletedTask;
         }
 
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
