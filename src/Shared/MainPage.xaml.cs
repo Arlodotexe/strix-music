@@ -247,40 +247,6 @@ namespace StrixMusic.Shared
 #if !__WASM__
             mediaSource.CommandManager.IsEnabled = false;
 #endif
-
-            /* If we're disabling CommandManager and not using automatic integration of background audio with SMTC, 
-             * then we need to manually integrate background audio with SMTC by at-least enabling play/pause and 
-             * handling ButtonPressed event.Its the minimum requirement for background audio to work.
-             * References:
-             ** https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/system-media-transport-controls#use-the-system-media-transport-controls-for-background-audio 
-             ** https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/background-audio#requirements-for-background-audio
-            */
-            var mediaTransportControls = mediaSource.SystemMediaTransportControls;
-            mediaTransportControls.IsPlayEnabled = true;
-            mediaTransportControls.IsPauseEnabled = true;
-            mediaTransportControls.ButtonPressed += SystemControls_ButtonPressed;
-
-            async void SystemControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-            {
-                switch (args.Button)
-                {
-                    case SystemMediaTransportControlsButton.Play:
-                        await Threading.OnPrimaryThread(() =>
-                         {
-                             mediaSource.Play();
-                         });
-                        break;
-                    case SystemMediaTransportControlsButton.Pause:
-                        await Threading.OnPrimaryThread(() =>
-                        {
-                            mediaSource.Pause();
-                        });
-                        break;
-                    default:
-                        break;
-                }
-            }
-
             _mediaPlayerElements.Add(mediaPlayerElement);
 
             // If loaded, add it to the visual tree.
