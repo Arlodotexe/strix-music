@@ -29,6 +29,9 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _playbackHandlerService = playbackHandlerService;
 
+            _systemMediaTransportControls.IsPlayEnabled = true;
+            _systemMediaTransportControls.IsPauseEnabled = true;
+
             AttachEvents();
         }
 
@@ -141,8 +144,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             if (e == PlaybackState.Queued)
                 return;
 
-            _systemMediaTransportControls.IsPlayEnabled = e == PlaybackState.Paused || e == PlaybackState.None;
-            _systemMediaTransportControls.IsPauseEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsStopEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsRewindEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsFastForwardEnabled = e == PlaybackState.Playing;
