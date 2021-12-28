@@ -96,7 +96,32 @@ namespace StrixMusic.Shared.ViewModels
         public ShellInfoViewModel? PreferredShell
         {
             get => _preferredShell;
-            set => SetProperty(ref _preferredShell, value, nameof(PreferredShell));
+            set
+            {
+                SetProperty(ref _preferredShell, value, nameof(PreferredShell));
+
+                _ = UpdateFallbackShell();
+            }
+        }
+
+        private async Task UpdateFallbackShell()
+        {
+            if (PreferredShell != null && PreferredShell.IsFullyResponsive)
+                FallbackShell = null;
+            else
+            {
+                // Setting the correct fallback shell back for non-responsive shells.
+                var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
+
+                foreach (var shell in AllShells)
+                {
+                    if (shell.Metadata.Id == fallbackShell)
+                    {
+                        _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
+                        FallbackShell = shell;
+                    }
+                }
+            }
         }
 
         /// <inheritdoc cref="SettingsKeysUI.FallbackShell"/>
