@@ -106,8 +106,13 @@ namespace StrixMusic.Shared.ViewModels
 
         private async Task UpdateFallbackShell()
         {
-            if (PreferredShell != null && PreferredShell.IsFullyResponsive)
+            if (PreferredShell is null)
+                return;
+
+            if (PreferredShell.IsFullyResponsive)
+            {
                 FallbackShell = null;
+            }
             else
             {
                 // Setting the correct fallback shell back for non-responsive shells.
