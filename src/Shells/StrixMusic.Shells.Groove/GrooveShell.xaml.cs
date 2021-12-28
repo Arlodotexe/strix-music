@@ -71,6 +71,15 @@ namespace StrixMusic.Shells.Groove
             NavigationTracker.Instance.Initialize();
 
             DataContextChanged += GrooveShell_DataContextChanged;
+
+            Unloaded += GrooveShell_Unloaded;
+        }
+
+        private void GrooveShell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= GrooveShell_Unloaded;
+
+            WeakReferenceMessenger.Default.Reset();
         }
 
         private void GrooveShell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)

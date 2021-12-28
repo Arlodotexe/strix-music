@@ -141,10 +141,24 @@ namespace StrixMusic.Shared
                 if (FallbackShell is null)
                     return;
 
+                // Store the shell that is actually going to be created according to the conditions.
+                ShellMetadata? shellToCreate = null;
+
                 if (CheckShellModelSupport(PreferredShell))
-                    await SetupShell(PreferredShell);
+                    shellToCreate = PreferredShell;
                 else
-                    await SetupShell(FallbackShell);
+                    shellToCreate = FallbackShell;
+
+                // Don't setup the fallback shell if its same as the preferred shell.
+                if (e.Key == nameof(SettingsKeysUI.FallbackShell) && shellToCreate != PreferredShell)
+                {
+                    await SetupShell(shellToCreate);
+                }
+
+                if (e.Key == nameof(SettingsKeysUI.PreferredShell))
+                {
+                    await SetupShell(shellToCreate);
+                }
             }
         }
 
@@ -228,10 +242,16 @@ namespace StrixMusic.Shared
             if (ActiveShellModel != PreferredShell)
             {
                 if (CheckShellModelSupport(PreferredShell))
-                    await SetupShell(PreferredShell);
+                {
+                    if (FallbackShell != PreferredShell)
+                        await SetupShell(PreferredShell);
+                }
             }
             else if (!CheckShellModelSupport(ActiveShellModel))
-                await SetupShell(FallbackShell);
+            {
+                if (FallbackShell != PreferredShell)
+                    await SetupShell(FallbackShell);
+            }
         }
 
         /// <summary>

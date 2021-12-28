@@ -116,11 +116,19 @@ namespace StrixMusic.Shared.ViewModels
 
         private async Task SaveSelectedShell()
         {
-            if (PreferredShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.Metadata.Id);
+            if (PreferredShell != null && FallbackShell != null && PreferredShell == FallbackShell)
+            {
+                if (PreferredShell == FallbackShell)
+                    await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.Metadata.Id);
+            }
+            else
+            {
+                if (PreferredShell != null)
+                    await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.Metadata.Id);
 
-            if (FallbackShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.FallbackShell), FallbackShell.Metadata.Id);
+                if (FallbackShell != null)
+                    await _settingsService.SetValue<string>(nameof(SettingsKeysUI.FallbackShell), FallbackShell.Metadata.Id);
+            }
         }
     }
 }
