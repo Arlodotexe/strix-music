@@ -1,4 +1,5 @@
-﻿<ResourceDictionary
+﻿
+    <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="using:System"
@@ -30,6 +31,9 @@
                                 </core:EventTriggerBehavior>
                                 <core:EventTriggerBehavior EventName="PointerExited">
                                     <core:GoToStateAction StateName="Normal"/>
+                                </core:EventTriggerBehavior>
+                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                    <core:InvokeCommandAction Command="{Binding Album.PlayTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <VisualStateManager.VisualStateGroups>
