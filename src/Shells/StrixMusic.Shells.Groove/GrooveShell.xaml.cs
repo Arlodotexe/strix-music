@@ -68,9 +68,24 @@ namespace StrixMusic.Shells.Groove
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
-            NavigationTracker.Instance.Initialize();
-
             DataContextChanged += GrooveShell_DataContextChanged;
+
+            Unloaded += GrooveShell_Unloaded;
+            Loaded += GrooveShell_Loaded;
+        }
+
+        private void GrooveShell_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= GrooveShell_Loaded;
+
+            NavigationTracker.Instance.Initialize();
+        }
+
+        private void GrooveShell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= GrooveShell_Unloaded;
+
+            WeakReferenceMessenger.Default.Reset();
         }
 
         private void GrooveShell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
