@@ -4,8 +4,6 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.ArtistItemStyle">
 
     <Style x:Key="ZuneDesktopArtistItemStyle" TargetType="items:ArtistItem">
@@ -14,12 +12,6 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="items:ArtistItem">
                         <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <core:InvokeCommandAction Command="{Binding Artist.PlayTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-
                             <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
                                        VerticalAlignment="Center"/>
                         </Grid>

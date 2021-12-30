@@ -32,9 +32,6 @@
                                 <core:EventTriggerBehavior EventName="PointerExited">
                                     <core:GoToStateAction StateName="Normal"/>
                                 </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <core:InvokeCommandAction Command="{Binding Album.PlayTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                                </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="Selection">
