@@ -36,6 +36,9 @@ namespace StrixMusic.Sdk.Extensions
             if (typeof(TCollection) == typeof(IImageCollection))
                 return ((IImageCollectionBase)source).TotalImageCount;
 
+            if (typeof(TCollection) == typeof(IGenreCollection))
+                return ((IGenreCollectionBase)source).TotalGenreCount;
+
             throw new ArgumentOutOfRangeException(nameof(source));
         }
     }
