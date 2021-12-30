@@ -5,7 +5,7 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.ArtistItemStyle">
-    
+
     <Style x:Key="ZuneDesktopArtistItemStyle" TargetType="items:ArtistItem">
         <Style.Setters>
             <Setter Property="Template">
