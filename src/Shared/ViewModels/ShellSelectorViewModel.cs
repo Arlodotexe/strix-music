@@ -59,6 +59,8 @@ namespace StrixMusic.Shared.ViewModels
                     _logger.LogInformation($"Adding {viewModel.Metadata.Id} to fully responsive shells");
                     FullyResponsiveShells.Add(viewModel);
                 }
+
+                await viewModel.InitAsync();
             }
 
             foreach (var shell in AllShells)
