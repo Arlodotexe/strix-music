@@ -55,8 +55,10 @@ namespace StrixMusic.Shared.ViewModels
         /// <inheritdoc cref="ShellMetadata.Description"/>
         public string Description => Metadata.Description;
 
+        /// <inheritdoc/>
         public bool IsInitialized { get; private set; }
 
+        /// <inheritdoc/>
         public Task InitAsync()
         {
             return SetupImages();
