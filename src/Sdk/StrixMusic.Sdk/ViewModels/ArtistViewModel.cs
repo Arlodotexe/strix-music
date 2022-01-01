@@ -522,7 +522,7 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalTrackCount => _artist.TotalTrackCount;
 
         /// <inheritdoc />
-        public int TotalImageCount => _artist.TotalTrackCount;
+        public int TotalImageCount => _artist.TotalImageCount;
 
         /// <inheritdoc />
         public int TotalGenreCount => _artist.TotalGenreCount;
