@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private static string? TryGetHashFromExistingTracks(Uri path, IEnumerable<FileMetadata?> files)
         {
-            return files.FirstOrDefault(c => c?.TrackMetadata?.Url == path.AbsoluteUri)?.Id;
+            return files.FirstOrDefault(c => c?.TrackMetadata?.Url == path.OriginalString)?.Id;
         }
 
         /// <summary>
