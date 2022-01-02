@@ -8,12 +8,15 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
     xmlns:pagevms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:colorconvert="using:OwlCore.Uno.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveAlbumPageStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
         <ResourceDictionary Source="../../Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/Collections/TrackCollectionStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <colorconvert:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
@@ -56,18 +59,8 @@
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
-                                    <Grid x:Name="TitleGrid" Background="{Binding BackgroundColor, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <!--<Grid x:Name="TitleGrid" Background="{ThemeResource LowBackgroundBrush}">-->
-                                        <!--<Grid.Resources>
-                            <Storyboard x:Name="BackgroundColorTransition" Duration=".666"
-                                        Storyboard.TargetName="TitleGrid" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)">
-                                <ColorAnimation To="{TemplateBinding BackgroundColor}">
-                                    <ColorAnimation.EasingFunction>
-                                        <QuadraticEase EasingMode="EaseInOut"/>
-                                    </ColorAnimation.EasingFunction>
-                                </ColorAnimation>
-                            </Storyboard>
-                        </Grid.Resources>-->
+                                    <Grid x:Name="TitleGrid" Background="{Binding BackgroundColor, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ColorToSolidColorBrushConverter}}">
+
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
                                             <ColumnDefinition/>
@@ -76,8 +69,20 @@
                                             <RowDefinition/>
                                             <RowDefinition Height="auto"/>
                                         </Grid.RowDefinitions>
+                                        
+                                        <Image Grid.RowSpan="2" Margin="32">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="Loaded">
+                                                    <core:InvokeCommandAction Command="{Binding Album.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
 
-                                        <strix:SafeImage Grid.RowSpan="2" Margin="32" ImageCollection="{TemplateBinding Album}" />
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding Album.Images[0].Uri, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                             DecodePixelHeight="{Binding Album.Images[0].Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                                             DecodePixelWidth="{Binding Album.Images[0].Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                            </Image.Source>
+                                        </Image>
 
                                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
                                             <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
@@ -101,9 +106,9 @@
                                         </StackPanel>
 
                                         <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
-                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                                    Grid.Column="1" Grid.Row="1"
-                                    Background="Transparent">
+                                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                                    Grid.Column="1" Grid.Row="1"
+                                                    Background="Transparent">
                                             <AppBarButton x:Uid="/Music/PlayABB" Label="Play" Style="{StaticResource QuickActionButton}">
                                                 <AppBarButton.Icon>
                                                     <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -115,7 +120,7 @@
                                         </CommandBar>
                                     </Grid>
 
-                                    <collections:TrackCollection Grid.Row="1" Collection="{TemplateBinding Album}"/>
+                                    <collections:TrackCollection Grid.Row="1" Collection="{Binding Album, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </Grid>
                             </UserControl>
                         </ScrollViewer>

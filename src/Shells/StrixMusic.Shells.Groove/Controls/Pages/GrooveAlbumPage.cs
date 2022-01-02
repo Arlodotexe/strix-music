@@ -34,7 +34,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public Color? BackgroundColor
         {
             get => (Color)GetValue(BackgroundColorProperty);
-            set =>  SetValue(BackgroundColorProperty, value);
+            set => SetValue(BackgroundColorProperty, value);
         }
 
         /// <summary>
@@ -49,17 +49,13 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         public AlbumViewModel? Album
         {
             get => (AlbumViewModel)GetValue(AlbumProperty);
-            set
-            {
-                SetValue(AlbumProperty, value);
-
-                if (!(value is null))
-                    _ = ProcessAlbumArtColorAsync(value);
-            }
+            set => SetValue(AlbumProperty, value);
         }
 
         private void OnAlbumChanged()
         {
+            if (!(Album is null))
+                _ = ProcessAlbumArtColorAsync(Album);
         }
 
         private async Task ProcessAlbumArtColorAsync(AlbumViewModel album)
@@ -69,8 +65,6 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
 
             if (album.Images.Count > 0)
                 BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(album.Images[0]));
-            else
-                BackgroundColor = Colors.Transparent;
         }
     }
 }
