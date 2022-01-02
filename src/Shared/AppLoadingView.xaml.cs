@@ -429,16 +429,29 @@ namespace StrixMusic.Shared
             notification.Dismissed += OnNotificationDismissed;
             doneButton.Clicked += OnDoneButtonClicked;
 
-            void OnNotificationDismissed(object? sender, EventArgs e)
+            async void OnNotificationDismissed(object? sender, EventArgs e)
             {
                 _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnNotificationDismissed)}, completing setup");
-                setupFinishedSemaphore.Release();
+
+                var registry = await coreManager.GetCoreInstanceRegistryAsync();
+
+                if (registry.Count > 0)
+                    setupFinishedSemaphore.Release();
+                else
+                {
+                    await InitializeOutOfBoxSetupIfNeeded();
+                    setupFinishedSemaphore.Release();
+                }
             }
 
-            void OnDoneButtonClicked(object? sender, EventArgs e)
+            async void OnDoneButtonClicked(object? sender, EventArgs e)
             {
                 _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnDoneButtonClicked)}, completing setup");
-                setupFinishedSemaphore.Release();
+
+                var registry = await coreManager.GetCoreInstanceRegistryAsync();
+
+                if (registry.Count > 0)
+                    setupFinishedSemaphore.Release();
             }
 
             await setupFinishedSemaphore.WaitAsync();
