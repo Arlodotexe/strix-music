@@ -300,8 +300,6 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.Id != Id)
                     return;
 
-                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
-
                 var previousData = _playlistMetadata;
                 _playlistMetadata = metadata;
 
@@ -314,8 +312,8 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.Duration != previousData.Duration)
                     DurationChanged?.Invoke(this, Duration);
 
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                    TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
+                if (metadata.TrackIds?.Count != previousData.TrackIds?.Count)
+                    TracksCountChanged?.Invoke(this, metadata.TrackIds?.Count ?? 0);
             }
         }
 
