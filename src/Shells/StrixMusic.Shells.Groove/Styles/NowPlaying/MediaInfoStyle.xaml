@@ -43,7 +43,7 @@
 
                         <Image x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Main.ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                     <core:InvokeCommandAction Command="{Binding Main.ActiveDevice.NowPlaying.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                 </core:EventTriggerBehavior>
 
