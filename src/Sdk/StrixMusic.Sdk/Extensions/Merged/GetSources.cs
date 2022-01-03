@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Extensions
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {

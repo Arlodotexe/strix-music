@@ -1,5 +1,5 @@
 ﻿using System;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Services
 {

@@ -9,8 +9,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {

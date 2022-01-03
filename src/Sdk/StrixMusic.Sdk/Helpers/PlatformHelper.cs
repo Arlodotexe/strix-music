@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Data;
+﻿using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.Helpers
 {

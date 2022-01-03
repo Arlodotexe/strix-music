@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.IO;

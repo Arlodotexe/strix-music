@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using System;

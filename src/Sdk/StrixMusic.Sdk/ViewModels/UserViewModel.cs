@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

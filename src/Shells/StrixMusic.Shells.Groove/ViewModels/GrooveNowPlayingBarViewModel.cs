@@ -62,7 +62,7 @@ namespace StrixMusic.Shells.Groove.ViewModels
             device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
-        private async void ActiveDevice_NowPlayingChanged(object sender, Sdk.Data.ITrack e)
+        private async void ActiveDevice_NowPlayingChanged(object sender, Sdk.Models.ITrack e)
         {
             TrackViewModel? nowPlaying = ActiveDevice?.NowPlaying;
             if (nowPlaying != null)

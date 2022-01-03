@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Extensions
 {

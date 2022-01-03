@@ -1,6 +1,6 @@
 ﻿using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
