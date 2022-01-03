@@ -198,8 +198,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
-            // TODO shift queue, move tracks before the played index into previous
-            // also account for shuffle
+            if (CurrentItem != null)
+                _prevItems.Add(CurrentItem);
+
+            CurrentItem = mediaSource;
             _nextItems.Remove(mediaSource);
             await _currentPlayerService.Play(mediaSource);
         }
@@ -252,6 +254,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             else
             {
                 nextItem = NextItems[nextIndex];
+                CurrentItem = nextItem;
 
                 // Move NowPlaying into previous
                 _prevItems.Add(_currentPlayerService.CurrentSource);
