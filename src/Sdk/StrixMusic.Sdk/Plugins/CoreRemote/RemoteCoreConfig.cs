@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// </summary>
         internal RemoteCoreConfig(string sourceCoreInstanceId)
         {
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, OwlCore.Remoting.RemotingMode.Client);
             AbstractUIElements = new AbstractUICollection(string.Empty);
         }
 

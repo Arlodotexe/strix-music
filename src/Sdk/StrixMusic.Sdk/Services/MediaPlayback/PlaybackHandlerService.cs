@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
         {
             // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            if (e == PlaybackState.Queued)
+            if (e == PlaybackState.Loaded)
             {
                 await AutoAdvanceQueue();
             }

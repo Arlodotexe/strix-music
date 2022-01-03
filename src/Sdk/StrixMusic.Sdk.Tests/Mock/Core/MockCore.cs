@@ -18,14 +18,14 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 {
     internal class MockCore : ICore
     {
-        private List<ICoreDevice> _devices = new List<ICoreDevice>();
+        private List<ICoreDevice> _devices;
         private string instanceDescriptor = "For testing only";
         private CoreState coreState;
 
-        public MockCore(string instanceId)
+        public MockCore()
         {
             SourceCore = this;
-            InstanceId = instanceId;
+            InstanceId = Guid.NewGuid().ToString();
 
             Library = new MockCoreLibrary(this);
             CoreConfig = new MockCoreConfig(this);
@@ -33,11 +33,19 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             RecentlyPlayed = new MockCoreRecentlyPlayed(this);
             Discoverables = new MockCoreDiscoverables(this);
             Search = new MockCoreSearch(this);
+
+            _devices = new List<ICoreDevice>()
+            {
+                new MockCoreDevice(SourceCore),
+            };
         }
 
         public async Task InitAsync(IServiceCollection services)
         {
             await Task.Delay(500);
+
+            Library.Cast<MockCoreLibrary>().PopulateMockItems();
+
             CoreState = CoreState.Loaded;
         }
 
@@ -99,7 +107,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 MockContextIds.Discoverables => new MockCoreDiscoverables(this),
                 MockContextIds.Image => new MockCoreImage(this, new Uri("https://strixmusic.com/favicon.ico")),
                 MockContextIds.Library => Library,
-                MockContextIds.Pins =>  Pins,
+                MockContextIds.Pins => Pins,
                 MockContextIds.PlayableCollectionGroup => new MockCorePlayableCollectionGroup(this, id, "Collection group"),
                 MockContextIds.Playlist => new MockCorePlaylist(this, id, "Playlist"),
                 MockContextIds.RecentlyPlayed => RecentlyPlayed,
@@ -109,7 +117,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 _ => throw new NotImplementedException(),
             });
         }
-        
+
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
             return Task.FromResult<IMediaSourceConfig?>(new MockMediaSourceConfig(track.Id, track));

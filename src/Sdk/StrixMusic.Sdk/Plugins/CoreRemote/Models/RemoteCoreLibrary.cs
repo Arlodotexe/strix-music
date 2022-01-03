@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using Newtonsoft.Json;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
@@ -12,6 +13,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// </summary>
         /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
         /// <param name="id">Uniquely identifies the instance being remoted.</param>
+        [JsonConstructor]
         internal RemoteCoreLibrary(string sourceCoreInstanceId, string id)
             : base(sourceCoreInstanceId, id)
         {
