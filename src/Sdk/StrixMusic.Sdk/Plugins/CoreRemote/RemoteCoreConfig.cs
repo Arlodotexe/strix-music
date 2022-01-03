@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

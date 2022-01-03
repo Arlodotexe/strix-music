@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.ViewModels
 {

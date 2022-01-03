@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
-using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Core

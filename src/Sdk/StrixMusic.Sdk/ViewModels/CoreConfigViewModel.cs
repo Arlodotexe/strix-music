@@ -5,9 +5,9 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {

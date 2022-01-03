@@ -1,11 +1,11 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
-using OwlCore.Extensions;
+using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
 
 namespace StrixMusic.Shells.Groove.TemplateSelectors
 {

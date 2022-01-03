@@ -1,11 +1,11 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Streams;
