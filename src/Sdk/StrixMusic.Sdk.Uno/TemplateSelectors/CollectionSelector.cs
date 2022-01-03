@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Data.Base;
+﻿using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

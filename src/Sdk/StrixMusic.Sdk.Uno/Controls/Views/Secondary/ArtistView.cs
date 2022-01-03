@@ -1,6 +1,6 @@
 ﻿using StrixMusic.Sdk.ViewModels;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
 {

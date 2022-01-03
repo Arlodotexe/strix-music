@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
@@ -8,10 +10,9 @@ using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
-using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
@@ -20,7 +21,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {

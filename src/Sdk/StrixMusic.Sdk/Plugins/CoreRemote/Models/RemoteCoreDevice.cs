@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using OwlCore.Remoting;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OwlCore.Remoting;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {

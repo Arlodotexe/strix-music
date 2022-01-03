@@ -9,10 +9,10 @@ using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -146,32 +146,32 @@ namespace StrixMusic.Sdk.ViewModels
         public ICore SourceCore => _core.SourceCore;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Unloaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Unloaded"/>.
         /// </summary>
         public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.NeedsSetup"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.NeedsSetup"/>.
         /// </summary>
         public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsSetup;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configured"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Configured"/>.
         /// </summary>
         public bool IsCoreStateConfigured => CoreState == CoreState.Configured;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loading"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loading"/>.
         /// </summary>
         public bool IsCoreStateLoading => CoreState == CoreState.Loading;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loaded"/>.
         /// </summary>
         public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Faulted"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Faulted"/>.
         /// </summary>
         public bool IsCoreStateFaulted => CoreState == CoreState.Faulted;
 

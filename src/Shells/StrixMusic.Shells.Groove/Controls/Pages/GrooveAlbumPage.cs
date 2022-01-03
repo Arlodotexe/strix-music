@@ -1,8 +1,8 @@
-﻿using OwlCore.Extensions;
+﻿using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Helper;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

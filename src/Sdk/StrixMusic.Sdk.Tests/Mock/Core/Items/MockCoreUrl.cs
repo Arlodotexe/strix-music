@@ -1,5 +1,5 @@
-﻿using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 using System;
 using System.Threading.Tasks;
 

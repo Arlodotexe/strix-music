@@ -1,5 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Models.Base;
 using System;
 
 namespace StrixMusic.Sdk.ViewModels

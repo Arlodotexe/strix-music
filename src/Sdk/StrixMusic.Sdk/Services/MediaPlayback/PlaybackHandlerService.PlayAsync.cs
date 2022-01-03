@@ -2,10 +2,10 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback

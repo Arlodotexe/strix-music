@@ -12,8 +12,8 @@ using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;
 

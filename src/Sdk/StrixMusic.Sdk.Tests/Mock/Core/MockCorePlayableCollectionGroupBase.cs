@@ -1,6 +1,6 @@
 ﻿using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;

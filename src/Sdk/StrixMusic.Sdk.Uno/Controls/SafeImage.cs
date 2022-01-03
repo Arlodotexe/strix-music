@@ -1,6 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Helpers;

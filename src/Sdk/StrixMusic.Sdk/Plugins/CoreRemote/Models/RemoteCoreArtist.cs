@@ -5,8 +5,8 @@ using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
