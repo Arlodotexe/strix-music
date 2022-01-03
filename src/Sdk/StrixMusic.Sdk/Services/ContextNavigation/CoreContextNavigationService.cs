@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Services.ContextNavigation
 {

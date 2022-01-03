@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
         {
             // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            if (e == PlaybackState.Queued)
+            if (e == PlaybackState.Loaded)
             {
                 await AutoAdvanceQueue();
             }

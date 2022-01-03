@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Cores.Files.Services;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 

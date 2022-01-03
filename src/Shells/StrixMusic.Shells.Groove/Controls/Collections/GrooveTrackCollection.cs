@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;

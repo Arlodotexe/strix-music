@@ -1,5 +1,5 @@
-﻿using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Extensions
 {

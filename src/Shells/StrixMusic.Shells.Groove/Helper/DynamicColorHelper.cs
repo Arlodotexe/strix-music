@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Threading.Tasks;
 using Color = Windows.UI.Color;
-using ISdkImage = StrixMusic.Sdk.Data.IImage;
+using ISdkImage = StrixMusic.Sdk.Models.IImage;
 
 namespace StrixMusic.Shells.Groove.Helper
 {
@@ -19,7 +19,7 @@ namespace StrixMusic.Shells.Groove.Helper
     public static class DynamicColorHelper
     {
         /// <summary>
-        /// Gets an accent color from an <see cref="Sdk.Data.IImage"/>.
+        /// Gets an accent color from an <see cref="Sdk.Models.IImage"/>.
         /// </summary>
         /// <param name="sdkImage">The image to get a color from.</param>
         /// <returns>The accent color for the image.</returns>

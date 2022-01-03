@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Services;
-using Microsoft.Extensions.Logging;
 
 namespace StrixMusic.Shared.ViewModels
 {

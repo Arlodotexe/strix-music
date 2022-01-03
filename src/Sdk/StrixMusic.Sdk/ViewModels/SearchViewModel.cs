@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {

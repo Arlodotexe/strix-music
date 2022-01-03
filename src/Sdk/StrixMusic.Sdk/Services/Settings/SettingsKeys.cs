@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.Settings.Containers;
 
 namespace StrixMusic.Sdk.Services.Settings

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files.Models
 {

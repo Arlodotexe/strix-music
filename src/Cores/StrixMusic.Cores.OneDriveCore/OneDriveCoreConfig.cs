@@ -16,7 +16,7 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Cores.OneDrive.Storage;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Notifications;
@@ -460,7 +460,7 @@ namespace StrixMusic.Cores.OneDrive
                 },
             };
 
-            SourceCore?.Cast<OneDriveCore>().ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
+            SourceCore?.Cast<OneDriveCore>().ChangeCoreState(Sdk.Models.CoreState.NeedsSetup);
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)

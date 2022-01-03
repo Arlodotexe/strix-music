@@ -6,7 +6,7 @@
     public enum PlaybackState
     {
         /// <summary>
-        /// The item is not playing, paused or loading.
+        /// The item has no playback known state.
         /// </summary>
         None,
 
@@ -26,9 +26,9 @@
         Paused,
 
         /// <summary>
-        /// The item was queued by user to play next.
+        /// The item has been loaded and playback can begin without wait.
         /// </summary>
-        Queued,
+        Loaded,
 
         /// <summary>
         /// The audio player is loading.

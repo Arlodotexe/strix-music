@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// </summary>
         internal RemoteCoreConfig(string sourceCoreInstanceId)
         {
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, OwlCore.Remoting.RemotingMode.Client);
             AbstractUIElements = new AbstractUICollection(string.Empty);
         }
 

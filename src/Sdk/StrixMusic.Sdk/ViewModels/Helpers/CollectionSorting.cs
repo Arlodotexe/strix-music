@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 

@@ -1,10 +1,11 @@
-﻿using OwlCore.Remoting;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OwlCore.Remoting;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
@@ -18,9 +19,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <summary>
         /// Creates a new instance of a <see cref="RemoteCoreDevice"/>.
         /// </summary>
-        internal RemoteCoreDevice(string sourceCoreInstanceId, string id)
+        [JsonConstructor]
+        public RemoteCoreDevice(string sourceCoreInstanceId, string id)
         {
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client);
 
             Id = id;
             Name = string.Empty;
@@ -33,7 +35,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// </summary>
         internal RemoteCoreDevice(ICoreDevice device)
         {
-            SourceCore = RemoteCore.GetInstance(device.SourceCore.InstanceId);
+            SourceCore = RemoteCore.GetInstance(device.SourceCore.InstanceId, RemotingMode.Host);
 
             _memberRemote = new MemberRemote(this, $"{device.SourceCore.InstanceId}.{nameof(RemoteCoreDevice)}.{device.Id}", RemoteCoreMessageHandler.SingletonHost);
 
