@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
 
