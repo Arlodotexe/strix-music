@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             Assert.AreEqual(_previousItems.Count, 0);
             Assert.AreEqual(_nextItems.Count, 0);
 
-            var mockTrack = new MockCoreTrack(new MockCore(string.Empty), string.Empty, string.Empty);
+            var mockTrack = new MockCoreTrack(new MockCore(), string.Empty, string.Empty);
 
             // Generate previous items
             for (int i = 0; i < numberOfPreviousItems; i++)
