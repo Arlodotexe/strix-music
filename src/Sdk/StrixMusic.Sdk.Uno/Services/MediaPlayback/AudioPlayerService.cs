@@ -91,7 +91,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
             // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            PlaybackStateChanged?.Invoke(this, PlaybackState.Queued);
+            PlaybackStateChanged?.Invoke(this, PlaybackState.Loaded);
         }
 
         private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
