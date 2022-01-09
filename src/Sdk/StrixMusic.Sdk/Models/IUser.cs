@@ -6,7 +6,6 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="IUserBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
     public interface IUser : IUserBase, IUserProfile, ISdkMember
     {
         /// <summary>

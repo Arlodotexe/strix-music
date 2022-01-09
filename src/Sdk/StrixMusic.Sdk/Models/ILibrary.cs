@@ -7,7 +7,6 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="ILibraryBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
     public interface ILibrary : ILibraryBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreLibrary>
     {
     }

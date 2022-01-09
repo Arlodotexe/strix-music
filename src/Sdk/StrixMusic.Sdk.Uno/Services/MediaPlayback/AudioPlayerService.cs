@@ -13,7 +13,6 @@ using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
 // ReSharper disable once CheckNamespace
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 {
     /// <inheritdoc />

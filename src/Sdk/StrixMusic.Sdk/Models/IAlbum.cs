@@ -7,7 +7,6 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="IAlbumBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
     public interface IAlbum : IAlbumBase, IAlbumCollectionItem, IArtistCollection, ITrackCollection, IImageCollection, IGenreCollection, ISdkMember, IMerged<ICoreAlbum>, IMerged<ICoreAlbumCollectionItem>
     {
         /// <summary>
