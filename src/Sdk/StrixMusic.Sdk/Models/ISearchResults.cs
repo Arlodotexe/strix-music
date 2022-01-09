@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="ISearchResultsBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface ISearchResults : ISearchResultsBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreSearchResults>
+    public interface ISearchResults : ISearchResultsBase, IPlayableCollectionGroup, IPlayable, ISdkMember, IMerged<ICoreSearchResults>
     {
     }
 }

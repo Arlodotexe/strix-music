@@ -31,6 +31,8 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
+        private DownloadInfo _downloadInfo;
+
         private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
@@ -397,6 +399,13 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _playlist.PlaybackState;
 
         /// <inheritdoc />
+        public DownloadInfo DownloadInfo
+        {
+            get => _downloadInfo;
+            private set => SetProperty(ref _downloadInfo, value);
+        }
+
+        /// <inheritdoc />
         public int TotalTrackCount => _playlist.TotalTrackCount;
 
         /// <inheritdoc />
@@ -455,6 +464,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task PauseTrackCollectionAsync() => _playlist.PauseTrackCollectionAsync();
+
+        /// <inheritdoc />
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            // TODO create / integrate download manager.
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

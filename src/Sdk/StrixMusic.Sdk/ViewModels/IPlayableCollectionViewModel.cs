@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An interface for ViewModels that use <see cref="IPlayableCollectionBase" />. 
     /// </summary>
-    public interface IPlayableCollectionViewModel : IPlayableCollectionBase
+    public interface IPlayableCollectionViewModel : IPlayableViewModel, IPlayableCollectionBase
     {
         /// <summary>
         /// Command to change the name, if supported.

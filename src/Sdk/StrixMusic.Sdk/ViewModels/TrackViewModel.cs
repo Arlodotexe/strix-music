@@ -30,6 +30,8 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
+        private DownloadInfo _downloadInfo;
+
         private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
@@ -551,6 +553,13 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => MainViewModel.Singleton?.ActiveDevice?.NowPlaying?.Id == Id ? MainViewModel.Singleton?.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
 
         /// <inheritdoc />
+        public DownloadInfo DownloadInfo
+        {
+            get => _downloadInfo;
+            private set => SetProperty(ref _downloadInfo, value);
+        }
+
+        /// <inheritdoc />
         public bool IsPlayArtistCollectionAsyncAvailable => Model.IsPlayArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
@@ -621,6 +630,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+
+        /// <inheritdoc />
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            // TODO create / integrate download manager.
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

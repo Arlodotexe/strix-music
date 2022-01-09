@@ -29,11 +29,13 @@ namespace StrixMusic.Sdk.ViewModels
     public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IArtistCollection _collection;
+        private DownloadInfo _downloadInfo;
+
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
         private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
-        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
@@ -346,6 +348,13 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
+        public DownloadInfo DownloadInfo
+        {
+            get => _downloadInfo;
+            private set => SetProperty(ref _downloadInfo, value);
+        }
+
+        /// <inheritdoc />
         public ArtistSortingType CurrentArtistSortingType { get; private set; }
 
         /// <inheritdoc />
@@ -436,6 +445,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
+
+        /// <inheritdoc />
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            // TODO create / integrate download manager.
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

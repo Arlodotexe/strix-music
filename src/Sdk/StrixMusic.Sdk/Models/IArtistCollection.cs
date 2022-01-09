@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="IArtistCollectionBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IUrlCollection, IImageCollection, ISdkMember, IMerged<ICoreArtistCollection>
+    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IUrlCollection, IImageCollection, IPlayable, ISdkMember, IMerged<ICoreArtistCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the artist collection. Restarts playback if already playing.

@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="ITrackBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, ISdkMember, IMerged<ICoreTrack>
+    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreTrack>
     {
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.

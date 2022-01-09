@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="IPlayableCollectionGroupChildrenBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ISdkMember, IMerged<ICorePlayableCollectionGroupChildren>
+    public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, IPlayable, ISdkMember, IMerged<ICorePlayableCollectionGroupChildren>
     {
         /// <summary>
         /// Attempts to play a specific item in the playable collection group. Restarts playback if already playing.

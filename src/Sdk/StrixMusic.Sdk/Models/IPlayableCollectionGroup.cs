@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Models
 {
     /// <inheritdoc cref="IPlayableCollectionGroupBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlayableCollectionGroup : IPlayableCollectionGroupBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection, IPlayableCollectionGroupChildren, ISdkMember, IMerged<ICorePlayableCollectionGroup>
+    public interface IPlayableCollectionGroup : IPlayableCollectionGroupBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection, IPlayableCollectionGroupChildren, IPlayable, ISdkMember, IMerged<ICorePlayableCollectionGroup>
     {
     }
 }
