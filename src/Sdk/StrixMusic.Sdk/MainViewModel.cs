@@ -200,12 +200,14 @@ namespace StrixMusic.Sdk
                 LocalDevice,
             };
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
-
             OnPropertyChanged(nameof(Devices));
+
+            DevicesChanged?.Invoke(this, Devices.Select((x, i) => new CollectionChangedItem<IDevice>(x, i)).ToList(), new List<CollectionChangedItem<IDevice>>());
 
             foreach (var device in Devices)
                 AttachEvents(device);
+
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
 
             _sources.ForEach(AttachEvents);
 
@@ -334,7 +336,14 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            Devices.ChangeCollection(addedItems, removedItems, x => new DeviceViewModel(new CoreDeviceProxy(x.Data)));
+            var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data)), x.Index)).ToList();
+            var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
+
+            Guard.IsNotNull(wrappedAdded, nameof(wrappedAdded));
+            Guard.IsNotNull(wrappedRemoved, nameof(wrappedRemoved));
+
+            Devices.ChangeCollection(wrappedAdded, wrappedRemoved);
+            DevicesChanged?.Invoke(this, wrappedAdded.Cast<CollectionChangedItem<IDevice>>().ToOrAsList(), wrappedRemoved.Cast<CollectionChangedItem<IDevice>>().ToOrAsList());
 
             foreach (var device in addedItems)
             {
