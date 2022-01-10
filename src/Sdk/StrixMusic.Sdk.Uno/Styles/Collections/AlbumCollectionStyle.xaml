@@ -4,7 +4,7 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:data="using:StrixMusic.Sdk.Data"
+    xmlns:data="using:StrixMusic.Sdk.Models"
     x:Class="StrixMusic.Sdk.Uno.Styles.Collections.AlbumCollectionStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">

@@ -141,7 +141,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
         private void PlaybackHandlerService_PlaybackStateChanged(object sender, PlaybackState e)
         {
-            if (e == PlaybackState.Queued)
+            if (e == PlaybackState.Loaded)
                 return;
 
             _systemMediaTransportControls.IsStopEnabled = e == PlaybackState.Playing;

@@ -83,7 +83,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Items.Abstract
                 case PlaybackState.Paused:
                     VisualStateManager.GoToState(this, "Paused", true);
                     break;
-                case PlaybackState.Queued:
+                case PlaybackState.Loaded:
                     VisualStateManager.GoToState(this, "Queued", true);
                     break;
                 case PlaybackState.Loading:

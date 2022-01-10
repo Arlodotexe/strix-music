@@ -6,7 +6,6 @@ namespace StrixMusic.Sdk.Models.Core
 {
     /// <inheritdoc cref="IDeviceBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Nullable SourceCore in IDeviceBase is overridden by non-nullable SourceCore in ICoreMember.")]
     public interface ICoreDevice : IDeviceBase, ICoreMember
     {
         /// <summary>

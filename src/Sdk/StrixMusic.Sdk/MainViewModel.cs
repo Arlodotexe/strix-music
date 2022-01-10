@@ -230,13 +230,10 @@ namespace StrixMusic.Sdk
 
             // Adds itself into Cores.
             // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
-#pragma warning disable CA2000 // Dispose objects before losing scope
             await Threading.OnPrimaryThread(() =>
             {
                 _ = new CoreViewModel(core, coreMetadata);
             });
-#pragma warning restore CA2000 // Dispose objects before losing scope
-
             return core;
         }
 
