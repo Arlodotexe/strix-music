@@ -27,64 +27,144 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<string>? NameChanged;
+        public event EventHandler<string>? NameChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<string?>? DescriptionChanged;
+        public event EventHandler<string?>? DescriptionChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<TimeSpan>? DurationChanged;
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<DateTime?>? LastPlayedChanged;
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
+        public event CollectionChangedEventHandler<ICoreTrack>? TracksChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TracksCountChanged;
+        public event EventHandler<int>? TracksCountChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<int>? ImagesCountChanged;
+        public event EventHandler<int>? ImagesCountChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+        public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<int>? PlaylistItemsCountChanged;
+        public event EventHandler<int>? PlaylistItemsCountChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+        public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<int>? UrlsCountChanged;
+        public event EventHandler<int>? UrlsCountChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         public int TotalTrackCount => _playlistData.TotalTrackCount;
