@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,10 +28,11 @@ namespace StrixMusic.Sdk
     /// </summary>
     public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
-        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
-        private readonly List<ICore> _sources = new List<ICore>();
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
+
+        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new();
+        private readonly List<ICore> _sources = new();
 
         private MergedLibrary? _mergedLibrary;
         private MergedRecentlyPlayed? _mergedRecentlyPlayed;
@@ -195,7 +195,7 @@ namespace StrixMusic.Sdk
                 Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
             {
                 LocalDevice,
             };
@@ -336,14 +336,18 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data)), x.Index)).ToList();
-            var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data)), x.Index)).ToList();
+            var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
 
-            Guard.IsNotNull(wrappedAdded, nameof(wrappedAdded));
-            Guard.IsNotNull(wrappedRemoved, nameof(wrappedRemoved));
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var wrappedAdded = wrappedAddedVms.Cast<CollectionChangedItem<IDevice>>().ToOrAsList();
 
-            Devices.ChangeCollection(wrappedAdded, wrappedRemoved);
-            DevicesChanged?.Invoke(this, wrappedAdded.Cast<CollectionChangedItem<IDevice>>().ToOrAsList(), wrappedRemoved.Cast<CollectionChangedItem<IDevice>>().ToOrAsList());
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var wrappedRemoved = wrappedRemovedVms.Cast<CollectionChangedItem<IDevice>>().ToOrAsList();
+
+            Devices.ChangeCollection(wrappedAddedVms, wrappedRemovedVms);
+
+            DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
 
             foreach (var device in addedItems)
             {
