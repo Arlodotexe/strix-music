@@ -5,7 +5,6 @@ using StrixMusic.Sdk.Uno.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Uno.Extensions.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -170,23 +169,23 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
 
         private void SelectedItemChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.AddedItems.ForEach(x =>
+            foreach (var item in e.AddedItems)
             {
-                TItem? container = GetItemFromData(x);
+                TItem? container = GetItemFromData(item);
                 if (container != null)
                 {
                     container.Selected = true;
                 }
-            });
+            }
 
-            e.RemovedItems.ForEach(x =>
+            foreach (var item in e.RemovedItems)
             {
-                TItem? container = GetItemFromData(x);
+                TItem? container = GetItemFromData(item);
                 if (container != null)
                 {
                     container.Selected = false;
                 }
-            });
+            }
 
             if (PART_Selector == null)
                 return;

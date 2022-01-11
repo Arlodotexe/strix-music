@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using Uno.Extensions.Specialized;
 using Windows.UI.Xaml.Data;
 
 namespace OwlCore.Uno.Converters.Bools
@@ -19,7 +18,7 @@ namespace OwlCore.Uno.Converters.Bools
         /// <returns>Whether or not the colleciton contains no elements</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Convert(ICollection collection) => !collection.Any();
+        public static bool Convert(ICollection collection) => collection.Count == 0;
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)

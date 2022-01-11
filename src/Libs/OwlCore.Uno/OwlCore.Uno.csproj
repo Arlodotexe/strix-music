@@ -21,25 +21,27 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0" />
     <PackageReference Include="OwlCore" Version="0.0.43" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
-    <PackageReference Include="Uno.UI" Version="3.10.11" />
+    <PackageReference Include="Uno.UI" Version="4.0.11" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.0-build.45.gd2e4192c8c" />
-	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0-build.2.g0e224f133a" />
-	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.0-build.2.g0e224f133a" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.81" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
+	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.10" />
+	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.10" />
+	  <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.10" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.0" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
