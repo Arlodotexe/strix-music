@@ -228,6 +228,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public async Task NextAsync()
         {
+            if (_currentPlayerService == null && CurrentItem != null)
+            {
+                _currentPlayerService = _audioPlayerRegistry[CurrentItem.Track.SourceCore.InstanceId];
+            }
+
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             var nextIndex = 0;
@@ -276,6 +281,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             AttachEvents(_currentPlayerService);
 
             await _currentPlayerService.Play(nextItem);
+
+            _currentPlayerService.CurrentSource = CurrentItem;
 
             CurrentItemChanged?.Invoke(this, nextItem);
         }
@@ -352,6 +359,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         private async Task PreviousAsync(bool shouldRemoveFromQueue)
         {
+            if (_currentPlayerService == null && CurrentItem != null)
+            {
+                _currentPlayerService = _audioPlayerRegistry[CurrentItem.Track.SourceCore.InstanceId];
+            }
+
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             await _currentPlayerService.PauseAsync();
@@ -368,6 +380,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             await _currentPlayerService.Play(newItem);
             CurrentItem = newItem;
+
             CurrentItemChanged?.Invoke(this, newItem);
         }
 
@@ -398,10 +411,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             // The space complexity will remain O(n), because we are not cloning any list we are simply references same items each time.
             var unshuffledItems = new List<IMediaSourceConfig>();
 
+            unshuffledItems.AddRange(_prevItems);
+
             if (CurrentItem != null)
                 unshuffledItems.Add(CurrentItem);
 
-            unshuffledItems.AddRange(_prevItems);
             unshuffledItems.AddRange(_nextItems);
             unshuffledItems.Unshuffle(_shuffleMap);
 

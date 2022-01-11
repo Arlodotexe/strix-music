@@ -16,20 +16,24 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
     [TestClass]
     public class PlaybackHandlerServiceQueueTests
     {
-        private const string MOCK_CORE_INSTANCE_ID = "MockCore";
-
         private PlaybackHandlerService? _handlerService;
         private IAudioPlayerService? _audioPlayer;
         private List<IMediaSourceConfig>? _previousItems;
         private List<IMediaSourceConfig>? _nextItems;
+        private IMediaSourceConfig? _currentItem;
+        private MockCoreTrack? _mockTrack;
 
         [TestInitialize]
         public void Setup()
         {
             _audioPlayer = new MockAudioPlayerService();
-
             _handlerService = new PlaybackHandlerService();
-            _handlerService.RegisterAudioPlayer(_audioPlayer, MOCK_CORE_INSTANCE_ID);
+
+            var mockCore = new MockCore();
+
+            var mockTrack = new MockCoreTrack(mockCore, string.Empty, string.Empty);
+            _handlerService.RegisterAudioPlayer(_audioPlayer, mockCore.InstanceId);
+            _mockTrack = mockTrack;
 
             _previousItems = new List<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
@@ -65,15 +69,14 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             Assert.IsNotNull(_nextItems);
             Assert.IsNotNull(_handlerService);
             Assert.IsNotNull(_audioPlayer);
+            Assert.IsNotNull(_mockTrack);
             Assert.AreEqual(_previousItems.Count, 0);
             Assert.AreEqual(_nextItems.Count, 0);
-
-            var mockTrack = new MockCoreTrack(new MockCore(MOCK_CORE_INSTANCE_ID), string.Empty, string.Empty);
 
             // Generate previous items
             for (int i = 0; i < numberOfPreviousItems; i++)
             {
-                var mediaSourceConfig = new MediaSourceConfig(mockTrack, i.ToString(), Stream.Null, "mp3");
+                var mediaSourceConfig = new MediaSourceConfig(_mockTrack, i.ToString(), Stream.Null, "mp3");
                 _previousItems.Add(mediaSourceConfig);
                 _handlerService.PushPrevious(mediaSourceConfig);
             }
@@ -81,14 +84,15 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // If there is anything in PreviousItems, there must be a CurrentItem.
             if (numberOfPreviousItems > 0)
             {
-                _handlerService.CurrentItem = new MediaSourceConfig(mockTrack, numberOfPreviousItems.ToString(), Stream.Null, "mp3");
+                _handlerService.CurrentItem = new MediaSourceConfig(_mockTrack, numberOfPreviousItems.ToString(), Stream.Null, "mp3");
                 _audioPlayer.CurrentSource = _handlerService.CurrentItem;
+                _currentItem = _handlerService.CurrentItem;
             }
 
             // Generate next items
             for (int i = 0; i < numberOfNextItems; i++)
             {
-                var mediaSourceConfig = new MediaSourceConfig(mockTrack, (numberOfPreviousItems + (i + 1)).ToString(), Stream.Null, "mp3");
+                var mediaSourceConfig = new MediaSourceConfig(_mockTrack, (numberOfPreviousItems + (i + 1)).ToString(), Stream.Null, "mp3");
                 _nextItems.Add(mediaSourceConfig);
                 _handlerService.InsertNext(i, mediaSourceConfig);
             }
@@ -143,17 +147,17 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         }
 
         [TestMethod]
-        //[DataRow(1, 10)]
-        //[DataRow(2, 9)]
-        //[DataRow(3, 8)]
-        //[DataRow(4, 7)]
-        //[DataRow(5, 6)]
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
+        [DataRow(3, 8)]
+        [DataRow(4, 7)]
+        [DataRow(5, 6)]
         [DataRow(6, 5)]
-        //[DataRow(7, 4)]
-        //[DataRow(8, 3)]
-        //[DataRow(9, 2)]
-        //[DataRow(10, 1)]
-        //[Timeout(800)]
+        [DataRow(7, 4)]
+        [DataRow(8, 3)]
+        [DataRow(9, 2)]
+        [DataRow(10, 1)]
+        [Timeout(800)]
         public async Task ShuffleAndUnshuffleWithForward_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {
             Assert.IsNotNull(_previousItems);
@@ -164,17 +168,76 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             Assert.IsTrue(_handlerService.ShuffleState);
 
-            // Play something from the nextItems to mimic the real playback scenerio.
-            await _handlerService.PlayFromNext(0);
-
             // Trigger manual forwarding for queue.
             await _handlerService.NextAsync();
 
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
 
-            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
-            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
+            // The next items and previous items COUNT is not necesserily equal to original prev and next items because we changed the currentItem.
+            // Original Order.
+            var unshuffledList = new List<IMediaSourceConfig?>();
+            unshuffledList.AddRange(_previousItems);
+            unshuffledList.Add(_currentItem);
+            unshuffledList.AddRange(_nextItems);
+
+            // Processed Unshuffled list.
+            var newUnShuffledList = new List<IMediaSourceConfig?>();
+            newUnShuffledList.AddRange(_handlerService.PreviousItems);
+            newUnShuffledList.Add(_handlerService.CurrentItem);
+            newUnShuffledList.AddRange(_handlerService.NextItems);
+
+            CollectionAssert.AreEqual(unshuffledList, newUnShuffledList);
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
+
+        [TestMethod]
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
+        [DataRow(3, 8)]
+        [DataRow(4, 7)]
+        [DataRow(5, 6)]
+        [DataRow(6, 5)]
+        [DataRow(7, 4)]
+        [DataRow(8, 3)]
+        [DataRow(9, 2)]
+        [DataRow(10, 1)]
+        [Timeout(800)]
+        public async Task ShuffleAndUnshuffleWithBackward_Queue(int numberOfPreviousItems, int numberOfNextItems)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Trigger manual forwarding for queue.
+            await _handlerService.NextAsync();
+
+            // Trigger manual rewinding for queue.
+            await _handlerService.PreviousAsync();
+
+            // Turn shuffle off.
+            await _handlerService.ToggleShuffleAsync();
+
+            // The next items and previous items COUNT is not necesserily equal to original prev and next items because we changed the currentItem.
+            // Original Order.
+            var unshuffledList = new List<IMediaSourceConfig?>();
+            unshuffledList.AddRange(_previousItems);
+            unshuffledList.Add(_currentItem);
+            unshuffledList.AddRange(_nextItems);
+
+            // Processed Unshuffled list.
+            var newUnShuffledList = new List<IMediaSourceConfig?>();
+            newUnShuffledList.AddRange(_handlerService.PreviousItems);
+            newUnShuffledList.Add(_handlerService.CurrentItem);
+            newUnShuffledList.AddRange(_handlerService.NextItems);
+
+            CollectionAssert.AreEqual(unshuffledList, newUnShuffledList);
 
             CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
             CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
