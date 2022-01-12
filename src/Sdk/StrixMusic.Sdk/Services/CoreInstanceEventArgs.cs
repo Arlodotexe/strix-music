@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Services
     /// <summary>
     /// Event args used to identify a specific core instance before it's created.
     /// </summary>
-    public class CoreInstanceEventArgs : EventArgs
+    public sealed class CoreInstanceEventArgs : EventArgs
     {
         /// <summary>
         /// Creates a new instance of <see cref="CoreInstanceEventArgs"/>.

@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ILibraryBase"/>.
     /// </summary>
-    public class MergedLibrary : MergedPlayableCollectionGroupBase<ICoreLibrary>, ILibrary
+    public sealed class MergedLibrary : MergedPlayableCollectionGroupBase<ICoreLibrary>, ILibrary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedLibrary"/> class.

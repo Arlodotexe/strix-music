@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.Settings.Containers
     /// User preferences for behavior when the user requests to play a single item from a collection of collections.
     /// </summary>
     /// <example>From the library, the user requests to requests that an album is played. This decides</example>
-    public class SiblingCollectionPlaybackPreferences
+    public sealed class SiblingCollectionPlaybackPreferences
     {
         /// <summary>
         /// Behavior for playing an ArtistCollection that has sibling ArtistCollections.

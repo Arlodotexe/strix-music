@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// <summary>
     /// Scans all playlist files.
     /// </summary>
-    public partial class PlaylistMetadataScanner : IDisposable
+    public sealed partial class PlaylistMetadataScanner : IDisposable
     {
         private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
 

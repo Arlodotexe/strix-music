@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ICoreSearchHistory"/>.
     /// </summary>
-    public class MergedSearchHistory : MergedPlayableCollectionGroupBase<ICoreSearchHistory>, ISearchHistory
+    public sealed class MergedSearchHistory : MergedPlayableCollectionGroupBase<ICoreSearchHistory>, ISearchHistory
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchHistory"/> class.

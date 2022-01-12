@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Uno.Services
     /// <remarks>
     /// The StrixMusic.Sdk contains the keys that don't return anything UI-dependent, while StrixMusic.Sdk.Uno contains a partial that has the UI-dependent keys.
     /// </remarks>
-    public class SettingsKeysUI : SettingsKeysBase
+    public sealed class SettingsKeysUI : SettingsKeysBase
     {
         /// <summary>
         /// Stores the registry id of the user's preferred shell.

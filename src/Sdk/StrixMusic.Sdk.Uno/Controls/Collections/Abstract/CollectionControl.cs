@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.Uno.Controls.Items.Abstract;
-using StrixMusic.Sdk.Uno.Helpers;
+using StrixMusic.Sdk.Uno;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

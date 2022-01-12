@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace StrixMusic.Sdk.Uno.Helpers
+namespace StrixMusic.Sdk.Uno
 {
     /// <summary>
     /// A <see langword="static"/> class of Visual Tree helper functions.

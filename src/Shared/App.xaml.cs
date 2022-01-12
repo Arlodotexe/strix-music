@@ -55,11 +55,9 @@ namespace StrixMusic
                 Window.Current.Activate();
             }
 
-            FrameworkElement? rootElement = Window.Current.Content as FrameworkElement;
-
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootElement == null)
+            if (!(Window.Current.Content is FrameworkElement rootElement))
             {
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -138,7 +136,6 @@ namespace StrixMusic
                 // builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug );
             });
 
-
 #if HAS_UNO
             // global::Uno.UI.FeatureConfiguration.ApiInformation.NotImplementedLogLevel = global::Uno.Foundation.Logging.LogLevel.Debug; // Raise not implemented usages as Debug messages
             global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
@@ -170,7 +167,9 @@ namespace StrixMusic
         /// </summary>
         private void TryEnablePrelaunch()
         {
+#if NETFXCORE
             Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
+#endif
         }
     }
 }

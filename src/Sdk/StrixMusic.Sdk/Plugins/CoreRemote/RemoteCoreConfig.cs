@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     ///  <inheritdoc/>
-    public class RemoteCoreConfig : ICoreConfig
+    public sealed class RemoteCoreConfig : ICoreConfig
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreConfig"/>.

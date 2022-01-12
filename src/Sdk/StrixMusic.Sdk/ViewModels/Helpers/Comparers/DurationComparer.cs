@@ -7,7 +7,8 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// <summary>
     /// Compares the duration/>.
     /// </summary>
-    public class DurationComparer<TPlayableBase> : InversableComparer<TPlayableBase> where TPlayableBase : IPlayableBase
+    public sealed class DurationComparer<TPlayableBase> : InversableComparer<TPlayableBase>
+        where TPlayableBase : IPlayableBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DurationComparer{TPlayableBase}"/> class.

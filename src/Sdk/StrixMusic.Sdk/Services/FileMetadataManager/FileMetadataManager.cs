@@ -18,7 +18,7 @@ using StrixMusic.Sdk.Services.Notifications;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <inheritdoc cref="IFileMetadataManager" />
-    public class FileMetadataManager : IFileMetadataManager
+    public sealed class FileMetadataManager : IFileMetadataManager
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
 

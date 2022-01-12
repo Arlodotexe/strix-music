@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <summary>
     /// The service that helps in interacting with playlist information.
     /// </summary>
-    public class PlaylistRepository : IPlaylistRepository
+    public sealed class PlaylistRepository : IPlaylistRepository
     {
         private const string PLAYLISTS_DATA_FILENAME = "Playlists.bin";
 

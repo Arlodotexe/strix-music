@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     /// <summary>
     /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
-    public class RemoteCoreTrack : ICoreTrack
+    public sealed class RemoteCoreTrack : ICoreTrack
     {
         private readonly MemberRemote _memberRemote;
         private readonly ICoreTrack? _track;

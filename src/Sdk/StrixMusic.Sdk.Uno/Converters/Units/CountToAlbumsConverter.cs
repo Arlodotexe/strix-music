@@ -7,9 +7,9 @@ using Windows.UI.Xaml.Data;
 namespace StrixMusic.Sdk.Uno.Converters.Units
 {
     /// <summary>
-    /// A converter that adds an "Albums" suffix to a unit..
+    /// A converter that adds an "Albums" suffix to a unit.
     /// </summary>
-    public class CountToAlbumsConverter : IValueConverter
+    public sealed class CountToAlbumsConverter : IValueConverter
     {
         /// <summary>
         /// Adds a "Albums" suffix to a unit.

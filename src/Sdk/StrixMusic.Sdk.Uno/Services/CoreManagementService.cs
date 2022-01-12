@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Uno.Services
     /// <summary>
     /// Manages added and removing core instances.
     /// </summary>
-    public class CoreManagementService : ICoreManagementService
+    public sealed class CoreManagementService : ICoreManagementService
     {
         private readonly ISettingsService _settingsService;
         private Dictionary<string, CoreMetadata>? _coreInstanceRegistry;

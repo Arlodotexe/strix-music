@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Aggregates many <see cref="ICore"/> instances into one.
     /// </summary>
-    public class MergedCore : IAppCore
+    public sealed class MergedCore : IAppCore
     {
         private readonly List<ICore> _sources;
         private readonly List<IDevice> _devices;

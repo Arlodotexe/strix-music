@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Translates a <see cref="ICoreDevice"/> to a <see cref="IDevice"/>. Does not provide merging.
     /// </summary>
-    public class CoreDeviceProxy : IDevice
+    public sealed class CoreDeviceProxy : IDevice
     {
         private readonly ICoreDevice _source;
 

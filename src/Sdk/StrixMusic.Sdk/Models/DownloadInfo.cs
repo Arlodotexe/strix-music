@@ -3,7 +3,7 @@
     /// <summary>
     /// Holds information about a download operation.
     /// </summary>
-    public struct DownloadInfo : System.IEquatable<DownloadInfo>
+    public sealed struct DownloadInfo : System.IEquatable<DownloadInfo>
     {
         /// <summary>
         /// A value between 0 and 65535 representing how much of this playable item has been downloaded for offline playback.

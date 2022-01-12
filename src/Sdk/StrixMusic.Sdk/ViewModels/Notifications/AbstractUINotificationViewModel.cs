@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     /// Wraps an <see cref="AbstractUICollection"/> intended for Notifications and parses supported elements for rendering.
     /// </summary>
     [Bindable(true)]
-    public class AbstractUINotificationViewModel : AbstractUICollectionViewModel
+    public sealed class AbstractUINotificationViewModel : AbstractUICollectionViewModel
     {
         private const int MAX_BUTTONS = 3;
         private readonly AbstractUICollection _model;

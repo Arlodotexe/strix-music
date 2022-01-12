@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Services.ContextNavigation
 {
     /// <inheritdoc />
-    public class CoreContextNavigationService : IContextNavigationService<ICoreMember?>
+    public sealed class CoreContextNavigationService : IContextNavigationService<ICoreMember?>
     {
         /// <inheritdoc />
         public event EventHandler<ContextNavigateEventArgs<ICoreMember?>>? NavigationRequested;

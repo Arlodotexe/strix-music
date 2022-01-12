@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// <summary>
     /// Holds multiple sets of metadata scanned from a single file.
     /// </summary>
-    public class FileMetadata
+    public sealed class FileMetadata
     {
         /// <summary>
         /// A unique identifier.

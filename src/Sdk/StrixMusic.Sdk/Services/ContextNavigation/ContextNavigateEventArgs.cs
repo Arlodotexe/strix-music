@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.ContextNavigation
     /// The arguments for whenever navigation is requested with context.
     /// </summary>
     /// <typeparam name="T">The type of the navigation objects</typeparam>
-    public class ContextNavigateEventArgs<T> : EventArgs
+    public sealed class ContextNavigateEventArgs<T> : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextNavigateEventArgs{T}"/> class.

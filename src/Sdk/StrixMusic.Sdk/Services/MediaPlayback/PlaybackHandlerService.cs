@@ -13,7 +13,7 @@ using StrixMusic.Sdk.ViewModels;
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
     /// <inheritdoc />
-    public partial class PlaybackHandlerService : IPlaybackHandlerService
+    public sealed partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private static readonly Random _rng = new Random();
 

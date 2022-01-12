@@ -60,7 +60,9 @@ namespace StrixMusic.Shared
         private bool _showingQuip;
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
+#if NETFX_CORE
         private SystemMediaTransportControlsHandler? _smtpHandler;
+#endif
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
         private ILogger? _logger;
@@ -531,6 +533,7 @@ namespace StrixMusic.Shared
             return;
 #endif
 
+#pragma warning disable CS0162 // Unreachable code detected
             _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
             if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
@@ -539,6 +542,7 @@ namespace StrixMusic.Shared
 
                 _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core.InstanceId);
             }
+#pragma warning restore CS0162 // Unreachable code detected
         }
     }
 }

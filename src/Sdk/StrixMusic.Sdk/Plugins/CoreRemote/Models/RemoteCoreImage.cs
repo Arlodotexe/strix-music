@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreImage"/>
     /// </summary>
-    public class RemoteCoreImage : ICoreImage
+    public sealed class RemoteCoreImage : ICoreImage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.

@@ -9,7 +9,7 @@ using Windows.Storage;
 namespace StrixMusic.Sdk.Uno.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
-    public class TextStorageService : ITextStorageService
+    public sealed class TextStorageService : ITextStorageService
     {
         private readonly Dictionary<string, AsyncLock> _keyedMutex = new Dictionary<string, AsyncLock>();
         private readonly StorageFolder _localFolder;

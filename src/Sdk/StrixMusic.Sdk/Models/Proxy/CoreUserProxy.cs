@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <remarks>
     /// Users are not actually merged.
     /// </remarks>
-    public class CoreUserProxy : IUser
+    public sealed class CoreUserProxy : IUser
     {
         private readonly ICoreUser _user;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;

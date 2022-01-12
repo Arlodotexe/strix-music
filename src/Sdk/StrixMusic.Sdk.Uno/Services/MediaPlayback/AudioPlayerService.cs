@@ -16,11 +16,10 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 {
     /// <inheritdoc />
-    public class AudioPlayerService : IAudioPlayerService
+    public sealed class AudioPlayerService : IAudioPlayerService
     {
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, IMediaSourceConfig> _preloadedSources;
-        private readonly AudioGraphLeech _leech;
         private IMediaSourceConfig? _currentSource;
         private PlaybackState _playbackState;
 
@@ -34,7 +33,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             _player = player;
             _preloadedSources = new Dictionary<string, IMediaSourceConfig>();
-            _leech = new AudioGraphLeech();
 
             AttachEvents();
         }
@@ -159,8 +157,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         /// <inheritdoc />
         public async Task Play(IMediaSourceConfig sourceConfig)
         {
-            await _leech.InitAsync();
-
             await Threading.OnPrimaryThread(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
@@ -187,7 +183,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 CurrentSource = sourceConfig;
 
                 _player.MediaPlayer.Play();
-                _leech.Begin();
             });
         }
 
@@ -206,8 +201,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             return Threading.OnPrimaryThread(() =>
             {
                 _player.MediaPlayer.Pause();
-
-                _leech.Stop();
             });
         }
 
@@ -217,7 +210,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             return Threading.OnPrimaryThread(() =>
             {
                 _player.MediaPlayer.Play();
-                _leech.Begin();
             });
         }
 

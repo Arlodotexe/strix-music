@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
+    public sealed partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;

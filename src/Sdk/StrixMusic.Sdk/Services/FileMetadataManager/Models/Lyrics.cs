@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// <summary>
     /// Holds lyrics information from file metadata.
     /// </summary>
-    public class Lyrics : ILyricsBase
+    public sealed class Lyrics : ILyricsBase
     {
         ///<inheritdoc />
         public Dictionary<TimeSpan, string>? TimedLyrics { get; }

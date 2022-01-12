@@ -19,10 +19,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// <summary>
     /// Handles scanning of individual audio files for metadata.
     /// </summary>
-    public partial class AudioMetadataScanner : IDisposable
+    public sealed partial class AudioMetadataScanner : IDisposable
     {
-        private readonly int _scanBatchSize;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
+        private readonly int _scanBatchSize;
 
         private readonly FileMetadataManager _metadataManager;
         private readonly ILogger<AudioMetadataScanner> _logger;
@@ -205,49 +205,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
         }
 
-        private void LinkMetadataIdsForFile(FileMetadata metadata)
-        {
-            // Each fileMetadata is the data for a single file.
-            // Album and artist ID are generated based on Title/Name
-            // so blindly linking based on Ids found in a single file is safe.
-
-            // The list of IDs for, e.g., the tracks in an AlbumMetadata, are merged by the repositories.
-            Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
-            Guard.IsNotNull(metadata.TrackMetadata?.Url, nameof(metadata.TrackMetadata.Url));
-
-            _logger.LogInformation($"Cross-linking IDs for metadata ID {metadata.Id} located at {metadata.TrackMetadata.Url}");
-
-            // Albums
-            Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
-            Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds, nameof(metadata.AlbumMetadata.TrackIds));
-
-            if (!metadata.AlbumMetadata.ArtistIds.Contains(metadata.AlbumMetadata.Id))
-                metadata.AlbumMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
-
-            if (!metadata.AlbumMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
-                metadata.AlbumMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
-
-            // Artists
-            Guard.IsNotNull(metadata.ArtistMetadata?.TrackIds, nameof(metadata.ArtistMetadata.TrackIds));
-            Guard.IsNotNull(metadata.ArtistMetadata?.AlbumIds, nameof(metadata.ArtistMetadata.AlbumIds));
-
-            if (!metadata.ArtistMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
-                metadata.ArtistMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
-
-            if (!metadata.ArtistMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
-                metadata.ArtistMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
-
-            // Tracks
-            Guard.IsNotNull(metadata.TrackMetadata?.ArtistIds, nameof(metadata.TrackMetadata.ArtistIds));
-
-            if (!metadata.TrackMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
-                metadata.TrackMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
-
-            metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
-        }
-
         private static FileMetadata MergeMetadataFields(FileMetadata[] metadata)
         {
             Guard.HasSizeGreaterThan(metadata, 0, nameof(metadata));
@@ -291,6 +248,49 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
 
             return primaryData;
+        }
+
+        private void LinkMetadataIdsForFile(FileMetadata metadata)
+        {
+            // Each fileMetadata is the data for a single file.
+            // Album and artist ID are generated based on Title/Name
+            // so blindly linking based on Ids found in a single file is safe.
+
+            // The list of IDs for, e.g., the tracks in an AlbumMetadata, are merged by the repositories.
+            Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
+            Guard.IsNotNull(metadata.TrackMetadata?.Url, nameof(metadata.TrackMetadata.Url));
+
+            _logger.LogInformation($"Cross-linking IDs for metadata ID {metadata.Id} located at {metadata.TrackMetadata.Url}");
+
+            // Albums
+            Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
+            Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds, nameof(metadata.AlbumMetadata.TrackIds));
+
+            if (!metadata.AlbumMetadata.ArtistIds.Contains(metadata.AlbumMetadata.Id))
+                metadata.AlbumMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+
+            if (!metadata.AlbumMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                metadata.AlbumMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+
+            // Artists
+            Guard.IsNotNull(metadata.ArtistMetadata?.TrackIds, nameof(metadata.ArtistMetadata.TrackIds));
+            Guard.IsNotNull(metadata.ArtistMetadata?.AlbumIds, nameof(metadata.ArtistMetadata.AlbumIds));
+
+            if (!metadata.ArtistMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                metadata.ArtistMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+
+            if (!metadata.ArtistMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
+                metadata.ArtistMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+
+            // Tracks
+            Guard.IsNotNull(metadata.TrackMetadata?.ArtistIds, nameof(metadata.TrackMetadata.ArtistIds));
+
+            if (!metadata.TrackMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
+                metadata.TrackMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+
+            metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
         }
 
         private async Task<FileMetadata?> GetMusicFilesProperties(IFileData fileData)

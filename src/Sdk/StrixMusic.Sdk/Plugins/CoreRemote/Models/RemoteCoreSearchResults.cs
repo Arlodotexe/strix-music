@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreSearchResults"/>
     /// </summary>
-    public class RemoteCoreSearchResults : RemoteCorePlayableCollectionGroupBase, ICoreSearchResults
+    public sealed class RemoteCoreSearchResults : RemoteCorePlayableCollectionGroupBase, ICoreSearchResults
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreSearchResults"/>.

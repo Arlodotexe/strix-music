@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// A concrete class that converts a <see cref="ICoreLyrics"/> to a <see cref="ILyrics"/>.
     /// </summary>
-    public class MergedLyrics : ILyrics, IMergedMutable<ICoreLyrics>
+    public sealed class MergedLyrics : ILyrics, IMergedMutable<ICoreLyrics>
     {
         private readonly ICoreLyrics _source;
 

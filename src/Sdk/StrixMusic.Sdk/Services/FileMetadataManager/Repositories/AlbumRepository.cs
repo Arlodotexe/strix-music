@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <summary>
     /// The service that helps in interacting with album information.
     /// </summary>
-    public class AlbumRepository : IAlbumRepository
+    public sealed class AlbumRepository : IAlbumRepository
     {
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
 

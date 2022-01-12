@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Services.Localization
     /// <summary>
     /// A service for getting localized strings from <see cref="ResourceManager"/> providers in a .NET Standard project.
     /// </summary>
-    public class LocalizationResourceManager : ILocalizationService
+    public sealed class LocalizationResourceManager : ILocalizationService
     {
         private readonly Dictionary<string, ResourceManager> _providers = new Dictionary<string, ResourceManager>();
 

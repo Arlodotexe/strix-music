@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// <summary>
     /// Contains information that describes an artist, scanned from one or more files.
     /// </summary>
-    public class ArtistMetadata : IFileMetadata
+    public sealed class ArtistMetadata : IFileMetadata
     {
         /// <summary>
         /// The unique identifier for this artist.

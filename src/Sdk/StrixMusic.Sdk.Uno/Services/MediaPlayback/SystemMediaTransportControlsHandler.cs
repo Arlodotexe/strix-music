@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
     /// <summary>
     /// Integrates an <see cref="IPlaybackHandlerService"/> with the system media transport controls.
     /// </summary>
-    public class SystemMediaTransportControlsHandler : IDisposable
+    public sealed class SystemMediaTransportControlsHandler : IDisposable
     {
         private readonly IPlaybackHandlerService _playbackHandlerService;
         private readonly SystemMediaTransportControls _systemMediaTransportControls;

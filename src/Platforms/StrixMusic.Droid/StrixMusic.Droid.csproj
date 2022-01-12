@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StrixMusic.Droid</RootNamespace>
-    <AssemblyName>Strix-Music.Droid</AssemblyName>
+    <AssemblyName>StrixMusic.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
@@ -85,13 +85,22 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.7.13</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Config">
+      <Version>4.7.13</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Extensions.Logging">
+      <Version>1.7.4</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore">
+      <Version>0.0.43</Version>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Text.Json">
-      <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>2.0.1</Version>
@@ -110,7 +119,6 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Services\FileSystemService.Droid.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Fonts\winjs-symbols.ttf" />
@@ -139,10 +147,6 @@
       <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
       <Name>StrixMusic.Cores.LocalFiles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
-      <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
-      <Name>OwlCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
       <Name>OwlCore.Uno</Name>
@@ -154,6 +158,10 @@
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj">
       <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>
       <Name>StrixMusic.Sdk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj">
+      <Project>{38b5b005-64c0-4bce-a4b8-df7b8358182f}</Project>
+      <Name>StrixMusic.Shells.Groove</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>

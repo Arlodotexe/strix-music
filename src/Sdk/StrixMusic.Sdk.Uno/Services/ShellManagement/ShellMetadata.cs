@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
     /// <summary>
     /// Holds metadata for a shell registered with the Strix SDK.
     /// </summary>
-    public class ShellMetadata
+    public sealed class ShellMetadata
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellMetadata"/> class.

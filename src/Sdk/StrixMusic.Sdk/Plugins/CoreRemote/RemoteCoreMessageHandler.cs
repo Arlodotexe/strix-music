@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
     /// <summary>
     /// The remote message handler use for external cores.
     /// </summary>
-    public class RemoteCoreMessageHandler : IRemoteMessageHandler
+    public sealed class RemoteCoreMessageHandler : IRemoteMessageHandler
     {
         /// <summary>
         /// The message handler used when we have the actual core implementation.

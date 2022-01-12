@@ -8,7 +8,8 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// Compares the LastPlayed item/>.
     /// </summary>
     /// <typeparam name="TPlayableBase">The <inheritdoc cref="IPlayableCollectionItem"/> to sort.</typeparam>
-    public class LastPlayedComparer<TPlayableBase> : InversableComparer<TPlayableBase> where TPlayableBase : IPlayableBase
+    public sealed class LastPlayedComparer<TPlayableBase> : InversableComparer<TPlayableBase>
+        where TPlayableBase : IPlayableBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LastPlayedComparer{TPlayableBase}"/> class.

@@ -98,3 +98,9 @@ dotnet_diagnostic.CA1063.severity = none
 
 # SA1520: Use braces consistently
 dotnet_diagnostic.SA1520.severity = none
+
+# CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+dotnet_diagnostic.CS8632.severity = suggestion
+
+# CS0067: The event 'AudioGraphLeech.QuantumProcessed' is never used
+dotnet_diagnostic.CS0067.severity = suggestion

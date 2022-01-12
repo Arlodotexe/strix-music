@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.Navigation
     /// The arguments for navigating to a new page
     /// </summary>
     /// <typeparam name="T">The type of the navigation objects</typeparam>
-    public class NavigateEventArgs<T> : EventArgs
+    public sealed class NavigateEventArgs<T> : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigateEventArgs{T}"/> class.

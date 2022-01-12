@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Services
     /// <summary>
     /// Contains metadata for a registered core. Used to identify and instantiate a new core instance.
     /// </summary>
-    public class CoreMetadata
+    public sealed class CoreMetadata
     {
         /// <summary>
         /// Creates a new instance of <see cref="CoreMetadata"/>.

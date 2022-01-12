@@ -8,7 +8,8 @@ namespace StrixMusic.Sdk.Services.Navigation
     /// <summary>
     /// An <see cref="INavigationService{T}"/> implementation.
     /// </summary>
-    public class NavigationService<T> : INavigationService<T>
+    [Obsolete("This service is being phased out and should not be used. Use the Messenger pattern instead.")]
+    public sealed class NavigationService<T> : INavigationService<T>
     {
         private readonly Dictionary<Type, T> _registeredPages = new Dictionary<Type, T>();
 

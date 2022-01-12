@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Models
     /// The UI should use this to create a new playlist that can be added to the backend.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Must use instances to satisfy interface.")]
-    public class InitialPlaylistData : IPlaylist, IInitialData
+    public sealed class InitialPlaylistData : IPlaylist, IInitialData
     {
         private readonly IReadOnlyList<ICorePlaylist> _sources = new List<ICorePlaylist>();
 

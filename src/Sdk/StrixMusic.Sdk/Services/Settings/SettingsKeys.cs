@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Services.Settings
     /// <remarks>
     /// The StrixMusic.Sdk contains the keys that don't return anything UI-dependent, while StrixMusic.Sdk.Uno contains a partial that has the UI-dependent keys.
     /// </remarks>
-    public class SettingsKeys : SettingsKeysBase
+    public sealed class SettingsKeys : SettingsKeysBase
     {
         /// <summary>
         /// Stored information about all core instances that the user has configured.

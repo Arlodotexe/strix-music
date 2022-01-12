@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Uno.Services
     /// The instance of <see cref="ISettingsService"/> used by default
     /// <remarks>Not used by Cores. User-configurable settings go here.</remarks>
     /// </summary>
-    public class DefaultSettingsService : SettingsServiceBase
+    public sealed class DefaultSettingsService : SettingsServiceBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultSettingsService"/> class.
