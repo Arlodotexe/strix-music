@@ -373,7 +373,7 @@ namespace StrixMusic.Sdk
         /// </remarks>
         public static MainViewModel? Singleton { get; private set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -447,7 +447,7 @@ namespace StrixMusic.Sdk
         /// </summary>
         public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
         {
             await Task.CompletedTask;

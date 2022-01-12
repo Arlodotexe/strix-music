@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.Models.Core
         /// Initializes the core asynchronously, allowing for API setup, service configuration, and other asynchronous tasks to be performed.
         /// </summary>
         /// <remarks>
-        /// <para> If the core state is changed to <see cref="CoreState.Configuring"/>, this task will be canceled
+        /// <para> If the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
         /// and the app will display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user for configuration and setup.
         /// After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
         /// Once complete, this method will fire again, at which point you should have the data you need to finish initialization.</para>
