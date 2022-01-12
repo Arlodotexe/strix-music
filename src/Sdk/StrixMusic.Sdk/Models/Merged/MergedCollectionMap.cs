@@ -753,7 +753,7 @@ namespace StrixMusic.Sdk.Models.Merged
             {
                 var allItemsWithData = MergeMappedData(_sortedMap.ToArray());
 
-#warning TODO Re-do of merged collection item handling.
+                // TODO Re-do of merged collection item handling.
 
                 // Since we don't get all items from the API, we don't know which are merged until we get the data, causing the count to be off.
                 // This problem may require a fundamental re-think of how we handle collection items,
