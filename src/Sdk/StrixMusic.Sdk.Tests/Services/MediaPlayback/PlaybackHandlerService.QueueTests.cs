@@ -167,9 +167,15 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
 
             Assert.IsTrue(_handlerService.ShuffleState);
+           
+            Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems);
+            Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
 
             // Trigger manual forwarding for queue.
             await _handlerService.NextAsync();
+
+            Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems - 1);
+            Assert.AreEqual(_handlerService.PreviousItems.Count, 1);
 
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
@@ -205,7 +211,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(9, 2)]
         [DataRow(10, 1)]
         [Timeout(800)]
-        public async Task ShuffleAndUnshuffleWithBackward_Queue(int numberOfPreviousItems, int numberOfNextItems)
+        public async Task ShuffleAndUnshuffleWithForwardAndBackward_Queue(int numberOfPreviousItems, int numberOfNextItems)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
@@ -216,10 +222,20 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             Assert.IsTrue(_handlerService.ShuffleState);
 
             // Trigger manual forwarding for queue.
+
+            Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems);
+            Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
+
             await _handlerService.NextAsync();
+
+            Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems - 1);
+            Assert.AreEqual(_handlerService.PreviousItems.Count, 1);
 
             // Trigger manual rewinding for queue.
             await _handlerService.PreviousAsync();
+
+            Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems);
+            Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
 
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
