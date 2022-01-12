@@ -113,3 +113,9 @@ dotnet_diagnostic.CA1001.severity = suggestion
 
 # Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = none
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = none
+
+# SA1649: File name should match first type name
+dotnet_diagnostic.SA1649.severity = silent
