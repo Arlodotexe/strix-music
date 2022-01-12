@@ -6,6 +6,7 @@ namespace StrixMusic.Sdk.Services.Navigation
     /// The arguments for navigating to a new page
     /// </summary>
     /// <typeparam name="T">The type of the navigation objects</typeparam>
+    [Obsolete("This pattern is being phased out and this class should not be used. Use the Messenger pattern instead.")]
     public sealed class NavigateEventArgs<T> : EventArgs
     {
         /// <summary>
