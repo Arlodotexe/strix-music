@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 {
@@ -35,6 +39,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
             _playbackHandler.PlaybackStateChanged += PlaybackHandler_PlaybackStateChanged;
             _playbackHandler.PositionChanged += PlaybackHandler_PositionChanged;
             _playbackHandler.VolumeChanged += PlaybackHandler_VolumeChanged;
+            _playbackHandler.CurrentItemChanged += PlaybackHandler_CurrentItemChanged;
         }
 
         private void DetachEvents()
@@ -45,6 +50,19 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
             _playbackHandler.PlaybackStateChanged -= PlaybackHandler_PlaybackStateChanged;
             _playbackHandler.PositionChanged -= PlaybackHandler_PositionChanged;
             _playbackHandler.VolumeChanged -= PlaybackHandler_VolumeChanged;
+            _playbackHandler.CurrentItemChanged -= PlaybackHandler_CurrentItemChanged;
+        }
+
+        private void PlaybackHandler_CurrentItemChanged(object sender, IMediaSourceConfig? e)
+        {
+            // TODO See DeviceViewModel.NowPlaying.
+            Guard.IsNotNull(e, nameof(e));
+
+            var track = new TrackViewModel(new MergedTrack(e.Track.IntoList()));
+
+            Guard.IsNotNull(PlaybackContext, nameof(PlaybackContext));
+
+            SetPlaybackData(PlaybackContext, track);
         }
 
         private void PlaybackHandler_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
