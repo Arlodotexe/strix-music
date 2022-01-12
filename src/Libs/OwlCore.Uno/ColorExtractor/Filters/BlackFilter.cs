@@ -4,6 +4,10 @@ namespace OwlCore.Uno.ColorExtractor.Filters
 {
     public class BlackFilter : IFilter
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="BlackFilter"/>.
+        /// </summary>
+        /// <param name="tolerance"></param>
         public BlackFilter(float tolerance)
         {
             Tolerance = tolerance;

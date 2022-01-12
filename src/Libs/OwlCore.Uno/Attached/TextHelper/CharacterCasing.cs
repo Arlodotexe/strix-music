@@ -1,6 +1,4 @@
-﻿/// https://stackoverflow.com/a/15615736/
-
-using OwlCore.Uno.Converters.Text;
+﻿using OwlCore.Uno.Converters.Text;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,59 +6,55 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace OwlCore.Uno.Attached
 {
+    /// <summary>
+    /// <see href="https://stackoverflow.com/a/15615736/"/>
+    /// </summary>
     public partial class TextHelpers : DependencyObject
     {
-        public static CharacterCasing GetCharacterCasing(DependencyObject obj)
-        {
-            return (CharacterCasing)obj.GetValue(CharacterCasingProperty);
-        }
+        private static bool _mutex; // This is nasty
 
-        public static void SetCharacterCasing(DependencyObject obj, CharacterCasing value)
-        {
-            obj.SetValue(CharacterCasingProperty, value);
-        }
+        /// <summary>
+        /// Gets the <see cref="CharacterCasing"/> value for this dependency object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static CharacterCasing GetCharacterCasing(DependencyObject obj) => (CharacterCasing)obj.GetValue(CharacterCasingProperty);
 
-        // Using a DependencyProperty as the backing store for Casing.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Sets the <see cref="CharacterCasing"/> value for this dependency object.
+        /// </summary>
+        public static void SetCharacterCasing(DependencyObject obj, CharacterCasing value) => obj.SetValue(CharacterCasingProperty, value);
+
+        /// <summary>
+        /// Backing dependency property for CharacterCasing attached property.
+        /// </summary>
         public static readonly DependencyProperty CharacterCasingProperty =
             DependencyProperty.RegisterAttached("CharacterCasing",
                 typeof(TextHelpers),
                 typeof(CharacterCasing),
                 new PropertyMetadata(CharacterCasing.Normal, OnCharacterCasingChanged));
 
-        private static bool mutex; // This is nasty
-
         private static void OnCharacterCasingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var val = (CharacterCasing)e.NewValue;
-            DependencyProperty prop;
 
-            // TODO: Remove ButtonBase and PivotItem, just use TextBlocks
-            switch(d)
+            DependencyProperty prop = d switch
             {
-                case TextBlock txt:
-                    prop = TextBlock.TextProperty;
-                    break;
-                case TextBox tbox:
-                    prop = TextBox.PlaceholderTextProperty;
-                    break;
-                case ButtonBase hBtn:
-                    prop = ButtonBase.ContentProperty;
-                    break;
-                case PivotItem pvi:
-                    prop = PivotItem.HeaderProperty;
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
+                TextBlock txt => TextBlock.TextProperty,
+                TextBox tbox => TextBox.PlaceholderTextProperty,
+                ButtonBase hBtn => ButtonBase.ContentProperty,
+                PivotItem pvi => PivotItem.HeaderProperty,
+                _ => throw new ArgumentException(),
+            };
 
             d.RegisterPropertyChangedCallback(prop, (s, e) =>
             {
-                if (mutex)
+                if (_mutex)
                     return;
 
-                mutex = true;
+                _mutex = true;
                 d.SetValue(prop, CaseConverter.Convert((string)d.GetValue(prop), val));
-                mutex = false;
+                _mutex = false;
             });
         }
     }
