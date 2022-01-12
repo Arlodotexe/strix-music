@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -31,9 +31,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         private readonly IPlaybackHandlerService _playbackHandler;
 
-        private readonly AsyncLock _populatePlaylistsMutex = new AsyncLock();
-        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
-        private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
+        private readonly SemaphoreSlim _populatePlaylistsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
@@ -463,7 +463,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            using (await _populatePlaylistsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populatePlaylistsMutex))
             {
                 var items = await _collection.GetPlaylistItemsAsync(limit, Playlists.Count);
 
@@ -488,7 +488,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            using (await _populateImagesMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 var items = await _collection.GetImagesAsync(limit, Images.Count);
 
@@ -505,7 +505,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit)
         {
-            using (await _populateUrlsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 var items = await _collection.GetUrlsAsync(limit, Urls.Count);
 
