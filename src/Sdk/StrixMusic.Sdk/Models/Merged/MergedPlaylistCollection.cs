@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICorePlaylistCollection"/>s.
     /// </summary>
-    public sealed class MergedPlaylistCollection : IPlaylistCollection, IMergedMutable<ICorePlaylistCollection>
+    public class MergedPlaylistCollection : IPlaylistCollection, IMergedMutable<ICorePlaylistCollection>
     {
         private readonly List<ICorePlaylistCollection> _sources;
         private readonly List<ICore> _sourceCores;

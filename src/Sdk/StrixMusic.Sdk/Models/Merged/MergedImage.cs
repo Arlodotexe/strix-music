@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreImage"/> into a single <see cref="IImage"/>
     /// </summary>
-    public sealed class MergedImage : IImage, IMergedMutable<ICoreImage>
+    public class MergedImage : IImage, IMergedMutable<ICoreImage>
     {
         private readonly ICoreImage _preferredSource;
         private readonly List<ICoreImage> _sources;

@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreUrl"/> into a single <see cref="IUrl"/>
     /// </summary>
-    public sealed class MergedUrl : IUrl, IMergedMutable<ICoreUrl>
+    public class MergedUrl : IUrl, IMergedMutable<ICoreUrl>
     {
         private readonly ICoreUrl _preferredSource;
         private readonly List<ICoreUrl> _sources;

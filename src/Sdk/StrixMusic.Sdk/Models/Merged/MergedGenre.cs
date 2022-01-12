@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreGenre"/> into a single <see cref="IGenre"/>
     /// </summary>
-    public sealed class MergedGenre : IGenre, IMergedMutable<ICoreGenre>
+    public class MergedGenre : IGenre, IMergedMutable<ICoreGenre>
     {
         private readonly ICoreGenre _preferredSource;
         private readonly List<ICoreGenre> _sources;
