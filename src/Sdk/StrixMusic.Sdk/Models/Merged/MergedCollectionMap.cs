@@ -10,7 +10,6 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged

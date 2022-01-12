@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Models.Merged

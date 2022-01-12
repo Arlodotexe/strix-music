@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Models.Core
 {
     /// <summary>
-    /// Used as a common interface for data that is created in the UI.
+    /// A common interface for any data that is created by the user.
     /// </summary>
     public interface ICoreInitialData : IInitialDataBase, ICoreMember
     {

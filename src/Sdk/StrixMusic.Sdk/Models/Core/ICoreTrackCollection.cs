@@ -5,7 +5,9 @@ using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="ITrackCollectionBase"/>
+    /// <summary>
+    /// A collection of tracks and the properties and methods for using and manipulating them.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreTrackCollection : ICorePlayableCollection, ITrackCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreMember
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Metadata about urls.
+    /// A common interface for all collections that return urls.
     /// </summary>
     public interface IUrlCollectionBase : ICollectionBase, IAsyncDisposable
     {

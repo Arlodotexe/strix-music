@@ -5,15 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Core
 {
     /// <summary>
-    /// An <see cref="ICore"/> is a common API surface that can be implemented to interface Strix with an arbitrary music service provider.
+    /// An <see cref="ICore"/> is a common API surface that can be implemented to allow interfacing with any arbitrary music provider.
     /// </summary>
     /// <remarks>
-    /// In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.
+    /// In a core's constructor, only do basic object initialization. For the rest, use <see cref="InitAsync"/>.
     /// </remarks>
     /// <seealso cref="ICoreBase"/>
     /// <seealso cref="IAppCore"/>

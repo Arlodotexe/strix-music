@@ -17,7 +17,7 @@ using TagLib;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
-    /// Handles scanning of individual audio files for metadata.
+    /// Handles extracting audio metadata from files. Includes image processing, cross-linking artists/albums/etc, and more.
     /// </summary>
     public sealed partial class AudioMetadataScanner : IDisposable
     {

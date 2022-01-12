@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Metadata about genres.
+    /// A common interface for all collections that return genres.
     /// </summary>
     public interface IGenreCollectionBase : ICollectionBase, IAsyncDisposable
     {

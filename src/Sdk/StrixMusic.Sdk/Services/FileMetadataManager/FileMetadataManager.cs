@@ -17,7 +17,9 @@ using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <inheritdoc cref="IFileMetadataManager" />
+    /// <summary>
+    /// Given an implementation of <see cref="IFolderData"/> and <see cref="IFileData"/>, this manages scanning and caching all the music metadata from files in folder, including child folders.
+    /// </summary>
     public sealed class FileMetadataManager : IFileMetadataManager
     {
         private static string NewGuid() => Guid.NewGuid().ToString();

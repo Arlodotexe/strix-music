@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Interface that represents a playlist.
+    /// A collection of artibrary songs that the user can edit, rearrange and play back.
     /// </summary>
     public interface IPlaylistBase : IPlayableCollectionItem, ITrackCollectionBase, IPlaylistCollectionItemBase, IAsyncDisposable
     {

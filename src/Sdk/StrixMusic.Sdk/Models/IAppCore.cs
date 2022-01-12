@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Models
     /// <summary>
     /// Allows for interfacing with multiple merged <see cref="ICore"/> instances.
     /// </summary>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IAppCore : ICoreBase, ISdkMember, IMerged<ICore>
     {
         /// <summary>

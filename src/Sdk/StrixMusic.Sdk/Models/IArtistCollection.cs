@@ -7,8 +7,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IArtistCollectionBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A collection of <see cref="IArtistCollectionItem"/>s and the properties and methods for using and manipulating them.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IUrlCollection, IImageCollection, IPlayable, ISdkMember, IMerged<ICoreArtistCollection>
     {
         /// <summary>

@@ -12,7 +12,9 @@ using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Manages an internal queue, handles playback, and delegates playback commands to an <see cref="IAudioPlayerService"/>.
+    /// </summary>
     public sealed partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private static readonly Random _rng = new Random();

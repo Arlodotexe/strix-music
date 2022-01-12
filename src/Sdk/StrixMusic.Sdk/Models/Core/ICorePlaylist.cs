@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IPlaylistBase"/>
+    /// <summary>
+    /// A collection of artibrary songs that the user can edit, rearrange and play back.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICorePlaylist : IPlaylistBase, ICoreTrackCollection, ICorePlaylistCollectionItem, ICoreMember
     {

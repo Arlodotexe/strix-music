@@ -12,7 +12,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
 {
     /// <summary>
-    /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
+    /// Wraps around an instance of an <see cref="ICoreAlbum"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
     public sealed class RemoteCoreAlbum : ICoreAlbum
     {

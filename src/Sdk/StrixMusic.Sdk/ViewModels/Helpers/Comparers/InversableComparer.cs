@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers.Abstract
+namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {
     /// <summary>
     /// A <see cref="Comparer{T}"/> that can be either ascending or descending.

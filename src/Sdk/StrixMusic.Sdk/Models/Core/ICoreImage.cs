@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IImageBase"/>
+    /// <summary>
+    /// Contains details about an image.
+    /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
     public interface ICoreImage : IImageBase, ICoreMember
     {

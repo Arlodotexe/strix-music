@@ -12,7 +12,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
-    /// Scans all playlist files.
+    /// Handles extracting playlist metadata from files.
     /// </summary>
     public sealed partial class PlaylistMetadataScanner : IDisposable
     {

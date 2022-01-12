@@ -4,8 +4,9 @@ using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IDeviceBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A device that controls playback of an audio player.
+    /// </summary>
     public interface IDevice : IDeviceBase, ISdkMember
     {
         /// <summary>

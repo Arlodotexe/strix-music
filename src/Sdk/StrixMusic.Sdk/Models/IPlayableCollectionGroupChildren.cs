@@ -7,8 +7,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IPlayableCollectionGroupChildrenBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A collection of <see cref="IPlayableCollectionGroup"/>s and the properties and methods for using and manipulating them.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, IPlayable, ISdkMember, IMerged<ICorePlayableCollectionGroupChildren>
     {
         /// <summary>

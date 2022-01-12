@@ -49,4 +49,8 @@
 		<None Include="..\..\..\stylecop.json" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="ViewModels\Helpers\Sorting\" />
+	</ItemGroup>
+
 </Project>

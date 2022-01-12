@@ -4,8 +4,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IRecentlyPlayedBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// Contains recently played albums, artists, tracks, playlists, etc.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IRecentlyPlayed : IRecentlyPlayedBase, IPlayableCollectionGroup, IPlayable, ISdkMember, IMerged<ICoreRecentlyPlayed>
     {
     }

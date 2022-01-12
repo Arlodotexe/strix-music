@@ -11,7 +11,7 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.Models
 {
     /// <summary>
-    /// The UI should use this to create a new playlist that can be added to the backend.
+    /// Used to create a new playlist that can be added to the backend.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Must use instances to satisfy interface.")]
     public sealed class InitialPlaylistData : IPlaylist, IInitialData

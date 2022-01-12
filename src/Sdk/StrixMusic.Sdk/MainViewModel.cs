@@ -24,7 +24,7 @@ using StrixMusic.Sdk.ViewModels.Notifications;
 namespace StrixMusic.Sdk
 {
     /// <summary>
-    /// The MainViewModel used throughout the app
+    /// The primary, root view model used to interact with all merged core sources.
     /// </summary>
     public sealed partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {

@@ -1,9 +1,9 @@
-﻿namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
+﻿namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Enumeration for sort types of artists.
+    /// Enumeration for sort types of tracks.
     /// </summary>
-    public enum ArtistSortingType
+    public enum AlbumSortingType
     {
         /// <summary>
         /// Default order of the collection.
@@ -11,28 +11,28 @@
         Unsorted,
 
         /// <summary>
-        /// Sort artists by name.
+        /// Sort albums by name.
         /// </summary>
         Alphanumerical,
 
         /// <summary>
-        /// Sort artists by track number.
-        /// </summary>
-        TrackNumber,
-
-        /// <summary>
-        /// Sort track by date added to collection.
+        /// Sort albums by date added to collection.
         /// </summary>
         DateAdded,
 
         /// <summary>
-        /// Sort artists by duration.
+        /// Sort albums by duration.
         /// </summary>
         Duration,
 
         /// <summary>
-        /// Sort artists by last played.
+        /// Sort albums by last played.
         /// </summary>
         LastPlayed,
+
+        /// <summary>
+        /// Sort albums by date published.
+        /// </summary>
+        DatePublished,
     }
 }

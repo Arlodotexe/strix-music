@@ -19,7 +19,6 @@ using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
-using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {

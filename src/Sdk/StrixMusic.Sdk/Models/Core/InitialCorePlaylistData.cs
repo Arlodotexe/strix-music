@@ -8,7 +8,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Models
 {
     /// <summary>
-    /// Playlist data that was created in the UI and should be added as a new item in the backend.
+    /// Playlist data that was created by the user and should be added as a new item in the backend.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Must use instances to satisfy interface.")]
     public sealed class InitialCorePlaylistData : ICorePlaylist, ICoreInitialData

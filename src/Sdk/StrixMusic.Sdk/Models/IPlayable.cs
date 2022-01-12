@@ -2,8 +2,10 @@
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IPlayableBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// Represents an item that can be played.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IPlayable : IPlayableBase, ISdkMember
     {
     } 

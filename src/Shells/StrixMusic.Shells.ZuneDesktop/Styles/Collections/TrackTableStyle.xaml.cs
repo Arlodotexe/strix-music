@@ -1,6 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;

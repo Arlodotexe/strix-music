@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Models.Base
+﻿namespace StrixMusic.Sdk.Models
 {
     /// <summary>
     /// The various types of URLs that might appear in a music app.

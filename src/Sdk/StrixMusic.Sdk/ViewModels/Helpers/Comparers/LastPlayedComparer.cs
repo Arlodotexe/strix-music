@@ -1,6 +1,5 @@
 ﻿using System;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.ViewModels.Helpers.Comparers.Abstract;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {

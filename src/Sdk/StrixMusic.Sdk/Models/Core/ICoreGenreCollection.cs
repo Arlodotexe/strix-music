@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IGenreCollectionBase" />
+    /// <summary>
+    /// A collection of <see cref="ICoreGenre"/>s.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreGenreCollection : ICoreCollection, IGenreCollectionBase, ICoreMember
     {

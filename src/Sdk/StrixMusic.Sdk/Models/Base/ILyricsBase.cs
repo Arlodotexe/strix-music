@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Contains lyrics for a track.
+    /// Contains the lyrics to a track.
     /// </summary>
     public interface ILyricsBase
     {

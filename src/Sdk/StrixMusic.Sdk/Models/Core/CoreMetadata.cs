@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrixMusic.Sdk.Services
+namespace StrixMusic.Sdk.Models.Core
 {
     /// <summary>
     /// Contains metadata for a registered core. Used to identify and instantiate a new core instance.

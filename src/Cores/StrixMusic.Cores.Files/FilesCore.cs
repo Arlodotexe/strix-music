@@ -11,7 +11,6 @@ using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 
 namespace StrixMusic.Cores.Files

@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Contains a music library.
+    /// A group of collections that represent a music library.
     /// </summary>
     public interface ILibraryBase : IPlayableCollectionGroupBase, IAsyncDisposable
     {

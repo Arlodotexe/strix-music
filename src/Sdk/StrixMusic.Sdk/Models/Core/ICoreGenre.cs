@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IGenreBase"/>
+    /// <summary>
+    /// Holds details about a genre.
+    /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
     public interface ICoreGenre : IGenreBase, ICoreMember
     {

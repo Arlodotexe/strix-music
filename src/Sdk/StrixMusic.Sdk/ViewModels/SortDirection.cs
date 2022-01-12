@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
+﻿namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// The direction to sort in by a type.

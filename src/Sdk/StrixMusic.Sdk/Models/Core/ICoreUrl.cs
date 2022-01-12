@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IUrlBase"/>
+    /// <summary>
+    /// Holds details about a url.
+    /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
     public interface ICoreUrl : IUrlBase, ICoreMember
     {

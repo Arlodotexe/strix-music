@@ -6,7 +6,9 @@ using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
-    ///  <inheritdoc/>
+    /// <summary>
+    /// Wraps around an instance of an <see cref="ICoreConfig"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
+    /// </summary>
     public sealed class RemoteCoreConfig : ICoreConfig
     {
         /// <summary>

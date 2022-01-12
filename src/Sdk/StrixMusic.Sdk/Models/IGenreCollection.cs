@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IGenreCollectionBase" />
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A collection of <see cref="IGenre"/>s.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IGenreCollection : IGenreCollectionBase, ISdkMember, IMerged<ICoreGenreCollection>
     {
         /// <summary>

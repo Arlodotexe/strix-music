@@ -6,8 +6,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="ITrackBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// Represents an audio stream with metadata that belongs to an <see cref="ITrackCollection"/>.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreTrack>
     {
         /// <summary>

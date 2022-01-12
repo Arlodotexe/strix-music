@@ -4,8 +4,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IPlaylistCollectionItemBase"/>
-    /// <remarks>This interface should be used in the Sdk.</remarks>
+    /// <summary>
+    /// An item that belongs in an <see cref="IPlaylistCollection"/>.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IPlaylistCollectionItem : IPlaylistCollectionItemBase, IPlayable, ISdkMember, IMerged<ICorePlaylistCollectionItem>
     {
     }
