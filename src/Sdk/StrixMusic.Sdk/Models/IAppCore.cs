@@ -6,7 +6,9 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="ICoreBase" />
+    /// <summary>
+    /// Allows for interfacing with multiple merged <see cref="ICore"/> instances.
+    /// </summary>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     public interface IAppCore : ICoreBase, ISdkMember, IMerged<ICore>
     {

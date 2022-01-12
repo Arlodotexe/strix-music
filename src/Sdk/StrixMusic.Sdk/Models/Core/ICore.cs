@@ -9,8 +9,14 @@ using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="ICoreBase"/>
-    /// <remarks>In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.</remarks>
+    /// <summary>
+    /// An <see cref="ICore"/> is a common API surface that can be implemented to interface Strix with an arbitrary music service provider.
+    /// </summary>
+    /// <remarks>
+    /// In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.
+    /// </remarks>
+    /// <seealso cref="ICoreBase"/>
+    /// <seealso cref="IAppCore"/>
     public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
     {
         /// <summary>
