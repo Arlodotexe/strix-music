@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using OwlCore.AbstractStorage;
-using OwlCore.Collections;
 using OwlCore.Collections.ObjectModel;
 
 namespace StrixMusic.Sdk.Services

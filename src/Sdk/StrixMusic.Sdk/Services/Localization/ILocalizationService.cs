@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace StrixMusic.Sdk.Services.Localization
+﻿namespace StrixMusic.Sdk.Services.Localization
 {
     /// <summary>
     /// A Service for getting localized strings from resource providers.

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core

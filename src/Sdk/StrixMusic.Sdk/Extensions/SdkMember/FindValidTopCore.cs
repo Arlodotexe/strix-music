@@ -1,7 +1,4 @@
-﻿using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
-
-namespace StrixMusic.Sdk.Extensions
+﻿namespace StrixMusic.Sdk.Extensions
 {
     internal static partial class SdkMember
     {

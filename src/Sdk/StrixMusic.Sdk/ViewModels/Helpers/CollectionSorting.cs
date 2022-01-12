@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 

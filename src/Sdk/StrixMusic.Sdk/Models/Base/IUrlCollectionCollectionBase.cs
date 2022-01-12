@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
-using OwlCore.Events;
 
 namespace StrixMusic.Sdk.Models.Base
 {

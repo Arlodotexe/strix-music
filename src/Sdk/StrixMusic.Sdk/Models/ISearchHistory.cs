@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using StrixMusic.Sdk.Models.Base;
+﻿using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 

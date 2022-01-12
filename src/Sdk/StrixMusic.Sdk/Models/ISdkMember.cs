@@ -1,6 +1,4 @@
-﻿using StrixMusic.Sdk.Models.Core;
-
-namespace StrixMusic.Sdk.Models
+﻿namespace StrixMusic.Sdk.Models
 {
     /// <summary>
     /// Properties used by all interfaces that interact with one or more Cores in the Sdk (ViewModel, Merged items, etc).

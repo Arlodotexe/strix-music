@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Remoting;
 using StrixMusic.Sdk.MediaPlayback;

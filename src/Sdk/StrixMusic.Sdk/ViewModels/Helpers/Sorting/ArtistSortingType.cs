@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
+﻿namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
     /// Enumeration for sort types of artists.

@@ -1,6 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Models;
-using System;
+﻿using StrixMusic.Sdk.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;

@@ -1,6 +1,4 @@
-﻿using StrixMusic.Sdk.Models;
-
-namespace StrixMusic.Sdk.Helpers
+﻿namespace StrixMusic.Sdk.Helpers
 {
     /// <summary>
     /// Static helpers related to the current platform.
