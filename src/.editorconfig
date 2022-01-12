@@ -102,5 +102,14 @@ dotnet_diagnostic.SA1520.severity = none
 # CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 dotnet_diagnostic.CS8632.severity = suggestion
 
-# CS0067: The event 'AudioGraphLeech.QuantumProcessed' is never used
+# CS0067: The event is never used
 dotnet_diagnostic.CS0067.severity = suggestion
+
+# Not implmented in Uno
+dotnet_diagnostic.Uno0001.severity = suggestion
+
+# Classes with disposable members should implement IDisposable
+dotnet_diagnostic.CA1001.severity = suggestion
+
+# Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none

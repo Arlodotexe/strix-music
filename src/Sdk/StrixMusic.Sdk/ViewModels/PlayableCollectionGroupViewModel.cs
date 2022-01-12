@@ -28,7 +28,6 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
-        private DownloadInfo _downloadInfo;
         private readonly IPlayableCollectionGroup _collectionGroup;
 
         private readonly IPlaybackHandlerService _playbackHandler;
@@ -40,6 +39,8 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateChildrenMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
@@ -1331,7 +1332,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
+        public bool IsInitialized { get; protected set; }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

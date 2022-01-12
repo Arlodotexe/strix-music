@@ -179,32 +179,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Content,
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
+        /// <inheritdoc />
+        public void Dispose()
         {
             if (!IsInitialized)
                 return;
 
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-                _scanningCancellationTokenSource?.Cancel();
-            }
+            DetachEvents();
+            _scanningCancellationTokenSource?.Cancel();
 
             IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

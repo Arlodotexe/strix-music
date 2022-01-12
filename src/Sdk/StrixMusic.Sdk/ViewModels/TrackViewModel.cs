@@ -29,8 +29,6 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
-        private DownloadInfo _downloadInfo;
-
         private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
@@ -38,6 +36,8 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateGenresMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.

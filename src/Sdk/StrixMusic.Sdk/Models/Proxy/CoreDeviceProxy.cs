@@ -31,6 +31,7 @@ namespace StrixMusic.Sdk.Models.Merged
             RepeatState = _source.RepeatState;
             Volume = _source.Volume;
             PlaybackSpeed = _source.PlaybackSpeed;
+            NowPlaying = _source.NowPlaying;
 
             if (!(_source.PlaybackQueue is null))
                 PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList());
@@ -50,7 +51,7 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private void Source_NowPlayingChanged(object sender, ICoreTrack e)
         {
-            NowPlaying = new MergedTrack(e.IntoList());
+            NowPlaying = e;
             NowPlayingChanged?.Invoke(sender, NowPlaying);
         }
 
@@ -111,7 +112,7 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged;
+        public event EventHandler<ICoreTrack>? NowPlayingChanged;
 
         /// <inheritdoc />
         public string Id => _source.Id;
@@ -213,7 +214,7 @@ namespace StrixMusic.Sdk.Models.Merged
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public ITrack? NowPlaying { get; private set; }
+        public ICoreTrack? NowPlaying { get; private set; }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync() => _source.DisposeAsync();

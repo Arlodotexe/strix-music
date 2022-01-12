@@ -252,6 +252,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         {
             throw new NotImplementedException();
         }
+        
         /// <inheritdoc/>
         public Task RemoveImageAsync(int index)
         {
@@ -277,9 +278,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

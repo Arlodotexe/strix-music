@@ -45,8 +45,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
+            var nextItem = _nextItems[0];
             await PlayFromNext(0);
-            _strixDevice.SetPlaybackData(context, track);
+
+            _strixDevice.SetPlaybackData(context, nextItem.Track);
         }
 
         /// <inheritdoc />
@@ -88,8 +90,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
+            var nextItem = _nextItems[0];
             await PlayFromNext(0);
-            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+            _strixDevice.SetPlaybackData(context, nextItem.Track);
         }
 
         /// <inheritdoc />
@@ -148,8 +151,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
+            var nextItem = _nextItems[0];
             await PlayFromNext(0);
-            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+
+            _strixDevice.SetPlaybackData(context, nextItem.Track);
         }
 
         /// <inheritdoc />
@@ -174,8 +179,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
+            var nextItem = _nextItems[0];
             await PlayFromNext(0);
-            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+
+            _strixDevice.SetPlaybackData(context, nextItem.Track);
         }
 
         /// <summary>

@@ -24,13 +24,13 @@ namespace StrixMusic.Sdk.Models
         ITrackCollection? PlaybackQueue { get; }
 
         /// <summary>
-        /// The currently playing <see cref="ITrack"/>.
+        /// The currently playing track.
         /// </summary>
-        ITrack? NowPlaying { get; }
+        ICoreTrack? NowPlaying { get; }
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<ITrack>? NowPlayingChanged;
+        event EventHandler<ICoreTrack>? NowPlayingChanged;
     }
 }

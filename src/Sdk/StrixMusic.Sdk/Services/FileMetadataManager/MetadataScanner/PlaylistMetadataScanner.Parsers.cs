@@ -337,7 +337,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 // The magic field is a 16-byte magic number.
                 // More details: https://github.com/rr-/fpl_reader/blob/master/fpl-format.md#magic
                 byte[] fplMagic = new byte[]
-                    {0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2};
+                    {
+                        0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2
+                    };
 
                 using var stream = await playlistFile.GetStreamAsync();
                 using var content = new BinaryReader(stream);

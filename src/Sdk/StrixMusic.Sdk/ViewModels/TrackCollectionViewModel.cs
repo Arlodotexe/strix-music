@@ -28,13 +28,14 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackCollectionViewModel : ObservableObject, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly ITrackCollection _collection;
-        private DownloadInfo _downloadInfo;
 
         private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1,1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
@@ -423,6 +424,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
+        
         /// <inheritdoc />
         public Task StartDownloadOperationAsync(DownloadOperation operation)
         {

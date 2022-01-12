@@ -18,28 +18,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         private readonly MemberRemote _memberRemote;
         private readonly ICoreTrack? _track;
 
-        private int _totalArtistItemsCount;
-        private int _totalTrackCount;
-        private int _totalImageCount;
-        private int _totalUrlCount;
-        private int _totalGenreCount;
-
-        private string _name;
-        private string? _description;
-        private PlaybackState _playbackState;
-        private TimeSpan _duration;
-        private DateTime? _lastPlayed;
-        private DateTime? _datePublished;
-
-        private bool _isChangeDurationAsyncAvailable;
-        private bool _isChangeDescriptionAsyncAvailable;
-        private bool _isChangeNameAsyncAvailable;
-        private bool _isPauseTrackCollectionAsyncAvailable;
-        private bool _isPlayTrackCollectionAsyncAvailable;
-        private bool _isPauseArtistCollectionAsyncAvailable;
-        private bool _isPlayArtistCollectionAsyncAvailable;
-        private bool _isChangeDatePublishedAsyncAvailable;
-
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreTrack"/>.
         /// </summary>
@@ -48,7 +26,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="name">The name of the data.</param>
         internal RemoteCoreTrack(string sourceCoreInstanceId, string name, string id)
         {
-            _name = name;
+            Name = name;
             Id = id;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
@@ -64,7 +42,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         internal RemoteCoreTrack(ICoreTrack coreTrack)
         {
             _track = coreTrack;
-            _name = coreTrack.Name;
+            Name = coreTrack.Name;
             Id = coreTrack.Id;
             SourceCore = RemoteCore.GetInstance(coreTrack.SourceCore.InstanceId, RemotingMode.Host);
 
@@ -147,7 +125,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public string Id { get; set; }
 
         /// <inheritdoc/>
-        public string Name => _name;
+        public string Name { get; set; }
 
         /// <inheritdoc/>
         public string? Description { get; set; }
@@ -417,9 +395,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

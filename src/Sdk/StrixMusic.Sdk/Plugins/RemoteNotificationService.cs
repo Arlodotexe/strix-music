@@ -12,9 +12,9 @@ namespace StrixMusic.Sdk.Plugins
 {
     /// <summary>
     /// A remoting-enabled wrapper for <see cref="INotificationService"/>.
+    /// TODO Implement INotificationService and figure out async compatability
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    // TODO Implement INotificationService and figure out async compatability
     public sealed class RemoteNotificationService : IDisposable
     {
         private readonly INotificationService? _notificationService;
@@ -136,7 +136,7 @@ namespace StrixMusic.Sdk.Plugins
 
                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
-                await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
+               await _memberRemote.PublishDataAsync($"{_notificationTick++}", notification);
 
                return notification;
            }

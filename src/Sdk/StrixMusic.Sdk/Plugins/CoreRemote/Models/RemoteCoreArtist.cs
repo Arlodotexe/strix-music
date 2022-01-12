@@ -68,11 +68,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public string Name
         {
             get => _name;
-            set
-            {
-                _name = value;
-
-            }
+            set => _name = value;
         }
 
         /// <inheritdoc/>
@@ -400,9 +396,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

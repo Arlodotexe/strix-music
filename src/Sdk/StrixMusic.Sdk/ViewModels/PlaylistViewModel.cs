@@ -30,7 +30,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
-        private DownloadInfo _downloadInfo;
 
         private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
@@ -38,6 +37,8 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.

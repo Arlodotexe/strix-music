@@ -27,13 +27,14 @@ namespace StrixMusic.Sdk.ViewModels
     public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
-        private DownloadInfo _downloadInfo;
 
         private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly SemaphoreSlim _populatePlaylistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
