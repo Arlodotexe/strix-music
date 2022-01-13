@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
@@ -35,6 +36,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
             _playbackHandler.PlaybackStateChanged += PlaybackHandler_PlaybackStateChanged;
             _playbackHandler.PositionChanged += PlaybackHandler_PositionChanged;
             _playbackHandler.VolumeChanged += PlaybackHandler_VolumeChanged;
+            _playbackHandler.CurrentItemChanged += PlaybackHandler_CurrentItemChanged;
         }
 
         private void DetachEvents()
@@ -45,6 +47,15 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
             _playbackHandler.PlaybackStateChanged -= PlaybackHandler_PlaybackStateChanged;
             _playbackHandler.PositionChanged -= PlaybackHandler_PositionChanged;
             _playbackHandler.VolumeChanged -= PlaybackHandler_VolumeChanged;
+            _playbackHandler.CurrentItemChanged -= PlaybackHandler_CurrentItemChanged;
+        }
+
+        private void PlaybackHandler_CurrentItemChanged(object sender, IMediaSourceConfig? e)
+        {
+            Guard.IsNotNull(e, nameof(e));
+            Guard.IsNotNull(PlaybackContext, nameof(PlaybackContext));
+
+            SetPlaybackData(PlaybackContext, e.Track);
         }
 
         private void PlaybackHandler_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
