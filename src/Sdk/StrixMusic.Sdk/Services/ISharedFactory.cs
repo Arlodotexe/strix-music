@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using OwlCore.AbstractStorage;
-using OwlCore.Collections;
 using OwlCore.Collections.ObjectModel;
 
 namespace StrixMusic.Sdk.Services
@@ -17,6 +16,7 @@ namespace StrixMusic.Sdk.Services
         /// <summary>
         /// Creates an <see cref="HttpClientHandler"/> that is guarunteed to work under the current platform.
         /// </summary>
+        /// <returns>An <see cref="HttpMessageHandler"/> that works under the current platform.</returns>
         public HttpMessageHandler GetPlatformSpecificHttpClientHandler();
 
         /// <summary>

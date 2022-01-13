@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
@@ -21,7 +20,6 @@ using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
-using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -33,10 +31,12 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
-        private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
-        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
-        private readonly AsyncLock _populateGenresMutex = new AsyncLock();
-        private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
+        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateGenresMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.
@@ -551,6 +551,13 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => MainViewModel.Singleton?.ActiveDevice?.NowPlaying?.Id == Id ? MainViewModel.Singleton?.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
 
         /// <inheritdoc />
+        public DownloadInfo DownloadInfo
+        {
+            get => _downloadInfo;
+            private set => SetProperty(ref _downloadInfo, value);
+        }
+
+        /// <inheritdoc />
         public bool IsPlayArtistCollectionAsyncAvailable => Model.IsPlayArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
@@ -623,6 +630,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
 
         /// <inheritdoc />
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            // TODO create / integrate download manager.
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
@@ -676,7 +690,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            using (await _populateArtistsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
                 var items = await GetArtistItemsAsync(limit, Artists.Count);
 
@@ -701,7 +715,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            using (await _populateImagesMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 var items = await GetImagesAsync(limit, Images.Count);
 
@@ -718,7 +732,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreGenresAsync(int limit)
         {
-            using (await _populateGenresMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateGenresMutex))
             {
                 var items = await GetGenresAsync(limit, Genres.Count);
 
@@ -735,7 +749,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit)
         {
-            using (await _populateUrlsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 var items = await GetUrlsAsync(limit, Urls.Count);
 

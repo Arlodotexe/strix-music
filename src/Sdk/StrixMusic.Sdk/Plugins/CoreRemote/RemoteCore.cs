@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
-using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.CoreRemote.Models;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
@@ -27,7 +24,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
     /// Passing a core instance will enable remoting for the ENTIRE core, including library, search, playback, devices and all other feature.
     /// </remarks>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public class RemoteCore : ICore
+    public sealed class RemoteCore : ICore
     {
         private static readonly ConcurrentDictionary<string, RemoteCore> _hostCoreInstances
             = new ConcurrentDictionary<string, RemoteCore>();

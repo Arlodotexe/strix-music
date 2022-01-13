@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Metadata about a track.
+    /// Represents an audio stream with metadata that belongs to an <see cref="ITrackCollectionBase"/>.
     /// </summary>
     public interface ITrackBase : IPlayableCollectionItem, IArtistCollectionBase, IGenreCollectionBase, IAsyncDisposable
     {

@@ -4,7 +4,9 @@ using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="ITrackBase"/>
+    /// <summary>
+    /// Represents an audio stream with metadata that belongs to an <see cref="ICoreTrackCollection"/>.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreTrack : ITrackBase, ICoreArtistCollection, ICoreGenreCollection, ICoreMember
     {

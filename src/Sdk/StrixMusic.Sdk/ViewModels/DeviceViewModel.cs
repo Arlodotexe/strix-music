@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class DeviceViewModel : ObservableObject, IDevice
     {
-        private TrackViewModel? _nowPlaying;
+        private ICoreTrack? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
             Model = device ?? throw new ArgumentNullException(nameof(device));
 
             if (Model.NowPlaying != null)
-                _nowPlaying = new TrackViewModel(Model.NowPlaying);
+                _nowPlaying = Model.NowPlaying;
 
             if (device.SourceCore != null)
                 SourceCore = MainViewModel.GetLoadedCore(device.SourceCore);
@@ -95,10 +95,8 @@ namespace StrixMusic.Sdk.ViewModels
             OnPropertyChanged(nameof(IsPlaying));
         });
 
-        private void Device_NowPlayingChanged(object sender, ITrack e) => _ = Threading.OnPrimaryThread(() =>
+        private void Device_NowPlayingChanged(object sender, ICoreTrack e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _nowPlaying = new TrackViewModel(e);
-
             OnPropertyChanged(nameof(NowPlaying));
             NowPlayingChanged?.Invoke(sender, e);
         });
@@ -112,7 +110,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ICore? SourceCore { get; set; }
 
         /// <inheritdoc />
-        public ICoreDevice? Source { get; set; }
+        public ICoreDevice? Source => Model.Source;
 
         /// <inheritdoc />
         public string Id => Model.Id;
@@ -127,11 +125,11 @@ namespace StrixMusic.Sdk.ViewModels
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc cref="IDevice.NowPlaying"/>
-        public TrackViewModel? NowPlaying => _nowPlaying;
-
-#warning TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
-        /// <inheritdoc />
-        ITrack? IDevice.NowPlaying => _nowPlaying;
+        public ICoreTrack? NowPlaying
+        {
+            get => _nowPlaying;
+            set => SetProperty(ref _nowPlaying, value);
+        }
 
         /// <inheritdoc />
         public bool IsActive => Model.IsActive;
@@ -206,7 +204,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged;
+        public event EventHandler<ICoreTrack>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged

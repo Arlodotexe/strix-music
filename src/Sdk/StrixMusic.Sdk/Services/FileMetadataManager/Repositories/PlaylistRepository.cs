@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <summary>
     /// The service that helps in interacting with playlist information.
     /// </summary>
-    public class PlaylistRepository : IPlaylistRepository
+    public sealed class PlaylistRepository : IPlaylistRepository
     {
         private const string PLAYLISTS_DATA_FILENAME = "Playlists.bin";
 
@@ -298,33 +298,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             _storageMutex.Release();
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
+        /// <inheritdoc />
+        public void Dispose()
         {
             if (!IsInitialized)
                 return;
 
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                // dispose any objects you created here
-                _inMemoryMetadata.Clear();
-                _storageMutex.Dispose();
-            }
+            // Dispose any objects you created here
+            _inMemoryMetadata.Clear();
+            _storageMutex.Dispose();
+            DetachEvents();
 
             IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

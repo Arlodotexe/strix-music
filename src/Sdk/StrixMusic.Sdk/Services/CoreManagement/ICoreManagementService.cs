@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Services
 {
-
     /// <summary>
     /// Manages added and removing core instances.
     /// </summary>

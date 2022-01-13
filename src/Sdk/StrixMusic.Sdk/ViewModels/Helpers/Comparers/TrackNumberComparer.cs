@@ -1,13 +1,13 @@
 ﻿using System;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.ViewModels.Helpers.Comparers.Abstract;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {
     /// <summary>
     /// Compares the track number.
     /// </summary>
-    public class TrackNumberComparer<TTrack> : InversableComparer<TTrack> where TTrack : ITrackBase
+    public sealed class TrackNumberComparer<TTrack> : InversableComparer<TTrack>
+        where TTrack : ITrackBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackNumberComparer{TPlayableBase}"/> class.

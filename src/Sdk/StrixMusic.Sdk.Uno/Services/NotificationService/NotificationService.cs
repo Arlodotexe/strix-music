@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// <summary>
     /// A Service for handling notifications between the Cores and Shell.
     /// </summary>
-    public class NotificationService : INotificationService
+    public sealed class NotificationService : INotificationService
     {
         private readonly List<Notification> _pendingNotifications;
         private readonly List<Notification> _activeNotifications;

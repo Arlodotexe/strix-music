@@ -64,7 +64,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
             await album.InitImageCollectionAsync();
 
             if (album.Images.Count > 0)
-                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(album.Images[0]));
+                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(album.Images[0].Uri));
         }
     }
 }

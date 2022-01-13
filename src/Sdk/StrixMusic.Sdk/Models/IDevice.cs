@@ -4,8 +4,9 @@ using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IDeviceBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A device that controls playback of an audio player.
+    /// </summary>
     public interface IDevice : IDeviceBase, ISdkMember
     {
         /// <summary>
@@ -24,13 +25,13 @@ namespace StrixMusic.Sdk.Models
         ITrackCollection? PlaybackQueue { get; }
 
         /// <summary>
-        /// The currently playing <see cref="ITrack"/>.
+        /// The currently playing track.
         /// </summary>
-        ITrack? NowPlaying { get; }
+        ICoreTrack? NowPlaying { get; }
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<ITrack>? NowPlayingChanged;
+        event EventHandler<ICoreTrack>? NowPlayingChanged;
     }
 }

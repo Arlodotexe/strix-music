@@ -10,7 +10,6 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
@@ -22,11 +21,12 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <typeparam name="TCoreCollection">The types of items that were merged to form <typeparamref name="TCollection"/>.</typeparam>
     /// <typeparam name="TCollectionItem">The type of the item returned from the merged collection.</typeparam>
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
-    internal class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit, IAsyncDisposable
-        where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
-        where TCoreCollection : class, ICoreCollection
-        where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
-        where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
+    internal sealed class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem>
+        : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit, IAsyncDisposable
+            where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
+            where TCoreCollection : class, ICoreCollection
+            where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
+            where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
     {
         // ReSharper disable StaticMemberInGenericType
         private static bool _isInitialized;
@@ -374,7 +374,6 @@ namespace StrixMusic.Sdk.Models.Merged
             {
                 var addedMergedItems = ItemsAdded_CheckAddedItems(addedItems, sender);
                 var removedMergedItems = ItemsChanged_CheckRemovedItems(removedItems);
-
 
                 ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
                 ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
@@ -753,7 +752,7 @@ namespace StrixMusic.Sdk.Models.Merged
             {
                 var allItemsWithData = MergeMappedData(_sortedMap.ToArray());
 
-#warning TODO Re-do of merged collection item handling.
+                // TODO Re-do of merged collection item handling.
 
                 // Since we don't get all items from the API, we don't know which are merged until we get the data, causing the count to be off.
                 // This problem may require a fundamental re-think of how we handle collection items,

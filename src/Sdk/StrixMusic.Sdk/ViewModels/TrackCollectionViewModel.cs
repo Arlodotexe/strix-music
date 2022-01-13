@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -18,7 +18,6 @@ using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
-using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -28,11 +27,14 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackCollectionViewModel : ObservableObject, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly ITrackCollection _collection;
+
         private readonly IPlaybackHandlerService _playbackHandler;
 
-        private readonly AsyncLock _populateTracksMutex = new AsyncLock();
-        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
-        private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
+        private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1,1);
+        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+
+        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
@@ -354,6 +356,13 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
+        public DownloadInfo DownloadInfo
+        {
+            get => _downloadInfo;
+            private set => SetProperty(ref _downloadInfo, value);
+        }
+
+        /// <inheritdoc />
         public TimeSpan Duration => _collection.Duration;
 
         /// <inheritdoc />
@@ -414,6 +423,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
+        
+        /// <inheritdoc />
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            // TODO create / integrate download manager.
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -472,7 +488,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            using (await _populateTracksMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateTracksMutex))
             {
                 var items = await _collection.GetTracksAsync(limit, Tracks.Count);
 
@@ -489,7 +505,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            using (await _populateImagesMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 var items = await _collection.GetImagesAsync(limit, Images.Count);
 
@@ -506,7 +522,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit)
         {
-            using (await _populateUrlsMutex.LockAsync())
+            using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 var items = await _collection.GetUrlsAsync(limit, Urls.Count);
 

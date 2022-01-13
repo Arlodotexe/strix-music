@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IUrlCollectionBase" />
+    /// <summary>
+    /// A collection of URLs.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreUrlCollection : ICoreCollection, IUrlCollectionBase, ICoreMember
     {

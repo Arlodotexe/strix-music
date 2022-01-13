@@ -23,9 +23,9 @@ namespace StrixMusic.Shells.Groove.Helper
         /// </summary>
         /// <param name="sdkImage">The image to get a color from.</param>
         /// <returns>The accent color for the image.</returns>
-        public static async Task<Color> GetImageAccentColorAsync(ISdkImage sdkImage)
+        public static async Task<Color> GetImageAccentColorAsync(Uri imageUri)
         {
-            Image<Argb32>? image = await ImageParser.GetImage(sdkImage.Uri.AbsoluteUri);
+            Image<Argb32>? image = await ImageParser.GetImage(imageUri.OriginalString);
 
             if (image is null)
                 return Color.FromArgb(255, 0, 0, 0);

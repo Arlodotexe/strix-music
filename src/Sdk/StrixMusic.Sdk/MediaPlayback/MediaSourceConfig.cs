@@ -4,7 +4,9 @@ using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Defines configuration for a simple playback source.
+    /// </summary>
     public class MediaSourceConfig : IMediaSourceConfig
     {
         /// <summary>

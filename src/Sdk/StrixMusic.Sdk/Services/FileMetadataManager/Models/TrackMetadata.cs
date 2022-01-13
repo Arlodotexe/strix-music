@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// <summary>
     /// Contains information that describes track, scanned from a single file.
     /// </summary>
-    public class TrackMetadata : IFileMetadata
+    public sealed class TrackMetadata : IFileMetadata
     {
         /// <summary>
         /// The unique identifier for this track.

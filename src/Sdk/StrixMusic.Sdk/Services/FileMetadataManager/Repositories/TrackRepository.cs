@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <summary>
     /// The service that helps in interacting with track information.
     /// </summary>
-    public class TrackRepository : ITrackRepository
+    public sealed class TrackRepository : ITrackRepository
     {
         private const string TRACK_DATA_FILENAME = "TrackData.bin";
 

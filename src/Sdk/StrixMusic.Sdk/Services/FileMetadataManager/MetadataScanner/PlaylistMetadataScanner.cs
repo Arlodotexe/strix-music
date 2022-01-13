@@ -12,9 +12,9 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
-    /// Scans all playlist files.
+    /// Handles extracting playlist metadata from files.
     /// </summary>
-    public partial class PlaylistMetadataScanner : IDisposable
+    public sealed partial class PlaylistMetadataScanner : IDisposable
     {
         private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
 
@@ -179,32 +179,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             Content,
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
+        /// <inheritdoc />
+        public void Dispose()
         {
             if (!IsInitialized)
                 return;
 
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-                _scanningCancellationTokenSource?.Cancel();
-            }
+            DetachEvents();
+            _scanningCancellationTokenSource?.Cancel();
 
             IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

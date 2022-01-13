@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <inheritdoc/>
-    public class FileAbstraction : TagLib.File.IFileAbstraction
+    internal sealed class FileAbstraction : TagLib.File.IFileAbstraction
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FileAbstraction"/> class.

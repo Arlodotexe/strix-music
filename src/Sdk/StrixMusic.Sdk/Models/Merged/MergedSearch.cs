@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Aggregates many <see cref="ICoreSearch"/> instances into one.
     /// </summary>
-    public class MergedSearch : ISearch, IMergedMutable<ICoreSearch>
+    public sealed class MergedSearch : ISearch, IMergedMutable<ICoreSearch>
     {
         private readonly List<ICoreSearch> _sources;
         private readonly List<ICore> _sourceCores;

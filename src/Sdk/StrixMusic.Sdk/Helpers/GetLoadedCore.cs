@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.ViewModels;

@@ -8,7 +8,7 @@ using StrixMusic.Sdk.Services.Notifications;
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// A view model wrapper for the <see cref="Model"/> class.
+    /// A view model wrapper for the <see cref="Notification"/> class.
     /// </summary>
     [Bindable(true)]
     public sealed class NotificationViewModel : ObservableObject, IDisposable

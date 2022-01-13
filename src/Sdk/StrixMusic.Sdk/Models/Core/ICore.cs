@@ -5,12 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="ICoreBase"/>
-    /// <remarks>In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.</remarks>
+    /// <summary>
+    /// An <see cref="ICore"/> is a common API surface that can be implemented to allow interfacing with any arbitrary music provider.
+    /// </summary>
+    /// <remarks>
+    /// In a core's constructor, only do basic object initialization. For the rest, use <see cref="InitAsync"/>.
+    /// </remarks>
+    /// <seealso cref="ICoreBase"/>
+    /// <seealso cref="IAppCore"/>
     public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
     {
         /// <summary>
@@ -86,7 +91,7 @@ namespace StrixMusic.Sdk.Models.Core
         /// Initializes the core asynchronously, allowing for API setup, service configuration, and other asynchronous tasks to be performed.
         /// </summary>
         /// <remarks>
-        /// <para> If the core state is changed to <see cref="CoreState.Configuring"/>, this task will be canceled
+        /// <para> If the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
         /// and the app will display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user for configuration and setup.
         /// After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
         /// Once complete, this method will fire again, at which point you should have the data you need to finish initialization.</para>

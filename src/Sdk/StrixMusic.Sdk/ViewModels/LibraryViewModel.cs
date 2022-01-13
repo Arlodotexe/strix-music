@@ -40,8 +40,5 @@ namespace StrixMusic.Sdk.ViewModels
             // TODO sync library completely or pull from cache
             return Task.CompletedTask;
         }
-
-        /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
     }
 }

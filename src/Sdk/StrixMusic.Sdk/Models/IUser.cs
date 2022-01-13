@@ -1,11 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using StrixMusic.Sdk.Models.Base;
+﻿using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IUserBase"/>
-    /// <remarks>This interface should be implemented by a core.</remarks>
+    /// <summary>
+    /// Contains information about a user.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IUser : IUserBase, IUserProfile, ISdkMember
     {
         /// <summary>

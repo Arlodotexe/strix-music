@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Models.Base;
@@ -8,9 +7,11 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="ITrackCollectionBase"/>
-    /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, IUrlCollection, ISdkMember, IMerged<ICoreTrackCollection>
+    /// <summary>
+    /// A collection of <see cref="ITrack"/>s and the properties and methods for using and manipulating them.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
+    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, IUrlCollection, IPlayable, ISdkMember, IMerged<ICoreTrackCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the track collection. Restarts playback if already playing.

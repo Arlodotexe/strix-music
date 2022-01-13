@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Describes a generic profile.
+    /// Describes a generic user profile.
     /// </summary>
     public interface IUserProfileBase : IImageCollectionBase, IAsyncDisposable
     {

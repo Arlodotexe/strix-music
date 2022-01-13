@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreLibrary"/>
     /// </summary>
-    public class RemoteCoreLibrary : RemoteCorePlayableCollectionGroupBase, ICoreLibrary
+    public sealed class RemoteCoreLibrary : RemoteCorePlayableCollectionGroupBase, ICoreLibrary
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.

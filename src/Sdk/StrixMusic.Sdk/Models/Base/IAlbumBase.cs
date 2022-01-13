@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Models.Base
 {
     /// <summary>
-    /// Interface representing an album.
+    /// A published album containing one or more tracks, discs, artist, etc.
     /// </summary>
     public interface IAlbumBase : IPlayableCollectionItem, IAlbumCollectionItemBase, IArtistCollectionBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase, IAsyncDisposable
     {

@@ -13,7 +13,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Models.Merged
 {
     /// <summary>
-    /// Merged multiple <see cref="ICoreAlbum"/> into a single <see cref="IAlbum"/>
+    /// Merged multiple <see cref="ICorePlaylist"/> into a single <see cref="IPlaylist"/>
     /// </summary>
     public class MergedPlaylist : IPlaylist, IMergedMutable<ICorePlaylist>, IMergedMutable<ICorePlaylistCollectionItem>
     {

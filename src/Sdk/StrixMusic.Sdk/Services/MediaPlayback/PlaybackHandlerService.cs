@@ -7,14 +7,15 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
-    /// <inheritdoc />
-    public partial class PlaybackHandlerService : IPlaybackHandlerService
+    /// <summary>
+    /// Manages an internal queue, handles playback, and delegates playback commands to an <see cref="IAudioPlayerService"/>.
+    /// </summary>
+    public sealed partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private static readonly Random _rng = new Random();
 
@@ -280,8 +281,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
-            await _currentPlayerService.Play(nextItem);
+            // TODO See DeviceViewModel.NowPlaying.
+            var track = new TrackViewModel(new MergedTrack(nextItem.Track.IntoList()));
 
+            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
+
+            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, nextItem.Track);
+
+            await _currentPlayerService.Play(nextItem);
             _currentPlayerService.CurrentSource = CurrentItem;
 
             CurrentItemChanged?.Invoke(this, nextItem);

@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IUrlCollectionBase" />
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
+    /// <summary>
+    /// A collection of URLs, combined from multiple sources.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IUrlCollection : IUrlCollectionBase, ISdkMember, IMerged<ICoreUrlCollection>
     {
         /// <summary>

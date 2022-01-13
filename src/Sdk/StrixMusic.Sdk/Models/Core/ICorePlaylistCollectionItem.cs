@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IPlaylistCollectionItemBase"/>
+    /// <summary>
+    /// An item that belongs in an <see cref="ICorePlaylistCollection"/>.
+    /// </summary>
     /// <remarks>This interface should be used in a core.</remarks>
     public interface ICorePlaylistCollectionItem : IPlaylistCollectionItemBase, ICoreMember
     {

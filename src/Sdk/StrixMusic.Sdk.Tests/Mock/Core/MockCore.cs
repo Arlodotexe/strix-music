@@ -9,7 +9,6 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using StrixMusic.Sdk.Tests.Mock.Core.Library;
 using StrixMusic.Sdk.Tests.Mock.Core.Search;

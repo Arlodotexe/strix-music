@@ -7,9 +7,9 @@ using Windows.UI.Xaml.Data;
 namespace StrixMusic.Sdk.Uno.Converters.Units
 {
     /// <summary>
-    /// A converter that adds a "Playlists" suffix to a unit..
+    /// A converter that adds a "Playlists" suffix to a unit.
     /// </summary>
-    public class CountToPlaylistsConverter : IValueConverter
+    public sealed class CountToPlaylistsConverter : IValueConverter
     {
         /// <summary>
         /// Adds a "Playlists" suffix to a unit.

@@ -1,13 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using StrixMusic.Sdk.Models.Base;
+﻿using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IPlaylistBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlaylist : IPlaylistBase, ITrackCollection, IImageCollection, IUrlCollection, IPlaylistCollectionItem, ISdkMember, IMerged<ICorePlaylist>, IMerged<ICorePlaylistCollectionItem>
+    /// <summary>
+    /// A collection of artibrary songs that the user can edit, rearrange and play back.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
+    public interface IPlaylist : IPlaylistBase, ITrackCollection, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, ISdkMember, IMerged<ICorePlaylist>, IMerged<ICorePlaylistCollectionItem>
     {
         /// <summary>
         /// Owner of the playable item.

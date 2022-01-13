@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <summary>
     /// The service that helps in interacting with artist information.
     /// </summary>
-    public class ArtistRepository : IArtistRepository
+    public sealed class ArtistRepository : IArtistRepository
     {
         private const string ARTIST_DATA_FILENAME = "ArtistMeta.bin";
 

@@ -5,7 +5,9 @@ using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IAlbumCollectionBase"/>
+    /// <summary>
+    /// A collection of <see cref="ICoreAlbumCollectionItem"/>s and the properties and methods for using and manipulating them.
+    /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
     public interface ICoreAlbumCollection : ICorePlayableCollection, IAlbumCollectionBase, ICoreAlbumCollectionItem, ICoreImageCollection, ICoreUrlCollection, ICoreMember
     {

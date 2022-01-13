@@ -1,4 +1,5 @@
 ﻿using System;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.LocalFiles

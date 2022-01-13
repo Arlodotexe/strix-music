@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="IDeviceBase"/>
+    /// <summary>
+    /// A device that controls playback of an audio player.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreDevice : IDeviceBase, ICoreMember
     {

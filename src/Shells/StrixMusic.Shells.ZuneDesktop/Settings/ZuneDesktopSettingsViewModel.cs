@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Extensions;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -13,7 +13,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
     /// <summary>
     /// The settings viewmodel for the Zune Desktop
     /// </summary>
-    public class ZuneDesktopSettingsViewModel : SettingsViewModelBase
+    public class ZuneDesktopSettingsViewModel : ObservableObject
     {
         private readonly Dictionary<string, string> _displayNameMap;
 

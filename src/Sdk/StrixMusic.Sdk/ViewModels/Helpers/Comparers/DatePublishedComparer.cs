@@ -1,6 +1,5 @@
 ﻿using System;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.ViewModels.Helpers.Comparers.Abstract;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {
@@ -8,7 +7,8 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// Compares the DatePublished />.
     /// </summary>
     /// <typeparam name="TAlbum">The <inheritdoc cref="IAlbumBase"/> to sort.</typeparam>
-    public class DatePublishedComparer<TAlbum> : InversableComparer<TAlbum> where TAlbum : IAlbumBase
+    public sealed class DatePublishedComparer<TAlbum> : InversableComparer<TAlbum>
+        where TAlbum : IAlbumBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DatePublishedComparer{TPlayableBase}"/> class.

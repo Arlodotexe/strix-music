@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Models.Base;
@@ -8,9 +7,11 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IPlaylistCollectionBase"/>
-    /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, ISdkMember, IMerged<ICorePlaylistCollection>
+    /// <summary>
+    /// A collection of <see cref="IPlaylistCollectionItem"/>s and the properties and methods for using and manipulating them.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
+    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, ISdkMember, IMerged<ICorePlaylistCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the playlist collection. Restarts playback if already playing.

@@ -2,7 +2,9 @@
 
 namespace StrixMusic.Sdk.Models.Core
 {
-    /// <inheritdoc cref="ILyricsBase"/>
+    /// <summary>
+    /// Contains the lyrics to a track.
+    /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
     public interface ICoreLyrics : ILyricsBase, ICoreMember
     {

@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
     /// <summary>
     /// A Service for getting localized strings from <see cref="ResourceLoader"/> providers.
     /// </summary>
-    public class LocalizationResourceLoader : ILocalizationService
+    public sealed class LocalizationResourceLoader : ILocalizationService
     {
         private readonly Dictionary<string, ResourceLoader> _providers = new Dictionary<string, ResourceLoader>();
 

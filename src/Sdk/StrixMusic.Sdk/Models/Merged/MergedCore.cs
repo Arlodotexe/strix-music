@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
@@ -11,7 +10,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <summary>
     /// Aggregates many <see cref="ICore"/> instances into one.
     /// </summary>
-    public class MergedCore : IAppCore
+    public sealed class MergedCore : IAppCore
     {
         private readonly List<ICore> _sources;
         private readonly List<IDevice> _devices;

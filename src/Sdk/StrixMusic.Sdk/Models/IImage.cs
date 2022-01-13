@@ -4,8 +4,10 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {
-    /// <inheritdoc cref="IImageBase"/>
-    /// <remarks>This interface should be implemented in the Sdk.</remarks>
+    /// <summary>
+    /// Contains details about an image.
+    /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IImage : IImageBase, ISdkMember, IMerged<ICoreImage>
     {
     }

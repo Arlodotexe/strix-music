@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,14 +24,15 @@ using StrixMusic.Sdk.ViewModels.Notifications;
 namespace StrixMusic.Sdk
 {
     /// <summary>
-    /// The MainViewModel used throughout the app
+    /// The primary, root view model used to interact with all merged core sources.
     /// </summary>
-    public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
+    public sealed partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
-        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
-        private readonly List<ICore> _sources = new List<ICore>();
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
+
+        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new();
+        private readonly List<ICore> _sources = new();
 
         private MergedLibrary? _mergedLibrary;
         private MergedRecentlyPlayed? _mergedRecentlyPlayed;
@@ -195,17 +195,19 @@ namespace StrixMusic.Sdk
                 Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
             {
                 LocalDevice,
             };
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
-
             OnPropertyChanged(nameof(Devices));
+
+            DevicesChanged?.Invoke(this, Devices.Select((x, i) => new CollectionChangedItem<IDevice>(x, i)).ToList(), new List<CollectionChangedItem<IDevice>>());
 
             foreach (var device in Devices)
                 AttachEvents(device);
+
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
 
             _sources.ForEach(AttachEvents);
 
@@ -334,7 +336,18 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            Devices.ChangeCollection(addedItems, removedItems, x => new DeviceViewModel(new CoreDeviceProxy(x.Data)));
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data)), x.Index)).ToList();
+            var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var wrappedAdded = wrappedAddedVms.Cast<CollectionChangedItem<IDevice>>().ToOrAsList();
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            var wrappedRemoved = wrappedRemovedVms.Cast<CollectionChangedItem<IDevice>>().ToOrAsList();
+
+            Devices.ChangeCollection(wrappedAddedVms, wrappedRemovedVms);
+
+            DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
 
             foreach (var device in addedItems)
             {
@@ -360,7 +373,7 @@ namespace StrixMusic.Sdk
         /// </remarks>
         public static MainViewModel? Singleton { get; private set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -434,7 +447,7 @@ namespace StrixMusic.Sdk
         /// </summary>
         public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
         {
             await Task.CompletedTask;

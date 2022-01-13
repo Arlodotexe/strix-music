@@ -1,20 +1,28 @@
-﻿using StrixMusic.Sdk.Models.Core;
-
-namespace StrixMusic.Sdk.Models
+﻿namespace StrixMusic.Sdk.Models
 {
     /// <summary>
-    /// Used to identify which variant of <see cref="ICoreTrack"/> this is.
+    /// Used to identify what kind of content an audio stream contains.
     /// </summary>
     public enum TrackType
     {
         /// <summary>
-        /// The <see cref="ICoreTrack"/> is a standard song.
+        /// A standard song.
         /// </summary>
         Song,
 
         /// <summary>
-        /// The <see cref="ICoreTrack"/> is an episode of a podcast.
+        /// An episode of a podcast.
         /// </summary>
         PodcastEpisode,
+
+        /// <summary>
+        /// A spoken book.
+        /// </summary>
+        Audiobook,
+
+        /// <summary>
+        /// A continuous audio stream with no determinate end.
+        /// </summary>
+        RadioOrStream,
     }
 }

@@ -33,7 +33,17 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The root view model used throughout the app.
         /// </summary>
-        public MainViewModel? ViewModel => DataContext as MainViewModel;
+        public MainViewModel? ViewModel
+        {
+            get => (MainViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="ViewModel" />.
+        /// </summary>
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(MainViewModel), typeof(AppFrame), new PropertyMetadata(null));
 
         /// <summary>
         /// The content overlay used as a popup dialog for the entire app.
@@ -59,14 +69,14 @@ namespace StrixMusic.Shared
 
         private static void SetupPlatformHelper()
         {
-            // TODO: Droid.
-
 #if __WASM__
             var currentPlatform = Platform.WASM;
-#elif NETFX_CORE
+#elif __ANDROID__
+            var currentPlatform = Platform.Droid;
+#elif WINDOWS_UWP
             var currentPlatform = Platform.UWP;
 #endif
-            new PlatformHelper(currentPlatform);
+            PlatformHelper.Current = currentPlatform;
         }
 
         /// <summary>
@@ -74,8 +84,7 @@ namespace StrixMusic.Shared
         /// </summary>
         public void SetupMainViewModel(MainViewModel mainViewModel)
         {
-            DataContext = mainViewModel;
-            this.Bindings.Update();
+            ViewModel = mainViewModel;
 
             AttachEvents(mainViewModel);
         }

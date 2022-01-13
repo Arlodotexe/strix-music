@@ -29,18 +29,6 @@ namespace OwlCore.Uno.ColorExtractor
             return image.CloneAs<Argb32>();
         }
 
-
-        private static async Task<Stream> GetImageStreamAsync(string url)
-        {
-            var uri = new Uri(url);
-
-            if (uri.IsFile)
-                return File.Open(uri.LocalPath, FileMode.Open);
-
-            var response = await WebRequest.CreateHttp(url).GetResponseAsync();
-            return response.GetResponseStream();
-        }
-
         /// <summary>
         /// Gets colors out of an image.
         /// </summary>
@@ -73,6 +61,17 @@ namespace OwlCore.Uno.ColorExtractor
             }
 
             return colors;
+        }
+
+        private static async Task<Stream> GetImageStreamAsync(string url)
+        {
+            var uri = new Uri(url);
+
+            if (uri.IsFile)
+                return File.Open(uri.LocalPath, FileMode.Open);
+
+            var response = await WebRequest.CreateHttp(url).GetResponseAsync();
+            return response.GetResponseStream();
         }
     }
 }

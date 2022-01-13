@@ -6,6 +6,7 @@ namespace StrixMusic.Sdk.Services.Navigation
     /// Handles events in the UI that will usually result in navigating between pages.
     /// </summary>
     /// <typeparam name="T">The type of the UI Elements for the app.</typeparam>
+    [Obsolete("This pattern is being phased out and this class should not be used. Use the Messenger pattern instead.")]
     public interface INavigationService<T>
     {
         /// <summary>

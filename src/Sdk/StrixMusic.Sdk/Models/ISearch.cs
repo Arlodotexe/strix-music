@@ -9,6 +9,7 @@ namespace StrixMusic.Sdk.Models
     /// <summary>
     /// Provides various search-related activities.
     /// </summary>
+    /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface ISearch : ISearchBase, ISdkMember, IMerged<ICoreSearch>
     {
         /// <summary>
