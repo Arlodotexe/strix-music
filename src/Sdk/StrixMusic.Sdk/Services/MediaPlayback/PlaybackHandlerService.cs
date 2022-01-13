@@ -385,12 +385,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
-            // TODO See DeviceViewModel.NowPlaying.
-            var track = new TrackViewModel(new MergedTrack(newItem.Track.IntoList()));
-
-            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
-
-            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
             await _currentPlayerService.Play(newItem);
             CurrentItem = newItem;
 
