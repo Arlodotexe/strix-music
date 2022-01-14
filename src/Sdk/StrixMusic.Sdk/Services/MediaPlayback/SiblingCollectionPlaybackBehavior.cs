@@ -7,13 +7,13 @@
     public enum SiblingCollectionPlaybackBehavior
     {
         /// <summary>
-        /// The selected collection will play. When completed, playback ends.
-        /// </summary>
-        OnlySelectedCollection,
-
-        /// <summary>
         /// The selected collection plays. When completed, the next collection plays.
         /// </summary>
         AllCollections,
+
+        /// <summary>
+        /// The selected collection will play. When completed, playback ends.
+        /// </summary>
+        OnlySelectedCollection,
     }
 }
