@@ -1,6 +1,6 @@
 - name: Home
-  href: 
-  homepage: /
+  href: index.html
+  homepage: index.html
 - name: SDK API
   href: api/
   homepage: api/
