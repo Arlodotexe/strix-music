@@ -5,7 +5,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.Services
 {
     /// <summary>
-    /// Represents a single registered core.
+    /// A central registry for tracking available cores.
     /// </summary>
     public static class CoreRegistry
     {
