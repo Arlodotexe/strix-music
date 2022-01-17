@@ -107,7 +107,13 @@ article h4 {
 
 @media (min-width: 1670px) {
   .container {
-    width: 1670px;
+    width: 1366px;
+  }
+}
+
+@media (min-width: 2070px) {
+  .container {
+    width: 1870px;
   }
 }
 
@@ -344,13 +350,6 @@ pre {
   margin-top: 15px;
   box-shadow: var(--card-box-shadow);
   max-width: 700px;
-}
-
-img[alt="large strix music logo"] {
-  width: 699px;
-  height: 350px;
-  margin-top: -55px;
-  margin-bottom: -55px;
 }
 
 svg:hover path {

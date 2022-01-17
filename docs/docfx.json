@@ -55,7 +55,7 @@
     "dest": "wwwroot",
     "template": [
       "default",
-      "templates/material"
+      "templates/strix"
     ],
     "globalMetadata": {
       "_appTitle": "Strix Music",

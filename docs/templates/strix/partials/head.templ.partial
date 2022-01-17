@@ -1,4 +1,4 @@
-{{!Copyright (c) Oscar Vasquez. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.}}
+{{!Copyright (c) Arlo Godfrey. All rights reserved. Licensed under the MIT license. See LICENSE file in the template root for full license information.}}
 
 <head>
   <meta charset="utf-8">
@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="{{_rel}}styles/docfx.vendor.css">
   <link rel="stylesheet" href="{{_rel}}styles/docfx.css">
   <link rel="stylesheet" href="{{_rel}}styles/main.css">
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
   <meta property="docfx:navrel" content="{{_navRel}}">
   <meta property="docfx:tocrel" content="{{_tocRel}}">
   {{#_noindex}}<meta name="searchOption" content="noindex">{{/_noindex}}
