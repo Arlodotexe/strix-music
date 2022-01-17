@@ -61,7 +61,8 @@
       "_appTitle": "Strix Music",
       "_appFooter": "© 2022 Arlo Godfrey",
       "_appLogoPath": "assets/logos/AppIcon.svg",
-      "_enableSearch": true
+      "_enableSearch": true,
+      "_appFaviconPath": "assets/favicon.ico"
     },
     "postProcessors": [
       "ExtractSearchIndex"
