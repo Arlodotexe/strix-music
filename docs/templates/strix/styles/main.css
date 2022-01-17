@@ -258,7 +258,7 @@ article h4 {
 .alert {
   padding: 0px 0px 5px 0px;
   color: inherit;
-  background-color: inherit;
+  background-color: #1f1f22;
   border: none;
   box-shadow: var(--card-box-shadow);
 }
@@ -281,19 +281,58 @@ article h4 {
   border-radius: 4px 4px 0 0;
 }
 
-.alert-info>h5 {
+.alert>h6 {
+  padding: 10px 15px;
+  margin-top: 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 4px 4px 0 0;
+}
+
+.alert>h1 {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.alert>h2 {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.alert>h3 {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.alert>h5 {
+  font-size: 14px;
+}
+
+.alert>h6 {
+  font-size: 12px;
+}
+
+.alert-info>h5:first-child {
   color: #1976d2;
   border-bottom: 4px solid #1976d2;
   background-color: #151718;
 }
 
-.alert-warning>h5 {
+.alert-warning>h5:first-child {
   color: #f57f17;
   border-bottom: 4px solid #f57f17;
   background-color: #151412;
 }
 
-.alert-danger>h5 {
+.alert-warning h5::before {
+  content: "";
+}
+
+.alert-warning h5:first-child::before {
+  content: "\e127";
+}
+
+.alert-danger>h5:first-child {
   color: #d32f2f;
   border-bottom: 4px solid #d32f2f;
   background-color: #0e0d0d;
@@ -358,15 +397,15 @@ svg:hover path {
 
 /* OTHER */
 
-.affix ul > li.active > a, .affix ul > li.active > a:before {
+.affix ul>li.active>a, .affix ul>li.active>a:before {
   color: #BA48DF;
 }
 
-.affix ul ul > li > a {
+.affix ul ul>li>a {
   padding: 2px 25px;
 }
 
-.affix ul ul > li > a:before {
+.affix ul ul>li>a:before {
   content: ">";
   font-size: 14px;
   top: -1px;
