@@ -1,3 +1,12 @@
-- name: API Docs
+- name: Home
+  href: /
+  homepage: /
+- name: SDK API
   href: api/
-  homepage: api/index.html
+  homepage: api/
+- name: Cores
+  href: cores/
+  homepage: cores/
+- name: Shells
+  href: shells/
+  homepage: shells/

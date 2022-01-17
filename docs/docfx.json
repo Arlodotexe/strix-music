@@ -18,6 +18,11 @@
     }
   ],
   "build": {
+    "resource": {
+      "files": [
+        "assets/**"
+      ]
+    },
     "content": [
       {
         "files": [
@@ -31,11 +36,35 @@
           "toc.yml",
           "**.md"
         ]
+      },
+      {
+        "files": [
+          "cores/**.md",
+          "cores/**.yml",
+          "cores/**.md"
+        ]
+      },
+      {
+        "files": [
+          "shells/**.md",
+          "shells/**.yml",
+          "shells/**.md"
+        ]
       }
     ],
     "dest": "wwwroot",
     "template": [
-      "default"
+      "default",
+      "templates/material"
+    ],
+    "globalMetadata": {
+      "_appTitle": "Strix Music",
+      "_appFooter": "© 2022 Arlo Godfrey",
+      "_appLogoPath": "assets/logos/AppIcon.svg",
+      "_enableSearch": true
+    },
+    "postProcessors": [
+      "ExtractSearchIndex"
     ],
     "markdownEngineName": "markdig",
     "noLangKeyword": false
