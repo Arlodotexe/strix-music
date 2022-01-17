@@ -96,8 +96,8 @@ article h1,
 article h2,
 article h3,
 article h4 {
-  margin-top: 35px;
-  margin-bottom: 15px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 article h4 {
@@ -113,7 +113,7 @@ article h4 {
 
 @media (min-width: 2070px) {
   .container {
-    width: 1870px;
+    width: 1700px;
   }
 }
 
