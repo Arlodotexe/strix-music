@@ -77,13 +77,13 @@ h1 {
 
 h2 {
   font-weight: 600;
-  font-size: 24px;
+  font-size: 26px;
   line-height: 1.8;
 }
 
 h3 {
   font-weight: 600;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.8;
 }
 
@@ -148,7 +148,7 @@ article h4 {
 .navbar-inverse .navbar-nav>li>a:hover {
   color: var(--header-ft-color);
   background-color: var(--header-bg-color);
-  border-bottom: 3px solid black;
+  border-bottom: 1px solid var(--header-ft-color);
 }
 
 .navbar-inverse .navbar-nav>.active>a,
@@ -156,7 +156,7 @@ article h4 {
 .navbar-inverse .navbar-nav>.active>a:hover {
   color: var(--header-ft-color);
   background-color: var(--header-bg-color);
-  border-bottom: 3px solid black;
+  border-bottom: 1px solid var(--header-ft-color);
 }
 
 .navbar-form .form-control {
@@ -355,4 +355,21 @@ img[alt="large strix music logo"] {
 
 svg:hover path {
   fill: #BA48DF;
+}
+
+/* OTHER */
+
+.affix ul > li.active > a, .affix ul > li.active > a:before {
+  color: #BA48DF;
+}
+
+.affix ul ul > li > a {
+  padding: 2px 25px;
+}
+
+.affix ul ul > li > a:before {
+  content: ">";
+  font-size: 14px;
+  top: -1px;
+  left: 10px;
 }
