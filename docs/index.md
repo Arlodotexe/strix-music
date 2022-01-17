@@ -3,32 +3,39 @@ uid: home
 title: Strix Music SDK
 ---
 
-# Strix Music SDK
+<div style="text-align:center">
 
----
+![Strix Music SDK](assets/logos/sdk.svg)
 
-- Highly flexible and standardized.
+</div>
 
-- Quickly interface with any music service.
+<h2 style="text-align: center;">
+ The universal music development kit
+</h2>
 
-- Rapidly build new music apps and tools.
 
-- Expand existing strix-compatible apps with new sources, skins and functionality.
+<div style="text-align:center">
+A highly flexible and standardized development kit for music apps.
 
----
+Rapidly interface with any music service to build new apps and tools. 
+</div>
+
+<div style="text-align:center;">
+
+<img height="225px" src="assets/services.png" />
+
+</div>
+
+## High level overview
 
 > [!WARNING]
 >
 > ###### **This SDK is still in alpha**. 
-> - Core interfaces are unlikely to change and are safe to build with.
+> - Core interfaces are safe to build with and are unlikely to change.
 > - Implementation of app-facing content may be incomplete.
-> - The finished SDK will be released on Nuget when the public beta launches.
-<!-- 
-![app startup](assets/screenshots/uwp_wasm_startup.png)
+> - Building fully custom apps on top of the SDK is inadvisable until the 1.0.0 release.
+> - Until the SDK is finished, we advise keeping development for the SDK in the [main repo](https://github.com/Arlodotexe/strix-music). 
 
---- -->
-
-## High level overview
 
 The Strix SDK is split into 3 parts:
 
@@ -39,7 +46,7 @@ The Strix SDK is split into 3 parts:
 For a deeper dive into the architecture, see the [SDK API](./api/) docs.
 
 ![sdk architecture overview](assets/screenshots/whiteboards/sdk_overview.png)
-<sub>Aggregating data from multiple music sources using a composite-proxy architecture</sub>
+<sub style="display:block;margin:5px;">Aggregating data from multiple music sources using a composite-proxy architecture</sub>
 
 <!-- Example for embedding code directly in docs.  -->
 <!-- [!code[Main](../src/Sdk/StrixMusic.Sdk/Plugins/CoreRemote/RemoteCore.cs#L43-L103)] -->
