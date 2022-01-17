@@ -167,9 +167,10 @@ article h4 {
 
 .navbar-form .form-control {
   border: 0;
-  border-radius: 4px;
+  border-radius: 2px;
   box-shadow: var(--search-box-shadow);
   transition: var(--transition);
+  background-color: var(--accent-dim);
 }
 
 .navbar-form .form-control:hover {
@@ -199,18 +200,18 @@ article h4 {
 }
 
 .toc .nav>li>a {
-  color: #c4c6ca;
+  color: #c6cad1;
   font-size: 0.9em;
 }
 
 .sidefilter {
-  background-color: black;
+  background-color: #0e0e0e;
   border-left: none;
   border-right: none;
 }
 
 .sidefilter {
-  background-color: black;
+  background-color: #0e0e0e;
   border-left: none;
   border-right: none;
 }
@@ -237,12 +238,12 @@ article h4 {
 }
 
 .sidetoc>.toc {
-  background-color: black;
+  background-color: #0e0e0e;
   overflow-x: hidden;
 }
 
 .sidetoc {
-  background-color: black;
+  background-color: #0e0e0e;
   border: none;
 }
 
@@ -410,4 +411,11 @@ svg:hover path {
   font-size: 14px;
   top: -1px;
   left: 10px;
+}
+
+/* SEARCH */
+
+.toc-filter {
+  background-color: var(--accent-dim);
+  border-radius: 2px;
 }
