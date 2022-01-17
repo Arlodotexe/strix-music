@@ -17,7 +17,7 @@ body {
   background-color: #313135;
   font-family: Segoe UI, SegoeUI, Helvetica Neue, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-size: 16px;
+  font-size: 14px;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   word-wrap: break-word;
@@ -83,13 +83,13 @@ h2 {
 
 h3 {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.8;
 }
 
 h5 {
   font-size: 14px;
-  padding: 10px 0px;
+  padding: 6px 0px 0px 0px;
 }
 
 article h1,
@@ -103,6 +103,12 @@ article h4 {
 article h4 {
   padding-bottom: 8px;
   border-bottom: 2px solid #1e1e24;
+}
+
+@media (min-width: 1670px) {
+  .container {
+    width: 1670px;
+  }
 }
 
 /* NAVBAR */
@@ -188,6 +194,7 @@ article h4 {
 
 .toc .nav>li>a {
   color: #c4c6ca;
+  font-size: 0.9em;
 }
 
 .sidefilter {
