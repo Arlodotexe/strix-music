@@ -204,17 +204,15 @@ article h4 {
 }
 
 .navbar-inverse .navbar-toggle {
-  box-shadow: var(--card-box-shadow);
   border: none;
-}
-
-.navbar-inverse .navbar-toggle:focus,
-.navbar-inverse .navbar-toggle:hover {
-  background-color: var(--highlight-dark);
 }
 
 .sidenav, .fixed_header, .toc {
   background-color: var( --header-bg-color);
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: var(--highlight-dark);
 }
 
 /* SIDEBAR */
