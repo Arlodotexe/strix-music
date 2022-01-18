@@ -8,7 +8,7 @@ using OwlCore.Remoting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Services.Notifications;
 
-namespace StrixMusic.Sdk.Plugins
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// A remoting-enabled wrapper for <see cref="INotificationService"/>.

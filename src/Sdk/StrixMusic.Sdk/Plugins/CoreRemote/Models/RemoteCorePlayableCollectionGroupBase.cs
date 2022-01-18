@@ -8,7 +8,7 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// Wraps around a <see cref="ICorePlayableCollectionGroup"/> to host data, or receives data given some identifiers.

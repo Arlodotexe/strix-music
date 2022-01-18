@@ -1,6 +1,6 @@
 ﻿using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreSearchResults"/>

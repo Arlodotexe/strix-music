@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// Wraps around an instance of an <see cref="ICoreDevice"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.

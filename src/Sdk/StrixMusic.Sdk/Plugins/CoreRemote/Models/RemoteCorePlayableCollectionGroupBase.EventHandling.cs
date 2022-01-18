@@ -4,7 +4,7 @@ using OwlCore.Events;
 using OwlCore.Remoting;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     public partial class RemoteCorePlayableCollectionGroupBase
     {
