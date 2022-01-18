@@ -7,8 +7,6 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {

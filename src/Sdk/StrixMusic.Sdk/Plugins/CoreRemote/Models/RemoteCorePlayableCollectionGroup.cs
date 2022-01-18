@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Plugins.CoreRemote.Models;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote

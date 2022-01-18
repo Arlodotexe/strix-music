@@ -12,7 +12,6 @@ using OwlCore.Remoting;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Plugins.CoreRemote.Models;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
