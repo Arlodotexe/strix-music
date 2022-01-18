@@ -150,10 +150,10 @@ article h4 {
   transition: 350ms;
 }
 
-.navbar-inverse .navbar-nav>li>a:focus,
-.navbar-inverse .navbar-nav>li>a:hover {
+.navbar-inverse .navbar-nav li>a:focus,
+.navbar-inverse .navbar-nav li>a:hover {
   color: var(--header-ft-color);
-  background-color: var(--header-bg-color);
+  background-color: #313135;
   border-bottom: 1px solid var(--header-ft-color);
 }
 
@@ -161,7 +161,7 @@ article h4 {
 .navbar-inverse .navbar-nav>.active>a:focus,
 .navbar-inverse .navbar-nav>.active>a:hover {
   color: var(--header-ft-color);
-  background-color: var(--header-bg-color);
+  background-color: #313135;
   border-bottom: 1px solid var(--header-ft-color);
 }
 
@@ -175,6 +175,26 @@ article h4 {
 
 .navbar-form .form-control:hover {
   background-color: var(--accent-dim);
+}
+
+.navbar-nav.nav.level1>li:hover .nav.level2 {
+  width: 150px;
+  display: block;
+}
+
+.navbar-nav.nav.level1>li:hover * {
+  background-color: #313135;
+  color: var(--header-ft-color);
+}
+
+.navbar-nav .nav.level2 {
+  display: none;
+  position: absolute;
+}
+
+.navbar-nav .nav>li>a:focus, .navbar-nav .nav>li>a:hover, .navbar-nav .nav>li>a {
+  text-decoration: none;
+  color: var(--header-ft-color);
 }
 
 /* NAVBAR TOGGLED (small screens) */
@@ -191,6 +211,10 @@ article h4 {
 .navbar-inverse .navbar-toggle:focus,
 .navbar-inverse .navbar-toggle:hover {
   background-color: var(--highlight-dark);
+}
+
+.sidenav, .fixed_header, .toc {
+  background-color: var( --header-bg-color);
 }
 
 /* SIDEBAR */
