@@ -1,12 +1,19 @@
 - name: Home
   href: index.html
   homepage: index.html
-- name: SDK API
-  href: api/
-  homepage: api/
+- name: Get started
+  href: get-started/
+  homepage: get-started/
 - name: Cores
   href: cores/
   homepage: cores/
 - name: Shells
   href: shells/
   homepage: shells/
+- name: Reference
+  href: reference/
+  homepage: reference/
+  items:
+  - name: API Reference
+    href: reference/api
+    homepage: reference/api

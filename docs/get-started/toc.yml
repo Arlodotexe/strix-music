@@ -1,0 +1,6 @@
+- name: Quickstart
+  href: /quickstart.md
+  homepage: quickstart.md
+- name: Installation
+  href: /installation.md
+  homepage: installation.md

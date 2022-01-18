@@ -46,7 +46,7 @@ The Strix SDK is split into 3 parts:
 For a deeper dive into the architecture, see the [SDK API](./api/) docs.
 
 ![sdk architecture overview](assets/screenshots/whiteboards/sdk_overview.png)
-<sub style="display:block;margin:5px;">Aggregating data from multiple music sources using a composite-proxy architecture</sub>
+<sub style="display:inline;margin:5px;">Aggregating data from multiple music sources using a composite-proxy architecture</sub>
 
 <!-- Example for embedding code directly in docs.  -->
 <!-- [!code[Main](../src/Sdk/StrixMusic.Sdk/Plugins/CoreRemote/RemoteCore.cs#L43-L103)] -->

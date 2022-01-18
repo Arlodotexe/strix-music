@@ -205,6 +205,6 @@ FakesAssemblies/
 gallery.xml
 project.lock.json
 
-docs/api/*.yml
-docs/api/.manifest
+docs/reference/api/*.yml
+docs/reference/api/.manifest
 docs/wwwroot/**
