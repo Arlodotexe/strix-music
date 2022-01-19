@@ -78,8 +78,9 @@ if (-not $isModuleInstalled)
     # Install and import the yaml reading module
     # Install module has a -Force -Verbose -Scope CurrentUser arguments
     # which might be necessary in your CI/CD environment to install the module
+    Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
     Install-Module -Name $yamlModuleName -Confirm:$False -Force -Verbose -Scope CurrentUser
-    Import-Module $yamlModuleName -Force
+    Import-Module $yamlModuleName -Force -Scope CurrentUser
 }
 else
 {
