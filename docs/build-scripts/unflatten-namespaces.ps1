@@ -69,7 +69,7 @@ function WriteYml
 # YAML/Module Loading
 #####################################
 
-$isModuleInstalled = (Get-Module -ListAvailable -Name $yamlModuleName).Name -eq $yamlModuleName;
+$isModuleInstalled = Get-InstalledModule $yamlModuleName -ErrorAction silentlycontinue;
 
 if (-not $isModuleInstalled)
 {
@@ -78,7 +78,7 @@ if (-not $isModuleInstalled)
     # Install and import the yaml reading module
     # Install module has a -Force -Verbose -Scope CurrentUser arguments
     # which might be necessary in your CI/CD environment to install the module
-    Install-Module -Name $yamlModuleName -Force -Verbose -Scope CurrentUser
+    Install-Module -Name $yamlModuleName -Confirm:$False -Force -Verbose -Scope CurrentUser
     Import-Module $yamlModuleName -Force
 }
 else
