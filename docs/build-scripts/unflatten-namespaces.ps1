@@ -73,13 +73,13 @@ $isModuleInstalled = (Get-Module -ListAvailable -Name $yamlModuleName).Name -eq 
 
 if (-not $isModuleInstalled)
 {
-    Write-Host "Module $yamlModuleName is not installed, installing.".
+    Write-Host "Module $yamlModuleName is not installed, installing."
 
     # Install and import the yaml reading module
     # Install module has a -Force -Verbose -Scope CurrentUser arguments
     # which might be necessary in your CI/CD environment to install the module
     Install-Module -Name $yamlModuleName -Force -Verbose -Scope CurrentUser
-    Import-Module $yamlModuleName
+    Import-Module $yamlModuleName -Force
 }
 else
 {
