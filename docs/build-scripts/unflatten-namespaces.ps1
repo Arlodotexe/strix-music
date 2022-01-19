@@ -80,7 +80,7 @@ if (-not $isModuleInstalled)
     # which might be necessary in your CI/CD environment to install the module
     Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
     Install-Module -Name $yamlModuleName -Confirm:$False -Force -Verbose -Scope CurrentUser
-    Import-Module $yamlModuleName -Force -Scope CurrentUser
+    Import-Module $yamlModuleName -Force -Scope Local
 }
 else
 {
