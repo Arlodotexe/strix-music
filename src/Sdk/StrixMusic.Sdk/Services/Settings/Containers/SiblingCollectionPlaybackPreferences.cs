@@ -1,6 +1,4 @@
-﻿using StrixMusic.Sdk.Services.MediaPlayback;
-
-namespace StrixMusic.Sdk.Services.Settings
+﻿namespace StrixMusic.Sdk.Services.Settings
 {
     /// <summary>
     /// User preferences for behavior when the user requests to play a single item from a collection of collections.

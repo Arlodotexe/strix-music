@@ -1,5 +1,4 @@
 ﻿using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Linq;

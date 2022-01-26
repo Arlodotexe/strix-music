@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Sdk.Services.MediaPlayback
+namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// A simple media player that can play an audio track.

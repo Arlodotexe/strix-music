@@ -5,7 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.ViewModels;
 

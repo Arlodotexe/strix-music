@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;

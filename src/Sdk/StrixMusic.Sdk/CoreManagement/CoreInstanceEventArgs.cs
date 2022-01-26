@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Sdk.Models.Core;
 using System;
 
-namespace StrixMusic.Sdk.Services
+namespace StrixMusic.Sdk.CoreManagement
 {
     /// <summary>
     /// Event args used to identify a specific core instance before it's created.

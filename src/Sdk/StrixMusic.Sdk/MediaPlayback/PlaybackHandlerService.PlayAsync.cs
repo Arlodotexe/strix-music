@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.ViewModels;
 
-namespace StrixMusic.Sdk.Services.MediaPlayback
+namespace StrixMusic.Sdk.MediaPlayback
 {
     public partial class PlaybackHandlerService
     {

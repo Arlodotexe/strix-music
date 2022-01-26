@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 
-namespace StrixMusic.Sdk.Services.MediaPlayback
+namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// Manages an internal queue, handles playback, and delegates playback commands to an <see cref="IAudioPlayerService"/>.

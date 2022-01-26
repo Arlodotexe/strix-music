@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Services
+namespace StrixMusic.Sdk.CoreManagement
 {
     /// <summary>
     /// A central registry for tracking available cores.

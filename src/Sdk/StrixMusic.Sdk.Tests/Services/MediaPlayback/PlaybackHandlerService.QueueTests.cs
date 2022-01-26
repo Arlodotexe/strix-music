@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Tests.Mock.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;

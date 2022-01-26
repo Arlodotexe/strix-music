@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;

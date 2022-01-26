@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Events;
-using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.ViewModels;
 
-namespace StrixMusic.Sdk.Services.MediaPlayback
+namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// Manages an internal queue, handles playback, and delegates playback commands to an <see cref="IAudioPlayerService"/>.
@@ -42,7 +41,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// </summary>
         bool ShuffleState { get; }
 
-        /// <inheritdoc cref="Sdk.MediaPlayback.RepeatState"/>
+        /// <inheritdoc cref="MediaPlayback.RepeatState"/>
         RepeatState RepeatState { get; }
 
         /// <summary>

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Services
+namespace StrixMusic.Sdk.CoreManagement
 {
     /// <summary>
     /// Manages added and removing core instances.

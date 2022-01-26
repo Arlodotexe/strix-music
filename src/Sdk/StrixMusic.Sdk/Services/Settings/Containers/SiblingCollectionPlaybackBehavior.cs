@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.MediaPlayback
+﻿namespace StrixMusic.Sdk.Services.Settings
 {
     /// <summary>
     /// The behavior when the users clicks an collection to play from a collection.

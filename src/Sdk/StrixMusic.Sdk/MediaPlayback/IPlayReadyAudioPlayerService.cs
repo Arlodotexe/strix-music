@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.MediaPlayback
+﻿namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// A PlayReady enabled <see cref="IAudioPlayerService"/>.

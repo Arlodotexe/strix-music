@@ -5,7 +5,7 @@ using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;

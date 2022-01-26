@@ -4,7 +4,6 @@ using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 {
