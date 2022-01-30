@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -14,18 +15,19 @@ namespace StrixMusic.Sdk.Models.Merged
     {
         private readonly List<ICoreSearch> _sources;
         private readonly List<ICore> _sourceCores;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearch"/>.
         /// </summary>
-        /// <param name="sources"></param>
-        public MergedSearch(IReadOnlyList<ICoreSearch> sources)
+        public MergedSearch(IReadOnlyList<ICoreSearch> sources, ISettingsService settingsService)
         {
             _sources = sources.ToList();
             _sourceCores = Sources.Select(x => x.SourceCore).ToList();
 
             if (Sources.Any(x => x.SearchHistory != null))
-                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull());
+                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), settingsService);
+            _settingsService = settingsService;
         }
 
         /// <inheritdoc />
@@ -50,7 +52,7 @@ namespace StrixMusic.Sdk.Models.Merged
         {
             var results = await Sources.InParallel(x => x.GetSearchResultsAsync(query));
 
-            var merged = new MergedSearchResults(results);
+            var merged = new MergedSearchResults(results, _settingsService);
 
             return merged;
         }

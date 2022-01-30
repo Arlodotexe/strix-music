@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -25,8 +26,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="CoreUserProfileProxy"/>.
         /// </summary>
-        /// <param name="userProfile">The user to wrap around.</param>
-        public CoreUserProfileProxy(ICoreUserProfile userProfile)
+        public CoreUserProfileProxy(ICoreUserProfile userProfile, ISettingsService settingsService)
         {
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
@@ -36,8 +36,8 @@ namespace StrixMusic.Sdk.Models.Merged
             TotalImageCount = _userProfile.TotalImageCount;
             TotalUrlCount = _userProfile.TotalUrlCount;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
             AttachEvents();
         }

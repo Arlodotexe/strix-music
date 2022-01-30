@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -12,9 +13,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroup"/> class.
         /// </summary>
-        /// <param name="source"></param>
-        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> source)
-            : base(source)
+        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> sources, ISettingsService settingsService)
+            : base(sources, settingsService)
         {
         }
 

@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -27,12 +28,12 @@ namespace StrixMusic.Sdk.Models.Merged
         private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlCollectionMap;
 
         private readonly List<ICore> _sourceCores;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedTrack"/> class.
         /// </summary>
-        /// <param name="tracks">The <see cref="ICoreTrack"/>s to merge together.</param>
-        public MergedTrack(IEnumerable<ICoreTrack> tracks)
+        public MergedTrack(IEnumerable<ICoreTrack> tracks, ISettingsService settingsService)
         {
             _sources = tracks.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
@@ -40,10 +41,10 @@ namespace StrixMusic.Sdk.Models.Merged
             // TODO: Use top Preferred core.
             _preferredSource = _sources.First();
 
-            _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
+            _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, settingsService);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, settingsService);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
             foreach (var item in _sources)
             {
@@ -57,6 +58,7 @@ namespace StrixMusic.Sdk.Models.Merged
             }
 
             AttachEvents(_preferredSource);
+            _settingsService = settingsService;
         }
 
         private void AttachEvents(ICoreTrack source)
@@ -178,7 +180,7 @@ namespace StrixMusic.Sdk.Models.Merged
             if (e is null)
                 return;
 
-            var merged = new MergedLyrics(e);
+            var merged = new MergedLyrics(e, _settingsService);
             LyricsChanged?.Invoke(this, merged);
         }
 
@@ -187,7 +189,7 @@ namespace StrixMusic.Sdk.Models.Merged
             if (e is null)
                 return;
 
-            var merged = new MergedAlbum(e.IntoList());
+            var merged = new MergedAlbum(e.IntoList(), _settingsService);
             AlbumChanged?.Invoke(this, merged);
         }
 

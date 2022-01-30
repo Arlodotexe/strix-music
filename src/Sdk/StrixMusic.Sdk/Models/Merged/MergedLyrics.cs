@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -16,13 +17,12 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedLyrics"/>.
         /// </summary>
-        /// <param name="source">The source to wrap around.</param>
-        public MergedLyrics(ICoreLyrics source)
+        public MergedLyrics(ICoreLyrics source, ISettingsService settingsService)
         {
             _source = source ?? ThrowHelper.ThrowArgumentNullException<ICoreLyrics>(nameof(source));
 
             Sources = source.IntoList();
-            Track = new MergedTrack(source.Track.IntoList());
+            Track = new MergedTrack(source.Track.IntoList(), settingsService);
         }
 
         /// <inheritdoc />

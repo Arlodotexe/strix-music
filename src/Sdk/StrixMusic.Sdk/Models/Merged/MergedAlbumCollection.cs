@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -27,8 +28,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedAlbumCollection"/>.
         /// </summary>
-        /// <param name="sources">The initial sources to merge together.</param>
-        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources)
+        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources, ISettingsService settingsService)
         {
             _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
@@ -49,9 +49,9 @@ namespace StrixMusic.Sdk.Models.Merged
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
-            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
+            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, settingsService);
 
             AttachEvents(_preferredSource);
         }

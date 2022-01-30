@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -27,17 +28,16 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylistCollection"/>.
         /// </summary>
-        /// <param name="collections">The collections to merge in.</param>
-        public MergedPlaylistCollection(IEnumerable<ICorePlaylistCollection> collections)
+        public MergedPlaylistCollection(IEnumerable<ICorePlaylistCollection> collections, ISettingsService settingsService)
         {
             _sources = collections.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
-            _playlistMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
+            _playlistMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, settingsService);
 
             foreach (var item in _sources)
             {

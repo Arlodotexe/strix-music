@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -12,9 +13,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedRecentlyPlayed"/> class.
         /// </summary>
-        /// <param name="sources">The <see cref="ICoreRecentlyPlayed"/> objects to merge.</param>
-        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources)
-            : base(sources.ToArray())
+        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources, ISettingsService settingsService)
+            : base(sources, settingsService)
         {
         }
 

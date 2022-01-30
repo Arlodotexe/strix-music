@@ -4,6 +4,7 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -18,7 +19,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
         /// </summary>
         /// <param name="source"></param>
-        public CoreDeviceProxy(ICoreDevice source)
+        public CoreDeviceProxy(ICoreDevice source, ISettingsService settingsService)
         {
             _source = source;
 
@@ -34,7 +35,7 @@ namespace StrixMusic.Sdk.Models.Merged
             NowPlaying = _source.NowPlaying;
 
             if (!(_source.PlaybackQueue is null))
-                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList());
+                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), settingsService);
 
             AttachEvents();
         }

@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -28,16 +29,16 @@ namespace StrixMusic.Sdk.Models.Merged
         /// Creates a new instance of <see cref="MergedTrackCollection"/>.
         /// </summary>
         /// <param name="collections">The collections to merge in.</param>
-        public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections)
+        public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections, ISettingsService settingsService)
         {
             _sources = collections.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _trackMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _trackMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, settingsService);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
             foreach (var item in _sources)
             {

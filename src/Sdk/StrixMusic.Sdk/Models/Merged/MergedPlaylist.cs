@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -28,15 +29,14 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylist"/>.
         /// </summary>
-        /// <param name="sources"></param>
-        public MergedPlaylist(IEnumerable<ICorePlaylist> sources)
+        public MergedPlaylist(IEnumerable<ICorePlaylist> sources, ISettingsService settingsService)
         {
             _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, settingsService);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
@@ -56,12 +56,12 @@ namespace StrixMusic.Sdk.Models.Merged
 
             if (_preferredSource.RelatedItems != null)
             {
-                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList());
+                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList(), settingsService);
             }
 
             if (_preferredSource.Owner != null)
             {
-                Owner = new CoreUserProfileProxy(_preferredSource.Owner);
+                Owner = new CoreUserProfileProxy(_preferredSource.Owner, settingsService);
             }
 
             AttachEvents(_preferredSource);

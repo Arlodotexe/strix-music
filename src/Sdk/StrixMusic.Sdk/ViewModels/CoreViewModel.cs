@@ -13,6 +13,7 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -22,38 +23,41 @@ namespace StrixMusic.Sdk.ViewModels
     public class CoreViewModel : ObservableObject, ICore
     {
         private readonly ICore _core;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
         /// </summary>
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         /// <param name="coreMetadata">The metadata that was used to construct this core instance.</param>
+        /// <param name="settingsService">An instance of <see cref="ISettingsService"/>.</param>
+        /// <param name="mainViewModel">The VM that created this instance.</param>
         /// <remarks>
-        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/>.
+        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/> on <paramref name="mainViewModel"/>.
         /// </remarks>
-        public CoreViewModel(ICore core, CoreMetadata coreMetadata)
+        public CoreViewModel(ICore core, CoreMetadata coreMetadata, ISettingsService settingsService, MainViewModel? mainViewModel = null)
         {
             _core = core;
-            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-
-            mainViewModel.Cores.Add(this);
+            _settingsService = settingsService;
+            if (mainViewModel is not null)
+                mainViewModel.Cores.Add(this);
 
             DisplayName = coreMetadata.DisplayName;
             LogoUri = coreMetadata.LogoUri;
 
-            Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
+            Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList(), settingsService));
 
             if (_core.RecentlyPlayed != null)
-                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
+                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList(), settingsService));
 
             if (_core.Discoverables != null)
-                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
+                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList(), settingsService));
 
             if (_core.Pins != null)
-                Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
+                Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList(), settingsService));
 
             if (_core.Search != null)
-                Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
+                Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList(), settingsService));
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
@@ -82,7 +86,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(new CoreDeviceProxy(item.Data)));
+                Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(new CoreDeviceProxy(item.Data, _settingsService)));
             });
         }
 

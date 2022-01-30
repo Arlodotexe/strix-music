@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -12,9 +12,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchHistory"/> class.
         /// </summary>
-        /// <param name="searchHistories">The search histories to merge.</param>
-        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories)
-            : base(searchHistories.ToArray())
+        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories, ISettingsService settingsService)
+            : base(searchHistories, settingsService)
         {
         }
 

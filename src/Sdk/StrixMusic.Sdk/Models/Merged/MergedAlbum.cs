@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -30,7 +31,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedAlbum"/> class.
         /// </summary>
-        public MergedAlbum(IEnumerable<ICoreAlbum> sources)
+        public MergedAlbum(IEnumerable<ICoreAlbum> sources, ISettingsService settingsService)
         {
             _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
@@ -38,7 +39,7 @@ namespace StrixMusic.Sdk.Models.Merged
             var relatedItemsSources = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
             if (relatedItemsSources.Count > 0)
             {
-                RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources);
+                RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources, settingsService);
             }
 
             // TODO: Get the actual preferred source.
@@ -59,11 +60,11 @@ namespace StrixMusic.Sdk.Models.Merged
                 TotalUrlCount += item.TotalUrlCount;
             }
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
-            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
-            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, settingsService);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
+            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, settingsService);
+            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, settingsService);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
             AttachEvents(_preferredSource);
         }

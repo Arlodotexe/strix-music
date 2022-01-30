@@ -29,6 +29,7 @@ namespace StrixMusic.Sdk
     public sealed partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
         private readonly ICoreManagementService _coreManagementService;
+        private readonly ISettingsService _settingsService;
         private readonly INotificationService _notificationService;
 
         private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new();
@@ -41,10 +42,11 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService, ICoreManagementService coreManagementService)
+        public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService, ICoreManagementService coreManagementService, ISettingsService settingsService)
         {
             Singleton = this;
             _coreManagementService = coreManagementService;
+            _settingsService = settingsService;
             _notificationService = notificationsService;
             LocalDevice = new DeviceViewModel(strixDevice);
 
@@ -120,13 +122,13 @@ namespace StrixMusic.Sdk
             {
                 foreach (var device in core.Devices)
                 {
-                    var deviceVm = new DeviceViewModel(new CoreDeviceProxy(device));
+                    var deviceVm = new DeviceViewModel(new CoreDeviceProxy(device, _settingsService));
                     Devices.Add(deviceVm);
                     AttachEvents(deviceVm);
                 }
 
                 if (core.User != null)
-                    Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
+                    Users.Add(new UserViewModel(new CoreUserProxy(core.User, _settingsService)));
             });
 
             AttachEvents(core);
@@ -158,8 +160,7 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitAsync()
         {
-            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
-            var coreInstanceRegistry = await coreManagementService.GetCoreInstanceRegistryAsync();
+            var coreInstanceRegistry = await _coreManagementService.GetCoreInstanceRegistryAsync();
 
             Guard.IsNotNull(coreInstanceRegistry, nameof(coreInstanceRegistry));
             Guard.IsGreaterThan(coreInstanceRegistry.Count, 0, nameof(coreInstanceRegistry));
@@ -179,23 +180,23 @@ namespace StrixMusic.Sdk
             foreach (var core in enumerable)
                 await InitCore(core);
 
-            _mergedLibrary = new MergedLibrary(_sources.Select(x => x.Library));
+            _mergedLibrary = new MergedLibrary(_sources.Select(x => x.Library), _settingsService);
             Library = new LibraryViewModel(_mergedLibrary);
             await Library.InitAsync();
 
             if (_sources.Any(x => x.RecentlyPlayed != null))
             {
-                _mergedRecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull());
+                _mergedRecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), _settingsService);
                 RecentlyPlayed = new RecentlyPlayedViewModel(_mergedRecentlyPlayed);
             }
 
             if (_sources.Any(x => x.Discoverables != null))
             {
-                _mergedDiscoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull());
+                _mergedDiscoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), _settingsService);
                 Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new CoreDeviceProxy(device, _settingsService))))
             {
                 LocalDevice,
             };
@@ -207,7 +208,7 @@ namespace StrixMusic.Sdk
             foreach (var device in Devices)
                 AttachEvents(device);
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x, _settingsService))));
 
             _sources.ForEach(AttachEvents);
 
@@ -234,7 +235,7 @@ namespace StrixMusic.Sdk
             // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
             await Threading.OnPrimaryThread(() =>
             {
-                _ = new CoreViewModel(core, coreMetadata);
+                _ = new CoreViewModel(core, coreMetadata, _settingsService, this);
             });
             return core;
         }
@@ -253,8 +254,7 @@ namespace StrixMusic.Sdk
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
-            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
-            var services = await coreManagementService.CreateInitialCoreServicesAsync(core);
+            var services = await _coreManagementService.CreateInitialCoreServicesAsync(core);
 
             try
             {
@@ -336,7 +336,7 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data)), x.Index)).ToList();
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data, _settingsService)), x.Index)).ToList();
             var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
 
             // ReSharper disable once SuspiciousTypeConversion.Global

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -12,9 +12,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
         /// </summary>
-        /// <param name="searchResults">The search results to merge.</param>
-        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults)
-            : base(searchResults.ToArray())
+        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults, ISettingsService settingService)
+            : base(searchResults, settingService)
         {
         }
 
