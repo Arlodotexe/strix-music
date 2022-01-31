@@ -10,10 +10,10 @@ using OwlCore.AbstractStorage;
 using OwlCore.AbstractStorage.Scanners;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
-using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {

@@ -1,7 +1,8 @@
 ﻿using System;
 using OwlCore.AbstractUI.Models;
+using StrixMusic.Sdk.Models;
 
-namespace StrixMusic.Sdk.Services.Notifications
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// A Service for handling notifications from Cores

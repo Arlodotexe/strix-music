@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.Settings
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// Holds information about a changed setting.

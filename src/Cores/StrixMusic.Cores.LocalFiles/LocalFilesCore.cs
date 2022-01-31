@@ -13,7 +13,7 @@ using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.LocalFiles
 {

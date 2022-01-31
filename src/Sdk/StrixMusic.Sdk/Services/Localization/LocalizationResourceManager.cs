@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Resources;
 
-namespace StrixMusic.Sdk.Services.Localization
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// A service for getting localized strings from <see cref="ResourceManager"/> providers in a .NET Standard project.
@@ -30,11 +30,11 @@ namespace StrixMusic.Sdk.Services.Localization
         {
             return sender switch
             {
-                IAlbum _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
-                IArtist _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
+                IAlbum _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
+                IArtist _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
 
                 // Default to unknown name
-                _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownName"),
+                _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownName"),
             };
         }
 

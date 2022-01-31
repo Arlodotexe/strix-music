@@ -2,7 +2,7 @@
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
 
-namespace StrixMusic.Sdk.Services.Notifications
+namespace StrixMusic.Sdk.Models
 {
     /// <summary>
     /// Represents a notification containing basic ui elements that can be dismissed.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Models;
 
 namespace StrixMusic.Sdk.Uno.Services

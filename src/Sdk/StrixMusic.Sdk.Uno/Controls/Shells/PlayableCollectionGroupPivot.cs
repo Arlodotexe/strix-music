@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;

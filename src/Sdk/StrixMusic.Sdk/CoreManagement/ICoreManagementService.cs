@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

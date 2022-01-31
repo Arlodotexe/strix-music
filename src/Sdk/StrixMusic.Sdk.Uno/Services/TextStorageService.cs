@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services;
 using Windows.Storage;
 
 namespace StrixMusic.Sdk.Uno.Services

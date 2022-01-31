@@ -4,7 +4,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 
-namespace StrixMusic.Sdk.Services.StorageService
+namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc/>
     public abstract class CacheServiceBase : IFileSystemService

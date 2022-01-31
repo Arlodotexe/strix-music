@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Services;
 using Windows.UI.Xaml.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters.Units

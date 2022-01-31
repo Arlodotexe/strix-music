@@ -5,7 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 

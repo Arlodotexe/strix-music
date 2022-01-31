@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.Settings
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// User preferences for behavior when the user requests to play a single item from a collection of collections.

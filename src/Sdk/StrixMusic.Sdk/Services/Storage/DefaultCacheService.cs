@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.StorageService
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc />
     public sealed class DefaultCacheService : CacheServiceBase

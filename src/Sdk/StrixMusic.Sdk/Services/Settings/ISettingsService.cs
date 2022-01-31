@@ -5,7 +5,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Services.Settings
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// Manages interactions with app settings.

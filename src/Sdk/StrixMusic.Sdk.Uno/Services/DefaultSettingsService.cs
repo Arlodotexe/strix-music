@@ -5,8 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Uno.Services
 {

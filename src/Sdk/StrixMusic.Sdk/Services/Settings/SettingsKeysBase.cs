@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Services.Settings
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// Base class used for all SettingsKeys classes.

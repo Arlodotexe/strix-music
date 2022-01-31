@@ -4,7 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
-using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {

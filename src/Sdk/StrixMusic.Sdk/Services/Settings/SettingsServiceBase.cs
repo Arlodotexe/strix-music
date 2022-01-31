@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json;
-using StrixMusic.Sdk.Services.StorageService;
 
-namespace StrixMusic.Sdk.Services.Settings
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// A <see langword="class"/> that handles the local app settings.
@@ -27,7 +26,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// </summary>
         protected SettingsServiceBase()
         {
-            _textStorageService = Ioc.Default.GetService<ITextStorageService>() ?? ThrowHelper.ThrowInvalidOperationException<ITextStorageService>();
+            _textStorageService = Ioc.Default.GetRequiredService<ITextStorageService>();
         }
 
         /// <summary>
@@ -133,7 +132,7 @@ namespace StrixMusic.Sdk.Services.Settings
                     // TODO: better check for if a key exists without reflection. Dictionary instead of method?
                     try
                     {
-                        return (T) settingsKey.GetDefaultValue(key);
+                        return (T)settingsKey.GetDefaultValue(key);
                     }
                     catch
                     {

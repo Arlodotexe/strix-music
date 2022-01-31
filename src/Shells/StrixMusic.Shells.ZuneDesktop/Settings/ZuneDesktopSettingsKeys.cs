@@ -1,5 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings

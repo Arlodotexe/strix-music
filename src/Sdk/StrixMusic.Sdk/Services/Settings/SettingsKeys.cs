@@ -3,7 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 
-namespace StrixMusic.Sdk.Services.Settings
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// A <see langword="class"/> containing keys for all settings throughout the main app.

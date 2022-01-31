@@ -9,7 +9,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Merged
 {

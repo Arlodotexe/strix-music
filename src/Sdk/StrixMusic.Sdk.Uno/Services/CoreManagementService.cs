@@ -9,8 +9,6 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
 using Windows.Storage;
 
 namespace StrixMusic.Sdk.Uno.Services

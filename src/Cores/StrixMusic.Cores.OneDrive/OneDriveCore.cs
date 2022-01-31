@@ -14,7 +14,7 @@ using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.OneDrive
 {

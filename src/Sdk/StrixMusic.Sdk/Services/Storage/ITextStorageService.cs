@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Services.StorageService
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// The <see langword="interface"/> to handle storing and retrieving data.

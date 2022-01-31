@@ -9,7 +9,7 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using Windows.UI.Xaml;
