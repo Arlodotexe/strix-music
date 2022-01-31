@@ -7,18 +7,19 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Used to bind recently played across multiple cores to the View model.
+    /// Used to bind to recently played items across multiple cores.
     /// </summary>
-    public class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, IRecentlyPlayed
+    public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed
     {
         private readonly IRecentlyPlayed _recentlyPlayed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecentlyPlayedViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="recentlyPlayed">The <see cref="IRecentlyPlayed"/> to wrap.</param>
-        public RecentlyPlayedViewModel(IRecentlyPlayed recentlyPlayed)
-            : base(recentlyPlayed)
+        internal RecentlyPlayedViewModel(MainViewModel root, IRecentlyPlayed recentlyPlayed)
+            : base(root, recentlyPlayed)
         {
             _recentlyPlayed = recentlyPlayed;
         }

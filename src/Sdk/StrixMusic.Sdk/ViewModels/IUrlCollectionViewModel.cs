@@ -6,9 +6,11 @@ using StrixMusic.Sdk.Models;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An interfaced ViewModel for <see cref="IUrlCollection" />. This is needed so because multiple view models implement <see cref="IUrlCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IUrlCollection"/>.
+    /// An interfaced ViewModel for <see cref="IUrlCollection" />.
+    /// This is needed so because multiple view models implement <see cref="IUrlCollection"/>,
+    /// and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IUrlCollection"/>.
     /// </summary>
-    public interface IUrlCollectionViewModel : IUrlCollection
+    public interface IUrlCollectionViewModel : ISdkViewModel, IUrlCollection
     {
         /// <summary>
         /// The urls in this collection.

@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             {
                 var apiTracks = await trackCollection.GetTracksAsync(1, 0);
                 Guard.HasSizeGreaterThan(apiTracks, 0, nameof(apiTracks));
-                firstTrack = new TrackViewModel(apiTracks[0]);
+                firstTrack = new TrackViewModel(trackCollection.Root, apiTracks[0]);
             }
 
             await PlayAsync(firstTrack, trackCollection, context);

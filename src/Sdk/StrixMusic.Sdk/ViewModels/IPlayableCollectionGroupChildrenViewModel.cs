@@ -6,9 +6,11 @@ using StrixMusic.Sdk.Models;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// The children-specific ViewModel properties for <see cref="IPlayableCollectionGroup"/>. This is needed so because multiple view models implement <see cref="IPlayableCollectionGroup"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlayableCollectionGroup"/>.
+    /// The children-specific ViewModel properties for <see cref="IPlayableCollectionGroup"/>.
+    /// This is needed so because multiple view models implement <see cref="IPlayableCollectionGroup"/>,
+    /// and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
-    public interface IPlayableCollectionGroupChildrenViewModel : IPlayableCollectionGroupChildren
+    public interface IPlayableCollectionGroupChildrenViewModel : ISdkViewModel, IPlayableCollectionGroupChildren
     {
         /// <summary>
         /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.

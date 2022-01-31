@@ -10,22 +10,24 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A view model wrapper for <see cref="ISearch"/>.
     /// </summary>
-    public class SearchViewModel : ObservableObject, ISearch
+    public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch
     {
         private readonly ISearch _search;
 
         /// <summary>
         /// Creates a new instance of <see cref="SearchViewModel"/>.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="search">The model to wrap around.</param>
-        public SearchViewModel(ISearch search)
+        internal SearchViewModel(MainViewModel root, ISearch search)
         {
+            Root = root;
             _search = search;
 
             if (search.SearchHistory != null)
-                SearchHistory = new SearchHistoryViewModel(search.SearchHistory);
+                SearchHistory = new SearchHistoryViewModel(root, search.SearchHistory);
 
-            SourceCores = search.SourceCores.Select(MainViewModel.GetLoadedCore).ToList();
+            SourceCores = search.SourceCores.Select(root.GetLoadedCore).ToList();
         }
 
         /// <inheritdoc />
@@ -45,6 +47,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc />
         public Task<ISearchResults> GetSearchResultsAsync(string query)

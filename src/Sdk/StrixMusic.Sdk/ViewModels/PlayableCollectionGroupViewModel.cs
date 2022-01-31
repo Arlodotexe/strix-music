@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable wrapper for a <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
+    public class PlayableCollectionGroupViewModel : ObservableObject, ISdkViewModel, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
 
@@ -43,14 +43,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
-        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
+        internal PlayableCollectionGroupViewModel(MainViewModel root, IPlayableCollectionGroup collectionGroup)
         {
             _collectionGroup = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
+            Root = root;
 
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
-            SourceCores = _collectionGroup.GetSourceCores<ICorePlayableCollectionGroup>().Select(MainViewModel.GetLoadedCore).ToList();
+            SourceCores = _collectionGroup.GetSourceCores<ICorePlayableCollectionGroup>().Select(root.GetLoadedCore).ToList();
 
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
@@ -446,8 +448,8 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IAlbum album => new AlbumViewModel(album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                        IAlbum album => new AlbumViewModel(Root, album),
+                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -457,8 +459,8 @@ namespace StrixMusic.Sdk.ViewModels
                     // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
                     UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IAlbum album => new AlbumViewModel(album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                        IAlbum album => new AlbumViewModel(Root, album),
+                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -487,8 +489,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IArtist artist => new ArtistViewModel(artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
             });
@@ -498,7 +500,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(item.Data));
+                Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(Root, item.Data));
             });
         }
 
@@ -510,8 +512,8 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IPlaylist playlist => new PlaylistViewModel(playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -521,8 +523,8 @@ namespace StrixMusic.Sdk.ViewModels
                     // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
                     UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IPlaylist playlist => new PlaylistViewModel(playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -551,12 +553,12 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 if (this.CurrentTracksSortingType == TrackSortingType.Unsorted)
                 {
-                    Tracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                    Tracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
                 }
                 else
                 {
                     // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                    UnsortedTracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
 
                     // Avoiding direct assignment to prevent effect on UI.
                     foreach (var item in UnsortedTracks)
@@ -594,6 +596,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -911,10 +916,10 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                Playlists.Add(new PlaylistViewModel(playlist));
+                                Playlists.Add(new PlaylistViewModel(Root, playlist));
                                 break;
                             case IPlaylistCollection collection:
-                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                Playlists.Add(new PlaylistCollectionViewModel(Root, collection));
                                 break;
                         }
                     }
@@ -933,7 +938,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     foreach (var item in items)
                     {
-                        Tracks.Add(new TrackViewModel(item));
+                        Tracks.Add(new TrackViewModel(Root, item));
                     }
                 });
             }
@@ -953,10 +958,10 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IAlbum album:
-                                Albums.Add(new AlbumViewModel(album));
+                                Albums.Add(new AlbumViewModel(Root, album));
                                 break;
                             case IAlbumCollection collection:
-                                Albums.Add(new AlbumCollectionViewModel(collection));
+                                Albums.Add(new AlbumCollectionViewModel(Root, collection));
                                 break;
                         }
                     }
@@ -977,12 +982,12 @@ namespace StrixMusic.Sdk.ViewModels
                     {
                         if (item is IArtist artist)
                         {
-                            Artists.Add(new ArtistViewModel(artist));
+                            Artists.Add(new ArtistViewModel(Root, artist));
                         }
 
                         if (item is IArtistCollection collection)
                         {
-                            Artists.Add(new ArtistCollectionViewModel(collection));
+                            Artists.Add(new ArtistCollectionViewModel(Root, collection));
                         }
                     }
                 });
@@ -1000,7 +1005,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     foreach (var item in items)
                     {
-                        Children.Add(new PlayableCollectionGroupViewModel(item));
+                        Children.Add(new PlayableCollectionGroupViewModel(Root, item));
                     }
                 });
             }

@@ -8,9 +8,11 @@ using StrixMusic.Sdk.Models.Base;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An interfaced ViewModel for <see cref="ITrackCollection" />. This is needed so because multiple view models implement <see cref="ITrackCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="ITrackCollection"/>.
+    /// An interfaced ViewModel for <see cref="ITrackCollection" />.
+    /// This is needed so because multiple view models implement <see cref="ITrackCollection"/>,
+    /// and the UI needs to create controls that handle only the ViewModels properties for an <see cref="ITrackCollection"/>.
     /// </summary>
-    public interface ITrackCollectionViewModel : ITrackCollection, IAsyncInit
+    public interface ITrackCollectionViewModel : ISdkViewModel, ITrackCollection, IAsyncInit
     {
         /// <summary>
         /// The tracks in this collection.

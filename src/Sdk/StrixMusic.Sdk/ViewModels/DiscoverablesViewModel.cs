@@ -9,16 +9,17 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper of the <see cref="IDiscoverables"/>.
     /// </summary>
-    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, IDiscoverables
+    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables
     {
         private readonly IDiscoverables _discoverables;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DiscoverablesViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="discoverables">The <see cref="IDiscoverables"/> to wrap.</param>
-        public DiscoverablesViewModel(IDiscoverables discoverables)
-            : base(discoverables)
+        internal DiscoverablesViewModel(MainViewModel root, IDiscoverables discoverables)
+            : base(root, discoverables)
         {
             _discoverables = discoverables;
         }

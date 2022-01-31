@@ -13,26 +13,28 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains information about a <see cref="IImage"/>
     /// </summary>
-    public class DeviceViewModel : ObservableObject, IDevice
+    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice
     {
         private ICoreTrack? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
-        /// <param name="device">The base <see cref="IDevice"/></param>
-        public DeviceViewModel(IDevice device)
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
+        /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
+        internal DeviceViewModel(MainViewModel root, IDevice device)
         {
             Model = device ?? throw new ArgumentNullException(nameof(device));
+            Root = root;
 
             if (Model.NowPlaying != null)
                 _nowPlaying = Model.NowPlaying;
 
             if (device.SourceCore != null)
-                SourceCore = MainViewModel.GetLoadedCore(device.SourceCore);
+                SourceCore = root.GetLoadedCore(device.SourceCore);
 
             if (Model.PlaybackQueue != null)
-                PlaybackQueue = new TrackCollectionViewModel(Model.PlaybackQueue);
+                PlaybackQueue = new TrackCollectionViewModel(root, Model.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -111,6 +113,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ICoreDevice? Source => Model.Source;
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc />
         public string Id => Model.Id;

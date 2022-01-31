@@ -9,7 +9,7 @@
         /// The <see cref="ICore"/> instance which created this object.
         /// </summary>
         /// <remarks>
-        /// This is required to be present on all classes implemented by a core, from the SDK.
+        /// This is required to be present on all classes implemented by a core.
         /// </remarks>
         public ICore SourceCore { get; }
     }

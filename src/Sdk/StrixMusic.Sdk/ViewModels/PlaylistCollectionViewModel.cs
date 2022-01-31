@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -22,7 +23,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A wrapper for <see cref="ICoreArtistCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
+    public sealed class PlaylistCollectionViewModel : ObservableObject, ISdkViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
 
@@ -37,11 +38,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
-        public PlaylistCollectionViewModel(IPlaylistCollection collection)
+        internal PlaylistCollectionViewModel(MainViewModel root, IPlaylistCollection collection)
         {
             _collection = collection;
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+
+            SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(root.GetLoadedCore).ToList();
+            Root = root;
 
             using (Threading.PrimaryContext)
             {
@@ -152,8 +157,8 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IPlaylist artist => new PlaylistViewModel(artist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -163,8 +168,8 @@ namespace StrixMusic.Sdk.ViewModels
                     // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
                     UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IPlaylist playlist => new PlaylistViewModel(playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
                     });
@@ -354,8 +359,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ObservableCollection<IUrl> Urls { get; }
 
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
+
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => _collection.GetSourceCores<ICorePlaylistCollection>();
+        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;
@@ -473,10 +481,10 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                Playlists.Add(new PlaylistViewModel(playlist));
+                                Playlists.Add(new PlaylistViewModel(Root, playlist));
                                 break;
                             case IPlaylistCollection collection:
-                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                Playlists.Add(new PlaylistCollectionViewModel(Root, collection));
                                 break;
                         }
                     }

@@ -7,18 +7,19 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Used to bind search history across multiple cores to the View model.
+    /// Used to bind to search history across multiple cores.
     /// </summary>
-    public class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISearchHistory
+    public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory
     {
         private readonly ISearchHistory _searchHistory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecentlyPlayedViewModel"/> class.
         /// </summary>
-        /// <param name="searchHistory">The <see cref="IRecentlyPlayed"/> to wrap.</param>
-        public SearchHistoryViewModel(ISearchHistory searchHistory)
-            : base(searchHistory)
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
+        /// <param name="searchHistory">The <see cref="ISearchHistory"/> to wrap.</param>
+        internal SearchHistoryViewModel(MainViewModel root, ISearchHistory searchHistory)
+            : base(root, searchHistory)
         {
             _searchHistory = searchHistory;
         }

@@ -12,16 +12,17 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper of the <see cref="ILibraryBase"/>.
     /// </summary>
-    public class LibraryViewModel : PlayableCollectionGroupViewModel, ILibrary, IAsyncInit
+    public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary
     {
         private readonly ILibrary _library;
 
         /// <summary>
         /// Creates a new instance of the <see cref="LibraryViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="library">The <see cref="ILibrary"/> to wrap.</param>
-        public LibraryViewModel(ILibrary library)
-            : base(library)
+        internal LibraryViewModel(MainViewModel root, ILibrary library)
+            : base(root, library)
         {
             _library = library;
         }

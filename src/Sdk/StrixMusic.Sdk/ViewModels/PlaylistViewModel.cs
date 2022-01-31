@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper for <see cref="IPlaylist"/>.
     /// </summary>
-    public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel, IImageCollectionViewModel
+    public sealed class PlaylistViewModel : ObservableObject, ISdkViewModel, IPlaylist, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
@@ -41,14 +41,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
-        public PlaylistViewModel(IPlaylist playlist)
+        internal PlaylistViewModel(MainViewModel root, IPlaylist playlist)
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
             _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
+            Root = root;
 
-            SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(MainViewModel.GetLoadedCore).ToList();
+            SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(root.GetLoadedCore).ToList();
 
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
@@ -70,11 +72,11 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
             if (_playlist.Owner != null)
-                _owner = new UserProfileViewModel(_playlist.Owner);
+                _owner = new UserProfileViewModel(root, _playlist.Owner);
 
             if (_playlist.RelatedItems != null)
             {
-                RelatedItems = new PlayableCollectionGroupViewModel(_playlist.RelatedItems);
+                RelatedItems = new PlayableCollectionGroupViewModel(root, _playlist.RelatedItems);
             }
 
             using (Threading.PrimaryContext)
@@ -284,12 +286,12 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 if (CurrentTracksSortingType == TrackSortingType.Unsorted)
                 {
-                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
                 }
                 else
                 {
                     // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
 
                     // Avoiding direct assignment to prevent effect on UI.
                     foreach (var item in UnsortedTracks)
@@ -327,6 +329,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -517,7 +522,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     foreach (var item in items)
                     {
-                        Tracks.Add(new TrackViewModel(item));
+                        Tracks.Add(new TrackViewModel(Root, item));
                     }
 
                     _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTrackCount)));

@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk
             _coreManagementService = coreManagementService;
             _settingsService = settingsService;
             _notificationService = notificationsService;
-            LocalDevice = new DeviceViewModel(strixDevice);
+            LocalDevice = new DeviceViewModel(this, strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
             Notifications = new NotificationsViewModel(notificationsService);
@@ -122,13 +122,13 @@ namespace StrixMusic.Sdk
             {
                 foreach (var device in core.Devices)
                 {
-                    var deviceVm = new DeviceViewModel(new CoreDeviceProxy(device, _settingsService));
+                    var deviceVm = new DeviceViewModel(this, new CoreDeviceProxy(device, _settingsService));
                     Devices.Add(deviceVm);
                     AttachEvents(deviceVm);
                 }
 
                 if (core.User != null)
-                    Users.Add(new UserViewModel(new CoreUserProxy(core.User, _settingsService)));
+                    Users.Add(new UserViewModel(this, new CoreUserProxy(core.User, _settingsService)));
             });
 
             AttachEvents(core);
@@ -153,6 +153,13 @@ namespace StrixMusic.Sdk
 
             await relevantVm.DisposeAsync();
         }
+
+        /// <summary>
+        /// Gets a loaded core from the list of loaded <see cref="Cores"/>.
+        /// </summary>
+        /// <param name="reference">The core to look for.</param>
+        /// <returns>The loaded, observable core.</returns>
+        public CoreViewModel GetLoadedCore(ICore reference) => Cores.First(x => x.InstanceId == reference.InstanceId);
 
         /// <summary>
         /// Initializes and loads the ViewModel, including initializing all cores in the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
@@ -181,22 +188,22 @@ namespace StrixMusic.Sdk
                 await InitCore(core);
 
             _mergedLibrary = new MergedLibrary(_sources.Select(x => x.Library), _settingsService);
-            Library = new LibraryViewModel(_mergedLibrary);
+            Library = new LibraryViewModel(this, _mergedLibrary);
             await Library.InitAsync();
 
             if (_sources.Any(x => x.RecentlyPlayed != null))
             {
                 _mergedRecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), _settingsService);
-                RecentlyPlayed = new RecentlyPlayedViewModel(_mergedRecentlyPlayed);
+                RecentlyPlayed = new RecentlyPlayedViewModel(this, _mergedRecentlyPlayed);
             }
 
             if (_sources.Any(x => x.Discoverables != null))
             {
                 _mergedDiscoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), _settingsService);
-                Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
+                Discoverables = new DiscoverablesViewModel(this, _mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new CoreDeviceProxy(device, _settingsService))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(this, new CoreDeviceProxy(device, _settingsService))))
             {
                 LocalDevice,
             };
@@ -208,7 +215,7 @@ namespace StrixMusic.Sdk
             foreach (var device in Devices)
                 AttachEvents(device);
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x, _settingsService))));
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(this, new CoreUserProxy(x, _settingsService))));
 
             _sources.ForEach(AttachEvents);
 
@@ -235,7 +242,7 @@ namespace StrixMusic.Sdk
             // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
             await Threading.OnPrimaryThread(() =>
             {
-                _ = new CoreViewModel(core, coreMetadata, _settingsService, this);
+                _ = new CoreViewModel(this, core, coreMetadata, _settingsService);
             });
             return core;
         }
@@ -318,7 +325,7 @@ namespace StrixMusic.Sdk
         /// </summary>
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
         {
-            if (!(sender is ICore core))
+            if (sender is not ICore core)
             {
                 ThrowHelper.ThrowInvalidOperationException();
                 return;
@@ -336,7 +343,7 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new CoreDeviceProxy(x.Data, _settingsService)), x.Index)).ToList();
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(this, new CoreDeviceProxy(x.Data, _settingsService)), x.Index)).ToList();
             var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
 
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -366,11 +373,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// The singleton instance of the <see cref="MainViewModel"/>.
         /// </summary>
-        /// <remarks>
-        /// The <see cref="MainViewModel"/> contains only logic for interacting with instance of cores, and relaying them to the UI.
-        /// Creating more than one <see cref="MainViewModel"/> off the same instance IDs would result in a second instance of
-        /// MainViewModel with identical states and functionality. Therefore, a singleton is desired over multi-instance.
-        /// </remarks>
+        [Obsolete("This singleton will be removed soon to better follow the trickle-down MVVM pattern.")]
         public static MainViewModel? Singleton { get; private set; }
 
         /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
