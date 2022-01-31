@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.FileMetadataManagement.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Cores.Files.Models
 {

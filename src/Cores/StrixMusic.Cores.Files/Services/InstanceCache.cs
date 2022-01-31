@@ -1,8 +1,8 @@
 ﻿using System;
 using OwlCore.Services;
 using StrixMusic.Cores.Files.Models;
+using StrixMusic.Sdk.FileMetadataManagement.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Cores.Files.Services
 {

@@ -18,9 +18,9 @@ using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Cores.OneDrive.Storage;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.FileMetadataManagement;
 
 namespace StrixMusic.Cores.OneDrive
 {
