@@ -54,7 +54,6 @@ namespace StrixMusic.Sdk
 
             Cores = new ObservableCollection<CoreViewModel>();
             Users = new ObservableCollection<UserViewModel>();
-            PlaybackQueue = new ObservableCollection<TrackViewModel>();
 
             AttachEvents();
         }
@@ -417,12 +416,12 @@ namespace StrixMusic.Sdk
         ISearch? IAppCore.Search { get; }
 
         /// <summary>
-        /// Gets the active device in <see cref="Devices"/>.
+        /// Gets the first active device in <see cref="Devices"/>.
         /// </summary>
         public DeviceViewModel? ActiveDevice => Devices.FirstOrDefault(x => x.IsActive);
 
         /// <summary>
-        /// Gets the active device in <see cref="Devices"/>.
+        /// Gets the device which is used for local playback.
         /// </summary>
         public DeviceViewModel LocalDevice { get; }
 
@@ -443,11 +442,6 @@ namespace StrixMusic.Sdk
 
         /// <inheritdoc cref="SearchViewModel" />
         public SearchViewModel? Search { get; }
-
-        /// <summary>
-        /// The current playback queue. First item plays next.
-        /// </summary>
-        public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
 
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
