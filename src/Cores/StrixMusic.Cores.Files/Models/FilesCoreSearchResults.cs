@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.FileMetadataManagement;
-using StrixMusic.Sdk.FileMetadataManagement.Models;
+using StrixMusic.Sdk.FileMetadata;
+using StrixMusic.Sdk.FileMetadata.Models;
 using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files.Models

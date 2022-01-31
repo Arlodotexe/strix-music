@@ -7,8 +7,8 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.FileMetadataManagement;
-using StrixMusic.Sdk.FileMetadataManagement.Models;
+using StrixMusic.Sdk.FileMetadata;
+using StrixMusic.Sdk.FileMetadata.Models;
 using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files.Models
