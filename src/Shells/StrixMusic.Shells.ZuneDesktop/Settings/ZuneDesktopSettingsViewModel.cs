@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -44,8 +46,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </summary>
         public ZuneDesktopSettingsViewModel()
         {
-            _settingsService = Shell.Ioc.GetRequiredService<ISettingsService>();
-            _localizationService = Shell.Ioc.GetRequiredService<LocalizationResourceLoader>();
+            _settingsService = ZuneShell.Ioc.GetRequiredService<ISettingsService>();
+            _localizationService = (LocalizationResourceLoader)Ioc.Default.GetRequiredService<ILocalizationService>();
 
             _displayNameMap = _zuneBackgroundImages.Keys
                 .ToDictionary(x => _localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x]);

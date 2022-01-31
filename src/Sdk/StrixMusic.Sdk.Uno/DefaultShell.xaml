@@ -47,7 +47,7 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
+            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataRoot}"
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 

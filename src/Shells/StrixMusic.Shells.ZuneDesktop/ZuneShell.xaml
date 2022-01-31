@@ -143,11 +143,11 @@
                 </Pivot.LeftHeader>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI" Header="quickplay"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <quickplay:QuickplayContent x:Name="QuickplayPage"/>
+                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind DataRoot}" />
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI" Header="collection"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <collection:CollectionContent />
+                    <collection:CollectionContent DataRoot="{x:Bind DataRoot}" />
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI" Header="browse"
                            a:TextHelpers.CharacterCasing="Lower">

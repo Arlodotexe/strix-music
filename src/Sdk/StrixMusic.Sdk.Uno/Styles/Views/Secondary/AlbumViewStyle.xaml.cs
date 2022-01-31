@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views.Secondary;
@@ -25,7 +26,7 @@ namespace StrixMusic.Sdk.Uno.Styles.Views.Secondary
         {
             if ((sender as Control)?.DataContext is ArtistViewModel viewModel)
             {
-                INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+                var navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
 
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel);
             }

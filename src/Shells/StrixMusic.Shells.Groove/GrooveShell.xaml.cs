@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Notifications;
@@ -45,8 +47,7 @@ namespace StrixMusic.Shells.Groove
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveShell), new PropertyMetadata(null));
 
-        private ILocalizationService? _localizationService;
-        private NotificationsViewModel? _notificationsViewModel;
+        private ILocalizationService _localizationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
@@ -66,9 +67,11 @@ namespace StrixMusic.Shells.Groove
             // Register playlists page navigation
             WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
+            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
+
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
-            DataContextChanged += GrooveShell_DataContextChanged;
+            RegisterPropertyChangedCallback(DataRootProperty, new DependencyPropertyChangedCallback((x, y) => x.Cast<GrooveShell>().OnDataRootChanged()));
 
             Unloaded += GrooveShell_Unloaded;
             Loaded += GrooveShell_Loaded;
@@ -78,6 +81,9 @@ namespace StrixMusic.Shells.Groove
         {
             Loaded -= GrooveShell_Loaded;
 
+            Guard.IsNotNull(DataRoot, nameof(DataRoot));
+
+            DataRoot.Notifications.IsHandled = true;
             NavigationTracker.Instance.Initialize();
         }
 
@@ -88,22 +94,22 @@ namespace StrixMusic.Shells.Groove
             WeakReferenceMessenger.Default.Reset();
         }
 
-        private void GrooveShell_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        private void OnDataRootChanged()
         {
-            DataContextChanged -= GrooveShell_DataContextChanged;
+            if (DataRoot is null)
+                return;
 
-            PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel() { PlaylistCollection = ViewModel.Library };
+            PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel
+            {
+                PlaylistCollection = DataRoot.Library
+            };
 
-            if (ViewModel?.Library != null)
+            if (DataRoot?.Library != null)
             {
                 Bindings.Update();
-                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));
+                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(DataRoot.Library));
             }
         }
-
-        private MainViewModel ViewModel => (MainViewModel)DataContext;
-
-        private NotificationsViewModel? NotificationsViewModel => _notificationsViewModel;
 
         /// <summary>
         /// Gets or sets the Title text for the Groove Shell.
@@ -159,30 +165,6 @@ namespace StrixMusic.Shells.Groove
             NavigationTracker.Instance.NavigateBackwards();
         }
 
-        /// <inheritdoc />
-        public override Task InitServices(IServiceCollection services)
-        {
-            foreach (var service in services)
-            {
-                if (service is null)
-                    continue;
-
-                if (service.ImplementationInstance is ILocalizationService localizationService)
-                    _localizationService = localizationService;
-
-                if (service.ImplementationInstance is NotificationsViewModel notificationsViewModel)
-                    _notificationsViewModel = SetupNotificationsViewModel(notificationsViewModel);
-            }
-
-            return base.InitServices(services);
-        }
-
-        private NotificationsViewModel SetupNotificationsViewModel(NotificationsViewModel notificationsViewModel)
-        {
-            notificationsViewModel.IsHandled = true;
-            return notificationsViewModel;
-        }
-
         private void NavigationButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sender is ToggleButton button)
@@ -190,12 +172,12 @@ namespace StrixMusic.Shells.Groove
                 switch (button.Tag as string)
                 {
                     case "MyMusic":
-                        Guard.IsNotNull(ViewModel?.Library, nameof(ViewModel.Library));
-                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(ViewModel.Library));
+                        Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
+                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(DataRoot.Library));
                         break;
                     case "Playlists":
-                        Guard.IsNotNull(ViewModel?.Library, nameof(ViewModel.Library));
-                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage(ViewModel.Library));
+                        Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
+                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage(DataRoot.Library));
                         break;
                 }
             }
@@ -225,7 +207,7 @@ namespace StrixMusic.Shells.Groove
                 if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
                     MainContent.ContentTemplate = (DataTemplate)dataTemplate;
                 else
-                    Ioc.GetRequiredService<INotificationService>().RaiseNotification("Error", "Unable to show page.");
+                    Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Error", "Unable to show page.");
             }
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));

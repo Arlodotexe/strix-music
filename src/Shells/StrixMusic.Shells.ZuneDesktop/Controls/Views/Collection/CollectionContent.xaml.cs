@@ -20,13 +20,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         public CollectionContent()
         {
             this.InitializeComponent();
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
-            _ = MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.ExecuteAsync(20);
         }
 
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
+        /// <summary>
+        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// </summary>
+        public MainViewModel? DataRoot
+        {
+            get { return (MainViewModel)GetValue(DataRootProperty); }
+            set { SetValue(DataRootProperty, value); }
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="DataRoot"/>.
+        /// </summary>
+        public static readonly DependencyProperty DataRootProperty =
+            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(CollectionContent), new PropertyMetadata(null));
 
         private void SwapPage(string pageVisualStateName)
         {
@@ -88,7 +97,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ClearSelections()
         {
-            if (ViewModel == null)
+            if (DataRoot == null)
                 return;
 
             ArtistCollection.ClearSelected();
@@ -100,12 +109,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             // Clears by rebinding
             TrackTable.DataContext = null;
 
-            Guard.IsNotNull(ViewModel.Library, nameof(ViewModel.Library));
-            ArtistCollection.Collection = ViewModel.Library;
-            AlbumCollection.Collection = ViewModel.Library;
-            TrackCollection.Collection = ViewModel.Library;
-            TrackTable.Collection = ViewModel.Library;
-            PlaylistCollection.DataContext = ViewModel.Library;
+            Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
+
+            ArtistCollection.Collection = DataRoot.Library;
+            AlbumCollection.Collection = DataRoot.Library;
+            TrackCollection.Collection = DataRoot.Library;
+            TrackTable.Collection = DataRoot.Library;
+            PlaylistCollection.Collection = DataRoot.Library;
 
             DetailsPane.DataContext = null;
         }

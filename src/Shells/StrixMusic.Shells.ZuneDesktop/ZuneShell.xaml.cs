@@ -2,8 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Controls.Shells;
@@ -41,29 +45,19 @@ namespace StrixMusic.Shells.ZuneDesktop
             Loaded += ZuneShell_Loaded;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override Task InitServices(IServiceCollection services)
         {
+            _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
+            SetupNavigationService(_navigationService);
+            SetupNotificationService();
+            SetupLocalizationService();
+
             var textStorageService = new TextStorageService();
             var settingsService = new ZuneDesktopSettingsService(textStorageService);
             settingsService.SettingChanged += SettingsService_SettingChanged;
 
             services.AddSingleton<ISettingsService>(settingsService);
-
-            foreach (var service in services)
-            {
-                if (service is null)
-                    continue;
-
-                if (service.ImplementationInstance is INavigationService<Control> navigationService)
-                    _navigationService = SetupNavigationService(navigationService);
-
-                if (service.ImplementationInstance is LocalizationResourceLoader localizationLoaderService)
-                    SetupLocalizationService(localizationLoaderService);
-
-                if (service.ImplementationInstance is NotificationService notificationService)
-                    SetupNotificationService(notificationService);
-            }
 
             return base.InitServices(services);
         }
@@ -76,20 +70,23 @@ namespace StrixMusic.Shells.ZuneDesktop
             return navigationService;
         }
 
-        private void SetupLocalizationService(LocalizationResourceLoader localizationLoaderService)
+        private void SetupLocalizationService()
         {
-            localizationLoaderService.RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
+            Ioc.Default.GetRequiredService<ILocalizationService>().Cast<LocalizationResourceLoader>().RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
         }
 
-        private void SetupNotificationService(NotificationService notificationService)
+        private void SetupNotificationService()
         {
-            notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
-            notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
+            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+
+            notificationService.Cast<NotificationService>().ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            notificationService.Cast<NotificationService>().ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
         }
 
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= ZuneShell_Loaded;
+
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
             SetupBackgroundImage();
         }
@@ -139,8 +136,6 @@ namespace StrixMusic.Shells.ZuneDesktop
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif
         }
-
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
 
         private void ZuneShell_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {

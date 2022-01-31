@@ -552,7 +552,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string? Description => Model.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => MainViewModel.Singleton?.ActiveDevice?.NowPlaying?.Id == Id ? MainViewModel.Singleton?.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
+        public PlaybackState PlaybackState => Root.ActiveDevice?.NowPlaying?.Id == Id ? Root.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
 
         /// <inheritdoc />
         public DownloadInfo DownloadInfo

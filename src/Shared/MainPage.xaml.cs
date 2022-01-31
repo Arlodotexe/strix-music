@@ -6,6 +6,7 @@ using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
@@ -55,24 +56,6 @@ namespace StrixMusic.Shared
         /// The user's preferred shell.
         /// </summary>
         internal ShellMetadata? FallbackShell { get; private set; }
-
-        private static void InjectServices(Sdk.Uno.Controls.Shells.Shell shell)
-        {
-            var services = new ServiceCollection();
-
-            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            var localizationService = new LocalizationResourceLoader();
-            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.CommonResource);
-            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.MusicResource);
-
-            services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
-            services.AddSingleton(localizationService);
-            services.AddSingleton(notificationService);
-            services.AddSingleton(mainViewModel);
-
-            shell.InitServices(services);
-        }
 
         private async void MainPage_Loaded(object? sender, RoutedEventArgs e)
         {
@@ -142,7 +125,7 @@ namespace StrixMusic.Shared
                     return;
 
                 // Store the shell that is actually going to be created according to the conditions.
-                ShellMetadata? shellToCreate = null;
+                ShellMetadata? shellToCreate;
 
                 if (CheckShellModelSupport(PreferredShell))
                     shellToCreate = PreferredShell;
@@ -203,18 +186,17 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                ActiveShellModel = shellMetadata;
-
-                var shell = ShellRegistry.CreateShell(shellMetadata);
-
                 var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
                 mainViewModel.Notifications.IsHandled = false;
-                InjectServices(shell);
 
-                shell.DataContext = MainViewModel.Singleton;
+                var shell = ShellRegistry.CreateShell(shellMetadata);
 
+                shell.DataRoot = mainViewModel;
+                shell.InitServices(new ServiceCollection());
                 ShellDisplay.Content = shell;
+
+                ActiveShellModel = shellMetadata;
             }
 
             return Task.CompletedTask;

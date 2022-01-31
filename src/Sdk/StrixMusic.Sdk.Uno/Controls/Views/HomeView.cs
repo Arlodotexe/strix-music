@@ -13,18 +13,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Views
         public HomeView()
         {
             this.DefaultStyleKey = typeof(HomeView);
-
-            if (MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.IsRunning == false)
-                _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(60);
-
-            if (MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.IsRunning == false)
-                _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(60);
-
-            if (MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.IsRunning == false)
-                _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(60);
-
-            if (MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.IsRunning == false)
-                _ = MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.ExecuteAsync(60);
         }
 
         /// <inheritdoc />

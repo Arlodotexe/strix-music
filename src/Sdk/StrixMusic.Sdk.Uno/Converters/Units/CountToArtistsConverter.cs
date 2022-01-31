@@ -1,7 +1,7 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Uno.Services.Localization;
-using System;
+using StrixMusic.Sdk.Services.Localization;
 using Windows.UI.Xaml.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters.Units
@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Units
         /// <returns>The converted value.</returns>
         public static string Convert(int value)
         {
-            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
             return string.Format(localizationService[Constants.Localization.MusicResource, "ArtistsCount"], value);
         }
 

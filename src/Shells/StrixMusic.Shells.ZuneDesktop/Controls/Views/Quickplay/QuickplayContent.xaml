@@ -10,6 +10,8 @@
     xmlns:collectionstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay.QuickplayContent"
     x:Name="RootControl"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:wasm="http://uno.ui/wasm"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:not_wasm="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -522,6 +524,12 @@
 
         <ScrollViewer x:Name="MainScroller" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="1">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Loaded">
+                    <core:InvokeCommandAction Command="{x:Bind DataRoot.Library.InitAlbumCollectionAsyncCommand}" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
             <Grid x:Name="MainWrapper" VerticalAlignment="Top" Padding="0,60,0,0" SizeChanged="MainWrapper_SizeChanged">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -566,7 +574,7 @@
                         </TextBlock.RenderTransform>
                     </TextBlock>
 
-                    <collections:AlbumCollection DataContext="{x:Bind ViewModel.Library}" Style="{StaticResource QuickplayAlbumCollectionStyle}"/>
+                    <collections:AlbumCollection DataContext="{x:Bind DataRoot.Library}" Style="{StaticResource QuickplayAlbumCollectionStyle}"/>
                 </Grid>
 
                 <Grid Width="500" Height="300" Grid.Column="1" Margin="20,0"

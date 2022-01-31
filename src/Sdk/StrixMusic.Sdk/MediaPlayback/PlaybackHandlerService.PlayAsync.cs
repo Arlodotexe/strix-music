@@ -174,7 +174,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             ClearPrevious();
             ClearNext();
 
-            var trackInfo = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
+            var (PlaybackTrack, Index) = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
 
             if (ShuffleState)
                 ShuffleOnInternal();
@@ -191,6 +191,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <returns>True if playback should continue locally, false if playback should continue remotely.</returns>
         private async Task<bool> PrepareToPlayCollection()
         {
+#warning TODO: Move device activation elsewhere.
             var mainViewModel = MainViewModel.Singleton;
 
             Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
