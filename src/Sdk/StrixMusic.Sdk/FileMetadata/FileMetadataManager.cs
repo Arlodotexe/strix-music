@@ -19,7 +19,7 @@ using StrixMusic.Sdk.Services;
 namespace StrixMusic.Sdk.FileMetadata
 {
     /// <summary>
-    /// Given an implementation of <see cref="IFolderData"/> and <see cref="IFileData"/>, this manages scanning and caching all the music metadata from files in folder, including child folders.
+    /// Given an OwlCore.AbstractStorage implementation, this manages scanning and caching all the music metadata from files in folder, including child folders.
     /// </summary>
     public sealed class FileMetadataManager : IFileMetadataManager
     {
@@ -211,12 +211,12 @@ namespace StrixMusic.Sdk.FileMetadata
         public bool IsInitialized { get; private set; }
 
         /// <summary>
-        /// Keeps the count of found files
+        /// Gets the number of found files
         /// </summary>
         public int FilesFound
         {
             get => _filesFound;
-            set
+            internal set
             {
                 _filesFound = value;
                 if (_progressUIElement != null)
@@ -227,12 +227,12 @@ namespace StrixMusic.Sdk.FileMetadata
         }
 
         /// <summary>
-        /// Keeps the count of processed file.
+        /// Gets the number of processed files.
         /// </summary>
         public int FilesProcessed
         {
             get => _filesProcessed;
-            set
+            internal set
             {
                 _filesProcessed = value;
 
@@ -244,19 +244,19 @@ namespace StrixMusic.Sdk.FileMetadata
         }
 
         /// <inheritdoc />
-        public AlbumRepository Albums { get; }
+        public IAlbumRepository Albums { get; }
 
         /// <inheritdoc />
-        public ArtistRepository Artists { get; }
+        public IArtistRepository Artists { get; }
 
         /// <inheritdoc />
-        public PlaylistRepository Playlists { get; }
+        public IPlaylistRepository Playlists { get; }
 
         /// <inheritdoc />
-        public TrackRepository Tracks { get; }
+        public ITrackRepository Tracks { get; }
 
         /// <inheritdoc/>
-        public ImageRepository Images { get; private set; }
+        public IImageRepository Images { get; private set; }
 
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }

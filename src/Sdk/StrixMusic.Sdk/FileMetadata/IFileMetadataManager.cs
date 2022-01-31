@@ -7,37 +7,37 @@ using StrixMusic.Sdk.FileMetadata.Repositories;
 namespace StrixMusic.Sdk.FileMetadata
 {
     /// <summary>
-    /// Given an implementation of <see cref="IFolderData"/> and <see cref="IFileData"/>, this manages scanning and caching all the music metadata from files in folder, including child folders.
+    /// Given an implementation of OwlCore.AbstractStorage, this manages scanning and caching all the music metadata from files in folder, including child folders.
     /// </summary>
     public interface IFileMetadataManager : IAsyncInit, IAsyncDisposable
     {
         /// <summary>
-        /// Provides access to all albums in the given folder.
+        /// Stores album metadata.
         /// </summary>
-        AlbumRepository Albums { get; }
+        IAlbumRepository Albums { get; }
 
         /// <summary>
-        /// Provides access to all artists in the given folder.
+        /// Stores artist metadata.
         /// </summary>
-        ArtistRepository Artists { get; }
+        IArtistRepository Artists { get; }
 
         /// <summary>
-        /// Provides access to all playlists in the given folder.
+        /// Stores playlist metadata.
         /// </summary>
-        PlaylistRepository Playlists { get; }
+        IPlaylistRepository Playlists { get; }
 
         /// <summary>
-        /// Provides access to all tracks in the given folder.
+        /// Stores track metadata.
         /// </summary>
-        TrackRepository Tracks { get; }
+        ITrackRepository Tracks { get; }
 
         /// <summary>
-        /// Provides access to all images in the given folder.
+        /// Stores image metadata.
         /// </summary>
-        ImageRepository Images { get; }
+        IImageRepository Images { get; }
 
         /// <summary>
-        /// If true, the repositories will not be initialized when <see cref="IAsyncInit.InitAsync"/> is called for this <see cref="IFileMetadataManager"/>.
+        /// If true, the repositories will not be initialized when InitAsync is called for this <see cref="IFileMetadataManager"/>.
         /// </summary>
         bool SkipRepoInit { get; set; }
 

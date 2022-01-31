@@ -42,6 +42,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <param name="metadataManager">The metadata manager that handles this scanner.</param>
         public AudioMetadataScanner(FileMetadataManager metadataManager)
         {
+#warning TODO: Remove dependency on FileMetadataManager.
             _logger = Ioc.Default.GetRequiredService<ILogger<AudioMetadataScanner>>();
             _metadataManager = metadataManager;
             _scanBatchSize = metadataManager.DegreesOfParallelism;
