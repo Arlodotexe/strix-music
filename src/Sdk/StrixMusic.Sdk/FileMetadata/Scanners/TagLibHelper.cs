@@ -1,7 +1,7 @@
 ﻿namespace StrixMusic.Sdk.FileMetadata.Scanners
 {
     /// <summary>
-    /// Miscellaneous helpers for <see cref="TagLib"/>.
+    /// Miscellaneous helpers for TagLibSharp.
     /// </summary>
     public static class TagLibHelper
     {
