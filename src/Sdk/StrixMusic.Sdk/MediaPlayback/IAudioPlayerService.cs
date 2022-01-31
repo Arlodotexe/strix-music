@@ -10,13 +10,6 @@ namespace StrixMusic.Sdk.MediaPlayback
     public interface IAudioPlayerService : IAudioPlayerBase
     {
         /// <summary>
-        /// Plays a preloaded track.
-        /// </summary>
-        /// <param name="id">The ID that was registered during preload.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task Play(string id);
-
-        /// <summary>
         /// Plays a track.
         /// </summary>
         /// <param name="sourceConfig">The source configuration for this track.</param>

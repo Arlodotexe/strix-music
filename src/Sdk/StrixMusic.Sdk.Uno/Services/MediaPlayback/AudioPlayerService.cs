@@ -11,7 +11,6 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-// ReSharper disable once CheckNamespace
 namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 {
     /// <inheritdoc />
@@ -143,15 +142,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
         /// <inheritdoc />
         public double PlaybackSpeed => _player.MediaPlayer.PlaybackSession.PlaybackRate;
-
-        /// <inheritdoc />
-        public Task Play(string id)
-        {
-            var source = _preloadedSources[id];
-
-            // TODO use preloaded
-            return Play(source);
-        }
 
         /// <inheritdoc />
         public async Task Play(IMediaSourceConfig sourceConfig)

@@ -46,11 +46,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             return Task.CompletedTask;
         }
 
-        public Task Play(string id)
-        {
-            return Task.CompletedTask;
-        }
-
         public Task Play(IMediaSourceConfig sourceConfig)
         {
             return Task.CompletedTask;
