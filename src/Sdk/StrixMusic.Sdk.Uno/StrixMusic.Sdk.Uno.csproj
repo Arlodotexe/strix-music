@@ -145,4 +145,7 @@
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.0" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converters\Time\" />
+  </ItemGroup>
 </Project>

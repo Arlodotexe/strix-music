@@ -11,7 +11,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:tkprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
     xmlns:timeconvert="using:OwlCore.Uno.Converters.Time"
-    xmlns:strixtimeconvert="using:StrixMusic.Sdk.Uno.Converters.Time"
+    xmlns:numericaltime="using:OwlCore.Uno.Converters.Time.Numerical"
     xmlns:a="using:OwlCore.Uno.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackTableStyle">
 
@@ -21,7 +21,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <timeconvert:TimeSpanToTextConverter x:Key="TimeSpanToTextConverter"/>
-    <strixtimeconvert:DateTimeToShortTextConverter x:Key="DateTimeToShortTextConverter"/>
+    <numericaltime:DateTimeToShortTextConverter x:Key="DateTimeToShortTextConverter"/>
     <convert:PlaybackStateToForegroundConverter x:Key="PlaybackStateToForegroundConverter"/>
 
     <Style x:Key="DataGridTextBlockStyle" TargetType="TextBlock">
