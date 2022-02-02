@@ -85,13 +85,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICoreImageCollection> Sources => InnerImageCollection.Sources;
-
-        /// <inheritdoc/>
-        public virtual IReadOnlyList<ICore> SourceCores => InnerImageCollection.SourceCores;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => InnerUrlCollection.Sources;
+
+        /// <inheritdoc/>
+        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => InnerImageCollection.SourceCores;
+
+        /// <inheritdoc/>
+        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => InnerUrlCollection.SourceCores;
 
         /// <inheritdoc/>
         public virtual event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -159,8 +162,8 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual event EventHandler<int>? UrlsCountChanged
         {
-            add => Inner.UrlsCountChanged += value;
-            remove => Inner.UrlsCountChanged -= value;
+            add => InnerUrlCollection.UrlsCountChanged += value;
+            remove => InnerUrlCollection.UrlsCountChanged -= value;
         }
 
         /// <inheritdoc/>

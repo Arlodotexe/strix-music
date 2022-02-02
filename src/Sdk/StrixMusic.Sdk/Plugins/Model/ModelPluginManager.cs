@@ -22,5 +22,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IImageCollection"/>.
         /// </summary>
         public ChainedProxyBuilder<ImageCollectionPluginBase, IImageCollection> ImageCollection { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IUrlCollection"/>.
+        /// </summary>
+        public ChainedProxyBuilder<UrlCollectionPluginBase, IUrlCollection> UrlCollection { get; } = new();
     }
 }
