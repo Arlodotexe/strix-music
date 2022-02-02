@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            core.CoreState = Models.CoreState.NeedsSetup;
+            core.CoreState = StrixMusic.Sdk.Models.CoreState.NeedsSetup;
 
             // Wait for changes to propogate
             await Task.Delay(500);

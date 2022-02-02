@@ -189,6 +189,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
 
@@ -200,6 +207,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public PlaybackState PlaybackState { get; internal set; }
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
@@ -335,6 +345,12 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItemsAsync(limit, offset);
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         void IMergedMutable<ICoreArtistCollection>.AddSource(ICoreArtistCollection itemToMerge)

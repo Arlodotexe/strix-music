@@ -36,8 +36,6 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
-        private DownloadInfo _downloadInfo;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
@@ -108,6 +106,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += CorePlaylistNameChanged;
             PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
+            DownloadInfoChanged += OnDownloadInfoChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged += OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -129,6 +128,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= CorePlaylistNameChanged;
             PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
+            DownloadInfoChanged -= OnDownloadInfoChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged -= OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -149,6 +149,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _playlist.PlaybackStateChanged += value;
             remove => _playlist.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => _playlist.DownloadInfoChanged += value;
+            remove => _playlist.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -257,6 +264,8 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
+
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
 
         private void CorePlaylistNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
@@ -402,11 +411,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _playlist.PlaybackState;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo
-        {
-            get => _downloadInfo;
-            private set => SetProperty(ref _downloadInfo, value);
-        }
+        public DownloadInfo DownloadInfo => _playlist.DownloadInfo;
 
         /// <inheritdoc />
         public int TotalTrackCount => _playlist.TotalTrackCount;
@@ -469,11 +474,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseTrackCollectionAsync() => _playlist.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
-        {
-            // TODO create / integrate download manager.
-            throw new NotImplementedException();
-        }
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _playlist.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

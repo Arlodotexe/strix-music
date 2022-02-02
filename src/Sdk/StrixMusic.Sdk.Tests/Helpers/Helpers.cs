@@ -6,11 +6,58 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Sdk.Tests
 {
     internal static class Helpers
     {
+        public static void AssertAllThrowsOnMemberAccess<TException>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+            where TException : Exception
+        {
+            AssertAllThrowsOnMemberAccess<TException>(value.GetType(), value, mustContainMembers, customFilter);
+        }
+
+
+        public static void AssertAllThrowsOnMemberAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+            where TException : Exception
+        {
+            AssertAllThrowsOnMemberAccess<TException>(typeof(TInterfaceFilter), value, mustContainMembers, customFilter);
+        }
+
+        public static void AssertAllThrowsOnMemberAccess<TException>(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+            where TException : Exception
+        {
+            var instanceType = value.GetType();
+
+            var properties = instanceType.GetProperties().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
+            var methods = instanceType.GetMethods().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
+            var events = instanceType.GetEvents().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
+
+            if (mustContainMembers)
+                Assert.AreNotEqual(0, properties.Length);
+
+            foreach (var property in properties)
+            {
+                var ex = Assert.ThrowsException<TargetInvocationException>(() => property.GetMethod!.Invoke(value, property.GetMethod.GetParameters().Select(x => x.DefaultValue).ToArray()));
+                Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
+            }
+
+            foreach (var method in methods)
+            {
+                var ex = Assert.ThrowsException<TargetInvocationException>(() => method!.Invoke(value, method.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
+                Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
+            }
+
+            foreach (var ev in events)
+            {
+                var addEx = Assert.ThrowsException<TargetInvocationException>(() => ev.AddMethod!.Invoke(value, ev.AddMethod.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
+                var removeEx = Assert.ThrowsException<TargetInvocationException>(() => ev.RemoveMethod!.Invoke(value, ev.RemoveMethod.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
+
+                Assert.IsInstanceOfType(addEx.InnerException, typeof(TException));
+                Assert.IsInstanceOfType(removeEx.InnerException, typeof(TException));
+            }
+        }
 
         public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)
         {
@@ -152,6 +199,7 @@ namespace StrixMusic.Sdk.Tests
 
             Assert.IsNotNull(originalParamProps);
             Assert.IsNotNull(deserParamProps);
+            Assert.AreNotEqual(0, originalParamProps.Length);
 
             for (int o = 0; o < originalParamProps.Length; o++)
             {
@@ -205,6 +253,7 @@ namespace StrixMusic.Sdk.Tests
 
             Assert.IsNotNull(originalParamProps);
             Assert.IsNotNull(deserParamProps);
+            Assert.AreNotEqual(0, originalParamProps.Length);
 
             for (int o = 0; o < originalParamProps.Length; o++)
             {

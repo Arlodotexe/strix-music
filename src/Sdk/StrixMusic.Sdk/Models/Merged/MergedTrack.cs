@@ -262,6 +262,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         /// <inheritdoc cref="IMerged{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
@@ -335,6 +342,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => _preferredSource.PlaybackState;
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc/>
         public TimeSpan Duration => _preferredSource.Duration;
@@ -505,6 +515,12 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public Task RemoveUrlAsync(int index) => _urlCollectionMap.RemoveAt(index);
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreTrack);

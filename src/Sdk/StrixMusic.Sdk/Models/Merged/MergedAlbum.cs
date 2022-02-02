@@ -295,6 +295,9 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc/>
         public Uri? Url { get; internal set; }
 
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+
         /// <inheritdoc />
         public event EventHandler<DateTime?>? DatePublishedChanged;
 
@@ -368,6 +371,13 @@ namespace StrixMusic.Sdk.Models.Merged
         public event EventHandler<int>? UrlsCountChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
@@ -434,6 +444,12 @@ namespace StrixMusic.Sdk.Models.Merged
         public Task ChangeNameAsync(string name)
         {
             return _preferredSource.ChangeNameAsync(name);
+        }
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>

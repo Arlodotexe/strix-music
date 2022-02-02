@@ -38,8 +38,6 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
-        private DownloadInfo _downloadInfo;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
@@ -120,6 +118,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
             LastPlayedChanged += CollectionGroupLastPlayedChanged;
+            DownloadInfoChanged += OnDownloadInfoChanged;
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged += CollectionGroupOnTrackItemsCountChanged;
@@ -157,6 +156,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
             LastPlayedChanged -= CollectionGroupLastPlayedChanged;
+            DownloadInfoChanged -= OnDownloadInfoChanged;
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged -= CollectionGroupOnTrackItemsCountChanged;
@@ -205,6 +205,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collectionGroup.PlaybackStateChanged += value;
             remove => _collectionGroup.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => _collectionGroup.DownloadInfoChanged += value;
+            remove => _collectionGroup.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -401,6 +408,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void CollectionGroupDescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
 
         private void CollectionGroupPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
+
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
 
         private void CollectionGroupOnTotalChildrenCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalChildrenCount)));
 
@@ -742,11 +751,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collectionGroup.PlaybackState;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo
-        {
-            get => _downloadInfo;
-            private set => SetProperty(ref _downloadInfo, value);
-        }
+        public DownloadInfo DownloadInfo => _collectionGroup.DownloadInfo;
 
         /// <inheritdoc />
         public bool IsPlayPlaylistCollectionAsyncAvailable => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailable;
@@ -824,11 +829,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collectionGroup.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
-        {
-            // TODO create / integrate download manager.
-            throw new NotImplementedException();
-        }
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _collectionGroup.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

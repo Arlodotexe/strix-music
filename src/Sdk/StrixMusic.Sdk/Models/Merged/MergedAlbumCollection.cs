@@ -156,6 +156,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public event EventHandler<int>? UrlsCountChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         private void AlbumMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
         {
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
@@ -219,6 +226,9 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public PlaybackState PlaybackState { get; internal set; }
 
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
 
@@ -251,6 +261,13 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public int TotalUrlCount { get; internal set; }
+
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         public Task<bool> IsAddAlbumItemAvailableAsync(int index) => _albumMap.IsAddItemAvailableAsync(index);

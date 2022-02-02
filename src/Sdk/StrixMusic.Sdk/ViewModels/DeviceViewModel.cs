@@ -196,7 +196,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? IsActiveChanged
         {
             add => Model.IsActiveChanged += value;
-
             remove => Model.IsActiveChanged -= value;
         }
 
@@ -204,7 +203,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<IPlayableBase>? PlaybackContextChanged
         {
             add => Model.PlaybackContextChanged += value;
-
             remove => Model.PlaybackContextChanged -= value;
         }
 
@@ -215,7 +213,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<TimeSpan>? PositionChanged
         {
             add => Model.PositionChanged += value;
-
             remove => Model.PositionChanged -= value;
         }
 
@@ -223,7 +220,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => Model.PlaybackStateChanged += value;
-
             remove => Model.PlaybackStateChanged -= value;
         }
 
@@ -231,7 +227,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? ShuffleStateChanged
         {
             add => Model.ShuffleStateChanged += value;
-
             remove => Model.ShuffleStateChanged -= value;
         }
 
@@ -239,7 +234,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<RepeatState>? RepeatStateChanged
         {
             add => Model.RepeatStateChanged += value;
-
             remove => Model.RepeatStateChanged -= value;
         }
 
@@ -247,7 +241,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<double>? VolumeChanged
         {
             add => Model.VolumeChanged += value;
-
             remove => Model.VolumeChanged -= value;
         }
 
@@ -255,7 +248,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<double>? PlaybackSpeedChanged
         {
             add => Model.PlaybackSpeedChanged += value;
-
             remove => Model.PlaybackSpeedChanged -= value;
         }
 

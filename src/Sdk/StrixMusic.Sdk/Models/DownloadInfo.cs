@@ -6,6 +6,25 @@
     public struct DownloadInfo : System.IEquatable<DownloadInfo>
     {
         /// <summary>
+        /// Creates an instance of the <see cref="DownloadInfo"/> struct.
+        /// </summary>
+        public DownloadInfo(DownloadState state)
+            : this()
+        {
+            State = state;
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="DownloadInfo"/> struct.
+        /// </summary>
+        public DownloadInfo(DownloadState state, ushort progress)
+            : this()
+        {
+            Progress = progress;
+            State = state;
+        }
+
+        /// <summary>
         /// A value between 0 and 65535 representing how much of this playable item has been downloaded for offline playback.
         /// </summary>
         public ushort Progress { get; }
