@@ -227,6 +227,32 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             });
         }
 
+        [TestMethod, Timeout(5000)]
+        public void PluginFullyCustomWith_ImageCollection_UrlCollection()
+        {
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var finalTestClass = new Unimplemented();
+            builder.Add(x => new NoOverride(x)
+            {
+                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
+                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented()
+            });
+
+            var finalImpl = builder.Execute(finalTestClass);
+
+            Assert.AreNotSame(finalImpl, finalTestClass);
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
+                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
+                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
+            });
+        }
+
         internal class FullyCustom : Sdk.Plugins.Model.PlayablePluginBase
         {
             public FullyCustom(IPlayable inner)
