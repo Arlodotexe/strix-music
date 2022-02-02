@@ -33,6 +33,8 @@ namespace StrixMusic.Sdk.Plugins.Model
             remove => Inner.DownloadInfoChanged -= value;
         }
 
+        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+
         /// <inheritdoc/>
         public virtual Task StartDownloadOperationAsync(DownloadOperation operation) => Inner.StartDownloadOperationAsync(operation);
     }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models
@@ -8,7 +6,7 @@ namespace StrixMusic.Sdk.Models
     /// <summary>
     /// Indicates an item that can be downloaded for offline usage.
     /// </summary>
-    public interface IDownloadable
+    public interface IDownloadable : IAsyncDisposable
     {
         /// <summary>
         /// Information about downloading this item.
