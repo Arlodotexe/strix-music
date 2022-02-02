@@ -15,22 +15,29 @@ namespace StrixMusic.Sdk.Tests
         public static void AssertAllThrowsOnMemberAccess<TException>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
-            AssertAllThrowsOnMemberAccess<TException>(value.GetType(), value, mustContainMembers, customFilter, typesToExclude);
+            AssertAllThrowsOnMemberAccess(value.GetType(), value, mustContainMembers, customFilter, typesToExclude, new[] { typeof(TException) });
         }
 
 
         public static void AssertAllThrowsOnMemberAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
-            AssertAllThrowsOnMemberAccess<TException>(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude);
+            AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, new[] { typeof(TException) });
         }
 
-        public static void AssertAllThrowsOnMemberAccess<TException>(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
-            where TException : Exception
+        public static void AssertAllThrowsOnMemberAccess<TInterfaceFilter>(object value, Type[] expectedExceptions, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null)
         {
+            AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, expectedExceptions);
+        }
+
+        public static void AssertAllThrowsOnMemberAccess(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null, Type[]? expectedExceptions = null)
+        {
+            Assert.IsNotNull(expectedExceptions);
+            var thrownExceptions = new List<Type>();
+
             var instanceType = value.GetType();
             var typeMethods = type.GetMethods();
-            var allExcludedMethods = typesToExclude.SelectMany(x => x.GetMethods());
+            var allExcludedMethods = typesToExclude?.SelectMany(x => x.GetMethods()) ?? Enumerable.Empty<MethodInfo>();
 
             var methods = instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
                                       .Where(x => customFilter?.Invoke(x) ?? true)
@@ -71,9 +78,24 @@ namespace StrixMusic.Sdk.Tests
                 }
                 catch (TargetInvocationException ex)
                 {
-                    Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
+                    if (ex.InnerException is AggregateException aggregateException)
+                    {
+                        foreach (var innerEx in aggregateException.InnerExceptions)
+                        {
+                            thrownExceptions.Add(innerEx.GetType());
+                            Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} did not throw the correct exception.");
+                        }
+                    }
+                    else
+                    {
+                        thrownExceptions.Add(ex.InnerException!.GetType());
+                        Assert.IsTrue(expectedExceptions.Contains(ex.InnerException!.GetType()), $"{method.Name} did not throw the correct exception.");
+                    }
                 }
             }
+
+            foreach (var item in expectedExceptions)
+                Assert.IsTrue(thrownExceptions.Contains(item));
         }
 
         public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)

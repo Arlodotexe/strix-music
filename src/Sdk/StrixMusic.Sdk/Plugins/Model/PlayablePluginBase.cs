@@ -1,11 +1,13 @@
 ﻿using OwlCore.ComponentModel;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Plugins.Model
@@ -77,10 +79,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool IsChangeDurationAsyncAvailable => Inner.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual int TotalImageCount => Inner.TotalImageCount;
+        public virtual int TotalImageCount => InnerImageCollection.TotalImageCount;
 
         /// <inheritdoc/>
-        public virtual int TotalUrlCount => Inner.TotalUrlCount;
+        public virtual int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
         /// <inheritdoc/>
         public virtual IReadOnlyList<ICoreImageCollection> Sources => InnerImageCollection.Sources;
@@ -150,8 +152,8 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual event EventHandler<int>? ImagesCountChanged
         {
-            add => Inner.ImagesCountChanged += value;
-            remove => Inner.ImagesCountChanged -= value;
+            add => InnerImageCollection.ImagesCountChanged += value;
+            remove => InnerImageCollection.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc/>
@@ -192,25 +194,38 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task ChangeNameAsync(string name) => Inner.ChangeNameAsync(name);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        public virtual ValueTask DisposeAsync()
+        {
+            var uniqueInstances = new HashSet<IAsyncDisposable>()
+            {
+                Inner,
+                InnerDownloadable,
+                InnerImageCollection,
+                InnerUrlCollection,
+            };
+
+            return new ValueTask(uniqueInstances.AsParallel()
+                                                .Select(x => x.DisposeAsync().AsTask())
+                                                .Aggregate((x, y) => Task.WhenAll(x, y)));
+        }
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddImageAvailableAsync(int index) => Inner.IsAddImageAvailableAsync(index);
+        public virtual Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddUrlAvailableAsync(int index) => Inner.IsAddUrlAvailableAsync(index);
+        public virtual Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveImageAvailableAsync(int index) => Inner.IsRemoveImageAvailableAsync(index);
+        public virtual Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index) => Inner.IsRemoveUrlAvailableAsync(index);
+        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveImageAsync(int index) => Inner.RemoveImageAsync(index);
+        public virtual Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveUrlAsync(int index) => Inner.RemoveUrlAsync(index);
+        public virtual Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
 
         /// <inheritdoc/>
         public virtual Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);

@@ -19,40 +19,40 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     {
         static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
-            var finalTestClass = new UnimplementedPlayable();
+            var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
             Assert.AreSame(emptyChain, finalTestClass);
 
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(emptyChain);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(finalTestClass);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(emptyChain);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
             // No plugins.
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
-            var finalTestClass = new UnimplementedPlayable();
+            var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
 
             Assert.AreSame(emptyChain, finalTestClass);
 
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(emptyChain);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(finalTestClass);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(emptyChain);
 
             // No overrides.
-            builder.Add(x => new NoOverrideCustomPlayable(x));
+            builder.Add(x => new NoOverride(x));
             var noOverride = builder.Execute(finalTestClass);
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>, NoOverrideCustomPlayable>(noOverride, customFilter: NoInner);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(noOverride, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(1000)]
@@ -60,56 +60,104 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             // No plugins.
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
-            var finalTestClass = new UnimplementedPlayable();
+            var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
 
             Assert.AreSame(emptyChain, finalTestClass);
 
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(emptyChain);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(finalTestClass);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(emptyChain);
 
             // No overrides.
-            builder.Add(x => new NoOverrideCustomPlayable(x));
+            builder.Add(x => new NoOverride(x));
             var noOverride = builder.Execute(finalTestClass);
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(noOverride, customFilter: NoInner);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: NoInner);
 
             // Fully custom
-            builder.Add(x => new FullyCustomPlayable(x));
+            builder.Add(x => new FullyCustom(x));
             var allCustom = builder.Execute(finalTestClass);
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustomPlayable>>(allCustom, customFilter: NoInner);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(5000)]
-        public void PluginFullyCustom_WithDownloadable()
+        public void PluginFullyCustomWith_Downloadable()
         {
             // No plugins.
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
-            var finalTestClass = new UnimplementedPlayable();
-            builder.Add(x => new NoOverrideCustomPlayable(x) { InnerDownloadable = new DownloadablePluginBaseTests.UnimplementedDownloadable() });
+            var finalTestClass = new Unimplemented();
+            builder.Add(x => new NoOverride(x) { InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented() });
 
             var finalImpl = builder.Execute(finalTestClass);
 
             Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverrideCustomPlayable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.UnimplementedDownloadable>, DownloadablePluginBaseTests.UnimplementedDownloadable>(finalImpl, customFilter: NoInner);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>, NoOverrideCustomPlayable>(finalImpl, customFilter: NoInner, typesToExclude: typeof(DownloadablePluginBaseTests.UnimplementedDownloadable));
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented) });
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
+                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+            });
         }
 
-        internal class FullyCustomPlayable : Sdk.Plugins.Model.PlayablePluginBase
+        [TestMethod, Timeout(5000)]
+        public void PluginFullyCustomWith_ImageCollection()
         {
-            public FullyCustomPlayable(IPlayable inner)
+            // No plugins.
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var finalTestClass = new Unimplemented();
+            builder.Add(x => new NoOverride(x) { InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented() });
+
+            var finalImpl = builder.Execute(finalTestClass);
+
+            Assert.AreNotSame(finalImpl, finalTestClass);
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+        }
+
+        [TestMethod, Timeout(5000)]
+        public void PluginFullyCustomWith_Downloadable_ImageCollection()
+        {
+            // No plugins.
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var finalTestClass = new Unimplemented();
+            builder.Add(x => new NoOverride(x)
+            {
+                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
+                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented()
+            });
+
+            var finalImpl = builder.Execute(finalTestClass);
+
+            Assert.AreNotSame(finalImpl, finalTestClass);
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
+                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
+            });
+        }
+
+        internal class FullyCustom : Sdk.Plugins.Model.PlayablePluginBase
+        {
+            public FullyCustom(IPlayable inner)
                 : base(inner)
             {
             }
 
-            internal static AccessedException<FullyCustomPlayable> AccessedException { get; } = new AccessedException<FullyCustomPlayable>();
+            internal static AccessedException<FullyCustom> AccessedException { get; } = new AccessedException<FullyCustom>();
 
             public override DownloadInfo DownloadInfo => throw AccessedException;
             public override string Id => throw AccessedException;
@@ -159,17 +207,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
         }
 
-        internal class NoOverrideCustomPlayable : Sdk.Plugins.Model.PlayablePluginBase
+        internal class NoOverride : Sdk.Plugins.Model.PlayablePluginBase
         {
-            public NoOverrideCustomPlayable(IPlayable inner)
+            public NoOverride(IPlayable inner)
                 : base(inner)
             {
             }
         }
 
-        internal class UnimplementedPlayable : IPlayable
+        internal class Unimplemented : IPlayable
         {
-            internal static AccessedException<UnimplementedPlayable> AccessedException { get; } = new AccessedException<UnimplementedPlayable>();
+            internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
 
             public DownloadInfo DownloadInfo => throw AccessedException;
             public string Id => throw AccessedException;

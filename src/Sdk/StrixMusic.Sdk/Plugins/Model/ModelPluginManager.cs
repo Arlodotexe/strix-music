@@ -17,5 +17,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IPlayable"/>.
         /// </summary>
         public ChainedProxyBuilder<PlayablePluginBase, IPlayable> Playable { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IImageCollection"/>.
+        /// </summary>
+        public ChainedProxyBuilder<ImageCollectionPluginBase, IImageCollection> ImageCollection { get; } = new();
     }
 }

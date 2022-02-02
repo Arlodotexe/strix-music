@@ -1,18 +1,21 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OwlCore.Events;
 using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
     [TestClass]
-    public class DownloadablePluginBaseTests
+    public class ImageCollectionPluginBaseTests
     {
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Downloadable;
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -25,7 +28,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Downloadable;
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -45,7 +48,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginFullyCustom()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Downloadable;
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -71,38 +74,73 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
         }
 
-        public class FullyCustom : Sdk.Plugins.Model.DownloadablePluginBase
+        public class FullyCustom : Sdk.Plugins.Model.ImageCollectionPluginBase
         {
-            public FullyCustom(IDownloadable inner)
+            public FullyCustom(IImageCollection inner)
                 : base(inner)
             {
             }
 
             internal static AccessedException<FullyCustom> AccessedException { get; } = new();
 
-            public override DownloadInfo DownloadInfo => throw AccessedException;
-            public override event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public override int TotalImageCount => throw AccessedException;
+
+            public override IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
+
+            public override IReadOnlyList<ICore> SourceCores => throw AccessedException;
+
+            public override event CollectionChangedEventHandler<IImage>? ImagesChanged { add => throw AccessedException; remove => throw AccessedException; }
+            public override event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
+
+            public override Task AddImageAsync(IImage image, int index) => throw AccessedException;
+
+            public override ValueTask DisposeAsync() => throw AccessedException;
+
+            public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
+
+            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+
+            public override Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+
+            public override Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+
+            public override Task RemoveImageAsync(int index) => throw AccessedException;
         }
 
-        public class NoOverride : Sdk.Plugins.Model.DownloadablePluginBase
+        public class NoOverride : Sdk.Plugins.Model.ImageCollectionPluginBase
         {
-            public NoOverride(IDownloadable inner)
+            public NoOverride(IImageCollection inner)
                 : base(inner)
             {
             }
         }
 
-        public class Unimplemented : IDownloadable
+        public class Unimplemented : IImageCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
-            public DownloadInfo DownloadInfo => throw AccessedException;
-            public event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
+            public int TotalImageCount => throw AccessedException;
+
+            public IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
+
+            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
+
+            public event CollectionChangedEventHandler<IImage>? ImagesChanged { add => throw AccessedException; remove => throw AccessedException; }
+            public event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
+
+            public Task AddImageAsync(IImage image, int index) => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
-            public Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public bool Equals(ICoreImageCollection? other) => throw AccessedException;
+
+            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+
+            public Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+
+            public Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+
+            public Task RemoveImageAsync(int index) => throw AccessedException;
         }
     }
 }
