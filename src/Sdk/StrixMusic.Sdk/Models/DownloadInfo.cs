@@ -8,8 +8,14 @@
         /// <summary>
         /// Creates an instance of the <see cref="DownloadInfo"/> struct.
         /// </summary>
+        public DownloadInfo()
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="DownloadInfo"/> struct.
+        /// </summary>
         public DownloadInfo(DownloadState state)
-            : this()
         {
             State = state;
         }
@@ -18,7 +24,6 @@
         /// Creates an instance of the <see cref="DownloadInfo"/> struct.
         /// </summary>
         public DownloadInfo(DownloadState state, ushort progress)
-            : this()
         {
             Progress = progress;
             State = state;
@@ -27,12 +32,12 @@
         /// <summary>
         /// A value between 0 and 65535 representing how much of this playable item has been downloaded for offline playback.
         /// </summary>
-        public ushort Progress { get; }
+        public ushort Progress { get; } = default;
 
         /// <summary>
         /// The current download state.
         /// </summary>
-        public DownloadState State { get; }
+        public DownloadState State { get; } = default;
 
         /// <inheritdoc />
         public override bool Equals(object obj) => obj is DownloadInfo status && Equals(status);

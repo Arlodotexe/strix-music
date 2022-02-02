@@ -12,50 +12,67 @@ namespace StrixMusic.Sdk.Tests
 {
     internal static class Helpers
     {
-        public static void AssertAllThrowsOnMemberAccess<TException>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+        public static void AssertAllThrowsOnMemberAccess<TException>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
-            AssertAllThrowsOnMemberAccess<TException>(value.GetType(), value, mustContainMembers, customFilter);
+            AssertAllThrowsOnMemberAccess<TException>(value.GetType(), value, mustContainMembers, customFilter, typesToExclude);
         }
 
 
-        public static void AssertAllThrowsOnMemberAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+        public static void AssertAllThrowsOnMemberAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
-            AssertAllThrowsOnMemberAccess<TException>(typeof(TInterfaceFilter), value, mustContainMembers, customFilter);
+            AssertAllThrowsOnMemberAccess<TException>(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude);
         }
 
-        public static void AssertAllThrowsOnMemberAccess<TException>(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null)
+        public static void AssertAllThrowsOnMemberAccess<TException>(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
             var instanceType = value.GetType();
+            var typeMethods = type.GetMethods();
+            var allExcludedMethods = typesToExclude.SelectMany(x => x.GetMethods());
 
-            var properties = instanceType.GetProperties().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
-            var methods = instanceType.GetMethods().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
-            var events = instanceType.GetEvents().Where(x => x == type.GetProperty(x.Name) && (customFilter?.Invoke(x) ?? true)).ToArray();
+            var methods = instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                                      .Where(x => customFilter?.Invoke(x) ?? true)
+                                      .Where(x => typeMethods.Any(y => x.ToString() == y.ToString()))
+                                      .Where(x => !allExcludedMethods.Any() || !allExcludedMethods.Any(y => y.ToString() == x.ToString()))
+                                      .ToArray();
+
+            if (instanceType != type)
+            {
+                methods = instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                                      .Where(x => customFilter?.Invoke(x) ?? true)
+                                      .Where(x => typeMethods.Any(y => x.ToString() == y.ToString()))
+                                      .Where(x => !allExcludedMethods.Any() || !allExcludedMethods.Any(y => y.ToString() == x.ToString()))
+                                      .ToArray();
+            }
 
             if (mustContainMembers)
-                Assert.AreNotEqual(0, properties.Length);
-
-            foreach (var property in properties)
             {
-                var ex = Assert.ThrowsException<TargetInvocationException>(() => property.GetMethod!.Invoke(value, property.GetMethod.GetParameters().Select(x => x.DefaultValue).ToArray()));
-                Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
+                Assert.AreNotEqual(0, methods.Length);
             }
 
             foreach (var method in methods)
             {
-                var ex = Assert.ThrowsException<TargetInvocationException>(() => method!.Invoke(value, method.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
-                Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
-            }
+                try
+                {
+                    method!.Invoke(value, method.GetParameters().Select(TransformMethodParam).ToArray());
 
-            foreach (var ev in events)
-            {
-                var addEx = Assert.ThrowsException<TargetInvocationException>(() => ev.AddMethod!.Invoke(value, ev.AddMethod.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
-                var removeEx = Assert.ThrowsException<TargetInvocationException>(() => ev.RemoveMethod!.Invoke(value, ev.RemoveMethod.GetParameters().Select<ParameterInfo, object?>(x => null).ToArray()));
+                    object? TransformMethodParam(ParameterInfo param)
+                    {
+                        if (param.DefaultValue is DBNull)
+                            return null;
 
-                Assert.IsInstanceOfType(addEx.InnerException, typeof(TException));
-                Assert.IsInstanceOfType(removeEx.InnerException, typeof(TException));
+                        if (param.ParameterType.IsValueType)
+                            return Activator.CreateInstance(param.ParameterType);
+
+                        return param.RawDefaultValue;
+                    }
+                }
+                catch (TargetInvocationException ex)
+                {
+                    Assert.IsInstanceOfType(ex.InnerException, typeof(TException));
+                }
             }
         }
 

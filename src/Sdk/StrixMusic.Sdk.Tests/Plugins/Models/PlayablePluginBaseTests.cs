@@ -8,6 +8,7 @@ using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class PlayablePluginBaseTests
     {
+        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+
         [TestMethod]
         public void NoPlugins()
         {
@@ -49,7 +52,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>, NoOverrideCustomPlayable>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>, NoOverrideCustomPlayable>(noOverride, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(1000)]
@@ -72,7 +75,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>>(noOverride, customFilter: NoInner);
 
             // Fully custom
             builder.Add(x => new FullyCustomPlayable(x));
@@ -80,7 +83,23 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustomPlayable>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustomPlayable>>(allCustom, customFilter: NoInner);
+        }
+
+        [TestMethod, Timeout(5000)]
+        public void PluginFullyCustom_WithDownloadable()
+        {
+            // No plugins.
+            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var finalTestClass = new UnimplementedPlayable();
+            builder.Add(x => new NoOverrideCustomPlayable(x) { InnerDownloadable = new DownloadablePluginBaseTests.UnimplementedDownloadable() });
+
+            var finalImpl = builder.Execute(finalTestClass);
+
+            Assert.AreNotSame(finalImpl, finalTestClass);
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverrideCustomPlayable));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.UnimplementedDownloadable>, DownloadablePluginBaseTests.UnimplementedDownloadable>(finalImpl, customFilter: NoInner);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedPlayable>, NoOverrideCustomPlayable>(finalImpl, customFilter: NoInner, typesToExclude: typeof(DownloadablePluginBaseTests.UnimplementedDownloadable));
         }
 
         internal class FullyCustomPlayable : Sdk.Plugins.Model.PlayablePluginBase

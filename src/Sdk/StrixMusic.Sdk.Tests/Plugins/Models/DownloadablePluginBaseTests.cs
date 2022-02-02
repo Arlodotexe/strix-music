@@ -13,7 +13,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class DownloadablePluginBaseTests
     {
-        [TestMethod]
+
+        [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Downloadable;
@@ -26,7 +27,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UnimplementedDownloadable>>(emptyChain);
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Downloadable;
