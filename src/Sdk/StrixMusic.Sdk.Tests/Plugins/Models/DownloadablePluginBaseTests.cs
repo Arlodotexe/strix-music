@@ -83,6 +83,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override DownloadInfo DownloadInfo => throw AccessedException;
             public override event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public override ValueTask DisposeAsync() => throw AccessedException;
         }
 
         public class NoOverride : Sdk.Plugins.Model.DownloadablePluginBase
