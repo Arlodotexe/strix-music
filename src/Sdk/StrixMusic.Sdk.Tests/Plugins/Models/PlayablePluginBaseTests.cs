@@ -102,8 +102,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
             });
         }
 
@@ -121,6 +121,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
+                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
+            });
         }
 
         [TestMethod, Timeout(5000)]
