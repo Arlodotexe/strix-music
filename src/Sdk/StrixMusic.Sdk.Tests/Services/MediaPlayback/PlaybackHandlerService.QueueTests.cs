@@ -257,5 +257,71 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
             CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
         }
+
+
+        [TestMethod]
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
+        [DataRow(3, 8)]
+        [DataRow(4, 7)]
+        [DataRow(5, 6)]
+        [DataRow(6, 5)]
+        [DataRow(7, 4)]
+        [DataRow(8, 3)]
+        [DataRow(9, 2)]
+        [DataRow(10, 1)]
+        [Timeout(800)]
+        public async Task ShuffleAndUnshuffleByAddingNewTracks_Queue(int numberOfPreviousItems, int numberOfNextItems)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Turn shuffle off.
+            await _handlerService.ToggleShuffleAsync();
+
+            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
+
+
+        [TestMethod]
+        [DataRow(1, 10)]
+        [DataRow(2, 9)]
+        [DataRow(3, 8)]
+        [DataRow(4, 7)]
+        [DataRow(5, 6)]
+        [DataRow(6, 5)]
+        [DataRow(7, 4)]
+        [DataRow(8, 3)]
+        [DataRow(9, 2)]
+        [DataRow(10, 1)]
+        [Timeout(800)]
+        public async Task ShuffleAndUnshuffleByRemovingTracks_Queue(int numberOfPreviousItems, int numberOfNextItems)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Turn shuffle off.
+            await _handlerService.ToggleShuffleAsync();
+
+            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
     }
 }
