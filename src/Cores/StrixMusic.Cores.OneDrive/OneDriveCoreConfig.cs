@@ -214,7 +214,7 @@ namespace StrixMusic.Cores.OneDrive
                 foreach (var item in advancedCollection.ToArray())
                 {
                     if (item != showAdvanced)
-                        advancedCollection.Remove(item);
+                        ((ICollection<AbstractUIElement>)advancedCollection).Remove(item);
                 }
             }
 
