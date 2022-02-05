@@ -298,7 +298,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             var newNextItems = _handlerService.NextItems.ToList();
             var newPrevItems = _handlerService.PreviousItems.ToList();
 
-            // Remove the newly added items before comparing.
+            // Remove the newly added items before comparing if present in previous or next items.
             foreach (var item in newItems)
             {
                 newNextItems.Remove(item);
@@ -313,30 +313,45 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         }
 
 
+
         [TestMethod]
-        [DataRow(1, 10)]
-        [DataRow(2, 9)]
-        [DataRow(3, 8)]
-        [DataRow(4, 7)]
-        [DataRow(5, 6)]
-        [DataRow(6, 5)]
-        [DataRow(7, 4)]
-        [DataRow(8, 3)]
-        [DataRow(9, 2)]
-        [DataRow(10, 1)]
+        [DataRow(1, 10, 8)]
+        [DataRow(2, 9, 3)]
+        [DataRow(3, 8, 3, 4)]
+        [DataRow(4, 7, 3)]
+        [DataRow(5, 6, 8)]
+        [DataRow(6, 5, 2, 4)]
+        [DataRow(7, 4, 2, 7)]
+        [DataRow(8, 3, 6, 9, 1)]
+        [DataRow(9, 2, 4)]
+        [DataRow(10, 1, 3)]
         [Timeout(800)]
-        public async Task ShuffleAndUnshuffleByRemovingTracks_Queue(int numberOfPreviousItems, int numberOfNextItems)
+        public async Task ShuffleAndUnshuffleByRemovingTracks_Queue(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
             Assert.IsNotNull(_handlerService);
 
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+            var itemsRemoved = new List<IMediaSourceConfig>();
+
+            for (int i = 0; i < nextIndexes.Length; i++)
+            {
+                itemsRemoved.Add(_handlerService.NextItems.ElementAt(nextIndexes[i]));
+                _handlerService.RemoveNext(nextIndexes[i], afterShuffle: true);
+            }
 
             Assert.IsTrue(_handlerService.ShuffleState);
 
             // Turn shuffle off.
             await _handlerService.ToggleShuffleAsync();
+
+            // Remove the removed items from the orginal previous and next items(if exists).
+            foreach (var item in itemsRemoved)
+            {
+                _nextItems.Remove(item);
+                _previousItems.Remove(item);
+            }
 
             CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
             CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());

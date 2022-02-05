@@ -143,13 +143,15 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <param name="sourceConfig">The item to insert.</param>
+        /// <param name="beforeShuffle">Flag to determine if the list is already shuffled or not.</param>
         void InsertNext(int index, IMediaSourceConfig sourceConfig, bool beforeShuffle = true);
 
         /// <summary>
         /// Removes an item from the <see cref="NextItems"/>.
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
-        void RemoveNext(int index);
+        /// <param name="beforeShuffle">Flag to determine if the list is already shuffled or not.</param>
+        void RemoveNext(int index, bool beforeShuffle = true);
 
         /// <summary>
         /// Clears all items from <see cref="NextItems"/>.

@@ -321,7 +321,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public void RemoveNext(int index)
+        public void RemoveNext(int index, bool afterShuffle = false)
         {
             var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
@@ -331,6 +331,24 @@ namespace StrixMusic.Sdk.MediaPlayback
             var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _nextItems.RemoveAt(index);
+
+            // Handle case when the list is shuffled.
+            if (afterShuffle)
+            {
+                var indexInShuffledList = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
+                var originalIndex = _shuffleMap[indexInShuffledList];
+
+                // Needs to be converted to list because InsertOrAdd isn't supported on the fixed number of collection such as arrays.
+                var shuffleList = _shuffleMap.ToList();
+                shuffleList.RemoveAt(indexInShuffledList);
+                _shuffleMap = shuffleList.ToArray();
+
+                for (int i = 0; i < _shuffleMap.Length; i++)
+                {
+                    if (_shuffleMap[i] > originalIndex)
+                        _shuffleMap[i]--;
+                }
+            }
 
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
         }
