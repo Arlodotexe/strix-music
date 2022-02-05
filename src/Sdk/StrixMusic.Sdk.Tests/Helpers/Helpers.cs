@@ -83,13 +83,13 @@ namespace StrixMusic.Sdk.Tests
                         foreach (var innerEx in aggregateException.InnerExceptions)
                         {
                             thrownExceptions.Add(innerEx.GetType());
-                            Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} did not throw the correct exception.");
+                            Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} threw an unexpected exception: {innerEx}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
                         }
                     }
                     else
                     {
                         thrownExceptions.Add(ex.InnerException!.GetType());
-                        Assert.IsTrue(expectedExceptions.Contains(ex.InnerException!.GetType()), $"{method.Name} did not throw the correct exception.");
+                        Assert.IsTrue(expectedExceptions.Contains(ex.InnerException!.GetType()), $"{method.Name} threw an unexpected exception: {ex.InnerException}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
                     }
                 }
             }
