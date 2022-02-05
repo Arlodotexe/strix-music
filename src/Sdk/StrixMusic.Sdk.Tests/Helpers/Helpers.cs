@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Tests
         }
 
 
-        public static void AssertAllThrowsOnMemberAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
+        public static void AssertAllMembersThrowOnAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
             where TException : Exception
         {
             AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, new[] { typeof(TException) });

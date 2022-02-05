@@ -52,7 +52,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(noOverride, customFilter: NoInner);
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(noOverride, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(1000)]
@@ -97,8 +97,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -117,8 +117,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -137,8 +137,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -161,9 +161,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -187,9 +187,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -202,7 +202,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustomWith_Downloadable_ImageCollection_UrlCollection()
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
-            var finalTestClass = new Unimplemented();
+
+            var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
                 InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
@@ -210,14 +211,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
             });
 
-            var finalImpl = builder.Execute(finalTestClass);
+            var finalImpl = builder.Execute(defaultImplementation);
 
-            Assert.AreNotSame(finalImpl, finalTestClass);
+            Assert.AreNotSame(finalImpl, defaultImplementation);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
@@ -242,9 +243,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(finalImpl, finalTestClass);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
                 typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
