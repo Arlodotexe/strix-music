@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -254,10 +255,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             });
         }
 
-        internal class FullyCustom : Sdk.Plugins.Model.PlayablePluginBase
+        internal class FullyCustom : PlayablePluginBase
         {
             public FullyCustom(IPlayable inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
             {
             }
 
@@ -309,10 +310,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
         }
 
-        internal class NoOverride : Sdk.Plugins.Model.PlayablePluginBase
+        internal class NoOverride : PlayablePluginBase
         {
             public NoOverride(IPlayable inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
             {
             }
         }

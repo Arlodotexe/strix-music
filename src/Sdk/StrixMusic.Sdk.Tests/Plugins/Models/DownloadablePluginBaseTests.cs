@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,10 +72,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
         }
 
-        public class FullyCustom : Sdk.Plugins.Model.DownloadablePluginBase
+        public class FullyCustom : DownloadablePluginBase
         {
             public FullyCustom(IDownloadable inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
             {
             }
 
@@ -86,10 +87,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override ValueTask DisposeAsync() => throw AccessedException;
         }
 
-        public class NoOverride : Sdk.Plugins.Model.DownloadablePluginBase
+        public class NoOverride : DownloadablePluginBase
         {
             public NoOverride(IDownloadable inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
             {
             }
         }

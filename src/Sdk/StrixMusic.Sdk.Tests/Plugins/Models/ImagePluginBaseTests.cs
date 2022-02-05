@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -73,10 +74,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
         }
 
-        public class FullyCustom : Sdk.Plugins.Model.ImagePluginBase
+        public class FullyCustom : ImagePluginBase
         {
             public FullyCustom(IImage inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
             {
             }
 
@@ -97,10 +98,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override bool Equals(ICoreImage? other) => throw AccessedException;
         }
 
-        public class NoOverride : Sdk.Plugins.Model.ImagePluginBase
+        public class NoOverride : ImagePluginBase
         {
             public NoOverride(IImage inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
             {
             }
         }

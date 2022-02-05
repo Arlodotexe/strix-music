@@ -9,16 +9,21 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IDownloadable"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public abstract class DownloadablePluginBase : IDownloadable, IDelegatable<IDownloadable>
+    public abstract class DownloadablePluginBase : IModelPlugin, IDownloadable, IDelegatable<IDownloadable>
     {
         /// <summary>
         /// Creates a new instance of <see cref="DownloadablePluginBase"/>.
         /// </summary>
+        /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected DownloadablePluginBase(IDownloadable inner)
+        protected DownloadablePluginBase(ModelPluginMetadata registration, IDownloadable inner)
         {
+            Registration = registration;
             Inner = inner;
         }
+
+        /// <inheritdoc />
+        public ModelPluginMetadata Registration { get; }
 
         /// <inheritdoc/>
         public IDownloadable Inner { get; set; }
@@ -33,6 +38,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             remove => Inner.DownloadInfoChanged -= value;
         }
 
+        /// <inheritdoc/>
         public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>

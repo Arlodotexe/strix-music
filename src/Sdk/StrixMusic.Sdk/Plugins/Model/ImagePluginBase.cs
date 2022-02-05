@@ -16,11 +16,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <summary>
         /// Creates a new instance of <see cref="ImagePluginBase"/>.
         /// </summary>
+        /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected ImagePluginBase(IImage inner)
+        protected ImagePluginBase(ModelPluginMetadata registration, IImage inner)
         {
+            Registration = registration;
             Inner = inner;
         }
+
+        /// <inheritdoc />
+        public ModelPluginMetadata Registration { get; }
 
         /// <inheritdoc/>
         public virtual IImage Inner { get; }

@@ -21,14 +21,20 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <summary>
         /// Creates a new instance of <see cref="PlayablePluginBase"/>.
         /// </summary>
+        /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected PlayablePluginBase(IPlayable inner)
+        protected PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
         {
+            Registration = registration;
+
             Inner = inner;
             InnerDownloadable = inner;
             InnerImageCollection = inner;
             InnerUrlCollection = inner;
         }
+
+        /// <inheritdoc />
+        public ModelPluginMetadata Registration { get; }
 
         /// <summary>
         /// A wrapped implementation which member access can be delegated to. Defaults to <see cref="Inner"/>.

@@ -2,6 +2,7 @@
 using OwlCore.Events;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -74,10 +75,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
         }
 
-        public class FullyCustom : Sdk.Plugins.Model.ImageCollectionPluginBase
+        public class FullyCustom : ImageCollectionPluginBase
         {
             public FullyCustom(IImageCollection inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
             {
             }
 
@@ -107,10 +108,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override Task RemoveImageAsync(int index) => throw AccessedException;
         }
 
-        public class NoOverride : Sdk.Plugins.Model.ImageCollectionPluginBase
+        public class NoOverride : ImageCollectionPluginBase
         {
             public NoOverride(IImageCollection inner)
-                : base(inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
             {
             }
         }
