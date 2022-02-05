@@ -36,10 +36,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalImageCount => Inner.TotalImageCount;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICoreImageCollection> Sources => Inner.Sources;
+        public IReadOnlyList<ICoreImageCollection> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IImage>? ImagesChanged

@@ -40,10 +40,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual double Width => Inner.Width;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICoreImage> Sources => Inner.Sources;
+        public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();

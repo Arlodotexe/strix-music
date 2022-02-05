@@ -4,6 +4,7 @@ using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class ImagePluginBaseTests
     {
+        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
@@ -42,7 +46,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(1000)]
@@ -63,7 +67,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: NoInner);
 
             // Fully custom
             builder.Add(x => new FullyCustom(x));
@@ -71,7 +75,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInnerOrSources);
         }
 
         public class FullyCustom : ImagePluginBase
@@ -88,10 +92,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override double Height => throw AccessedException;
 
             public override double Width => throw AccessedException;
-
-            public override IReadOnlyList<ICoreImage> Sources => throw AccessedException;
-
-            public override IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 

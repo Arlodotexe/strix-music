@@ -35,10 +35,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalGenreCount => Inner.TotalGenreCount;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICoreGenreCollection> Sources => Inner.Sources;
+        public IReadOnlyList<ICoreGenreCollection> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IGenre>? GenresChanged

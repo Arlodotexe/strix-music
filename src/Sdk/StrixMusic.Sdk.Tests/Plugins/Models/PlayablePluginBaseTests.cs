@@ -19,6 +19,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class PlayablePluginBaseTests
     {
         static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -84,7 +85,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInner);
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInnerOrSources);
         }
 
         [TestMethod, Timeout(5000)]

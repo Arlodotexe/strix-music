@@ -35,10 +35,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalUrlCount => Inner.TotalUrlCount;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICoreUrlCollection> Sources => Inner.Sources;
+        public IReadOnlyList<ICoreUrlCollection> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IUrl>? UrlsChanged

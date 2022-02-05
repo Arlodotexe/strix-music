@@ -5,6 +5,7 @@ using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class UrlCollectionPluginBaseTests
     {
+        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
@@ -43,7 +47,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: NoInner);
         }
 
         [TestMethod, Timeout(1000)]
@@ -64,7 +68,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: NoInner);
 
             // Fully custom
             builder.Add(x => new FullyCustom(x));
@@ -72,7 +76,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Assert.AreNotSame(noOverride, emptyChain);
             Assert.AreNotSame(noOverride, finalTestClass);
-            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: x => !x.Name.Contains("Inner"));
+            Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInnerOrSources);
         }
 
         public class FullyCustom : UrlCollectionPluginBase
@@ -85,10 +89,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             internal static AccessedException<FullyCustom> AccessedException { get; } = new();
 
             public override int TotalUrlCount => throw AccessedException;
-
-            public override IReadOnlyList<ICoreUrlCollection> Sources => throw AccessedException;
-
-            public override IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
