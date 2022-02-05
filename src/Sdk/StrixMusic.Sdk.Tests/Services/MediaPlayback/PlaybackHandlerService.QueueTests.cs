@@ -261,16 +261,16 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
 
         [TestMethod]
-        [DataRow(1, 10)]
-        [DataRow(2, 9)]
-        [DataRow(3, 8)]
-        [DataRow(4, 7)]
+        [DataRow(1, 10, 8)]
+        [DataRow(2, 9, 3)]
+        [DataRow(3, 8, 3, 4)]
+        [DataRow(4, 7, 3, 3)]
         [DataRow(5, 6, 8)]
         [DataRow(6, 5, 2, 4)]
         [DataRow(7, 4, 2, 7)]
         [DataRow(8, 3, 6, 9, 1)]
-        [DataRow(9, 2)]
-        [DataRow(10, 1)]
+        [DataRow(9, 2, 4)]
+        [DataRow(10, 1, 3)]
         [Timeout(800)]
         public async Task ShuffleAndUnshuffleByAddingNewTracks_Queue(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
         {
