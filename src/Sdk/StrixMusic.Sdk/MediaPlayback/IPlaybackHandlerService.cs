@@ -143,7 +143,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <param name="sourceConfig">The item to insert.</param>
-        void InsertNext(int index, IMediaSourceConfig sourceConfig);
+        void InsertNext(int index, IMediaSourceConfig sourceConfig, bool beforeShuffle = true);
 
         /// <summary>
         /// Removes an item from the <see cref="NextItems"/>.
