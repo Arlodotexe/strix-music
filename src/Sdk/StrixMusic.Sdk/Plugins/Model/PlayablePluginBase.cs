@@ -1,6 +1,5 @@
 ﻿using OwlCore.ComponentModel;
 using OwlCore.Events;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
@@ -16,7 +15,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IPlayable"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public abstract class PlayablePluginBase : IPlayable, IDelegatable<IPlayable>
+    public abstract class PlayablePluginBase : IModelPlugin, IPlayable, IDelegatable<IPlayable>
     {
         /// <summary>
         /// Creates a new instance of <see cref="PlayablePluginBase"/>.

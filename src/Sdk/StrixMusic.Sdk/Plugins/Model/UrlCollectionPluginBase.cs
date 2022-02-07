@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IUrlCollection"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public abstract class UrlCollectionPluginBase : IUrlCollection, IDelegatable<IUrlCollection>
+    public abstract class UrlCollectionPluginBase : IModelPlugin, IUrlCollection, IDelegatable<IUrlCollection>
     {
         /// <summary>
         /// Creates a new instance of <see cref="DownloadablePluginBase"/>.
