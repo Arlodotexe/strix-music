@@ -303,7 +303,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task PauseAlbumCollectionAsync() => Inner.PauseAlbumCollectionAsync();
 
         /// <inheritdoc/>
-        public virtual Task PlayAlbumCollectionAsync(IAlbumCollectionItem AlbumItem) => Inner.PlayAlbumCollectionAsync(AlbumItem);
+        public virtual Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => Inner.PlayAlbumCollectionAsync(albumItem);
 
         /// <inheritdoc/>
         public virtual Task PlayAlbumCollectionAsync() => Inner.PlayAlbumCollectionAsync();
