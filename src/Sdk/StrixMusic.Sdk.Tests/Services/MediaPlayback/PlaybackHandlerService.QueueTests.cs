@@ -272,7 +272,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(9, 2, 4)]
         [DataRow(10, 1, 3)]
         [Timeout(800)]
-        public async Task ShuffleAndUnshuffleByAddingNewTracks_Queue(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
+        public async Task ShuffleAndUnshuffleByAddingNewTracks(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
@@ -288,7 +288,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             {
                 var itemToAdd = new MediaSourceConfig(_mockTrack, $"New Item: {nextIndexes[i]}", Stream.Null, "mp3");
 
-                _handlerService.InsertNext(nextIndexes[i], itemToAdd, afterShuffle: true);
+                _handlerService.InsertNext(nextIndexes[i], itemToAdd);
                 newItems.Add(itemToAdd);
             }
 
@@ -326,7 +326,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(9, 2, 4)]
         [DataRow(10, 1, 3)]
         [Timeout(800)]
-        public async Task ShuffleAndUnshuffleByRemovingTracks_Queue(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
+        public async Task ShuffleAndUnshuffleByRemovingTracks(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
@@ -338,7 +338,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             for (int i = 0; i < nextIndexes.Length; i++)
             {
                 itemsRemoved.Add(_handlerService.NextItems.ElementAt(nextIndexes[i]));
-                _handlerService.RemoveNext(nextIndexes[i], afterShuffle: true);
+                _handlerService.RemoveNext(nextIndexes[i]);
             }
 
             Assert.IsTrue(_handlerService.ShuffleState);

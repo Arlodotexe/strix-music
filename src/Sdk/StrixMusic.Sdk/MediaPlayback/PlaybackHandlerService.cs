@@ -288,7 +288,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         public Task PreviousAsync() => PreviousAsync(true);
 
         /// <inheritdoc />
-        public void InsertNext(int index, IMediaSourceConfig sourceConfig, bool afterShuffle = false)
+        public void InsertNext(int index, IMediaSourceConfig sourceConfig)
         {
             var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
@@ -300,7 +300,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             _nextItems.InsertOrAdd(index, sourceConfig);
 
             // Handle case when the list is shuffled.
-            if (afterShuffle)
+            if (_shuffleState)
             {
                 var originalIndex = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
 
@@ -321,7 +321,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public void RemoveNext(int index, bool afterShuffle = false)
+        public void RemoveNext(int index)
         {
             var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
@@ -333,7 +333,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             _nextItems.RemoveAt(index);
 
             // Handle case when the list is shuffled.
-            if (afterShuffle)
+            if (_shuffleState)
             {
                 var indexInShuffledList = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
                 var originalIndex = _shuffleMap[indexInShuffledList];
