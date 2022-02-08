@@ -298,6 +298,25 @@ namespace StrixMusic.Sdk.MediaPlayback
             var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _nextItems.InsertOrAdd(index, sourceConfig);
+
+            // Handle case when the list is shuffled.
+            if (_shuffleState)
+            {
+                var originalIndex = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
+
+                // Needs to be converted to list because InsertOrAdd isn't supported on the fixed number of collection such as arrays.
+                var shuffleList = _shuffleMap.ToList();
+                shuffleList.InsertOrAdd(originalIndex, originalIndex);
+                _shuffleMap = shuffleList.ToArray();
+
+                for (int i = 0; i < _shuffleMap.Length; i++)
+                {
+                    // Adjust the all indexes for all elements with the orignal index greater than or equal to the newly added index.
+                    if (_shuffleMap[i] >= originalIndex && i != originalIndex)
+                        _shuffleMap[i]++;
+                }
+            }
+
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
@@ -312,6 +331,25 @@ namespace StrixMusic.Sdk.MediaPlayback
             var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _nextItems.RemoveAt(index);
+
+            // Handle case when the list is shuffled.
+            if (_shuffleState)
+            {
+                var indexInShuffledList = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
+                var originalIndex = _shuffleMap[indexInShuffledList];
+
+                // Needs to be converted to list so we can remove an element from the array using the index.
+                // After removing the element, we're decrementing all orignal indexes in the shufflemap greater than the orginal index of the removed element, so the tracks can be unshuffled correctly.
+                var shuffleList = _shuffleMap.ToList();
+                shuffleList.RemoveAt(indexInShuffledList);
+                _shuffleMap = shuffleList.ToArray();
+
+                for (int i = 0; i < _shuffleMap.Length; i++)
+                {
+                    if (_shuffleMap[i] > originalIndex)
+                        _shuffleMap[i]--;
+                }
+            }
 
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
         }
