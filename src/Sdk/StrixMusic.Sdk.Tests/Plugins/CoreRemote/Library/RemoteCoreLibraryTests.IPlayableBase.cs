@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
     public partial class RemoteCoreLibraryTests
     {
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteName()
         {
             var core = new MockCore();
@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.Name);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.Name, remoteClientCore.Library.Name);
             Assert.AreEqual(core.Library.Name, remoteHostCore.Library.Name);
@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow("Name"), DataRow("Name1")]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteName_Changed(string name)
         {
             var core = new MockCore();
@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().Name = name;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(name, core.Library.Name);
             Assert.AreEqual(name, remoteClientCore.Library.Name);
@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemotePlaybackState()
         {
             var core = new MockCore();
@@ -70,7 +70,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.PlaybackState);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.PlaybackState, remoteClientCore.Library.PlaybackState);
             Assert.AreEqual(core.Library.PlaybackState, remoteHostCore.Library.PlaybackState);
@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(PlaybackState.Failed), DataRow(PlaybackState.Playing), DataRow(PlaybackState.Paused), DataRow(PlaybackState.Loading)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemotePlaybackState_Changed(PlaybackState playbackState)
         {
             var core = new MockCore();
@@ -94,7 +94,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().PlaybackState = playbackState;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(playbackState, core.Library.PlaybackState);
             Assert.AreEqual(playbackState, remoteClientCore.Library.PlaybackState);
@@ -105,7 +105,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteLastPlayed()
         {
             var core = new MockCore();
@@ -116,7 +116,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.LastPlayed);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.LastPlayed, remoteClientCore.Library.LastPlayed);
             Assert.AreEqual(core.Library.LastPlayed, remoteHostCore.Library.LastPlayed);
@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteLastPlayed_Changed()
         {
             var core = new MockCore();
@@ -141,7 +141,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().LastPlayed = newLastPlayed;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newLastPlayed, core.Library.LastPlayed);
             Assert.AreEqual(newLastPlayed, remoteClientCore.Library.LastPlayed);
@@ -152,7 +152,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteDuration()
         {
             var core = new MockCore();
@@ -163,7 +163,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.Duration);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.Duration, remoteClientCore.Library.Duration);
             Assert.AreEqual(core.Library.Duration, remoteHostCore.Library.Duration);
@@ -173,7 +173,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteDuration_Changed()
         {
             var core = new MockCore();
@@ -188,7 +188,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().Duration = newDuration;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newDuration, core.Library.Duration);
             Assert.AreEqual(newDuration, remoteClientCore.Library.Duration);
@@ -199,7 +199,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeNameAsyncAvailable()
         {
             var core = new MockCore();
@@ -210,7 +210,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.IsChangeNameAsyncAvailable);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.IsChangeNameAsyncAvailable, remoteClientCore.Library.IsChangeNameAsyncAvailable);
             Assert.AreEqual(core.Library.IsChangeNameAsyncAvailable, remoteHostCore.Library.IsChangeNameAsyncAvailable);
@@ -220,7 +220,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeNameAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -235,7 +235,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().IsChangeNameAsyncAvailable = newIsChangeNameAsyncAvailable;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newIsChangeNameAsyncAvailable, core.Library.IsChangeNameAsyncAvailable);
             Assert.AreEqual(newIsChangeNameAsyncAvailable, remoteClientCore.Library.IsChangeNameAsyncAvailable);
@@ -246,7 +246,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeDescriptionAsyncAvailable()
         {
             var core = new MockCore();
@@ -257,7 +257,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.IsChangeDescriptionAsyncAvailable);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.IsChangeDescriptionAsyncAvailable, remoteClientCore.Library.IsChangeDescriptionAsyncAvailable);
             Assert.AreEqual(core.Library.IsChangeDescriptionAsyncAvailable, remoteHostCore.Library.IsChangeDescriptionAsyncAvailable);
@@ -267,7 +267,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeDescriptionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -282,7 +282,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().IsChangeDescriptionAsyncAvailable = newIsChangeDescriptionAsyncAvailable;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newIsChangeDescriptionAsyncAvailable, core.Library.IsChangeDescriptionAsyncAvailable);
             Assert.AreEqual(newIsChangeDescriptionAsyncAvailable, remoteClientCore.Library.IsChangeDescriptionAsyncAvailable);
@@ -293,7 +293,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeDurationAsyncAvailable()
         {
             var core = new MockCore();
@@ -304,7 +304,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             Assert.AreNotEqual(default, core.Library.IsChangeDurationAsyncAvailable);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.Library.IsChangeDurationAsyncAvailable, remoteClientCore.Library.IsChangeDurationAsyncAvailable);
             Assert.AreEqual(core.Library.IsChangeDurationAsyncAvailable, remoteHostCore.Library.IsChangeDurationAsyncAvailable);
@@ -314,7 +314,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsChangeDurationAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -329,7 +329,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             core.Library.Cast<MockCoreLibrary>().IsChangeDurationAsyncAvailable = newIsChangeDurationAsyncAvailable;
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newIsChangeDurationAsyncAvailable, core.Library.IsChangeDurationAsyncAvailable);
             Assert.AreEqual(newIsChangeDurationAsyncAvailable, remoteClientCore.Library.IsChangeDurationAsyncAvailable);
@@ -340,7 +340,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteChangeName()
         {
             var core = new MockCore();
@@ -358,7 +358,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.Library.ChangeNameAsync(newName);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newName, remoteClientCore.Library.Name);
             Assert.AreEqual(newName, remoteHostCore.Library.Name);
@@ -369,7 +369,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteChangeDescription()
         {
             var core = new MockCore();
@@ -387,7 +387,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.Library.ChangeDescriptionAsync(newDescription);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newDescription, remoteClientCore.Library.Description);
             Assert.AreEqual(newDescription, remoteHostCore.Library.Description);
@@ -398,7 +398,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteChangeDuration()
         {
             var core = new MockCore();
@@ -416,7 +416,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.Library.ChangeDurationAsync(newDuration);
 
             // Wait for changes to propogate
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             Assert.AreEqual(newDuration, remoteClientCore.Library.Duration);
             Assert.AreEqual(newDuration, remoteHostCore.Library.Duration);
