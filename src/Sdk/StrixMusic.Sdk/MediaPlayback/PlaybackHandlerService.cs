@@ -338,7 +338,8 @@ namespace StrixMusic.Sdk.MediaPlayback
                 var indexInShuffledList = _prevItems.Count + index + (CurrentItem == null ? 0 : 1);
                 var originalIndex = _shuffleMap[indexInShuffledList];
 
-                // Needs to be converted to list because InsertOrAdd isn't supported on the fixed number of collection such as arrays.
+                // Needs to be converted to list so we can remove an element from the array using the index.
+                // After removing the element, we're decrementing all orignal indexes in the shufflemap greater than the orginal index of the removed element, so the tracks can be unshuffled correctly.
                 var shuffleList = _shuffleMap.ToList();
                 shuffleList.RemoveAt(indexInShuffledList);
                 _shuffleMap = shuffleList.ToArray();
