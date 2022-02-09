@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.Sdk.Uno.Converters.Time
+namespace OwlCore.Uno.Converters.Time.Numerical
 {
     /// <summary>
     /// A converter that converts a given <see cref="TimeSpan"/> to a natural time format string.
