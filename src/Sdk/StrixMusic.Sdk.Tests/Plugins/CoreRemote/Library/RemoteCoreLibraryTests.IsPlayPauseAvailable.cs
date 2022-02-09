@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
     public partial class RemoteCoreLibraryTests
     {
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayAlbumCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayAlbumCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseAlbumCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseAlbumCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -104,7 +104,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayArtistCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -125,7 +125,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayArtistCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -151,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseArtistCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -172,7 +172,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseArtistCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -198,7 +198,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayPlaylistCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -219,7 +219,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayPlaylistCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -245,7 +245,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPausePlaylistCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -266,7 +266,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPausePlaylistCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -292,7 +292,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayTrackCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -313,7 +313,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPlayTrackCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();
@@ -339,7 +339,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseTrackCollectionAsyncAvailable()
         {
             var core = new MockCore();
@@ -360,7 +360,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsPauseTrackCollectionAsyncAvailable_Changed()
         {
             var core = new MockCore();

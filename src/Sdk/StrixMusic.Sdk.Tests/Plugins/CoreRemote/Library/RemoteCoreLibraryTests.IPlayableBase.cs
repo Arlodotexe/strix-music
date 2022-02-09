@@ -323,6 +323,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var newIsChangeDurationAsyncAvailable = false;
 
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
             // For test to work, must not be same as current.
             Assert.AreNotEqual(core.Library.IsChangeDurationAsyncAvailable, newIsChangeDurationAsyncAvailable);
 

@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
         
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetArtistItemsAsync(int limit)
         {
@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
         
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetPlaylistItemsAsync(int limit)
         {
@@ -90,7 +90,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
         
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetTracksAsync(int limit)
         {
@@ -117,7 +117,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetChildrenAsync(int limit)
         {
@@ -144,7 +144,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetImagesAsync(int limit)
         {
@@ -171,7 +171,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
         
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow(1), DataRow(5), DataRow(10), DataRow(50)]
         public async Task RemoteGetUrlsAsync(int limit)
         {
