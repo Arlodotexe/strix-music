@@ -12,12 +12,12 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="id">A unique identifier for this plugin, including all instances.</param>
         /// <param name="displayName">The user-friendly name of the plugin.</param>
-        /// <param name="sdkVersion">The version of the Strix Music SDK that this plugin was built against.</param>
-        public ModelPluginMetadata(string id, string displayName, Version sdkVersion)
+        /// <param name="sdkVer">The version of the Strix Music SDK that this plugin was built against.</param>
+        public ModelPluginMetadata(string id, string displayName, Version sdkVer)
         {
             Id = id;
             DisplayName = displayName;
-            SdkVersion = sdkVersion;
+            SdkVer = sdkVer;
         }
 
         /// <summary>
@@ -38,6 +38,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <summary>
         /// The version of the Strix Music SDK that this plugin was built against.
         /// </summary>
-        public Version SdkVersion { get; }
+        public Version SdkVer { get; }
     }
 }

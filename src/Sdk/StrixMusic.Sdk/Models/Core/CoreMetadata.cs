@@ -13,13 +13,13 @@ namespace StrixMusic.Sdk.Models.Core
         /// <param name="id">A unique identifier for this core, across all instances.</param>
         /// <param name="displayName">The user-friendly name of the core.</param>
         /// <param name="logoUri">A relative path pointing to a SVG file containing the logo for this core.</param>
-        /// <param name="sdkVersion">The version of the Strix Music SDK that this core was built against.</param>
-        public CoreMetadata(string id, string displayName, Uri logoUri, Version sdkVersion)
+        /// <param name="sdkVer">The version of the Strix Music SDK that this core was built against.</param>
+        public CoreMetadata(string id, string displayName, Uri logoUri, Version sdkVer)
         {
             Id = id;
             LogoUri = logoUri;
             DisplayName = displayName;
-            SdkVersion = sdkVersion;
+            SdkVer = sdkVer;
         }
 
         /// <summary>
@@ -40,6 +40,6 @@ namespace StrixMusic.Sdk.Models.Core
         /// <summary>
         /// The version of the Strix Music SDK that this core was built against.
         /// </summary>
-        public Version SdkVersion { get; }
+        public Version SdkVer { get; }
     }
 }

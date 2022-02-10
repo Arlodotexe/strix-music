@@ -227,9 +227,9 @@ namespace StrixMusic.Sdk
                 return null;
 
             var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
-            if (coreMetadata.SdkVersion != currentSdkVersion)
+            if (coreMetadata.SdkVer != currentSdkVersion)
             {
-                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVersion}, which is not compatible with the current version {currentSdkVersion}.");
+                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVer}, which is not compatible with the current version {currentSdkVersion}.");
                 return null;
             }
 
