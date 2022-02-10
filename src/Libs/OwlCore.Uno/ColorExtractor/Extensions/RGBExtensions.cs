@@ -5,8 +5,7 @@ namespace OwlCore.Uno.ColorExtractor
 {
     public static class RGBExtensions
     {
-        private enum RGBChannel
-        { R, G, B }
+        private enum RGBChannel { R, G, B }
 
         /// <summary>
         /// Adjusts the Value of the <see cref="RGBColor"/>.
@@ -34,6 +33,7 @@ namespace OwlCore.Uno.ColorExtractor
                 V = color.GetValue(),
             };
         }
+
         public static int GetHue(this RGBColor color)
         {
             float delta = GetDelta(color);
@@ -57,6 +57,7 @@ namespace OwlCore.Uno.ColorExtractor
 
             return 0; // Not possible
         }
+
         public static float GetSaturation(this RGBColor color)
         {
             float value = color.GetValue();
@@ -69,31 +70,38 @@ namespace OwlCore.Uno.ColorExtractor
             float delta = GetDelta(color);
             return delta / value;
         }
+
         public static float GetValue(this RGBColor color)
         {
             return (float)GetRawCMax(color) / 255;
         }
+
         internal static float GetCMin(this RGBColor color)
         {
             return GetRawCMin(color);
         }
+
         private static float GetDelta(this RGBColor color)
         {
             return GetValue(color) - GetCMin(color);
         }
+
         private static float GetRawCMax(this RGBColor color)
         {
             float max = Math.Max(color.R, color.G);
             return Math.Max(max, color.B);
         }
+
         private static float GetRawCMin(this RGBColor color)
         {
             float min = Math.Min(color.R, color.G);
             return Math.Min(min, color.B);
         }
+
         private static RGBChannel GetCMaxChannel(this RGBColor color)
         {
             float maxValue = GetRawCMax(color);
+
             if (maxValue == color.R)
                 return RGBChannel.R;
             if (maxValue == color.G)

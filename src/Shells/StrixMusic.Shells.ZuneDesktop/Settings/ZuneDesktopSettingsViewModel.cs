@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
@@ -13,7 +14,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
     /// <summary>
     /// The settings viewmodel for the Zune Desktop
     /// </summary>
-    public class ZuneDesktopSettingsViewModel : SettingsViewModelBase
+    public class ZuneDesktopSettingsViewModel : ObservableObject
     {
         private readonly Dictionary<string, string> _displayNameMap;
 
@@ -44,8 +45,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </summary>
         public ZuneDesktopSettingsViewModel()
         {
-            _settingsService = Shell.Ioc.GetRequiredService<ISettingsService>();
-            _localizationService = Shell.Ioc.GetRequiredService<LocalizationResourceLoader>();
+            _settingsService = ZuneShell.Ioc.GetRequiredService<ISettingsService>();
+            _localizationService = (LocalizationResourceLoader)Ioc.Default.GetRequiredService<ILocalizationService>();
 
             _displayNameMap = _zuneBackgroundImages.Keys
                 .ToDictionary(x => _localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x]);

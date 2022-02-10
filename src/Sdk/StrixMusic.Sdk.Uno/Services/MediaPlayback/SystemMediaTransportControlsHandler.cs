@@ -1,11 +1,10 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -15,7 +14,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
     /// <summary>
     /// Integrates an <see cref="IPlaybackHandlerService"/> with the system media transport controls.
     /// </summary>
-    public class SystemMediaTransportControlsHandler : IDisposable
+    public sealed class SystemMediaTransportControlsHandler : IDisposable
     {
         private readonly IPlaybackHandlerService _playbackHandlerService;
         private readonly SystemMediaTransportControls _systemMediaTransportControls;
@@ -28,6 +27,9 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         {
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _playbackHandlerService = playbackHandlerService;
+
+            _systemMediaTransportControls.IsPlayEnabled = true;
+            _systemMediaTransportControls.IsPauseEnabled = true;
 
             AttachEvents();
         }
@@ -138,11 +140,9 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
         private void PlaybackHandlerService_PlaybackStateChanged(object sender, PlaybackState e)
         {
-            if (e == PlaybackState.Queued)
+            if (e == PlaybackState.Loaded)
                 return;
 
-            _systemMediaTransportControls.IsPlayEnabled = e == PlaybackState.Paused || e == PlaybackState.None;
-            _systemMediaTransportControls.IsPauseEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsStopEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsRewindEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsFastForwardEnabled = e == PlaybackState.Playing;

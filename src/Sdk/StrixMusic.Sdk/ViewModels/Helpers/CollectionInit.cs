@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {
     /// <summary>
     /// Helpers for initializing collection view models.
     /// </summary>
-    public static class CollectionInit
+    public sealed class CollectionInit
     {
         private static SemaphoreSlim _imagesMutex = new SemaphoreSlim(1, 1);
 
@@ -37,7 +28,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == trackCollection.Tracks.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Collection init for {nameof(trackCollection)} {trackCollection.Name} failed. Not all items were returned.");
                     return;
@@ -63,7 +54,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == albumCollection.Albums.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Collection init for {nameof(albumCollection)} {albumCollection.Name} failed. Not all items were returned.");
                     return;
@@ -89,7 +80,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == artistCollection.Artists.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Warning: Collection init for {nameof(artistCollection)} {artistCollection.Name} failed. Not all items were returned.");
                     return;
@@ -115,7 +106,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == playlistCollection.Playlists.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Collection init for {nameof(playlistCollection)} {playlistCollection.Name} failed. Not all items were returned.");
                     return;
@@ -141,7 +132,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == genreCollectionViewModel.Genres.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Collection init for {nameof(genreCollectionViewModel)} {genreCollectionViewModel.Genres} failed. Not all items were returned.");
                     return;
@@ -175,7 +166,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 // nothing was returned
                 if (lastItemCount == imageCollectionViewModel.Images.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger>();
+                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
 
                     logger.LogError($"Collection init for {nameof(imageCollectionViewModel)} {imageCollectionViewModel.Images} failed. Not all items were returned.");
 

@@ -5,10 +5,9 @@ using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
@@ -17,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -54,24 +54,6 @@ namespace StrixMusic.Shared
         /// The user's preferred shell.
         /// </summary>
         internal ShellMetadata? FallbackShell { get; private set; }
-
-        private static void InjectServices(Sdk.Uno.Controls.Shells.Shell shell)
-        {
-            var services = new ServiceCollection();
-
-            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            var localizationService = new LocalizationResourceLoader();
-            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.CommonResource);
-            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.MusicResource);
-
-            services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
-            services.AddSingleton(localizationService);
-            services.AddSingleton(notificationService);
-            services.AddSingleton(mainViewModel);
-
-            shell.InitServices(services);
-        }
 
         private async void MainPage_Loaded(object? sender, RoutedEventArgs e)
         {
@@ -140,10 +122,24 @@ namespace StrixMusic.Shared
                 if (FallbackShell is null)
                     return;
 
+                // Store the shell that is actually going to be created according to the conditions.
+                ShellMetadata? shellToCreate;
+
                 if (CheckShellModelSupport(PreferredShell))
-                    await SetupShell(PreferredShell);
+                    shellToCreate = PreferredShell;
                 else
-                    await SetupShell(FallbackShell);
+                    shellToCreate = FallbackShell;
+
+                // Don't setup the fallback shell if its same as the preferred shell.
+                if (e.Key == nameof(SettingsKeysUI.FallbackShell) && shellToCreate != PreferredShell)
+                {
+                    await SetupShell(shellToCreate);
+                }
+
+                if (e.Key == nameof(SettingsKeysUI.PreferredShell))
+                {
+                    await SetupShell(shellToCreate);
+                }
             }
         }
 
@@ -173,7 +169,7 @@ namespace StrixMusic.Shared
             // Gets the preferred shell from settings.
             var fallbackShellId = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
 
-            FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id  == fallbackShellId);
+            FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == fallbackShellId);
         }
 
         private Task SetupShell(ShellMetadata shellMetadata)
@@ -188,18 +184,17 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                ActiveShellModel = shellMetadata;
-
-                var shell = ShellRegistry.CreateShell(shellMetadata);
-
                 var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
                 mainViewModel.Notifications.IsHandled = false;
-                InjectServices(shell);
 
-                shell.DataContext = MainViewModel.Singleton;
+                var shell = ShellRegistry.CreateShell(shellMetadata);
 
+                shell.DataRoot = mainViewModel;
+                shell.InitServices(new ServiceCollection());
                 ShellDisplay.Content = shell;
+
+                ActiveShellModel = shellMetadata;
             }
 
             return Task.CompletedTask;
@@ -227,10 +222,16 @@ namespace StrixMusic.Shared
             if (ActiveShellModel != PreferredShell)
             {
                 if (CheckShellModelSupport(PreferredShell))
-                    await SetupShell(PreferredShell);
+                {
+                    if (FallbackShell != PreferredShell)
+                        await SetupShell(PreferredShell);
+                }
             }
             else if (!CheckShellModelSupport(ActiveShellModel))
-                await SetupShell(FallbackShell);
+            {
+                if (FallbackShell != PreferredShell)
+                    await SetupShell(FallbackShell);
+            }
         }
 
         /// <summary>
@@ -246,7 +247,6 @@ namespace StrixMusic.Shared
 #if !__WASM__
             mediaSource.CommandManager.IsEnabled = false;
 #endif
-
             _mediaPlayerElements.Add(mediaPlayerElement);
 
             // If loaded, add it to the visual tree.

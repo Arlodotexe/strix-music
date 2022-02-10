@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using Newtonsoft.Json;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
-    public class RemoteCoreArtist : ICoreArtist
+    public sealed class RemoteCoreArtist : ICoreArtist
     {
         private readonly MemberRemote _memberRemote;
         private readonly ICoreArtist? _artist;
@@ -25,13 +25,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="sourceCoreInstanceId">The instance ID of the core that created this object.</param>
         /// <param name="id">A unique identifier for this instance.</param>
         /// <param name="name">The name of the data.</param>
-        internal RemoteCoreArtist(string sourceCoreInstanceId, string name, string id)
+        [JsonConstructor]
+        public RemoteCoreArtist(string sourceCoreInstanceId, string name, string id)
         {
             _name = name;
             Id = id;
+            SourceCoreInstanceId = sourceCoreInstanceId;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client); // should be set remotely by the ctor.
 
             _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCoreAlbum)}.{id}", RemoteCoreMessageHandler.SingletonClient);
         }
@@ -45,13 +47,19 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             _artist = coreArtist;
             _name = coreArtist.Name;
             Id = coreArtist.Id;
-            SourceCore = RemoteCore.GetInstance(coreArtist.SourceCore.InstanceId);
+            SourceCoreInstanceId = coreArtist.SourceCore.InstanceId;
+            SourceCore = RemoteCore.GetInstance(SourceCoreInstanceId, RemotingMode.Host);
 
             _memberRemote = new MemberRemote(this, $"{coreArtist.SourceCore.InstanceId}.{nameof(RemoteCoreAlbum)}.{coreArtist.Id}", RemoteCoreMessageHandler.SingletonHost);
         }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; set; }
+
+        /// <summary>
+        /// The instance ID of the <see cref="SourceCore" />
+        /// </summary>
+        public string SourceCoreInstanceId { get; set; }
 
         /// <inheritdoc/>
         public string Id { get; set; }
@@ -60,11 +68,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public string Name
         {
             get => _name;
-            set
-            {
-                _name = value;
-
-            }
+            set => _name = value;
         }
 
         /// <inheritdoc/>
@@ -392,9 +396,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

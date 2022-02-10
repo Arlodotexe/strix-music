@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
     /// <summary>
     /// Holds metadata for a shell registered with the Strix SDK.
     /// </summary>
-    public class ShellMetadata
+    public sealed class ShellMetadata
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellMetadata"/> class.
@@ -14,10 +14,8 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
         /// <param name="displayName">The display name for the shell.</param>
         /// <param name="description"> A brief summary of the shell that will be displayed to the user.</param>
         /// <param name="inputMethods">The supported input methods.</param>
-        /// <param name="maxWidth">The maximum width of the window for the shell.</param>
-        /// <param name="maxHeight">The maximum height of the window for the shell.</param>
-        /// <param name="minWidth">The minimum width of the window for the shell.</param>
-        /// <param name="minHeight">The minimum height of the window for the shell.</param>
+        /// <param name="maxWindowSize">The maximum size of the window for the shell.</param>
+        /// <param name="minWindowSize">The minimum size of the window for the shell.</param>
         public ShellMetadata(
             string id,
             string displayName,

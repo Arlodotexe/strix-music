@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using OwlCore.Events;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
 {

@@ -1,10 +1,10 @@
-﻿using OwlCore.Extensions;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace StrixMusic.Shells.Groove.Controls.Pages
 {

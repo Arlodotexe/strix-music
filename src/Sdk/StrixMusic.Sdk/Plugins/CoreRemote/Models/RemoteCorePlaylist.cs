@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
-    public class RemoteCorePlaylist : ICorePlaylist
+    public sealed class RemoteCorePlaylist : ICorePlaylist
     {
         private readonly MemberRemote _memberRemote;
         private readonly ICorePlaylist? _playlist;
@@ -31,7 +30,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             Id = id;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client); // should be set remotely by the ctor.
 
             _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCorePlaylist)}.{id}", RemoteCoreMessageHandler.SingletonClient);
         }
@@ -45,7 +44,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
             _playlist = corePlaylist;
             _name = corePlaylist.Name;
             Id = corePlaylist.Id;
-            SourceCore = RemoteCore.GetInstance(corePlaylist.SourceCore.InstanceId);
+            SourceCore = RemoteCore.GetInstance(corePlaylist.SourceCore.InstanceId, RemotingMode.Host);
 
             _memberRemote = new MemberRemote(this, $"{corePlaylist.SourceCore.InstanceId}.{nameof(RemoteCorePlaylist)}.{corePlaylist.Id}", RemoteCoreMessageHandler.SingletonHost);
         }
@@ -253,6 +252,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         {
             throw new NotImplementedException();
         }
+
         /// <inheritdoc/>
         public Task RemoveImageAsync(int index)
         {
@@ -278,9 +278,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

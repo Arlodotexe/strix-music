@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Shells
@@ -27,7 +28,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         }
 
         /// <summary>
-        /// The ioc provider used by this shell.
+        /// A unique Ioc container for shell-specific services. Wiped and recreated when the user switches shells.
         /// </summary>
         public static Ioc Ioc { get; private set; } = new Ioc();
 
@@ -39,10 +40,23 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         {
             Ioc.ConfigureServices(serviceCollection.BuildServiceProvider());
 
-            PostShellSetup();
-
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// </summary>
+        public MainViewModel? DataRoot
+        {
+            get { return (MainViewModel)GetValue(DataRootProperty); }
+            set { SetValue(DataRootProperty, value); }
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="DataRoot"/>.
+        /// </summary>
+        public static readonly DependencyProperty DataRootProperty =
+            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(Shell), new PropertyMetadata(null));
 
         private void ShellControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
@@ -62,13 +76,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
 #endif
-        }
-
-        /// <summary>
-        /// Runs after all Shell services and window setup are finished.
-        /// </summary>
-        protected virtual void PostShellSetup()
-        {
         }
     }
 }

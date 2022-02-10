@@ -3,7 +3,7 @@
 namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 {
     /// <summary>
-    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.ArtistCollection"/> in the ZuneDesktop Shell.
+    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.Collections.ArtistCollection"/> in the ZuneDesktop Shell.
     /// </summary>
     public sealed partial class ArtistCollectionStyle : ResourceDictionary
     {

@@ -1,9 +1,9 @@
-﻿namespace StrixMusic.Sdk.Services.Settings
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// Holds information about a changed setting.
     /// </summary>
-    public class SettingChangedEventArgs
+    public sealed class SettingChangedEventArgs
     {
         /// <summary>
         /// The identifier for this setting

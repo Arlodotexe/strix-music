@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreImage"/>
     /// </summary>
-    public class RemoteCoreImage : ICoreImage
+    public sealed class RemoteCoreImage : ICoreImage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.
@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="id">Uniquely identifies the instance being remoted.</param>
         internal RemoteCoreImage(string sourceCoreInstanceId, string id)
         {
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId);
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client);
             Uri = new Uri("https://strixmusic.com/favicon.ico");
         }
 
@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="image">The image to control remotely.</param>
         internal RemoteCoreImage(ICoreImage image)
         {
-            SourceCore = RemoteCore.GetInstance(image.SourceCore.InstanceId);
+            SourceCore = RemoteCore.GetInstance(image.SourceCore.InstanceId, RemotingMode.Host);
             Uri = image.Uri;
             Height = image.Height;
             Width = image.Width;

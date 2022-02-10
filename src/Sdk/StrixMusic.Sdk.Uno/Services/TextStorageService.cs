@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Nito.AsyncEx;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services;
+using Windows.Storage;
 
 namespace StrixMusic.Sdk.Uno.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
-    public class TextStorageService : ITextStorageService
+    public sealed class TextStorageService : ITextStorageService
     {
         private readonly Dictionary<string, AsyncLock> _keyedMutex = new Dictionary<string, AsyncLock>();
         private readonly StorageFolder _localFolder;

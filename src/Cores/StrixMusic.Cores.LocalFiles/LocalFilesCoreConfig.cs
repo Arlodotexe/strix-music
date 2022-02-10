@@ -9,12 +9,11 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.LocalFiles.Services;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.FileMetadata;
 
 namespace StrixMusic.Cores.LocalFiles
 {

@@ -77,7 +77,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         /// <summary>
         /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
         /// </summary>
-        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CollectionProperty =
             DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(0));
     }

@@ -1,7 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;;monoandroid10.0;uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.19041</TargetFrameworks>
 		<!--<TargetFrameworks>uap10.0.16299</TargetFrameworks>-->
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -22,11 +21,12 @@
 	  <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
-		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
-		<PackageReference Include="OwlCore" Version="0.0.37" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+		<PackageReference Include="OwlCore" Version="0.0.49" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -117,8 +117,8 @@
 		<UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-		<PackageReference Include="Uno.UI" Version="3.10.11" />
+		<PackageReference Include="Uno.Diagnostics.Eventing" Version="2.0.1" />
+		<PackageReference Include="Uno.UI" Version="4.0.11" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
@@ -185,7 +185,7 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
 	  <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-	    <Version>7.0.0</Version>
+	    <Version>7.1.2</Version>
 	  </PackageReference>
 	</ItemGroup>
 </Project>

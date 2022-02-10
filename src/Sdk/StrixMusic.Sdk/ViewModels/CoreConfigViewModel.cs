@@ -5,28 +5,30 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// ViewModel for an <see cref="ICoreConfig"/>
     /// </summary>
-    public class CoreConfigViewModel : ObservableObject, ICoreConfig
+    public sealed class CoreConfigViewModel : ObservableObject, ISdkViewModel, ICoreConfig
     {
         private readonly ICoreConfig _coreConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreConfigViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="coreConfig">The instance of <see cref="ICoreConfig"/> to wrap around for this view model.</param>
-        public CoreConfigViewModel(ICoreConfig coreConfig)
+        internal CoreConfigViewModel(MainViewModel root, ICoreConfig coreConfig)
         {
+            Root = root;
             _coreConfig = coreConfig;
 
-            AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel> { new(_coreConfig.AbstractUIElements) };
+            AbstractUIElements = new () { new(_coreConfig.AbstractUIElements) };
 
             AttachEvents();
         }
@@ -64,6 +66,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public event EventHandler? AbstractUIElementsChanged;
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc/>
         public ICore SourceCore => _coreConfig.SourceCore;

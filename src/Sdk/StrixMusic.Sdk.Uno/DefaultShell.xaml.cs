@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views;
@@ -19,7 +20,7 @@ namespace StrixMusic.Shells.Default
     {
         private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
         private readonly Stack<Control> _history = new Stack<Control>();
-        private INavigationService<Control>? _navigationService;
+        private INavigationService<Control> _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultShell"/> class.
@@ -34,25 +35,14 @@ namespace StrixMusic.Shells.Default
                 { HomeItem, typeof(HomeView) },
                 { NowPlayingItem, typeof(NowPlayingView) },
             };
+
+            _navigationService = SetupNavigationService();
         }
 
-        /// <inheritdoc />
-        public override Task InitServices(IServiceCollection services)
+        private INavigationService<Control> SetupNavigationService()
         {
-            foreach (var service in services)
-            {
-                if (service is null)
-                    continue;
+            var navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
 
-                if (service.ImplementationInstance is INavigationService<Control> navigationService)
-                    _navigationService = SetupNavigationService(navigationService);
-            }
-
-            return base.InitServices(services);
-        }
-
-        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
-        {
             navigationService.NavigationRequested += NavigationService_NavigationRequested;
             navigationService.BackRequested += Shell_BackRequested;
 

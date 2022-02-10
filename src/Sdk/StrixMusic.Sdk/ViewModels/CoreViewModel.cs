@@ -9,11 +9,10 @@ using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Plugins.CoreRemote;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -21,45 +20,49 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains information about an <see cref="ICore"/>.
     /// </summary>
-    public class CoreViewModel : ObservableObject, ICore
+    public sealed class CoreViewModel : ObservableObject, ISdkViewModel, ICore
     {
         private readonly ICore _core;
+        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
         /// </summary>
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         /// <param name="coreMetadata">The metadata that was used to construct this core instance.</param>
+        /// <param name="settingsService">An instance of <see cref="ISettingsService"/>.</param>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <remarks>
-        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/>.
+        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/> on <paramref name="root"/>.
         /// </remarks>
-        public CoreViewModel(ICore core, CoreMetadata coreMetadata)
+        internal CoreViewModel(MainViewModel root, ICore core, CoreMetadata coreMetadata, ISettingsService settingsService)
         {
+            Root = root;
             _core = core;
-            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+            _settingsService = settingsService;
 
-            mainViewModel.Cores.Add(this);
+            root.Cores.Add(this);
 
             DisplayName = coreMetadata.DisplayName;
             LogoUri = coreMetadata.LogoUri;
 
-            Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
+            Library = new LibraryViewModel(root, new MergedLibrary(_core.Library.IntoList(), settingsService));
 
             if (_core.RecentlyPlayed != null)
-                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
+                RecentlyPlayed = new RecentlyPlayedViewModel(root, new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList(), settingsService));
 
             if (_core.Discoverables != null)
-                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
+                Discoverables = new DiscoverablesViewModel(root, new MergedDiscoverables(_core.Discoverables.IntoList(), settingsService));
 
             if (_core.Pins != null)
-                Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
+                Pins = new PlayableCollectionGroupViewModel(root, new MergedPlayableCollectionGroup(_core.Pins.IntoList(), settingsService));
 
             if (_core.Search != null)
-                Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
+                Search = new SearchViewModel(root, new MergedSearch(_core.Search.IntoList(), settingsService));
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
-            CoreConfig = new CoreConfigViewModel(core.CoreConfig);
+            CoreConfig = new CoreConfigViewModel(root, core.CoreConfig);
 
             CoreState = _core.CoreState;
 
@@ -84,7 +87,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(new CoreDeviceProxy(item.Data)));
+                Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data, _settingsService)));
             });
         }
 
@@ -146,33 +149,36 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;
 
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
+
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Unloaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Unloaded"/>.
         /// </summary>
         public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.NeedsSetup"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.NeedsSetup"/>.
         /// </summary>
         public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsSetup;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configured"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Configured"/>.
         /// </summary>
         public bool IsCoreStateConfigured => CoreState == CoreState.Configured;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loading"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loading"/>.
         /// </summary>
         public bool IsCoreStateLoading => CoreState == CoreState.Loading;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loaded"/>.
         /// </summary>
         public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Faulted"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Faulted"/>.
         /// </summary>
         public bool IsCoreStateFaulted => CoreState == CoreState.Faulted;
 

@@ -16,23 +16,19 @@ using NLog;
 using NLog.Config;
 using NLog.Extensions.Logging;
 using NLog.Targets;
-using OwlCore.Provisos;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Provisos;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Messages;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Localization;
-using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
@@ -60,7 +56,9 @@ namespace StrixMusic.Shared
         private bool _showingQuip;
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
+#if NETFX_CORE
         private SystemMediaTransportControlsHandler? _smtpHandler;
+#endif
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
         private ILogger? _logger;
@@ -429,16 +427,29 @@ namespace StrixMusic.Shared
             notification.Dismissed += OnNotificationDismissed;
             doneButton.Clicked += OnDoneButtonClicked;
 
-            void OnNotificationDismissed(object? sender, EventArgs e)
+            async void OnNotificationDismissed(object? sender, EventArgs e)
             {
                 _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnNotificationDismissed)}, completing setup");
-                setupFinishedSemaphore.Release();
+
+                var registry = await coreManager.GetCoreInstanceRegistryAsync();
+
+                if (registry.Count > 0)
+                    setupFinishedSemaphore.Release();
+                else
+                {
+                    await InitializeOutOfBoxSetupIfNeeded();
+                    setupFinishedSemaphore.Release();
+                }
             }
 
-            void OnDoneButtonClicked(object? sender, EventArgs e)
+            async void OnDoneButtonClicked(object? sender, EventArgs e)
             {
                 _logger?.LogInformation($"{nameof(InitializeOutOfBoxSetupIfNeeded)}: {nameof(OnDoneButtonClicked)}, completing setup");
-                setupFinishedSemaphore.Release();
+
+                var registry = await coreManager.GetCoreInstanceRegistryAsync();
+
+                if (registry.Count > 0)
+                    setupFinishedSemaphore.Release();
             }
 
             await setupFinishedSemaphore.WaitAsync();
@@ -518,14 +529,16 @@ namespace StrixMusic.Shared
             return;
 #endif
 
+#pragma warning disable CS0162 // Unreachable code detected
             _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
             if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
             {
                 var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 
-                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
+                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core.InstanceId);
             }
+#pragma warning restore CS0162 // Unreachable code detected
         }
     }
 }

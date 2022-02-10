@@ -45,6 +45,9 @@ namespace StrixMusic.Shells.Groove.Helper
         /// </summary>
         public bool CanGoBack => _navigationStack != null ? _navigationStack.Count > 1 : false;
 
+        /// <summary>
+        /// Navigates backwards.
+        /// </summary>
         public void NavigateBackwards()
         {
             if (!CanGoBack || _navigationStack == null)

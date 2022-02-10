@@ -33,7 +33,7 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Duration="0:0:0.1" BeginTime="0:0:0.2" To="1" From="0"
-                             Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity">
+                             Storyboard.TargetName="PART_Content" Storyboard.TargetProperty="Opacity">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase/>
                 </DoubleAnimation.EasingFunction>
@@ -60,7 +60,7 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
             <DoubleAnimation Duration="0:0:0.1" To="0" From="1"
-                             Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity">
+                             Storyboard.TargetName="PART_Content" Storyboard.TargetProperty="Opacity">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase/>
                 </DoubleAnimation.EasingFunction>
@@ -104,7 +104,7 @@
                    Fill="#d6d1d5"
                    Tapped="Background_OnTapped"/>
 
-        <Grid x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
+        <Grid x:Name="PART_Content" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
               Margin="50, 40, 50, 35">
             <Grid.RenderTransform>
                 <CompositeTransform x:Name="ContentTransform" ScaleX="1" ScaleY="1"/>

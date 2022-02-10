@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An interfaced ViewModel for <see cref="IPlaylistCollection" />. This is needed so because multiple view models implement <see cref="IPlaylistCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlaylistCollection"/>.
+    /// An interfaced ViewModel for <see cref="IPlaylistCollection" />.
+    /// This is needed so because multiple view models implement <see cref="IPlaylistCollection"/>,
+    /// and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlaylistCollection"/>.
     /// </summary>
-    public interface IPlaylistCollectionViewModel : IPlaylistCollection, IUrlCollectionViewModel, IAsyncInit
+    public interface IPlaylistCollectionViewModel : ISdkViewModel, IPlaylistCollection, IUrlCollectionViewModel, IAsyncInit
     {
         /// <summary>
         /// Keeps the default track collection while sorting.

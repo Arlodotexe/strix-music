@@ -6,11 +6,13 @@
     xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
     xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
     xmlns:pagestyles="using:StrixMusic.Shells.Groove.Styles.Pages"
+    xmlns:shellstyles="using:StrixMusic.Sdk.Uno.Styles.Shells"
     xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
     xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
     xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
     xmlns:dviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views"
     xmlns:dsecondaryviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views.Secondary">
+    
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
@@ -38,7 +40,7 @@
         <nowplayingstyles:MediaTransportStyle/>
 
         <!--Shell related styles-->
-        <!--<shellstyles:NotificationAbstractUICollectionStyle/>-->
+        <shellstyles:NotificationAbstractUICollectionStyle/>
         <styles:GrooveNowPlayingBarStyle/>
 
         <!--Page related styles-->

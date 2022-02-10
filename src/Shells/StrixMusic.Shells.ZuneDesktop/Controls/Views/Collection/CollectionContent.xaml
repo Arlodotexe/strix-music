@@ -204,23 +204,23 @@
                 <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
             </Grid.ColumnDefinitions>
 
-            <collections:ArtistCollection x:Name="ArtistCollection" Collection="{x:Bind ViewModel.Library}"
+            <collections:ArtistCollection x:Name="ArtistCollection" Collection="{x:Bind DataRoot.Library}"
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
-            <collections:AlbumCollection x:Name="AlbumCollection" Collection="{x:Bind ViewModel.Library}"
+            <collections:AlbumCollection x:Name="AlbumCollection" Collection="{x:Bind DataRoot.Library}"
                                          Margin="8,0" Grid.Column="1"
                                          SelectionChanged="AlbumSelected"/>
 
-            <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{x:Bind ViewModel.Library}"
+            <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{x:Bind DataRoot.Library}"
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
                                             SelectionChanged="PlaylistSelected"/>
 
-            <collections:TrackCollection x:Name="TrackCollection" Collection="{x:Bind ViewModel.Library}"
+            <collections:TrackCollection x:Name="TrackCollection" Collection="{x:Bind DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackListControlStyle}"
                                          Margin="0,0,8,0" Grid.Column="2"/>
-            
-            <collections:TrackCollection x:Name="TrackTable" Collection="{x:Bind ViewModel.Library}"
+
+            <collections:TrackCollection x:Name="TrackTable" Collection="{x:Bind DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
                                          Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
 

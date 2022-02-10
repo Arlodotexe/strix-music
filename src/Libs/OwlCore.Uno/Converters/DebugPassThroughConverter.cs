@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace OwlCore.Uno.Converters
 {
@@ -13,7 +12,6 @@ namespace OwlCore.Uno.Converters
         /// <inheritdoc/>
         public object? Convert(object value, Type targetType, object parameter, string language)
         {
-            Ioc.Default.GetRequiredService<ILogger<DebugPassThroughConverter>>().LogInformation($"Debug passthrough: Type is {value?.GetType().ToString() ?? "null"}");
             return value;
         }
 

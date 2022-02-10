@@ -18,12 +18,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         public QuickplayContent()
         {
             this.InitializeComponent();
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
 
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
+        /// <summary>
+        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// </summary>
+        public MainViewModel DataRoot
+        {
+            get { return (MainViewModel)GetValue(DataRootProperty); }
+            set { SetValue(DataRootProperty, value); }
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="DataRoot"/>.
+        /// </summary>
+        public static readonly DependencyProperty DataRootProperty =
+            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
 
         /// <summary>
         /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.

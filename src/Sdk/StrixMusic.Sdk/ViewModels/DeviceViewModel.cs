@@ -3,36 +3,38 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// Contains information about a <see cref="IImage"/>
     /// </summary>
-    public class DeviceViewModel : ObservableObject, IDevice
+    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice
     {
-        private TrackViewModel? _nowPlaying;
+        private ICoreTrack? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
-        /// <param name="device">The base <see cref="IDevice"/></param>
-        public DeviceViewModel(IDevice device)
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
+        /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
+        internal DeviceViewModel(MainViewModel root, IDevice device)
         {
             Model = device ?? throw new ArgumentNullException(nameof(device));
+            Root = root;
 
             if (Model.NowPlaying != null)
-                _nowPlaying = new TrackViewModel(Model.NowPlaying);
+                _nowPlaying = Model.NowPlaying;
 
             if (device.SourceCore != null)
-                SourceCore = MainViewModel.GetLoadedCore(device.SourceCore);
+                SourceCore = root.GetLoadedCore(device.SourceCore);
 
             if (Model.PlaybackQueue != null)
-                PlaybackQueue = new TrackCollectionViewModel(Model.PlaybackQueue);
+                PlaybackQueue = new TrackCollectionViewModel(root, Model.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -95,10 +97,8 @@ namespace StrixMusic.Sdk.ViewModels
             OnPropertyChanged(nameof(IsPlaying));
         });
 
-        private void Device_NowPlayingChanged(object sender, ITrack e) => _ = Threading.OnPrimaryThread(() =>
+        private void Device_NowPlayingChanged(object sender, ICoreTrack e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _nowPlaying = new TrackViewModel(e);
-
             OnPropertyChanged(nameof(NowPlaying));
             NowPlayingChanged?.Invoke(sender, e);
         });
@@ -112,7 +112,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ICore? SourceCore { get; set; }
 
         /// <inheritdoc />
-        public ICoreDevice? Source { get; set; }
+        public ICoreDevice? Source => Model.Source;
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc />
         public string Id => Model.Id;
@@ -127,11 +130,11 @@ namespace StrixMusic.Sdk.ViewModels
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc cref="IDevice.NowPlaying"/>
-        public TrackViewModel? NowPlaying => _nowPlaying;
-
-#warning TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
-        /// <inheritdoc />
-        ITrack? IDevice.NowPlaying => _nowPlaying;
+        public ICoreTrack? NowPlaying
+        {
+            get => _nowPlaying;
+            set => SetProperty(ref _nowPlaying, value);
+        }
 
         /// <inheritdoc />
         public bool IsActive => Model.IsActive;
@@ -206,7 +209,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged;
+        public event EventHandler<ICoreTrack>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged

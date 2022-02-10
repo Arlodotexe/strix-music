@@ -5,7 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 
@@ -59,6 +59,8 @@ namespace StrixMusic.Shared.ViewModels
                     _logger.LogInformation($"Adding {viewModel.Metadata.Id} to fully responsive shells");
                     FullyResponsiveShells.Add(viewModel);
                 }
+
+                await viewModel.InitAsync();
             }
 
             foreach (var shell in AllShells)
@@ -96,7 +98,37 @@ namespace StrixMusic.Shared.ViewModels
         public ShellInfoViewModel? PreferredShell
         {
             get => _preferredShell;
-            set => SetProperty(ref _preferredShell, value, nameof(PreferredShell));
+            set
+            {
+                SetProperty(ref _preferredShell, value, nameof(PreferredShell));
+
+                _ = UpdateFallbackShell();
+            }
+        }
+
+        private async Task UpdateFallbackShell()
+        {
+            if (PreferredShell is null)
+                return;
+
+            if (PreferredShell.IsFullyResponsive)
+            {
+                FallbackShell = null;
+            }
+            else
+            {
+                // Setting the correct fallback shell back for non-responsive shells.
+                var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
+
+                foreach (var shell in AllShells)
+                {
+                    if (shell.Metadata.Id == fallbackShell)
+                    {
+                        _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
+                        FallbackShell = shell;
+                    }
+                }
+            }
         }
 
         /// <inheritdoc cref="SettingsKeysUI.FallbackShell"/>

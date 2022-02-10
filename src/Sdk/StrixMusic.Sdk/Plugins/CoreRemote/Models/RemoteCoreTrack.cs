@@ -1,47 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// Wraps around an instance of an <see cref="ICoreArtist"/> to enable controlling it remotely, or takes a remotingId to control another instance remotely.
     /// </summary>
-    public class RemoteCoreTrack : ICoreTrack
+    public sealed class RemoteCoreTrack : ICoreTrack
     {
         private readonly MemberRemote _memberRemote;
         private readonly ICoreTrack? _track;
-
-        private int _totalArtistItemsCount;
-        private int _totalTrackCount;
-        private int _totalImageCount;
-        private int _totalUrlCount;
-        private int _totalGenreCount;
-
-        private string _name;
-        private string? _description;
-        private PlaybackState _playbackState;
-        private TimeSpan _duration;
-        private DateTime? _lastPlayed;
-        private DateTime? _datePublished;
-
-        private bool _isChangeDurationAsyncAvailable;
-        private bool _isChangeDescriptionAsyncAvailable;
-        private bool _isChangeNameAsyncAvailable;
-        private bool _isPauseTrackCollectionAsyncAvailable;
-        private bool _isPlayTrackCollectionAsyncAvailable;
-        private bool _isPauseArtistCollectionAsyncAvailable;
-        private bool _isPlayArtistCollectionAsyncAvailable;
-        private bool _isChangeDatePublishedAsyncAvailable;
 
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreTrack"/>.
@@ -51,11 +26,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         /// <param name="name">The name of the data.</param>
         internal RemoteCoreTrack(string sourceCoreInstanceId, string name, string id)
         {
-            _name = name;
+            Name = name;
             Id = id;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
-            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
+            SourceCore = RemoteCore.GetInstance(sourceCoreInstanceId, RemotingMode.Client); // should be set remotely by the ctor.
 
             _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(RemoteCoreTrack)}.{id}", RemoteCoreMessageHandler.SingletonClient);
         }
@@ -67,9 +42,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         internal RemoteCoreTrack(ICoreTrack coreTrack)
         {
             _track = coreTrack;
-            _name = coreTrack.Name;
+            Name = coreTrack.Name;
             Id = coreTrack.Id;
-            SourceCore = RemoteCore.GetInstance(coreTrack.SourceCore.InstanceId);
+            SourceCore = RemoteCore.GetInstance(coreTrack.SourceCore.InstanceId, RemotingMode.Host);
 
             _memberRemote = new MemberRemote(this, $"{coreTrack.SourceCore.InstanceId}.{nameof(RemoteCoreTrack)}.{coreTrack.Id}", RemoteCoreMessageHandler.SingletonHost);
         }
@@ -150,7 +125,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         public string Id { get; set; }
 
         /// <inheritdoc/>
-        public string Name => _name;
+        public string Name { get; set; }
 
         /// <inheritdoc/>
         public string? Description { get; set; }
@@ -420,9 +395,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync() => new ValueTask(Task.Run(async () =>
-        {
-            throw new NotImplementedException();
-        }));
+        public ValueTask DisposeAsync() => default;
     }
 }

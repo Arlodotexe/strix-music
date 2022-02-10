@@ -1,4 +1,8 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using System;
@@ -14,7 +18,7 @@ namespace StrixMusic.Shared.ViewModels
     /// <summary>
     /// A view model containing metadata about a shell that the user can switch to.
     /// </summary>
-    public class ShellInfoViewModel : ObservableObject
+    public class ShellInfoViewModel : ObservableObject, IAsyncInit
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellInfoViewModel"/> class.
@@ -30,8 +34,6 @@ namespace StrixMusic.Shared.ViewModels
                                 metadata.MinWindowSize.Width == 0;
 
             ShellPreviews = new ObservableCollection<Uri>();
-
-            _ = SetupImages();
         }
 
         /// <inheritdoc cref="ShellMetadata"/>
@@ -53,6 +55,15 @@ namespace StrixMusic.Shared.ViewModels
         /// <inheritdoc cref="ShellMetadata.Description"/>
         public string Description => Metadata.Description;
 
+        /// <inheritdoc/>
+        public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc/>
+        public Task InitAsync()
+        {
+            return SetupImages();
+        }
+
         private async Task SetupImages()
         {
             var foundFiles = new List<StorageFile>();
@@ -69,16 +80,19 @@ namespace StrixMusic.Shared.ViewModels
 
                     foundFiles.Add(file);
                 }
-                catch
+                catch (Exception ex)
                 {
                     break;
                 }
             }
 
-            foreach (var file in foundFiles)
+            await OwlCore.Threading.OnPrimaryThread(() =>
             {
-                ShellPreviews.Add(new Uri($"ms-appx:///Assets/ShellPreviews/{Metadata.Id}/{file.Name}"));
-            }
+                foreach (var file in foundFiles)
+                {
+                    ShellPreviews.Add(new Uri($"ms-appx:///Assets/ShellPreviews/{Metadata.Id}/{file.Name}"));
+                }
+            });
         }
     }
 }

@@ -1,23 +1,25 @@
 ﻿using System.Collections.Generic;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Used to bind search results across multiple cores to the View model.
+    /// Used to bind to search results across multiple cores.
     /// </summary>
-    public class SearchResultsViewModel : PlayableCollectionGroupViewModel, ISearchResults
+    public sealed class SearchResultsViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchResults
     {
         private readonly ISearchResults _searchResults;
 
         /// <summary>
-        /// Bindable wrapper for <see cref="ISearchResults"/>.
+        /// Initializes a new instance of the <see cref="SearchResultsViewModel"/> class.
         /// </summary>
-        public SearchResultsViewModel(ISearchResults searchResults)
-            : base(searchResults)
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
+        /// <param name="searchResults">The <see cref="ISearchResults"/> to wrap.</param>
+        internal SearchResultsViewModel(MainViewModel root, ISearchResults searchResults)
+            : base(root, searchResults)
         {
             _searchResults = searchResults;
         }

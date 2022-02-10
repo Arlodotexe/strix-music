@@ -1,17 +1,19 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using Newtonsoft.Json;
+using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreLibrary"/>
     /// </summary>
-    public class RemoteCoreLibrary : RemoteCorePlayableCollectionGroupBase, ICoreLibrary
+    public sealed class RemoteCoreLibrary : RemoteCorePlayableCollectionGroupBase, ICoreLibrary
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreLibrary"/>. Interacts with a remote core, identified by the given parameters.
         /// </summary>
         /// <param name="sourceCoreInstanceId">The ID of the core that created this instance.</param>
         /// <param name="id">Uniquely identifies the instance being remoted.</param>
+        [JsonConstructor]
         internal RemoteCoreLibrary(string sourceCoreInstanceId, string id)
             : base(sourceCoreInstanceId, id)
         {

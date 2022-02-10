@@ -9,9 +9,9 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IUserProfile"/>
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel
+    public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
@@ -28,14 +28,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        public UserProfileViewModel(IUserProfile userProfile)
+        internal UserProfileViewModel(MainViewModel root, IUserProfile userProfile)
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
+            Root = root;
 
             var userProfileImpl = userProfile.Cast<CoreUserProfileProxy>();
 
-            _sourceCores = userProfileImpl.SourceCores.Select(MainViewModel.GetLoadedCore).ToList();
+            _sourceCores = userProfileImpl.SourceCores.Select(root.GetLoadedCore).ToList();
             _sources = userProfileImpl.Sources;
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -123,6 +125,9 @@ namespace StrixMusic.Sdk.ViewModels
             add => _userProfile.UrlsChanged += value;
             remove => _userProfile.UrlsChanged -= value;
         }
+
+        /// <inheritdoc/>
+        public MainViewModel Root { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => _sourceCores;

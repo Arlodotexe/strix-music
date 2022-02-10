@@ -1,12 +1,13 @@
-﻿using StrixMusic.Sdk.Services.MediaPlayback;
-
-namespace StrixMusic.Sdk.Services.Settings.Containers
+﻿namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// User preferences for behavior when the user requests to play a single item from a collection of collections.
     /// </summary>
-    /// <example>From the library, the user requests to requests that an album is played. This decides</example>
-    public class SiblingCollectionPlaybackPreferences
+    /// <example>
+    /// Assuming album preference is set to <see cref="SiblingCollectionPlaybackBehavior.AllCollections"/>.
+    /// From an album collection (such as library), the user selects to play an album. When playback of the album ends, the next album in the collection might begin.
+    /// </example>
+    public sealed class SiblingCollectionPlaybackPreferences
     {
         /// <summary>
         /// Behavior for playing an ArtistCollection that has sibling ArtistCollections.

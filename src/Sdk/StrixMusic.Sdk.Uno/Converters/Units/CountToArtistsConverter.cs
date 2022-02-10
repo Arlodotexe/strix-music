@@ -1,15 +1,15 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Uno.Services.Localization;
-using System;
+using StrixMusic.Sdk.Services;
 using Windows.UI.Xaml.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters.Units
 {
     /// <summary>
-    /// A converter that adds an "Artists" suffix to a unit..
+    /// A converter that adds an "Artists" suffix to a unit.
     /// </summary>
-    public class CountToArtistsConverter : IValueConverter
+    public sealed class CountToArtistsConverter : IValueConverter
     {
         /// <summary>
         /// Adds an "Artists" suffix to a unit.
@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Units
         /// <returns>The converted value.</returns>
         public static string Convert(int value)
         {
-            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
             return string.Format(localizationService[Constants.Localization.MusicResource, "ArtistsCount"], value);
         }
 

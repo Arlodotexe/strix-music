@@ -6,10 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.CoreManagement;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
 using Windows.Storage;
 
 namespace StrixMusic.Sdk.Uno.Services
@@ -17,7 +16,7 @@ namespace StrixMusic.Sdk.Uno.Services
     /// <summary>
     /// Manages added and removing core instances.
     /// </summary>
-    public class CoreManagementService : ICoreManagementService
+    public sealed class CoreManagementService : ICoreManagementService
     {
         private readonly ISettingsService _settingsService;
         private Dictionary<string, CoreMetadata>? _coreInstanceRegistry;

@@ -1,14 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An interfaced ViewModel for <see cref="IGenreCollection" />. This is needed so because multiple view models implement <see cref="IGenreCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IGenreCollection"/>.
+    /// An interfaced ViewModel for <see cref="IGenreCollection" />.
+    /// This is needed so because multiple view models implement <see cref="IGenreCollection"/>,
+    /// and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IGenreCollection"/>.
     /// </summary>
-    public interface IGenreCollectionViewModel : IGenreCollection
+    public interface IGenreCollectionViewModel : ISdkViewModel, IGenreCollection
     {
         /// <summary>
         /// The genres in this collection.

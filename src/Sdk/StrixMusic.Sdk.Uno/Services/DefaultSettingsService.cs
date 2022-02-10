@@ -5,8 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Uno.Services
 {
@@ -14,7 +13,7 @@ namespace StrixMusic.Sdk.Uno.Services
     /// The instance of <see cref="ISettingsService"/> used by default
     /// <remarks>Not used by Cores. User-configurable settings go here.</remarks>
     /// </summary>
-    public class DefaultSettingsService : SettingsServiceBase
+    public sealed class DefaultSettingsService : SettingsServiceBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultSettingsService"/> class.

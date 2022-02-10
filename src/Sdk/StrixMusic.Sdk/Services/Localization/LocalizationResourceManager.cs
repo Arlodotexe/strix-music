@@ -1,17 +1,15 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Data;
-using System;
+﻿using StrixMusic.Sdk.Models;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
 
-namespace StrixMusic.Sdk.Services.Localization
+namespace StrixMusic.Sdk.Services
 {
     /// <summary>
     /// A service for getting localized strings from <see cref="ResourceManager"/> providers in a .NET Standard project.
     /// </summary>
-    public class LocalizationResourceManager : ILocalizationService
+    public sealed class LocalizationResourceManager : ILocalizationService
     {
         private readonly Dictionary<string, ResourceManager> _providers = new Dictionary<string, ResourceManager>();
 
@@ -32,11 +30,11 @@ namespace StrixMusic.Sdk.Services.Localization
         {
             return sender switch
             {
-                IAlbum _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
-                IArtist _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
+                IAlbum _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
+                IArtist _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
 
                 // Default to unknown name
-                _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownName"),
+                _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownName"),
             };
         }
 

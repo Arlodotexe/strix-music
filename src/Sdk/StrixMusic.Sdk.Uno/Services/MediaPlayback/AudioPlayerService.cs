@@ -6,22 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-// ReSharper disable once CheckNamespace
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 {
     /// <inheritdoc />
-    public class AudioPlayerService : IAudioPlayerService
+    public sealed class AudioPlayerService : IAudioPlayerService
     {
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, IMediaSourceConfig> _preloadedSources;
-        private readonly AudioGraphLeech _leech;
         private IMediaSourceConfig? _currentSource;
         private PlaybackState _playbackState;
 
@@ -35,7 +31,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             _player = player;
             _preloadedSources = new Dictionary<string, IMediaSourceConfig>();
-            _leech = new AudioGraphLeech();
 
             AttachEvents();
         }
@@ -91,7 +86,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
             // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            PlaybackStateChanged?.Invoke(this, PlaybackState.Queued);
+            PlaybackStateChanged?.Invoke(this, PlaybackState.Loaded);
         }
 
         private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
@@ -149,19 +144,8 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         public double PlaybackSpeed => _player.MediaPlayer.PlaybackSession.PlaybackRate;
 
         /// <inheritdoc />
-        public Task Play(string id)
-        {
-            var source = _preloadedSources[id];
-
-            // TODO use preloaded
-            return Play(source);
-        }
-
-        /// <inheritdoc />
         public async Task Play(IMediaSourceConfig sourceConfig)
         {
-            await _leech.InitAsync();
-
             await Threading.OnPrimaryThread(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
@@ -188,7 +172,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 CurrentSource = sourceConfig;
 
                 _player.MediaPlayer.Play();
-                _leech.Begin();
             });
         }
 
@@ -207,8 +190,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             return Threading.OnPrimaryThread(() =>
             {
                 _player.MediaPlayer.Pause();
-
-                _leech.Stop();
             });
         }
 
@@ -218,7 +199,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             return Threading.OnPrimaryThread(() =>
             {
                 _player.MediaPlayer.Play();
-                _leech.Begin();
             });
         }
 

@@ -5,14 +5,49 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run Tests",
+      "type": "coreclr",
+      "isBackground": true,
+      "program": "dotnet",
+      "request": "launch",
+      "cwd": "${workspaceFolder}\\src\\Sdk\\StrixMusic.Sdk.Tests",
+      "env": {
+        "VSTEST_HOST_DEBUG": "1"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}\\src\\Sdk\\StrixMusic.Sdk.Tests",
+        "env": {
+          "VSTEST_HOST_DEBUG": "1"
+        },
+      },
+      "args": [
+        "test"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "name": "Attach to process (.NET)",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    },
+    {
       "name": ".NET Core Launch (Uno Platform App)",
       "type": "coreclr",
       "request": "launch",
       "program": "dotnet",
-      "args": [ "run" ],
+      "args": [
+        "run"
+      ],
       "cwd": "${workspaceFolder}\\src\\Platforms\\StrixMusic.Wasm",
-      "env": {
-      }
+      "env": {}
     },
     {
       "name": ".NET Core Debug Uno Platform WebAssembly in Edge",

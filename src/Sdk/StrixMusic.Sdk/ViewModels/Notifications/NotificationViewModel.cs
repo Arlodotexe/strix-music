@@ -3,12 +3,12 @@ using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
-using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// A view model wrapper for the <see cref="Model"/> class.
+    /// A view model wrapper for the <see cref="Notification"/> class.
     /// </summary>
     [Bindable(true)]
     public sealed class NotificationViewModel : ObservableObject, IDisposable

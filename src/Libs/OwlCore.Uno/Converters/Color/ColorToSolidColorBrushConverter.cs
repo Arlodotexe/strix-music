@@ -19,7 +19,7 @@ namespace OwlCore.Uno.Converters.Color
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert((Windows.UI.Color)value);
+            return Convert(value as Windows.UI.Color?);
         }
 
         /// <inheritdoc/>

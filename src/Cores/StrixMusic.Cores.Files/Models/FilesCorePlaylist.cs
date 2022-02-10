@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.FileMetadata;
+using StrixMusic.Sdk.FileMetadata.Models;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files.Models
 {
@@ -300,8 +300,6 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.Id != Id)
                     return;
 
-                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
-
                 var previousData = _playlistMetadata;
                 _playlistMetadata = metadata;
 
@@ -314,8 +312,8 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.Duration != previousData.Duration)
                     DurationChanged?.Invoke(this, Duration);
 
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                    TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
+                if (metadata.TrackIds?.Count != previousData.TrackIds?.Count)
+                    TracksCountChanged?.Invoke(this, metadata.TrackIds?.Count ?? 0);
             }
         }
 

@@ -18,14 +18,12 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Provisos;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Messages;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Localization;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Helpers;
+using StrixMusic.Sdk.Uno;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.ViewModels;
 using Windows.ApplicationModel;
@@ -196,7 +194,7 @@ namespace StrixMusic.Shared.ViewModels
             var core = (ICore)sender;
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
-            if (e == CoreState.Configured || e == CoreState.Unloaded)
+            if (e == CoreState.Configured || e == CoreState.Unloaded || e == CoreState.Faulted)
             {
                 await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
                 return;
@@ -465,7 +463,6 @@ namespace StrixMusic.Shared.ViewModels
 
         private void SetupCores()
         {
-
             var registry = CoreRegistry.MetadataRegistry;
             _logger.LogInformation($"Setting up {nameof(CoreRegistry)}. Total {registry.Count} items.");
 

@@ -1,11 +1,11 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Plugins.CoreRemote.Models
+namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreSearchHistory"/>
     /// </summary>
-    public class RemoteCoreSearchHistory : RemoteCorePlayableCollectionGroupBase, ICoreSearchHistory
+    public sealed class RemoteCoreSearchHistory : RemoteCorePlayableCollectionGroupBase, ICoreSearchHistory
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteCoreSearchHistory"/>. Interacts with a remote core, identified by the given parameters.

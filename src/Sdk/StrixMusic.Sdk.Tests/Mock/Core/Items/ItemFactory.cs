@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,11 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public static ICoreAlbum CreateAlbum(ICore sourceCore) => new MockCoreAlbum(sourceCore, "factoryAlbum", "Test Album");
 
         public static ICorePlaylist CreatePlaylist(ICore sourceCore) => new MockCorePlaylist(sourceCore, "factoryPlaylist", "Test Playlist");
+
+        public static ICorePlayableCollectionGroup CreatePlayableCollectionGroup(ICore sourceCore) => new MockCorePlayableCollectionGroup(sourceCore, "factoryPcg", "Test collection group");
+
+        public static ICoreImage CreateImage(ICore sourceCore) => new MockCoreImage(sourceCore, new Uri("https://strixmusic.com/favicon.ico"));
+
+        public static ICoreUrl CreateUrl(ICore sourceCore) => new MockCoreUrl(sourceCore, new Uri("https://strixmusic.com/favicon.ico"), "test url");
     }
 }

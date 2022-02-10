@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Services;
 using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Services.NotificationService
@@ -11,7 +12,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// <summary>
     /// A Service for handling notifications between the Cores and Shell.
     /// </summary>
-    public class NotificationService : INotificationService
+    public sealed class NotificationService : INotificationService
     {
         private readonly List<Notification> _pendingNotifications;
         private readonly List<Notification> _activeNotifications;

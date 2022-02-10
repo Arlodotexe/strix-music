@@ -1,5 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.LocalFiles.Services
 {

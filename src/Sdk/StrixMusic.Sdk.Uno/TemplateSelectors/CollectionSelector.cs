@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Data.Base;
+﻿using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
     /// <summary>
     /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroupBase"/> library.
     /// </summary>
-    public class CollectionSelector : DataTemplateSelector
+    public sealed class CollectionSelector : DataTemplateSelector
     {
         /// <summary>
         /// The <see cref="DataTemplate"/> for track lists.

@@ -1,5 +1,6 @@
 ﻿using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public IServiceProvider? Services { get; set; }
 
-        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; set; } = new List<AbstractUICollection>();
+        public AbstractUICollection AbstractUIElements { get; set; } = new AbstractUICollection(string.Empty);
 
         public MediaPlayerType PlaybackType { get; internal set; } = MediaPlayerType.None;
 
         public ICore SourceCore { get; set; }
+
+        AbstractUICollection ICoreConfigBase.AbstractUIElements => throw new NotImplementedException();
 
         public event EventHandler? AbstractUIElementsChanged;
 

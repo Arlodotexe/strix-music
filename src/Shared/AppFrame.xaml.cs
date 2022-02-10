@@ -1,17 +1,17 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
-using System;
-using System.Linq;
-using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -33,7 +33,17 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The root view model used throughout the app.
         /// </summary>
-        public MainViewModel? ViewModel => DataContext as MainViewModel;
+        public MainViewModel? ViewModel
+        {
+            get => (MainViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="ViewModel" />.
+        /// </summary>
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(MainViewModel), typeof(AppFrame), new PropertyMetadata(null));
 
         /// <summary>
         /// The content overlay used as a popup dialog for the entire app.
@@ -59,14 +69,14 @@ namespace StrixMusic.Shared
 
         private static void SetupPlatformHelper()
         {
-            // TODO: Droid.
-
 #if __WASM__
             var currentPlatform = Platform.WASM;
-#elif NETFX_CORE
+#elif __ANDROID__
+            var currentPlatform = Platform.Droid;
+#elif WINDOWS_UWP
             var currentPlatform = Platform.UWP;
 #endif
-            new PlatformHelper(currentPlatform);
+            PlatformHelper.Current = currentPlatform;
         }
 
         /// <summary>
@@ -74,8 +84,7 @@ namespace StrixMusic.Shared
         /// </summary>
         public void SetupMainViewModel(MainViewModel mainViewModel)
         {
-            DataContext = mainViewModel;
-            this.Bindings.Update();
+            ViewModel = mainViewModel;
 
             AttachEvents(mainViewModel);
         }
@@ -147,7 +156,7 @@ namespace StrixMusic.Shared
         }
 
         /// <summary>
-        /// For displaying the UI for a <see cref="Sdk.Data.CoreState.NeedsSetup"/> core state.
+        /// For displaying the UI for a <see cref="Sdk.Models.CoreState.NeedsSetup"/> core state.
         /// </summary>
         private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -174,14 +183,14 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async void Core_CoreStateChanged(object? sender, Sdk.Data.CoreState e)
+        private async void Core_CoreStateChanged(object? sender, Sdk.Models.CoreState e)
         {
             var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (!(sender is ICore core))
                 return;
 
-            if (e == Sdk.Data.CoreState.NeedsSetup)
+            if (e == Sdk.Models.CoreState.NeedsSetup)
             {
                 await Threading.OnPrimaryThread(() =>
                 {
