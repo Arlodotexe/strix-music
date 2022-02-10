@@ -29,10 +29,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         public SdkModelPlugins()
         {
-            var pluginMetadata = new ModelPluginMetadata(id: "Default",
-                                                         displayName: "Global Plugin Connector",
-                                                         description: "Required for common plugins to be applied everywhere. For all plugins of a common interface, adds them for reuse to any chains that implement that interface.",
-                                                         sdkVer: new Version(0, 0, 0));
+            var pluginMetadata = new ModelPluginMetadata(
+                id: "Default",
+                displayName: "Global Plugin Connector",
+                description: "Required for common plugins to be applied globally. Should always be last in the load order.",
+                sdkVer: new Version(0, 0, 0));
 
             // In order to share behavior without blocking custom plugins that might be added,
             // The Global Plugin Connector must be last in the load order.
@@ -44,7 +45,6 @@ namespace StrixMusic.Sdk.Plugins.Model
             // If any of these contain plugins, the provided behavior is applied to
             // all other plugins which implement the returned interface
             // before using the default implementation.
-#warning Write unit tests.
             Playable.Add(x => new PlayablePluginBase(pluginMetadata, x)
             {
                 InnerDownloadable = Downloadable.Execute(x),
@@ -52,52 +52,36 @@ namespace StrixMusic.Sdk.Plugins.Model
                 InnerUrlCollection = UrlCollection.Execute(x),
             });
 
-            TrackCollection.Add(x =>
+            TrackCollection.Add(x => new TrackCollectionPluginBase(pluginMetadata, x)
             {
-                var commonPlugins = Playable.Execute(x);
-                return new TrackCollectionPluginBase(pluginMetadata, x)
-                {
-                    InnerDownloadable = commonPlugins,
-                    InnerPlayable = commonPlugins,
-                    InnerImageCollection = commonPlugins,
-                    InnerUrlCollection = commonPlugins,
-                };
+                InnerDownloadable = Playable.Execute(x),
+                InnerPlayable = Playable.Execute(x),
+                InnerImageCollection = Playable.Execute(x),
+                InnerUrlCollection = Playable.Execute(x),
             });
 
-            ArtistCollection.Add(x =>
+            ArtistCollection.Add(x => new ArtistCollectionPluginBase(pluginMetadata, x)
             {
-                var commonPlugins = Playable.Execute(x);
-                return new ArtistCollectionPluginBase(pluginMetadata, x)
-                {
-                    InnerDownloadable = commonPlugins,
-                    InnerPlayable = commonPlugins,
-                    InnerImageCollection = commonPlugins,
-                    InnerUrlCollection = commonPlugins,
-                };
+                InnerDownloadable = Playable.Execute(x),
+                InnerPlayable = Playable.Execute(x),
+                InnerImageCollection = Playable.Execute(x),
+                InnerUrlCollection = Playable.Execute(x),
             });
 
-            AlbumCollection.Add(x =>
+            AlbumCollection.Add(x => new AlbumCollectionPluginBase(pluginMetadata, x)
             {
-                var commonPlugins = Playable.Execute(x);
-                return new AlbumCollectionPluginBase(pluginMetadata, x)
-                {
-                    InnerDownloadable = commonPlugins,
-                    InnerPlayable = commonPlugins,
-                    InnerImageCollection = commonPlugins,
-                    InnerUrlCollection = commonPlugins,
-                };
+                InnerDownloadable = Playable.Execute(x),
+                InnerPlayable = Playable.Execute(x),
+                InnerImageCollection = Playable.Execute(x),
+                InnerUrlCollection = Playable.Execute(x),
             });
 
-            PlaylistCollection.Add(x =>
+            PlaylistCollection.Add(x => new PlaylistCollectionPluginBase(pluginMetadata, x)
             {
-                var commonPlugins = Playable.Execute(x);
-                return new PlaylistCollectionPluginBase(pluginMetadata, x)
-                {
-                    InnerDownloadable = commonPlugins,
-                    InnerPlayable = commonPlugins,
-                    InnerImageCollection = commonPlugins,
-                    InnerUrlCollection = commonPlugins,
-                };
+                InnerDownloadable = Playable.Execute(x),
+                InnerPlayable = Playable.Execute(x),
+                InnerImageCollection = Playable.Execute(x),
+                InnerUrlCollection = Playable.Execute(x),
             });
         }
 
