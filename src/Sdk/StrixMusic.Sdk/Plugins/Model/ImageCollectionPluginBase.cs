@@ -13,14 +13,14 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IImageCollection"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public abstract class ImageCollectionPluginBase : IModelPlugin, IImageCollection, IDelegatable<IImageCollection>
+    public class ImageCollectionPluginBase : IModelPlugin, IImageCollection, IDelegatable<IImageCollection>
     {
         /// <summary>
         /// Creates a new instance of <see cref="DownloadablePluginBase"/>.
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected ImageCollectionPluginBase(ModelPluginMetadata registration, IImageCollection inner)
+        protected internal ImageCollectionPluginBase(ModelPluginMetadata registration, IImageCollection inner)
         {
             Registration = registration;
             Inner = inner;

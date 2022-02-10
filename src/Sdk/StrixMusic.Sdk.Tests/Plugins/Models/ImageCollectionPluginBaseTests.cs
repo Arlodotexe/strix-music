@@ -82,7 +82,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : ImageCollectionPluginBase
         {
             public FullyCustom(IImageCollection inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -111,7 +111,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : ImageCollectionPluginBase
         {
             public NoOverride(IImageCollection inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

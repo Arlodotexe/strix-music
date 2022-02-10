@@ -259,7 +259,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : PlayablePluginBase
         {
             public FullyCustom(IPlayable inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -314,7 +314,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : PlayablePluginBase
         {
             public NoOverride(IPlayable inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

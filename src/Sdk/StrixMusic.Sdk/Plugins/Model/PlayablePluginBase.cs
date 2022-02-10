@@ -15,14 +15,14 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IPlayable"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public abstract class PlayablePluginBase : IModelPlugin, IPlayable, IDelegatable<IPlayable>
+    public class PlayablePluginBase : IModelPlugin, IPlayable, IDelegatable<IPlayable>
     {
         /// <summary>
         /// Creates a new instance of <see cref="PlayablePluginBase"/>.
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
+        protected internal PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
         {
             Registration = registration;
 

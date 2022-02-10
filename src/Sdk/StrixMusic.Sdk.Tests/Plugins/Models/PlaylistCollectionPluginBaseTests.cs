@@ -468,7 +468,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : PlaylistCollectionPluginBase
         {
             public FullyCustom(IPlaylistCollection inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -526,7 +526,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : PlaylistCollectionPluginBase
         {
             public NoOverride(IPlaylistCollection inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

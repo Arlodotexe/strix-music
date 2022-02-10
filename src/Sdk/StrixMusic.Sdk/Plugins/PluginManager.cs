@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Plugins.Model;
+﻿
+using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Plugins
 {
@@ -10,6 +11,6 @@ namespace StrixMusic.Sdk.Plugins
         /// <summary>
         /// Manages plugins that modify the behavior of plugins or models.
         /// </summary>
-        public ModelPluginManager ModelPlugins { get; } = new();
+        public SdkModelPlugins ModelPlugins { get; } = new();
     }
 }

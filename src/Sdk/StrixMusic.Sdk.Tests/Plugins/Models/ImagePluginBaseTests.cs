@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : ImagePluginBase
         {
             public FullyCustom(IImage inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : ImagePluginBase
         {
             public NoOverride(IImage inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

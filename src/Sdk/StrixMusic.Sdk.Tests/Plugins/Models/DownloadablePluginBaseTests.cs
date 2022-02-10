@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : DownloadablePluginBase
         {
             public FullyCustom(IDownloadable inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -90,7 +90,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : DownloadablePluginBase
         {
             public NoOverride(IDownloadable inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }
