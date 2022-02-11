@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.Sdk.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Shells
 {
@@ -13,6 +15,24 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         public NowPlayingBar()
         {
             this.DefaultStyleKey = typeof(NowPlayingBar);
+        }
+
+        /// <summary>
+        /// Backing dependency property for <see cref="MainViewModel"/>.
+        /// </summary>
+        public static readonly DependencyProperty ActiveDeviceProperty = DependencyProperty.Register(
+            nameof(DeviceViewModel),
+            typeof(DeviceViewModel),
+            typeof(NowPlayingBar),
+            new PropertyMetadata(null));
+
+        /// <summary>
+        /// Holds active devices and track playback information.
+        /// </summary>
+        public DeviceViewModel? ActiveDevice
+        {
+            get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
+            set => SetValue(ActiveDeviceProperty, value);
         }
     }
 }

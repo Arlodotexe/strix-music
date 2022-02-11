@@ -70,7 +70,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <!--Media info-->
-                                            <nowplaying:MediaInfo MaxWidth="300"/>
+                                            <nowplaying:MediaInfo MaxWidth="300" Device="{x:Bind ActiveDevice, Mode=OneWay}"/>
 
                                             <!--Media slider control-->
                                             <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
@@ -86,7 +86,7 @@
                                             </nowplaying:MediaSlider>
 
                                             <!--Media transport controls-->
-                                            <nowplaying:MediaTransports Device="{Binding ActiveDevice}" Grid.Column="2"/>
+											<nowplaying:MediaTransports Device="{x:Bind ActiveDevice, Mode=OneWay}" Grid.Column="2"/>
                                         </Grid>
                                     </UserControl>
                                 </DataTemplate>
