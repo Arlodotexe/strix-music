@@ -56,10 +56,10 @@
                                 </StackPanel>
 
                                 <!--Media info-->
-                                <nowplaying:MediaInfo x:Name="NowPlaying" Device="{Binding ActiveDevice}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" Height="64" VerticalAlignment="Bottom" Margin="0,0,0,-8"/>
+                                <nowplaying:MediaInfo x:Name="NowPlaying" Device="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" Height="64" VerticalAlignment="Bottom" Margin="0,0,0,-8"/>
 
                                 <!--Transport controls-->
-                                <zunenowplaying:ZuneMediaTransports Device="{Binding ActiveDevice}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                <zunenowplaying:ZuneMediaTransports Device="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                             </Grid>
                         </UserControl>
                     </ControlTemplate>

@@ -178,6 +178,6 @@
         <!--NowPlayingOverlay-->
         <views:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-        <shells:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" />
+        <shells:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" ActiveDevice="{x:Bind DataRoot.ActiveDevice, Mode=OneWay}" />
     </Grid>
 </shells:Shell>
