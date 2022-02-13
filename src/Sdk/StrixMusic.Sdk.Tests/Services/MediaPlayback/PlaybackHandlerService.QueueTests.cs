@@ -373,7 +373,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(10, 1, 3, 6)]
         [Timeout(800)]
         // AKA: Swapping of items test.
-        public async Task ShuffleAndUnshuffleByRemovingAndAddingItem(int numberOfPreviousItems, int numberOfNextItems, int oldIndex, int newIndex)
+        public async Task ShuffleRemoveItemAddItemThenUnshuffle(int numberOfPreviousItems, int numberOfNextItems, int oldIndex, int newIndex)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
@@ -395,13 +395,13 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Adding an item.
             _handlerService.InsertNext(newIndex, itemToSwap);
 
-            // Unfshuffle.
+            // Unshuffle.
             await _handlerService.ToggleShuffleAsync();
 
             var newNextItems = _handlerService.NextItems.ToList();
             var newPrevItems = _handlerService.PreviousItems.ToList();
 
-            // Syncing orignal next and previous items with the new next and previous items.
+            // Syncing original next and previous items with the new next and previous items.
             if (newNextItems.Contains(itemToSwap))
             {
                 _nextItems.InsertOrAdd(newNextItems.IndexOf(itemToSwap), itemToSwap);
@@ -431,7 +431,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         [DataRow(9, 2, 4)]
         [DataRow(10, 1, 3)]
         [Timeout(800)]
-        public async Task ShuffleAndUnshuffleByAddingAndRemovingItem(int numberOfPreviousItems, int numberOfNextItems, int addIndex)
+        public async Task ShuffleAddItemRemoveItemThenUnshuffle(int numberOfPreviousItems, int numberOfNextItems, int addIndex)
         {
             Assert.IsNotNull(_previousItems);
             Assert.IsNotNull(_nextItems);
@@ -451,7 +451,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Removing an item.
             _handlerService.RemoveNext(addIndex);
 
-            // Unfshuffle.
+            // Unshuffle.
             await _handlerService.ToggleShuffleAsync();
 
 
