@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
+namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 {
     [TestClass]
     public class UrlCollectionTests

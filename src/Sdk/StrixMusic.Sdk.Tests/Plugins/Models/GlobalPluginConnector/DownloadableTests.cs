@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
+namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 {
     [TestClass]
     public class DownloadableTests
