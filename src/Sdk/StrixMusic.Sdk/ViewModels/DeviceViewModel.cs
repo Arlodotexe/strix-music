@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_NowPlayingChanged(object sender, ICoreTrack e) => _ = Threading.OnPrimaryThread(() =>
         {
-            OnPropertyChanged(nameof(NowPlaying));
+            NowPlaying = e;
             NowPlayingChanged?.Invoke(sender, e);
         });
 
