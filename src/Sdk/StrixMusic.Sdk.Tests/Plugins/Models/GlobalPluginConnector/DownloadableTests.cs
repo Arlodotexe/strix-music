@@ -10,6 +10,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void AccessedThroughPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
@@ -21,6 +23,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void NotBlockingPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
             plugins.Playable.Insert(0, x => new PlayablePluginBaseTests.FullyCustom(x));
 
@@ -34,6 +38,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void DisposingPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
@@ -48,6 +54,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void AccessedThroughTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
@@ -59,6 +67,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void NotBlockingTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
             plugins.TrackCollection.Insert(0, x => new TrackCollectionPluginBaseTests.FullyCustom(x));
 
@@ -72,6 +82,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void DisposingTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
@@ -86,6 +98,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void AccessedThroughArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
@@ -97,6 +111,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void NotBlockingArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
             plugins.ArtistCollection.Insert(0, x => new ArtistCollectionPluginBaseTests.FullyCustom(x));
 
@@ -110,6 +126,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void DisposingArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
@@ -124,6 +142,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void AccessedThroughAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
@@ -135,6 +155,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void NotBlockingAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
             plugins.AlbumCollection.Insert(0, x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
@@ -148,6 +170,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalPluginConnector
         public void DisposingAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+
             plugins.Downloadable.Insert(0, x => new DownloadablePluginBaseTests.FullyCustom(x));
 
             var plugin = plugins.AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
