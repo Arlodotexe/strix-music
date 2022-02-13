@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Tests.Mock.Core;
@@ -166,7 +167,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
 
             Assert.IsTrue(_handlerService.ShuffleState);
-           
+
             Assert.AreEqual(_handlerService.NextItems.Count, numberOfPreviousItems + numberOfNextItems);
             Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
 
@@ -253,6 +254,107 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             newUnShuffledList.AddRange(_handlerService.NextItems);
 
             CollectionAssert.AreEqual(unshuffledList, newUnShuffledList);
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
+
+
+        [TestMethod]
+        [DataRow(1, 10, 8)]
+        [DataRow(2, 9, 3)]
+        [DataRow(3, 8, 3, 4)]
+        [DataRow(4, 7, 3, 3)]
+        [DataRow(5, 6, 8)]
+        [DataRow(6, 5, 2, 4)]
+        [DataRow(7, 4, 2, 7)]
+        [DataRow(8, 3, 6, 9, 1)]
+        [DataRow(9, 2, 4)]
+        [DataRow(10, 1, 3)]
+        [Timeout(800)]
+        public async Task ShuffleAndUnshuffleByAddingNewTracks(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+            Assert.IsNotNull(_mockTrack);
+
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+            var newItems = new List<IMediaSourceConfig>();
+
+            for (int i = 0; i < nextIndexes.Length; i++)
+            {
+                var itemToAdd = new MediaSourceConfig(_mockTrack, $"New Item: {nextIndexes[i]}", Stream.Null, "mp3");
+
+                _handlerService.InsertNext(nextIndexes[i], itemToAdd);
+                newItems.Add(itemToAdd);
+            }
+
+            // Turn shuffle off.
+            await _handlerService.ToggleShuffleAsync();
+
+            var newNextItems = _handlerService.NextItems.ToList();
+            var newPrevItems = _handlerService.PreviousItems.ToList();
+
+            // Remove the newly added items before comparing if present in previous or next items.
+            foreach (var item in newItems)
+            {
+                newNextItems.Remove(item);
+                newPrevItems.Remove(item);
+            }
+
+            CollectionAssert.AreEqual(_nextItems, newNextItems);
+            CollectionAssert.AreEqual(_previousItems, newPrevItems);
+
+            CollectionAssert.AllItemsAreNotNull(newNextItems);
+            CollectionAssert.AllItemsAreNotNull(newPrevItems);
+        }
+
+
+
+        [TestMethod]
+        [DataRow(1, 10, 8)]
+        [DataRow(2, 9, 3)]
+        [DataRow(3, 8, 3, 4)]
+        [DataRow(4, 7, 3)]
+        [DataRow(5, 6, 8)]
+        [DataRow(6, 5, 2, 4)]
+        [DataRow(7, 4, 2, 7)]
+        [DataRow(8, 3, 6, 9, 1)]
+        [DataRow(9, 2, 4)]
+        [DataRow(10, 1, 3)]
+        [Timeout(800)]
+        public async Task ShuffleAndUnshuffleByRemovingTracks(int numberOfPreviousItems, int numberOfNextItems, params int[] nextIndexes)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+            var itemsRemoved = new List<IMediaSourceConfig>();
+
+            for (int i = 0; i < nextIndexes.Length; i++)
+            {
+                itemsRemoved.Add(_handlerService.NextItems.ElementAt(nextIndexes[i]));
+                _handlerService.RemoveNext(nextIndexes[i]);
+            }
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Turn shuffle off.
+            await _handlerService.ToggleShuffleAsync();
+
+            // Remove the removed items from the orginal previous and next items(if exists).
+            foreach (var item in itemsRemoved)
+            {
+                _nextItems.Remove(item);
+                _previousItems.Remove(item);
+            }
+
+            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
 
             CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
             CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());

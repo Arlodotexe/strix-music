@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {
     public partial class RemoteCoreLibraryTests
     {
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalTrackCount()
         {
             var core = new MockCore();
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalTrackCount_Changed(int amount)
         {
             var core = new MockCore();
@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalAlbumItemsCount()
         {
             var core = new MockCore();
@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalAlbumItemsCount_Changed(int amount)
         {
             var core = new MockCore();
@@ -102,7 +102,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalPlaylistItemsCount()
         {
             var core = new MockCore();
@@ -124,7 +124,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalPlaylistItemsCount_Changed(int amount)
         {
             var core = new MockCore();
@@ -148,7 +148,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalChildrenCount()
         {
             var core = new MockCore();
@@ -170,7 +170,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalChildrenCount_Changed(int amount)
         {
             var core = new MockCore();
@@ -194,7 +194,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalImageCount()
         {
             var core = new MockCore();
@@ -216,7 +216,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalImageCount_Changed(int amount)
         {
             var core = new MockCore();
@@ -240,7 +240,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalUrlCount()
         {
             var core = new MockCore();
@@ -262,7 +262,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(10), DataRow(100)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteTotalUrlCount_Changed(int amount)
         {
             var core = new MockCore();

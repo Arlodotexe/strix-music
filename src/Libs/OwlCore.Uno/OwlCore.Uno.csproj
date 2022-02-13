@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.45" />
+    <PackageReference Include="OwlCore" Version="0.0.49" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="Uno.UI" Version="4.0.11" />
   </ItemGroup>

@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
     public partial class RemoteCoreLibraryTests
     {
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddChildAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddAlbumItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddArtistItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddTrackAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddPlaylistItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -124,7 +124,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddImageAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsAddUrlAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -170,7 +170,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveChildAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -193,7 +193,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveAlbumItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -216,7 +216,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveArtistItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -239,7 +239,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveTrackAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -262,7 +262,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemovePlaylistItemAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -285,7 +285,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveImageAvailableAsync(int index)
         {
             var core = new MockCore();
@@ -308,7 +308,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
         }
 
         [DataRow(1), DataRow(2), DataRow(5), DataRow(10), DataRow(99)]
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteIsRemoveUrlAvailableAsync(int index)
         {
             var core = new MockCore();

@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             RemoteCoreMessageHandler.SingletonHost.MessageOutbound -= SingletonHost_MessageOutbound;
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteRegistration()
         {
             var core = new MockCore();
@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteInitAsync()
         {
             var core = new MockCore();
@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            await Task.Delay(200);
+            await Task.Delay(500);
 
             var wrappedResult = remoteHostCore.CoreState;
             var remotelyReceivedResult = remoteClientCore.CoreState;
@@ -72,19 +72,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteInstanceDescriptor()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await Task.Delay(200);
+            await Task.Delay(500);
 
             core.InstanceDescriptor = "So remote, much wow.";
 
             // Wait for changes to propogate
-            await Task.Delay(200);
+            await Task.Delay(500);
 
             Assert.AreEqual(core.InstanceDescriptor, remoteHostCore.InstanceDescriptor);
             Assert.AreEqual(core.InstanceDescriptor, remoteClientCore.InstanceDescriptor);
@@ -94,17 +94,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteCoreState()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            core.CoreState = StrixMusic.Sdk.Models.CoreState.NeedsSetup;
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
+            core.CoreState = Sdk.Models.CoreState.NeedsSetup;
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(1000);
 
             Assert.AreEqual(core.CoreState, remoteHostCore.CoreState);
             Assert.AreEqual(core.CoreState, remoteClientCore.CoreState);
@@ -114,17 +116,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteDevices_InitialSet()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
+            await remoteClientCore.InitAsync(new ServiceCollection());
+
             Assert.AreNotEqual(default, core.Devices.Count);
 
             // Wait for changes to propogate
-            await Task.Delay(500);
+            await Task.Delay(800);
 
             Assert.AreEqual(core.Devices.Count, remoteHostCore.Devices.Count);
             Assert.AreEqual(core.Devices.Count, remoteClientCore.Devices.Count);
@@ -134,7 +138,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteDevices_Add()
         {
             var core = new MockCore();
@@ -225,7 +229,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         [DataRow("TestTrack")]
         [DataRow("TestTrack1")]
         public async Task RemoteGetMediaSourceConfig(string id)
@@ -248,12 +252,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteLibrarySetup()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
 
             // Wait for changes to propogate
             await Task.Delay(500);
@@ -266,7 +272,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteRecentlyPlayedSetup()
         {
             var core = new MockCore();
@@ -284,12 +290,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemoteDiscoverablesSetup()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
 
             // Wait for changes to propogate
             await Task.Delay(500);
@@ -302,12 +310,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             await remoteClientCore.DisposeAsync();
         }
 
-        [TestMethod, Timeout(2000)]
+        [TestMethod, Timeout(5000)]
         public async Task RemotePinsSetup()
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
+
+            await remoteClientCore.InitAsync(new ServiceCollection());
 
             // Wait for changes to propogate
             await Task.Delay(500);
