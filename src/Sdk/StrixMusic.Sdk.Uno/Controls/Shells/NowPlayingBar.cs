@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         /// Backing dependency property for <see cref="MainViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ActiveDeviceProperty = DependencyProperty.Register(
-            nameof(DeviceViewModel),
+            nameof(ActiveDevice),
             typeof(DeviceViewModel),
             typeof(NowPlayingBar),
             new PropertyMetadata(null));
