@@ -359,5 +359,107 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
             CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
         }
+
+        [TestMethod]
+        [DataRow(1, 10, 8, 6)]
+        [DataRow(2, 9, 3, 6)]
+        [DataRow(3, 8, 2, 4)]
+        [DataRow(4, 7, 3, 1)]
+        [DataRow(5, 6, 8, 9)]
+        [DataRow(6, 5, 2, 4)]
+        [DataRow(7, 4, 2, 7)]
+        [DataRow(8, 3, 6, 9)]
+        [DataRow(9, 2, 4, 8)]
+        [DataRow(10, 1, 3, 6)]
+        [Timeout(800)]
+        // AKA: Swapping of items test.
+        public async Task ShuffleRemoveItemAddItemThenUnshuffle(int numberOfPreviousItems, int numberOfNextItems, int oldIndex, int newIndex)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+
+            // Shuffle.
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Removing an item.
+            var itemToSwap = _handlerService.NextItems.ElementAt(oldIndex);
+            _handlerService.RemoveNext(oldIndex);
+
+            // Remove the removed item from the orginal previous and next items(if exists).
+            _nextItems.Remove(itemToSwap);
+            _previousItems.Remove(itemToSwap);
+
+            // Adding an item.
+            _handlerService.InsertNext(newIndex, itemToSwap);
+
+            // Unshuffle.
+            await _handlerService.ToggleShuffleAsync();
+
+            var newNextItems = _handlerService.NextItems.ToList();
+            var newPrevItems = _handlerService.PreviousItems.ToList();
+
+            // Syncing original next and previous items with the new next and previous items.
+            if (newNextItems.Contains(itemToSwap))
+            {
+                _nextItems.InsertOrAdd(newNextItems.IndexOf(itemToSwap), itemToSwap);
+            }
+            else if (newPrevItems.Contains(itemToSwap))
+            {
+                _previousItems.InsertOrAdd(newPrevItems.IndexOf(itemToSwap), itemToSwap);
+            }
+
+
+            CollectionAssert.AreEqual(newNextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(newPrevItems, _handlerService.PreviousItems.ToList());
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
+
+        [TestMethod]
+        [DataRow(1, 10, 8)]
+        [DataRow(2, 9, 3)]
+        [DataRow(3, 8, 2)]
+        [DataRow(4, 7, 3)]
+        [DataRow(5, 6, 8)]
+        [DataRow(6, 5, 2)]
+        [DataRow(7, 4, 2)]
+        [DataRow(8, 3, 6)]
+        [DataRow(9, 2, 4)]
+        [DataRow(10, 1, 3)]
+        [Timeout(800)]
+        public async Task ShuffleAddItemRemoveItemThenUnshuffle(int numberOfPreviousItems, int numberOfNextItems, int addIndex)
+        {
+            Assert.IsNotNull(_previousItems);
+            Assert.IsNotNull(_nextItems);
+            Assert.IsNotNull(_handlerService);
+            Assert.IsNotNull(_mockTrack);
+
+            // Shuffle.
+            await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
+
+            var itemToAdd = new MediaSourceConfig(_mockTrack, $"New Item: {addIndex}", Stream.Null, "mp3");
+
+            Assert.IsTrue(_handlerService.ShuffleState);
+
+            // Adding an item.
+            _handlerService.InsertNext(addIndex, itemToAdd);
+
+            // Removing an item.
+            _handlerService.RemoveNext(addIndex);
+
+            // Unshuffle.
+            await _handlerService.ToggleShuffleAsync();
+
+
+            CollectionAssert.AreEqual(_nextItems, _handlerService.NextItems.ToList());
+            CollectionAssert.AreEqual(_previousItems, _handlerService.PreviousItems.ToList());
+
+            CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
+            CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
     }
 }
