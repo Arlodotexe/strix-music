@@ -1,8 +1,4 @@
-﻿// Special thanks to Sergio Pedri for this design from Legere
-// Sergio's GitHub: https://github.com/Sergio0694
-// Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Services;
