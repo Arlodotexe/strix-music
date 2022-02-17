@@ -1,7 +1,6 @@
-﻿// Special thanks to Sergio Pedri for this class from Legere.
-// Modified to work with "identifiers" (setting folders).
-// Sergio's GitHub: https://github.com/Sergio0694
-// Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
+﻿// Copyright (c) Arlo Godfrey. All Rights Reserved.
+// Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
+// See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
 using System.Collections.Generic;
