@@ -24,17 +24,17 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// The items that should be played next.
         /// </summary>
-        IReadOnlyList<IMediaSourceConfig> NextItems { get; }
+        IReadOnlyList<PlaybackItem> NextItems { get; }
 
         /// <summary>
         /// Items that precede the currently playing item. Used to go to the previous track in the playback context.
         /// </summary>
-        IReadOnlyCollection<IMediaSourceConfig> PreviousItems { get; }
+        IReadOnlyCollection<PlaybackItem> PreviousItems { get; }
 
         /// <summary>
         /// The currently playing item.
         /// </summary>
-        IMediaSourceConfig? CurrentItem { get; }
+        PlaybackItem? CurrentItem { get; }
 
         /// <summary>
         /// True if the player is using a shuffled track list.
@@ -205,17 +205,17 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Fires when the <see cref="NextItems"/> are updated.
         /// </summary>
-        event CollectionChangedEventHandler<IMediaSourceConfig>? NextItemsChanged;
+        event CollectionChangedEventHandler<PlaybackItem>? NextItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="PreviousItems"/> are updated.
         /// </summary>
-        event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
+        event CollectionChangedEventHandler<PlaybackItem>? PreviousItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="CurrentItem"/> is changed.
         /// </summary>
-        event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
+        event EventHandler<PlaybackItem?>? CurrentItemChanged;
 
         /// <summary>
         /// Raised when a quantum of data is processed. 
