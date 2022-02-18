@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     public class AlbumCollectionPluginBase : IModelPlugin, IAlbumCollection, IDelegatable<IAlbumCollection>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="DownloadablePluginBase"/>.
+        /// Creates a new instance of <see cref="AlbumCollectionPluginBase"/>.
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
