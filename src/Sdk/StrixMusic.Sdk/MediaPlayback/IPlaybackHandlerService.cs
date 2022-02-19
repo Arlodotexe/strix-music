@@ -143,7 +143,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <param name="sourceConfig">The item to insert.</param>
-        void InsertNext(int index, IMediaSourceConfig sourceConfig);
+        void InsertNext(int index, PlaybackItem sourceConfig);
 
         /// <summary>
         /// Removes an item from the <see cref="NextItems"/>.
@@ -160,14 +160,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// Adds an item to the top of <see cref="PreviousItems"/>.
         /// </summary>
         /// <param name="sourceConfig">The item to insert.</param>
-        void PushPrevious(IMediaSourceConfig sourceConfig);
+        void PushPrevious(PlaybackItem sourceConfig);
 
         /// <summary>
         /// Removes and returns item from top of the <see cref="PreviousItems"/> stack.
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <returns>The <see cref="IMediaSourceConfig"/> that was in the requested index.</returns>
-        IMediaSourceConfig PopPrevious(int index);
+        PlaybackItem PopPrevious(int index);
 
         /// <summary>
         /// Clears all items from <see cref="PreviousItems"/>.
