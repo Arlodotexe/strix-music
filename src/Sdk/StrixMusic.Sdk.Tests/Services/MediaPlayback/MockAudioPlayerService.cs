@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 {
     internal class MockAudioPlayerService : IAudioPlayerService
     {
-        public IMediaSourceConfig? CurrentSource { get; set; } = new MockMediaSourceConfig();
+        public PlaybackItem? CurrentSource { get; set; } = new PlaybackItem();
 
         public TimeSpan Position => TimeSpan.FromSeconds(10);
 
@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
         public double PlaybackSpeed => 1;
 
-        public event EventHandler<IMediaSourceConfig?>? CurrentSourceChanged;
+        public event EventHandler<PlaybackItem?>? CurrentSourceChanged;
         public event EventHandler<float[]>? QuantumProcessed;
         public event EventHandler<TimeSpan>? PositionChanged;
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -46,12 +46,12 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             return Task.CompletedTask;
         }
 
-        public Task Play(IMediaSourceConfig sourceConfig)
+        public Task Play(PlaybackItem sourceConfig)
         {
             return Task.CompletedTask;
         }
 
-        public Task Preload(IMediaSourceConfig sourceConfig)
+        public Task Preload(PlaybackItem sourceConfig)
         {
             return Task.CompletedTask;
         }
