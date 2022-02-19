@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public ICoreTrackCollection? PlaybackQueue { get; set; }
 
         /// <inheritdoc/>
-        public ICoreTrack? NowPlaying { get; set; }
+        public PlaybackItem? NowPlaying { get; set; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; set; }
@@ -115,7 +115,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public double PlaybackSpeed { get; set; }
 
         /// <inheritdoc/>
-        public event EventHandler<ICoreTrack>? NowPlayingChanged;
+        public event EventHandler<PlaybackItem>? NowPlayingChanged;
 
         /// <inheritdoc/>
         public event EventHandler<bool>? IsActiveChanged;

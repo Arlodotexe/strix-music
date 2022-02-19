@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Models.Merged
             _source.NowPlayingChanged -= Source_NowPlayingChanged;
         }
 
-        private void Source_NowPlayingChanged(object sender, ICoreTrack e)
+        private void Source_NowPlayingChanged(object sender, PlaybackItem e)
         {
             NowPlaying = e;
             NowPlayingChanged?.Invoke(sender, NowPlaying);
@@ -113,7 +113,7 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<ICoreTrack>? NowPlayingChanged;
+        public event EventHandler<PlaybackItem>? NowPlayingChanged;
 
         /// <inheritdoc />
         public string Id => _source.Id;
@@ -215,7 +215,7 @@ namespace StrixMusic.Sdk.Models.Merged
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public ICoreTrack? NowPlaying { get; private set; }
+        public PlaybackItem? NowPlaying { get; private set; }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync() => _source.DisposeAsync();

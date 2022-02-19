@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice
     {
-        private ICoreTrack? _nowPlaying;
+        private PlaybackItem? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.ViewModels
             OnPropertyChanged(nameof(IsPlaying));
         });
 
-        private void Device_NowPlayingChanged(object sender, ICoreTrack e) => _ = Threading.OnPrimaryThread(() =>
+        private void Device_NowPlayingChanged(object sender, PlaybackItem e) => _ = Threading.OnPrimaryThread(() =>
         {
             NowPlaying = e;
             NowPlayingChanged?.Invoke(sender, e);
@@ -130,7 +130,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc cref="IDevice.NowPlaying"/>
-        public ICoreTrack? NowPlaying
+        public PlaybackItem? NowPlaying
         {
             get => _nowPlaying;
             set => SetProperty(ref _nowPlaying, value);
@@ -209,7 +209,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ICoreTrack>? NowPlayingChanged;
+        public event EventHandler<PlaybackItem>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged

@@ -76,7 +76,7 @@
                                             <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
                                                                     IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
                                                                     Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
+                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
                                                 <interactivity:Interaction.Behaviors>
                                                     <core:EventTriggerBehavior EventName="SliderManipulationCompleted">

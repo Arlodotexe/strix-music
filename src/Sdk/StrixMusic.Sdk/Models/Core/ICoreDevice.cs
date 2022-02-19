@@ -1,4 +1,5 @@
 ﻿using System;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
@@ -17,11 +18,11 @@ namespace StrixMusic.Sdk.Models.Core
         /// <summary>
         /// The currently playing <see cref="ICoreTrack"/>.
         /// </summary>
-        ICoreTrack? NowPlaying { get; }
+        PlaybackItem? NowPlaying { get; }
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<ICoreTrack>? NowPlayingChanged;
+        event EventHandler<PlaybackItem>? NowPlayingChanged;
     }
 }

@@ -52,10 +52,9 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         private void PlaybackHandler_CurrentItemChanged(object sender, PlaybackItem? e)
         {
             Guard.IsNotNull(e, nameof(e));
-            Guard.IsNotNull(e.MediaConfig, nameof(e.MediaConfig));
             Guard.IsNotNull(PlaybackContext, nameof(PlaybackContext));
 
-            SetPlaybackData(PlaybackContext, e.MediaConfig.Track);
+            SetPlaybackData(PlaybackContext, e);
         }
 
         private void PlaybackHandler_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
@@ -77,7 +76,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public event EventHandler<IPlayableBase>? PlaybackContextChanged;
 
         /// <inheritdoc />
-        public event EventHandler<ICoreTrack>? NowPlayingChanged;
+        public event EventHandler<PlaybackItem>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? ShuffleStateChanged;
@@ -146,7 +145,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public IPlayableBase? PlaybackContext { get; private set; }
 
         /// <inheritdoc />
-        public ICoreTrack? NowPlaying { get; private set; }
+        public PlaybackItem? NowPlaying { get; private set; }
 
         /// <inheritdoc />
         public DeviceType Type => DeviceType.Local;
@@ -205,7 +204,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         /// </summary>
         /// <param name="playbackContext">The playback context.</param>
         /// <param name="nowPlaying">The track that is playing.</param>
-        internal void SetPlaybackData(IPlayableBase playbackContext, ICoreTrack nowPlaying)
+        internal void SetPlaybackData(IPlayableBase playbackContext, PlaybackItem nowPlaying)
         {
             PlaybackContext = playbackContext;
             PlaybackContextChanged?.Invoke(this, playbackContext);

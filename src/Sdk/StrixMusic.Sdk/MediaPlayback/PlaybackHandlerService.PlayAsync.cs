@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
-            _strixDevice.SetPlaybackData(context, nextItem.MediaConfig.Track);
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -96,7 +96,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             await PlayFromNext(0);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
-            _strixDevice.SetPlaybackData(context, nextItem.MediaConfig.Track);
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -160,7 +160,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
-            _strixDevice.SetPlaybackData(context, nextItem.MediaConfig.Track);
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -190,7 +190,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
-            _strixDevice.SetPlaybackData(context, nextItem.MediaConfig.Track);
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <summary>
