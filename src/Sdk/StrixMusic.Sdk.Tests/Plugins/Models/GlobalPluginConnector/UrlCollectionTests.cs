@@ -227,5 +227,49 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<AlbumPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.Artist.Add(x => new ArtistPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            // Ensure an Artist plugin can still override UrlCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
+                typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<ArtistPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

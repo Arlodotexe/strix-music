@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Models;
 namespace StrixMusic.Sdk.Plugins.Model
 {
     /// <summary>
-    /// The global plugin connector applies common interface plugins to other plugins that use the interface.
+    /// The global plugin connector applies common interface plugins to other plugins that derive them.
     /// <para/>
     /// For example, if you create a plugin for <see cref="SdkModelPlugins.Downloadable"/>, that plugin is applied to
     /// <see cref="SdkModelPlugins.AlbumCollection"/>, <see cref="SdkModelPlugins.TrackCollection"/>, and every other
@@ -24,49 +24,48 @@ namespace StrixMusic.Sdk.Plugins.Model
             sdkVer: new Version(0, 0, 0));
 
         /// <summary>
-        /// Creates a new <see cref="SdkModelPlugins"/> from those provided in <paramref name="plugins"/> and
-        /// inserts a new "Global Connector" plugin at the end of the chain, which aggregates
-        /// all other plugins which implement an interface that the relevant plugin also implements.
+        /// Creates a new instance of <see cref="SdkModelPlugins"/> from the provided <paramref name="plugins"/> and
+        /// inserts a new "Global Model Plugin Connector" plugin at the end of each plugin chain, which applies common
+        /// interface plugins to other plugins that derive them.
         /// <para/>
+        /// <example>
         /// For example, if you create a plugin for <see cref="SdkModelPlugins.Downloadable"/>, that plugin is applied to
         /// <see cref="SdkModelPlugins.AlbumCollection"/>, <see cref="SdkModelPlugins.TrackCollection"/>, and every other
         /// plugin which implements <see cref="IDownloadable"/>.
+        /// </example>
         /// </summary>
+        /// <remarks>
+        /// <para/> A global connector is only ever built if all user-added plugins have executed and none of them
+        ///         have blocked/ignored the next plugin in their chain.
+        /// <para/> Once this happens, the connector executes and collects all plugins which derive other
+        ///         plugin-enabled interfaces, chaining them so each has a chance to execute.
+        /// <para/> The resulting chain is constructed as a single plugin and neatly placed at the end of a new plugin
+        ///         chain with all provided user-added plugins preceding it.
+        /// </remarks>
         /// <param name="plugins">A plugin container which contains existing plugins to weave with the global plugin connector.</param>
         public static SdkModelPlugins Create(SdkModelPlugins plugins)
         {
-            Guard.IsNotNull(plugins, nameof(plugins));
+            // Generate plugin connectors inside of a buildable plugin.
+            // Note that only plugins which derived other plugin-enabled interfaces need setup here.
+            // The derived interface plugins are applied inside each method.
+            var playableBuilder = GenerateGlobalPlayablePluginBuilder(plugins);
+            var albumCollectionBuilder = GenerateGlobalAlbumCollectionPluginBuilder(plugins);
+            var artistCollectionBuilder = GenerateGlobalArtistCollectionPluginBuilder(plugins);
+            var trackCollectionBuilder = GenerateGlobalTrackCollectionPluginBuilder(plugins);
+            var albumBuilder = GenerateGlobalAlbumPluginBuilder(plugins);
+            var artistBuilder = GenerateGlobalArtistPluginBuilder(plugins);
 
-            // A global connector is only ever built when all user-added plugins have executed and none of them
-            // have ignored the next plugin in the chain.
-            // Once this happens, the connector collects all other plugins which implement an interface that the
-            // relevant plugin also implements.
-            // The resulting chain is constructed as a single plugin and neatly placed at the end of a new plugin
-            // chain with all provided user-added plugins preceding it.
-            var globalPlayablePluginBuilder = GenerateGlobalPlayablePluginBuilder(plugins);
-            var globalAlbumCollectionPluginBuilder = GenerateGlobalAlbumCollectionPluginBuilder(plugins);
-            var globalArtistCollectionPluginBuilder = GenerateGlobalArtistCollectionPluginBuilder(plugins);
-            var globalTrackCollectionPluginBuilder = GenerateGlobalTrackCollectionPluginBuilder(plugins);
-            var globalAlbumPluginBuilder = GenerateGlobalAlbumPluginBuilder(plugins);
-
-            var pluginsWithGlobalConnectors = new SdkModelPlugins();
-
-            // Add all existing plugins.
-            pluginsWithGlobalConnectors.Playable.AddRange(plugins.Playable);
-            pluginsWithGlobalConnectors.Downloadable.AddRange(plugins.Downloadable);
-            pluginsWithGlobalConnectors.AlbumCollection.AddRange(plugins.AlbumCollection);
-            pluginsWithGlobalConnectors.ArtistCollection.AddRange(plugins.ArtistCollection);
-            pluginsWithGlobalConnectors.TrackCollection.AddRange(plugins.TrackCollection);
-            pluginsWithGlobalConnectors.UrlCollection.AddRange(plugins.UrlCollection);
-            pluginsWithGlobalConnectors.ImageCollection.AddRange(plugins.ImageCollection);
-            pluginsWithGlobalConnectors.Album.AddRange(plugins.Album);
-
-            // Add globally connected plugins.
-            pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, globalPlayablePluginBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.AlbumCollection.Add(x => new AlbumCollectionPluginBase(PluginMetadata, globalAlbumCollectionPluginBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.ArtistCollection.Add(x => new ArtistCollectionPluginBase(PluginMetadata, globalArtistCollectionPluginBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.TrackCollection.Add(x => new TrackCollectionPluginBase(PluginMetadata, globalTrackCollectionPluginBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, globalAlbumPluginBuilder.Execute(x)));
+            // Clone plugin container & add global connectors.
+            // Global connectors must be added to a new instance, otherwise some global connectors could
+            // treat other global connectors as a user-added plugin and attempt to ingest them, causing
+            // undesired behavior.
+            var pluginsWithGlobalConnectors = new SdkModelPlugins(plugins);
+            pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, playableBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.AlbumCollection.Add(x => new AlbumCollectionPluginBase(PluginMetadata, albumCollectionBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.ArtistCollection.Add(x => new ArtistCollectionPluginBase(PluginMetadata, artistCollectionBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.TrackCollection.Add(x => new TrackCollectionPluginBase(PluginMetadata, trackCollectionBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, albumBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Artist.Add(x => new ArtistPluginBase(PluginMetadata, artistBuilder.Execute(x)));
 
             return pluginsWithGlobalConnectors;
         }
@@ -143,16 +142,12 @@ namespace StrixMusic.Sdk.Plugins.Model
         private static ChainedProxyBuilder<AlbumPluginBase, IAlbum> GenerateGlobalAlbumPluginBuilder(SdkModelPlugins plugins) => new()
         {
             // Downloadable members
-            x => new AlbumPluginBase(PluginMetadata, x)
-            {
-                InnerDownloadable = plugins.Downloadable.Execute(x),
-            },
-
             // UrlCollection members
             // GenreCollection members
             // ImageCollection members
             x => new AlbumPluginBase(PluginMetadata, x)
             {
+                InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
                 InnerGenreCollection = plugins.GenreCollection.Execute(x),
                 InnerUrlCollection = plugins.UrlCollection.Execute(x),
@@ -179,6 +174,50 @@ namespace StrixMusic.Sdk.Plugins.Model
 
             // TrackCollection members
             x => new AlbumPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.TrackCollection.Execute(x),
+                InnerPlayable = plugins.TrackCollection.Execute(x),
+                InnerImageCollection = plugins.TrackCollection.Execute(x),
+                InnerUrlCollection = plugins.TrackCollection.Execute(x),
+                InnerTrackCollection = plugins.TrackCollection.Execute(x),
+            }
+        };
+
+        private static ChainedProxyBuilder<ArtistPluginBase, IArtist> GenerateGlobalArtistPluginBuilder(SdkModelPlugins plugins) => new()
+        {
+            // Downloadable members
+            // UrlCollection members
+            // GenreCollection members
+            // ImageCollection members
+            x => new ArtistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Downloadable.Execute(x),
+                InnerImageCollection = plugins.ImageCollection.Execute(x),
+                InnerGenreCollection = plugins.GenreCollection.Execute(x),
+                InnerUrlCollection = plugins.UrlCollection.Execute(x),
+            },
+
+            // Playable members
+            x => new ArtistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Playable.Execute(x),
+                InnerPlayable = plugins.Playable.Execute(x),
+                InnerImageCollection = plugins.Playable.Execute(x),
+                InnerUrlCollection = plugins.Playable.Execute(x),
+            },
+
+            // AlbumCollection members
+            x => new ArtistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.AlbumCollection.Execute(x),
+                InnerPlayable = plugins.AlbumCollection.Execute(x),
+                InnerImageCollection = plugins.AlbumCollection.Execute(x),
+                InnerUrlCollection = plugins.AlbumCollection.Execute(x),
+                InnerAlbumCollection = plugins.AlbumCollection.Execute(x),
+            },
+
+            // TrackCollection members
+            x => new ArtistPluginBase(PluginMetadata, x)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),

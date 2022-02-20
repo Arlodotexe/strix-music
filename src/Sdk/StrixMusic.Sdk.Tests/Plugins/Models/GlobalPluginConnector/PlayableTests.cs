@@ -185,5 +185,49 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<AlbumPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, PlayablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+            plugins.Artist.Add(x => new ArtistPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            // Ensure an Artist plugin can still override Playable members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, PlayablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources, 
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingArtist()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, expectedExceptions: new[] {
+                typeof(AccessedException<PlayablePluginBaseTests.FullyCustom>),
+                typeof(AccessedException<ArtistPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

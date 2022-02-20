@@ -19,6 +19,35 @@ namespace StrixMusic.Sdk.Plugins.Model
     public class SdkModelPlugins
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SdkModelPlugins"/> class.
+        /// </summary>
+        public SdkModelPlugins()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SdkModelPlugins"/> class, copying plugins from an existing instance.
+        /// </summary>
+        public SdkModelPlugins(SdkModelPlugins modelPlugins)
+        {
+            Playable.AddRange(modelPlugins.Playable);
+            Downloadable.AddRange(modelPlugins.Downloadable);
+
+            Album.AddRange(modelPlugins.Album);
+            Artist.AddRange(modelPlugins.Artist);
+            Image.AddRange(modelPlugins.Image);
+            Lyrics.AddRange(modelPlugins.Lyrics);
+            
+            AlbumCollection.AddRange(modelPlugins.AlbumCollection);
+            ArtistCollection.AddRange(modelPlugins.ArtistCollection);
+            PlaylistCollection.AddRange(modelPlugins.PlaylistCollection);
+            TrackCollection.AddRange(modelPlugins.TrackCollection);
+            ImageCollection.AddRange(modelPlugins.ImageCollection);
+            UrlCollection.AddRange(modelPlugins.UrlCollection);
+            GenreCollection.AddRange(modelPlugins.GenreCollection);
+        }
+
+        /// <summary>
         /// All plugins that provide overridden behavior for <see cref="IDownloadable"/>.
         /// </summary>
         public ChainedProxyBuilder<DownloadablePluginBase, IDownloadable> Downloadable { get; } = new();
@@ -32,6 +61,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IAlbum"/>.
         /// </summary>
         public ChainedProxyBuilder<AlbumPluginBase, IAlbum> Album { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IArtist"/>.
+        /// </summary>
+        public ChainedProxyBuilder<ArtistPluginBase, IArtist> Artist { get; } = new();
 
         /// <summary>
         /// All plugins that provide overridden behavior for <see cref="IImage"/>.
