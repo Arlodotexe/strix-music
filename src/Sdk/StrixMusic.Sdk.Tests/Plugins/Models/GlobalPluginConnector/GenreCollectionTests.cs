@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
 
-            // Ensure an Album plugin can still override GenreCollection members.
+            // Ensure an Album plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
-            // Ensure an Artist plugin can still override GenreCollection members.
+            // Ensure an Artist plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -123,7 +123,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
 
-            // Ensure an Track plugin can still override GenreCollection members.
+            // Ensure an Track plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,

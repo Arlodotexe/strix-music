@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
 
-            // Ensure an Album plugin can still override ArtistCollection members.
+            // Ensure an Album plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -87,7 +87,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
 
-            // Ensure an Track plugin can still override ArtistCollection members.
+            // Ensure an Track plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -136,7 +136,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
 
-            // Ensure an PlayableCollectionGroup plugin can still override ArtistCollection members.
+            // Ensure an PlayableCollectionGroup plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayableCollectionGroupPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -185,7 +185,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
 
-            // Ensure an Library plugin can still override ArtistCollection members.
+            // Ensure an Library plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -234,7 +234,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
 
-            // Ensure an Discoverables plugin can still override ArtistCollection members.
+            // Ensure an Discoverables plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -283,7 +283,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
 
-            // Ensure an RecentlyPlayed plugin can still override ArtistCollection members.
+            // Ensure an RecentlyPlayed plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -332,7 +332,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
-            // Ensure an SearchHistory plugin can still override ArtistCollection members.
+            // Ensure an SearchHistory plugin can still be accessed through ArtistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, ArtistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,

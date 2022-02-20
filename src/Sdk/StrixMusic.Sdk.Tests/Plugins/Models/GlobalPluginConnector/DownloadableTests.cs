@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
 
-            // Ensure a Playable plugin can still override Downloadable members.
+            // Ensure a Playable plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(plugin, typesToExclude: typeof(IAsyncDisposable));
         }
 
@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
 
-            // Ensure a TrackCollection plugin can still override Downloadable members.
+            // Ensure a TrackCollection plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackCollectionPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(plugin, typesToExclude: typeof(IAsyncDisposable));
         }
 
@@ -108,7 +108,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
 
-            // Ensure an ArtistCollection plugin can still override Downloadable members.
+            // Ensure an ArtistCollection plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistCollectionPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(plugin, typesToExclude: typeof(IAsyncDisposable));
         }
 
@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
 
-            // Ensure an AlbumCollection plugin can still override Downloadable members.
+            // Ensure an AlbumCollection plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(plugin, typesToExclude: typeof(IAsyncDisposable));
         }
 
@@ -189,7 +189,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
 
-            // Ensure an Album plugin can still override Downloadable members.
+            // Ensure an Album plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -234,7 +234,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
-            // Ensure an Artist plugin can still override Downloadable members.
+            // Ensure an Artist plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -279,7 +279,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playlist.Execute(new PlaylistPluginBaseTests.Unimplemented());
 
-            // Ensure an Playlist plugin can still override Downloadable members.
+            // Ensure an Playlist plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlaylistPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -324,7 +324,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
 
-            // Ensure an Track plugin can still override Downloadable members.
+            // Ensure an Track plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -369,7 +369,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
 
-            // Ensure an PlayableCollectionGroup plugin can still override Downloadable members.
+            // Ensure an PlayableCollectionGroup plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayableCollectionGroupPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -414,7 +414,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
 
-            // Ensure an Library plugin can still override Downloadable members.
+            // Ensure an Library plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -459,7 +459,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
 
-            // Ensure an Discoverables plugin can still override Downloadable members.
+            // Ensure an Discoverables plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -504,7 +504,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
 
-            // Ensure an RecentlyPlayed plugin can still override Downloadable members.
+            // Ensure an RecentlyPlayed plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
@@ -549,7 +549,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
-            // Ensure an SearchHistory plugin can still override Downloadable members.
+            // Ensure an SearchHistory plugin can still be accessed through Downloadable members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
