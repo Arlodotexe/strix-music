@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal AlbumViewModel(MainViewModel root, IAlbum album)
         {
             Root = root;
-            _album = album;
+            _album = root.Plugins.ModelPlugins.Album.Execute(album);
 
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(root.GetLoadedCore).ToList();
 

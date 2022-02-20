@@ -11,6 +11,6 @@ namespace StrixMusic.Sdk.Plugins
         /// <summary>
         /// Manages plugins that modify the behavior of plugins or models.
         /// </summary>
-        public SdkModelPlugins ModelPlugins { get; } = new();
+        public SdkModelPlugins ModelPlugins { get; set; } = new();
     }
 }

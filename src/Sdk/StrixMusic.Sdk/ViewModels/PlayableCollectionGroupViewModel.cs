@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
         internal PlayableCollectionGroupViewModel(MainViewModel root, IPlayableCollectionGroup collectionGroup)
         {
-            _collectionGroup = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
+            _collectionGroup = root.Plugins.ModelPlugins.PlayableCollectionGroup.Execute(collectionGroup);
             Root = root;
 
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();

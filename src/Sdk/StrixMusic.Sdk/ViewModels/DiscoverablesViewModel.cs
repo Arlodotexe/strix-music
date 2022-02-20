@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal DiscoverablesViewModel(MainViewModel root, IDiscoverables discoverables)
             : base(root, discoverables)
         {
-            _discoverables = discoverables;
+            _discoverables = root.Plugins.ModelPlugins.Discoverables.Execute(discoverables);
         }
 
         /// <inheritdoc />

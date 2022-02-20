@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
         public AlbumCollectionViewModel(MainViewModel root, IAlbumCollection collection)
         {
             Root = root;
-            _collection = collection;
+            _collection = root.Plugins.ModelPlugins.AlbumCollection.Execute(collection);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             using (Threading.PrimaryContext)

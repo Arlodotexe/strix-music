@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collection">The base <see cref="ITrackCollection"/> containing properties about this class.</param>
         public TrackCollectionViewModel(MainViewModel root, ITrackCollection collection)
         {
-            _collection = collection ?? throw new ArgumentNullException();
+            _collection = root.Plugins.ModelPlugins.TrackCollection.Execute(collection);
             Root = root;
 
             using (Threading.PrimaryContext)

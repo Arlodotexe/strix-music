@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
         internal PlaylistViewModel(MainViewModel root, IPlaylist playlist)
         {
-            _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
+            _playlist = root.Plugins.ModelPlugins.Playlist.Execute(playlist);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
             _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
             Root = root;

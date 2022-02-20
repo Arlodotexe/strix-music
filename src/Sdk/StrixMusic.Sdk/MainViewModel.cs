@@ -19,6 +19,8 @@ using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.Plugins;
+using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
@@ -168,6 +170,8 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitAsync()
         {
+            Plugins.ModelPlugins = GlobalModelPluginConnector.Create(Plugins.ModelPlugins);
+
             var coreInstanceRegistry = await _coreManagementService.GetCoreInstanceRegistryAsync();
 
             Guard.IsNotNull(coreInstanceRegistry, nameof(coreInstanceRegistry));
@@ -394,6 +398,9 @@ namespace StrixMusic.Sdk
         /// A consolidated list of all users in the app.
         /// </summary>
         public ObservableCollection<UserViewModel> Users { get; private set; }
+
+        /// <inheritdoc />
+        public PluginManager Plugins { get; } = new();
 
         /// <summary>
         /// All available devices.

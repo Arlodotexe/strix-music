@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal ArtistCollectionViewModel(MainViewModel root, IArtistCollection collection)
         {
             Root = root;
-            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            _collection = root.Plugins.ModelPlugins.ArtistCollection.Execute(collection);
 
             SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(root.GetLoadedCore).ToList();
 

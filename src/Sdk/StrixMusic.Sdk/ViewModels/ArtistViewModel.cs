@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="artist">The <see cref="IArtist"/> to wrap.</param>
         internal ArtistViewModel(MainViewModel root, IArtist artist)
         {
-            _artist = artist;
+            _artist = root.Plugins.ModelPlugins.Artist.Execute(artist);
             Root = root;
 
             SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(root.GetLoadedCore).ToList();

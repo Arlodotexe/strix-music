@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
         internal PlaylistCollectionViewModel(MainViewModel root, IPlaylistCollection collection)
         {
-            _collection = collection;
+            _collection = root.Plugins.ModelPlugins.PlaylistCollection.Execute(collection);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(root.GetLoadedCore).ToList();

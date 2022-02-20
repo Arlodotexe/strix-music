@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.Plugins;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Merged
@@ -77,6 +78,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
+
+        /// <inheritdoc/>
+        public PluginManager Plugins { get; } = new();
 
         /// <inheritdoc />
         public IReadOnlyList<IDevice> Devices => _devices;

@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal TrackViewModel(MainViewModel root, ITrack track)
         {
             Root = root;
-            Model = track;
+            Model = root.Plugins.ModelPlugins.Track.Execute(track);
 
             SourceCores = Model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
 
