@@ -490,5 +490,49 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
+            plugins.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            // Ensure an RecentlyPlayed plugin can still override ImageCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
+                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

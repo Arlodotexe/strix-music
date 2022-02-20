@@ -449,5 +449,49 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, PlayablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+            plugins.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            // Ensure an RecentlyPlayed plugin can still override Playable members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, PlayablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources, 
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, expectedExceptions: new[] {
+                typeof(AccessedException<PlayablePluginBaseTests.FullyCustom>),
+                typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

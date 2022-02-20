@@ -206,5 +206,54 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: new[]
+                {
+                    typeof(IAsyncDisposable),
+                    typeof(IPlayableCollectionItem)
+                });
+        }
+
+        [TestMethod]
+        public void NotBlockingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+            plugins.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            // Ensure an RecentlyPlayed plugin can still override RecentlyPlayedCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingRecentlyPlayed()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
+            {
+                typeof(AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }
