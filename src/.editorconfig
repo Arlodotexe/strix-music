@@ -1,5 +1,7 @@
 ﻿[*.cs]
 
+insert_final_newline = true;
+
 # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
 dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = none
 
@@ -79,7 +81,7 @@ dotnet_diagnostic.CA2007.severity = none
 dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
 
 # SA1208: System using directives should be placed before other using directives
-dotnet_diagnostic.SA1208.severity = none
+dotnet_diagnostic.SA1208.severity = warning;
 
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = suggestion
