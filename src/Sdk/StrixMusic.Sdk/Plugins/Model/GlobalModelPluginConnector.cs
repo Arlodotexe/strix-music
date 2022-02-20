@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="plugins">A plugin container which contains existing plugins to weave with the global plugin connector.</param>
         public static SdkModelPlugins Create(SdkModelPlugins plugins)
         {
-            // Generate plugin connectors inside of a buildable plugin.
+            // Create plugin connectors inside of a buildable plugin.
             // Note that only plugins which derived other plugin-enabled interfaces need setup here.
             // The derived interface plugins are applied inside each method.
             var playableBuilder = GenerateGlobalPlayablePluginBuilder(plugins);
@@ -54,6 +54,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             var albumBuilder = GenerateGlobalAlbumPluginBuilder(plugins);
             var artistBuilder = GenerateGlobalArtistPluginBuilder(plugins);
             var playlistBuilder = GenerateGlobalPlaylistPluginBuilder(plugins);
+            var trackBuilder = GenerateGlobalTrackPluginBuilder(plugins);
 
             // Clone plugin container & add global connectors.
             // Global connectors must be added to a new instance, otherwise some global connectors could
@@ -67,6 +68,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, albumBuilder.Execute(x)));
             pluginsWithGlobalConnectors.Artist.Add(x => new ArtistPluginBase(PluginMetadata, artistBuilder.Execute(x)));
             pluginsWithGlobalConnectors.Playlist.Add(x => new PlaylistPluginBase(PluginMetadata, playlistBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Track.Add(x => new TrackPluginBase(PluginMetadata, trackBuilder.Execute(x)));
 
             return pluginsWithGlobalConnectors;
         }
@@ -258,6 +260,40 @@ namespace StrixMusic.Sdk.Plugins.Model
                 InnerUrlCollection = plugins.TrackCollection.Execute(x),
                 InnerTrackCollection = plugins.TrackCollection.Execute(x),
             }
+        };
+
+        private static ChainedProxyBuilder<TrackPluginBase, ITrack> GenerateGlobalTrackPluginBuilder(SdkModelPlugins plugins) => new()
+        {
+            // Downloadable members
+            // UrlCollection members
+            // GenreCollection members
+            // ImageCollection members
+            x => new TrackPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Downloadable.Execute(x),
+                InnerImageCollection = plugins.ImageCollection.Execute(x),
+                InnerGenreCollection = plugins.GenreCollection.Execute(x),
+                InnerUrlCollection = plugins.UrlCollection.Execute(x),
+            },
+
+            // Playable members
+            x => new TrackPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Playable.Execute(x),
+                InnerPlayable = plugins.Playable.Execute(x),
+                InnerImageCollection = plugins.Playable.Execute(x),
+                InnerUrlCollection = plugins.Playable.Execute(x),
+            },
+
+            // ArtistCollection members
+            x => new TrackPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.ArtistCollection.Execute(x),
+                InnerPlayable = plugins.ArtistCollection.Execute(x),
+                InnerImageCollection = plugins.ArtistCollection.Execute(x),
+                InnerUrlCollection = plugins.ArtistCollection.Execute(x),
+                InnerArtistCollection = plugins.ArtistCollection.Execute(x),
+            },
         };
     }
 }
