@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [Flags]
-        public enum PossiblePlaylistPlugins
+        public enum PossiblePlugins
         {
             None = 0,
             Playable = 1,
@@ -106,18 +106,18 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         }
 
         [TestMethod, Timeout(5000)]
-        [AllEnumFlagCombinations(typeof(PossiblePlaylistPlugins))]
-        public void PluginFullyCustomWith_AllCombinations(PossiblePlaylistPlugins data)
+        [AllEnumFlagCombinations(typeof(PossiblePlugins))]
+        public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playlist;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
                 {
-                    InnerDownloadable = data.HasFlag(PossiblePlaylistPlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
-                    InnerPlayable = data.HasFlag(PossiblePlaylistPlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
-                    InnerTrackCollection = data.HasFlag(PossiblePlaylistPlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerImageCollection = data.HasFlag(PossiblePlaylistPlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerUrlCollection = data.HasFlag(PossiblePlaylistPlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
+                    InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
+                    InnerTrackCollection = data.HasFlag(PossiblePlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
                 }
             );
 
@@ -131,7 +131,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 typeof(AccessedException<PlaylistPluginBaseTests.Unimplemented>),
             };
 
-            if (data.HasFlag(PossiblePlaylistPlugins.Downloadable))
+            if (data.HasFlag(PossiblePlugins.Downloadable))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>));
 
@@ -143,7 +143,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossiblePlaylistPlugins.Playable))
+            if (data.HasFlag(PossiblePlugins.Playable))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>));
 
@@ -161,7 +161,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossiblePlaylistPlugins.ImageCollection))
+            if (data.HasFlag(PossiblePlugins.ImageCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>));
 
@@ -173,7 +173,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossiblePlaylistPlugins.TrackCollection))
+            if (data.HasFlag(PossiblePlugins.TrackCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<TrackCollectionPluginBaseTests.Unimplemented>));
 
@@ -192,7 +192,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossiblePlaylistPlugins.UrlCollection))
+            if (data.HasFlag(PossiblePlugins.UrlCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>));
 

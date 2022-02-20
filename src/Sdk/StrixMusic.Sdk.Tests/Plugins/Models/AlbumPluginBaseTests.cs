@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [Flags]
-        public enum PossibleAlbumPlugins
+        public enum PossiblePlugins
         {
             None = 0,
             Playable = 1,
@@ -108,20 +108,20 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         }
 
         [TestMethod, Timeout(5000)]
-        [AllEnumFlagCombinations(typeof(PossibleAlbumPlugins))]
-        public void PluginFullyCustomWith_AllCombinations(PossibleAlbumPlugins data)
+        [AllEnumFlagCombinations(typeof(PossiblePlugins))]
+        public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
             var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Album;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
                 {
-                    InnerDownloadable = data.HasFlag(PossibleAlbumPlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
-                    InnerPlayable = data.HasFlag(PossibleAlbumPlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
-                    InnerArtistCollection = data.HasFlag(PossibleAlbumPlugins.ArtistCollection) ? new ArtistCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerGenreCollection = data.HasFlag(PossibleAlbumPlugins.GenreCollection) ? new GenreCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerTrackCollection = data.HasFlag(PossibleAlbumPlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerImageCollection = data.HasFlag(PossibleAlbumPlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerUrlCollection = data.HasFlag(PossibleAlbumPlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
+                    InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
+                    InnerArtistCollection = data.HasFlag(PossiblePlugins.ArtistCollection) ? new ArtistCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerGenreCollection = data.HasFlag(PossiblePlugins.GenreCollection) ? new GenreCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerTrackCollection = data.HasFlag(PossiblePlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
+                    InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
                 }
             );
 
@@ -135,7 +135,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 typeof(AccessedException<AlbumPluginBaseTests.Unimplemented>),
             };
 
-            if (data.HasFlag(PossibleAlbumPlugins.Downloadable))
+            if (data.HasFlag(PossiblePlugins.Downloadable))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>));
 
@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.Playable))
+            if (data.HasFlag(PossiblePlugins.Playable))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>));
 
@@ -165,7 +165,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.ArtistCollection))
+            if (data.HasFlag(PossiblePlugins.ArtistCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<ArtistCollectionPluginBaseTests.Unimplemented>));
 
@@ -185,7 +185,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.GenreCollection))
+            if (data.HasFlag(PossiblePlugins.GenreCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<GenreCollectionPluginBaseTests.Unimplemented>));
 
@@ -197,7 +197,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.ImageCollection))
+            if (data.HasFlag(PossiblePlugins.ImageCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>));
 
@@ -209,7 +209,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.TrackCollection))
+            if (data.HasFlag(PossiblePlugins.TrackCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<TrackCollectionPluginBaseTests.Unimplemented>));
 
@@ -228,7 +228,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 );
             }
 
-            if (data.HasFlag(PossibleAlbumPlugins.UrlCollection))
+            if (data.HasFlag(PossiblePlugins.UrlCollection))
             {
                 expectedExceptionsWhenDisposing.Add(typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>));
 
