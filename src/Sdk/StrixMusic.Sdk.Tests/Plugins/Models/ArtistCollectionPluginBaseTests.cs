@@ -18,8 +18,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class ArtistCollectionPluginBaseTests
     {
-        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -256,10 +256,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             });
         }
 
-
-#warning
-
-
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_Playable_Downloadable()
         {
@@ -474,7 +470,22 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             internal static AccessedException<FullyCustom> AccessedException { get; } = new AccessedException<FullyCustom>();
 
-            public override int TotalArtistItemsCount => throw AccessedException;            public override bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;            public override bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;            public override DateTime? AddedAt => throw AccessedException;            public override string Id => throw AccessedException;            public override string Name => throw AccessedException;            public override string? Description => throw AccessedException;            public override DateTime? LastPlayed => throw AccessedException;            public override PlaybackState PlaybackState => throw AccessedException;            public override TimeSpan Duration => throw AccessedException;            public override bool IsChangeNameAsyncAvailable => throw AccessedException;            public override bool IsChangeDescriptionAsyncAvailable => throw AccessedException;            public override bool IsChangeDurationAsyncAvailable => throw AccessedException;            public override DownloadInfo DownloadInfo => throw AccessedException;            public override int TotalImageCount => throw AccessedException;            public override int TotalUrlCount => throw AccessedException;
+            public override int TotalArtistItemsCount => throw AccessedException;
+            public override bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;
+            public override bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;
+            public override DateTime? AddedAt => throw AccessedException;
+            public override string Id => throw AccessedException;
+            public override string Name => throw AccessedException;
+            public override string? Description => throw AccessedException;
+            public override DateTime? LastPlayed => throw AccessedException;
+            public override PlaybackState PlaybackState => throw AccessedException;
+            public override TimeSpan Duration => throw AccessedException;
+            public override bool IsChangeNameAsyncAvailable => throw AccessedException;
+            public override bool IsChangeDescriptionAsyncAvailable => throw AccessedException;
+            public override bool IsChangeDurationAsyncAvailable => throw AccessedException;
+            public override DownloadInfo DownloadInfo => throw AccessedException;
+            public override int TotalImageCount => throw AccessedException;
+            public override int TotalUrlCount => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged { add => throw AccessedException; remove => throw AccessedException; }
@@ -534,7 +545,28 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class Unimplemented : IArtistCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
-            public int TotalArtistItemsCount => throw AccessedException;            public bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;            public bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;            public DateTime? AddedAt => throw AccessedException;            public IReadOnlyList<ICoreArtistCollectionItem> Sources => throw AccessedException;            public IReadOnlyList<ICore> SourceCores => throw AccessedException;            public string Id => throw AccessedException;            public string Name => throw AccessedException;            public string? Description => throw AccessedException;            public DateTime? LastPlayed => throw AccessedException;            public PlaybackState PlaybackState => throw AccessedException;            public TimeSpan Duration => throw AccessedException;            public bool IsChangeNameAsyncAvailable => throw AccessedException;            public bool IsChangeDescriptionAsyncAvailable => throw AccessedException;            public bool IsChangeDurationAsyncAvailable => throw AccessedException;            public DownloadInfo DownloadInfo => throw AccessedException;            public int TotalImageCount => throw AccessedException;            public int TotalUrlCount => throw AccessedException;            IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => throw AccessedException;            IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;            IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => throw AccessedException;
+
+            public int TotalArtistItemsCount => throw AccessedException;
+            public bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;
+            public bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;
+            public DateTime? AddedAt => throw AccessedException;
+            public IReadOnlyList<ICoreArtistCollectionItem> Sources => throw AccessedException;
+            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
+            public string Id => throw AccessedException;
+            public string Name => throw AccessedException;
+            public string? Description => throw AccessedException;
+            public DateTime? LastPlayed => throw AccessedException;
+            public PlaybackState PlaybackState => throw AccessedException;
+            public TimeSpan Duration => throw AccessedException;
+            public bool IsChangeNameAsyncAvailable => throw AccessedException;
+            public bool IsChangeDescriptionAsyncAvailable => throw AccessedException;
+            public bool IsChangeDurationAsyncAvailable => throw AccessedException;
+            public DownloadInfo DownloadInfo => throw AccessedException;
+            public int TotalImageCount => throw AccessedException;
+            public int TotalUrlCount => throw AccessedException;
+            IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => throw AccessedException;
+            IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;
+            IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => throw AccessedException;
 
             public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged { add => throw AccessedException; remove => throw AccessedException; }

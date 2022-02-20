@@ -11,7 +11,7 @@ namespace StrixMusic.Cores.LocalFiles
             Metadata = new CoreMetadata(id: nameof(LocalFilesCore),
                                         displayName: "Local Files",
                                         logoUri: new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
-                                        sdkVersion: Version.Parse("0.0.0.0"));
+                                        sdkVer: Version.Parse("0.0.0.0"));
         }
 
         public static CoreMetadata Metadata { get; }

@@ -29,19 +29,19 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IDownloadable Inner { get; set; }
 
         /// <inheritdoc/>
-        public virtual DownloadInfo DownloadInfo => Inner.DownloadInfo;
+        virtual public DownloadInfo DownloadInfo => Inner.DownloadInfo;
 
         /// <inheritdoc/>
-        public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
+        virtual public event EventHandler<DownloadInfo>? DownloadInfoChanged
         {
             add => Inner.DownloadInfoChanged += value;
             remove => Inner.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual Task StartDownloadOperationAsync(DownloadOperation operation) => Inner.StartDownloadOperationAsync(operation);
+        virtual public Task StartDownloadOperationAsync(DownloadOperation operation) => Inner.StartDownloadOperationAsync(operation);
     }
 }

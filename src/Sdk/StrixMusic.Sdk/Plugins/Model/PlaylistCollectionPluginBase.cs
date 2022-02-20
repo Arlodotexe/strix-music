@@ -61,52 +61,52 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IImageCollection InnerImageCollection { get; set; }
 
         /// <inheritdoc/>
-        public virtual int TotalPlaylistItemsCount => Inner.TotalPlaylistItemsCount;
+        virtual public int TotalPlaylistItemsCount => Inner.TotalPlaylistItemsCount;
 
         /// <inheritdoc/>
-        public virtual bool IsPlayPlaylistCollectionAsyncAvailable => Inner.IsPlayPlaylistCollectionAsyncAvailable;
+        virtual public bool IsPlayPlaylistCollectionAsyncAvailable => Inner.IsPlayPlaylistCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsPausePlaylistCollectionAsyncAvailable => Inner.IsPausePlaylistCollectionAsyncAvailable;
+        virtual public bool IsPausePlaylistCollectionAsyncAvailable => Inner.IsPausePlaylistCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual DateTime? AddedAt => Inner.AddedAt;
+        virtual public DateTime? AddedAt => Inner.AddedAt;
 
         /// <inheritdoc/>
-        public virtual string Id => InnerPlayable.Id;
+        virtual public string Id => InnerPlayable.Id;
 
         /// <inheritdoc/>
-        public virtual string Name => InnerPlayable.Name;
+        virtual public string Name => InnerPlayable.Name;
 
         /// <inheritdoc/>
-        public virtual string? Description => InnerPlayable.Description;
+        virtual public string? Description => InnerPlayable.Description;
 
         /// <inheritdoc/>
-        public virtual DateTime? LastPlayed => InnerPlayable.LastPlayed;
+        virtual public DateTime? LastPlayed => InnerPlayable.LastPlayed;
 
         /// <inheritdoc/>
-        public virtual PlaybackState PlaybackState => InnerPlayable.PlaybackState;
+        virtual public PlaybackState PlaybackState => InnerPlayable.PlaybackState;
 
         /// <inheritdoc/>
-        public virtual TimeSpan Duration => InnerPlayable.Duration;
+        virtual public TimeSpan Duration => InnerPlayable.Duration;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeNameAsyncAvailable => InnerPlayable.IsChangeNameAsyncAvailable;
+        virtual public bool IsChangeNameAsyncAvailable => InnerPlayable.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeDescriptionAsyncAvailable => InnerPlayable.IsChangeDescriptionAsyncAvailable;
+        virtual public bool IsChangeDescriptionAsyncAvailable => InnerPlayable.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeDurationAsyncAvailable => InnerPlayable.IsChangeDurationAsyncAvailable;
+        virtual public bool IsChangeDurationAsyncAvailable => InnerPlayable.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
+        virtual public DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
 
         /// <inheritdoc/>
-        public virtual int TotalImageCount => InnerImageCollection.TotalImageCount;
+        virtual public int TotalImageCount => InnerImageCollection.TotalImageCount;
 
         /// <inheritdoc/>
-        public virtual int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
+        virtual public int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
         /// <inheritdoc cref="IMerged{T}.Sources" />
         public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylistCollection>)Inner).SourceCores;
@@ -124,204 +124,204 @@ namespace StrixMusic.Sdk.Plugins.Model
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => ((IMerged<ICoreUrlCollection>)InnerUrlCollection).Sources;
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged
+        virtual public event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged
         {
             add => Inner.PlaylistItemsChanged += value;
             remove => Inner.PlaylistItemsChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? PlaylistItemsCountChanged
+        virtual public event EventHandler<int>? PlaylistItemsCountChanged
         {
             add => Inner.PlaylistItemsCountChanged += value;
             remove => Inner.PlaylistItemsCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged
+        virtual public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged
         {
             add => Inner.IsPlayPlaylistCollectionAsyncAvailableChanged += value;
             remove => Inner.IsPlayPlaylistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged
+        virtual public event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged
         {
             add => Inner.IsPausePlaylistCollectionAsyncAvailableChanged += value;
             remove => Inner.IsPausePlaylistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<PlaybackState>? PlaybackStateChanged
+        virtual public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => InnerPlayable.PlaybackStateChanged += value;
             remove => InnerPlayable.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<string>? NameChanged
+        virtual public event EventHandler<string>? NameChanged
         {
             add => InnerPlayable.NameChanged += value;
             remove => InnerPlayable.NameChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<string?>? DescriptionChanged
+        virtual public event EventHandler<string?>? DescriptionChanged
         {
             add => InnerPlayable.DescriptionChanged += value;
             remove => InnerPlayable.DescriptionChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<TimeSpan>? DurationChanged
+        virtual public event EventHandler<TimeSpan>? DurationChanged
         {
             add => InnerPlayable.DurationChanged += value;
             remove => InnerPlayable.DurationChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<DateTime?>? LastPlayedChanged
+        virtual public event EventHandler<DateTime?>? LastPlayedChanged
         {
             add => InnerPlayable.LastPlayedChanged += value;
             remove => InnerPlayable.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        virtual public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
             add => InnerPlayable.IsChangeNameAsyncAvailableChanged += value;
             remove => InnerPlayable.IsChangeNameAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        virtual public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
         {
             add => InnerPlayable.IsChangeDescriptionAsyncAvailableChanged += value;
             remove => InnerPlayable.IsChangeDescriptionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        virtual public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
         {
             add => InnerPlayable.IsChangeDurationAsyncAvailableChanged += value;
             remove => InnerPlayable.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
+        virtual public event EventHandler<DownloadInfo>? DownloadInfoChanged
         {
             add => InnerDownloadable.DownloadInfoChanged += value;
             remove => InnerDownloadable.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IImage>? ImagesChanged
+        virtual public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => InnerImageCollection.ImagesChanged += value;
             remove => InnerImageCollection.ImagesChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? ImagesCountChanged
+        virtual public event EventHandler<int>? ImagesCountChanged
         {
             add => InnerImageCollection.ImagesCountChanged += value;
             remove => InnerImageCollection.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IUrl>? UrlsChanged
+        virtual public event CollectionChangedEventHandler<IUrl>? UrlsChanged
         {
             add => InnerUrlCollection.UrlsChanged += value;
             remove => InnerUrlCollection.UrlsChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? UrlsCountChanged
+        virtual public event EventHandler<int>? UrlsCountChanged
         {
             add => InnerUrlCollection.UrlsCountChanged += value;
             remove => InnerUrlCollection.UrlsCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual Task AddImageAsync(IImage image, int index) => InnerImageCollection.AddImageAsync(image, index);
+        virtual public Task AddImageAsync(IImage image, int index) => InnerImageCollection.AddImageAsync(image, index);
 
         /// <inheritdoc/>
-        public virtual Task AddPlaylistItemAsync(IPlaylistCollectionItem PlaylistItem, int index) => Inner.AddPlaylistItemAsync(PlaylistItem, index);
+        virtual public Task AddPlaylistItemAsync(IPlaylistCollectionItem PlaylistItem, int index) => Inner.AddPlaylistItemAsync(PlaylistItem, index);
 
         /// <inheritdoc/>
-        public virtual Task AddUrlAsync(IUrl url, int index) => InnerUrlCollection.AddUrlAsync(url, index);
+        virtual public Task AddUrlAsync(IUrl url, int index) => InnerUrlCollection.AddUrlAsync(url, index);
 
         /// <inheritdoc/>
-        public virtual Task ChangeDescriptionAsync(string? description) => InnerPlayable.ChangeDescriptionAsync(description);
+        virtual public Task ChangeDescriptionAsync(string? description) => InnerPlayable.ChangeDescriptionAsync(description);
 
         /// <inheritdoc/>
-        public virtual Task ChangeDurationAsync(TimeSpan duration) => InnerPlayable.ChangeDurationAsync(duration);
+        virtual public Task ChangeDurationAsync(TimeSpan duration) => InnerPlayable.ChangeDurationAsync(duration);
 
         /// <inheritdoc/>
-        public virtual Task ChangeNameAsync(string name) => InnerPlayable.ChangeNameAsync(name);
+        virtual public Task ChangeNameAsync(string name) => InnerPlayable.ChangeNameAsync(name);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylistCollectionItem other) => Inner.Equals(other);
+        virtual public bool Equals(ICorePlaylistCollectionItem other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylistCollection other) => Inner.Equals(other);
+        virtual public bool Equals(ICorePlaylistCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        virtual public bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        virtual public bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => InnerImageCollection.GetImagesAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => InnerImageCollection.GetImagesAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => Inner.GetPlaylistItemsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => Inner.GetPlaylistItemsAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => InnerUrlCollection.GetUrlsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => InnerUrlCollection.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
+        virtual public Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Inner.IsAddPlaylistItemAvailableAsync(index);
+        virtual public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Inner.IsAddPlaylistItemAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
+        virtual public Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
+        virtual public Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Inner.IsRemovePlaylistItemAvailableAsync(index);
+        virtual public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Inner.IsRemovePlaylistItemAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
+        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task PausePlaylistCollectionAsync() => Inner.PausePlaylistCollectionAsync();
+        virtual public Task PausePlaylistCollectionAsync() => Inner.PausePlaylistCollectionAsync();
 
         /// <inheritdoc/>
-        public virtual Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => Inner.PlayPlaylistCollectionAsync(playlistItem);
+        virtual public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => Inner.PlayPlaylistCollectionAsync(playlistItem);
 
         /// <inheritdoc/>
-        public virtual Task PlayPlaylistCollectionAsync() => Inner.PlayPlaylistCollectionAsync();
+        virtual public Task PlayPlaylistCollectionAsync() => Inner.PlayPlaylistCollectionAsync();
 
         /// <inheritdoc/>
-        public virtual Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
+        virtual public Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemovePlaylistItemAsync(int index) => Inner.RemovePlaylistItemAsync(index);
+        virtual public Task RemovePlaylistItemAsync(int index) => Inner.RemovePlaylistItemAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
+        virtual public Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);
+        virtual public Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
+        virtual public ValueTask DisposeAsync()
         {
             var uniqueInstances = new HashSet<IAsyncDisposable>()
             {

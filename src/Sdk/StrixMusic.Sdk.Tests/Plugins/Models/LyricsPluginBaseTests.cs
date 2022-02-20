@@ -13,8 +13,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class LyricsPluginBaseTests
     {
-        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()

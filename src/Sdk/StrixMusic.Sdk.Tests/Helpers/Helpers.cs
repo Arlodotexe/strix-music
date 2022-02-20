@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.Tests
             }
 
             foreach (var item in expectedExceptions)
-                Assert.IsTrue(thrownExceptions.Contains(item));
+                Assert.IsTrue(thrownExceptions.Contains(item), $"An expected exception {item} was not thrown.");
         }
 
         public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)

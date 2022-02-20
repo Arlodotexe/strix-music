@@ -7,18 +7,16 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
     [TestClass]
     public class UrlCollectionTests
     {
-        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [TestMethod]
         public void AccessedThroughPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -29,12 +27,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void NotBlockingPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.Playable.Add(x => new PlayablePluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-            plugins.Playable.Insert(0, x => new PlayablePluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
 
             // Ensure a Playable plugin can still override UrlCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
@@ -46,11 +42,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void DisposingPlayable()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, expectedExceptions: new[] {
                 typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
@@ -62,11 +56,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void AccessedThroughTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -78,12 +70,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void NotBlockingTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.TrackCollection.Add(x => new TrackCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-            plugins.TrackCollection.Insert(0, x => new TrackCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
 
             // Ensure a TrackCollection plugin can still override UrlCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
@@ -96,11 +86,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void DisposingTrackCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, customFilter: NoInnerOrSources, expectedExceptions: new[] {
                 typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
@@ -112,11 +100,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void AccessedThroughArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -128,12 +114,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void NotBlockingArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.ArtistCollection.Add(x => new ArtistCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-            plugins.ArtistCollection.Insert(0, x => new ArtistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
 
             // Ensure an ArtistCollection plugin can still override UrlCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
@@ -146,11 +130,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void DisposingArtistCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, customFilter: NoInnerOrSources, expectedExceptions: new[] {
                 typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
@@ -162,11 +144,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void AccessedThroughAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -178,12 +158,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void NotBlockingAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-            plugins.AlbumCollection.Insert(0, x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
 
             // Ensure an AlbumCollection plugin can still override UrlCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
@@ -196,15 +174,57 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         public void DisposingAlbumCollection()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
-            Sdk.Plugins.Model.GlobalModelPluginConnector.Enable(plugins);
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
 
-            plugins.UrlCollection.Insert(0, x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = plugins.AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
                 typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
                 typeof(AccessedException<AlbumCollectionPluginBaseTests.Unimplemented>),
+            });
+        }
+
+        [TestMethod]
+        public void AccessedThroughAlbum()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingAlbum()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.Album.Add(x => new AlbumPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
+
+            // Ensure an Album plugin can still override UrlCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingAlbum()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
+                typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<AlbumPluginBaseTests.Unimplemented>),
             });
         }
     }

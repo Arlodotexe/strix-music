@@ -14,8 +14,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class GenreCollectionPluginBaseTests
     {
-        static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -93,7 +93,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event CollectionChangedEventHandler<IGenre>? GenresChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? GenresCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public override Task AddGenreAsync(IGenre Genre, int index) => throw AccessedException;
+            public override Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
@@ -129,7 +129,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event CollectionChangedEventHandler<IGenre>? GenresChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? GenresCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public Task AddGenreAsync(IGenre Genre, int index) => throw AccessedException;
+            public Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 

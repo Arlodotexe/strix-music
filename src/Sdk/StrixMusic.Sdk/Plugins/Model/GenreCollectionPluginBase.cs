@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IGenreCollection Inner { get; set; }
 
         /// <inheritdoc/>
-        public virtual int TotalGenreCount => Inner.TotalGenreCount;
+        virtual public int TotalGenreCount => Inner.TotalGenreCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreGenreCollection> Sources => Inner.Sources;
@@ -41,38 +41,38 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IGenre>? GenresChanged
+        virtual public event CollectionChangedEventHandler<IGenre>? GenresChanged
         {
             add => Inner.GenresChanged += value;
             remove => Inner.GenresChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? GenresCountChanged
+        virtual public event EventHandler<int>? GenresCountChanged
         {
             add => Inner.GenresCountChanged += value;
             remove => Inner.GenresCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual Task AddGenreAsync(IGenre gene, int index) => Inner.AddGenreAsync(gene, index);
+        virtual public Task AddGenreAsync(IGenre gene, int index) => Inner.AddGenreAsync(gene, index);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
+        virtual public bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => Inner.GetGenresAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => Inner.GetGenresAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddGenreAvailableAsync(int index) => Inner.IsAddGenreAvailableAsync(index);
+        virtual public Task<bool> IsAddGenreAvailableAsync(int index) => Inner.IsAddGenreAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveGenreAvailableAsync(int index) => Inner.IsRemoveGenreAvailableAsync(index);
+        virtual public Task<bool> IsRemoveGenreAvailableAsync(int index) => Inner.IsRemoveGenreAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveGenreAsync(int index) => Inner.RemoveGenreAsync(index);
+        virtual public Task RemoveGenreAsync(int index) => Inner.RemoveGenreAsync(index);
     }
 }

@@ -28,16 +28,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Registration { get; }
 
         /// <inheritdoc/>
-        public virtual IImage Inner { get; }
+        virtual public IImage Inner { get; }
 
         /// <inheritdoc/>
-        public virtual Uri Uri => Inner.Uri;
+        virtual public Uri Uri => Inner.Uri;
 
         /// <inheritdoc/>
-        public virtual double Height => Inner.Height;
+        virtual public double Height => Inner.Height;
 
         /// <inheritdoc/>
-        public virtual double Width => Inner.Width;
+        virtual public double Width => Inner.Width;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
@@ -46,9 +46,9 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
+        virtual public bool Equals(ICoreImage other) => Inner.Equals(other);
     }
 }

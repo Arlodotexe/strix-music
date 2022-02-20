@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IImageCollection Inner { get; set; }
 
         /// <inheritdoc/>
-        public virtual int TotalImageCount => Inner.TotalImageCount;
+        virtual public int TotalImageCount => Inner.TotalImageCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImageCollection> Sources => Inner.Sources;
@@ -42,38 +42,38 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IImage>? ImagesChanged
+        virtual public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => Inner.ImagesChanged += value;
             remove => Inner.ImagesChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? ImagesCountChanged
+        virtual public event EventHandler<int>? ImagesCountChanged
         {
             add => Inner.ImagesCountChanged += value;
             remove => Inner.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual Task AddImageAsync(IImage image, int index) => Inner.AddImageAsync(image, index);
+        virtual public Task AddImageAsync(IImage image, int index) => Inner.AddImageAsync(image, index);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => Inner.Equals(other);
+        virtual public bool Equals(ICoreImageCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => Inner.GetImagesAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => Inner.GetImagesAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddImageAvailableAsync(int index) => Inner.IsAddImageAvailableAsync(index);
+        virtual public Task<bool> IsAddImageAvailableAsync(int index) => Inner.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveImageAvailableAsync(int index) => Inner.IsRemoveImageAvailableAsync(index);
+        virtual public Task<bool> IsRemoveImageAvailableAsync(int index) => Inner.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveImageAsync(int index) => Inner.RemoveImageAsync(index);
+        virtual public Task RemoveImageAsync(int index) => Inner.RemoveImageAsync(index);
     }
 }

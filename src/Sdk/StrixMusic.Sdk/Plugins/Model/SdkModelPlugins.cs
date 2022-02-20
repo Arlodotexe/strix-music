@@ -3,7 +3,6 @@ using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {
-
     /// <summary>
     /// A model plugin is one or more implementation of <see cref="IModelPlugin"/>
     /// that modifies the behavior of an interface implementation
@@ -12,7 +11,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// <para/> This class contains a chainable plugin builder for every relevant model interface used in the Strix Music SDK.
     ///         When the chain is built, the first added Plugin is returned, with the next Plugin provided during construction for 
     ///         proxying, which also had the next item passed into it during construction, and so on.
-    /// <para/> When accessing a member, a plugin may retreive data from the next plugin (or, if none, the actual implementation), and
+    /// <para/> When accessing a member, a plugin may retrieve data from the next plugin (or, if none, the actual implementation), and
     ///         transform or replace it as needed.
     ///         A plugin may ignore the inner implementation entirely and supply new data.
     ///         Or, a plugin might not override that member and simply relay data from the actual implementation.
@@ -28,6 +27,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IPlayable"/>.
         /// </summary>
         public ChainedProxyBuilder<PlayablePluginBase, IPlayable> Playable { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IAlbum"/>.
+        /// </summary>
+        public ChainedProxyBuilder<AlbumPluginBase, IAlbum> Album { get; } = new();
 
         /// <summary>
         /// All plugins that provide overridden behavior for <see cref="IImage"/>.

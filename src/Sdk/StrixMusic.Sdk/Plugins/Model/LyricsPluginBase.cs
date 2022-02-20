@@ -27,19 +27,19 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Registration { get; }
 
         /// <inheritdoc/>
-        public virtual ILyrics Inner { get; }
+        virtual public ILyrics Inner { get; }
 
         /// <inheritdoc/>
-        public virtual ITrack Track => Inner.Track;
+        virtual public ITrack Track => Inner.Track;
 
         /// <inheritdoc/>
-        public virtual Dictionary<TimeSpan, string>? TimedLyrics => Inner.TimedLyrics;
+        virtual public Dictionary<TimeSpan, string>? TimedLyrics => Inner.TimedLyrics;
 
         /// <inheritdoc/>
-        public virtual string? TextLyrics => Inner.TextLyrics;
+        virtual public string? TextLyrics => Inner.TextLyrics;
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreLyrics other) => Inner.Equals(other);
+        virtual public bool Equals(ICoreLyrics other) => Inner.Equals(other);
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreLyrics> Sources => Inner.Sources;

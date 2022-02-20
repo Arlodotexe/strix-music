@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IUrlCollection Inner { get; set; }
 
         /// <inheritdoc/>
-        public virtual int TotalUrlCount => Inner.TotalUrlCount;
+        virtual public int TotalUrlCount => Inner.TotalUrlCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreUrlCollection> Sources => Inner.Sources;
@@ -41,38 +41,38 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
-        public virtual event CollectionChangedEventHandler<IUrl>? UrlsChanged
+        virtual public event CollectionChangedEventHandler<IUrl>? UrlsChanged
         {
             add => Inner.UrlsChanged += value;
             remove => Inner.UrlsChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual event EventHandler<int>? UrlsCountChanged
+        virtual public event EventHandler<int>? UrlsCountChanged
         {
             add => Inner.UrlsCountChanged += value;
             remove => Inner.UrlsCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        public virtual Task AddUrlAsync(IUrl url, int index) => Inner.AddUrlAsync(url, index);
+        virtual public Task AddUrlAsync(IUrl url, int index) => Inner.AddUrlAsync(url, index);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
+        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => Inner.Equals(other);
+        virtual public bool Equals(ICoreUrlCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => Inner.GetUrlsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => Inner.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddUrlAvailableAsync(int index) => Inner.IsAddUrlAvailableAsync(index);
+        virtual public Task<bool> IsAddUrlAvailableAsync(int index) => Inner.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index) => Inner.IsRemoveUrlAvailableAsync(index);
+        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index) => Inner.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc/>
-        public virtual Task RemoveUrlAsync(int index) => Inner.RemoveUrlAsync(index);
+        virtual public Task RemoveUrlAsync(int index) => Inner.RemoveUrlAsync(index);
     }
 }
