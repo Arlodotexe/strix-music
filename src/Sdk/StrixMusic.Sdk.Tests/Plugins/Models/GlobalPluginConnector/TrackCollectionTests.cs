@@ -353,5 +353,54 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughSearchHistory()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.TrackCollection.Add(x => new TrackCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackCollectionPluginBaseTests.FullyCustom>, TrackCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: new[]
+                {
+                    typeof(IAsyncDisposable),
+                    typeof(IPlayableCollectionItem)
+                });
+        }
+
+        [TestMethod]
+        public void NotBlockingSearchHistory()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.TrackCollection.Add(x => new TrackCollectionPluginBaseTests.FullyCustom(x));
+            plugins.SearchHistory.Add(x => new SearchHistoryPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
+
+            // Ensure an SearchHistory plugin can still override TrackCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, TrackCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingSearchHistory()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.TrackCollection.Add(x => new TrackCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
+            {
+                typeof(AccessedException<TrackCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

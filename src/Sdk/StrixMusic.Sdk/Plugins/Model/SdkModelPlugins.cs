@@ -45,6 +45,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             Library.AddRange(modelPlugins.Library);
             Discoverables.AddRange(modelPlugins.Discoverables);
             RecentlyPlayed.AddRange(modelPlugins.RecentlyPlayed);
+            SearchHistory.AddRange(modelPlugins.SearchHistory);
             
             AlbumCollection.AddRange(modelPlugins.AlbumCollection);
             ArtistCollection.AddRange(modelPlugins.ArtistCollection);
@@ -119,6 +120,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IRecentlyPlayed"/>.
         /// </summary>
         public ChainedProxyBuilder<RecentlyPlayedPluginBase, IRecentlyPlayed> RecentlyPlayed { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="ISearchHistory"/>.
+        /// </summary>
+        public ChainedProxyBuilder<SearchHistoryPluginBase, ISearchHistory> SearchHistory { get; } = new();
 
         /// <summary>
         /// All plugins that provide overridden behavior for <see cref="ITrackCollection"/>.

@@ -208,12 +208,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         }
 
         [TestMethod]
-        public void AccessedThroughRecentlyPlayed()
+        public void AccessedThroughSearchHistory()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -226,33 +226,33 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         }
 
         [TestMethod]
-        public void NotBlockingRecentlyPlayed()
+        public void NotBlockingSearchHistory()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
-            plugins.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBaseTests.FullyCustom(x));
+            plugins.SearchHistory.Add(x => new SearchHistoryPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
-            // Ensure an RecentlyPlayed plugin can still override RecentlyPlayedCollection members.
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
+            // Ensure an SearchHistory plugin can still override SearchHistoryCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
                 customFilter: NoInnerOrSources,
                 typesToExclude: typeof(IAsyncDisposable));
         }
 
         [TestMethod]
-        public void DisposingRecentlyPlayed()
+        public void DisposingSearchHistory()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
             {
                 typeof(AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
+                typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
             });
         }
     }
