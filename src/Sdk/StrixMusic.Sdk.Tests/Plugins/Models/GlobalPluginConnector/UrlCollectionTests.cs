@@ -579,5 +579,49 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughSearchResults()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingSearchResults()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+            plugins.SearchResults.Add(x => new SearchResultsPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
+
+            // Ensure an SearchResults plugin can still be accessed through UrlCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchResultsPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingSearchResults()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
+                typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<SearchResultsPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }
