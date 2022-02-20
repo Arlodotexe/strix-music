@@ -121,16 +121,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtist>)Inner).SourceCores;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ICoreGenreCollection> Sources => InnerGenreCollection.Sources;
+        public IReadOnlyList<ICoreArtist> Sources => ((IMerged<ICoreArtist>)Inner).Sources;
+
+        /// <inheritdoc/>
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => InnerGenreCollection.Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => ((IMerged<ICoreArtist>)Inner).Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => ((IMerged<ICoreAlbum>)Inner).Sources;
-
-        /// <inheritdoc/>
-        IReadOnlyList<ICoreArtist> IMerged<ICoreArtist>.Sources => ((IMerged<ICoreArtist>)Inner).Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
