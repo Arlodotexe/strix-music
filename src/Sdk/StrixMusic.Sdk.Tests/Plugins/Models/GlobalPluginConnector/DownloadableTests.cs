@@ -435,5 +435,50 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<LibraryPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughDiscoverables()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Downloadable.Add(x => new DownloadablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void NotBlockingDiscoverables()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Downloadable.Add(x => new DownloadablePluginBaseTests.FullyCustom(x));
+            plugins.Discoverables.Add(x => new DiscoverablesPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
+
+            // Ensure an Discoverables plugin can still override Downloadable members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, DownloadablePluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingDiscoverables()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.Downloadable.Add(x => new DownloadablePluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
+            {
+                typeof(AccessedException<DownloadablePluginBaseTests.FullyCustom>),
+                typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }
