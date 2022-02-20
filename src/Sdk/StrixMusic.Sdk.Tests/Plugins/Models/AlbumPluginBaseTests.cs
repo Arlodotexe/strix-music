@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.ComponentModel;
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
@@ -9,9 +8,7 @@ using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models

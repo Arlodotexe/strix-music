@@ -1,6 +1,4 @@
 ﻿using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Tests.Mock.Core.Items;
-using System.Collections.Generic;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core.Library
 {

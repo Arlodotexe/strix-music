@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Tests.Mock.Core;
-using StrixMusic.Sdk.Tests.Mock.Core.Library;
 
 namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 {

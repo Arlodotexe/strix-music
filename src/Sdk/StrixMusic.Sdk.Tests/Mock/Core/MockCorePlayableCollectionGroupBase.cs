@@ -5,7 +5,6 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core

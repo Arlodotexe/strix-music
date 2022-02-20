@@ -2,7 +2,6 @@
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models

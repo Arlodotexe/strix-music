@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Plugins.CoreRemote;

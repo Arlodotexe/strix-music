@@ -3,9 +3,6 @@ using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core

@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;

@@ -1,7 +1,7 @@
-﻿using StrixMusic.Sdk.Models;
-using System;
+﻿using System;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.ComponentModel;
+using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

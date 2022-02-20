@@ -1,13 +1,13 @@
-﻿using OwlCore.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {
