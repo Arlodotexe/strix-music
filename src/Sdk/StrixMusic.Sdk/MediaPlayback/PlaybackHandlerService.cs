@@ -279,9 +279,10 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
 
-            Guard.IsNotNull(nextItem.SourceCore, nameof(nextItem.SourceCore));
+            var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            Guard.IsNotNull(instanceId, nameof(instanceId));
 
-            _currentPlayerService = _audioPlayerRegistry[nextItem.SourceCore.InstanceId];
+            _currentPlayerService = _audioPlayerRegistry[instanceId];
             AttachEvents(_currentPlayerService);
 
             await _currentPlayerService.Play(nextItem);
@@ -402,9 +403,10 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             if (_currentPlayerService == null && CurrentItem != null)
             {
-                Guard.IsNotNull(CurrentItem.SourceCore, nameof(CurrentItem.SourceCore));
+                var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+                Guard.IsNotNull(instanceId, nameof(instanceId));
 
-                _currentPlayerService = _audioPlayerRegistry[CurrentItem.SourceCore.InstanceId];
+                _currentPlayerService = _audioPlayerRegistry[instanceId];
             }
 
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
@@ -418,9 +420,10 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Last();
 
-            Guard.IsNotNull(newItem.SourceCore, nameof(newItem.SourceCore));
+            var instId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            Guard.IsNotNull(instId, nameof(instId));
 
-            _currentPlayerService = _audioPlayerRegistry[newItem.SourceCore.InstanceId];
+            _currentPlayerService = _audioPlayerRegistry[instId];
             AttachEvents(_currentPlayerService);
 
             await _currentPlayerService.Play(newItem);

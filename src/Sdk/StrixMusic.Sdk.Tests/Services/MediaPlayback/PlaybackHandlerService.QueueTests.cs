@@ -379,7 +379,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             {
                 MediaConfig = mediaSourceConfig,
                 Track = null,
-                SourceCore = _mockTrack.SourceCore,
             };
         }
     }

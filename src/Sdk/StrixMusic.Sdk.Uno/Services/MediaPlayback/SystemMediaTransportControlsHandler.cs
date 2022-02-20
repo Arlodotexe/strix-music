@@ -210,7 +210,8 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             // Genres
             musicProperties.Genres.Clear();
-            var genres = await e.Track.GetGenresAsync(e.Track.TotalGenreCount, 0);
+
+            var genres = await e.Track.GetGenresAsync(1, 0);
 
             foreach (var genre in genres)
                 musicProperties.Genres.Add(genre.Name);

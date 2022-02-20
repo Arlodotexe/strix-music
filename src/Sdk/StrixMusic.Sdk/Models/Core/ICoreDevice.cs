@@ -18,11 +18,11 @@ namespace StrixMusic.Sdk.Models.Core
         /// <summary>
         /// The currently playing <see cref="ICoreTrack"/>.
         /// </summary>
-        PlaybackItem? NowPlaying { get; }
+        ICoreTrack? NowPlaying { get; }
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<PlaybackItem>? NowPlayingChanged;
+        event EventHandler<ICoreTrack>? NowPlayingChanged;
     }
 }

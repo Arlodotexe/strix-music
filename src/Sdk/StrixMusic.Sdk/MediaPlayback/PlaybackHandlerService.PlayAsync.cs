@@ -265,7 +265,6 @@ namespace StrixMusic.Sdk.MediaPlayback
                 var playbackItem = new PlaybackItem()
                 {
                     MediaConfig = mediaSource,
-                    SourceCore = coreTrack.SourceCore,
                     Track = item
                 };
 
@@ -325,7 +324,6 @@ namespace StrixMusic.Sdk.MediaPlayback
                 var playbackItem = new PlaybackItem()
                 {
                     MediaConfig = mediaSource,
-                    SourceCore = coreTrack.SourceCore,
                     Track = item
                 };
 
