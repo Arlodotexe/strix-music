@@ -15,11 +15,12 @@ using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {
+
     /// <summary>
     /// An implementation of <see cref="IPlayableCollectionGroup"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class PlayableCollectionGroupPluginBase : IModelPlugin, IPlayableCollectionGroup, IPlaylistCollection, IAlbumCollection, IArtistCollection, ITrackCollection, IPlayable, IImageCollection, IUrlCollection, IDownloadable, IDelegatable<IPlayableCollectionGroup>
+    public class PlayableCollectionGroupPluginBase : IModelPlugin, IPlayableCollectionGroup, IDelegatable<IPlayableCollectionGroup>
     {
         /// <summary>
         /// Creates a new instance of <see cref="PlayableCollectionGroupPluginBase"/>.
@@ -155,7 +156,7 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc />
         public IReadOnlyList<ICorePlayableCollectionGroup> Sources => ((IMerged<ICorePlayableCollectionGroup>)Inner).Sources;
-        
+
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores => InnerUrlCollection.SourceCores;
 

@@ -108,5 +108,54 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 typeof(AccessedException<PlayableCollectionGroupPluginBaseTests.Unimplemented>),
             });
         }
+
+        [TestMethod]
+        public void AccessedThroughLibrary()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: new[]
+                {
+                    typeof(IAsyncDisposable),
+                    typeof(IPlayableCollectionItem)
+                });
+        }
+
+        [TestMethod]
+        public void NotBlockingLibrary()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+            plugins.Library.Add(x => new LibraryPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
+
+            // Ensure an Library plugin can still override LibraryCollection members.
+            Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
+                value: plugin,
+                customFilter: NoInnerOrSources,
+                typesToExclude: typeof(IAsyncDisposable));
+        }
+
+        [TestMethod]
+        public void DisposingLibrary()
+        {
+            var plugins = new Sdk.Plugins.Model.SdkModelPlugins();
+            plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
+
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
+            {
+                typeof(AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>),
+                typeof(AccessedException<LibraryPluginBaseTests.Unimplemented>),
+            });
+        }
     }
 }

@@ -42,6 +42,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             Url.AddRange(modelPlugins.Url);
 
             PlayableCollectionGroup.AddRange(modelPlugins.PlayableCollectionGroup);
+            Library.AddRange(modelPlugins.Library);
             AlbumCollection.AddRange(modelPlugins.AlbumCollection);
             ArtistCollection.AddRange(modelPlugins.ArtistCollection);
             PlaylistCollection.AddRange(modelPlugins.PlaylistCollection);
@@ -100,6 +101,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IPlayableCollectionGroup"/>.
         /// </summary>
         public ChainedProxyBuilder<PlayableCollectionGroupPluginBase, IPlayableCollectionGroup> PlayableCollectionGroup { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="ILibrary"/>.
+        /// </summary>
+        public ChainedProxyBuilder<LibraryPluginBase, ILibrary> Library { get; } = new();
 
         /// <summary>
         /// All plugins that provide overridden behavior for <see cref="ITrackCollection"/>.
