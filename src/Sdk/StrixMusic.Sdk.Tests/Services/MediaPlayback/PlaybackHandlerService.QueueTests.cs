@@ -455,8 +455,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             Assert.IsTrue(_handlerService.ShuffleState);
 
+            var playbackItem = GetPlaybackItem(itemToAdd);
+
             // Adding an item.
-            _handlerService.InsertNext(addIndex, itemToAdd);
+            _handlerService.InsertNext(addIndex, playbackItem);
 
             // Removing an item.
             _handlerService.RemoveNext(addIndex);
