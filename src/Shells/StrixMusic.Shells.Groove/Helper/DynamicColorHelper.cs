@@ -1,6 +1,6 @@
 ﻿using ClusterNet.Kernels;
 using ClusterNet.Methods;
-using Nito.AsyncEx;
+using OwlCore;
 using OwlCore.Uno.ColorExtractor;
 using OwlCore.Uno.ColorExtractor.ColorSpaces;
 using OwlCore.Uno.ColorExtractor.Filters;
@@ -8,6 +8,7 @@ using OwlCore.Uno.ColorExtractor.Shapes;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Color = Windows.UI.Color;
 using ISdkImage = StrixMusic.Sdk.Models.IImage;
@@ -19,7 +20,7 @@ namespace StrixMusic.Shells.Groove.Helper
     /// </summary>
     public static class DynamicColorHelper
     {
-        private static AsyncLock _asyncLock = new AsyncLock();
+        private static SemaphoreSlim _mutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Gets an accent color from an <see cref="Sdk.Models.IImage"/>.
@@ -28,7 +29,7 @@ namespace StrixMusic.Shells.Groove.Helper
         /// <returns>The accent color for the image.</returns>
         public static async Task<Color> GetImageAccentColorAsync(Uri imageUri)
         {
-            using (_asyncLock.Lock())
+            using (await Flow.EasySemaphore(_mutex))
             {
                 var image = await ImageParser.GetImage(imageUri.OriginalString);
 
