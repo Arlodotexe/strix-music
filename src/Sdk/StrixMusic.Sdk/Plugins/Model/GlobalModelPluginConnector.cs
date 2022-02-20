@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.Models;
 
@@ -54,6 +53,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             var trackCollectionBuilder = GenerateGlobalTrackCollectionPluginBuilder(plugins);
             var albumBuilder = GenerateGlobalAlbumPluginBuilder(plugins);
             var artistBuilder = GenerateGlobalArtistPluginBuilder(plugins);
+            var playlistBuilder = GenerateGlobalPlaylistPluginBuilder(plugins);
 
             // Clone plugin container & add global connectors.
             // Global connectors must be added to a new instance, otherwise some global connectors could
@@ -66,6 +66,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             pluginsWithGlobalConnectors.TrackCollection.Add(x => new TrackCollectionPluginBase(PluginMetadata, trackCollectionBuilder.Execute(x)));
             pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, albumBuilder.Execute(x)));
             pluginsWithGlobalConnectors.Artist.Add(x => new ArtistPluginBase(PluginMetadata, artistBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Playlist.Add(x => new PlaylistPluginBase(PluginMetadata, playlistBuilder.Execute(x)));
 
             return pluginsWithGlobalConnectors;
         }
@@ -218,6 +219,38 @@ namespace StrixMusic.Sdk.Plugins.Model
 
             // TrackCollection members
             x => new ArtistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.TrackCollection.Execute(x),
+                InnerPlayable = plugins.TrackCollection.Execute(x),
+                InnerImageCollection = plugins.TrackCollection.Execute(x),
+                InnerUrlCollection = plugins.TrackCollection.Execute(x),
+                InnerTrackCollection = plugins.TrackCollection.Execute(x),
+            }
+        };
+
+        private static ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> GenerateGlobalPlaylistPluginBuilder(SdkModelPlugins plugins) => new()
+        {
+            // Downloadable members
+            // UrlCollection members
+            // ImageCollection members
+            x => new PlaylistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Downloadable.Execute(x),
+                InnerImageCollection = plugins.ImageCollection.Execute(x),
+                InnerUrlCollection = plugins.UrlCollection.Execute(x),
+            },
+
+            // Playable members
+            x => new PlaylistPluginBase(PluginMetadata, x)
+            {
+                InnerDownloadable = plugins.Playable.Execute(x),
+                InnerPlayable = plugins.Playable.Execute(x),
+                InnerImageCollection = plugins.Playable.Execute(x),
+                InnerUrlCollection = plugins.Playable.Execute(x),
+            },
+
+            // TrackCollection members
+            x => new PlaylistPluginBase(PluginMetadata, x)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),

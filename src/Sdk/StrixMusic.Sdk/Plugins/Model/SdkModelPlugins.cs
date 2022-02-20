@@ -35,6 +35,7 @@ namespace StrixMusic.Sdk.Plugins.Model
 
             Album.AddRange(modelPlugins.Album);
             Artist.AddRange(modelPlugins.Artist);
+            Playlist.AddRange(modelPlugins.Playlist);
             Image.AddRange(modelPlugins.Image);
             Lyrics.AddRange(modelPlugins.Lyrics);
             
@@ -66,6 +67,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// All plugins that provide overridden behavior for <see cref="IArtist"/>.
         /// </summary>
         public ChainedProxyBuilder<ArtistPluginBase, IArtist> Artist { get; } = new();
+
+        /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IPlaylist"/>.
+        /// </summary>
+        public ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> Playlist { get; } = new();
 
         /// <summary>
         /// All plugins that provide overridden behavior for <see cref="IImage"/>.
