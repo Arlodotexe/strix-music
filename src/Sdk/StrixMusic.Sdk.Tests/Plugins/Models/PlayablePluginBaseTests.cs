@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -58,7 +58,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_Downloadable()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x) {InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented()});
 
@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
             });
         }
@@ -109,7 +109,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_ImageCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x) {InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented()});
 
@@ -122,7 +122,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
             });
         }
@@ -130,7 +130,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_UrlCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x) {InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented()});
 
@@ -143,7 +143,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
             });
         }
@@ -151,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_Downloadable_ImageCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -169,7 +169,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
                 typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
             });
@@ -178,7 +178,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_Downloadable_UrlCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -196,7 +196,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
                 typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
             });
@@ -205,7 +205,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_Downloadable_ImageCollection_UrlCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
 
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
@@ -226,7 +226,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
                 typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
                 typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
@@ -236,7 +236,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(5000)]
         public void PluginFullyCustomWith_ImageCollection_UrlCollection()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Playable;
+            var builder = new SdkModelPlugins().Playable;
             var finalTestClass = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -254,7 +254,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[]
             {
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
                 typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
                 typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
             });

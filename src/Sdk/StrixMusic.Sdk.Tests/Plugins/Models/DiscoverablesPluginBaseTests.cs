@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Discoverables;
+            var builder = new SdkModelPlugins().Discoverables;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Discoverables;
+            var builder = new SdkModelPlugins().Discoverables;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Discoverables;
+            var builder = new SdkModelPlugins().Discoverables;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -104,7 +104,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
-            var builder = new Sdk.Plugins.PluginManager().ModelPlugins.Discoverables;
+            var builder = new SdkModelPlugins().Discoverables;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
                 {
@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             var expectedExceptionsWhenDisposing = new List<Type>
             {
-                typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
+                typeof(AccessedException<Unimplemented>),
             };
 
             if (data.HasFlag(PossiblePlugins.Downloadable))
