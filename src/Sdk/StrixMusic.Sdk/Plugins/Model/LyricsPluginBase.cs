@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Registration { get; }
 
         /// <inheritdoc/>
-        virtual public ILyrics Inner { get; }
+        public ILyrics Inner { get; }
 
         /// <inheritdoc/>
         virtual public ITrack Track => Inner.Track;
