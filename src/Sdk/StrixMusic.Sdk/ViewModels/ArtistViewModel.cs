@@ -33,7 +33,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IArtist _artist;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
@@ -54,7 +53,6 @@ namespace StrixMusic.Sdk.ViewModels
 
             SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(root.GetLoadedCore).ToList();
 
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
             _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (_artist.RelatedItems != null)
@@ -76,8 +74,8 @@ namespace StrixMusic.Sdk.ViewModels
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _artist.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(x => _artist.PlayAlbumCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IAlbumCollectionItem>(nameof(x))));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -580,16 +578,16 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _artist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, _artist);
+        public Task PlayTrackCollectionAsync() => _artist.PlayTrackCollectionAsync(); 
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync() => _playbackHandler.PlayAsync((IAlbumCollectionViewModel)this, _artist);
+        public Task PlayAlbumCollectionAsync() => _artist.PlayAlbumCollectionAsync(); 
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseTrackCollectionAsync() => _artist.PauseTrackCollectionAsync(); 
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseAlbumCollectionAsync()  => _artist.PauseAlbumCollectionAsync(); 
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -634,10 +632,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _artist.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => _artist.PlayAlbumCollectionAsync(albumItem);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track) => _artist.PlayTrackCollectionAsync(track);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
@@ -913,18 +911,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(name, nameof(name));
             return _artist.ChangeNameAsync(name);
-        }
-
-        private Task PlayTrackCollectionInternalAsync(ITrack? track)
-        {
-            Guard.IsNotNull(track, nameof(track));
-            return _playbackHandler.PlayAsync(track, this, _artist);
-        }
-
-        private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
-        {
-            Guard.IsNotNull(albumItem, nameof(albumItem));
-            return _playbackHandler.PlayAsync(albumItem, this, this);
         }
 
         /// <inheritdoc />

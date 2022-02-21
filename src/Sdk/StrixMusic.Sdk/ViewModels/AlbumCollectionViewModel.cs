@@ -31,8 +31,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IAlbumCollection _collection;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
         private readonly SemaphoreSlim _populateAlbumsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
@@ -46,7 +44,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Root = root;
             _collection = root.Plugins.ModelPlugins.AlbumCollection.Execute(collection);
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             using (Threading.PrimaryContext)
             {
@@ -75,7 +72,7 @@ namespace StrixMusic.Sdk.ViewModels
             InitAlbumCollectionAsyncCommand = new AsyncRelayCommand(InitAlbumCollectionAsync);
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
 
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(x => _collection.PlayAlbumCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IAlbumCollectionItem>(nameof(x))));
 
             AttachEvents();
         }
@@ -523,13 +520,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
+        public Task PlayAlbumCollectionAsync() => _collection.PlayAlbumCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => _collection.PlayAlbumCollectionAsync(albumItem);
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseAlbumCollectionAsync() => _collection.PauseAlbumCollectionAsync();
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _collection.AddAlbumItemAsync(album, index);
@@ -616,13 +613,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(name, nameof(name));
             return _collection.ChangeNameAsync(name);
-        }
-
-        private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
-        {
-            Guard.IsNotNull(albumItem, nameof(albumItem));
-
-            return _playbackHandler.PlayAsync(albumItem, this, this);
         }
 
         /// <inheritdoc />

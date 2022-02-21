@@ -31,9 +31,7 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly ITrackCollection _collection;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
-        private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1,1);
+        private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
@@ -63,7 +61,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _collection.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -76,7 +74,6 @@ namespace StrixMusic.Sdk.ViewModels
             InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(root.GetLoadedCore).ToList();
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -435,7 +432,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
-        
+
         /// <inheritdoc />
         public Task StartDownloadOperationAsync(DownloadOperation operation) => _collection.StartDownloadOperationAsync(operation);
 
@@ -470,13 +467,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collection.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
+        public Task PlayTrackCollectionAsync() => _collection.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track) => _collection.PlayTrackCollectionAsync(track);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseTrackCollectionAsync() => _collection.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
@@ -603,14 +600,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => _collection.Equals(other);
-
-        /// <inheritdoc />
-        private Task PlayTrackCollectionInternalAsync(ITrack? track)
-        {
-            Guard.IsNotNull(track, nameof(track));
-
-            return _playbackHandler.PlayAsync(track, this, this);
-        }
 
         private Task ChangeNameInternalAsync(string? name)
         {

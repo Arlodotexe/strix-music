@@ -32,7 +32,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IAlbum _album;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
         private readonly ILocalizationService _localizationService;
 
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
@@ -53,7 +52,6 @@ namespace StrixMusic.Sdk.ViewModels
 
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(root.GetLoadedCore).ToList();
 
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
             _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             using (Threading.PrimaryContext)
@@ -76,8 +74,8 @@ namespace StrixMusic.Sdk.ViewModels
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistCollectionInternalAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _album.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _album.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x))));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -566,22 +564,22 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsPauseArtistCollectionAsyncAvailable => _album.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, _album);
+        public Task PlayTrackCollectionAsync() => _album.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseTrackCollectionAsync() => _album.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _album);
+        public Task PlayArtistCollectionAsync() => _album.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseArtistCollectionAsync() => _album.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track) => _album.PlayTrackCollectionAsync(track);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _album.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
         public DateTime? DatePublished => _album.DatePublished;
@@ -929,18 +927,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
-
-        private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
-        {
-            Guard.IsNotNull(artistItem, nameof(artistItem));
-            return _playbackHandler.PlayAsync(artistItem, this, this);
-        }
-
-        private Task PlayTrackCollectionInternalAsync(ITrack? track)
-        {
-            Guard.IsNotNull(track, nameof(track));
-            return _playbackHandler.PlayAsync(track, this, this);
-        }
 
         private Task ChangeNameInternalAsync(string? name)
         {

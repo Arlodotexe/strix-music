@@ -31,11 +31,9 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IArtistCollection _collection;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
-        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1,1);
-        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1,1);
-        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1,1);
+        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
@@ -66,8 +64,7 @@ namespace StrixMusic.Sdk.ViewModels
             InitArtistCollectionAsyncCommand = new AsyncRelayCommand(InitArtistCollectionAsync);
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
 
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _collection.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x))));
 
             using (Threading.PrimaryContext)
             {
@@ -489,13 +486,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
+        public Task PlayArtistCollectionAsync() => _collection.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseArtistCollectionAsync() => _collection.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistInternalAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _collection.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);
@@ -627,13 +624,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollection other) => _collection.Equals(other);
-
-        private Task PlayArtistInternalAsync(IArtistCollectionItem? artistCollectionItem)
-        {
-            Guard.IsNotNull(artistCollectionItem, nameof(artistCollectionItem));
-
-            return _playbackHandler.PlayAsync(artistCollectionItem, this, this);
-        }
 
         private Task ChangeNameInternalAsync(string? name)
         {
