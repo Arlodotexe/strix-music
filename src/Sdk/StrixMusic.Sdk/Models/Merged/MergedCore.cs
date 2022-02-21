@@ -105,12 +105,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         /// <remarks>
-        /// Cores are all merged, but never matched
+        /// Cores can be merged, but are never matched conditionally.
         /// </remarks>
-        public bool Equals(ICore other)
-        {
-            return false;
-        }
+        public bool Equals(ICore other) => false;
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
