@@ -68,7 +68,9 @@ namespace StrixMusic.Sdk.Plugins.Model
             // Global connectors must be added to a new instance, otherwise some global connectors could
             // treat other global connectors as a user-added plugin and attempt to ingest them, causing
             // undesired behavior.
-            var pluginsWithGlobalConnectors = new SdkModelPlugins(plugins);
+            var pluginsWithGlobalConnectors = new SdkModelPlugins();
+            pluginsWithGlobalConnectors.Import(plugins);
+            
             pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, playableBuilder.Execute(x)));
             
             pluginsWithGlobalConnectors.PlayableCollectionGroup.Add(x => new PlayableCollectionGroupPluginBase(PluginMetadata, playableCollectionGroupBuilder.Execute(x)));

@@ -106,7 +106,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += ArtistDescriptionChanged;
             NameChanged += ArtistNameChanged;
             LastPlayedChanged += OnLastPlayedChanged;
-            DownloadInfoChanged += OnDownloadInfoChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
 
             IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged += OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -136,7 +136,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= ArtistDescriptionChanged;
             NameChanged -= ArtistNameChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
-            DownloadInfoChanged -= OnDownloadInfoChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
 
             IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged -= OnIsPauseTrackCollectionAsyncAvailableChanged;

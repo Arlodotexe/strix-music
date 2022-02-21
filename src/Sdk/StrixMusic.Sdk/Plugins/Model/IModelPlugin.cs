@@ -10,6 +10,6 @@
         /// <summary>
         /// The plugin metadata that was provided during registration.
         /// </summary>
-        public ModelPluginMetadata Registration { get; }
+        public ModelPluginMetadata Metadata { get; }
     }
 }

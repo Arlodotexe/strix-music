@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
         protected internal PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
         {
-            Registration = registration;
+            Metadata = registration;
 
             Inner = inner;
             InnerDownloadable = inner;
@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc />
-        public ModelPluginMetadata Registration { get; }
+        public ModelPluginMetadata Metadata { get; }
 
         /// <summary>
         /// A wrapped implementation which member access can be delegated to. Defaults to <see cref="Inner"/>.

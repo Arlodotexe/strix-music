@@ -52,44 +52,44 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// Loads the given track collection into the play queue and plays the given track.
         /// </summary>
         /// <param name="track">The track to play.</param>
-        /// <param name="context">The playback context.</param>
-        /// <param name="trackCollection">The tracks to use in the queue.</param>
+        /// <param name="context">The actual playback context.</param>
+        /// <param name="trackCollection">The complete track collection that <paramref name="track"/> belongs to.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(ITrack track, ITrackCollectionViewModel trackCollection, IPlayableBase context);
+        Task PlayAsync(ITrack track, ITrackCollection trackCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given track collection into the play queue and plays the first track.
         /// </summary>
-        /// <param name="context">The playback context.</param>
+        /// <param name="context">The actual playback context.</param>
         /// <param name="trackCollection">The tracks to use in the queue.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(ITrackCollectionViewModel trackCollection, IPlayableBase context);
+        Task PlayAsync(ITrackCollection trackCollection, IPlayableBase context);
 
         /// <summary>
-        /// Loads the given track collection into the play queue and plays the given track.
+        /// Loads the given album collection into the play queue and plays the first track of the provided <paramref name="albumCollectionItem"/>.
         /// </summary>
-        /// <param name="albumCollectionItem">The track to play.</param>
-        /// <param name="albumCollection">The albums to use in the queue.</param>
-        /// <param name="context">The playback context.</param>
+        /// <param name="albumCollectionItem">The album item to play.</param>
+        /// <param name="albumCollection">The complete album collection that <paramref name="albumCollectionItem"/> belongs to.</param>
+        /// <param name="context">The actual playback context.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IAlbumCollectionItem albumCollectionItem, IAlbumCollectionViewModel albumCollection, IPlayableBase context);
+        Task PlayAsync(IAlbumCollectionItem albumCollectionItem, IAlbumCollection albumCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given playlist collection into the play queue and plays the given track.
         /// </summary>
         /// <param name="playlistCollectionItem">The track to play.</param>
-        /// <param name="playlistCollection">The playlists to use in the queue.</param>
-        /// <param name="context">The playback context.</param>
+        /// <param name="playlistCollection">The complete playlist collection that <paramref name="playlistCollectionItem"/> belongs to.</param>
+        /// <param name="context">The actual playback context.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IPlaylistCollectionItem playlistCollectionItem, IPlaylistCollectionViewModel playlistCollection, IPlayableBase context);
+        Task PlayAsync(IPlaylistCollectionItem playlistCollectionItem, IPlaylistCollection playlistCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given track collection into the play queue and plays the first track.
         /// </summary>
-        /// <param name="context">The playback context.</param>
+        /// <param name="context">The actual playback context.</param>
         /// <param name="albumCollection">The albums to use in the queue.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context);
+        Task PlayAsync(IAlbumCollection albumCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given artist collection into the play queue and plays the given track.
@@ -97,24 +97,24 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="artistCollection">The album collection to play.</param>
         /// <param name="context">The playback context.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IArtistCollectionViewModel artistCollection, IPlayableBase context);
+        Task PlayAsync(IArtistCollection artistCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given playlist collection into the play queue and plays the given track.
         /// </summary>
         /// <param name="playlistCollection">The playlist collection to play.</param>
-        /// <param name="context">The playback context.</param>
+        /// <param name="context">The actual playback context.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IPlaylistCollectionViewModel playlistCollection, IPlayableBase context);
+        Task PlayAsync(IPlaylistCollection playlistCollection, IPlayableBase context);
 
         /// <summary>
         /// Loads the given track collection into the play queue and plays the first track.
         /// </summary>
-        /// <param name="context">The playback context.</param>
-        /// <param name="artistCollectionItem">The album item to be played.</param>
-        /// <param name="artistCollection">The album collection to play.</param>
+        /// <param name="context">The actual playback context.</param>
+        /// <param name="artistCollectionItem">The artist item to play.</param>
+        /// <param name="artistCollection">The complete artist collection that <paramref name="artistCollectionItem"/> belongs to.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection, IPlayableBase context);
+        Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollection artistCollection, IPlayableBase context);
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.

@@ -753,7 +753,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
             lock (_sortedMap)
             {
-                var allItemsWithData = MergeMappedData(_sortedMap.ToArray());
+                // Initial item count == the item count for all sources combined
+                // Interacting with _sortedMap is treating as though all items are included but nothing is merged.
+                var allItemsWithData = MergeMappedData(_sortedMap.Skip(offset).Take(limit).ToArray());
 
                 // TODO Re-do of merged collection item handling.
 
@@ -764,8 +766,7 @@ namespace StrixMusic.Sdk.Models.Merged
                 // Until then, supply the maximum possible count (as if no items are merged).
                 ItemsCountChanged?.Invoke(this, _sortedMap.Count);
 
-                var relevantMergedMappedData = allItemsWithData.Skip(offset).Take(limit);
-                var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
+                var merged = allItemsWithData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
             }

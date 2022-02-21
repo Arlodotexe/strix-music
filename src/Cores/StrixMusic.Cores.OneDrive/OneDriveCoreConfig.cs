@@ -198,7 +198,6 @@ namespace StrixMusic.Cores.OneDrive
 
             void OnShowAdvancedClicked(object sender, bool newState)
             {
-
                 if (showAdvanced.State)
                     InjectAdvancedSettings();
                 else

@@ -408,7 +408,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
                 _previousItems.InsertOrAdd(newPrevItems.IndexOf(itemToSwap), itemToSwap);
             }
 
-
             CollectionAssert.AreEqual(newNextItems, _handlerService.NextItems.ToList());
             CollectionAssert.AreEqual(newPrevItems, _handlerService.PreviousItems.ToList());
 

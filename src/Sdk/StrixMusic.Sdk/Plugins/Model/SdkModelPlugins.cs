@@ -4,31 +4,27 @@ using StrixMusic.Sdk.Models;
 namespace StrixMusic.Sdk.Plugins.Model
 {
     /// <summary>
-    /// A model plugin is one or more implementation of <see cref="IModelPlugin"/>
+    /// A model plugin is one or more implementations of <see cref="IModelPlugin"/>
     /// that modifies the behavior of an interface implementation
     /// by wrapping around an existing instance and selectively overriding members.
-    /// 
-    /// <para/> This class contains a chainable plugin builder for every relevant model interface used in the Strix Music SDK.
-    ///         When the chain is built, the first added Plugin is returned, with the next Plugin provided during construction for 
+    /// </summary>
+    /// <remarks>
+    ///         Contains a chainable plugin builder for every relevant model interface used
+    ///         in the Strix Music SDK. 
+    /// <para/> When the chain is built, the first added Plugin is returned, with the next Plugin provided during construction for 
     ///         proxying, which also had the next item passed into it during construction, and so on.
     /// <para/> When accessing a member, a plugin may retrieve data from the next plugin (or, if none, the actual implementation), and
     ///         transform or replace it as needed.
     ///         A plugin may ignore the inner implementation entirely and supply new data.
     ///         Or, a plugin might not override that member and simply relay data from the actual implementation.
-    /// </summary>
+    /// </remarks>
     public class SdkModelPlugins
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SdkModelPlugins"/> class.
+        /// Copies all plugins from the provided <paramref name="modelPlugins"/> into this instance.
         /// </summary>
-        public SdkModelPlugins()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SdkModelPlugins"/> class, copying plugins from an existing instance.
-        /// </summary>
-        public SdkModelPlugins(SdkModelPlugins modelPlugins)
+        /// <param name="modelPlugins">The plugin collection to import into this instance.</param>
+        public void Import(SdkModelPlugins modelPlugins)
         {
             Playable.AddRange(modelPlugins.Playable);
             Downloadable.AddRange(modelPlugins.Downloadable);

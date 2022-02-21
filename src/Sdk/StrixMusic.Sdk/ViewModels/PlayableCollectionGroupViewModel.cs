@@ -118,7 +118,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
             LastPlayedChanged += CollectionGroupLastPlayedChanged;
-            DownloadInfoChanged += OnDownloadInfoChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged += CollectionGroupOnTrackItemsCountChanged;
@@ -156,7 +156,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
             LastPlayedChanged -= CollectionGroupLastPlayedChanged;
-            DownloadInfoChanged -= OnDownloadInfoChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged -= CollectionGroupOnTrackItemsCountChanged;
@@ -1047,7 +1047,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)  => _collectionGroup.PlayAlbumCollectionAsync(albumItem);
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => _collectionGroup.PlayAlbumCollectionAsync(albumItem);
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync() => _collectionGroup.PlayAlbumCollectionAsync();

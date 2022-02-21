@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
         protected internal PlaylistCollectionPluginBase(ModelPluginMetadata registration, IPlaylistCollection inner)
         {
-            Registration = registration;
+            Metadata = registration;
             Inner = inner;
             InnerUrlCollection = inner;
             InnerImageCollection = inner;
@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <summary>
         /// Metadata about the plugin which was provided during registration.
         /// </summary>
-        public ModelPluginMetadata Registration { get; }
+        public ModelPluginMetadata Metadata { get; }
 
         /// <inheritdoc/>
         public IPlaylistCollection Inner { get; set; }

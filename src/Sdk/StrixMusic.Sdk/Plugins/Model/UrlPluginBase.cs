@@ -20,12 +20,12 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
         protected internal UrlPluginBase(ModelPluginMetadata registration, IUrl inner)
         {
-            Registration = registration;
+            Metadata = registration;
             Inner = inner;
         }
 
         /// <inheritdoc />
-        public ModelPluginMetadata Registration { get; }
+        public ModelPluginMetadata Metadata { get; }
 
         /// <inheritdoc/>
         public IUrl Inner { get; }
