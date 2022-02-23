@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Helper;
 using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace StrixMusic.Shells.Groove.ViewModels
             device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
-        private async void ActiveDevice_NowPlayingChanged(object sender, Sdk.Models.Core.ICoreTrack e)
+        private async void ActiveDevice_NowPlayingChanged(object sender, PlaybackItem e)
         {
             // Load images if there aren't images loaded.
             // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.
@@ -69,9 +70,14 @@ namespace StrixMusic.Shells.Groove.ViewModels
             // await nowPlaying.InitImageCollectionAsync();
 
             // If there are now images, grab the color from the first image.
-            if (e.TotalImageCount != 0)
+
+            Guard.IsNotNull(e.Track, nameof(e.Track));
+
+            if (e.Track.TotalImageCount != 0)
             {
-                await foreach (var image in e.GetImagesAsync(1, 0))
+                var images = await e.Track.GetImagesAsync(1, 0);
+
+                foreach (var image in images)
                 {
                     BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(image.Uri));
                 }

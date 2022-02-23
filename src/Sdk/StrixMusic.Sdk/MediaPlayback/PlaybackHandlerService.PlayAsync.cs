@@ -43,7 +43,9 @@ namespace StrixMusic.Sdk.MediaPlayback
             var nextItem = _nextItems[0];
             await PlayFromNext(0);
 
-            _strixDevice.SetPlaybackData(context, nextItem.Track);
+            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
+
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -77,7 +79,9 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var nextItem = _nextItems[0];
             await PlayFromNext(0);
-            _strixDevice.SetPlaybackData(context, nextItem.Track);
+
+            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -121,7 +125,9 @@ namespace StrixMusic.Sdk.MediaPlayback
             var nextItem = _nextItems[0];
             await PlayFromNext(0);
 
-            _strixDevice.SetPlaybackData(context, nextItem.Track);
+            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
+
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
@@ -147,7 +153,9 @@ namespace StrixMusic.Sdk.MediaPlayback
             var nextItem = _nextItems[0];
             await PlayFromNext(0);
 
-            _strixDevice.SetPlaybackData(context, nextItem.Track);
+            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
+
+            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <summary>
@@ -229,17 +237,24 @@ namespace StrixMusic.Sdk.MediaPlayback
                     trackPlaybackIndex = i;
                 }
 
+                var playbackItem = new PlaybackItem()
+                {
+                    MediaConfig = mediaSource,
+                    Track = item
+                };
+
+
                 switch (pushTarget)
                 {
                     case AddTrackPushTarget.Normal when reachedTargetTrack:
-                        InsertNext(i - trackPlaybackIndex, mediaSource);
+                        InsertNext(i - trackPlaybackIndex, playbackItem);
                         break;
                     case AddTrackPushTarget.Normal:
                     case AddTrackPushTarget.AllPrevious:
-                        PushPrevious(mediaSource);
+                        PushPrevious(playbackItem);
                         break;
                     case AddTrackPushTarget.AllNext:
-                        InsertNext(i + offset, mediaSource);
+                        InsertNext(i + offset, playbackItem);
                         break;
                     default:
                         return ThrowHelper.ThrowArgumentOutOfRangeException<int>(nameof(pushTarget));

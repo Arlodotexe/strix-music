@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
@@ -18,6 +19,7 @@ namespace StrixMusic.Sdk.Models.Merged
     public sealed class CoreDeviceProxy : IDevice
     {
         private readonly ICoreDevice _source;
+        private readonly ISettingsService _serviceProvider;
 
         /// <summary>
         /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
@@ -36,7 +38,17 @@ namespace StrixMusic.Sdk.Models.Merged
             RepeatState = _source.RepeatState;
             Volume = _source.Volume;
             PlaybackSpeed = _source.PlaybackSpeed;
-            NowPlaying = _source.NowPlaying;
+
+            _serviceProvider = settingsService;
+
+            Guard.IsNotNull(_source.NowPlaying,nameof(_source.NowPlaying));
+
+            var nowPlaying = new MergedTrack(_source.NowPlaying.IntoList(), settingsService);
+
+            NowPlaying = new PlaybackItem()
+            {
+                Track = nowPlaying,
+            };
 
             if (!(_source.PlaybackQueue is null))
                 PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), settingsService);
@@ -56,7 +68,13 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private void Source_NowPlayingChanged(object sender, ICoreTrack e)
         {
-            NowPlaying = e;
+            var nowPlaying = new MergedTrack(e.IntoList(), _serviceProvider);
+
+            NowPlaying = new PlaybackItem()
+            {
+                Track = nowPlaying,
+            };
+
             NowPlayingChanged?.Invoke(sender, NowPlaying);
         }
 
@@ -117,7 +135,7 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<ICoreTrack>? NowPlayingChanged;
+        public event EventHandler<PlaybackItem>? NowPlayingChanged;
 
         /// <inheritdoc />
         public string Id => _source.Id;
@@ -219,7 +237,7 @@ namespace StrixMusic.Sdk.Models.Merged
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public ICoreTrack? NowPlaying { get; private set; }
+        public PlaybackItem? NowPlaying { get; private set; }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync() => _source.DisposeAsync();

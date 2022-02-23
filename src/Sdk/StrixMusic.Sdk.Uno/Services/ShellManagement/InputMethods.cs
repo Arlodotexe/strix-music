@@ -14,17 +14,17 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
         None = 0,
         
         /// <summary>
-        /// The shell supports and is shown on devices with mouse support.
+        /// The shell is optimized for use with a mouse.
         /// </summary>
         Mouse = 1,
-        
+
         /// <summary>
-        /// The shell supports and is shown on devices with a touchscreen.
+        /// The shell is optimized for use with a touch screen.
         /// </summary>
         Touch = 2,
-        
+
         /// <summary>
-        /// The shell supports and is shown on devices that use a controller.
+        /// The shell is optimized for use with a game controller.
         /// </summary>
         Controller = 4,
     }

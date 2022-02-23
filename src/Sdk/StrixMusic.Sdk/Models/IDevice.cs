@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 
@@ -31,11 +32,11 @@ namespace StrixMusic.Sdk.Models
         /// <summary>
         /// The currently playing track.
         /// </summary>
-        ICoreTrack? NowPlaying { get; }
+        PlaybackItem? NowPlaying { get; }
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<ICoreTrack>? NowPlayingChanged;
+        event EventHandler<PlaybackItem>? NowPlayingChanged;
     }
 }

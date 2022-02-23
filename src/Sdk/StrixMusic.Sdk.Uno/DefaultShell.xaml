@@ -51,7 +51,7 @@
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-        <shells:NowPlayingBar Grid.Row="1"/>
+		<shells:NowPlayingBar Grid.Row="1" ActiveDevice="{x:Bind DataRoot.ActiveDevice, Mode=OneWay}"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"

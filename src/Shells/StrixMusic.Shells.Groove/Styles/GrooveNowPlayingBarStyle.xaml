@@ -70,17 +70,17 @@
                 <!--Media info-->
                 <Button x:Name="NowPlayingButton" MinWidth="300" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
                                         BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
-                    <nowplaying:MediaInfo x:Name="mediaInfo" Main="{Binding}"/>
+                    <nowplaying:MediaInfo x:Name="mediaInfo" Device="{Binding ActiveDevice}"/>
                 </Button>
 
                 <!--Media transport controls-->
-                <nowplaying:MediaTransports x:Name="MediaTransports"  Main="{Binding}"  Grid.Column="1" HorizontalAlignment="Center"/>
+                <nowplaying:MediaTransports x:Name="MediaTransports" Device="{Binding ActiveDevice}" Grid.Column="1" HorizontalAlignment="Center"/>
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
                                         IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
                                         Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}">
+                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
                             <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}"

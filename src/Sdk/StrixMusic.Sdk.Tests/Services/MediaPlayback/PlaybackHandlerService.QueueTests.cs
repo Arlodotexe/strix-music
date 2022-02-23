@@ -15,9 +15,9 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
     {
         private PlaybackHandlerService? _handlerService;
         private IAudioPlayerService? _audioPlayer;
-        private List<IMediaSourceConfig>? _previousItems;
-        private List<IMediaSourceConfig>? _nextItems;
-        private IMediaSourceConfig? _currentItem;
+        private List<PlaybackItem>? _previousItems;
+        private List<PlaybackItem>? _nextItems;
+        private PlaybackItem? _currentItem;
         private MockCoreTrack? _mockTrack;
 
         [TestInitialize]
@@ -32,8 +32,8 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             _handlerService.RegisterAudioPlayer(_audioPlayer, mockCore.InstanceId);
             _mockTrack = mockTrack;
 
-            _previousItems = new List<IMediaSourceConfig>();
-            _nextItems = new List<IMediaSourceConfig>();
+            _previousItems = new List<PlaybackItem>();
+            _nextItems = new List<PlaybackItem>();
         }
 
         [TestCleanup]
@@ -74,14 +74,19 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             for (int i = 0; i < numberOfPreviousItems; i++)
             {
                 var mediaSourceConfig = new MediaSourceConfig(_mockTrack, i.ToString(), Stream.Null, "mp3");
-                _previousItems.Add(mediaSourceConfig);
-                _handlerService.PushPrevious(mediaSourceConfig);
+
+                var playbackItem = GetPlaybackItem(mediaSourceConfig);
+
+                _previousItems.Add(playbackItem);
+                _handlerService.PushPrevious(playbackItem);
             }
 
             // If there is anything in PreviousItems, there must be a CurrentItem.
             if (numberOfPreviousItems > 0)
             {
-                _handlerService.CurrentItem = new MediaSourceConfig(_mockTrack, numberOfPreviousItems.ToString(), Stream.Null, "mp3");
+                var playbackItem = GetPlaybackItem(new MediaSourceConfig(_mockTrack, numberOfPreviousItems.ToString(), Stream.Null, "mp3"));
+
+                _handlerService.CurrentItem = playbackItem;
                 _audioPlayer.CurrentSource = _handlerService.CurrentItem;
                 _currentItem = _handlerService.CurrentItem;
             }
@@ -90,8 +95,11 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             for (int i = 0; i < numberOfNextItems; i++)
             {
                 var mediaSourceConfig = new MediaSourceConfig(_mockTrack, (numberOfPreviousItems + (i + 1)).ToString(), Stream.Null, "mp3");
-                _nextItems.Add(mediaSourceConfig);
-                _handlerService.InsertNext(i, mediaSourceConfig);
+
+                var playbackItem = GetPlaybackItem(mediaSourceConfig);
+
+                _nextItems.Add(playbackItem);
+                _handlerService.InsertNext(i, playbackItem);
             }
 
             Assert.IsFalse(_handlerService.ShuffleState);
@@ -179,13 +187,13 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             // The next items and previous items COUNT is not necesserily equal to original prev and next items because we changed the currentItem.
             // Original Order.
-            var unshuffledList = new List<IMediaSourceConfig?>();
+            var unshuffledList = new List<PlaybackItem?>();
             unshuffledList.AddRange(_previousItems);
             unshuffledList.Add(_currentItem);
             unshuffledList.AddRange(_nextItems);
 
             // Processed Unshuffled list.
-            var newUnShuffledList = new List<IMediaSourceConfig?>();
+            var newUnShuffledList = new List<PlaybackItem?>();
             newUnShuffledList.AddRange(_handlerService.PreviousItems);
             newUnShuffledList.Add(_handlerService.CurrentItem);
             newUnShuffledList.AddRange(_handlerService.NextItems);
@@ -239,13 +247,13 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             // The next items and previous items COUNT is not necesserily equal to original prev and next items because we changed the currentItem.
             // Original Order.
-            var unshuffledList = new List<IMediaSourceConfig?>();
+            var unshuffledList = new List<PlaybackItem?>();
             unshuffledList.AddRange(_previousItems);
             unshuffledList.Add(_currentItem);
             unshuffledList.AddRange(_nextItems);
 
             // Processed Unshuffled list.
-            var newUnShuffledList = new List<IMediaSourceConfig?>();
+            var newUnShuffledList = new List<PlaybackItem?>();
             newUnShuffledList.AddRange(_handlerService.PreviousItems);
             newUnShuffledList.Add(_handlerService.CurrentItem);
             newUnShuffledList.AddRange(_handlerService.NextItems);
@@ -279,14 +287,16 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
 
             Assert.IsTrue(_handlerService.ShuffleState);
-            var newItems = new List<IMediaSourceConfig>();
+            var newItems = new List<PlaybackItem>();
 
             for (int i = 0; i < nextIndexes.Length; i++)
             {
                 var itemToAdd = new MediaSourceConfig(_mockTrack, $"New Item: {nextIndexes[i]}", Stream.Null, "mp3");
 
-                _handlerService.InsertNext(nextIndexes[i], itemToAdd);
-                newItems.Add(itemToAdd);
+                var playbackItem = GetPlaybackItem(itemToAdd);
+
+                _handlerService.InsertNext(nextIndexes[i], playbackItem);
+                newItems.Add(playbackItem);
             }
 
             // Turn shuffle off.
@@ -330,7 +340,7 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             Assert.IsNotNull(_handlerService);
 
             await Shuffle_Queue(numberOfPreviousItems, numberOfNextItems);
-            var itemsRemoved = new List<IMediaSourceConfig>();
+            var itemsRemoved = new List<PlaybackItem>();
 
             for (int i = 0; i < nextIndexes.Length; i++)
             {
@@ -441,8 +451,10 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             Assert.IsTrue(_handlerService.ShuffleState);
 
+            var playbackItem = GetPlaybackItem(itemToAdd);
+
             // Adding an item.
-            _handlerService.InsertNext(addIndex, itemToAdd);
+            _handlerService.InsertNext(addIndex, playbackItem);
 
             // Removing an item.
             _handlerService.RemoveNext(addIndex);
@@ -456,6 +468,18 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
 
             CollectionAssert.AllItemsAreNotNull(_handlerService.NextItems.ToList());
             CollectionAssert.AllItemsAreNotNull(_handlerService.PreviousItems.ToList());
+        }
+
+
+        private PlaybackItem GetPlaybackItem(MediaSourceConfig mediaSourceConfig)
+        {
+            Assert.IsNotNull(_mockTrack, nameof(_mockTrack));
+
+            return new PlaybackItem()
+            {
+                MediaConfig = mediaSourceConfig,
+                Track = null,
+            };
         }
     }
 }

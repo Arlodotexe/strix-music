@@ -28,17 +28,17 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// The items that should be played next.
         /// </summary>
-        IReadOnlyList<IMediaSourceConfig> NextItems { get; }
+        IReadOnlyList<PlaybackItem> NextItems { get; }
 
         /// <summary>
         /// Items that precede the currently playing item. Used to go to the previous track in the playback context.
         /// </summary>
-        IReadOnlyCollection<IMediaSourceConfig> PreviousItems { get; }
+        IReadOnlyCollection<PlaybackItem> PreviousItems { get; }
 
         /// <summary>
         /// The currently playing item.
         /// </summary>
-        IMediaSourceConfig? CurrentItem { get; }
+        PlaybackItem? CurrentItem { get; }
 
         /// <summary>
         /// True if the player is using a shuffled track list.
@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <param name="sourceConfig">The item to insert.</param>
-        void InsertNext(int index, IMediaSourceConfig sourceConfig);
+        void InsertNext(int index, PlaybackItem sourceConfig);
 
         /// <summary>
         /// Removes an item from the <see cref="NextItems"/>.
@@ -164,14 +164,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// Adds an item to the top of <see cref="PreviousItems"/>.
         /// </summary>
         /// <param name="sourceConfig">The item to insert.</param>
-        void PushPrevious(IMediaSourceConfig sourceConfig);
+        void PushPrevious(PlaybackItem sourceConfig);
 
         /// <summary>
         /// Removes and returns item from top of the <see cref="PreviousItems"/> stack.
         /// </summary>
         /// <param name="index">The index to insert the item at.</param>
         /// <returns>The <see cref="IMediaSourceConfig"/> that was in the requested index.</returns>
-        IMediaSourceConfig PopPrevious(int index);
+        PlaybackItem PopPrevious(int index);
 
         /// <summary>
         /// Clears all items from <see cref="PreviousItems"/>.
@@ -209,17 +209,17 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Fires when the <see cref="NextItems"/> are updated.
         /// </summary>
-        event CollectionChangedEventHandler<IMediaSourceConfig>? NextItemsChanged;
+        event CollectionChangedEventHandler<PlaybackItem>? NextItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="PreviousItems"/> are updated.
         /// </summary>
-        event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
+        event CollectionChangedEventHandler<PlaybackItem>? PreviousItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="CurrentItem"/> is changed.
         /// </summary>
-        event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
+        event EventHandler<PlaybackItem?>? CurrentItemChanged;
 
         /// <summary>
         /// Raised when a quantum of data is processed. 
