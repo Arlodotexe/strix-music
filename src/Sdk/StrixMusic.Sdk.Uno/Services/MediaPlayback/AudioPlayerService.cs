@@ -17,8 +17,8 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
     public sealed class AudioPlayerService : IAudioPlayerService
     {
         private readonly MediaPlayerElement _player;
-        private readonly Dictionary<string, IMediaSourceConfig> _preloadedSources;
-        private IMediaSourceConfig? _currentSource;
+        private readonly Dictionary<string, PlaybackItem> _preloadedSources;
+        private PlaybackItem? _currentSource;
         private PlaybackState _playbackState;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             Guard.IsNotNull(player.MediaPlayer, nameof(player.MediaPlayer));
 
             _player = player;
-            _preloadedSources = new Dictionary<string, IMediaSourceConfig>();
+            _preloadedSources = new Dictionary<string, PlaybackItem>();
 
             AttachEvents();
         }
@@ -110,10 +110,10 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         public event EventHandler<float[]>? QuantumProcessed;
 
         /// <inheritdoc/>
-        public event EventHandler<IMediaSourceConfig?>? CurrentSourceChanged;
+        public event EventHandler<PlaybackItem?>? CurrentSourceChanged;
 
         /// <inheritdoc />
-        public IMediaSourceConfig? CurrentSource
+        public PlaybackItem? CurrentSource
         {
             get => _currentSource;
             set
@@ -144,8 +144,12 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         public double PlaybackSpeed => _player.MediaPlayer.PlaybackSession.PlaybackRate;
 
         /// <inheritdoc />
-        public async Task Play(IMediaSourceConfig sourceConfig)
+        public async Task Play(PlaybackItem playbackItem)
         {
+            var sourceConfig = playbackItem.MediaConfig;
+
+            Guard.IsNotNull(sourceConfig, nameof(sourceConfig));
+
             await Threading.OnPrimaryThread(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
@@ -169,17 +173,21 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                     _player.MediaPlayer.Source = source;
                 }
 
-                CurrentSource = sourceConfig;
+                CurrentSource = playbackItem;
 
                 _player.MediaPlayer.Play();
             });
         }
 
         /// <inheritdoc />
-        public Task Preload(IMediaSourceConfig sourceConfig)
+        public Task Preload(PlaybackItem playbackItem)
         {
+            var sourceConfig = playbackItem.MediaConfig;
+
+            Guard.IsNotNull(sourceConfig, nameof(sourceConfig));
+
             // TODO: preload the track
-            _preloadedSources.Add(sourceConfig.Id, sourceConfig);
+            _preloadedSources.Add(sourceConfig.Id, playbackItem);
 
             return Task.CompletedTask;
         }

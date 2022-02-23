@@ -21,8 +21,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         private static readonly Random _rng = new Random();
 
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>();
-        private readonly List<IMediaSourceConfig> _prevItems = new List<IMediaSourceConfig>();
-        private List<IMediaSourceConfig> _nextItems = new List<IMediaSourceConfig>();
+        private readonly List<PlaybackItem> _prevItems = new List<PlaybackItem>();
+        private List<PlaybackItem> _nextItems = new List<PlaybackItem>();
 
         private int[] _shuffleMap;
 
@@ -68,7 +68,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             audioPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
-        private void CurrentPlayerService_CurrentSourceChanged(object sender, IMediaSourceConfig? e)
+        private void CurrentPlayerService_CurrentSourceChanged(object sender, PlaybackItem? e)
         {
             CurrentItem = e;
             CurrentItemChanged?.Invoke(this, e);
@@ -115,13 +115,13 @@ namespace StrixMusic.Sdk.MediaPlayback
         public event EventHandler<bool>? ShuffleStateChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IMediaSourceConfig>? NextItemsChanged;
+        public event CollectionChangedEventHandler<PlaybackItem>? NextItemsChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
+        public event CollectionChangedEventHandler<PlaybackItem>? PreviousItemsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
+        public event EventHandler<PlaybackItem?>? CurrentItemChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged;
@@ -139,13 +139,13 @@ namespace StrixMusic.Sdk.MediaPlayback
         public event EventHandler<float[]>? QuantumProcessed;
 
         /// <inheritdoc />
-        public IReadOnlyList<IMediaSourceConfig> NextItems => _nextItems;
+        public IReadOnlyList<PlaybackItem> NextItems => _nextItems;
 
         /// <inheritdoc />
-        public IReadOnlyCollection<IMediaSourceConfig> PreviousItems => _prevItems;
+        public IReadOnlyCollection<PlaybackItem> PreviousItems => _prevItems;
 
         /// <inheritdoc />
-        public IMediaSourceConfig? CurrentItem { get; internal set; }
+        public PlaybackItem? CurrentItem { get; internal set; }
 
         /// <inheritdoc />
         public bool ShuffleState => _shuffleState;
@@ -192,20 +192,22 @@ namespace StrixMusic.Sdk.MediaPlayback
                 DetachEvents(_currentPlayerService);
             }
 
-            var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
+            var playbackItem = NextItems.ElementAtOrDefault(queueIndex);
 
-            if (mediaSource is null)
+            if (playbackItem is null)
                 return;
 
-            _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore.InstanceId];
+            Guard.IsNotNull(playbackItem.MediaConfig, nameof(playbackItem.MediaConfig));
+
+            _currentPlayerService = _audioPlayerRegistry[playbackItem.MediaConfig.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
             if (CurrentItem != null)
                 _prevItems.Add(CurrentItem);
 
-            CurrentItem = mediaSource;
-            _nextItems.Remove(mediaSource);
-            await _currentPlayerService.Play(mediaSource);
+            CurrentItem = playbackItem;
+            _nextItems.Remove(playbackItem);
+            await _currentPlayerService.Play(playbackItem);
         }
 
         /// <inheritdoc />
@@ -213,18 +215,19 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             Guard.IsNotNull(_currentPlayerService, nameof(_currentPlayerService));
 
-            var mediaSource = PreviousItems.ElementAtOrDefault(queueIndex);
+            var playbackItem = PreviousItems.ElementAtOrDefault(queueIndex);
 
-            Guard.IsNotNull(mediaSource, nameof(mediaSource));
+            Guard.IsNotNull(playbackItem, nameof(playbackItem));
+            Guard.IsNotNull(playbackItem.MediaConfig, nameof(playbackItem.MediaConfig));
 
             await _currentPlayerService.PauseAsync();
             DetachEvents(_currentPlayerService);
 
-            _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore.InstanceId];
+            _currentPlayerService = _audioPlayerRegistry[playbackItem.MediaConfig.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
             // TODO shift queue, move tracks after the played item into next
-            await _currentPlayerService.Play(mediaSource);
+            await _currentPlayerService.Play(playbackItem);
         }
 
         /// <inheritdoc />
@@ -232,7 +235,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             if (_currentPlayerService == null && CurrentItem != null)
             {
-                _currentPlayerService = _audioPlayerRegistry[CurrentItem.Track.SourceCore.InstanceId];
+                Guard.IsNotNull(CurrentItem.MediaConfig, nameof(CurrentItem.MediaConfig));
+                _currentPlayerService = _audioPlayerRegistry[CurrentItem.MediaConfig.Track.SourceCore.InstanceId];
             }
 
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
@@ -252,7 +256,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (NextItems.Count <= nextIndex)
                 return;
 
-            IMediaSourceConfig? nextItem = null;
+            PlaybackItem? nextItem = null;
 
             if (RepeatState == RepeatState.One && !(CurrentItem is null))
             {
@@ -270,16 +274,19 @@ namespace StrixMusic.Sdk.MediaPlayback
                 _nextItems.Remove(nextItem);
             }
 
-            var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var removedItems = new List<CollectionChangedItem<PlaybackItem>>()
                 {
-                    new CollectionChangedItem<IMediaSourceConfig>(nextItem, nextIndex),
+                    new CollectionChangedItem<PlaybackItem>(nextItem, nextIndex),
                 };
 
-            var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var addedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
 
-            _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore.InstanceId];
+            var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            Guard.IsNotNull(instanceId, nameof(instanceId));
+
+            _currentPlayerService = _audioPlayerRegistry[instanceId];
             AttachEvents(_currentPlayerService);
 
             await _currentPlayerService.Play(nextItem);
@@ -292,14 +299,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         public Task PreviousAsync() => PreviousAsync(true);
 
         /// <inheritdoc />
-        public void InsertNext(int index, IMediaSourceConfig sourceConfig)
+        public void InsertNext(int index, PlaybackItem sourceConfig)
         {
-            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<IMediaSourceConfig>(sourceConfig, index),
+                new CollectionChangedItem<PlaybackItem>(sourceConfig, index),
             };
 
-            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             _nextItems.InsertOrAdd(index, sourceConfig);
 
@@ -327,12 +334,12 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public void RemoveNext(int index)
         {
-            var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var removedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<IMediaSourceConfig>(NextItems[index], index),
+                new CollectionChangedItem<PlaybackItem>(NextItems[index], index),
             };
 
-            var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var addedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             _nextItems.RemoveAt(index);
 
@@ -362,14 +369,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         public void ClearNext() => _nextItems.Clear();
 
         /// <inheritdoc />
-        public void PushPrevious(IMediaSourceConfig sourceConfig)
+        public void PushPrevious(PlaybackItem sourceConfig)
         {
-            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<IMediaSourceConfig>(sourceConfig, PreviousItems.Count),
+                new CollectionChangedItem<PlaybackItem>(sourceConfig, PreviousItems.Count),
             };
 
-            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             _prevItems.Add(sourceConfig);
 
@@ -377,16 +384,16 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public IMediaSourceConfig PopPrevious(int index)
+        public PlaybackItem PopPrevious(int index)
         {
             var returnItem = _prevItems.Pop();
 
-            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<IMediaSourceConfig>(returnItem, PreviousItems.Count),
+                new CollectionChangedItem<PlaybackItem>(returnItem, PreviousItems.Count),
             };
 
-            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             PreviousItemsChanged?.Invoke(this, addedItems, removedItems);
 
@@ -400,7 +407,10 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             if (_currentPlayerService == null && CurrentItem != null)
             {
-                _currentPlayerService = _audioPlayerRegistry[CurrentItem.Track.SourceCore.InstanceId];
+                var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+                Guard.IsNotNull(instanceId, nameof(instanceId));
+
+                _currentPlayerService = _audioPlayerRegistry[instanceId];
             }
 
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
@@ -414,7 +424,10 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Last();
 
-            _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore.InstanceId];
+            var instId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            Guard.IsNotNull(instId, nameof(instId));
+
+            _currentPlayerService = _audioPlayerRegistry[instId];
             AttachEvents(_currentPlayerService);
 
             await _currentPlayerService.Play(newItem);
@@ -448,7 +461,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             var originalCurrentItemIndex = _shuffleMap[_prevItems.Count];
 
             // The space complexity will remain O(n), because we are not cloning any list we are simply references same items each time.
-            var unshuffledItems = new List<IMediaSourceConfig>();
+            var unshuffledItems = new List<PlaybackItem>();
 
             unshuffledItems.AddRange(_prevItems);
 
@@ -488,7 +501,7 @@ namespace StrixMusic.Sdk.MediaPlayback
             _shuffleMap = Array.Empty<int>();
 
             // This list is only used for shuffle purpose, at the end we will extract nextitems out of it.
-            var list = new List<IMediaSourceConfig>();
+            var list = new List<PlaybackItem>();
 
             list.AddRange(_prevItems);
 

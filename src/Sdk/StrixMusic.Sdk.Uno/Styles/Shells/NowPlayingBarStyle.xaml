@@ -25,73 +25,67 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="shell:NowPlayingBar">
-                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="sdk:MainViewModel">
-                                    <UserControl>
-                                        <Grid VerticalAlignment="Center">
-                                            <VisualStateManager.VisualStateGroups>
-                                                <VisualStateGroup x:Name="Sizes">
-                                                    <VisualState x:Name="Small">
-                                                        <VisualState.StateTriggers>
-                                                            <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
-                                                        </VisualState.StateTriggers>
-                                                        <VisualState.Setters>
-                                                            <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
-                                                            <Setter Target="sliderRow.Height" Value="48"/>
-                                                            <Setter Target="slider.(Grid.Row)" Value="1"/>
-                                                            <Setter Target="slider.(Grid.Column)" Value="0"/>
-                                                            <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                    <VisualState x:Name="Large">
-                                                        <VisualState.StateTriggers>
-                                                            <AdaptiveTrigger MinWindowWidth="1200"/>
-                                                        </VisualState.StateTriggers>
-                                                        <VisualState.Setters>
-                                                            <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
-                                                            <Setter Target="sliderRow.Height" Value="0"/>
-                                                            <Setter Target="slider.(Grid.Row)" Value="0"/>
-                                                            <Setter Target="slider.(Grid.Column)" Value="1"/>
-                                                            <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
-                                                        </VisualState.Setters>
-                                                    </VisualState>
-                                                </VisualStateGroup>
-                                            </VisualStateManager.VisualStateGroups>
+                        <UserControl>
+                            <Grid VerticalAlignment="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="Sizes">
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
+                                                <Setter Target="sliderRow.Height" Value="48"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="1"/>
+                                                <Setter Target="slider.(Grid.Column)" Value="0"/>
+                                                <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1200"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
+                                                <Setter Target="sliderRow.Height" Value="0"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="0"/>
+                                                <Setter Target="slider.(Grid.Column)" Value="1"/>
+                                                <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
 
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="96"/>
-                                                <RowDefinition x:Name="sliderRow" Height="0"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"/>
-                                                <ColumnDefinition x:Name="sliderColumn"/>
-                                                <ColumnDefinition Width="auto"/>
-                                            </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="96"/>
+                                    <RowDefinition x:Name="sliderRow" Height="0"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition x:Name="sliderColumn"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                            <!--Media info-->
-                                            <nowplaying:MediaInfo MaxWidth="300"/>
+                                <!--Media info-->
+                                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
 
-                                            <!--Media slider control-->
-                                            <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
-                                                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
+                                <!--Media slider control-->
+                                <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
+                                                                    IsAdvancing="{Binding ActiveDevice.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                                                    Value="{Binding ActiveDevice.Position.TotalMilliseconds, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                                                    Maximum="{Binding ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
-                                                <interactivity:Interaction.Behaviors>
-                                                    <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                                                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                                                    </core:EventTriggerBehavior>
-                                                </interactivity:Interaction.Behaviors>
-                                            </nowplaying:MediaSlider>
+                                    <interactivity:Interaction.Behaviors>
+                                        <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                                        </core:EventTriggerBehavior>
+                                    </interactivity:Interaction.Behaviors>
+                                </nowplaying:MediaSlider>
 
-                                            <!--Media transport controls-->
-                                            <nowplaying:MediaTransports Main="{Binding}"  Grid.Column="2"/>
-                                        </Grid>
-                                    </UserControl>
-                                </DataTemplate>
-                            </ContentControl.ContentTemplate>
-                        </ContentControl>
+                                <!--Media transport controls-->
+                                <nowplaying:MediaTransports Device="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Grid.Column="2"/>
+                            </Grid>
+                        </UserControl>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

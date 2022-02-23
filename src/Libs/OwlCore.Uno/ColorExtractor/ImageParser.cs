@@ -23,10 +23,11 @@ namespace OwlCore.Uno.ColorExtractor
             if (string.IsNullOrEmpty(url))
                 return null;
 
-            var imageStreamAsync = await GetImageStreamAsync(url);
+            using var imageStreamAsync = await GetImageStreamAsync(url);
             var image = await Image.LoadAsync(imageStreamAsync);
+            var clonedImage = image.CloneAs<Argb32>();
 
-            return image.CloneAs<Argb32>();
+            return clonedImage;
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace OwlCore.Uno.ColorExtractor
             var uri = new Uri(url);
 
             if (uri.IsFile)
-                return File.Open(uri.LocalPath, FileMode.Open);
+                return File.Open(uri.LocalPath, FileMode.Open, FileAccess.Read);
 
             var response = await WebRequest.CreateHttp(url).GetResponseAsync();
             return response.GetResponseStream();

@@ -123,7 +123,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _systemMediaTransportControls.UpdateTimelineProperties(new SystemMediaTransportControlsTimelineProperties
             {
                 Position = e,
-                EndTime = _playbackHandlerService.CurrentItem?.Track.Duration ?? TimeSpan.MaxValue,
+                EndTime = _playbackHandlerService.CurrentItem?.Track?.Duration ?? TimeSpan.MaxValue,
                 StartTime = TimeSpan.Zero,
             });
         }
@@ -161,7 +161,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             };
         }
 
-        private async void PlaybackHandlerService_CurrentItemChanged(object sender, IMediaSourceConfig? e)
+        private async void PlaybackHandlerService_CurrentItemChanged(object sender, PlaybackItem? e)
         {
             var updater = _systemMediaTransportControls.DisplayUpdater;
             updater.Type = MediaPlaybackType.Music;
@@ -173,6 +173,9 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 updater.Update();
                 return;
             }
+            Guard.IsNotNull(e.Track, nameof(e.Track));
+
+            var sourceConfig = e;
 
             PlaybackHandlerService_PlaybackStateChanged(sender, _playbackHandlerService.PlaybackState);
             _systemMediaTransportControls.IsNextEnabled = _playbackHandlerService.NextItems.Count > 0;
@@ -186,7 +189,10 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             else
             {
                 // Just the first, we don't care about the size.
-                await foreach (var image in e.Track.GetImagesAsync(1, 0))
+
+                var images = await e.Track.GetImagesAsync(1, 0);
+
+                 foreach (var image in images)
                 {
                     if (image.Uri.IsFile)
                     {
@@ -204,7 +210,10 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             // Genres
             musicProperties.Genres.Clear();
-            await foreach (var genre in e.Track.GetGenresAsync(e.Track.TotalGenreCount, 0))
+
+            var genres = await e.Track.GetGenresAsync(1, 0);
+
+            foreach (var genre in genres)
                 musicProperties.Genres.Add(genre.Name);
 
             // Track info
@@ -213,7 +222,10 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             // Artist info
             // Just the first (primary) artist.
-            await foreach (var artist in e.Track.GetArtistItemsAsync(1, 0))
+
+            var artists = await e.Track.GetArtistItemsAsync(1, 0);
+
+             foreach (var artist in artists)
             {
                 musicProperties.Artist = artist.Name;
                 break;

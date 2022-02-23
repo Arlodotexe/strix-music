@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
