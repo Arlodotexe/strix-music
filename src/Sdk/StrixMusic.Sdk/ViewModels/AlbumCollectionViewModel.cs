@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -145,64 +144,55 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable)));
 
-        private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void AlbumCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void AlbumCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void AlbumCollectionViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+        private void AlbumCollectionViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
+                UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
-                    UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedAlbums)
-                    {
-                        if (!Albums.Contains(item))
-                            Albums.Add(item);
-                    }
-
-                    foreach (var item in Albums)
-                    {
-                        if (!UnsortedAlbums.Contains(item))
-                            Albums.Remove(item);
-                    }
-
-                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedAlbums)
+                {
+                    if (!Albums.Contains(item))
+                        Albums.Add(item);
                 }
-            });
-        }
+
+                foreach (var item in Albums)
+                {
+                    if (!UnsortedAlbums.Contains(item))
+                        Albums.Remove(item);
+                }
+
+                SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+            }
+        });
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged

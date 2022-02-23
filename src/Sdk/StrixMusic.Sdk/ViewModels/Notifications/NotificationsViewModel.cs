@@ -59,30 +59,21 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             _notificationService.NotificationDismissed -= NotificationService_NotificationDismissed;
         }
 
-        private void NotificationService_NotificationDismissed(object sender, Notification e)
+        private void NotificationService_NotificationDismissed(object sender, Notification e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                var relevantNotification = Notifications.FirstOrDefault(x => ReferenceEquals(x.Model, e));
-                if (relevantNotification is null)
-                    return;
+            var relevantNotification = Notifications.FirstOrDefault(x => ReferenceEquals(x.Model, e));
+            if (relevantNotification is null)
+                return;
 
-                Notifications.Remove(relevantNotification);
-            });
-        }
+            Notifications.Remove(relevantNotification);
+        });
 
-        private void NotificationService_NotificationRaised(object sender, Notification e)
+        private void NotificationService_NotificationRaised(object sender, Notification e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Notifications.Add(new NotificationViewModel(e));
-            });
-        }
+            Notifications.Add(new NotificationViewModel(e));
+        });
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            DetachEvents();
-        }
+        public void Dispose() => DetachEvents();
     }
 }

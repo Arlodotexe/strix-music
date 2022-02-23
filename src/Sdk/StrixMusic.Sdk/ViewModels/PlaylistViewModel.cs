@@ -293,52 +293,43 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
-        private void PlaylistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        private void PlaylistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+            }
+            else
+            {
+                // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedTracks)
                 {
-                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    if (!Tracks.Contains(item))
+                        Tracks.Add(item);
                 }
-                else
+
+                foreach (var item in Tracks)
                 {
-                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedTracks)
-                    {
-                        if (!Tracks.Contains(item))
-                            Tracks.Add(item);
-                    }
-
-                    foreach (var item in Tracks)
-                    {
-                        if (!UnsortedTracks.Contains(item))
-                            Tracks.Remove(item);
-                    }
-
-                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                    if (!UnsortedTracks.Contains(item))
+                        Tracks.Remove(item);
                 }
-            });
-        }
 
-        private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+                SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+            }
+        });
 
-        private void PlaylistViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
+
+        private void PlaylistViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }

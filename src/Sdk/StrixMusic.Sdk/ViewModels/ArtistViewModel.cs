@@ -353,95 +353,83 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable)));
 
-        private async void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private async void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => await Threading.OnPrimaryThread(() =>
         {
-            await Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
 
-        private async void ArtistViewModel_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems)
+        private async void ArtistViewModel_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => await Threading.OnPrimaryThread(() =>
         {
-            await Threading.OnPrimaryThread(() =>
-            {
-                Genres.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Genres.ChangeCollection(addedItems, removedItems);
+        });
 
-        private async void ArtistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        private async void ArtistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => await Threading.OnPrimaryThread(() =>
         {
-            await Threading.OnPrimaryThread(() =>
+            if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+            }
+            else
+            {
+                // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedTracks)
                 {
-                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    if (!Tracks.Contains(item))
+                        Tracks.Add(item);
                 }
-                else
+
+                foreach (var item in Tracks)
                 {
-                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedTracks)
-                    {
-                        if (!Tracks.Contains(item))
-                            Tracks.Add(item);
-                    }
-
-                    foreach (var item in Tracks)
-                    {
-                        if (!UnsortedTracks.Contains(item))
-                            Tracks.Remove(item);
-                    }
-
-                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                    if (!UnsortedTracks.Contains(item))
+                        Tracks.Remove(item);
                 }
-            });
-        }
 
-        private async void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+                SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+            }
+        });
+
+        private async void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems) => await Threading.OnPrimaryThread(() =>
         {
-            await Threading.OnPrimaryThread(() =>
+            if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
+                UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
-                    UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedAlbums)
-                    {
-                        if (!Albums.Contains(item))
-                            Albums.Add(item);
-                    }
-
-                    foreach (var item in Albums)
-                    {
-                        if (!UnsortedAlbums.Contains(item))
-                            Albums.Remove(item);
-                    }
-
-                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedAlbums)
+                {
+                    if (!Albums.Contains(item))
+                        Albums.Add(item);
                 }
-            });
-        }
+
+                foreach (var item in Albums)
+                {
+                    if (!UnsortedAlbums.Contains(item))
+                        Albums.Remove(item);
+                }
+
+                SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+            }
+        });
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }

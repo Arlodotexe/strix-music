@@ -51,24 +51,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="trackSorting">The <see cref="TrackSortingType"/> by which to sort.</param>
         /// <param name="sortDirection">The direction by which to sort.</param>
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection);
-
+        
         /// <summary>
-        /// Loads the collection of <see cref="ITrack"/> for the first time.
+        /// Loads the entire collection of <see cref="ITrack"/>s and ensures all sources are merged.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task InitTrackCollectionAsync();
 
-        /// <summary>
         /// Initializes the list of the <see cref="ITrack"/>.
-        /// </summary>
         public IAsyncRelayCommand InitTrackCollectionAsyncCommand { get; }
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
-        /// <summary>
         /// <inheritdoc cref="ITrackCollectionBase.PlayTrackCollectionAsync"/>
-        /// </summary>
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
 
         /// <summary>
@@ -76,18 +72,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }
 
-        /// <summary>
         /// <inheritdoc cref="ITrackCollectionBase.PauseTrackCollectionAsync"/>
-        /// </summary>
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
-
+        
         /// <summary>
-        /// Adjustes sorting to maintain its direction, with a new type.
+        /// Sorts the collection with a new type.
         /// </summary>
         public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
-
+        
         /// <summary>
-        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// Sorts the collection with a new direction.
         /// </summary>
         public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
     }

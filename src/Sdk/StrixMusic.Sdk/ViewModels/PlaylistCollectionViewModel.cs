@@ -147,56 +147,50 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayPlaylistCollectionAsyncAvailable)));
 
-        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
+        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
             {
-                if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
+                Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
+                UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
-                    UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedPlaylists)
-                    {
-                        if (!Playlists.Contains(item))
-                            Playlists.Add(item);
-                    }
-
-                    foreach (var item in Playlists)
-                    {
-                        if (!UnsortedPlaylists.Contains(item))
-                            UnsortedPlaylists.Remove(item);
-                    }
-
-                    SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedPlaylists)
+                {
+                    if (!Playlists.Contains(item))
+                        Playlists.Add(item);
                 }
-            });
-        }
+
+                foreach (var item in Playlists)
+                {
+                    if (!UnsortedPlaylists.Contains(item))
+                        UnsortedPlaylists.Remove(item);
+                }
+
+                SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
+            }
+        });
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged

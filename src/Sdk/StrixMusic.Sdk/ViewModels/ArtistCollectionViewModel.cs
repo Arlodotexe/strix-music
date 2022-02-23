@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -158,64 +157,55 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)));
 
-        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
-                if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
+                UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
-                    UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedArtists)
-                    {
-                        if (!Artists.Contains(item))
-                            Artists.Add(item);
-                    }
-
-                    foreach (var item in Artists)
-                    {
-                        if (!UnsortedArtists.Contains(item))
-                            Artists.Remove(item);
-                    }
-
-                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedArtists)
+                {
+                    if (!Artists.Contains(item))
+                        Artists.Add(item);
                 }
-            });
-        }
+
+                foreach (var item in Artists)
+                {
+                    if (!UnsortedArtists.Contains(item))
+                        Artists.Remove(item);
+                }
+
+                SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+            }
+        });
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged

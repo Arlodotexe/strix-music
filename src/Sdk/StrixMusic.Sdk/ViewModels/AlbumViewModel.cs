@@ -125,6 +125,8 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged += AlbumViewModel_ImagesChanged;
             GenresCountChanged += OnGenresItemsCountChanged;
             GenresChanged += OnGenresChanged;
+            UrlsCountChanged += OnUrlsCountChanged;
+            UrlsChanged += OnUrlsChanged;
         }
 
         private void DetachEvents()
@@ -368,95 +370,88 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsChangeDatePublishedAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDatePublishedAsyncAvailableChanged)));
 
-        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+            }
+            else
+            {
+                // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedTracks)
                 {
-                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    if (!Tracks.Contains(item))
+                        Tracks.Add(item);
                 }
-                else
+
+                foreach (var item in Tracks)
                 {
-                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedTracks)
-                    {
-                        if (!Tracks.Contains(item))
-                            Tracks.Add(item);
-                    }
-
-                    foreach (var item in Tracks)
-                    {
-                        if (!UnsortedTracks.Contains(item))
-                            Tracks.Remove(item);
-                    }
-
-                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                    if (!UnsortedTracks.Contains(item))
+                        Tracks.Remove(item);
                 }
-            });
-        }
 
-        private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+                SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+            }
+        });
+
+        private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
-                if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
+                UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
-                    UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedArtists)
-                    {
-                        if (!Artists.Contains(item))
-                            Artists.Add(item);
-                    }
-
-                    foreach (var item in Artists)
-                    {
-                        if (!UnsortedArtists.Contains(item))
-                            Artists.Remove(item);
-                    }
-
-                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedArtists)
+                {
+                    if (!Artists.Contains(item))
+                        Artists.Add(item);
                 }
-            });
-        }
 
-        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+                foreach (var item in Artists)
+                {
+                    if (!UnsortedArtists.Contains(item))
+                        Artists.Remove(item);
+                }
 
-        private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems)
+                SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+            }
+        });
+
+        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Genres.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
+
+        private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Genres.ChangeCollection(addedItems, removedItems);
+        });
+
+        private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
         /// <inheritdoc />
         public string Id => _album.Id;
