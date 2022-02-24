@@ -66,9 +66,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="sortDirection">The direction by which to sort.</param>
         public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection);
 
-        /// <summary>
         /// <inheritdoc cref="IPlaylistCollectionBase.PlayPlaylistCollectionAsync"/>
-        /// </summary>
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
 
         /// <summary>
@@ -80,14 +78,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IPlaylistCollectionBase.PausePlaylistCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
-
+        
         /// <summary>
-        /// Adjustes sorting to maintain its direction, with a new type.
+        /// Sorts the collection with a new type.
         /// </summary>
         public IRelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
-
+        
         /// <summary>
-        /// Adjustes sorting to maintain its type, with a new direction.
+        /// Sorts the collection with a new direction.
         /// </summary>
         public IRelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
     }

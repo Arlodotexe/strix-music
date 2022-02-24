@@ -91,6 +91,13 @@ namespace StrixMusic.Sdk.Models
         /// <inheritdoc/>
         public event EventHandler<int>? UrlsCountChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         /// <inheritdoc />
         public int TotalImageCount => Images.Count;
 
@@ -114,6 +121,9 @@ namespace StrixMusic.Sdk.Models
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc />
         public PlaybackState PlaybackState { get; }
@@ -219,6 +229,12 @@ namespace StrixMusic.Sdk.Models
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
         {
             throw new NotSupportedException();
         }

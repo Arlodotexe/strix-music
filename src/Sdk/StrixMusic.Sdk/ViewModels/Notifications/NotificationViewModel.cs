@@ -55,9 +55,6 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         public IRelayCommand DismissCommand { get; set; }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            _abstractUINotificationViewModel?.Dispose();
-        }
+        public void Dispose() => _abstractUINotificationViewModel?.Dispose();
     }
 }

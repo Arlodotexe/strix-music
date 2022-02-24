@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -31,13 +30,9 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IArtistCollection _collection;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
-        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1,1);
-        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1,1);
-        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1,1);
-
-        private DownloadInfo _downloadInfo;
+        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
@@ -47,7 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal ArtistCollectionViewModel(MainViewModel root, IArtistCollection collection)
         {
             Root = root;
-            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            _collection = root.Plugins.ModelPlugins.ArtistCollection.Execute(collection);
 
             SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(root.GetLoadedCore).ToList();
 
@@ -68,8 +63,7 @@ namespace StrixMusic.Sdk.ViewModels
             InitArtistCollectionAsyncCommand = new AsyncRelayCommand(InitArtistCollectionAsync);
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
 
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _collection.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x))));
 
             using (Threading.PrimaryContext)
             {
@@ -99,6 +93,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             LastPlayedChanged += OnLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
 
             IsPlayArtistCollectionAsyncAvailableChanged += OnIsPlayArtistCollectionAsyncAvailableChanged;
             IsPauseArtistCollectionAsyncAvailableChanged += OnIsPauseArtistCollectionAsyncAvailableChanged;
@@ -120,6 +115,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
 
             IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
             IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
@@ -141,6 +137,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
+
         private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
 
         private void ArtistCollectionViewModel_UrlsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
@@ -159,70 +157,68 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)));
 
-        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
-        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
-                if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
+                UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
-                    UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IArtist artist => new ArtistViewModel(Root, artist),
-                        IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                    IArtist artist => new ArtistViewModel(Root, artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedArtists)
-                    {
-                        if (!Artists.Contains(item))
-                            Artists.Add(item);
-                    }
-
-                    foreach (var item in Artists)
-                    {
-                        if (!UnsortedArtists.Contains(item))
-                            Artists.Remove(item);
-                    }
-
-                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedArtists)
+                {
+                    if (!Artists.Contains(item))
+                        Artists.Add(item);
                 }
-            });
-        }
+
+                foreach (var item in Artists)
+                {
+                    if (!UnsortedArtists.Contains(item))
+                        Artists.Remove(item);
+                }
+
+                SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
+            }
+        });
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _collection.PlaybackStateChanged += value;
             remove => _collection.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => _collection.DownloadInfoChanged += value;
+            remove => _collection.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -352,11 +348,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo
-        {
-            get => _downloadInfo;
-            private set => SetProperty(ref _downloadInfo, value);
-        }
+        public DownloadInfo DownloadInfo => _collection.DownloadInfo;
 
         /// <inheritdoc />
         public ArtistSortingType CurrentArtistSortingType { get; private set; }
@@ -454,11 +446,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
-        {
-            // TODO create / integrate download manager.
-            throw new NotImplementedException();
-        }
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _collection.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -488,13 +476,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
+        public Task PlayArtistCollectionAsync() => _collection.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseArtistCollectionAsync() => _collection.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistInternalAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _collection.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);
@@ -626,13 +614,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollection other) => _collection.Equals(other);
-
-        private Task PlayArtistInternalAsync(IArtistCollectionItem? artistCollectionItem)
-        {
-            Guard.IsNotNull(artistCollectionItem, nameof(artistCollectionItem));
-
-            return _playbackHandler.PlayAsync(artistCollectionItem, this, this);
-        }
 
         private Task ChangeNameInternalAsync(string? name)
         {

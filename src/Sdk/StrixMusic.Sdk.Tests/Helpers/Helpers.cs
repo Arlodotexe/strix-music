@@ -3,14 +3,97 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections;
 
 namespace StrixMusic.Sdk.Tests
 {
     internal static class Helpers
     {
+        public static void AssertAllThrowsOnMemberAccess<TException>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
+            where TException : Exception
+        {
+            AssertAllThrowsOnMemberAccess(value.GetType(), value, mustContainMembers, customFilter, typesToExclude, new[] { typeof(TException) });
+        }
+
+
+        public static void AssertAllMembersThrowOnAccess<TException, TInterfaceFilter>(object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, params Type[] typesToExclude)
+            where TException : Exception
+        {
+            AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, new[] { typeof(TException) });
+        }
+
+        public static void AssertAllThrowsOnMemberAccess<TInterfaceFilter>(object value, Type[] expectedExceptions, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null)
+        {
+            AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, expectedExceptions);
+        }
+
+        public static void AssertAllThrowsOnMemberAccess(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null, Type[]? expectedExceptions = null)
+        {
+            Assert.IsNotNull(expectedExceptions);
+            var thrownExceptions = new List<Type>();
+
+            var instanceType = value.GetType();
+            var typeMethods = type.GetMethods();
+            var allExcludedMethods = typesToExclude?.SelectMany(x => x.GetMethods()) ?? Enumerable.Empty<MethodInfo>();
+
+            var methods = instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                                      .Where(x => customFilter?.Invoke(x) ?? true)
+                                      .Where(x => typeMethods.Any(y => x.ToString() == y.ToString()))
+                                      .Where(x => !allExcludedMethods.Any() || !allExcludedMethods.Any(y => y.ToString() == x.ToString()))
+                                      .ToArray();
+
+            if (instanceType != type)
+            {
+                methods = instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                                      .Where(x => customFilter?.Invoke(x) ?? true)
+                                      .Where(x => typeMethods.Any(y => x.ToString() == y.ToString()))
+                                      .Where(x => !allExcludedMethods.Any() || !allExcludedMethods.Any(y => y.ToString() == x.ToString()))
+                                      .ToArray();
+            }
+
+            if (mustContainMembers)
+            {
+                Assert.AreNotEqual(0, methods.Length);
+            }
+
+            foreach (var method in methods)
+            {
+                try
+                {
+                    method!.Invoke(value, method.GetParameters().Select(TransformMethodParam).ToArray());
+
+                    object? TransformMethodParam(ParameterInfo param)
+                    {
+                        if (param.DefaultValue is DBNull)
+                            return null;
+
+                        if (param.ParameterType.IsValueType)
+                            return Activator.CreateInstance(param.ParameterType);
+
+                        return param.RawDefaultValue;
+                    }
+                }
+                catch (TargetInvocationException ex)
+                {
+                    if (ex.InnerException is AggregateException aggregateException)
+                    {
+                        foreach (var innerEx in aggregateException.InnerExceptions)
+                        {
+                            thrownExceptions.Add(innerEx.GetType());
+                            Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} threw an unexpected exception: {innerEx}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
+                        }
+                    }
+                    else
+                    {
+                        thrownExceptions.Add(ex.InnerException!.GetType());
+                        Assert.IsTrue(expectedExceptions.Contains(ex.InnerException!.GetType()), $"{method.Name} threw an unexpected exception: {ex.InnerException}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
+                    }
+                }
+            }
+
+            foreach (var item in expectedExceptions)
+                Assert.IsTrue(thrownExceptions.Contains(item), $"An expected exception {item} was not thrown.");
+        }
 
         public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)
         {
@@ -152,6 +235,7 @@ namespace StrixMusic.Sdk.Tests
 
             Assert.IsNotNull(originalParamProps);
             Assert.IsNotNull(deserParamProps);
+            Assert.AreNotEqual(0, originalParamProps.Length);
 
             for (int o = 0; o < originalParamProps.Length; o++)
             {
@@ -205,6 +289,7 @@ namespace StrixMusic.Sdk.Tests
 
             Assert.IsNotNull(originalParamProps);
             Assert.IsNotNull(deserParamProps);
+            Assert.AreNotEqual(0, originalParamProps.Length);
 
             for (int o = 0; o < originalParamProps.Length; o++)
             {

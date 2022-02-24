@@ -251,6 +251,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         private void ImagesCollectionMap_ItemsCountChanged(object sender, int e)
         {
             TotalImageCount = e;
@@ -378,6 +385,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState { get; internal set; }
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; } = new TimeSpan(0);
@@ -732,6 +742,12 @@ namespace StrixMusic.Sdk.Models.Merged
         public Task RemoveUrlAsync(int index)
         {
             return _urlCollectionMap.RemoveAt(index);
+        }
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />

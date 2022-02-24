@@ -2,8 +2,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Tests.Mock.Core;
 using System.Threading.Tasks;
-using System;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -103,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            core.CoreState = Models.CoreState.NeedsSetup;
+            core.CoreState = Sdk.Models.CoreState.NeedsSetup;
 
             // Wait for changes to propogate
             await Task.Delay(1000);

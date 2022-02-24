@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Models
     /// Represents an item that can be played.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IPlayable : IPlayableBase, ISdkMember
+    public interface IPlayable : IPlayableBase, IDownloadable, IImageCollection, IUrlCollection, ISdkMember
     {
     } 
 }

@@ -2,7 +2,6 @@
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractUI.Models;
 using System;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -13,7 +12,6 @@ using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Helpers;
 using OwlCore.Extensions;
 using TaskStatus = System.Threading.Tasks.TaskStatus;
-using System.Net.Http;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {

@@ -37,24 +37,15 @@ namespace StrixMusic.Sdk.ViewModels
             AttachEvents();
         }
 
-        private void AttachEvents()
-        {
-            _coreConfig.AbstractUIElementsChanged += CoreConfig_AbstractUIElementsChanged;
-        }
+        private void AttachEvents() => _coreConfig.AbstractUIElementsChanged += CoreConfig_AbstractUIElementsChanged;
 
-        private void DetachEvents()
-        {
-            _coreConfig.AbstractUIElementsChanged -= CoreConfig_AbstractUIElementsChanged;
-        }
+        private void DetachEvents() => _coreConfig.AbstractUIElementsChanged -= CoreConfig_AbstractUIElementsChanged;
 
-        private async void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e)
+        private async void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e) => await Threading.OnPrimaryThread(() =>
         {
-            await Threading.OnPrimaryThread(() =>
-            {
-                AbstractUIElements.Clear();
-                AbstractUIElements.Add(new AbstractUICollectionViewModel(_coreConfig.AbstractUIElements));
-            });
-        }
+            AbstractUIElements.Clear();
+            AbstractUIElements.Add(new AbstractUICollectionViewModel(_coreConfig.AbstractUIElements));
+        });
 
         /// <inheritdoc/>
         public IServiceProvider? Services => _coreConfig.Services;

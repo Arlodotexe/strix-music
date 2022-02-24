@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -20,6 +19,8 @@ using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.Plugins;
+using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
@@ -169,6 +170,8 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitAsync()
         {
+            Plugins.ModelPlugins = GlobalModelPluginConnector.Create(Plugins.ModelPlugins);
+
             var coreInstanceRegistry = await _coreManagementService.GetCoreInstanceRegistryAsync();
 
             Guard.IsNotNull(coreInstanceRegistry, nameof(coreInstanceRegistry));
@@ -231,9 +234,9 @@ namespace StrixMusic.Sdk
                 return null;
 
             var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
-            if (coreMetadata.SdkVersion != currentSdkVersion)
+            if (coreMetadata.SdkVer != currentSdkVersion)
             {
-                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVersion}, which is not compatible with the current version {currentSdkVersion}.");
+                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVer}, which is not compatible with the current version {currentSdkVersion}.");
                 return null;
             }
 
@@ -395,6 +398,9 @@ namespace StrixMusic.Sdk
         /// A consolidated list of all users in the app.
         /// </summary>
         public ObservableCollection<UserViewModel> Users { get; private set; }
+
+        /// <inheritdoc />
+        public PluginManager Plugins { get; } = new();
 
         /// <summary>
         /// All available devices.

@@ -255,6 +255,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
@@ -304,6 +311,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public PlaybackState PlaybackState { get; internal set; }
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
@@ -478,6 +488,13 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public Task RemoveUrlAsync(int index) => _urlCollectionMap.RemoveAt(index);
+
+
+        /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <summary>
         /// Adds a new source to this merged item.

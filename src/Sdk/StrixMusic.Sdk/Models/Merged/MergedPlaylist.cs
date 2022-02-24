@@ -122,6 +122,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc/>
         public event EventHandler<int>? UrlsCountChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => throw new NotSupportedException();
+            remove => throw new NotSupportedException();
+        }
+
         private void AttachEvents(ICorePlaylist source)
         {
             AttachPlayableEvents(source);
@@ -322,6 +329,12 @@ namespace StrixMusic.Sdk.Models.Merged
         public Task RemoveUrlAsync(int index) => _imageCollectionMap.RemoveAt(index);
 
         /// <inheritdoc/>
+        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
         public IUserProfile? Owner { get; }
 
         /// <inheritdoc/>
@@ -347,6 +360,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState { get; internal set; }
+
+        /// <inheritdoc/>
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; }

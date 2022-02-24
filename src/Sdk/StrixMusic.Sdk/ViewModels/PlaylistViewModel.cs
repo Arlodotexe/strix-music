@@ -40,8 +40,6 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
 
-        private DownloadInfo _downloadInfo;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
@@ -49,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
         internal PlaylistViewModel(MainViewModel root, IPlaylist playlist)
         {
-            _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
+            _playlist = root.Plugins.ModelPlugins.Playlist.Execute(playlist);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
             _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
             Root = root;
@@ -112,6 +110,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += CorePlaylistNameChanged;
             PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
 
             IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged += OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -133,6 +132,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= CorePlaylistNameChanged;
             PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
 
             IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged -= OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -153,6 +153,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _playlist.PlaybackStateChanged += value;
             remove => _playlist.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => _playlist.DownloadInfoChanged += value;
+            remove => _playlist.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -262,6 +269,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
+
         private void CorePlaylistNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
         private void CorePlaylistDescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
@@ -284,52 +293,43 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
-        private void PlaylistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        private void PlaylistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+            }
+            else
+            {
+                // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedTracks)
                 {
-                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    if (!Tracks.Contains(item))
+                        Tracks.Add(item);
                 }
-                else
+
+                foreach (var item in Tracks)
                 {
-                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedTracks)
-                    {
-                        if (!Tracks.Contains(item))
-                            Tracks.Add(item);
-                    }
-
-                    foreach (var item in Tracks)
-                    {
-                        if (!UnsortedTracks.Contains(item))
-                            Tracks.Remove(item);
-                    }
-
-                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                    if (!UnsortedTracks.Contains(item))
+                        Tracks.Remove(item);
                 }
-            });
-        }
 
-        private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+                SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+            }
+        });
 
-        private void PlaylistViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+            Images.ChangeCollection(addedItems, removedItems);
+        });
+
+        private void PlaylistViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -406,11 +406,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _playlist.PlaybackState;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo
-        {
-            get => _downloadInfo;
-            private set => SetProperty(ref _downloadInfo, value);
-        }
+        public DownloadInfo DownloadInfo => _playlist.DownloadInfo;
 
         /// <inheritdoc />
         public int TotalTrackCount => _playlist.TotalTrackCount;
@@ -473,11 +469,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseTrackCollectionAsync() => _playlist.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
-        {
-            // TODO create / integrate download manager.
-            throw new NotImplementedException();
-        }
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _playlist.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

@@ -1,14 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Tests.Mock.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
@@ -420,7 +417,6 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             {
                 _previousItems.InsertOrAdd(newPrevItems.IndexOf(itemToSwap), itemToSwap);
             }
-
 
             CollectionAssert.AreEqual(newNextItems, _handlerService.NextItems.ToList());
             CollectionAssert.AreEqual(newPrevItems, _handlerService.PreviousItems.ToList());

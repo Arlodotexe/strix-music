@@ -7,15 +7,36 @@ using OwlCore.Events;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.Plugins;
+using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Models
 {
     /// <summary>
-    /// Allows for interfacing with multiple merged <see cref="ICore"/> instances.
+    /// Implementations provide a root entrypoint for interaction with the SDK. Allows for interfacing with multiple
+    /// merged <see cref="ICore"/>s, configuring plugins, and more. 
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
     public interface IAppCore : ICoreBase, ISdkMember, IMerged<ICore>
     {
+        /// <summary>
+        /// All available and configured plugins for this instance.
+        /// </summary>
+        /// <remarks>
+        ///         NOTICE:
+        /// <para/> Model plugins cannot be applied automatically to classes which merge core data, as it would hide members 
+        ///         of <see cref="IMergedMutable{T}"/> and prevent you from adding or removing sources. Instead, create your
+        ///         instance of <see cref="IMerged{T}"/>, then pass it to the corresponding plugin builder.
+        ///         
+        /// <para/> Once built, the returned instance will have plugins applied on top of the <see cref="IMergedMutable{T}"/> instance.
+        ///         If no plugins override functionality when accessing a member, the provided <see cref="IMergedMutable{T}"/> will be used instead.
+        /// <para/> See <see cref="SdkModelPlugins"/> for more info.
+        /// </remarks>
+        /// <seealso cref="SdkModelPlugins"/>
+        /// <seealso cref="SdkModelPlugin"/>
+        /// <seealso cref="GlobalModelPluginConnector"/>
+        public PluginManager Plugins { get; }
+        
         /// <summary>
         /// The available devices.
         /// </summary>

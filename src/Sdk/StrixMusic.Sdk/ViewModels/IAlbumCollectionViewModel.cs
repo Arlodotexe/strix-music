@@ -28,10 +28,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The type of sorting used for <see cref="Albums"/>.
+        /// </summary>
         public AlbumSortingType CurrentAlbumSortingType { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The direction to sort <see cref="Albums"/>.
+        /// </summary>
         public SortDirection CurrentAlbumSortingDirection { get; }
 
         /// <summary>
@@ -80,12 +84,12 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Adjustes sorting to maintain its direction, with a new type.
+        /// Sorts the collection with a new type.
         /// </summary>
         public IRelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
 
         /// <summary>
-        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// Sorts the collection with a new direction.
         /// </summary>
         public IRelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
     }

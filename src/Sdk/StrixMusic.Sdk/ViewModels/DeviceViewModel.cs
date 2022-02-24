@@ -200,7 +200,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? IsActiveChanged
         {
             add => Model.IsActiveChanged += value;
-
             remove => Model.IsActiveChanged -= value;
         }
 
@@ -208,7 +207,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<IPlayableBase>? PlaybackContextChanged
         {
             add => Model.PlaybackContextChanged += value;
-
             remove => Model.PlaybackContextChanged -= value;
         }
 
@@ -219,7 +217,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<TimeSpan>? PositionChanged
         {
             add => Model.PositionChanged += value;
-
             remove => Model.PositionChanged -= value;
         }
 
@@ -227,7 +224,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => Model.PlaybackStateChanged += value;
-
             remove => Model.PlaybackStateChanged -= value;
         }
 
@@ -235,7 +231,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? ShuffleStateChanged
         {
             add => Model.ShuffleStateChanged += value;
-
             remove => Model.ShuffleStateChanged -= value;
         }
 
@@ -243,7 +238,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<RepeatState>? RepeatStateChanged
         {
             add => Model.RepeatStateChanged += value;
-
             remove => Model.RepeatStateChanged -= value;
         }
 
@@ -251,7 +245,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<double>? VolumeChanged
         {
             add => Model.VolumeChanged += value;
-
             remove => Model.VolumeChanged -= value;
         }
 
@@ -259,74 +252,40 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<double>? PlaybackSpeedChanged
         {
             add => Model.PlaybackSpeedChanged += value;
-
             remove => Model.PlaybackSpeedChanged -= value;
         }
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed)
-        {
-            return Model.ChangePlaybackSpeedAsync(speed);
-        }
+        public Task ChangePlaybackSpeedAsync(double speed) => Model.ChangePlaybackSpeedAsync(speed);
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume)
-        {
-            return Model.ChangeVolumeAsync(volume);
-        }
+        public Task ChangeVolumeAsync(double volume) => Model.ChangeVolumeAsync(volume);
 
         /// <inheritdoc />
-        public Task NextAsync()
-        {
-            return Model.NextAsync();
-        }
+        public Task NextAsync() => Model.NextAsync();
 
         /// <inheritdoc />
-        public Task PauseAsync()
-        {
-            return Model.PauseAsync();
-        }
+        public Task PauseAsync() => Model.PauseAsync();
 
         /// <inheritdoc />
-        public Task PreviousAsync()
-        {
-            return Model.PreviousAsync();
-        }
+        public Task PreviousAsync() => Model.PreviousAsync();
 
         /// <inheritdoc />
-        public Task ResumeAsync()
-        {
-            return Model.ResumeAsync();
-        }
+        public Task ResumeAsync() => Model.ResumeAsync();
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position)
-        {
-            return Model.SeekAsync(position);
-        }
+        public Task SeekAsync(TimeSpan position) => Model.SeekAsync(position);
 
         /// <inheritdoc />
-        public Task SwitchToAsync()
-        {
-            return Model.SwitchToAsync();
-        }
+        public Task SwitchToAsync() => Model.SwitchToAsync();
 
         /// <inheritdoc />
-        public Task ToggleRepeatAsync()
-        {
-            return Model.ToggleRepeatAsync();
-        }
+        public Task ToggleRepeatAsync() => Model.ToggleRepeatAsync();
 
         /// <inheritdoc />
-        public Task ToggleShuffleAsync()
-        {
-            return Model.ToggleShuffleAsync();
-        }
+        public Task ToggleShuffleAsync() => Model.ToggleShuffleAsync();
 
-        private Task TogglePauseResume()
-        {
-            return IsPlaying ? PauseAsync() : ResumeAsync();
-        }
+        private Task TogglePauseResume() => IsPlaying ? PauseAsync() : ResumeAsync();
 
         /// <summary>
         /// Attempts to change playback speed.

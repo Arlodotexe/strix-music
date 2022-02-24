@@ -46,7 +46,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\..\..\stylecop.json" />
+		<None Remove="LICENSE" />
+		<None Remove="LICENSE.ADDITIONAL" />
+		<None Remove="LICENSE.LESSER" />
 	</ItemGroup>
 
 </Project>

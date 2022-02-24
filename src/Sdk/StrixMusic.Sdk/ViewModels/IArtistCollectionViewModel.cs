@@ -82,14 +82,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IArtistCollectionBase.PauseArtistCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
-
+        
         /// <summary>
-        /// Adjustes sorting to maintain its direction, with a new type.
+        /// Sorts the collection with a new type.
         /// </summary>
         public IRelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
-
+        
         /// <summary>
-        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// Sorts the collection with a new direction.
         /// </summary>
         public IRelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
     }

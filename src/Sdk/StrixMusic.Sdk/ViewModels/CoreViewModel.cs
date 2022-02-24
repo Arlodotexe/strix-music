@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -87,22 +86,16 @@ namespace StrixMusic.Sdk.ViewModels
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
         }
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data, _settingsService)));
-            });
-        }
+            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data, _settingsService)));
+        });
 
-        private void Core_InstanceDescriptorChanged(object sender, string e)
+        private void Core_InstanceDescriptorChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                OnPropertyChanged(nameof(InstanceDescriptor));
-                InstanceDescriptorChanged?.Invoke(sender, e);
-            });
-        }
+            OnPropertyChanged(nameof(InstanceDescriptor));
+            InstanceDescriptorChanged?.Invoke(sender, e);
+        });
 
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e)

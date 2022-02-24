@@ -379,6 +379,11 @@ namespace StrixMusic.Shared
             DataContext = mainViewModel;
             Bindings.Update();
 
+            UpdateStatus("SetupPlugins");
+            _logger?.LogInformation($"Services initialized, setting up plugins");
+
+            mainViewModel.Plugins.ModelPlugins.Import(new Sdk.Plugins.PlaybackHandler.PlaybackHandlerPlugin(_playbackHandlerService));
+
             _navService.RegisterCommonPage(_mainPage);
             App.AppFrame.SetupMainViewModel(mainViewModel);
             App.AppFrame.SetupNotificationService((NotificationService)notificationService);

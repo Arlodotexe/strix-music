@@ -32,17 +32,13 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
-        private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1,1);
+        private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateAlbumsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populatePlaylistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateChildrenMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
-
-        private DownloadInfo _downloadInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
@@ -51,10 +47,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
         internal PlayableCollectionGroupViewModel(MainViewModel root, IPlayableCollectionGroup collectionGroup)
         {
-            _collectionGroup = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
+            _collectionGroup = root.Plugins.ModelPlugins.PlayableCollectionGroup.Execute(collectionGroup);
             Root = root;
-
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             SourceCores = _collectionGroup.GetSourceCores<ICorePlayableCollectionGroup>().Select(root.GetLoadedCore).ToList();
 
@@ -67,10 +61,10 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
-            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlayPlaylistCollectionInternalAsync);
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistCollectionInternalAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _collectionGroup.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(x => _collectionGroup.PlayAlbumCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IAlbumCollectionItem>(nameof(x))));
+            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(x => _collectionGroup.PlayPlaylistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IPlaylistCollectionItem>(nameof(x))));
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _collectionGroup.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x))));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -124,6 +118,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
             LastPlayedChanged += CollectionGroupLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged += CollectionGroupOnTrackItemsCountChanged;
@@ -161,6 +156,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
             LastPlayedChanged -= CollectionGroupLastPlayedChanged;
+            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged -= CollectionGroupOnTrackItemsCountChanged;
@@ -209,6 +205,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collectionGroup.PlaybackStateChanged += value;
             remove => _collectionGroup.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        {
+            add => _collectionGroup.DownloadInfoChanged += value;
+            remove => _collectionGroup.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -406,6 +409,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void CollectionGroupPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
+
         private void CollectionGroupOnTotalChildrenCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalChildrenCount)));
 
         private void CollectionGroupOnPlaylistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalPlaylistItemsCount)));
@@ -444,159 +449,138 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
-        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
-                {
-                    // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
-                    UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(Root, album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedAlbums)
-                    {
-                        if (!Albums.Contains(item))
-                            Albums.Add(item);
-                    }
-
-                    foreach (var item in Albums)
-                    {
-                        if (!UnsortedAlbums.Contains(item))
-                            Albums.Remove(item);
-                    }
-
-                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
-                }
-            });
-        }
-
-        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                {
-                    IArtist artist => new ArtistViewModel(Root, artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
-                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
-            });
-        }
-
-        private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
+            }
+            else
             {
-                Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(Root, item.Data));
-            });
-        }
-
-        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
+                // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
+                UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
+                    IAlbum album => new AlbumViewModel(Root, album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedAlbums)
                 {
-                    // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
-                    UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IPlaylist playlist => new PlaylistViewModel(Root, playlist),
-                        IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedPlaylists)
-                    {
-                        if (!Playlists.Contains(item))
-                            Playlists.Add(item);
-                    }
-
-                    foreach (var item in Playlists)
-                    {
-                        if (!UnsortedPlaylists.Contains(item))
-                            UnsortedPlaylists.Remove(item);
-                    }
-
-                    SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
+                    if (!Albums.Contains(item))
+                        Albums.Add(item);
                 }
-            });
-        }
 
-        private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread((Action)(() =>
-            {
-                if (this.CurrentTracksSortingType == TrackSortingType.Unsorted)
+                foreach (var item in Albums)
                 {
-                    Tracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    if (!UnsortedAlbums.Contains(item))
+                        Albums.Remove(item);
                 }
-                else
+
+                SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+            }
+        });
+
+        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+            {
+                IArtist artist => new ArtistViewModel(Root, artist),
+                IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+            });
+        });
+
+        private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(Root, item.Data));
+        });
+
+        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
+            {
+                Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
-                    UnsortedTracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                    IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
+                UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                {
+                    IPlaylist playlist => new PlaylistViewModel(Root, playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(Root, collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedTracks)
-                    {
-                        if (!Tracks.Contains(item))
-                            Tracks.Add(item);
-                    }
-
-                    foreach (var item in Tracks)
-                    {
-                        if (!UnsortedTracks.Contains(item))
-                            Tracks.Remove(item);
-                    }
-
-                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedPlaylists)
+                {
+                    if (!Playlists.Contains(item))
+                        Playlists.Add(item);
                 }
-            }));
-        }
 
-        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
+                foreach (var item in Playlists)
+                {
+                    if (!UnsortedPlaylists.Contains(item))
+                        UnsortedPlaylists.Remove(item);
+                }
 
-        private void PlayableCollectionGroupViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+                SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
+            }
+        });
+
+        private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _ = Threading.OnPrimaryThread((Action)(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
+            if (this.CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                Urls.ChangeCollection(addedItems, removedItems);
-            });
-        }
+                Tracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+            }
+            else
+            {
+                // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                UnsortedTracks.ChangeCollection<ITrack, TrackViewModel>(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+
+                // Avoiding direct assignment to prevent effect on UI.
+                foreach (var item in UnsortedTracks)
+                {
+                    if (!Tracks.Contains(item))
+                        Tracks.Add(item);
+                }
+
+                foreach (var item in Tracks)
+                {
+                    if (!UnsortedTracks.Contains(item))
+                        Tracks.Remove(item);
+                }
+
+                SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+            }
+        }));
+
+        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Images.ChangeCollection(addedItems, removedItems);
+        });
+
+        private void PlayableCollectionGroupViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        {
+            Urls.ChangeCollection(addedItems, removedItems);
+        });
 
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
@@ -746,11 +730,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collectionGroup.PlaybackState;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo
-        {
-            get => _downloadInfo;
-            private set => SetProperty(ref _downloadInfo, value);
-        }
+        public DownloadInfo DownloadInfo => _collectionGroup.DownloadInfo;
 
         /// <inheritdoc />
         public bool IsPlayPlaylistCollectionAsyncAvailable => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailable;
@@ -828,11 +808,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collectionGroup.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
-        {
-            // TODO create / integrate download manager.
-            throw new NotImplementedException();
-        }
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _collectionGroup.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -1050,25 +1026,25 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => _collectionGroup.PlayAlbumCollectionAsync(albumItem);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync() => _playbackHandler.PlayAsync((IAlbumCollectionViewModel)this, _collectionGroup);
+        public Task PlayAlbumCollectionAsync() => _collectionGroup.PlayAlbumCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseAlbumCollectionAsync() => _collectionGroup.PauseAlbumCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _collectionGroup.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _collectionGroup);
+        public Task PlayArtistCollectionAsync() => _collectionGroup.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseArtistCollectionAsync() => _collectionGroup.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup) => PlayPlayableCollectionGroupInternalAsync(collectionGroup);
+        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup) => _collectionGroup.PlayPlaylistCollectionAsync(collectionGroup);
 
         /// <inheritdoc />
         public Task PlayPlayableCollectionGroupAsync() => _collectionGroup.PlayPlayableCollectionGroupAsync();
@@ -1077,22 +1053,22 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PausePlayableCollectionGroupAsync() => _collectionGroup.PausePlayableCollectionGroupAsync();
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => PlayPlaylistCollectionInternalAsync(playlistItem);
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => _collectionGroup.PlayPlaylistCollectionAsync(playlistItem);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync() => _playbackHandler.PlayAsync((IPlaylistCollectionViewModel)this, _collectionGroup);
+        public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PausePlaylistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PausePlaylistCollectionAsync() => _collectionGroup.PausePlaylistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track) => _collectionGroup.PlayTrackCollectionAsync(track);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, this);
+        public Task PlayTrackCollectionAsync() => _collectionGroup.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseTrackCollectionAsync() => _collectionGroup.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
         public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection)
@@ -1304,38 +1280,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(name, nameof(name));
             return _collectionGroup.ChangeNameAsync(name);
-        }
-
-        private Task PlayTrackCollectionInternalAsync(ITrack? track)
-        {
-            Guard.IsNotNull(track, nameof(track));
-            return _playbackHandler.PlayAsync(track, this, _collectionGroup);
-        }
-
-        private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
-        {
-            Guard.IsNotNull(albumItem, nameof(albumItem));
-            return _playbackHandler.PlayAsync(albumItem, this, _collectionGroup);
-        }
-
-        private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
-        {
-            Guard.IsNotNull(artistItem, nameof(artistItem));
-            return _playbackHandler.PlayAsync(artistItem, this, _collectionGroup);
-        }
-
-        private Task PlayPlaylistCollectionInternalAsync(IPlaylistCollectionItem? playlistItem)
-        {
-            Guard.IsNotNull(playlistItem, nameof(playlistItem));
-
-            return _playbackHandler.PlayAsync(playlistItem, this, _collectionGroup);
-        }
-
-        private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)
-        {
-            Guard.IsNotNull(collectionGroup, nameof(collectionGroup));
-
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

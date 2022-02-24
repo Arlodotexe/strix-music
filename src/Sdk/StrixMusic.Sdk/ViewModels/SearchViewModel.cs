@@ -35,16 +35,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query)
-        {
-            return _search.GetSearchAutoCompleteAsync(query);
-        }
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query) => _search.GetSearchAutoCompleteAsync(query);
 
         /// <inheritdoc />
-        public bool Equals(ICoreSearch other)
-        {
-            return _search.Equals(other);
-        }
+        public bool Equals(ICoreSearch other) => _search.Equals(other);
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearch> Sources => _search.Sources;
@@ -56,16 +50,10 @@ namespace StrixMusic.Sdk.ViewModels
         public MainViewModel Root { get; }
 
         /// <inheritdoc />
-        public Task<ISearchResults> GetSearchResultsAsync(string query)
-        {
-            return _search.GetSearchResultsAsync(query);
-        }
+        public Task<ISearchResults> GetSearchResultsAsync(string query) => _search.GetSearchResultsAsync(query);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries()
-        {
-            return _search.GetRecentSearchQueries();
-        }
+        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries() => _search.GetRecentSearchQueries();
 
         /// <inheritdoc />
         ISearchHistory? ISearch.SearchHistory => _search.SearchHistory;
@@ -76,9 +64,6 @@ namespace StrixMusic.Sdk.ViewModels
         public SearchHistoryViewModel? SearchHistory { get; }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            return _search.DisposeAsync();
-        }
+        public ValueTask DisposeAsync() => _search.DisposeAsync();
     }
 }

@@ -144,4 +144,7 @@
   <data name="StrixMusicStrixTB.Text" xml:space="preserve">
     <value>Strix</value>
   </data>
+  <data name="SetupPlugins" xml:space="preserve">
+    <value>Setting up plugins</value>
+  </data>
 </root>
