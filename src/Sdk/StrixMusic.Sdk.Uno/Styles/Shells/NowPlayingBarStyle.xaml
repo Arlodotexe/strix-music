@@ -90,7 +90,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="shell:NowPlayingBar">
-                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" DataContext="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
+                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" Content="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
