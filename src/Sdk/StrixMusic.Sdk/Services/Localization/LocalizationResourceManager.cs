@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.Services
 {
@@ -18,29 +17,7 @@ namespace StrixMusic.Sdk.Services
         private readonly Dictionary<string, ResourceManager> _providers = new Dictionary<string, ResourceManager>();
 
         /// <inheritdoc/>
-        public string this[string provider, string key] => _providers.ContainsKey(provider) ? _providers[provider].GetString(key, CultureInfo.CurrentUICulture) : "ResourceError";
-
-        /// <inheritdoc/>
-        public string LocalizeIfNullOrEmpty(string value, string provider, string key)
-        {
-            if (string.IsNullOrEmpty(value))
-                return this[provider, key];
-            else
-                return value;
-        }
-
-        /// <inheritdoc/>
-        public string LocalizeIfNullOrEmpty<T>(string value, T sender)
-        {
-            return sender switch
-            {
-                IAlbum _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
-                IArtist _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
-
-                // Default to unknown name
-                _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownName"),
-            };
-        }
+        public string this[string provider, string key] => (_providers.ContainsKey(provider) ? _providers[provider].GetString(key, CultureInfo.CurrentUICulture) : "ResourceError") ?? "?";
 
         /// <summary>
         /// Registers a new provider.
