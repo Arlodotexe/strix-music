@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreateAlbum(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreateAlbum(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICoreAlbumCollectionItem>(newItem, 1);
 
@@ -77,7 +77,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreateArtist(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreateArtist(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICoreArtistCollectionItem>(newItem, 1);
 
@@ -133,7 +133,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreatePlaylist(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreatePlaylist(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICorePlaylistCollectionItem>(newItem, 1);
 
@@ -189,7 +189,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreateTrack(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreateTrack(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICoreTrack>(newItem, 1);
 
@@ -245,7 +245,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreateImage(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreateImage(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICoreImage>(newItem, 1);
 
@@ -301,7 +301,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreateUrl(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreateUrl(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICoreUrl>(newItem, 1);
 
@@ -357,7 +357,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var newItem = MockItemFactory.CreatePlayableCollectionGroup(remoteClientCore);
+            var newItem = MockCoreItemFactory.CreatePlayableCollectionGroup(remoteClientCore);
 
             var expectedCollectionChangedData = new CollectionChangedItem<ICorePlayableCollectionGroup>(newItem, 1);
 

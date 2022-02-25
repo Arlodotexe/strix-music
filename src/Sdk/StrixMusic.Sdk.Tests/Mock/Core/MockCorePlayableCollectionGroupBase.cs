@@ -390,7 +390,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreateAlbum(SourceCore);
+                yield return MockCoreItemFactory.CreateAlbum(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
@@ -398,7 +398,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreateArtist(SourceCore);
+                yield return MockCoreItemFactory.CreateArtist(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset)
@@ -406,7 +406,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreatePlayableCollectionGroup(SourceCore);
+                yield return MockCoreItemFactory.CreatePlayableCollectionGroup(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
@@ -414,7 +414,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreateImage(SourceCore);
+                yield return MockCoreItemFactory.CreateImage(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
@@ -422,7 +422,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreatePlaylist(SourceCore);
+                yield return MockCoreItemFactory.CreatePlaylist(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
@@ -430,7 +430,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreateTrack(SourceCore);
+                yield return MockCoreItemFactory.CreateTrack(SourceCore);
         }
 
         public virtual async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
@@ -438,7 +438,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Yield();
 
             for (int i = 0; i < limit; i++)
-                yield return MockItemFactory.CreateUrl(SourceCore);
+                yield return MockCoreItemFactory.CreateUrl(SourceCore);
         }
 
         public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);

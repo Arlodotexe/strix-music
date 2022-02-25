@@ -50,6 +50,8 @@ namespace StrixMusic.Sdk.Models.Merged
             _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, settingsService);
             _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
 
+            Name = _preferredSource.Name;
+            
             foreach (var item in _sources)
             {
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
@@ -303,7 +305,7 @@ namespace StrixMusic.Sdk.Models.Merged
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc/>
-        public string Name => _preferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc/>
         public TrackType Type => _preferredSource.Type;
