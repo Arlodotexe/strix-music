@@ -8,6 +8,7 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:vm="using:StrixMusic.Sdk.ViewModels"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -22,10 +23,7 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="DefaultZuneMediaInfoStyle" TargetType="nowplaying:MediaInfo">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="nowplaying:MediaInfo">
+    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="vm:DeviceViewModel">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
@@ -40,28 +38,40 @@
                             <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
                         </controls:DropShadowPanel>
 
-                        <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding NowPlaying.Track}"/>
 
-                        <TextBlock Text="{Binding Device.NowPlaying.Track.Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+                         <TextBlock Text="{Binding NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    IsAdvancing="{Binding Device.IsPlaying, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    Value="{Binding Device.Position.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    Maximum="{Binding Device.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    IsAdvancing="{x:Bind IsPlaying,Mode=OneWay}"
+                                    Value="{x:Bind Position.TotalMilliseconds,Mode=OneWay}"
+                                    Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                     FlowDirection="LeftToRight">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                                    <core:InvokeCommandAction Command="{Binding Device.SeekAsyncCommand, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                        <core:InvokeCommandAction Command="{x:Bind SeekAsyncCommand}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </nowplaying:MediaSlider>
                     </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+    </DataTemplate>
+
+
+    <Style x:Key="DefaultZuneMediaInfoStyle" TargetType="nowplaying:MediaInfo">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="nowplaying:MediaInfo">
+                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" Content="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
+                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
     </Style>
+
 
     <Style TargetType="nowplaying:MediaInfo" BasedOn="{StaticResource DefaultZuneMediaInfoStyle}"/>
 </ResourceDictionary>
