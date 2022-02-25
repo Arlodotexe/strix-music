@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
@@ -103,7 +104,14 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_NowPlayingChanged(object sender, PlaybackItem e) => _ = Threading.OnPrimaryThread(() =>
         {
-            NowPlaying = e;
+            Guard.IsNotNull(e.Track, nameof(e.Track));
+
+            NowPlaying = new PlaybackItem() 
+            {
+                MediaConfig = e.MediaConfig, 
+                Track = new TrackViewModel(Root, e.Track)
+            };
+
             NowPlayingChanged?.Invoke(sender, e);
         });
 
