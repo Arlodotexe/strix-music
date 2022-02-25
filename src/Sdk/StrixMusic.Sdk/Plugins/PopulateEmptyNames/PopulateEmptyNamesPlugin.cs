@@ -40,7 +40,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         set
         {
             Album.Clear();
-            Album.Add(x => new PopulateEmptyAlbumNamePlugin(_metadata, x, value));
+            if (!string.IsNullOrWhiteSpace(value))
+                Album.Add(x => new PopulateEmptyAlbumNamePlugin(_metadata, x, value));
+
             _emptyAlbumName = value;
         }
     }
@@ -54,7 +56,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         set
         {
             Artist.Clear();
-            Artist.Add(x => new PopulateEmptyArtistNamePlugin(_metadata, x, value));
+            if (!string.IsNullOrWhiteSpace(value))
+                Artist.Add(x => new PopulateEmptyArtistNamePlugin(_metadata, x, value));
+
             _emptyArtistName = value;
         }
     }
@@ -68,7 +72,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         set
         {
             Playlist.Clear();
-            Playlist.Add(x => new PopulateEmptyPlaylistNamePlugin(_metadata, x, value));
+            if (!string.IsNullOrWhiteSpace(value))
+                Playlist.Add(x => new PopulateEmptyPlaylistNamePlugin(_metadata, x, value));
+
             _emptyPlaylistName = value;
         }
     }
@@ -82,7 +88,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         set
         {
             Track.Clear();
-            Track.Add(x => new PopulateEmptyTrackNamePlugin(_metadata, x, value));
+            if (!string.IsNullOrWhiteSpace(value))
+                Track.Add(x => new PopulateEmptyTrackNamePlugin(_metadata, x, value));
+
             _emptyTrackName = value;
         }
     }
@@ -96,7 +104,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         set
         {
             Playable.Clear();
-            Playable.Add(x => new PopulateEmptyPlayableNamePlugin(_metadata, x, value));
+            if (!string.IsNullOrWhiteSpace(value))
+                Playable.Add(x => new PopulateEmptyPlayableNamePlugin(_metadata, x, value));
+
             _emptyDefaultName = value;
         }
     }

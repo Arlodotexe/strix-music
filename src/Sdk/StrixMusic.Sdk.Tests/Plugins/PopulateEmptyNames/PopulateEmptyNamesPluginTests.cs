@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
     public class PopulateEmptyNamesPluginTests
     {
         private const string IncorrectPluginCountMsg = "Exactly one empty name plugin should exist per item type.";
-        
+
         [TestMethod]
         public void PopulatesEmptyNames()
         {
@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreNotEqual(string.Empty, plugin.EmptyTrackName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyPlaylistName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyDefaultName);
-            
+
             Assert.AreEqual(1, plugin.Album.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Artist.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Playlist.Count, IncorrectPluginCountMsg);
@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreNotEqual(string.Empty, plugin.EmptyTrackName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyPlaylistName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyDefaultName);
-            
+
             Assert.AreEqual(1, plugin.Album.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Artist.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Playlist.Count, IncorrectPluginCountMsg);
@@ -141,7 +141,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
                 Assert.AreEqual(1, plugin.Playlist.Count, IncorrectPluginCountMsg);
                 Assert.AreEqual(1, plugin.Track.Count, IncorrectPluginCountMsg);
                 Assert.AreEqual(1, plugin.Playable.Count, IncorrectPluginCountMsg);
-                
+
                 var albumWithPlugin = plugin.Album.Execute(album);
                 var artistWithPlugin = plugin.Artist.Execute(artist);
                 var playlistWithPlugin = plugin.Playlist.Execute(playlist);
@@ -153,6 +153,56 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
                 Assert.AreEqual(plugin.EmptyPlaylistName, playlistWithPlugin.Name);
                 Assert.AreEqual(plugin.EmptyTrackName, trackWithPlugin.Name);
                 Assert.AreEqual(plugin.EmptyDefaultName, playableWithPlugin.Name);
+            }
+        }
+
+        [DataRow("album")]
+        [DataRow("artist")]
+        [DataRow("playlist")]
+        [DataRow("track")]
+        [DataRow("default")]
+        [TestMethod]
+        public void AssigningEmptyValueRemovesPlugin(string target)
+        {
+            var plugin = CreatePlugin();
+
+            Assert.AreEqual(1, plugin.Album.Count, IncorrectPluginCountMsg);
+            Assert.AreEqual(1, plugin.Artist.Count, IncorrectPluginCountMsg);
+            Assert.AreEqual(1, plugin.Playlist.Count, IncorrectPluginCountMsg);
+            Assert.AreEqual(1, plugin.Track.Count, IncorrectPluginCountMsg);
+            Assert.AreEqual(1, plugin.Playable.Count, IncorrectPluginCountMsg);
+
+            Assert.AreNotEqual(string.Empty, plugin.EmptyAlbumName);
+            Assert.AreNotEqual(string.Empty, plugin.EmptyArtistName);
+            Assert.AreNotEqual(string.Empty, plugin.EmptyTrackName);
+            Assert.AreNotEqual(string.Empty, plugin.EmptyPlaylistName);
+            Assert.AreNotEqual(string.Empty, plugin.EmptyDefaultName);
+
+            switch (target)
+            {
+                case "album":
+                    plugin.EmptyAlbumName = string.Empty;
+                    Assert.AreEqual(0, plugin.Album.Count);
+                    break;
+                case "artist":
+                    plugin.EmptyArtistName = string.Empty;
+                    Assert.AreEqual(0, plugin.Artist.Count);
+                    break;
+                case "playlist":
+                    plugin.EmptyPlaylistName = string.Empty;
+                    Assert.AreEqual(0, plugin.Playlist.Count);
+                    break;
+                case "track":
+                    plugin.EmptyTrackName = string.Empty;
+                    Assert.AreEqual(0, plugin.Track.Count);
+                    break;
+                case "default":
+                    plugin.EmptyDefaultName = string.Empty;
+                    Assert.AreEqual(0, plugin.Playable.Count);
+                    break;
+                default:
+                    Assert.Fail();
+                    break;
             }
         }
 
