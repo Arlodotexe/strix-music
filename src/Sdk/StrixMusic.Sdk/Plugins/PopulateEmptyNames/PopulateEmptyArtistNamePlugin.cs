@@ -8,7 +8,7 @@ using StrixMusic.Sdk.Plugins.Model;
 namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 
 /// <summary>
-/// Provides a fallback name for Artists when missing or empty.
+/// A plugin that intercepts null or whitespaces names on artists and uses a value provided to the plugin instead.
 /// </summary>
 internal class PopulateEmptyArtistNamePlugin : ArtistPluginBase
 {
