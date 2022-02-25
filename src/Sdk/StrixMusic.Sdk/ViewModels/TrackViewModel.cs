@@ -21,7 +21,6 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -32,7 +31,6 @@ namespace StrixMusic.Sdk.ViewModels
     public sealed class TrackViewModel : ObservableObject, ISdkViewModel, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
         private readonly IPlaybackHandlerService _playbackHandler;
-        private readonly ILocalizationService _localizationService;
 
         private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
@@ -52,7 +50,6 @@ namespace StrixMusic.Sdk.ViewModels
             SourceCores = Model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
 
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (Model.Album != null)
                 Album = new AlbumViewModel(root, Model.Album);
@@ -511,7 +508,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => Model.Id;
 
         /// <inheritdoc />
-        public string Name => _localizationService.LocalizeIfNullOrEmpty(Model.Name, this);
+        public string Name => Model.Name;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
