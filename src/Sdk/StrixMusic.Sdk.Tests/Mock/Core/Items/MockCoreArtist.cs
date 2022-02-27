@@ -130,7 +130,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             await Task.CompletedTask;
-            yield return MockItemFactory.CreateAlbum(SourceCore);
+            yield return MockCoreItemFactory.CreateAlbum(SourceCore);
         }
 
         public IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
@@ -146,7 +146,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             await Task.CompletedTask;
-            yield return MockItemFactory.CreateTrack(SourceCore);
+            yield return MockCoreItemFactory.CreateTrack(SourceCore);
         }
 
         public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
