@@ -28,7 +28,10 @@ namespace StrixMusic
             if (!string.IsNullOrWhiteSpace(Sdk.Helpers.Secrets.AppCenterId))
                 Microsoft.AppCenter.AppCenter.Start(Sdk.Helpers.Secrets.AppCenterId, typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
 #endif
+
+#if __WASM__
             InitializeLogging();
+#endif
 
             InitializeComponent();
             Suspending += OnSuspending;
@@ -95,7 +98,7 @@ namespace StrixMusic
 #elif __IOS__
                     builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
 #elif NETFX_CORE
-                    builder.AddDebug();
+                builder.AddDebug();
 #else
                     builder.AddConsole();
 #endif
