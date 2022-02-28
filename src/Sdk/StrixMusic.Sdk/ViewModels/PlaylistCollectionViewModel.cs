@@ -3,14 +3,13 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -31,8 +30,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylistCollection _collection;
 
-        private readonly IPlaybackHandlerService _playbackHandler;
-
         private readonly SemaphoreSlim _populatePlaylistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
@@ -45,7 +42,6 @@ namespace StrixMusic.Sdk.ViewModels
         internal PlaylistCollectionViewModel(MainViewModel root, IPlaylistCollection collection)
         {
             _collection = root.Plugins.ModelPlugins.PlaylistCollection.Execute(collection);
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(root.GetLoadedCore).ToList();
             Root = root;
@@ -65,7 +61,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(x => SortPlaylistCollection(x, CurrentPlaylistSortingDirection));
             ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType, x));
 
-            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlaylistPlaylistInternalAsync);
+            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(x => _collection.PlayPlaylistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IPlaylistCollectionItem>()));
 
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -449,13 +445,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
+        public Task PlayPlaylistCollectionAsync() => _collection.PlayPlaylistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => _playbackHandler.PlayAsync(playlistItem, this, _collection);
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => _collection.PlayPlaylistCollectionAsync(playlistItem);
 
         /// <inheritdoc />
-        public Task PausePlaylistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PausePlaylistCollectionAsync() => _collection.PausePlaylistCollectionAsync();
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
@@ -610,13 +606,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => _collection.Equals(other);
-
-        private Task PlaylistPlaylistInternalAsync(IPlaylistCollectionItem? playlistCollectionItem)
-        {
-            Guard.IsNotNull(playlistCollectionItem, nameof(playlistCollectionItem));
-
-            return _playbackHandler.PlayAsync(this, this);
-        }
 
         private Task ChangeNameInternalAsync(string? name)
         {
