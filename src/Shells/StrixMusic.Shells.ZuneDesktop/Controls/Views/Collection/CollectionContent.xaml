@@ -168,18 +168,18 @@
         </Grid.RowDefinitions>
 
         <!--Media Types-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-11,0,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-11,10,0,0" Spacing="10">
             <RadioButton x:Uid="/Music/MusicBTN" Content="MUSIC" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" IsChecked="True" GroupName="MediaType"/>
             <RadioButton x:Uid="/Music/PodcastsBTN" Content="PODCASTS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
             <RadioButton x:Uid="/Music/AudiobooksBTN" Content="AUDIOBOOKS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
         </StackPanel>
 
         <!--Search box-->
-        <TextBox x:Uid="/Common/SearchTBox" PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0" Style="{StaticResource ZuneDesktopSearchTextBoxStyle}"
+        <TextBox x:Uid="/Common/SearchTBox" PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,0,0,0" Style="{StaticResource ZuneDesktopSearchTextBoxStyle}"
                  a:TextHelpers.CharacterCasing="Upper"/>
 
         <!--Page Selector-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Spacing="10" Margin="0,8,0,24"> 
             <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
             <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
