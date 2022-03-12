@@ -33,7 +33,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <inheritdoc />
-        protected override async void OnApplyTemplate()
+        protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
@@ -71,7 +71,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             foreach (var item in Collection.Albums)
             {
                 // NOTE: ContainerFromItem doesn't work in uno.
-                var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(itemIndex); 
+                var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(itemIndex);
 
                 if (gridViewItem == null)
                     break;
@@ -93,7 +93,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             foreach (var item in uiElements)
             {
                 var animationSet = new AnimationSet();
-                var duration = 500;
+                var duration = 250;
 
                 animationSet.Add(new OpacityAnimation()
                 {
@@ -101,10 +101,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     To = 1,
                     Duration = TimeSpan.FromMilliseconds(duration),
                     Delay = TimeSpan.FromMilliseconds(delay),
-                    EasingMode = Windows.UI.Xaml.Media.Animation.EasingMode.EaseOut,
-                    EasingType = EasingType.Quadratic
+                    EasingMode = Windows.UI.Xaml.Media.Animation.EasingMode.EaseInOut,
+                    EasingType = EasingType.Linear
                 });
-                delay += 150;
+                delay += 75;
 
                 animationSet.Start(item);
             }
