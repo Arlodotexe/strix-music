@@ -37,8 +37,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         public static readonly DependencyProperty DataRootProperty =
             DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(CollectionContent), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Trigger animation on the <see cref="ZuneAlbumCollection"/> if its visible.
+        /// </summary>
+        public void AnimateAlbumCollection()
+        {
+            if (ZuneAlbumCollection.Visibility == Visibility.Visible && ZuneAlbumCollection.AlbumsLoaded)
+            {
+                ZuneAlbumCollection.AnimateCollection();
+            }
+        }
+
         private void SwapPage(string pageVisualStateName)
         {
+            AnimateAlbumCollection();
+
             VisualStateManager.GoToState(this, pageVisualStateName, true);
             PageTransition.Begin();
             ClearSelections();
@@ -70,7 +83,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
                 return;
 
             e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
-            AlbumCollection.Collection = e.SelectedItem;
+            ZuneAlbumCollection.Collection = e.SelectedItem;
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.Collection = e.SelectedItem;
@@ -95,13 +108,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             DetailsPane.DataContext = e.SelectedItem;
         }
 
+
         private void ClearSelections()
         {
             if (DataRoot == null)
                 return;
 
             ArtistCollection.ClearSelected();
-            AlbumCollection.ClearSelected();
+            ZuneAlbumCollection.ClearSelected();
             TrackTable.ClearSelected();
             TrackCollection.ClearSelected();
             PlaylistCollection.ClearSelected();
@@ -112,7 +126,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
 
             ArtistCollection.Collection = DataRoot.Library;
-            AlbumCollection.Collection = DataRoot.Library;
+            ZuneAlbumCollection.Collection = DataRoot.Library;
             TrackCollection.Collection = DataRoot.Library;
             TrackTable.Collection = DataRoot.Library;
             PlaylistCollection.Collection = DataRoot.Library;
