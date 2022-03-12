@@ -104,7 +104,7 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.1.10" />
-		<PackageReference Include="Uno.UI" Version="4.0.11" />
+		<PackageReference Include="Uno.UI" Version="4.0.13" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Styles\NowPlaying\" />

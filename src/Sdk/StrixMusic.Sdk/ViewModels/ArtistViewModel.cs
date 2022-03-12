@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -21,7 +20,6 @@ using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -32,8 +30,6 @@ namespace StrixMusic.Sdk.ViewModels
     public sealed class ArtistViewModel : ObservableObject, IArtist, ISdkViewModel, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IArtist _artist;
-
-        private readonly ILocalizationService _localizationService;
 
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateAlbumsMutex = new SemaphoreSlim(1, 1);
@@ -52,8 +48,6 @@ namespace StrixMusic.Sdk.ViewModels
             Root = root;
 
             SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(root.GetLoadedCore).ToList();
-
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (_artist.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(root, _artist.RelatedItems);
@@ -518,7 +512,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc />
-        public string Name => _localizationService.LocalizeIfNullOrEmpty(_artist.Name, this);
+        public string Name => _artist.Name;
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount => _artist.TotalAlbumItemsCount;
@@ -566,16 +560,16 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _artist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _artist.PlayTrackCollectionAsync(); 
+        public Task PlayTrackCollectionAsync() => _artist.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync() => _artist.PlayAlbumCollectionAsync(); 
+        public Task PlayAlbumCollectionAsync() => _artist.PlayAlbumCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _artist.PauseTrackCollectionAsync(); 
+        public Task PauseTrackCollectionAsync() => _artist.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync()  => _artist.PauseAlbumCollectionAsync(); 
+        public Task PauseAlbumCollectionAsync() => _artist.PauseAlbumCollectionAsync();
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

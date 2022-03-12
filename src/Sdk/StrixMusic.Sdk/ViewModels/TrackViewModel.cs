@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -21,7 +20,6 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -31,9 +29,6 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public sealed class TrackViewModel : ObservableObject, ISdkViewModel, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
-        private readonly IPlaybackHandlerService _playbackHandler;
-        private readonly ILocalizationService _localizationService;
-
         private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateGenresMutex = new SemaphoreSlim(1, 1);
@@ -50,9 +45,6 @@ namespace StrixMusic.Sdk.ViewModels
             Model = root.Plugins.ModelPlugins.Track.Execute(track);
 
             SourceCores = Model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
-
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (Model.Album != null)
                 Album = new AlbumViewModel(root, Model.Album);
@@ -72,7 +64,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
 
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistCollectionInternalAsync);
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => Model.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>()));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -122,7 +114,6 @@ namespace StrixMusic.Sdk.ViewModels
             UrlsChanged += TrackViewModel_UrlsChanged;
             UrlsCountChanged += OnUrlsCountChanged;
 
-            _playbackHandler.PlaybackStateChanged += OnPlaybackStateChanged;
             Model.PlaybackStateChanged += OnPlaybackStateChanged;
         }
 
@@ -155,7 +146,6 @@ namespace StrixMusic.Sdk.ViewModels
             UrlsChanged -= TrackViewModel_UrlsChanged;
             UrlsCountChanged -= OnUrlsCountChanged;
 
-            _playbackHandler.PlaybackStateChanged -= OnPlaybackStateChanged;
             Model.PlaybackStateChanged -= OnPlaybackStateChanged;
         }
 
@@ -511,7 +501,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => Model.Id;
 
         /// <inheritdoc />
-        public string Name => _localizationService.LocalizeIfNullOrEmpty(Model.Name, this);
+        public string Name => Model.Name;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
@@ -625,7 +615,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+        public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
         public Task StartDownloadOperationAsync(DownloadOperation operation) => Model.StartDownloadOperationAsync(operation);
@@ -676,10 +666,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => Model.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => Model.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync(this, Model);
+        public Task PlayArtistCollectionAsync() => Model.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
@@ -839,12 +829,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(name, nameof(name));
             return Model.ChangeNameAsync(name);
-        }
-
-        private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
-        {
-            Guard.IsNotNull(artistItem, nameof(artistItem));
-            return _playbackHandler.PlayAsync(this, this);
         }
 
         /// <inheritdoc />

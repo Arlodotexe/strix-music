@@ -180,7 +180,7 @@
                  a:TextHelpers.CharacterCasing="Upper"/>
 
         <!--Page Selector-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Spacing="10" Margin="0,8,0,24">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Spacing="10" Margin="0,8,0,24"> 
             <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
             <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"

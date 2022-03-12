@@ -41,6 +41,8 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Plugins.PlaybackHandler;
+using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace StrixMusic.Shared
@@ -382,7 +384,13 @@ namespace StrixMusic.Shared
             UpdateStatus("SetupPlugins");
             _logger?.LogInformation($"Services initialized, setting up plugins");
 
-            mainViewModel.Plugins.ModelPlugins.Import(new Sdk.Plugins.PlaybackHandler.PlaybackHandlerPlugin(_playbackHandlerService));
+            mainViewModel.Plugins.ModelPlugins.Import(new PlaybackHandlerPlugin(_playbackHandlerService));
+            mainViewModel.Plugins.ModelPlugins.Import(new PopulateEmptyNamesPlugin()
+            {
+                EmptyAlbumName = _localizationService["Music", "UnknownAlbum"],
+                EmptyArtistName = _localizationService["Music", "UnknownArtist"],
+                EmptyDefaultName = _localizationService["Music", "UnknownName"],
+            });
 
             _navService.RegisterCommonPage(_mainPage);
             App.AppFrame.SetupMainViewModel(mainViewModel);

@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -20,7 +19,6 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -31,9 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
     public sealed class AlbumViewModel : ObservableObject, ISdkViewModel, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IGenreCollectionViewModel
     {
         private readonly IAlbum _album;
-
-        private readonly ILocalizationService _localizationService;
-
+        
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
@@ -51,9 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
             _album = root.Plugins.ModelPlugins.Album.Execute(album);
 
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(root.GetLoadedCore).ToList();
-
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
-
+            
             using (Threading.PrimaryContext)
             {
                 Tracks = new ObservableCollection<TrackViewModel>();
@@ -529,7 +523,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc />
-        public string Name => _localizationService.LocalizeIfNullOrEmpty(_album.Name, this);
+        public string Name => _album.Name;
 
         /// <inheritdoc />
         public int TotalTrackCount => _album.TotalTrackCount;

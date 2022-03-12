@@ -12,13 +12,6 @@ namespace StrixMusic.Sdk.Models
         /// <summary>
         /// Creates an instance of the <see cref="DownloadInfo"/> struct.
         /// </summary>
-        public DownloadInfo()
-        {
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="DownloadInfo"/> struct.
-        /// </summary>
         public DownloadInfo(DownloadState state)
         {
             State = state;

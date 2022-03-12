@@ -20,7 +20,6 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Models.Merged;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -32,9 +31,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
-
-        private readonly IPlaybackHandlerService _playbackHandler;
-        private readonly ILocalizationService _localizationService;
 
         private readonly SemaphoreSlim _populateTracksMutex = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
@@ -48,8 +44,6 @@ namespace StrixMusic.Sdk.ViewModels
         internal PlaylistViewModel(MainViewModel root, IPlaylist playlist)
         {
             _playlist = root.Plugins.ModelPlugins.Playlist.Execute(playlist);
-            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
             Root = root;
 
             SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(root.GetLoadedCore).ToList();
@@ -57,7 +51,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackInternalAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _playlist.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>()));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -397,7 +391,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IUserProfile? Owner => _owner;
 
         /// <inheritdoc />
-        public string Name => _localizationService.LocalizeIfNullOrEmpty(_playlist.Name, this);
+        public string Name => _playlist.Name;
 
         /// <inheritdoc />
         public string? Description => _playlist.Description;
@@ -460,10 +454,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackInternalAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track) => _playlist.PlayTrackCollectionAsync(track);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync(this, this);
+        public Task PlayTrackCollectionAsync() => _playlist.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
         public Task PauseTrackCollectionAsync() => _playlist.PauseTrackCollectionAsync();
@@ -630,12 +624,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(name, nameof(name));
             return _playlist.ChangeNameAsync(name);
-        }
-
-        private Task PlayTrackInternalAsync(ITrack? track)
-        {
-            Guard.IsNotNull(track, nameof(track));
-            return _playbackHandler.PlayAsync(track, this, _playlist);
         }
 
         /// <inheritdoc />

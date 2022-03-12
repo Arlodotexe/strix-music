@@ -4,7 +4,7 @@ using System;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
 {
-    internal static class MockItemFactory
+    internal static class MockCoreItemFactory
     {
         public static ICoreTrack CreateTrack(ICore sourceCore) => new MockCoreTrack(sourceCore, "factoryTrack", "Test track");
         

@@ -40,7 +40,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalAlbumItemsCount;
 
-            var item = MockItemFactory.CreateAlbum(remoteClientCore);
+            var item = MockCoreItemFactory.CreateAlbum(remoteClientCore);
 
             await remoteClientCore.Library.AddAlbumItemAsync(item, 0);
 
@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalArtistItemsCount;
 
-            var item = MockItemFactory.CreateArtist(remoteClientCore);
+            var item = MockCoreItemFactory.CreateArtist(remoteClientCore);
 
             await remoteClientCore.Library.AddArtistItemAsync(item, 0);
 
@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalPlaylistItemsCount;
 
-            var item = MockItemFactory.CreatePlaylist(remoteClientCore);
+            var item = MockCoreItemFactory.CreatePlaylist(remoteClientCore);
 
             await remoteClientCore.Library.AddPlaylistItemAsync(item, 0);
 
@@ -109,7 +109,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalTrackCount;
 
-            var item = MockItemFactory.CreateTrack(remoteClientCore);
+            var item = MockCoreItemFactory.CreateTrack(remoteClientCore);
 
             await remoteClientCore.Library.AddTrackAsync(item, 0);
 
@@ -132,7 +132,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalImageCount;
 
-            var item = MockItemFactory.CreateImage(remoteClientCore);
+            var item = MockCoreItemFactory.CreateImage(remoteClientCore);
 
             await remoteClientCore.Library.AddImageAsync(item, 0);
 
@@ -155,7 +155,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var initialCount = remoteClientCore.Library.TotalUrlCount;
 
-            var item = MockItemFactory.CreateUrl(remoteClientCore);
+            var item = MockCoreItemFactory.CreateUrl(remoteClientCore);
 
             await remoteClientCore.Library.AddUrlAsync(item, 0);
 

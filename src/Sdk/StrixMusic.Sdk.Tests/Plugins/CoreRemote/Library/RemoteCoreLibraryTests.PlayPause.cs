@@ -64,7 +64,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var item = MockItemFactory.CreateAlbum(remoteClientCore);
+            var item = MockCoreItemFactory.CreateAlbum(remoteClientCore);
 
             var initialPlaybackState = remoteClientCore.Library.PlaybackState;
             var expectedPlaybackState = PlaybackState.Playing;
@@ -142,7 +142,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var item = MockItemFactory.CreateArtist(remoteClientCore);
+            var item = MockCoreItemFactory.CreateArtist(remoteClientCore);
 
             var initialPlaybackState = remoteClientCore.Library.PlaybackState;
             var expectedPlaybackState = PlaybackState.Playing;
@@ -220,7 +220,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var item = MockItemFactory.CreatePlaylist(remoteClientCore);
+            var item = MockCoreItemFactory.CreatePlaylist(remoteClientCore);
 
             var initialPlaybackState = remoteClientCore.Library.PlaybackState;
             var expectedPlaybackState = PlaybackState.Playing;
@@ -298,7 +298,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var item = MockItemFactory.CreateTrack(remoteClientCore);
+            var item = MockCoreItemFactory.CreateTrack(remoteClientCore);
 
             var initialPlaybackState = remoteClientCore.Library.PlaybackState;
             var expectedPlaybackState = PlaybackState.Playing;
@@ -376,7 +376,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             await remoteClientCore.InitAsync(new ServiceCollection());
 
-            var item = MockItemFactory.CreatePlayableCollectionGroup(remoteClientCore);
+            var item = MockCoreItemFactory.CreatePlayableCollectionGroup(remoteClientCore);
 
             var initialPlaybackState = item.PlaybackState;
             var expectedPlaybackState = PlaybackState.Playing;
