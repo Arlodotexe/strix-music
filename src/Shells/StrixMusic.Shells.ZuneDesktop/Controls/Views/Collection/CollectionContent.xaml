@@ -4,6 +4,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:zuneCollections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
@@ -44,7 +45,7 @@
                 <!--View related style-->
                 <viewstyles:NowPlayingViewStyle/>
                 <viewstyles:SettingsViewStyle/>
-                
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -59,7 +60,7 @@
                 </DoubleAnimation>
             </Storyboard>
         </Grid.Resources>
-        
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="PageStates">
                 <VisualState x:Name="Artists">
@@ -73,13 +74,13 @@
                         <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="ZuneAlbumCollection.(Grid.Column)" Value="1"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
                         <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackTable.Visibility" Value="Collapsed"/>
                         <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCollection.Visibility" Value="Visible"/>
+                        <Setter Target="ZuneAlbumCollection.Visibility" Value="Visible"/>
                         <Setter Target="TrackCollection.Visibility" Value="Visible"/>
                         <Setter Target="ArtistCollection.Visibility" Value="Visible"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
@@ -97,13 +98,13 @@
                         <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="ZuneAlbumCollection.(Grid.Column)" Value="0"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
                         <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackTable.Visibility" Value="Collapsed"/>
                         <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCollection.Visibility" Value="Visible"/>
+                        <Setter Target="ZuneAlbumCollection.Visibility" Value="Visible"/>
                         <Setter Target="TrackCollection.Visibility" Value="Visible"/>
                         <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
@@ -121,13 +122,13 @@
                         <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="ZuneAlbumCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackTable.(Grid.Column)" Value="0"/>
                         <Setter Target="TrackTable.Visibility" Value="Visible"/>
                         <Setter Target="DetailsPane.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.Visibility" Value="Collapsed"/>
-                        <Setter Target="AlbumCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="ZuneAlbumCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="TrackCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
@@ -145,13 +146,13 @@
                         <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="ZuneAlbumCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="TrackTable.(Grid.Column)" Value="1"/>
                         <Setter Target="TrackTable.Visibility" Value="Visible"/>
                         <Setter Target="DetailsPane.Visibility" Value="Visible"/>
                         <Setter Target="PlaylistCollection.Visibility" Value="Visible"/>
-                        <Setter Target="AlbumCollection.Visibility" Value="Collapsed"/>
+                        <Setter Target="ZuneAlbumCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="ArtistCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="TrackCollection.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="0"/>
@@ -160,7 +161,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -208,9 +209,9 @@
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
-            <collections:AlbumCollection x:Name="AlbumCollection" Collection="{x:Bind DataRoot.Library}"
-                                         Margin="8,0" Grid.Column="1"
-                                         SelectionChanged="AlbumSelected"/>
+            <zuneCollections:ZuneAlbumCollection x:Name="ZuneAlbumCollection" Collection="{x:Bind DataRoot.Library}"
+                                                   Margin="8,0" Grid.Column="1"
+                                                   SelectionChanged="AlbumSelected"/>
 
             <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{x:Bind DataRoot.Library}"
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
@@ -228,7 +229,7 @@
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,29,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
-            
+
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2" Margin="0,29,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
         </Grid>

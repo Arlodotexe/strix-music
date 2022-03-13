@@ -175,6 +175,12 @@ namespace StrixMusic.Shells.ZuneDesktop
             {
                 QuickplayPage.RunEnterViewAnimation();
             }
+
+            // Collection index.
+            if (Pivot.SelectedIndex == 1)
+            {
+                PART_CollectionContent.AnimateAlbumCollection();
+            }
         }
 
         private void RequestTheme(ElementTheme theme = ElementTheme.Default)
