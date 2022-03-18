@@ -103,6 +103,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Smooth.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\Wired.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Hover.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\play.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Quickplay-Background.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-gray.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-white.svg" />

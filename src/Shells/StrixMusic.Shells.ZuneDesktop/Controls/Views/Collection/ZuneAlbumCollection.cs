@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using StrixMusic.Sdk.Uno.Controls.Collections;
+using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -41,8 +42,23 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
 
+            Collection.Albums.CollectionChanged += Albums_CollectionChanged;
+
             PART_Selector.Loaded += PART_Selector_Loaded;
             Unloaded += ZuneAlbumCollection_Unloaded;
+        }
+
+        private void Albums_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+
+            var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(Collection.Albums.Count - 1);
+            var uiElement = gridViewItem.ContentTemplateRoot;
+
+            if (uiElement is ZuneAlbumItem zuneAlbumItem)
+            {
+                zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
+            }
         }
 
         private void ZuneAlbumCollection_Unloaded(object sender, RoutedEventArgs e)
@@ -78,12 +94,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 var uiElement = gridViewItem.ContentTemplateRoot;
 
+                if (uiElement is ZuneAlbumItem zuneAlbumItem)
+                {
+                    zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
+                }
+
                 // This needs to be explicitly casted to UIElement to avoid a compiler error specific to android in uno.
                 uiElments.Add((UIElement)uiElement);
                 itemIndex++;
             }
 
             FadeInAlbumCollectionItems(uiElments);
+        }
+
+        private async void ZuneAlbumItem_AlbumPlaybackTriggered(object sender, Sdk.ViewModels.AlbumViewModel e)
+        {
+            await Collection.PlayAlbumCollectionAsync(e);
         }
 
         private void FadeInAlbumCollectionItems(List<UIElement> uiElements)
