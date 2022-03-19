@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
@@ -82,11 +83,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             if (e.SelectedItem == null)
                 return;
 
+            ZuneAlbumCollection.DetachItemEvents();
+
             e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
             ZuneAlbumCollection.Collection = e.SelectedItem;
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.Collection = e.SelectedItem;
+
+            ZuneAlbumCollection.ArtistSelected(e.SelectedItem);
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
@@ -107,7 +112,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackTable.Collection = e.SelectedItem;
             DetailsPane.DataContext = e.SelectedItem;
         }
-
 
         private void ClearSelections()
         {

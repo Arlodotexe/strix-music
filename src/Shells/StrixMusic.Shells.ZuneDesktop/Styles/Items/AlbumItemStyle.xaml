@@ -60,6 +60,7 @@
                                             <Setter Target="AlbumName.Foreground" Value="#242628"/>
                                             <Setter Target="ImageOutline.Opacity" Value="0"/>
                                             <Setter Target="HoverShadowPanel.BlurRadius" Value="0"/>
+                                            <Setter Target="PART_PlayIcon.Opacity" Value="0"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
@@ -67,12 +68,6 @@
                                                      Duration="0:0:0.3" From="1" To="0">
                                                     <DoubleAnimation.EasingFunction>
                                                         <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                                <DoubleAnimation Storyboard.TargetName="PART_PlayIcon" Storyboard.TargetProperty="Opacity"
-                                                     Duration="0:0:0.3" From="1" To="0">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <QuarticEase/>
                                                     </DoubleAnimation.EasingFunction>
                                                 </DoubleAnimation>
                                             </Storyboard>
@@ -94,7 +89,7 @@
                                                     </DoubleAnimation.EasingFunction>
                                                 </DoubleAnimation>
                                                 <DoubleAnimation Storyboard.TargetName="PART_PlayIcon" Storyboard.TargetProperty="Opacity"
-                                                                 Duration="0:0:0.5" From="0" To="1" >
+                                                                  BeginTime="0:0:0.5"  Duration="0:0:0.5" From="0" To="1" >
                                                     <DoubleAnimation.EasingFunction>
                                                         <QuarticEase/>
                                                     </DoubleAnimation.EasingFunction>
@@ -133,14 +128,12 @@
                                                         <ResourceDictionary>
                                                             <ResourceDictionary.ThemeDictionaries>
                                                                 <ResourceDictionary x:Key="Light">
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOverPressed" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBackgroundPointerPressed" Color="Transparent"/>
                                                                 </ResourceDictionary>
                                                                 <ResourceDictionary x:Key="Dark">
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOverPressed" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
                                                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>

@@ -46,6 +46,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         {
             Guard.IsNotNull(PART_PlayIcon, nameof(PART_PlayIcon));
             PART_PlayIcon.Tapped -= PART_PlayIcon_Tapped;
+            PART_PlayIcon.Tapped -= PART_PlayIcon_Tapped;
         }
 
         private void PART_PlayIcon_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
