@@ -80,7 +80,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                // Intentional delay (for safe side), this doesn't freeze anything as event attachment can be done silently, it wait for the emitted album to load in Visual Tree.
+                // Intentional delay (for safe side), this doesn't freeze anything as event attachment can be done silently, it waits for the emitted album to load in Visual Tree.
                 // There is no event on GridView that tells when a UI Element is added to Items list.
                 await Task.Delay(1000);
 
