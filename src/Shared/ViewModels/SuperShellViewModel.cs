@@ -26,6 +26,7 @@ using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -41,7 +42,7 @@ namespace StrixMusic.Shared.ViewModels
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
         private readonly ICoreManagementService _coreManagementService;
-        private readonly ISettingsService _settingsService;
+        private readonly AppSettings _settings;
         private readonly INotificationService _notificationService;
         private readonly ILocalizationService _localizationResourceLoader;
         private bool _isShowingAddNew;
@@ -57,7 +58,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
-            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            _settings = Ioc.Default.GetRequiredService<AppSettings>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _localizationResourceLoader = Ioc.Default.GetRequiredService<ILocalizationService>();
             _logger = Ioc.Default.GetRequiredService<ILogger<SuperShellViewModel>>();
@@ -97,8 +98,9 @@ namespace StrixMusic.Shared.ViewModels
             _logger.LogInformation($"Started {nameof(InitAsync)}");
 
             IsInitialized = true;
-
-            _loggingToggle.State = await _settingsService.GetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled));
+            
+            await _settings.LoadAsync();
+            _loggingToggle.State = _settings.IsLoggingEnabled;
 
             SetupCores();
             await ShellSelectorViewModel.InitAsync();
@@ -179,7 +181,8 @@ namespace StrixMusic.Shared.ViewModels
 
         private async void LoggingToggle_StateChanged(object? sender, bool e)
         {
-            await _settingsService.SetValue<bool>(nameof(SettingsKeys.IsLoggingEnabled), e);
+            _settings.IsLoggingEnabled = e;
+            await _settings.SaveAsync();
         }
 
         private void AddNewItem_NewItemRequested(object? sender, EventArgs e)

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.Provisos;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Cores.OneDrive.Storage;
 using StrixMusic.Sdk.Models.Core;
@@ -27,6 +27,8 @@ namespace StrixMusic.Cores.OneDrive
     ///  <inheritdoc/>
     public sealed class OneDriveCoreConfig : ICoreConfig
     {
+        private readonly OneDriveCore _sourceCore;
+        private readonly ILogger<OneDriveCoreConfig> _logger;
         private readonly AbstractBoolean _useTagLibScannerToggle;
         private readonly AbstractBoolean _useFilePropsScannerToggle;
         private Notification? _scannerRequiredNotification;
@@ -36,17 +38,20 @@ namespace StrixMusic.Cores.OneDrive
         private GraphServiceClient? _graphClient;
         private IFolderData? _rootFolder;
 
-        private ISettingsService? _settingsService;
-        private INotificationService? _notificationService;
+        private OneDriveCoreSettings _settings;
+        private INotificationService _notificationService;
         private AuthenticationManager? _authenticationManager;
-        private FileMetadataManager? _fileMetadataManager;
+        private readonly ILauncher _launcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCoreConfig"/> class.
         /// </summary>
-        public OneDriveCoreConfig(ICore sourceCore)
+        public OneDriveCoreConfig(OneDriveCore sourceCore)
         {
-            SourceCore = sourceCore;
+            _sourceCore = sourceCore;
+            _settings = sourceCore.Settings;
+            _notificationService = sourceCore.NotificationService;
+            _launcher = sourceCore.Launcher;
 
             _logger = Ioc.Default.GetRequiredService<ILogger<OneDriveCoreConfig>>();
 
@@ -63,16 +68,16 @@ namespace StrixMusic.Cores.OneDrive
 
         private void AttachEvents()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+            Guard.IsNotNull(_settings, nameof(_settings));
+            _settings.PropertyChanged += OnSettingChanged;
             _useTagLibScannerToggle.StateChanged += UseTagLibScannerToggleOnStateChanged;
             _useFilePropsScannerToggle.StateChanged += UseFilePropsScannerToggleOnStateChanged;
         }
 
         private void DetachEvents()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            _settingsService.SettingChanged -= SettingsServiceOnSettingChanged;
+            Guard.IsNotNull(_settings, nameof(_settings));
+            _settings.PropertyChanged -= OnSettingChanged;
             _useTagLibScannerToggle.StateChanged -= UseTagLibScannerToggleOnStateChanged;
             _useFilePropsScannerToggle.StateChanged -= UseFilePropsScannerToggleOnStateChanged;
         }
@@ -84,17 +89,12 @@ namespace StrixMusic.Cores.OneDrive
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
         /// <inheritdoc />
-        public ICore SourceCore { get; }
-
-        private readonly ILogger<OneDriveCoreConfig> _logger;
-
-        /// <inheritdoc />
-        public IServiceProvider? Services { get; private set; }
+        public ICore SourceCore => _sourceCore;
 
         /// <inheritdoc/>
         public event EventHandler? AbstractUIElementsChanged;
 
-        public async Task SetupConfigurationServices(IServiceCollection services, OneDriveCoreSettingsService? settingsService = null)
+        public async Task SetupConfigurationServices()
         {
             _logger.LogInformation("Setting up configuration services");
 
@@ -106,19 +106,10 @@ namespace StrixMusic.Cores.OneDrive
 
             _isConfigServicesSetup = false;
 
-            _logger.LogInformation("Setting up settings service");
-            _settingsService = settingsService ?? new OneDriveCoreSettingsService(SourceCore.InstanceId);
-            services.AddSingleton(_settingsService);
-
             _logger.LogInformation("Getting initial setting states");
-            _useFilePropsScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties));
-            _useTagLibScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib));
-
-            _logger.LogInformation("Building service provider");
-            Services = services.BuildServiceProvider();
-
-            _logger.LogInformation("Getting notification service");
-            _notificationService = Services.GetRequiredService<INotificationService>();
+            await _settings.LoadAsync();
+            _useFilePropsScannerToggle.State = _settings.ScanWithFileProperties;
+            _useTagLibScannerToggle.State = _settings.ScanWithTagLib;
 
             AttachEvents();
             _isConfigServicesSetup = true;
@@ -135,11 +126,14 @@ namespace StrixMusic.Cores.OneDrive
             metadataScanType.Title = "Scanner type";
             metadataScanType.Subtitle = "Requires restart.";
 
-            return new AbstractUICollection("GenericConfig")
+            var genericConfig = new AbstractUICollection("GenericConfig")
             {
                 Title = "OneDrive settings",
-                Items = metadataScanType.IntoList(),
             };
+
+            genericConfig.Add(metadataScanType);
+            
+            return genericConfig;
         }
 
         /// <summary>
@@ -155,9 +149,10 @@ namespace StrixMusic.Cores.OneDrive
             var advancedCollection = new AbstractUICollection("advancedSettings")
             {
                 Title = "Advanced",
-                Items = showAdvanced.IntoList()
             };
 
+            advancedCollection.Add(showAdvanced);
+            
             var continueButton = new AbstractButton("continueButton", "Continue", type: AbstractButtonType.Confirm);
             var cancelButton = new AbstractButton("cancelButton", "Cancel", type: AbstractButtonType.Cancel);
             var actionButtons = new AbstractUICollection("actionButtons", PreferredOrientation.Horizontal)
@@ -238,16 +233,18 @@ namespace StrixMusic.Cores.OneDrive
 
                 async void OnTextBoxChanged(object sender, string value)
                 {
-                    Guard.IsNotNull(_settingsService, nameof(_settingsService));
+                    Guard.IsNotNull(_settings, nameof(_settings));
 
                     if (sender == clientIdTb)
-                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), value.Trim());
+                        _settings.ClientId = value.Trim();
 
                     if (sender == tenantTb)
-                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), value.Trim());
+                        _settings.TenantId = value.Trim();
 
                     if (sender == redirectUriTb)
-                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri), value.Trim());
+                        _settings.RedirectUri = value.Trim();
+
+                    await _settings.SaveAsync();
                 }
 
                 void OnAdvancedTurnedOff(object sender, bool newState)
@@ -280,15 +277,10 @@ namespace StrixMusic.Cores.OneDrive
         public async Task<bool> TryLoginAsync(CancellationToken? cancellationToken = null)
         {
             _logger.LogInformation($"Entered {nameof(TryLoginAsync)}");
-
-            Guard.IsNotNull(Services, nameof(Services));
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
-            _logger.LogInformation($"Getting client/tenant/redirect settings");
-
-            var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
-            var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
-            var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
+            
+            var clientId = _settings.ClientId;
+            var tenantId = _settings.TenantId;
+            var redirectUri = _settings.RedirectUri;
 
             _logger.LogInformation($"Initializing authentication manager");
             _authenticationManager = new AuthenticationManager(this, clientId, tenantId, redirectUri);
@@ -303,33 +295,26 @@ namespace StrixMusic.Cores.OneDrive
             return true;
         }
 
-        public async Task SetupMetadataScannerAsync(IServiceCollection services, IFolderData folder)
+        public async Task SetupMetadataScannerAsync()
         {
-            _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folder);
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
+            Guard.IsNotNull(_sourceCore.FileMetadataManager, nameof(_sourceCore.FileMetadataManager));
+            
             // Scanning file contents are possible but extremely slow over the network.
             // The Graph API supplies music metadata from file properties, which is much faster.
             // Use the user's preferences.
             var scanTypes = MetadataScanTypes.None;
 
-            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib)))
+            if (_settings.ScanWithTagLib)
                 scanTypes |= MetadataScanTypes.TagLib;
 
-            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties)))
+            if (_settings.ScanWithFileProperties)
                 scanTypes |= MetadataScanTypes.FileProperties;
 
-            _fileMetadataManager.ScanTypes = scanTypes;
-            _fileMetadataManager.DegreesOfParallelism = 8;
+            _sourceCore.FileMetadataManager.ScanTypes = scanTypes;
+            _sourceCore.FileMetadataManager.DegreesOfParallelism = 8;
 
-            // Must be on the Core IoC for FileCore base classes to get access to it.
-            services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
-
-            Services = null;
-            Services = services.BuildServiceProvider();
-
-            await _fileMetadataManager.InitAsync();
-            Task.Run(_fileMetadataManager.StartScan).Forget();
+            await _sourceCore.FileMetadataManager.InitAsync();
+            Task.Run(_sourceCore.FileMetadataManager.StartScan).Forget();
         }
 
         public async Task<IFolderData?> PickSingleFolderAsync()
@@ -337,7 +322,7 @@ namespace StrixMusic.Cores.OneDrive
             _logger.LogInformation($"Started setup for folder picker");
             Guard.IsNotNull(_graphClient, nameof(_graphClient));
             Guard.IsNotNull(_authenticationManager, nameof(_authenticationManager));
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_settings, nameof(_settings));
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
             // Get root OneDrive folder.
@@ -393,11 +378,8 @@ namespace StrixMusic.Cores.OneDrive
             fileExplorer.NavigationFailed -= OnNavigationFailed;
             fileExplorer.Dispose();
 
-            if (result is null)
-                return null;
-
-            _logger.LogInformation($"Saving {nameof(OneDriveCoreSettingsKeys.SelectedFolderId)}");
-            await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().Id);
+            _settings.SelectedFolderId = (result as OneDriveFolderData)?.Id ?? string.Empty;
+            await _settings.SaveAsync();
 
             return result;
 
@@ -413,12 +395,13 @@ namespace StrixMusic.Cores.OneDrive
 
             void OnNavigationFailed(object sender, AbstractFolderExplorerNavigationFailedEventArgs e)
             {
+                // Notify the user of a problem, but don't complete the task or change state unless the
+                // user explicitly cancels the operation or fixes the problem (like a network issue)
+
                 if (e.Exception is ServiceException)
                     _notificationService.RaiseNotification("Connection lost", "We weren't able to reach OneDrive to load that folder.");
                 else
                     _notificationService.RaiseNotification("Couldn't open folder", $"An error occured while opening the folder{(e.Exception is not null ? $" ({e.Exception.GetType()})" : "")}");
-
-                taskCompletionSource.SetResult(null);
             }
 
             void OnFolderSelected(object sender, IFolderData e) => taskCompletionSource.SetResult(e);
@@ -451,23 +434,18 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElements = new AbstractUICollection("deviceCodeResult")
             {
                 Title = "Let's login",
-                Subtitle = "You'll need your phone or computer",
-                Items = new List<AbstractUIElement>
-                {
-                    authenticateButton,
-                    cancelButton
-                },
+                Subtitle = "You'll need your phone or computer"
             };
 
-            SourceCore?.Cast<OneDriveCore>().ChangeCoreState(Sdk.Models.CoreState.NeedsSetup);
+            AbstractUIElements.Add(authenticateButton);
+            AbstractUIElements.Add(cancelButton);
+
+            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.NeedsSetup);
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             async void OnAuthenticateButtonClicked(object sender, EventArgs e)
             {
-                Guard.IsNotNull(Services, nameof(Services));
-
-                var launcher = Services.GetRequiredService<ILauncher>();
-                await launcher.LaunchUriAsync(new Uri(dcr.VerificationUrl));
+                await _launcher.LaunchUriAsync(new Uri(dcr.VerificationUrl));
             }
 
             void OnCancelButtonClicked(object sender, EventArgs e)
@@ -481,37 +459,38 @@ namespace StrixMusic.Cores.OneDrive
 
         private async void UseFilePropsScannerToggleOnStateChanged(object sender, bool e)
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties), e);
+            Guard.IsNotNull(_settings, nameof(_settings));
+            _settings.ScanWithFileProperties = e;
+            await _settings.SaveAsync();
         }
 
         private async void UseTagLibScannerToggleOnStateChanged(object sender, bool e)
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib), e);
+            Guard.IsNotNull(_settings, nameof(_settings));
+            _settings.ScanWithTagLib = e;
+            await _settings.SaveAsync();
         }
 
-        private async void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
+        private void OnSettingChanged(object sender, PropertyChangedEventArgs e)
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_settings, nameof(_settings));
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            if (!(e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties) ||
-                  e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithTagLib)))
+            if (e.PropertyName is not (nameof(OneDriveCoreSettings.ScanWithFileProperties) or nameof(OneDriveCoreSettings.ScanWithTagLib)))
                 return;
 
-            var filePropSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties));
-            var tagLibSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib));
+            var filePropSetting = _settings.ScanWithFileProperties;
+            var tagLibSetting = _settings.ScanWithTagLib;
 
             if (!filePropSetting && !tagLibSetting)
             {
                 _scannerRequiredNotification?.Dismiss();
                 _scannerRequiredNotification = _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
 
-                if (e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties))
+                if (e.PropertyName == nameof(OneDriveCoreSettings.ScanWithFileProperties))
                     _useFilePropsScannerToggle.State = true;
 
-                if (e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithTagLib))
+                if (e.PropertyName == nameof(OneDriveCoreSettings.ScanWithTagLib))
                     _useTagLibScannerToggle.State = true;
             }
         }

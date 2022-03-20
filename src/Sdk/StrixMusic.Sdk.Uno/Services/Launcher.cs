@@ -1,6 +1,6 @@
-﻿using OwlCore.Provisos;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using OwlCore.Provisos;
 
 namespace StrixMusic.Sdk.Uno.Services
 {

@@ -60,7 +60,7 @@ namespace StrixMusic.Sdk.Tests
             {
                 try
                 {
-                    method!.Invoke(value, method.GetParameters().Select(TransformMethodParam).ToArray());
+                    var returnVal = method!.Invoke(value, method.GetParameters().Select(TransformMethodParam).ToArray());
 
                     object? TransformMethodParam(ParameterInfo param)
                     {

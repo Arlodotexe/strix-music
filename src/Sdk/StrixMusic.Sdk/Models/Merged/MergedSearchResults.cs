@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
         /// </summary>
-        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults, ISettingsService settingService)
-            : base(searchResults, settingService)
+        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults, MergedCollectionConfig config)
+            : base(searchResults, config)
         {
         }
 

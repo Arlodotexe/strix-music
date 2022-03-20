@@ -12,9 +12,5 @@ namespace StrixMusic.Sdk.Models.Core
     /// </summary>
     public interface ICoreConfig : ICoreConfigBase, ICoreMember
     {
-        /// <summary>
-        /// The services for this instance of the core.
-        /// </summary>
-        IServiceProvider? Services { get; }
     }
 }

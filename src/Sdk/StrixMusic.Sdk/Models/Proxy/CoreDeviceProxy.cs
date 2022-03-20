@@ -19,13 +19,12 @@ namespace StrixMusic.Sdk.Models.Merged
     public sealed class CoreDeviceProxy : IDevice
     {
         private readonly ICoreDevice _source;
-        private readonly ISettingsService _serviceProvider;
 
         /// <summary>
         /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
         /// </summary>
         /// <param name="source"></param>
-        public CoreDeviceProxy(ICoreDevice source, ISettingsService settingsService)
+        public CoreDeviceProxy(ICoreDevice source)
         {
             _source = source;
 
@@ -38,12 +37,10 @@ namespace StrixMusic.Sdk.Models.Merged
             RepeatState = _source.RepeatState;
             Volume = _source.Volume;
             PlaybackSpeed = _source.PlaybackSpeed;
-
-            _serviceProvider = settingsService;
-
+            
             Guard.IsNotNull(_source.NowPlaying,nameof(_source.NowPlaying));
 
-            var nowPlaying = new MergedTrack(_source.NowPlaying.IntoList(), settingsService);
+            var nowPlaying = new MergedTrack(_source.NowPlaying.IntoList(), new MergedCollectionConfig());
 
             NowPlaying = new PlaybackItem()
             {
@@ -51,7 +48,7 @@ namespace StrixMusic.Sdk.Models.Merged
             };
 
             if (!(_source.PlaybackQueue is null))
-                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), settingsService);
+                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), new MergedCollectionConfig());
 
             AttachEvents();
         }
@@ -68,9 +65,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private void Source_NowPlayingChanged(object sender, ICoreTrack e)
         {
-            var nowPlaying = new MergedTrack(e.IntoList(), _serviceProvider);
+            var nowPlaying = new MergedTrack(e.IntoList(), new MergedCollectionConfig());
 
-            NowPlaying = new PlaybackItem()
+            NowPlaying = new PlaybackItem
             {
                 Track = nowPlaying,
             };

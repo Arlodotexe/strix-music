@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Tests.Mock.Core;
@@ -17,7 +16,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetAlbumItemsAsync(limit, 0).ToArrayAsync();
 
@@ -44,7 +43,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetArtistItemsAsync(limit, 0).ToArrayAsync();
 
@@ -71,7 +70,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetPlaylistItemsAsync(limit, 0).ToArrayAsync();
 
@@ -98,7 +97,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetTracksAsync(limit, 0).ToArrayAsync();
 
@@ -125,7 +124,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetChildrenAsync(limit, 0).ToArrayAsync();
 
@@ -152,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetImagesAsync(limit, 0).ToArrayAsync();
 
@@ -179,7 +178,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var expectedItem = await core.Library.GetUrlsAsync(limit, 0).ToArrayAsync();
 

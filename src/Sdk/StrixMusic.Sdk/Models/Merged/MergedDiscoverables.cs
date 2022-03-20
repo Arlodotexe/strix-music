@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedDiscoverables"/> class.
         /// </summary>
-        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources, ISettingsService settingsService)
-            : base(sources, settingsService)
+        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 

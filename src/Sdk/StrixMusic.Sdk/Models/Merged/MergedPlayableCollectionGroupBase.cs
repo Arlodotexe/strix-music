@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -13,7 +14,6 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -31,11 +31,14 @@ namespace StrixMusic.Sdk.Models.Merged
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlCollectionMap;
         private readonly List<ICore> _sourceCores;
+        private readonly SemaphoreSlim _disposeSemaphore = new(1, 1);
+
+        private bool _isDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
         /// </summary>
-        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources, ISettingsService settingsService)
+        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources, MergedCollectionConfig config)
         {
             // TODO: Use top Preferred core.
             if (sources is null)
@@ -47,13 +50,13 @@ namespace StrixMusic.Sdk.Models.Merged
             PreferredSource = StoredSources[0];
             _sourceCores = StoredSources.Select(x => x.SourceCore).ToList();
 
-            _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, settingsService);
-            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, settingsService);
-            _playlistCollectionMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, settingsService);
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, settingsService);
-            _playableCollectionGroupMap = new MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup>(this, settingsService);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
+            _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
+            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, config);
+            _playlistCollectionMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, config);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
+            _playableCollectionGroupMap = new MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup>(this, config);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
 
             AttachPropertyChangedEvents(PreferredSource);
             AttachCollectionChangedEvents();
@@ -836,18 +839,29 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            DetachCollectionChangedEvents();
-            DetachPropertyChangedEvents(PreferredSource);
+            if (_isDisposed)
+                return;
 
-            await _albumCollectionMap.DisposeAsync();
-            await _artistCollectionMap.DisposeAsync();
-            await _playableCollectionGroupMap.DisposeAsync();
-            await _playlistCollectionMap.DisposeAsync();
-            await _trackCollectionMap.DisposeAsync();
-            await _imageCollectionMap.DisposeAsync();
-            await _urlCollectionMap.DisposeAsync();
+            using (await OwlCore.Flow.EasySemaphore(_disposeSemaphore))
+            {
+                if (_isDisposed)
+                    return;
 
-            await Sources.InParallel(x => x.Cast<ICorePlayableCollectionGroup>().DisposeAsync().AsTask());
+                DetachCollectionChangedEvents();
+                DetachPropertyChangedEvents(PreferredSource);
+
+                await _albumCollectionMap.DisposeAsync();
+                await _artistCollectionMap.DisposeAsync();
+                await _playableCollectionGroupMap.DisposeAsync();
+                await _playlistCollectionMap.DisposeAsync();
+                await _trackCollectionMap.DisposeAsync();
+                await _imageCollectionMap.DisposeAsync();
+                await _urlCollectionMap.DisposeAsync();
+
+                await Sources.InParallel(x => x.Cast<ICorePlayableCollectionGroup>().DisposeAsync().AsTask());
+
+                _isDisposed = true;
+            }
         }
     }
 }

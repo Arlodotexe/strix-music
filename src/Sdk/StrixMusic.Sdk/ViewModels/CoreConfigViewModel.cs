@@ -48,9 +48,6 @@ namespace StrixMusic.Sdk.ViewModels
         });
 
         /// <inheritdoc/>
-        public IServiceProvider? Services => _coreConfig.Services;
-
-        /// <inheritdoc/>
         AbstractUICollection ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
 
         /// <inheritdoc cref="ICoreConfigBase.AbstractUIElements" />

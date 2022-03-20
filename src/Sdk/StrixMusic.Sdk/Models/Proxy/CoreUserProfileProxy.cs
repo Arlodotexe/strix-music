@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="CoreUserProfileProxy"/>.
         /// </summary>
-        public CoreUserProfileProxy(ICoreUserProfile userProfile, ISettingsService settingsService)
+        public CoreUserProfileProxy(ICoreUserProfile userProfile)
         {
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
@@ -40,8 +40,8 @@ namespace StrixMusic.Sdk.Models.Merged
             TotalImageCount = _userProfile.TotalImageCount;
             TotalUrlCount = _userProfile.TotalUrlCount;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, new MergedCollectionConfig());
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, new MergedCollectionConfig());
 
             AttachEvents();
         }

@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedAlbumCollection"/>.
         /// </summary>
-        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources, ISettingsService settingsService)
+        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources, MergedCollectionConfig config)
         {
             _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
@@ -53,9 +53,9 @@ namespace StrixMusic.Sdk.Models.Merged
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
-            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, settingsService);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
+            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
 
             AttachEvents(_preferredSource);
         }
@@ -265,8 +265,7 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc />
         public int TotalUrlCount { get; internal set; }
-
-
+        
         /// <inheritdoc/>
         public Task StartDownloadOperationAsync(DownloadOperation operation)
         {

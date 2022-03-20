@@ -36,6 +36,11 @@ namespace StrixMusic.Sdk.Models
         /// <seealso cref="SdkModelPlugin"/>
         /// <seealso cref="GlobalModelPluginConnector"/>
         public PluginManager Plugins { get; }
+
+        /// <summary>
+        /// Configuration options for merging collections items together.
+        /// </summary>
+        public MergedCollectionConfig MergeConfig { get; }
         
         /// <summary>
         /// The available devices.

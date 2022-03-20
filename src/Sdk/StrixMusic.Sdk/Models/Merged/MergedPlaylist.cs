@@ -33,14 +33,14 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylist"/>.
         /// </summary>
-        public MergedPlaylist(IEnumerable<ICorePlaylist> sources, ISettingsService settingsService)
+        public MergedPlaylist(IEnumerable<ICorePlaylist> sources, MergedCollectionConfig config)
         {
             _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, settingsService);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, settingsService);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, settingsService);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
@@ -60,12 +60,12 @@ namespace StrixMusic.Sdk.Models.Merged
 
             if (_preferredSource.RelatedItems != null)
             {
-                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList(), settingsService);
+                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList(), config);
             }
 
             if (_preferredSource.Owner != null)
             {
-                Owner = new CoreUserProfileProxy(_preferredSource.Owner, settingsService);
+                Owner = new CoreUserProfileProxy(_preferredSource.Owner);
             }
 
             AttachEvents(_preferredSource);

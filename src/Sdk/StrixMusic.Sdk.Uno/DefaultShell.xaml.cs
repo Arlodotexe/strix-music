@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -38,6 +37,13 @@ namespace StrixMusic.Shells.Default
 
             _navigationService = SetupNavigationService();
         }
+
+        /// <summary>
+        /// Metadata used to identify this shell before instantiation.
+        /// </summary>
+        public static ShellMetadata Metadata { get; } = new ShellMetadata(id: "default.sandbox",
+                                                                          displayName: "Sandbox",
+                                                                          description: "Used by devs to test and create default controls for other shells.");
 
         private INavigationService<Control> SetupNavigationService()
         {

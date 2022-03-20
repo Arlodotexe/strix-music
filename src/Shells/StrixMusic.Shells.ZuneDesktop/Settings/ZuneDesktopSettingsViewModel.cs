@@ -5,7 +5,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
@@ -36,7 +35,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </summary>
         public IEnumerable<string> ImageNames => _displayNameMap.Keys;
 
-        private readonly ISettingsService _settingsService;
+        private readonly ZuneDesktopSettings _settings;
         private readonly LocalizationResourceLoader _localizationService;
         private string _selectedBackgroundImage = string.Empty;
 
@@ -45,7 +44,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </summary>
         public ZuneDesktopSettingsViewModel()
         {
-            _settingsService = ZuneShell.Ioc.GetRequiredService<ISettingsService>();
+            _settings = ZuneShell.Ioc.GetRequiredService<ZuneDesktopSettings>();
             _localizationService = (LocalizationResourceLoader)Ioc.Default.GetRequiredService<ILocalizationService>();
 
             _displayNameMap = _zuneBackgroundImages.Keys
@@ -67,7 +66,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
 
                 var image = _zuneBackgroundImages[_displayNameMap[value]];
 
-                _settingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image).Forget();
+                _settings.BackgroundImage = image;
+                _ = _settings.SaveAsync();
             }
         }
 
@@ -79,9 +79,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </remarks>
         private async Task LoadInitialValues()
         {
-            var backgroundImage = await _settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+            await _settings.LoadAsync();
 
-            string displayName = _localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", backgroundImage.Name];
+            string displayName = _localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", _settings.BackgroundImage.Name];
             SetProperty(ref _selectedBackgroundImage, displayName);
         }
     }

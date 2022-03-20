@@ -20,31 +20,30 @@ namespace StrixMusic.Sdk.Models.Merged
     {
         private readonly List<ICore> _sources;
         private readonly List<IDevice> _devices;
-        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
         /// </summary>
-        public MergedCore(IEnumerable<ICore> cores, ISettingsService settingsService)
+        public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
+            MergeConfig = config;
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
 
-            Library = new MergedLibrary(_sources.Select(x => x.Library), settingsService);
+            Library = new MergedLibrary(_sources.Select(x => x.Library), config);
 
             if (_sources.All(x => x.Discoverables == null))
-                Discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), settingsService);
+                Discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), config);
 
             if (_sources.All(x => x.Pins == null))
-                Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), settingsService);
+                Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), config);
 
             if (_sources.All(x => x.RecentlyPlayed == null))
-                RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), settingsService);
+                RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
 
-            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new CoreDeviceProxy(device, settingsService)));
+            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new CoreDeviceProxy(device)));
 
             AttachEvents();
-            _settingsService = settingsService;
         }
 
         private void AttachEvents()
@@ -61,8 +60,8 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data, _settingsService), x.Index)).ToList();
-            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data, _settingsService), x.Index)).ToList();
+            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
 
             foreach (var item in itemsToRemove)
                 _devices.RemoveAt(item.Index);
@@ -81,6 +80,9 @@ namespace StrixMusic.Sdk.Models.Merged
 
         /// <inheritdoc/>
         public PluginManager Plugins { get; } = new();
+
+        /// <inheritdoc />
+        public MergedCollectionConfig MergeConfig { get; }
 
         /// <inheritdoc />
         public IReadOnlyList<IDevice> Devices => _devices;

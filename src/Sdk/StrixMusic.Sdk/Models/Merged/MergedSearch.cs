@@ -17,21 +17,21 @@ namespace StrixMusic.Sdk.Models.Merged
     /// </summary>
     public sealed class MergedSearch : ISearch, IMergedMutable<ICoreSearch>
     {
+        private readonly MergedCollectionConfig _config;
         private readonly List<ICoreSearch> _sources;
         private readonly List<ICore> _sourceCores;
-        private readonly ISettingsService _settingsService;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearch"/>.
         /// </summary>
-        public MergedSearch(IReadOnlyList<ICoreSearch> sources, ISettingsService settingsService)
+        public MergedSearch(IReadOnlyList<ICoreSearch> sources, MergedCollectionConfig config)
         {
+            _config = config;
             _sources = sources.ToList();
             _sourceCores = Sources.Select(x => x.SourceCore).ToList();
 
             if (Sources.Any(x => x.SearchHistory != null))
-                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), settingsService);
-            _settingsService = settingsService;
+                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), config);
         }
 
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Models.Merged
         {
             var results = await Sources.InParallel(x => x.GetSearchResultsAsync(query));
 
-            var merged = new MergedSearchResults(results, _settingsService);
+            var merged = new MergedSearchResults(results, _config);
 
             return merged;
         }

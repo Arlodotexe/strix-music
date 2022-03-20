@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedRecentlyPlayed"/> class.
         /// </summary>
-        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources, ISettingsService settingsService)
-            : base(sources, settingsService)
+        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 
@@ -25,21 +25,12 @@ namespace StrixMusic.Sdk.Models.Merged
         IReadOnlyList<ICoreRecentlyPlayed> IMerged<ICoreRecentlyPlayed>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
-        public override bool Equals(ICoreRecentlyPlayed? other)
-        {
-            return other?.Name == Name;
-        }
+        public override bool Equals(ICoreRecentlyPlayed? other) => other?.Name == Name;
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || (obj is ICoreRecentlyPlayed other && Equals(other));
-        }
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || (obj is ICoreRecentlyPlayed other && Equals(other));
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return PreferredSource.GetHashCode();
-        }
+        public override int GetHashCode() => PreferredSource.GetHashCode();
     }
 }

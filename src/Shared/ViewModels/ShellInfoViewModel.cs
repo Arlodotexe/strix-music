@@ -1,16 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.Extensions;
-using OwlCore.Provisos;
-using StrixMusic.Sdk.Uno.Models;
-using StrixMusic.Sdk.Uno.Services.ShellManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.Provisos;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using Windows.Storage;
 
 namespace StrixMusic.Shared.ViewModels

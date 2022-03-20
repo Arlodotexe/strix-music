@@ -11,7 +11,7 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
+namespace StrixMusic.Services
 {
     /// <inheritdoc />
     public sealed class AudioPlayerService : IAudioPlayerService
@@ -153,7 +153,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             await Threading.OnPrimaryThread(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
-                {
                     if (sourceConfig.MediaSourceUri.IsFile)
                     {
                         var file = await StorageFile.GetFileFromPathAsync(sourceConfig.MediaSourceUri.LocalPath);
@@ -166,7 +165,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                         var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
                         _player.MediaPlayer.Source = source;
                     }
-                }
                 else if (sourceConfig.FileStreamSource != null)
                 {
                     var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);

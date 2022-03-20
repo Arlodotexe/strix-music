@@ -3,15 +3,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
+using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
@@ -21,18 +22,25 @@ namespace StrixMusic.Cores.OneDrive
     /// <inheritdoc/>
     public sealed class OneDriveCore : FilesCore
     {
+        private readonly IFolderData _metadataStorage;
         private readonly AbstractButton _completeGenericSetupButton;
         private readonly ILogger<OneDriveCore> _logger;
-        private OneDriveCoreSettingsService? _settingsService;
-        private INotificationService? _notificationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCore"/> class.
         /// </summary>
-        /// <param name="instanceId"></param>
-        public OneDriveCore(string instanceId)
+        /// <param name="instanceId">A unique identifier for this core instance.</param>
+        /// <param name="settingsStorage">A folder abstraction where this core can persist settings data beyond the lifetime of the application.</param>
+        /// <param name="metadataStorage">A folder abstraction where this core can persist metadata for scanned files.</param>
+        /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
+        /// <param name="launcher">Enables launching a URI in the default system application.</param>
+        public OneDriveCore(string instanceId, IFolderData settingsStorage, IFolderData metadataStorage, INotificationService notificationService, ILauncher launcher)
             : base(instanceId)
         {
+            _metadataStorage = metadataStorage;
+            Launcher = launcher;
+            NotificationService = notificationService;
+            Settings = new OneDriveCoreSettings(settingsStorage);
             CoreConfig = new OneDriveCoreConfig(this);
 
             _logger = Ioc.Default.GetRequiredService<ILogger<OneDriveCore>>();
@@ -41,13 +49,40 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc/>
-        public override CoreMetadata Registration => OneDrive.Registration.Metadata;
+        public override CoreMetadata Registration { get; } = Metadata;
 
+        /// <summary>
+        /// The metadata that identifies this core before instantiation.
+        /// </summary>
+        public static CoreMetadata Metadata { get; } = new CoreMetadata(id: nameof(OneDriveCore),
+                                                                        displayName: "OneDrive",
+                                                                        logoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
+                                                                        sdkVer: Version.Parse("0.0.0.0"));
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public override ICoreConfig CoreConfig { get; protected set; }
+
+        /// <summary>
+        /// The message handler to use or requests (wherever possible).
+        /// </summary>
+        public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
+
+        /// <summary>
+        /// The settings for this core instance.
+        /// </summary>
+        public OneDriveCoreSettings Settings { get; }
+
+        /// <summary>
+        /// Gets a service that can notify the user with interactive UI or generic messages.
+        /// </summary>
+        internal INotificationService NotificationService { get; }
+
+        /// <summary>
+        /// Interface that enables launching a URI. 
+        /// </summary>
+        internal ILauncher Launcher { get; }
 
         /// <inheritdoc/>
         public override event EventHandler<CoreState>? CoreStateChanged;
@@ -56,7 +91,7 @@ namespace StrixMusic.Cores.OneDrive
         public override event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc/>
-        public override async Task InitAsync(IServiceCollection services)
+        public async override Task InitAsync()
         {
 #warning TODO: Pass cancellationToken from InitAsync when implemented
             var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken.None);
@@ -66,32 +101,28 @@ namespace StrixMusic.Cores.OneDrive
             if (CoreConfig is not OneDriveCoreConfig coreConfig)
                 return;
 
-            _logger.LogInformation($"Setting up {nameof(OneDriveCoreSettingsService)}");
-            _settingsService = new OneDriveCoreSettingsService(InstanceId);
+            _logger.LogInformation("Getting setting values");
+            await Settings.LoadAsync();
+            var clientId = Settings.ClientId;
+            var tenantId = Settings.TenantId;
+            var folderId = Settings.SelectedFolderId;
+            var firstSetupComplete = Settings.IsFirstSetupComplete;
 
-            _logger.LogInformation($"Getting setting values");
-            var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
-            var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
-            var folderId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId));
-            var firstSetupComplete = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete));
-
-            _logger.LogInformation($"Setting up configuration services");
-            await coreConfig.SetupConfigurationServices(services, _settingsService);
-
-            Guard.IsNotNull(coreConfig.Services, nameof(coreConfig.Services));
-
-            _notificationService = coreConfig.Services.GetRequiredService<INotificationService>();
+            _logger.LogInformation("Setting up configuration services");
+            await coreConfig.SetupConfigurationServices();
 
             // Step 1: Settings OOBE
             if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(tenantId) || !firstSetupComplete)
             {
-                _logger.LogInformation($"Resetting all settings");
-                await _settingsService.ResetAllAsync();
+                _logger.LogInformation("Resetting all settings");
+                var files = await Settings.Folder.GetFilesAsync();
+                await files.InParallel(x => x.Delete());
+                await Settings.LoadAsync();
 
-                _logger.LogInformation($"Triggering setup UI");
+                _logger.LogInformation("Triggering setup UI");
                 ChangeCoreState(CoreState.NeedsSetup);
 
-                _logger.LogInformation($"Creating OOBE");
+                _logger.LogInformation("Creating OOBE");
                 var oobeUI = coreConfig.CreateOutOfBoxSetupAsync();
 
                 var actionButtons = (AbstractUICollection)oobeUI.First(x => x is AbstractUICollection { Id: "actionButtons" });
@@ -103,11 +134,11 @@ namespace StrixMusic.Cores.OneDrive
                 confirmButton.Clicked += OnConfirmClicked;
                 cancelButton.Clicked += OnCancelClicked;
 
-                _logger.LogInformation($"Displaying OOBE");
+                _logger.LogInformation("Displaying OOBE");
                 coreConfig.SaveAbstractUI(oobeUI);
 
-                _logger.LogInformation($"Waiting for completion");
-                await oobeCompletionSemaphore.WaitAsync();
+                _logger.LogInformation("Waiting for completion");
+                await oobeCompletionSemaphore.WaitAsync(cancellationTokenSource.Token);
 
                 return;
 
@@ -116,8 +147,9 @@ namespace StrixMusic.Cores.OneDrive
                     confirmButton.Clicked -= OnConfirmClicked;
                     cancelButton.Clicked -= OnCancelClicked;
 
-                    await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.IsFirstSetupComplete), true);
-                    await InitAsync(services);
+                    Settings.IsFirstSetupComplete = true;
+                    await Settings.SaveAsync();
+                    await InitAsync();
                     oobeCompletionSemaphore.Release();
                 }
 
@@ -137,8 +169,7 @@ namespace StrixMusic.Cores.OneDrive
                 var loggedIn = await coreConfig.TryLoginAsync(cancellationTokenSource.Token);
                 if (!loggedIn)
                 {
-                    Guard.IsNotNull(_notificationService, nameof(_notificationService));
-                    _notificationService.RaiseNotification("Login failed", "An error occurred and we weren't able to log you into OneDrive.");
+                    NotificationService.RaiseNotification("Login failed", "An error occurred and we weren't able to log you into OneDrive.");
 
                     ChangeInstanceDescriptor("Login failed");
                     ChangeCoreState(CoreState.Faulted);
@@ -152,7 +183,7 @@ namespace StrixMusic.Cores.OneDrive
             }
             catch (OperationCanceledException)
             {
-                await _settingsService.ResetAllAsync();
+                await Settings.LoadAsync();
                 ChangeCoreState(CoreState.Unloaded);
                 return;
             }
@@ -160,15 +191,14 @@ namespace StrixMusic.Cores.OneDrive
             {
                 if (ex.InnerExceptions.Any(x => x is HttpRequestException))
                 {
-                    ex.Handle((ex) =>
+                    ex.Handle(x =>
                     {
-                        if (ex is HttpRequestException)
-                        {
-                            RaiseFailedConnectionState();
-                            return true;
-                        }
+                        if (x is not HttpRequestException)
+                            return false;
 
-                        return false;
+                        RaiseFailedConnectionState();
+                        return true;
+
                     });
 
                     cancellationTokenSource.Cancel();
@@ -181,7 +211,7 @@ namespace StrixMusic.Cores.OneDrive
             {
                 ChangeCoreState(CoreState.NeedsSetup);
 
-                _logger.LogInformation($"No folder selected, opening picker.");
+                _logger.LogInformation("No folder selected, opening picker.");
                 var folder = await coreConfig.PickSingleFolderAsync();
                 if (folder is null)
                 {
@@ -190,7 +220,7 @@ namespace StrixMusic.Cores.OneDrive
                     return;
                 }
 
-                await InitAsync(services);
+                await InitAsync();
                 return;
             }
 
@@ -208,29 +238,31 @@ namespace StrixMusic.Cores.OneDrive
                     return;
                 }
 
-                await InitAsync(services);
+                await InitAsync();
                 return;
             }
 
-            _logger.LogInformation($"Setting up metadata scanner.");
-            await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
+            _logger.LogInformation("Setting up metadata scanner.");
 
-            _logger.LogInformation($"Fully configured, setting state.");
+            FileMetadataManager = new FileMetadataManager(selectedFolder, _metadataStorage, NotificationService);
+            await coreConfig.SetupMetadataScannerAsync();
+
+            _logger.LogInformation("Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);
             ChangeCoreState(CoreState.Loaded);
 
-            _logger.LogInformation($"Post config task: setting up generic config UI.");
+            _logger.LogInformation("Post config task: setting up generic config UI.");
             var genericConfig = coreConfig.CreateGenericConfig();
             genericConfig.Add(_completeGenericSetupButton);
 
             coreConfig.SaveAbstractUI(genericConfig);
 
-            _logger.LogInformation($"Initializing library");
+            _logger.LogInformation("Initializing library");
             await Library.Cast<FilesCoreLibrary>().InitAsync();
 
             void RaiseFailedConnectionState()
             {
-                _notificationService?.RaiseNotification("Connection failed", "We weren't able to contact OneDrive");
+                NotificationService?.RaiseNotification("Connection failed", "We weren't able to contact OneDrive");
 
                 ChangeInstanceDescriptor("Login failed");
                 ChangeCoreState(CoreState.Faulted);

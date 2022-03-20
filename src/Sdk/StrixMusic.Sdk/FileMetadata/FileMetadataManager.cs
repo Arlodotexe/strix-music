@@ -14,7 +14,6 @@ using OwlCore.AbstractStorage;
 using OwlCore.AbstractStorage.Scanners;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.FileMetadata.Models;
 using StrixMusic.Sdk.FileMetadata.Repositories;
 using StrixMusic.Sdk.FileMetadata.Scanners;
 using StrixMusic.Sdk.Models;
@@ -29,13 +28,13 @@ namespace StrixMusic.Sdk.FileMetadata
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
 
-        private readonly string _instanceId;
         private readonly IFileScanner _fileScanner;
         private readonly ILogger<FileMetadataManager> _logger;
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly INotificationService? _notificationService;
-        private readonly IFolderData _rootFolder;
+        private readonly IFolderData _rootFolderToScan;
+        private readonly IFolderData _metadataStorage;
 
         private CancellationTokenSource? _inProgressScanCancellationTokenSource;
         private Notification? _filesScannedNotification;
@@ -49,15 +48,14 @@ namespace StrixMusic.Sdk.FileMetadata
         /// <summary>
         /// Creates a new instance of <see cref="FileMetadataManager"/>.
         /// </summary>
-        /// <param name="instanceId">A unique identifier that helps decide where the scanned data is stored.</param>
-        /// <param name="rootFolder">The folder where data is scanned.</param>
-        public FileMetadataManager(string instanceId, IFolderData rootFolder)
+        /// <param name="rootFolderToScan">The folder where data is scanned.</param>
+        /// <param name="metadataStorage">The folder the metadata manager can persist metadata.</param>
+        /// <param name="notificationService">An optional notification service for notifying the user with dynamic data.</param>
+        public FileMetadataManager(IFolderData rootFolderToScan, IFolderData metadataStorage, INotificationService? notificationService = null)
         {
-            _instanceId = instanceId;
-
-            _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+            _notificationService = notificationService;
             _logger = Ioc.Default.GetRequiredService<ILogger<FileMetadataManager>>();
-            _fileScanner = new DepthFirstFileScanner(rootFolder);
+            _fileScanner = new DepthFirstFileScanner(rootFolderToScan);
             _audioMetadataScanner = new AudioMetadataScanner(this);
             _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
 
@@ -67,7 +65,8 @@ namespace StrixMusic.Sdk.FileMetadata
             Artists = new ArtistRepository();
             Playlists = new PlaylistRepository(_playlistMetadataScanner);
 
-            _rootFolder = rootFolder;
+            _rootFolderToScan = rootFolderToScan;
+            _metadataStorage = metadataStorage;
         }
 
         /// <inheritdoc />
@@ -76,17 +75,14 @@ namespace StrixMusic.Sdk.FileMetadata
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
-            _logger.LogInformation($"Getting data storage folder (instanceId {_instanceId})");
-            var dataFolder = await GetDataStorageFolder(_instanceId);
+            _logger.LogInformation($"Setting up repository data location to {_metadataStorage.Path}");
+            _audioMetadataScanner.CacheFolder = _metadataStorage;
 
-            _logger.LogInformation($"Setting up repository data location to {dataFolder.Path}");
-            _audioMetadataScanner.CacheFolder = dataFolder;
-
-            Albums.SetDataFolder(dataFolder);
-            Artists.SetDataFolder(dataFolder);
-            Tracks.SetDataFolder(dataFolder);
-            Playlists.SetDataFolder(dataFolder);
-            Images.SetDataFolder(dataFolder);
+            Albums.SetDataFolder(_metadataStorage);
+            Artists.SetDataFolder(_metadataStorage);
+            Tracks.SetDataFolder(_metadataStorage);
+            Playlists.SetDataFolder(_metadataStorage);
+            Images.SetDataFolder(_metadataStorage);
 
             if (!SkipRepoInit)
             {
@@ -100,17 +96,6 @@ namespace StrixMusic.Sdk.FileMetadata
 
             AttachEvents();
             _logger.LogInformation($"{nameof(InitAsync)} completed.");
-        }
-
-        private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
-        {
-            var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
-
-            var folderData = await primaryFileSystemService.RootFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
-
-            Guard.IsNotNull(folderData, nameof(folderData));
-
-            return folderData;
         }
 
         /// <inheritdoc />
@@ -143,15 +128,7 @@ namespace StrixMusic.Sdk.FileMetadata
         {
             _logger.LogInformation($"Pruning missing metadata.");
             var tracks = await Tracks.GetItemsAsync(0, -1);
-            var removedTracks = new List<TrackMetadata>();
-
-            foreach (var track in tracks)
-            {
-                if (!discoveredFiles.Any(c => c.Path == track.Url))
-                {
-                    removedTracks.Add(track);
-                }
-            }
+            var removedTracks = tracks.Where(track => discoveredFiles.All(c => c.Path != track.Url)).ToList();
 
             foreach (var removedTrack in removedTracks)
             {
@@ -260,7 +237,7 @@ namespace StrixMusic.Sdk.FileMetadata
         public ITrackRepository Tracks { get; }
 
         /// <inheritdoc/>
-        public IImageRepository Images { get; private set; }
+        public IImageRepository Images { get; }
 
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }
@@ -305,14 +282,17 @@ namespace StrixMusic.Sdk.FileMetadata
             CancelIfNeeded();
             FilesFound = 0;
 
-            _logger.LogInformation($"Starting recursive file discovery in {_rootFolder.Path}");
+            _logger.LogInformation($"Starting recursive file discovery in {_rootFolderToScan.Path}");
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
             var discoveredFiles = await _fileScanner.ScanFolderAsync(currentToken);
             var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
-            findingFilesNotif.Dismiss();
+            findingFilesNotif?.Dismiss();
 
             CancelIfNeeded();
+            if (filesToScan.Length == 0)
+                return;
+
             FilesProcessed = 0;
 
             _logger.LogInformation($"Starting metadata scan of audio files");
@@ -320,7 +300,7 @@ namespace StrixMusic.Sdk.FileMetadata
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
             var fileMetadata = await _audioMetadataScanner.ScanMusicFilesAsync(filesToScan, currentToken);
-            scanningMusicNotif.Dismiss();
+            scanningMusicNotif?.Dismiss();
 
             CancelIfNeeded();
 
@@ -329,7 +309,7 @@ namespace StrixMusic.Sdk.FileMetadata
             _currentScanningType = FileScanningType.Playlists;
             var scanningPlaylistsNotif = RaiseProcessingNotification();
             await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata, currentToken);
-            scanningPlaylistsNotif.Dismiss();
+            scanningPlaylistsNotif?.Dismiss();
 
             CancelIfNeeded();
 
@@ -356,7 +336,7 @@ namespace StrixMusic.Sdk.FileMetadata
             if (_filesScannedNotification is null)
                 return;
 
-            _filesScannedNotification.AbstractUICollection.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
+            _filesScannedNotification.AbstractUICollection.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolderToScan.Path}";
         }
 
         private void UpdateFilesFoundNotification()
@@ -364,26 +344,29 @@ namespace StrixMusic.Sdk.FileMetadata
             if (_filesFoundNotification is null)
                 return;
 
-            _filesFoundNotification.AbstractUICollection.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
+            _filesFoundNotification.AbstractUICollection.Subtitle = $"Found {FilesFound} in {_rootFolderToScan.Path}";
         }
 
-        private Notification RaiseFileDiscoveryNotification()
+        private Notification? RaiseFileDiscoveryNotification()
         {
-            Guard.IsNotNull(_notificationService, nameof(_notificationService));
+            if (_notificationService is null)
+                return null;
 
             var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = "Discovering files",
-                Subtitle = $"Found {FilesFound} in {_rootFolder.Path}",
-                Items = new AbstractProgressIndicator(NewGuid(), null).IntoList(),
+                Subtitle = $"Found {FilesFound} in {_rootFolderToScan.Path}",
             };
 
+            elementGroup.Add(new AbstractProgressIndicator(NewGuid(), true));
+            
             return _filesFoundNotification = _notificationService.RaiseNotification(elementGroup);
         }
 
-        private Notification RaiseProcessingNotification()
+        private Notification? RaiseProcessingNotification()
         {
-            Guard.IsNotNull(_notificationService, nameof(_notificationService));
+            if (_notificationService is null)
+                return null;
 
             _progressUIElement = new AbstractProgressIndicator(NewGuid(), FilesProcessed, FilesFound);
 
@@ -397,9 +380,10 @@ namespace StrixMusic.Sdk.FileMetadata
             var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = $"Scanning {scanningTypeStr}",
-                Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}",
-                Items = _progressUIElement.IntoList(),
+                Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolderToScan.Path}",
             };
+            
+            elementGroup.Add(_progressUIElement);
 
             return _filesScannedNotification = _notificationService.RaiseNotification(elementGroup);
         }

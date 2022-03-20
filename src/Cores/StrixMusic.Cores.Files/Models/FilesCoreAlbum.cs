@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.FileMetadata;
@@ -18,7 +19,7 @@ namespace StrixMusic.Cores.Files.Models
     /// </summary>
     public sealed class FilesCoreAlbum : ICoreAlbum
     {
-        private readonly IFileMetadataManager _fileMetadataManager;
+        private readonly IFileMetadataManager? _fileMetadataManager;
         private AlbumMetadata _albumMetadata;
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace StrixMusic.Cores.Files.Models
             Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
 
             Id = albumMetadata.Id;
-            _fileMetadataManager = sourceCore.GetService<IFileMetadataManager>();
+            _fileMetadataManager = sourceCore.Cast<FilesCore>().FileMetadataManager;
             SourceCore = sourceCore;
             _albumMetadata = albumMetadata;
 
@@ -43,11 +44,13 @@ namespace StrixMusic.Cores.Files.Models
 
         private void AttachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Albums.MetadataUpdated += Albums_MetadataUpdated;
         }
 
         private void DetachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Albums.MetadataUpdated -= Albums_MetadataUpdated;
         }
 
@@ -100,6 +103,8 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleTracksChangedAsync(HashSet<string> oldTrackIds, HashSet<string> newTrackIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
             if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -134,6 +139,8 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleArtistsChangedAsync(HashSet<string> newArtistIds, HashSet<string> oldArtistIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
             if (oldArtistIds.OrderBy(s => s).SequenceEqual(newArtistIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -168,6 +175,8 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleImagesChangedAsync(HashSet<string> oldImageIds, HashSet<string> newImageIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
             if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -524,6 +533,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(Id, offset, limit);
 
             foreach (var track in tracks)
@@ -536,6 +546,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var artists = await _fileMetadataManager.Artists.GetArtistsByAlbumId(Id, offset, limit);
 
             foreach (var artist in artists)
@@ -548,6 +559,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             if (_albumMetadata.ImageIds == null)
                 yield break;
 
