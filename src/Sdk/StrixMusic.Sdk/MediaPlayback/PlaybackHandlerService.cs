@@ -42,7 +42,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Sets the local playback device for this playback handler.
         /// </summary>
-        /// <param name="strixDevice"></param>
         public void SetStrixDevice(StrixDevice strixDevice)
         {
             _strixDevice = strixDevice;

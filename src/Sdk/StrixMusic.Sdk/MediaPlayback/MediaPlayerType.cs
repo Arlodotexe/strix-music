@@ -15,18 +15,18 @@ namespace StrixMusic.Sdk.MediaPlayback
         None,
 
         /// <summary>
-        /// Plays using a standard playback source (web resources or local files).
+        /// Indicates a standard, unencrypted playback source.
         /// </summary>
         Standard,
 
         /// <summary>
-        /// Plays using a PlayReady-enabled playback source.
-        /// </summary>
-        PlayReady,
-
-        /// <summary>
-        /// The core does not support local playback. All device manipulations will be delegated to the core.
+        /// Indicates remote playback only. All device manipulations will be delegated to the core.
         /// </summary>
         RemoteOnly,
+
+        /// <summary>
+        /// Indicates support for a PlayReady-enabled playback source.
+        /// </summary>
+        PlayReady,
     }
 }

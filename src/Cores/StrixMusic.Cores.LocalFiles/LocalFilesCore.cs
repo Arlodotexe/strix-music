@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
@@ -12,29 +10,57 @@ using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.LocalFiles
 {
     /// <inheritdoc />
-    public sealed partial class LocalFilesCore : FilesCore
+    public sealed class LocalFilesCore : FilesCore
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCore"/> class.
         /// </summary>
-        /// <param name="instanceId"></param>
-        public LocalFilesCore(string instanceId)
+        /// <param name="instanceId">A unique identifier for this core instance.</param>
+        /// <param name="fileSystem">An abstraction of the local file system.</param>
+        /// <param name="settingsStorage">A folder abstraction where this core can persist settings data beyond the lifetime of the application.</param>
+        /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
+        public LocalFilesCore(string instanceId, IFileSystemService fileSystem, IFolderData settingsStorage, INotificationService notificationService)
             : base(instanceId)
         {
+            FileSystem = fileSystem;
+            NotificationService = notificationService;
+            Settings = new LocalFilesCoreSettings(settingsStorage);
             CoreConfig = new LocalFilesCoreConfig(this);
         }
 
         /// <inheritdoc/>
-        public override CoreMetadata Registration => LocalFiles.Registration.Metadata;
+        public override CoreMetadata Registration { get; } = Metadata;
+
+        /// <summary>
+        /// The metadata that identifies this core before instantiation.
+        /// </summary>
+        public static CoreMetadata Metadata { get; } = new CoreMetadata(id: nameof(LocalFilesCore),
+                                                                        displayName: "Local Files",
+                                                                        logoUri: new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
+                                                                        sdkVer: Version.Parse("0.0.0.0"));
 
         /// <inheritdoc/>
         public override ICoreConfig CoreConfig { get; protected set; }
+
+        /// <summary>
+        /// The settings for this core instance.
+        /// </summary>
+        internal LocalFilesCoreSettings Settings { get; }
+
+        /// <summary>
+        /// An abstraction of the local file system.
+        /// </summary>
+        internal IFileSystemService FileSystem { get; }
+
+        /// <summary>
+        /// Gets a service that can notify the user with interactive UI or generic messages.
+        /// </summary>
+        internal INotificationService NotificationService { get; }
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.
@@ -61,25 +87,23 @@ namespace StrixMusic.Cores.LocalFiles
         public override event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc/>
-        public override async Task InitAsync(IServiceCollection services)
+        public async override Task InitAsync()
         {
-            Guard.IsNotNull(services, nameof(services));
-
             ChangeCoreState(CoreState.Loading);
 
-            if (!(CoreConfig is LocalFilesCoreConfig coreConfig))
+            if (CoreConfig is not LocalFilesCoreConfig coreConfig)
                 return;
 
-            await coreConfig.SetupConfigurationServices(services);
+            await coreConfig.SetupConfigurationServices();
 
             var ui = coreConfig.CreateGenericConfig();
             var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
 
-            var configuredFolder = await coreConfig.GetConfiguredFolder();
+            await Settings.LoadAsync();
+            var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
             if (configuredFolder is null)
             {
-                var fileSystem = SourceCore.GetService<IFileSystemService>();
-                var pickedFolder = await fileSystem.PickFolder();
+                var pickedFolder = await FileSystem.PickFolder();
 
                 // No folder selected.
                 if (pickedFolder is null)
@@ -88,7 +112,9 @@ namespace StrixMusic.Cores.LocalFiles
                     return;
                 }
 
-                await SourceCore.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+                Settings.FolderPath = pickedFolder.Path;
+                await Settings.SaveAsync();
+
                 ui.Subtitle = pickedFolder.Path;
 
                 coreConfig.SaveAbstractUI(ui);
@@ -99,7 +125,7 @@ namespace StrixMusic.Cores.LocalFiles
                 _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
                 ChangeCoreState(CoreState.Configured);
-                await InitAsync(services);
+                await InitAsync();
                 return;
             }
 
@@ -112,12 +138,11 @@ namespace StrixMusic.Cores.LocalFiles
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
-            await coreConfig.SetupServices(services);
+            await coreConfig.SetupServices(configuredFolder);
             await Library.Cast<FilesCoreLibrary>().InitAsync();
 
-            Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));
             ChangeCoreState(CoreState.Loaded);
+            IsInitialized = true;
         }
-
     }
 }

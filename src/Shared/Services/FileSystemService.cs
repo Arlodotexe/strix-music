@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OwlCore.AbstractStorage;
 using OwlCore.Uno.Extensions;
 using StrixMusic.Sdk.Uno.Models;
 using Windows.ApplicationModel.Core;
@@ -11,7 +12,7 @@ using Windows.Storage.Pickers;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-namespace OwlCore.AbstractStorage
+namespace StrixMusic.Services
 {
     /// <inheritdoc cref="IFileSystemService" />
     public sealed class FileSystemService : IFileSystemService
@@ -35,6 +36,11 @@ namespace OwlCore.AbstractStorage
 
             RootFolder = new FolderData(rootFolder);
         }
+
+        /// <summary>
+        /// A shared singleton instance of <see cref="FileSystemService"/>.
+        /// </summary>
+        public static FileSystemService Singleton { get; } = new FileSystemService();
 
         /// <inheritdoc />
         public bool IsInitialized { get; set; }
@@ -124,16 +130,16 @@ namespace OwlCore.AbstractStorage
         }
 
         /// <inheritdoc/>
-        public async Task<IFolderData?> GetFolderFromPathAsync(string path)
+        public Task<IFolderData?> GetFolderFromPathAsync(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException();
 
             var folderData = _registeredFolders.FirstOrDefault(x => x.Path == path);
             if (folderData is null)
-                return null;
+                return Task.FromResult<IFolderData?>(null);
             else
-                return folderData;
+                return Task.FromResult<IFolderData?>(folderData);
 
             // https://github.com/unoplatform/uno/issues/7401
             // var folderData = await StorageFolder.GetFolderFromPathAsync(path);
@@ -153,7 +159,7 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc/>
         public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
-            var folderData = await RootFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            var folderData = await RootFolder.CreateFolderAsync(folderName, OwlCore.AbstractStorage.CreationCollisionOption.OpenIfExists);
 
             return folderData;
         }
@@ -161,10 +167,8 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            await RootFolder.EnsureExists();
-
 #if NETFX_CORE
-            var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries;
+            var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries.ToArray();
 
             if (persistentAccessEntries == null || !persistentAccessEntries.Any())
                 return;
@@ -182,7 +186,7 @@ namespace OwlCore.AbstractStorage
                     // Folder may have been removed.
                     StorageApplicationPermissions.FutureAccessList.Remove(accessEntry.Token);
                 }
-                    
+
                 if (folder == null)
                     continue;
 

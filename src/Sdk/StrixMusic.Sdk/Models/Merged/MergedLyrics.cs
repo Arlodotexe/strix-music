@@ -21,12 +21,12 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Creates a new instance of <see cref="MergedLyrics"/>.
         /// </summary>
-        public MergedLyrics(ICoreLyrics source, ISettingsService settingsService)
+        public MergedLyrics(ICoreLyrics source, MergedCollectionConfig config)
         {
-            _source = source ?? ThrowHelper.ThrowArgumentNullException<ICoreLyrics>(nameof(source));
+            _source = source;
 
             Sources = source.IntoList();
-            Track = new MergedTrack(source.Track.IntoList(), settingsService);
+            Track = new MergedTrack(source.Track.IntoList(), config);
         }
 
         /// <inheritdoc />

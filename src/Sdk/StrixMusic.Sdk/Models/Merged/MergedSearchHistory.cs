@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchHistory"/> class.
         /// </summary>
-        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories, ISettingsService settingsService)
-            : base(searchHistories, settingsService)
+        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories, MergedCollectionConfig config)
+            : base(searchHistories, config)
         {
         }
 
@@ -27,20 +27,14 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc cref="Equals(object?)" />
         public override bool Equals(ICoreSearchHistory? other)
         {
-            // Search histories should always be merged together.
+            // Search history should always be merged together.
             return true;
         }
 
         /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || (obj is ICoreSearchHistory other && Equals(other));
-        }
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || (obj is ICoreSearchHistory other && Equals(other));
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return PreferredSource.GetHashCode();
-        }
+        public override int GetHashCode() => PreferredSource.GetHashCode();
     }
 }

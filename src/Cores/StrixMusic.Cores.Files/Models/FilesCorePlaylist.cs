@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.FileMetadata.Models;
@@ -17,7 +18,7 @@ namespace StrixMusic.Cores.Files.Models
     /// </summary>
     public sealed class LocalFilesCorePlaylist : ICorePlaylist
     {
-        private readonly IFileMetadataManager _fileMetadataManager;
+        private readonly IFileMetadataManager? _fileMetadataManager;
         private PlaylistMetadata _playlistMetadata;
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace StrixMusic.Cores.Files.Models
             Guard.IsNotNullOrWhiteSpace(playlistMetadata.Id, nameof(playlistMetadata.Id));
 
             Id = playlistMetadata.Id;
-            _fileMetadataManager = sourceCore.GetService<IFileMetadataManager>();
+            _fileMetadataManager = sourceCore.Cast<FilesCore>().FileMetadataManager;
 
             Duration = playlistMetadata.Duration ?? default;
 
@@ -41,11 +42,13 @@ namespace StrixMusic.Cores.Files.Models
 
         private void AttachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Playlists.MetadataUpdated += Albums_MetadataUpdated;
         }
 
         private void DetachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Playlists.MetadataUpdated -= Albums_MetadataUpdated;
         }
 
@@ -262,6 +265,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var trackIds = _playlistMetadata.TrackIds;
 
             Guard.IsNotNull(trackIds, nameof(trackIds));

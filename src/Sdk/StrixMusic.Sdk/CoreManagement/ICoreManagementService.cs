@@ -5,10 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.CoreManagement
 {
@@ -18,12 +16,12 @@ namespace StrixMusic.Sdk.CoreManagement
     public interface ICoreManagementService : IAsyncInit
     {
         /// <summary>
-        /// Raised when a core is added to the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Raised when a core is added to the registry.
         /// </summary>
         event EventHandler<CoreInstanceEventArgs>? CoreInstanceRegistered;
 
         /// <summary>
-        /// Raised when a core is removed from the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Raised when a core is removed from the registry.
         /// </summary>
         event EventHandler<CoreInstanceEventArgs>? CoreInstanceUnregistered;
 
@@ -40,14 +38,14 @@ namespace StrixMusic.Sdk.CoreManagement
         public Task<IReadOnlyList<string>> GetCoreInstanceRanking();
 
         /// <summary>
-        /// Registers a core into the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Registers a new core instance.
         /// </summary>
         /// <param name="coreMetadata">The metadata for the core being registered.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the <see cref="ICore.InstanceId"/> used to uniquely identify the core instance.</returns>
         Task<string> RegisterCoreInstanceAsync(CoreMetadata coreMetadata);
 
         /// <summary>
-        /// Unregisters a core from the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Unregisters an existing core instance.
         /// </summary>
         /// <param name="instanceId">The ID of the core to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -59,12 +57,5 @@ namespace StrixMusic.Sdk.CoreManagement
         /// <param name="core">The core instance to check.</param>
         /// <returns>The metadata used to create the given <paramref name="core"/>.</returns>
         CoreMetadata GetCoreMetadata(ICore core);
-
-        /// <summary>
-        /// Creates the services that are injected into a core on InitAsync.
-        /// </summary>
-        /// <param name="core">The core to create services for.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<IServiceCollection> CreateInitialCoreServicesAsync(ICore core);
     }
 }

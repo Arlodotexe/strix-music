@@ -17,21 +17,15 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroup"/> class.
         /// </summary>
-        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> sources, ISettingsService settingsService)
-            : base(sources, settingsService)
+        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || (obj is ICorePlayableCollectionGroup other && Equals(other));
-        }
+        public override bool Equals(object? obj) => ReferenceEquals(this, obj) || (obj is ICorePlayableCollectionGroup other && Equals(other));
 
         /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return PreferredSource.GetHashCode();
-        }
+        public override int GetHashCode() => PreferredSource.GetHashCode();
     }
 }

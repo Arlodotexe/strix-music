@@ -53,13 +53,14 @@ namespace StrixMusic.Cores.OneDrive.Services
             _coreConfig = coreConfig;
             _logger = Ioc.Default.GetRequiredService<ILogger<AuthenticationManager>>();
 
+#warning Remove platform helper dependency
             LoginMethod = PlatformHelper.Current switch
             {
                 Platform.UWP => LoginMethod.DeviceCode,
                 Platform.WASM => LoginMethod.Interactive,
                 Platform.Droid => LoginMethod.Interactive,
                 Platform.Unknown => LoginMethod.None,
-                _ => ThrowHelper.ThrowNotSupportedException<LoginMethod>($"Current platform {Sdk.Helpers.PlatformHelper.Current} not supported."),
+                _ => ThrowHelper.ThrowNotSupportedException<LoginMethod>($"Current platform {PlatformHelper.Current} not supported."),
             };
 
             _logger.LogInformation($"Creating {nameof(PublicClientApplicationBuilder)}");
@@ -227,7 +228,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             _logger.LogInformation($"Creating graph client");
 
-            var httpHandler = Ioc.Default.GetRequiredService<ISharedFactory>().GetPlatformSpecificHttpClientHandler();
+            var httpHandler = _coreConfig.SourceCore.Cast<OneDriveCore>().HttpMessageHandler;
 
             var authProvider = new DelegateAuthenticationProvider(requestMessage =>
             {

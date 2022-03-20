@@ -259,14 +259,17 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
-        public Task InitAsync(IServiceCollection services) => Task.Run(async () =>
+        public Task InitAsync() => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Host)
                 return;
 
-            SetupRemoteServices(services, InstanceId);
             await RemoteInitAsync();
+            IsInitialized = true;
         });
+        
+        /// <inheritdoc/>
+        public bool IsInitialized { get; private set; }
 
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
         private Task RemoteInitAsync() => Task.Run(async () =>
@@ -279,8 +282,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
             Guard.IsNotNull(_core, nameof(_core));
 
-            var services = SetupRemoteServices(InstanceId);
-            await _core.InitAsync(services);
+            await _core.InitAsync();
 
             await _memberRemote.RemoteReleaseAsync(nameof(InitAsync));
         });
@@ -348,23 +350,5 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
                 return null;
             }
         });
-
-        private static void SetupRemoteServices(IServiceCollection clientServices, string remotingId)
-        {
-            var notificationService = clientServices.FirstOrDefault(x => x.ServiceType == typeof(INotificationService)) as INotificationService;
-
-            if (notificationService != null)
-                _ = new RemoteNotificationService(remotingId, notificationService);
-        }
-
-        private static IServiceCollection SetupRemoteServices(string remotingId)
-        {
-            var services = new ServiceCollection();
-            var notificationService = new RemoteNotificationService(remotingId);
-
-            services.AddSingleton<RemoteNotificationService>(x => notificationService);
-
-            return services;
-        }
     }
 }

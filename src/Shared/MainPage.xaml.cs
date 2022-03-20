@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
@@ -8,15 +12,9 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Services;
-using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Media;
+using StrixMusic.Services;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -60,7 +58,7 @@ namespace StrixMusic.Shared
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
-            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            var settingsService = Ioc.Default.GetRequiredService<AppSettings>();
             _navigationService = CurrentWindow.NavigationService;
 
             LoadRegisteredMediaPlayerElements();
@@ -90,7 +88,7 @@ namespace StrixMusic.Shared
 
         private void AttachEvents()
         {
-            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<AppSettings>().PropertyChanged += OnSettingChanged;
 
 #warning Remove me when live core editing is stable.
             Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceRegistered += ShowEditCoresWarning;
@@ -100,19 +98,19 @@ namespace StrixMusic.Shared
             {
                 Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Restart recommended",
                     "Editing cores while the app is running is not stable yet");
-            };
+            }
         }
 
         private void DetachEvents()
         {
             Unloaded -= MainPage_Unloaded;
 
-            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<AppSettings>().PropertyChanged -= OnSettingChanged;
         }
 
-        private async void SettingsService_SettingChanged(object? sender, SettingChangedEventArgs e)
+        private async void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.Key == nameof(SettingsKeysUI.FallbackShell) || e.Key == nameof(SettingsKeysUI.PreferredShell))
+            if (e.PropertyName == nameof(AppSettings.FallbackShell) || e.PropertyName == nameof(AppSettings.PreferredShell))
             {
                 await SetupShellsFromSettings();
 
@@ -131,12 +129,12 @@ namespace StrixMusic.Shared
                     shellToCreate = FallbackShell;
 
                 // Don't setup the fallback shell if its same as the preferred shell.
-                if (e.Key == nameof(SettingsKeysUI.FallbackShell) && shellToCreate != PreferredShell)
+                if (e.PropertyName == nameof(AppSettings.FallbackShell) && shellToCreate != PreferredShell)
                 {
                     await SetupShell(shellToCreate);
                 }
 
-                if (e.Key == nameof(SettingsKeysUI.PreferredShell))
+                if (e.PropertyName == nameof(AppSettings.PreferredShell))
                 {
                     await SetupShell(shellToCreate);
                 }
@@ -156,7 +154,7 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_navigationService, nameof(_navigationService));
 
             // Gets the preferred shell from settings.
-            var preferredShellId = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
+            var preferredShellId = Ioc.Default.GetRequiredService<AppSettings>().PreferredShell;
 
             PreferredShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == preferredShellId);
 
@@ -167,7 +165,7 @@ namespace StrixMusic.Shared
             }
 
             // Gets the preferred shell from settings.
-            var fallbackShellId = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
+            var fallbackShellId = Ioc.Default.GetRequiredService<AppSettings>().FallbackShell;
 
             FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == fallbackShellId);
         }

@@ -9,7 +9,7 @@ using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
-namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
+namespace StrixMusic.Services
 {
     /// <summary>
     /// Integrates an <see cref="IPlaybackHandlerService"/> with the system media transport controls.
@@ -118,7 +118,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 _playbackHandlerService.ToggleShuffleAsync();
         }
 
-        private void PlaybackHandlerService_PositionChanged(object sender, TimeSpan e)
+        private void PlaybackHandlerService_PositionChanged(object? sender, TimeSpan e)
         {
             _systemMediaTransportControls.UpdateTimelineProperties(new SystemMediaTransportControlsTimelineProperties
             {
@@ -128,17 +128,17 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             });
         }
 
-        private void PlaybackHandlerService_ShuffleStateChanged(object sender, bool e)
+        private void PlaybackHandlerService_ShuffleStateChanged(object? sender, bool e)
         {
             _systemMediaTransportControls.ShuffleEnabled = e;
         }
 
-        private void PlaybackHandlerService_RepeatStateChanged(object sender, RepeatState e)
+        private void PlaybackHandlerService_RepeatStateChanged(object? sender, RepeatState e)
         {
             _systemMediaTransportControls.AutoRepeatMode = (MediaPlaybackAutoRepeatMode)e;
         }
 
-        private void PlaybackHandlerService_PlaybackStateChanged(object sender, PlaybackState e)
+        private void PlaybackHandlerService_PlaybackStateChanged(object? sender, PlaybackState e)
         {
             if (e == PlaybackState.Loaded)
                 return;
@@ -161,7 +161,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             };
         }
 
-        private async void PlaybackHandlerService_CurrentItemChanged(object sender, PlaybackItem? e)
+        private async void PlaybackHandlerService_CurrentItemChanged(object? sender, PlaybackItem? e)
         {
             var updater = _systemMediaTransportControls.DisplayUpdater;
             updater.Type = MediaPlaybackType.Music;
@@ -173,6 +173,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 updater.Update();
                 return;
             }
+
             Guard.IsNotNull(e.Track, nameof(e.Track));
 
             var sourceConfig = e;
@@ -183,16 +184,14 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             // Images
             if (e.Track.TotalImageCount == 0)
-            {
                 updater.Thumbnail = null;
-            }
             else
             {
                 // Just the first, we don't care about the size.
 
                 var images = await e.Track.GetImagesAsync(1, 0);
 
-                 foreach (var image in images)
+                foreach (var image in images)
                 {
                     if (image.Uri.IsFile)
                     {
@@ -200,9 +199,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                         updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
                     }
                     else
-                    {
                         updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(image.Uri);
-                    }
 
                     break;
                 }
@@ -225,7 +222,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             var artists = await e.Track.GetArtistItemsAsync(1, 0);
 
-             foreach (var artist in artists)
+            foreach (var artist in artists)
             {
                 musicProperties.Artist = artist.Name;
                 break;

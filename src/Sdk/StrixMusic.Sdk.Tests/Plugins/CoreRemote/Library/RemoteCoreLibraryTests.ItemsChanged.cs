@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
@@ -19,7 +18,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreateAlbum(remoteClientCore);
 
@@ -75,7 +74,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreateArtist(remoteClientCore);
 
@@ -131,7 +130,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreatePlaylist(remoteClientCore);
 
@@ -187,7 +186,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreateTrack(remoteClientCore);
 
@@ -243,7 +242,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreateImage(remoteClientCore);
 
@@ -299,7 +298,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreateUrl(remoteClientCore);
 
@@ -355,7 +354,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var newItem = MockCoreItemFactory.CreatePlayableCollectionGroup(remoteClientCore);
 

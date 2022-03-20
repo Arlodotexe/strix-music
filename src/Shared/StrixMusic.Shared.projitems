@@ -36,8 +36,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.UWP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagementService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml.cs">
       <DependentUpon>ShellSelector.xaml</DependentUpon>
     </Compile>

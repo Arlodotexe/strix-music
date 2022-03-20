@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Uno.Services.ShellManagement
         /// </summary>
         /// <param name="coreFactory">A <see cref="Func{T, TResult}"/> that, given an instance ID, returns an instance of a core.</param>
         /// <param name="metadata">The metadata to register for this core.</param>
-        public static void Register(Func<Shell> coreFactory, ShellMetadata metadata)
+        public static void Register(ShellMetadata metadata, Func<Shell> coreFactory)
         {
             _metadataRegistry.Add(metadata);
             _coreFactories.Add(metadata, coreFactory);

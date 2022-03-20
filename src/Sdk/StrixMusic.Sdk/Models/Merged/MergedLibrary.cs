@@ -17,8 +17,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedLibrary"/> class.
         /// </summary>
-        public MergedLibrary(IEnumerable<ICoreLibrary> sources, ISettingsService settingsService)
-            : base(sources, settingsService)
+        public MergedLibrary(IEnumerable<ICoreLibrary> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 

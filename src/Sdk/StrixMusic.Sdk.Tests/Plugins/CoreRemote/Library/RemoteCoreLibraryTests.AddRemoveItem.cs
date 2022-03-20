@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Sdk.Tests.Mock.Core;
@@ -15,7 +14,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalChildrenCount;
 
@@ -36,7 +35,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalAlbumItemsCount;
 
@@ -59,7 +58,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalArtistItemsCount;
 
@@ -82,7 +81,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalPlaylistItemsCount;
 
@@ -105,7 +104,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalTrackCount;
 
@@ -128,7 +127,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalImageCount;
 
@@ -151,7 +150,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalUrlCount;
 
@@ -174,7 +173,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalChildrenCount;
 
@@ -195,7 +194,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalAlbumItemsCount;
 
@@ -216,7 +215,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalArtistItemsCount;
 
@@ -237,7 +236,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalPlaylistItemsCount;
 
@@ -258,7 +257,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalTrackCount;
 
@@ -279,7 +278,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalImageCount;
 
@@ -300,7 +299,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             var initialCount = remoteClientCore.Library.TotalUrlCount;
 

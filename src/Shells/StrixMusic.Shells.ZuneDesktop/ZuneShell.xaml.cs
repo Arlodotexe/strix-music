@@ -3,19 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views;
-using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Shells.ZuneDesktop.Settings;
-using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -31,17 +30,28 @@ namespace StrixMusic.Shells.ZuneDesktop
     /// </summary>
     public sealed partial class ZuneShell : Shell
     {
+        private readonly IFolderData _settingStorage;
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell()
+        public ZuneShell(IFolderData settingStorage)
         {
             this.InitializeComponent();
 
             Loaded += ZuneShell_Loaded;
+            _settingStorage = settingStorage;
         }
+
+        /// <summary>
+        /// Metadata used to identify this shell before instantiation.
+        /// </summary>
+        public static ShellMetadata Metadata { get; } = new ShellMetadata(id: "Zune.Desktop.4.8",
+                                                                          displayName: "Zune Desktop",
+                                                                          description: "A faithful recreation of the iconic Zune client for Windows",
+                                                                          inputMethods: InputMethods.Mouse,
+                                                                          minWindowSize: new Size(width: 700, height: 600));
 
         /// <inheritdoc/>
         public override Task InitServices(IServiceCollection services)
@@ -51,11 +61,10 @@ namespace StrixMusic.Shells.ZuneDesktop
             SetupNotificationService();
             SetupLocalizationService();
 
-            var textStorageService = new TextStorageService();
-            var settingsService = new ZuneDesktopSettingsService(textStorageService);
-            settingsService.SettingChanged += SettingsService_SettingChanged;
+            var settings = new ZuneDesktopSettings(_settingStorage);
+            settings.PropertyChanged += SettingsService_SettingChanged;
 
-            services.AddSingleton<ISettingsService>(settingsService);
+            services.AddSingleton(settings);
 
             return base.InitServices(services);
         }
@@ -86,40 +95,38 @@ namespace StrixMusic.Shells.ZuneDesktop
             Loaded -= ZuneShell_Loaded;
 
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
-            SetupBackgroundImage();
+            _ = SetupBackgroundImage();
         }
 
-        private async void SetupBackgroundImage()
+        private async Task SetupBackgroundImage()
         {
-            var settingsService = Ioc.GetRequiredService<ISettingsService>();
+            var settingsService = Ioc.GetRequiredService<ZuneDesktopSettings>();
+            await settingsService.LoadAsync();
 
-            var backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+            var backgroundImage = settingsService.BackgroundImage;
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            if (backgroundImage.IsNone)
             {
-                if (backgroundImage.IsNone)
-                {
-                    BackgroundImage.Visibility = Visibility.Collapsed;
-                    return;
-                }
-                else
-                {
-                    BackgroundImage.Visibility = Visibility.Visible;
-                }
+                BackgroundImage.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                BackgroundImage.Visibility = Visibility.Visible;
+            }
 
-                BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
-                BackgroundImageBrush.ImageSource = bitmapImage;
-                BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
-                BackgroundImageBrush.Stretch = backgroundImage.Stretch;
-            });
+            BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
+            BackgroundImageBrush.ImageSource = bitmapImage;
+            BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
+            BackgroundImageBrush.Stretch = backgroundImage.Stretch;
         }
 
-        private async void ChangeBackgroundImage()
+        private void ChangeBackgroundImage()
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-               {
-                   HideBackground.Begin();
-               });
+            _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                HideBackground.Begin();
+            });
         }
 
         /// <inheritdoc/>
@@ -200,9 +207,9 @@ namespace StrixMusic.Shells.ZuneDesktop
             }
         }
 
-        private void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
+        private void SettingsService_SettingChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.Key == nameof(ZuneDesktopSettingsKeys.BackgroundImage))
+            if (e.PropertyName == nameof(ZuneDesktopSettings.BackgroundImage))
             {
                 ChangeBackgroundImage();
             }

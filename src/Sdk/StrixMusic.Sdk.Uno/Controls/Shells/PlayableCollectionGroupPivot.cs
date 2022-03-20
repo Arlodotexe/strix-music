@@ -1,11 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
-using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,9 +12,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
     /// </summary>
     public sealed partial class PlayableCollectionGroupPivot : Control
     {
-        private readonly DefaultSettingsService _settingsService;
-
-        private readonly Dictionary<string, int> _pivotItemPositionMemo = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> _pivotItemPositionMemo = new Dictionary<string, int>();
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="RestoreSelectedPivot"/> property.
@@ -130,11 +123,10 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         /// </summary>
         public PlayableCollectionGroupPivot()
         {
-            _settingsService = (DefaultSettingsService)Ioc.Default.GetRequiredService<ISettingsService>();
         }
 
         /// <inheritdoc />
-        protected override async void OnApplyTemplate()
+        protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
@@ -146,7 +138,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
             PART_PlaylistsPivotItem = GetTemplateChild(nameof(PART_PlaylistsPivotItem)) as PivotItem;
             PART_AllEmptyContentPresenter = GetTemplateChild(nameof(PART_AllEmptyContentPresenter)) as ContentPresenter;
 
-            await RestoreMostRecentSelectedPivot();
+            RestoreMostRecentSelectedPivot();
 
             AttachEvents();
 
@@ -208,11 +200,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
             if (PART_Pivot == null)
                 return;
 
-            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeysUI.PivotSelectionMemo), respectCurrentShell: true);
-
-            pivotSelectionMemo[ViewModel.Id] = PART_Pivot.SelectedIndex;
-
-            await _settingsService.SetValue(nameof(SettingsKeysUI.PivotSelectionMemo), pivotSelectionMemo, respectCurrentShell: true);
+            _pivotItemPositionMemo[ViewModel.Id] = PART_Pivot.SelectedIndex;
         }
 
         /// <summary>
@@ -239,12 +227,12 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
             }
         }
 
-        private async Task RestoreMostRecentSelectedPivot()
+        private void RestoreMostRecentSelectedPivot()
         {
             if (!RestoreSelectedPivot || PART_Pivot == null)
                 return;
 
-            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeysUI.PivotSelectionMemo), respectCurrentShell: true);
+            var pivotSelectionMemo = _pivotItemPositionMemo;
 
             if (pivotSelectionMemo != null && pivotSelectionMemo.TryGetValue(ViewModel.Id, out int value))
             {

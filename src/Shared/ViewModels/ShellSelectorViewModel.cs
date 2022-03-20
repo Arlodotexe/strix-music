@@ -8,6 +8,7 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Services;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -16,7 +17,7 @@ namespace StrixMusic.Shared.ViewModels
     /// </summary>
     public class ShellSelectorViewModel : ObservableObject, IAsyncInit
     {
-        private readonly ISettingsService _settingsService;
+        private readonly AppSettings _settings;
         private readonly ILogger<ShellSelectorViewModel> _logger;
         private ShellInfoViewModel? _preferredShell;
         private ShellInfoViewModel? _fallbackShell;
@@ -26,7 +27,7 @@ namespace StrixMusic.Shared.ViewModels
         /// </summary>
         public ShellSelectorViewModel()
         {
-            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            _settings = Ioc.Default.GetRequiredService<AppSettings>();
             _logger = Ioc.Default.GetRequiredService<ILogger<ShellSelectorViewModel>>();
 
             AllShells = new ObservableCollection<ShellInfoViewModel>();
@@ -39,12 +40,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             _logger.LogInformation($"Entered {nameof(InitAsync)}");
 
-            // Gets the preferred shell's assembly name
-            var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
-            _logger.LogInformation($"Retreived preferred shell: {preferredShell}");
-
-            var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
-            _logger.LogInformation($"Retreived fallback shell: {fallbackShell}");
+            await _settings.LoadAsync();
 
             // Gets the list of loaded shells.
             foreach (var shell in ShellRegistry.MetadataRegistry)
@@ -66,13 +62,13 @@ namespace StrixMusic.Shared.ViewModels
             foreach (var shell in AllShells)
             {
                 // Mark the current shell selected or Default (if unset)
-                if (shell.Metadata.Id == preferredShell)
+                if (shell.Metadata.Id == _settings.PreferredShell)
                 {
                     _logger.LogInformation($"Setting preferred shell: {shell.Metadata.Id}");
                     PreferredShell = shell;
                 }
 
-                if (shell.Metadata.Id == fallbackShell)
+                if (shell.Metadata.Id == _settings.FallbackShell)
                 {
                     _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
                     FallbackShell = shell;
@@ -118,11 +114,9 @@ namespace StrixMusic.Shared.ViewModels
             else
             {
                 // Setting the correct fallback shell back for non-responsive shells.
-                var fallbackShell = await _settingsService.GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
-
                 foreach (var shell in AllShells)
                 {
-                    if (shell.Metadata.Id == fallbackShell)
+                    if (shell.Metadata.Id == _settings.FallbackShell)
                     {
                         _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
                         FallbackShell = shell;
@@ -149,10 +143,12 @@ namespace StrixMusic.Shared.ViewModels
         private async Task SaveSelectedShell()
         {
             if (PreferredShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), PreferredShell.Metadata.Id);
+                _settings.PreferredShell = PreferredShell.Metadata.Id;
 
             if (FallbackShell != null)
-                await _settingsService.SetValue<string>(nameof(SettingsKeysUI.FallbackShell), FallbackShell.Metadata.Id);
+                _settings.FallbackShell = FallbackShell.Metadata.Id;
+
+            await _settings.SaveAsync();
         }
     }
 }

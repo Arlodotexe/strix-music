@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.Uno.Models
         {
             var files = await StorageFolder.GetFilesAsync();
 
-            return files.Select(x => new FileData(x));
+            return files.Select(x => new FileData(x)).ToArray();
         }
 
         /// <inheritdoc />

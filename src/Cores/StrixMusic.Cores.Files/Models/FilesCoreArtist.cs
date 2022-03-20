@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Cores.Files.Services;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.FileMetadata.Models;
 using StrixMusic.Sdk.MediaPlayback;
@@ -18,7 +18,7 @@ namespace StrixMusic.Cores.Files.Models
     /// </summary>
     public sealed class FilesCoreArtist : ICoreArtist
     {
-        private readonly IFileMetadataManager _fileMetadataManager;
+        private readonly IFileMetadataManager? _fileMetadataManager;
         private ArtistMetadata _artistMetadata;
 
         /// <summary>
@@ -30,18 +30,20 @@ namespace StrixMusic.Cores.Files.Models
         {
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
-            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
+            _fileMetadataManager = sourceCore.Cast<FilesCore>().FileMetadataManager;
 
             AttachEvents();
         }
 
         private void AttachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Artists.MetadataUpdated += Artists_MetadataUpdated;
         }
 
         private void DetachEvents()
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             _fileMetadataManager.Artists.MetadataUpdated -= Artists_MetadataUpdated;
         }
 
@@ -88,6 +90,8 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleAlbumsChanged(HashSet<string> oldAlbumIds, HashSet<string> newAlbumIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
             if (oldAlbumIds.OrderBy(s => s).SequenceEqual(newAlbumIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -122,6 +126,7 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleTracksChanged(HashSet<string> oldTrackIds, HashSet<string> newTrackIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -156,6 +161,7 @@ namespace StrixMusic.Cores.Files.Models
 
         private async Task HandleImagesChanged(HashSet<string> oldImageIds, HashSet<string> newImageIds)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
             {
                 // Lists have identical content, so no images have changed.
@@ -494,6 +500,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var albums = await _fileMetadataManager.Albums.GetAlbumsByArtistId(Id, offset, limit);
 
             foreach (var album in albums)
@@ -506,6 +513,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var tracks = await _fileMetadataManager.Tracks.GetTracksByArtistId(Id, offset, limit);
 
             foreach (var track in tracks)
@@ -518,6 +526,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             if (_artistMetadata.ImageIds == null)
                 yield break;
 

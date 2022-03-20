@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -322,7 +321,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var newIsChangeDurationAsyncAvailable = false;
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             // For test to work, must not be same as current.
             Assert.AreNotEqual(core.Library.IsChangeDurationAsyncAvailable, newIsChangeDurationAsyncAvailable);
@@ -350,7 +349,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var newName = "NewName";
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             // For test to work, must not be a default value or the new value.
             Assert.AreNotEqual(default, core.Library.Name);
@@ -379,7 +378,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var newDescription = "NewDescription";
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             // For test to work, must not be a default value or the new value.
             Assert.AreNotEqual(default, core.Library.Description);
@@ -408,7 +407,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
 
             var newDuration = TimeSpan.FromMilliseconds(100);
 
-            await remoteClientCore.InitAsync(new ServiceCollection());
+            await remoteClientCore.InitAsync();
 
             // For test to work, must not be a default value or the new value.
             Assert.AreNotEqual(default, core.Library.Duration);

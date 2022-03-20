@@ -7,6 +7,7 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Controls.Shells;
+using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Controls.Pages;
 using StrixMusic.Shells.Groove.Helper;
@@ -75,6 +76,14 @@ namespace StrixMusic.Shells.Groove
             Unloaded += GrooveShell_Unloaded;
             Loaded += GrooveShell_Loaded;
         }
+
+        /// <summary>
+        /// Metadata used to identify this shell before instantiation.
+        /// </summary>
+        public static ShellMetadata Metadata { get; }
+            = new ShellMetadata(id: "GrooveMusic.10.21061.10121.0",
+                                displayName: "Groove Music",
+                                description: "A faithful recreation of the Groove Music app from Windows 10");
 
         private void GrooveShell_Loaded(object sender, RoutedEventArgs e)
         {

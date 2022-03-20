@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Events;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 
@@ -15,12 +16,19 @@ namespace StrixMusic.Sdk.Models.Core
     /// <summary>
     /// An <see cref="ICore"/> is a common API surface that can be implemented to allow interfacing with any arbitrary music provider.
     /// </summary>
-    /// <remarks>
-    /// In a core's constructor, only do basic object initialization. For the rest, use <see cref="InitAsync"/>.
+    /// <remarks> In a core's constructor, only do basic object initialization. For the rest, use <see cref="InitAsync"/>.
+    /// 
+    /// <para/> During <see cref="InitAsync"/>, if the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
+    ///         and the app will display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user for configuration and setup.
+    ///         After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
+    ///         <see cref="InitAsync"/> will fire again, at which point you can make sure you have the data you need to finish initialization.
+    /// 
+    /// <para/> There is a 10 minute time limit for the user to complete setup.
+    ///         If it takes longer, the SDK will assume something has gone wrong and unload the core until the user manually initiates setup or restarts the app.
     /// </remarks>
     /// <seealso cref="ICoreBase"/>
     /// <seealso cref="IAppCore"/>
-    public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
+    public interface ICore : IAsyncInit, ICoreMember, ICoreBase, IAsyncDisposable
     {
         /// <summary>
         /// The registered metadata for this core. Contains information to identify the core before creating an instance.
@@ -89,35 +97,6 @@ namespace StrixMusic.Sdk.Models.Core
         /// The current state of the core.
         /// </summary>
         public CoreState CoreState { get; }
-
-#pragma warning disable 1574, 1584, 1581, 1580
-        /// <summary>
-        /// Initializes the core asynchronously, allowing for API setup, service configuration, and other asynchronous tasks to be performed.
-        /// </summary>
-        /// <remarks>
-        /// <para> If the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
-        /// and the app will display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user for configuration and setup.
-        /// After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
-        /// Once complete, this method will fire again, at which point you should have the data you need to finish initialization.</para>
-        /// 
-        /// <para> There is a 10 minute time limit for the user to complete setup.
-        /// If it takes longer, the SDK will assume something has gone wrong and unload the core until the user manually initiates setup or restarts the app. </para>
-        /// </remarks>
-        /// <param name="services">
-        /// <para> Here, various <paramref name="services"/> are injected into each core by the SDK. You may use these or discard them. These include:</para>
-        /// <list type="bullet|number|table">
-        /// <listheader>
-        /// <term>IFileSystemService</term>
-        /// <description>An abstracted service that deals with file system operations, including those not handled by System.IO (such as File/Folder pickers)</description>
-        /// </listheader>
-        /// <item>
-        /// <term>INotificationsService</term>
-        /// <description>Provides ways for cores to raise notifications to the user to see in the UI. Use sparingly.</description>
-        /// </item>
-        /// </list>
-        /// </param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task InitAsync(IServiceCollection services);
 
         /// <summary>
         /// Given the ID of an instance created by this core, return the fully constructed instance.

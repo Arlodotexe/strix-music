@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -13,7 +14,6 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -34,18 +34,19 @@ namespace StrixMusic.Sdk.Models.Merged
         // ReSharper disable StaticMemberInGenericType
         private static bool _isInitialized;
         private static TaskCompletionSource<bool>? _initCompletionSource;
-        private static IReadOnlyList<string>? _coreRanking;
-        private static Dictionary<string, CoreMetadata>? _coreInstanceRegistry;
-        private static MergedCollectionSorting? _sortingMethod;
+
+        private readonly SemaphoreSlim _disposeSemaphore = new(1, 1);
 
         private readonly TCollection _collection;
-        private readonly ISettingsService _settingsService;
+        private readonly MergedCollectionConfig _config;
 
         /// <summary>
         /// A map where each index contains the representation of an item returned from a source collection, where the value is that source collection.
         /// </summary>
         private readonly List<MappedData> _sortedMap = new List<MappedData>();
         private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
+
+        private bool _isDisposed;
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
@@ -57,11 +58,11 @@ namespace StrixMusic.Sdk.Models.Merged
         /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
         /// </summary>
         /// <param name="collection">The collection that contains the items </param>
-        /// <param name="settingsService">An instance of a settings service.</param>
-        public MergedCollectionMap(TCollection collection, ISettingsService settingsService)
+        /// <param name="config">Configurable options for this merged collection map.</param>
+        public MergedCollectionMap(TCollection collection, MergedCollectionConfig? config = null)
         {
             _collection = collection;
-            _settingsService = settingsService;
+            _config = config ?? new MergedCollectionConfig();
             AttachEvents();
         }
 
@@ -174,18 +175,10 @@ namespace StrixMusic.Sdk.Models.Merged
 
             _initCompletionSource = new TaskCompletionSource<bool>();
 
-            _coreRanking = await GetCoreRankings();
+            _config.CoreRankingChanged += ConfigOnCoreRankingChanged;
+            _config.MergedCollectionSortingChanged += ConfigOnMergedCollectionSortingChanged;
 
-            _coreInstanceRegistry = await GetConfiguredCoreRegistry();
-
-            _sortingMethod = await GetSortingMethod();
-            _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
-
-            Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.HasSizeGreaterThan(_coreRanking, 0, nameof(_coreRanking));
-
-            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
-            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
+            Guard.HasSizeGreaterThan(_config.CoreRanking, 0, nameof(_config.CoreRanking));
 
             _initCompletionSource.SetResult(true);
             IsInitialized = true;
@@ -398,7 +391,7 @@ namespace StrixMusic.Sdk.Models.Merged
 
                 // TODO: Sorting is not handled.
                 var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
-                var mergedImpl = MergeOrAdd(newItems, collectionItemData, _settingsService);
+                var mergedImpl = MergeOrAdd(newItems, collectionItemData, _config);
 
                 _sortedMap.Add(mappedData);
 
@@ -474,12 +467,11 @@ namespace StrixMusic.Sdk.Models.Merged
         public async Task<IReadOnlyList<TCollectionItem>> GetItemsAsync(int limit, int offset)
         {
             await TryInitAsync();
-            Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
 
-            return _sortingMethod switch
+            return _config.MergedCollectionSorting switch
             {
                 MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset),
-                _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
+                _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_config.MergedCollectionSorting}\" not supported.")
             };
         }
 
@@ -593,7 +585,7 @@ namespace StrixMusic.Sdk.Models.Merged
             return sourceResults.Any();
         }
 
-        private static IMergedMutable<TCoreCollectionItem> MergeOrAdd(List<IMergedMutable<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge, ISettingsService settingsService)
+        private static IMergedMutable<TCoreCollectionItem> MergeOrAdd(List<IMergedMutable<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge, MergedCollectionConfig config)
         {
             foreach (var item in collection)
             {
@@ -611,31 +603,31 @@ namespace StrixMusic.Sdk.Models.Merged
             switch (itemToMerge)
             {
                 case ICoreArtist artist:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtist(artist.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtist(artist.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbum(album.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbum(album.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICorePlaylist playlist:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreTrack track:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrack(track.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrack(track.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreDiscoverables discoverables:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreLibrary library:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedLibrary(library.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedLibrary(library.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreRecentlyPlayed recentlyPlayed:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreImage coreImage:
@@ -657,23 +649,23 @@ namespace StrixMusic.Sdk.Models.Merged
                 // Example: an AlbumCollection can return either an Album or another AlbumCollection,
                 // so we need ViewModels and Merged proxy classes for both.
                 case ICorePlayableCollectionGroup playableCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList(), settingsService);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 default:
@@ -687,9 +679,7 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
         {
-            Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
-            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
+            Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
             var mappedData = BuildSortedMapRanked(_sortedMap.Count);
@@ -782,7 +772,7 @@ namespace StrixMusic.Sdk.Models.Merged
                 if (item.CollectionItem is null)
                     continue;
 
-                var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _settingsService);
+                var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _config);
 
                 bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
 
@@ -799,32 +789,18 @@ namespace StrixMusic.Sdk.Models.Merged
             return returnedData;
         }
 
-        private List<MappedData> BuildSortedMap()
+        private List<MappedData> BuildSortedMap() => _config.MergedCollectionSorting switch
         {
-            Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
-
-            return _sortingMethod switch
-            {
-                MergedCollectionSorting.Ranked => BuildSortedMapRanked(),
-                _ => throw new NotSupportedException($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
-            };
-        }
+            MergedCollectionSorting.Ranked => BuildSortedMapRanked(),
+            _ => throw new NotSupportedException($"Merged collection sorting by \"{_config.MergedCollectionSorting}\" not supported.")
+        };
 
         private List<MappedData> BuildSortedMapRanked(int offset = 0)
         {
-            Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
-            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
-
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
-            foreach (var instanceId in _coreRanking)
+            foreach (var instanceId in _config.CoreRanking)
             {
-                // Get metadata by instance id, making sure it's still registered.
-                var coreMetadata = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
-                if (coreMetadata is null)
-                    continue;
-
                 // Find source by instance id.
                 var source = Sources.FirstOrDefault(x => x.SourceCore.InstanceId == instanceId);
 
@@ -851,16 +827,6 @@ namespace StrixMusic.Sdk.Models.Merged
             return itemsMap;
         }
 
-        private Task<List<string>> GetCoreRankings()
-        {
-            return _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking));
-        }
-
-        private Task<Dictionary<string, CoreMetadata>> GetConfiguredCoreRegistry()
-        {
-            return _settingsService.GetValue<Dictionary<string, CoreMetadata>>(nameof(SettingsKeys.CoreInstanceRegistry));
-        }
-
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
             return Task.FromResult(MergedCollectionSorting.Ranked);
@@ -868,18 +834,14 @@ namespace StrixMusic.Sdk.Models.Merged
             //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 
-        private void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
+        private void ConfigOnMergedCollectionSortingChanged(object sender, MergedCollectionSorting e)
         {
-            switch (e.Key)
-            {
-                case nameof(SettingsKeys.CoreRanking):
-                    Guard.IsNotNull(e.Value, nameof(e.Value));
-                    _coreRanking = e.Value as IReadOnlyList<string>;
-                    break;
-                case nameof(SettingsKeys.MergedCollectionSorting) when e.Value != null:
-                    _sortingMethod = (MergedCollectionSorting)e.Value;
-                    break;
-            }
+            throw new NotImplementedException();
+        }
+
+        private void ConfigOnCoreRankingChanged(object sender, IReadOnlyList<string> e)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task ResetDataRanked()
@@ -954,13 +916,13 @@ namespace StrixMusic.Sdk.Models.Merged
         /// </remarks>
         void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
-            ResetDataRanked().Forget();
+            OwlCore.Flow.Catch(() => ResetDataRanked());
         }
 
         /// <inheritdoc />
         void IMergedMutable<TCoreCollection>.RemoveSource(TCoreCollection itemToRemove)
         {
-            ResetDataRanked().Forget();
+            OwlCore.Flow.Catch(() => ResetDataRanked());
         }
 
         /// <inheritdoc />
@@ -1003,13 +965,24 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            DetachEvents();
-            _mergedMappedData.Clear();
-            _sortedMap.Clear();
+            if (_isDisposed)
+                return;
 
-            return default;
+            using (await OwlCore.Flow.EasySemaphore(_disposeSemaphore))
+            {
+                if (_isDisposed)
+                    return;
+
+                DetachEvents();
+                _mergedMappedData.Clear();
+                _sortedMap.Clear();
+
+                _isDisposed = true;
+
+                return;
+            }
         }
     }
 }

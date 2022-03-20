@@ -107,16 +107,16 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             var builder = new SdkModelPlugins().PlayableCollectionGroup;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
-                {
-                    InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
-                    InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
-                    InnerArtistCollection = data.HasFlag(PossiblePlugins.ArtistCollection) ? new ArtistCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerAlbumCollection = data.HasFlag(PossiblePlugins.AlbumCollection) ? new AlbumCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerTrackCollection = data.HasFlag(PossiblePlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerPlaylistCollection = data.HasFlag(PossiblePlugins.PlaylistCollection) ? new PlaylistCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
-                    InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
-                }
+            {
+                InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
+                InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
+                InnerArtistCollection = data.HasFlag(PossiblePlugins.ArtistCollection) ? new ArtistCollectionPluginBaseTests.Unimplemented() : x,
+                InnerAlbumCollection = data.HasFlag(PossiblePlugins.AlbumCollection) ? new AlbumCollectionPluginBaseTests.Unimplemented() : x,
+                InnerTrackCollection = data.HasFlag(PossiblePlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.Unimplemented() : x,
+                InnerPlaylistCollection = data.HasFlag(PossiblePlugins.PlaylistCollection) ? new PlaylistCollectionPluginBaseTests.Unimplemented() : x,
+                InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
+                InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
+            }
             );
 
             var finalImpl = builder.Execute(defaultImplementation);
@@ -276,7 +276,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
 
             internal static AccessedException<FullyCustom> AccessedException { get; } = new();
-            
+
             public override ValueTask DisposeAsync() => throw AccessedException;
             public override Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
             public override Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
@@ -413,7 +413,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class Unimplemented : IPlayableCollectionGroup
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
-            
+
             public ValueTask DisposeAsync() => throw AccessedException;
             public Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
             public Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
