@@ -83,15 +83,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             if (e.SelectedItem == null)
                 return;
 
-            ZuneAlbumCollection.DetachItemEvents();
-
             e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
             ZuneAlbumCollection.Collection = e.SelectedItem;
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.Collection = e.SelectedItem;
-
-            ZuneAlbumCollection.ArtistSelected(e.SelectedItem);
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)

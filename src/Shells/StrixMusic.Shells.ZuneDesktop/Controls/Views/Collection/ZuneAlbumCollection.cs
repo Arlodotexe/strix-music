@@ -18,6 +18,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// </summary>
     public class ZuneAlbumCollection : AlbumCollection
     {
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ZuneAlbumCollection"/>.
+        /// </summary>
+        public ZuneAlbumCollection()
+        {
+        }
+
         /// <summary>
         /// Flag to determine if albums are already loaded.
         /// </summary>
@@ -28,12 +36,27 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// </summary>
         public GridView? PART_Selector { get; private set; }
 
+
         /// <summary>
-        /// Creates a new instance of <see cref="ZuneAlbumCollection"/>.
+        /// Collection holding the data for <see cref="AlbumCollection" />
         /// </summary>
-        public ZuneAlbumCollection()
+        public new IAlbumCollectionViewModel Collection
         {
+            get { return (IAlbumCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
         }
+
+        /// <summary>
+        /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
+        /// </summary>
+        public static readonly new DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) =>
+            {
+                if (s is ZuneAlbumCollection zc)
+                {
+                    zc.OnAlbumCollectionChanged(s, e);
+                }
+            }));
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -48,32 +71,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             PART_Selector.Loaded += PART_Selector_Loaded;
             Unloaded += ZuneAlbumCollection_Unloaded;
-        }
-
-        /// <summary>
-        /// Detaches events from the already loaded <see href="ZuneAlbumItem"/>
-        /// </summary>
-        public void DetachItemEvents()
-        {
-            Collection.Albums.CollectionChanged -= Albums_CollectionChanged;
-
-            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
-            int itemIndex = 0;
-            foreach (var item in Collection.Albums)
-            {
-                // NOTE: ContainerFromItem doesn't work in uno.
-                var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(itemIndex);
-
-                if (gridViewItem == null)
-                    break;
-
-                var uiElement = gridViewItem.ContentTemplateRoot;
-
-                if (uiElement is ZuneAlbumItem zuneAlbumItem)
-                {
-                    zuneAlbumItem.AlbumPlaybackTriggered -= ZuneAlbumItem_AlbumPlaybackTriggered;
-                }
-            }
         }
 
         private async void Albums_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -97,9 +94,24 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     if (uiElement is ZuneAlbumItem zuneAlbumItem)
                     {
                         zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
+                        zuneAlbumItem.Unloaded += ZuneAlbumItem_Unloaded;
                     }
                 }
             }
+        }
+
+        private void OnAlbumCollectionChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        {
+            if(e.NewValue is IAlbumCollectionViewModel collection)
+            {
+                collection.Albums.CollectionChanged += Albums_CollectionChanged;
+            }
+        }
+
+        private void ZuneAlbumItem_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is ZuneAlbumItem zuneAlbum)
+                zuneAlbum.AlbumPlaybackTriggered -= ZuneAlbumItem_AlbumPlaybackTriggered;
         }
 
         private void ZuneAlbumCollection_Unloaded(object sender, RoutedEventArgs e)
@@ -146,15 +158,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
 
             FadeInAlbumCollectionItems(uiElments);
-        }
-
-        /// <summary>
-        /// The method handles album update whenever an artist is selected.
-        /// </summary>
-        /// <param name="selectedItem"></param>
-        public void ArtistSelected(ArtistViewModel selectedItem)
-        {
-            Collection.Albums.CollectionChanged += Albums_CollectionChanged;
         }
 
         private async void ZuneAlbumItem_AlbumPlaybackTriggered(object sender, Sdk.ViewModels.AlbumViewModel e)
