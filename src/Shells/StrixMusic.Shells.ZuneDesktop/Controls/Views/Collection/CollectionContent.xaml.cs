@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
@@ -107,7 +108,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackTable.Collection = e.SelectedItem;
             DetailsPane.DataContext = e.SelectedItem;
         }
-
 
         private void ClearSelections()
         {
