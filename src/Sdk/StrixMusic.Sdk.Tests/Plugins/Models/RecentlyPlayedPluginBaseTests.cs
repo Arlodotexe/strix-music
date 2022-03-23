@@ -268,6 +268,32 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             );
         }
 
+        [TestMethod, Timeout(5000)]
+        [AllEnumFlagCombinations(typeof(PossiblePlugins))]
+        public async Task DisposeAsync_AllCombinations(PossiblePlugins data)
+        {
+            var builder = new SdkModelPlugins().RecentlyPlayed;
+            var defaultImplementation = new NotBlockingDisposeAsync();
+            builder.Add(x => new NoOverride(x)
+            {
+                InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerArtistCollection = data.HasFlag(PossiblePlugins.ArtistCollection) ? new ArtistCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerAlbumCollection = data.HasFlag(PossiblePlugins.AlbumCollection) ? new AlbumCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerTrackCollection = data.HasFlag(PossiblePlugins.TrackCollection) ? new TrackCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerPlaylistCollection = data.HasFlag(PossiblePlugins.PlaylistCollection) ? new PlaylistCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+            });
+
+            var finalImpl = builder.Execute(defaultImplementation);
+
+            Assert.AreNotSame(finalImpl, defaultImplementation);
+            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
+
+            await finalImpl.DisposeAsync();
+        }
+
         internal class FullyCustom : RecentlyPlayedPluginBase
         {
             public FullyCustom(IRecentlyPlayed inner)
@@ -409,6 +435,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
+        }
+
+        internal class NotBlockingDisposeAsync : RecentlyPlayedPluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
         }
 
         internal class Unimplemented : IRecentlyPlayed

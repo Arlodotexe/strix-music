@@ -92,7 +92,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public override Task AddUrlAsync(IUrl Url, int index) => throw AccessedException;
+            public override Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
@@ -115,6 +115,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
+        internal class NotBlockingDisposeAsync : UrlCollectionPluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
+        }
+
         public class Unimplemented : IUrlCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
@@ -128,7 +139,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public Task AddUrlAsync(IUrl Url, int index) => throw AccessedException;
+            public Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
