@@ -24,7 +24,8 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
         public void Setup()
         {
             _audioPlayer = new MockAudioPlayerService();
-            _handlerService = new PlaybackHandlerService();
+            // MainViewModel dependency is only required when performing playback tests
+            _handlerService = new PlaybackHandlerService(null!);
 
             var mockCore = new MockCore();
 

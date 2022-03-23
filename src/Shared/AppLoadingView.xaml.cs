@@ -333,20 +333,23 @@ namespace StrixMusic.Shared
 
             _logger?.LogInformation("Constructing manually instantiated services");
 
+            _mainPage = new MainPage();
+
+            var fileSystemService = new FileSystemService();
+            var coreManagementService = new CoreManagementService(_settings);
+
             _playbackHandlerService = new PlaybackHandlerService();
             _notificationService = new NotificationService();
+            
+            var strixDevice = new StrixDevice(_playbackHandlerService);
+            _playbackHandlerService.SetStrixDevice(strixDevice);
 
 #if NETFX_CORE
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
 #endif
 
-            _mainPage = new MainPage();
+            var mainViewModel = new MainViewModel(strixDevice, _notificationService, coreManagementService);
 
-            var strixDevice = new StrixDevice(_playbackHandlerService);
-            _playbackHandlerService.SetStrixDevice(strixDevice);
-
-            var fileSystemService = new FileSystemService();
-            var coreManagementService = new CoreManagementService(_settings);
             _settings.PropertyChanged += OnSettingChanged;
 
             _logger?.LogInformation($"Setting up localization");
@@ -374,7 +377,7 @@ namespace StrixMusic.Shared
 #endif
 
             services.AddSingleton(strixDevice);
-            services.AddSingleton<MainViewModel>();
+            services.AddSingleton(mainViewModel);
             services.AddSingleton(_mainPage);
 
             services.AddSingleton<ILocalizationService>(_localizationService);
@@ -393,11 +396,10 @@ namespace StrixMusic.Shared
 
             await fileSystemService.InitAsync();
 
-            var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
             _navService = serviceProvider.GetRequiredService<INavigationService<Control>>();
-            _mainPage = serviceProvider.GetRequiredService<MainPage>();
 
+            // TODO: Remove all usage of DataContext. Use DependencyProperties instead.
             DataContext = mainViewModel;
             Bindings.Update();
 
