@@ -340,7 +340,7 @@ namespace StrixMusic.Shared
 
             _playbackHandlerService = new PlaybackHandlerService();
             _notificationService = new NotificationService();
-            
+
             var strixDevice = new StrixDevice(_playbackHandlerService);
             _playbackHandlerService.SetStrixDevice(strixDevice);
 
@@ -349,6 +349,13 @@ namespace StrixMusic.Shared
 #endif
 
             var mainViewModel = new MainViewModel(strixDevice, _notificationService, coreManagementService);
+
+            // This event stays attached for the lifetime of the application.
+            mainViewModel.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(MainViewModel.ActiveDevice))
+                    _playbackHandlerService.ActiveDevice = mainViewModel.ActiveDevice;
+            };
 
             _settings.PropertyChanged += OnSettingChanged;
 

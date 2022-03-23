@@ -173,8 +173,9 @@ namespace StrixMusic.Sdk.MediaPlayback
             // If there is no active device, activate the device used for local playback.
             if (ActiveDevice is null)
             {
+                // Switching to the device should activate it and set it as our active device via events,
+                // via the same mechanism used for switching to remote devices.
                 await _strixDevice.SwitchToAsync();
-                ActiveDevice = _strixDevice;
             }
 
             Guard.IsNotNull(ActiveDevice, nameof(ActiveDevice));
