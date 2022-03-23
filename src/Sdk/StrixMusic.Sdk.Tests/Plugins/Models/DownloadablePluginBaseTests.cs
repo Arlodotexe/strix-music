@@ -94,6 +94,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
+        internal class NotBlockingDisposeAsync : DownloadablePluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
+        }
+
         public class Unimplemented : IDownloadable
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();

@@ -115,6 +115,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
+        internal class NotBlockingDisposeAsync : GenreCollectionPluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
+        }
+
         public class Unimplemented : IGenreCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();

@@ -115,6 +115,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
+        internal class NotBlockingDisposeAsync : ImageCollectionPluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
+        }
+
         public class Unimplemented : IImageCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();

@@ -18,6 +18,16 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
         private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
 
+        [Flags]
+        public enum PossiblePlugins
+        {
+            None = 0,
+            Playable = 1,
+            Downloadable = 2,
+            ImageCollection = 4,
+            UrlCollection = 8,
+        }
+
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
@@ -86,377 +96,110 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         }
 
         [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Downloadable()
+        [AllEnumFlagCombinations(typeof(PossiblePlugins))]
+        public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
             var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x) { InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented() });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_ImageCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x) { InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented() });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x) { InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented() });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Downloadable_ImageCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented()
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Downloadable_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented()
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Downloadable_ImageCollection_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented(),
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
+                InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.Unimplemented() : x,
+                InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.Unimplemented() : x,
+                InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.Unimplemented() : x,
+                InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.Unimplemented() : x,
             });
 
             var finalImpl = builder.Execute(defaultImplementation);
 
             Assert.AreNotSame(finalImpl, defaultImplementation);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
 
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
+            var expectedExceptionsWhenDisposing = new List<Type>
+            {
                 typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-            });
+            };
+
+            if (data.HasFlag(PossiblePlugins.Downloadable))
+            {
+                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>));
+
+                Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>,
+                    DownloadablePluginBaseTests.Unimplemented>(
+                    finalImpl,
+                    customFilter: NoInnerOrSources,
+                    typesToExclude: typeof(IAsyncDisposable)
+                );
+            }
+
+            if (data.HasFlag(PossiblePlugins.Playable))
+            {
+                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>));
+
+                Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>,
+                    PlayablePluginBaseTests.Unimplemented>(
+                    finalImpl,
+                    customFilter: NoInnerOrSources,
+                    typesToExclude: new[]
+                    {
+                        typeof(IAsyncDisposable),
+                        typeof(DownloadablePluginBaseTests.Unimplemented),
+                        typeof(ImageCollectionPluginBaseTests.Unimplemented),
+                        typeof(UrlCollectionPluginBaseTests.Unimplemented)
+                    }
+                );
+            }
+
+            if (data.HasFlag(PossiblePlugins.ImageCollection))
+            {
+                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>));
+
+                Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>,
+                    ImageCollectionPluginBaseTests.Unimplemented>(
+                    finalImpl,
+                    customFilter: NoInnerOrSources,
+                    typesToExclude: typeof(IAsyncDisposable)
+                );
+            }
+
+            if (data.HasFlag(PossiblePlugins.UrlCollection))
+            {
+                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>));
+
+                Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(
+                    finalImpl,
+                    customFilter: NoInnerOrSources,
+                    typesToExclude: typeof(IAsyncDisposable)
+                );
+            }
+
+            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(
+                finalImpl,
+                customFilter: NoInnerOrSources,
+                expectedExceptions: expectedExceptionsWhenDisposing.ToArray()
+            );
         }
 
         [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_ImageCollection_UrlCollection()
+        [AllEnumFlagCombinations(typeof(PossiblePlugins))]
+        public async Task DisposeAsync_AllCombinations(PossiblePlugins data)
         {
             var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
+            var defaultImplementation = new NotBlockingDisposeAsync();
             builder.Add(x => new NoOverride(x)
             {
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented()
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_Downloadable()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-
-            // Testing InnerPlayable
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-
-            // Testing InnerDownloadable
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-
-            // Testing all other properties
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_ImageCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_Downloadable_ImageCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_Downloadable_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_Downloadable_ImageCollection_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-
-            var defaultImplementation = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerDownloadable = new DownloadablePluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented(),
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
+                InnerDownloadable = data.HasFlag(PossiblePlugins.Downloadable) ? new DownloadablePluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerPlayable = data.HasFlag(PossiblePlugins.Playable) ? new PlayablePluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerImageCollection = data.HasFlag(PossiblePlugins.ImageCollection) ? new ImageCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
+                InnerUrlCollection = data.HasFlag(PossiblePlugins.UrlCollection) ? new UrlCollectionPluginBaseTests.NotBlockingDisposeAsync() : x,
             });
 
             var finalImpl = builder.Execute(defaultImplementation);
 
             Assert.AreNotSame(finalImpl, defaultImplementation);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>, DownloadablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
 
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
+            await finalImpl.DisposeAsync();
         }
-
-        [TestMethod, Timeout(5000)]
-        public void PluginFullyCustomWith_Playable_ImageCollection_UrlCollection()
-        {
-            var builder = new SdkModelPlugins().ArtistCollection;
-            var finalTestClass = new Unimplemented();
-            builder.Add(x => new NoOverride(x)
-            {
-                InnerUrlCollection = new UrlCollectionPluginBaseTests.Unimplemented(),
-                InnerImageCollection = new ImageCollectionPluginBaseTests.Unimplemented(),
-                InnerPlayable = new PlayablePluginBaseTests.Unimplemented(),
-            });
-
-            var finalImpl = builder.Execute(finalTestClass);
-
-            Assert.AreNotSame(finalImpl, finalTestClass);
-            Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>, PlayablePluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInner, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(DownloadablePluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(UrlCollectionPluginBaseTests.Unimplemented) });
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>, ImageCollectionPluginBaseTests.Unimplemented>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: typeof(IAsyncDisposable));
-            Helpers.AssertAllMembersThrowOnAccess<AccessedException<Unimplemented>, NoOverride>(finalImpl, customFilter: NoInnerOrSources, typesToExclude: new[] { typeof(IAsyncDisposable), typeof(UrlCollectionPluginBaseTests.Unimplemented), typeof(ImageCollectionPluginBaseTests.Unimplemented), typeof(PlayablePluginBaseTests.Unimplemented) });
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(finalImpl, customFilter: NoInner, expectedExceptions: new[] {
-                typeof(AccessedException<Unimplemented>),
-                typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
-        }
-
 
         internal class FullyCustom : ArtistCollectionPluginBase
         {
@@ -537,6 +280,17 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
+        }
+
+        internal class NotBlockingDisposeAsync : ArtistCollectionPluginBase
+        {
+            public NotBlockingDisposeAsync()
+                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
+            {
+            }
+
+            /// <inheritdoc />
+            public override ValueTask DisposeAsync() => default;
         }
 
         internal class Unimplemented : IArtistCollection
