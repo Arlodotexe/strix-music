@@ -47,7 +47,6 @@ namespace StrixMusic.Sdk
         /// </summary>
         public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService, ICoreManagementService coreManagementService)
         {
-            Singleton = this;
             _coreManagementService = coreManagementService;
             _notificationService = notificationsService;
             LocalDevice = new DeviceViewModel(this, strixDevice);
@@ -370,12 +369,6 @@ namespace StrixMusic.Sdk
         }
 
         private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ActiveDevice)));
-
-        /// <summary>
-        /// The singleton instance of the <see cref="MainViewModel"/>.
-        /// </summary>
-        [Obsolete("This singleton will be removed soon to better follow the trickle-down MVVM pattern.")]
-        public static MainViewModel? Singleton { get; private set; }
 
         /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
         public bool IsInitialized { get; private set; }

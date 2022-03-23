@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
@@ -18,11 +19,9 @@ namespace StrixMusic.Sdk.MediaPlayback
     /// </summary>
     public sealed partial class PlaybackHandlerService : IPlaybackHandlerService
     {
-        private static readonly Random _rng = new Random();
-
-        private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry = new Dictionary<string, IAudioPlayerService>();
-        private readonly List<PlaybackItem> _prevItems = new List<PlaybackItem>();
-        private List<PlaybackItem> _nextItems = new List<PlaybackItem>();
+        private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry = new();
+        private readonly List<PlaybackItem> _prevItems = new();
+        private readonly List<PlaybackItem> _nextItems = new();
 
         private int[] _shuffleMap;
 
@@ -42,10 +41,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Sets the local playback device for this playback handler.
         /// </summary>
-        public void SetStrixDevice(StrixDevice strixDevice)
-        {
-            _strixDevice = strixDevice;
-        }
+        public void SetStrixDevice(StrixDevice strixDevice) => _strixDevice = strixDevice;
 
         private void AttachEvents(IAudioPlayerService audioPlayerService)
         {
@@ -136,6 +132,11 @@ namespace StrixMusic.Sdk.MediaPlayback
 
         /// <inheritdoc />
         public event EventHandler<float[]>? QuantumProcessed;
+
+        /// <summary>
+        /// Gets or sets the device which is being currently being used for playback.
+        /// </summary>
+        public IDevice? ActiveDevice { get; set; }
 
         /// <inheritdoc />
         public IReadOnlyList<PlaybackItem> NextItems => _nextItems;
@@ -255,9 +256,9 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (NextItems.Count <= nextIndex)
                 return;
 
-            PlaybackItem? nextItem = null;
+            PlaybackItem? nextItem;
 
-            if (RepeatState == RepeatState.One && !(CurrentItem is null))
+            if (RepeatState == RepeatState.One && CurrentItem is not null)
             {
                 nextItem = CurrentItem;
             }
@@ -275,14 +276,14 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var removedItems = new List<CollectionChangedItem<PlaybackItem>>()
                 {
-                    new CollectionChangedItem<PlaybackItem>(nextItem, nextIndex),
+                    new(nextItem, nextIndex),
                 };
 
             var addedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
 
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
 
-            var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            var instanceId = CurrentItem?.MediaConfig?.Track.SourceCore.InstanceId;
             Guard.IsNotNull(instanceId, nameof(instanceId));
 
             _currentPlayerService = _audioPlayerRegistry[instanceId];
@@ -302,7 +303,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<PlaybackItem>(sourceConfig, index),
+                new(sourceConfig, index),
             };
 
             var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
@@ -321,7 +322,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
                 for (int i = 0; i < _shuffleMap.Length; i++)
                 {
-                    // Adjust the all indexes for all elements with the orignal index greater than or equal to the newly added index.
+                    // Adjust the all indexes for all elements with the original index greater than or equal to the newly added index.
                     if (_shuffleMap[i] >= originalIndex && i != originalIndex)
                         _shuffleMap[i]++;
                 }
@@ -335,7 +336,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             var removedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<PlaybackItem>(NextItems[index], index),
+                new(NextItems[index], index),
             };
 
             var addedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
@@ -349,7 +350,7 @@ namespace StrixMusic.Sdk.MediaPlayback
                 var originalIndex = _shuffleMap[indexInShuffledList];
 
                 // Needs to be converted to list so we can remove an element from the array using the index.
-                // After removing the element, we're decrementing all orignal indexes in the shufflemap greater than the orginal index of the removed element, so the tracks can be unshuffled correctly.
+                // After removing the element, we're decrementing all original indexes in the shufflemap greater than the original index of the removed element, so the tracks can be unshuffled correctly.
                 var shuffleList = _shuffleMap.ToList();
                 shuffleList.RemoveAt(indexInShuffledList);
                 _shuffleMap = shuffleList.ToArray();
@@ -372,7 +373,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<PlaybackItem>(sourceConfig, PreviousItems.Count),
+                new(sourceConfig, PreviousItems.Count),
             };
 
             var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
@@ -389,7 +390,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var addedItems = new List<CollectionChangedItem<PlaybackItem>>()
             {
-                new CollectionChangedItem<PlaybackItem>(returnItem, PreviousItems.Count),
+                new(returnItem, PreviousItems.Count),
             };
 
             var removedItems = Array.Empty<CollectionChangedItem<PlaybackItem>>();
@@ -406,7 +407,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         {
             if (_currentPlayerService == null && CurrentItem != null)
             {
-                var instanceId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+                var instanceId = CurrentItem?.MediaConfig?.Track.SourceCore.InstanceId;
                 Guard.IsNotNull(instanceId, nameof(instanceId));
 
                 _currentPlayerService = _audioPlayerRegistry[instanceId];
@@ -423,7 +424,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var newItem = shouldRemoveFromQueue ? _prevItems.Pop() : _prevItems.Last();
 
-            var instId = CurrentItem?.MediaConfig?.Track?.SourceCore?.InstanceId;
+            var instId = CurrentItem?.MediaConfig?.Track.SourceCore.InstanceId;
             Guard.IsNotNull(instId, nameof(instId));
 
             _currentPlayerService = _audioPlayerRegistry[instId];
@@ -528,7 +529,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             // Populate everything in the list except the item at 0th index in nextItems because its the CurrentItem.
             _nextItems.Clear();
-            for (int i = 1; i < list.Count; i++)
+            for (var i = 1; i < list.Count; i++)
             {
                 _nextItems.Add(list[i]);
             }

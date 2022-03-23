@@ -9,7 +9,6 @@ using OwlCore.Events;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

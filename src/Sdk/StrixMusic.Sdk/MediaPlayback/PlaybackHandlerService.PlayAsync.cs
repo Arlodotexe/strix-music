@@ -77,8 +77,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[0];
-            await PlayFromNext(0);
+            var nextItem = _nextItems[trackInfo.Index];
+            await PlayFromNext(trackInfo.Index);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
             _strixDevice.SetPlaybackData(context, nextItem);
@@ -122,8 +122,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[0];
-            await PlayFromNext(0);
+            var nextItem = _nextItems[trackInfo.Index];
+            await PlayFromNext(trackInfo.Index);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
@@ -145,13 +145,13 @@ namespace StrixMusic.Sdk.MediaPlayback
             ClearPrevious();
             ClearNext();
 
-            var (PlaybackTrack, Index) = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
+            var trackInfo = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
 
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[0];
-            await PlayFromNext(0);
+            var nextItem = _nextItems[trackInfo.Index];
+            await PlayFromNext(trackInfo.Index);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
@@ -164,36 +164,24 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <returns>True if playback should continue locally, false if playback should continue remotely.</returns>
         private async Task<bool> PrepareToPlayCollection()
         {
-#warning TODO: Move device activation elsewhere.
-            var mainViewModel = MainViewModel.Singleton;
-
             Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-            Guard.IsTrue(mainViewModel?.Library?.IsInitialized ?? false, nameof(mainViewModel.Library.IsInitialized));
-
-            var activeDevice = mainViewModel?.ActiveDevice;
 
             // Pause the active player first.
-            if (!(activeDevice is null))
-            {
-                _ = activeDevice.PauseAsync();
-            }
+            if (ActiveDevice is not null)
+                await ActiveDevice.PauseAsync();
 
             // If there is no active device, activate the device used for local playback.
-            if (activeDevice is null)
+            if (ActiveDevice is null)
             {
+                // Switching to the device should activate it and set it as our active device via events,
+                // via the same mechanism used for switching to remote devices.
                 await _strixDevice.SwitchToAsync();
-                activeDevice ??= mainViewModel?.ActiveDevice;
             }
+
+            Guard.IsNotNull(ActiveDevice, nameof(ActiveDevice));
 
             // If the active device is controlled remotely, the rest is handled there.
-            if (activeDevice?.Type == DeviceType.Remote)
-            {
-                return false;
-            }
-
-            Guard.IsNotNull(activeDevice, nameof(activeDevice));
-
-            return true;
+            return ActiveDevice.Type != DeviceType.Remote;
         }
 
         /// <summary>
@@ -339,41 +327,42 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             foreach (var artistItem in artists)
             {
-                if (artistItem is IArtist artist)
+                switch (artistItem)
                 {
                     // Ignore artist without any tracks
-                    if (artist.TotalTrackCount < 1)
+                    case IArtist { TotalTrackCount: < 1 }:
                         continue;
-                    
-                    var tracks = await artist.GetTracksAsync(1, 0);
-                    var firstTrack = tracks[0];
+                    case IArtist artist:
+                        var tracks = await artist.GetTracksAsync(1, 0);
+                        var firstTrack = tracks[0];
 
-                    if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
-                    {
-                        // Tracks are added to the queue of previous items until we reach the item the user wants to play.
-                        itemIndex = _prevItems.Count;
-                        foundItemTarget = true;
+                        if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
+                        {
+                            // Tracks are added to the queue of previous items until we reach the item the user wants to play.
+                            itemIndex = _prevItems.Count;
+                            foundItemTarget = true;
 
-                        playbackTrack = firstTrack;
-                    }
+                            playbackTrack = firstTrack;
+                        }
 
-                    if (foundItemTarget)
-                    {
-                        _ = await AddTrackCollectionToQueue(firstTrack, artist, offset,
-                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
-                        offset = _nextItems.Count;
-                    }
-                    else
-                    {
-                        _ = await AddTrackCollectionToQueue(firstTrack, artist,
-                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
-                    }
+                        if (foundItemTarget)
+                        {
+                            _ = await AddTrackCollectionToQueue(firstTrack, artist, offset,
+                                foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                            offset = _nextItems.Count;
+                        }
+                        else
+                        {
+                            _ = await AddTrackCollectionToQueue(firstTrack, artist,
+                                foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        }
+
+                        break;
+                    case IArtistCollection artistCol:
+                        _ = await AddArtistCollectionToQueue(null, artistCol);
+                        break;
                 }
 
-                if (artistItem is IArtistCollection artistCol)
-                {
-                    _ = await AddArtistCollectionToQueue(null, artistCol);
-                }
             }
 
             Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
@@ -402,7 +391,7 @@ namespace StrixMusic.Sdk.MediaPlayback
                     // Ignore artist without any tracks
                     if (playlist.TotalTrackCount < 1)
                         continue;
-                    
+
                     var tracks = await playlist.GetTracksAsync(1, 0);
                     var firstTrack = tracks[0];
 
