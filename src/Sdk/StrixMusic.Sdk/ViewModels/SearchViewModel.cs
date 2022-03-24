@@ -12,7 +12,7 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// A view model wrapper for <see cref="ISearch"/>.
+    /// A ViewModel for <see cref="ISearch"/>.
     /// </summary>
     public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch
     {

@@ -11,7 +11,7 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Used to bind to recently played items across multiple cores.
+    /// A ViewModel for <see cref="IRecentlyPlayed"/>.
     /// </summary>
     public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed
     {

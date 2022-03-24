@@ -13,7 +13,7 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// A bindable wrapper of the <see cref="ILibraryBase"/>.
+    /// A ViewModel for <see cref="ILibrary"/>.
     /// </summary>
     public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary
     {

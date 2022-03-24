@@ -14,8 +14,9 @@ namespace StrixMusic.Sdk.ViewModels
     public class UserViewModel : UserProfileViewModel, ISdkViewModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserViewModel"/> class.
+        /// A ViewModel for <see cref="IUser"/>.
         /// </summary>
+        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="user">The <see cref="IUser"/> to wrap.</param>
         public UserViewModel(MainViewModel root, IUser user)
             : base(root, user)

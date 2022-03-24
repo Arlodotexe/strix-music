@@ -11,7 +11,7 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Used to bind to search history across multiple cores.
+    /// A ViewModel for <see cref="ISearchHistory"/>.
     /// </summary>
     public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory
     {

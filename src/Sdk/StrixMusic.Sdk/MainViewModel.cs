@@ -41,12 +41,14 @@ namespace StrixMusic.Sdk
         private MergedLibrary? _mergedLibrary;
         private MergedRecentlyPlayed? _mergedRecentlyPlayed;
         private MergedDiscoverables? _mergedDiscoverables;
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
         public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService, ICoreManagementService coreManagementService)
         {
+            _syncContext = SynchronizationContext.Current;
             _coreManagementService = coreManagementService;
             _notificationService = notificationsService;
             LocalDevice = new DeviceViewModel(this, strixDevice);
@@ -118,7 +120,7 @@ namespace StrixMusic.Sdk
             if (core.RecentlyPlayed != null && _mergedRecentlyPlayed != null)
                 _mergedRecentlyPlayed.Cast<IMergedMutable<ICoreRecentlyPlayed>>().AddSource(core.RecentlyPlayed);
 
-            await Threading.OnPrimaryThread(() =>
+            _syncContext.Post(_ =>
             {
                 foreach (var device in core.Devices)
                 {
@@ -129,7 +131,7 @@ namespace StrixMusic.Sdk
 
                 if (core.User != null)
                     Users.Add(new UserViewModel(this, new CoreUserProxy(core.User)));
-            });
+            }, null);
 
             AttachEvents(core);
         }
@@ -233,7 +235,10 @@ namespace StrixMusic.Sdk
             var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
             if (coreMetadata.SdkVer != currentSdkVersion)
             {
-                _notificationService.RaiseNotification($"{coreMetadata.DisplayName} not compatible", $"Uses SDK version {coreMetadata.SdkVer}, which is not compatible with the current version {currentSdkVersion}.");
+                _notificationService.RaiseNotification(
+                    $"{coreMetadata.DisplayName} not compatible", 
+                    $"Uses SDK version {coreMetadata.SdkVer}, which is not compatible with the current version {currentSdkVersion}.");
+
                 return null;
             }
 
@@ -241,11 +246,12 @@ namespace StrixMusic.Sdk
             _sources.Add(core);
 
             // Adds itself into Cores.
-            // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
-            await Threading.OnPrimaryThread(() =>
+            // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished,
+            // before the below can be added to the list of MainViewModel.Cores.
+            _syncContext.Post(_ =>
             {
                 _ = new CoreViewModel(this, core, coreMetadata);
-            });
+            }, null);
             return core;
         }
 
@@ -368,7 +374,7 @@ namespace StrixMusic.Sdk
             }
         }
 
-        private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ActiveDevice)));
+        private void Device_IsActiveChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(ActiveDevice)), null);
 
         /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
         public bool IsInitialized { get; private set; }
