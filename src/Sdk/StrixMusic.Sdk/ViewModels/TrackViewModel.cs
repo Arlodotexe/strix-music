@@ -25,22 +25,25 @@ using StrixMusic.Sdk.ViewModels.Helpers;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="ITrack"/>
+    /// A ViewModel for <see cref="ITrack"/>.
     /// </summary>
     public sealed class TrackViewModel : ObservableObject, ISdkViewModel, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
-        private readonly SemaphoreSlim _populateArtistsMutex = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _populateGenresMutex = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populateArtistsMutex = new(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new(1, 1);
+        private readonly SemaphoreSlim _populateGenresMutex = new(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new(1, 1);
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
-        /// Creates a bindable wrapper around an <see cref="ITrack"/>.
+        /// Creates a new instance of <see cref="TrackViewModel"/>.
         /// </summary>
         /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
         internal TrackViewModel(MainViewModel root, ITrack track)
         {
+            _syncContext = SynchronizationContext.Current;
+
             Root = root;
             Model = root.Plugins.ModelPlugins.Track.Execute(track);
 
@@ -52,14 +55,11 @@ namespace StrixMusic.Sdk.ViewModels
             if (Model.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(root, Model.RelatedItems);
 
-            using (Threading.PrimaryContext)
-            {
-                Artists = new ObservableCollection<IArtistCollectionItem>();
-                UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
-                Images = new ObservableCollection<IImage>();
-                Urls = new ObservableCollection<IUrl>();
-                Genres = new ObservableCollection<IGenre>();
-            }
+            Artists = new ObservableCollection<IArtistCollectionItem>();
+            UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
+            Images = new ObservableCollection<IImage>();
+            Urls = new ObservableCollection<IUrl>();
+            Genres = new ObservableCollection<IGenre>();
 
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
@@ -313,64 +313,64 @@ namespace StrixMusic.Sdk.ViewModels
             remove => Model.UrlsChanged -= value;
         }
 
-        private void Track_TrackNumberChanged(object sender, int? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TrackNumber)));
+        private void Track_TrackNumberChanged(object sender, int? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TrackNumber)), null);
 
-        private void Track_PlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
+        private void Track_PlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
 
-        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
 
-        private void Track_NameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
+        private void Track_NameChanged(object sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
 
-        private void Track_LyricsChanged(object sender, ILyrics? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Lyrics)));
+        private void Track_LyricsChanged(object sender, ILyrics? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Lyrics)), null);
 
-        private void Track_LanguageChanged(object sender, CultureInfo? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Language)));
+        private void Track_LanguageChanged(object sender, CultureInfo? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Language)), null);
 
-        private void Track_IsExplicitChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsExplicit)));
+        private void Track_IsExplicitChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsExplicit)), null);
 
-        private void Track_DescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
+        private void Track_DescriptionChanged(object sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
+        private void OnLastPlayedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)));
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)));
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
 
-        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)));
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)));
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
 
         private void Track_AlbumChanged(object sender, IAlbum? e)
         {
             Album = e is null ? null : new AlbumViewModel(Root, e);
-            _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Album)));
+            _syncContext.Post(_ => OnPropertyChanged(nameof(Album)), null);
         }
 
-        private void OnArtistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalArtistItemsCount)));
+        private void OnArtistItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
 
-        private void OnImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+        private void OnImagesCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
 
-        private void OnGenresCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalGenreCount)));
+        private void OnGenresCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalGenreCount)), null);
 
-        private void OnUrlsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
+        private void OnUrlsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
 
-        private void TrackViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void TrackViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
         {
             Images.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void TrackViewModel_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void TrackViewModel_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => _syncContext.Post(_ =>
         {
             Genres.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void TrackViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void TrackViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _syncContext.Post(_ =>
         {
             Urls.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void TrackViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void TrackViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
@@ -408,13 +408,13 @@ namespace StrixMusic.Sdk.ViewModels
 
                 SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
             }
-        });
+        }, null);
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() =>
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ =>
         {
             PlaybackStateChanged?.Invoke(this, PlaybackState);
             OnPropertyChanged(nameof(PlaybackState));
-        });
+        }, null);
 
         ///<inheritdoc />
         public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection)
@@ -678,21 +678,17 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await GetArtistItemsAsync(limit, Artists.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
                     {
                         if (item is IArtist artist)
-                        {
                             Artists.Add(new ArtistViewModel(Root, artist));
-                        }
 
                         if (item is IArtistCollection collection)
-                        {
                             Artists.Add(new ArtistCollectionViewModel(Root, collection));
-                        }
                     }
-                });
+                }, null);
             }
         }
 
@@ -703,13 +699,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await GetImagesAsync(limit, Images.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                    {
                         Images.Add(item);
-                    }
-                });
+                }, null);
             }
         }
 
@@ -720,13 +714,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await GetGenresAsync(limit, Genres.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                    {
                         Genres.Add(item);
-                    }
-                });
+                }, null);
             }
         }
 
@@ -737,13 +729,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await GetUrlsAsync(limit, Urls.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                    {
                         Urls.Add(item);
-                    }
-                });
+                }, null);
             }
         }
 
@@ -839,15 +829,16 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public async Task InitAsync()
         {
             if (!IsInitialized)
-                return Task.CompletedTask;
+                return;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitArtistCollectionAsync(), InitGenreCollectionAsync());
+            await Task.WhenAll(InitImageCollectionAsync(), InitArtistCollectionAsync(), InitGenreCollectionAsync());
+            IsInitialized = true;
         }
 
         /// <inheritdoc />
-        public bool IsInitialized { get; }
+        public bool IsInitialized { get; private set; }
     }
 }

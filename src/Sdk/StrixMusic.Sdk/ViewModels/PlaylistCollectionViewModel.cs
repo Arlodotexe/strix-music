@@ -24,15 +24,16 @@ using StrixMusic.Sdk.ViewModels.Helpers;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// A wrapper for <see cref="ICoreArtistCollection"/> that contains props and methods for a ViewModel.
+    /// A ViewModel for <see cref="IPlaylistCollection"/>.
     /// </summary>
     public sealed class PlaylistCollectionViewModel : ObservableObject, ISdkViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
 
-        private readonly SemaphoreSlim _populatePlaylistsMutex = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _populateImagesMutex = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _populateUrlsMutex = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _populatePlaylistsMutex = new(1, 1);
+        private readonly SemaphoreSlim _populateImagesMutex = new(1, 1);
+        private readonly SemaphoreSlim _populateUrlsMutex = new(1, 1);
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
@@ -41,19 +42,18 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
         internal PlaylistCollectionViewModel(MainViewModel root, IPlaylistCollection collection)
         {
+            _syncContext = SynchronizationContext.Current;
+
             _collection = root.Plugins.ModelPlugins.PlaylistCollection.Execute(collection);
 
             SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(root.GetLoadedCore).ToList();
             Root = root;
 
-            using (Threading.PrimaryContext)
-            {
-                Playlists = new ObservableCollection<IPlaylistCollectionItem>();
-                Images = new ObservableCollection<IImage>();
-                Urls = new ObservableCollection<IUrl>();
+            Playlists = new ObservableCollection<IPlaylistCollectionItem>();
+            Images = new ObservableCollection<IImage>();
+            Urls = new ObservableCollection<IUrl>();
 
-                UnsortedPlaylists = new ObservableCollection<IPlaylistCollectionItem>();
-            }
+            UnsortedPlaylists = new ObservableCollection<IPlaylistCollectionItem>();
 
             PlayPlaylistCollectionAsyncCommand = new AsyncRelayCommand(PlayPlaylistCollectionAsync);
             PausePlaylistCollectionAsyncCommand = new AsyncRelayCommand(PausePlaylistCollectionAsync);
@@ -119,36 +119,36 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= PlaylistCollectionViewModel_ImagesChanged;
         }
 
-        private void OnNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
+        private void OnNameChanged(object sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
 
-        private void OnDescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
+        private void OnDescriptionChanged(object sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
 
-        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DownloadInfo)));
+        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
 
-        private void OnPlaylistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalPlaylistItemsCount)));
+        private void OnPlaylistItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalPlaylistItemsCount)), null);
 
-        private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+        private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
+        private void OnLastPlayedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)));
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)));
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
 
-        private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPausePlaylistCollectionAsyncAvailable)));
+        private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPausePlaylistCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayPlaylistCollectionAsyncAvailable)));
+        private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayPlaylistCollectionAsyncAvailable)), null);
 
-        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
         {
             Images.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
             {
@@ -162,7 +162,7 @@ namespace StrixMusic.Sdk.ViewModels
             }
             else
             {
-                // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
+                // Make sure both ordered and unordered playlists are updated.
                 UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
                     IPlaylist playlist => new PlaylistViewModel(Root, playlist),
@@ -171,7 +171,6 @@ namespace StrixMusic.Sdk.ViewModels
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
 
-                // Avoiding direct assignment to prevent effect on UI.
                 foreach (var item in UnsortedPlaylists)
                 {
                     if (!Playlists.Contains(item))
@@ -186,7 +185,7 @@ namespace StrixMusic.Sdk.ViewModels
 
                 SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
             }
-        });
+        }, null);
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -469,7 +468,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _collection.GetPlaylistItemsAsync(limit, Playlists.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
                     {
@@ -483,7 +482,7 @@ namespace StrixMusic.Sdk.ViewModels
                                 break;
                         }
                     }
-                });
+                }, null);
             }
         }
 
@@ -494,13 +493,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _collection.GetImagesAsync(limit, Images.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                    {
                         Images.Add(item);
-                    }
-                });
+                }, null);
             }
         }
 
@@ -511,13 +508,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _collection.GetUrlsAsync(limit, Urls.Count);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                    {
                         Urls.Add(item);
-                    }
-                });
+                }, null);
             }
         }
 

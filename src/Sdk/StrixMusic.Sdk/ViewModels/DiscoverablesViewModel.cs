@@ -11,7 +11,7 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// A bindable wrapper of the <see cref="IDiscoverables"/>.
+    /// A ViewModel for <see cref="IDiscoverables"/>.
     /// </summary>
     public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables
     {

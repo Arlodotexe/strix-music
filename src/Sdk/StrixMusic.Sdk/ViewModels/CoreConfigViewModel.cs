@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using StrixMusic.Sdk.MediaPlayback;
@@ -21,6 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
     public sealed class CoreConfigViewModel : ObservableObject, ISdkViewModel, ICoreConfig
     {
         private readonly ICoreConfig _coreConfig;
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreConfigViewModel"/> class.
@@ -29,10 +30,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="coreConfig">The instance of <see cref="ICoreConfig"/> to wrap around for this view model.</param>
         internal CoreConfigViewModel(MainViewModel root, ICoreConfig coreConfig)
         {
+            _syncContext = SynchronizationContext.Current;
+
             Root = root;
             _coreConfig = coreConfig;
 
-            AbstractUIElements = new () { new(_coreConfig.AbstractUIElements) };
+            AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel>
+            {
+                new(_coreConfig.AbstractUIElements),
+            };
 
             AttachEvents();
         }
@@ -41,11 +47,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void DetachEvents() => _coreConfig.AbstractUIElementsChanged -= CoreConfig_AbstractUIElementsChanged;
 
-        private async void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e) => await Threading.OnPrimaryThread(() =>
+        private void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e) => _syncContext.Post(_ =>
         {
             AbstractUIElements.Clear();
             AbstractUIElements.Add(new AbstractUICollectionViewModel(_coreConfig.AbstractUIElements));
-        });
+        }, null);
 
         /// <inheritdoc/>
         AbstractUICollection ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;

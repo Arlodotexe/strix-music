@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
@@ -21,13 +21,14 @@ using StrixMusic.Sdk.ViewModels.Helpers;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="IUserProfile"/>
+    /// A ViewModel for <see cref="IUserProfile"/>.
     /// </summary>
     public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
         private readonly IReadOnlyList<ICore> _sourceCores;
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
@@ -36,6 +37,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         internal UserProfileViewModel(MainViewModel root, IUserProfile userProfile)
         {
+            _syncContext = SynchronizationContext.Current;
+
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
             Root = root;
 
@@ -49,11 +52,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
 
-            using (Threading.PrimaryContext)
-            {
-                Images = new ObservableCollection<IImage>();
-                Urls = new ObservableCollection<IUrl>();
-            }
+            Images = new ObservableCollection<IImage>();
+            Urls = new ObservableCollection<IUrl>();
         }
 
         /// <inheritdoc />
@@ -243,13 +243,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             var items = await GetImagesAsync(limit, Images.Count);
 
-            _ = Threading.OnPrimaryThread(() =>
+            _syncContext.Post(_ =>
             {
                 foreach (var item in items)
-                {
                     Images.Add(item);
-                }
-            });
+            }, null);
         }
 
         /// <inheritdoc />
@@ -257,13 +255,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             var items = await GetUrlsAsync(limit, Urls.Count);
 
-            _ = Threading.OnPrimaryThread(() =>
+            _syncContext.Post(_ =>
             {
                 foreach (var item in items)
-                {
                     Urls.Add(item);
-                }
-            });
+            }, null);
         }
 
         /// <inheritdoc />

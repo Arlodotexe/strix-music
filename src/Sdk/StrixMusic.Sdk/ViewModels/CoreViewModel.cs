@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -18,11 +18,12 @@ using StrixMusic.Sdk.Models.Merged;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains information about an <see cref="ICore"/>.
+    /// A ViewModel for <see cref="ICore"/>.
     /// </summary>
     public sealed class CoreViewModel : ObservableObject, ISdkViewModel, ICore
     {
         private readonly ICore _core;
+        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
@@ -35,6 +36,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// </remarks>
         internal CoreViewModel(MainViewModel root, ICore core, CoreMetadata coreMetadata)
         {
+            _syncContext = SynchronizationContext.Current;
+
             Root = root;
             _core = core;
 
@@ -80,23 +83,23 @@ namespace StrixMusic.Sdk.ViewModels
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
         }
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _syncContext.Post(_ =>
         {
             Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data)));
-        });
+        }, null);
 
-        private void Core_InstanceDescriptorChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() =>
+        private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(InstanceDescriptor));
             InstanceDescriptorChanged?.Invoke(sender, e);
-        });
+        }, null);
 
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e)
         {
             CoreState = e;
 
-            _ = Threading.OnPrimaryThread(() =>
+            _syncContext.Post(_ =>
             {
                 OnPropertyChanged(nameof(CoreState));
 
@@ -106,7 +109,7 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateLoading));
                 OnPropertyChanged(nameof(IsCoreStateLoaded));
                 OnPropertyChanged(nameof(IsCoreStateFaulted));
-            });
+            }, null);
         }
 
         /// <inheritdoc />
@@ -177,7 +180,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<CoreState>? CoreStateChanged
         {
             add => _core.CoreStateChanged += value;
-
             remove => _core.CoreStateChanged -= value;
         }
 

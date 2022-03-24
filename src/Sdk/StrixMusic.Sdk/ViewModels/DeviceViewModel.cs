@@ -3,11 +3,11 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
@@ -16,10 +16,11 @@ using StrixMusic.Sdk.Models.Core;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains information about a <see cref="IImage"/>
+    /// A ViewModel for <see cref="IDevice"/>.
     /// </summary>
     public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice
     {
+        private readonly SynchronizationContext _syncContext;
         private PlaybackItem? _nowPlaying;
 
         /// <summary>
@@ -29,6 +30,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
         internal DeviceViewModel(MainViewModel root, IDevice device)
         {
+            _syncContext = SynchronizationContext.Current;
+
             Model = device ?? throw new ArgumentNullException(nameof(device));
             Root = root;
 
@@ -82,27 +85,27 @@ namespace StrixMusic.Sdk.ViewModels
             Model.VolumeChanged -= Device_VolumeChanged;
         }
 
-        private void Device_VolumeChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Volume)));
+        private void Device_VolumeChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Volume)), null);
 
-        private void Device_ShuffleStateChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ShuffleState)));
+        private void Device_ShuffleStateChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(ShuffleState)), null);
 
-        private void Device_RepeatStateChanged(object sender, RepeatState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(RepeatState)));
+        private void Device_RepeatStateChanged(object sender, RepeatState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(RepeatState)), null);
 
-        private void Device_PositionChanged(object sender, TimeSpan e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Position)));
+        private void Device_PositionChanged(object sender, TimeSpan e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Position)), null);
 
-        private void Device_PlaybackSpeedChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackSpeed)));
+        private void Device_PlaybackSpeedChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackSpeed)), null);
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackContext)));
+        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
 
-        private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsActive)));
+        private void Device_IsActiveChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsActive)), null);
 
-        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() =>
+        private void Device_StateChanged(object sender, PlaybackState e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(PlaybackState));
             OnPropertyChanged(nameof(IsPlaying));
-        });
+        }, null);
 
-        private void Device_NowPlayingChanged(object sender, PlaybackItem e) => _ = Threading.OnPrimaryThread(() =>
+        private void Device_NowPlayingChanged(object sender, PlaybackItem e) => _syncContext.Post(_ =>
         {
             Guard.IsNotNull(e.Track, nameof(e.Track));
 
@@ -113,7 +116,7 @@ namespace StrixMusic.Sdk.ViewModels
             };
 
             NowPlayingChanged?.Invoke(sender, e);
-        });
+        }, null);
 
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.

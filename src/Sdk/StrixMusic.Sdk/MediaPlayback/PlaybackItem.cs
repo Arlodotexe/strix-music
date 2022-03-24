@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Models;
 namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
-    /// Holds data that uniquely identifies an item played from an<see cref="IAudioPlayerService"/>.
+    /// Holds data that uniquely identifies an item played from an <see cref="IAudioPlayerService"/>.
     /// </summary>
     public record PlaybackItem
     {
