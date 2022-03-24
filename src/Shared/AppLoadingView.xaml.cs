@@ -351,10 +351,9 @@ namespace StrixMusic.Shared
             var mainViewModel = new MainViewModel(strixDevice, _notificationService, coreManagementService);
 
             // This event stays attached for the lifetime of the application.
-            mainViewModel.PropertyChanged += (sender, args) =>
+            mainViewModel.ActiveDeviceChanged += (sender, args) =>
             {
-                if (args.PropertyName == nameof(MainViewModel.ActiveDevice))
-                    _playbackHandlerService.ActiveDevice = mainViewModel.ActiveDevice;
+                _playbackHandlerService.ActiveDevice = args;
             };
 
             _settings.PropertyChanged += OnSettingChanged;

@@ -97,7 +97,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
 
-        private void Device_IsActiveChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsActive)), null);
+        private void Device_IsActiveChanged(object sender, bool e)
+        {
+            _syncContext.Post(_ => OnPropertyChanged(nameof(IsActive)), null);
+            IsActiveChanged?.Invoke(this, e);
+        }
 
         private void Device_StateChanged(object sender, PlaybackState e) => _syncContext.Post(_ =>
         {
@@ -208,11 +212,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsSeekAsyncAvailable => Model.IsSeekAsyncAvailable;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsActiveChanged
-        {
-            add => Model.IsActiveChanged += value;
-            remove => Model.IsActiveChanged -= value;
-        }
+        public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc />
         public event EventHandler<IPlayableBase>? PlaybackContextChanged

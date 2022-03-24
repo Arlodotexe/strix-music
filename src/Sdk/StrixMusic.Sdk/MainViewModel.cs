@@ -374,7 +374,11 @@ namespace StrixMusic.Sdk
             }
         }
 
-        private void Device_IsActiveChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(ActiveDevice)), null);
+        private void Device_IsActiveChanged(object sender, bool e)
+        {
+            ActiveDeviceChanged?.Invoke(this, ActiveDevice);
+            _syncContext.Post(_ => OnPropertyChanged(nameof(ActiveDevice)), null);
+        }
 
         /// <inheritdoc cref="IAsyncInit.IsInitialized"/>
         public bool IsInitialized { get; private set; }
@@ -450,6 +454,11 @@ namespace StrixMusic.Sdk
 
         /// <inheritdoc cref="SearchViewModel" />
         public SearchViewModel? Search { get; }
+
+        /// <summary>
+        /// Raised when <see cref="ActiveDevice"/> is changed.
+        /// </summary>
+        public event EventHandler<IDevice?>? ActiveDeviceChanged;
 
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()

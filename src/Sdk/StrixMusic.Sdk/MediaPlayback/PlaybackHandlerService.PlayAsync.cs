@@ -77,8 +77,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[trackInfo.Index];
-            await PlayFromNext(trackInfo.Index);
+            var nextItem = _nextItems[0];
+            await PlayFromNext(0);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
             _strixDevice.SetPlaybackData(context, nextItem);
@@ -122,8 +122,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[trackInfo.Index];
-            await PlayFromNext(trackInfo.Index);
+            var nextItem = _nextItems[0];
+            await PlayFromNext(0);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
@@ -150,8 +150,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[trackInfo.Index];
-            await PlayFromNext(trackInfo.Index);
+            var nextItem = _nextItems[0];
+            await PlayFromNext(0);
 
             Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
 
