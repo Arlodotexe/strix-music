@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
@@ -8,6 +10,8 @@ using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Sdk.FileMetadata;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
@@ -17,6 +21,9 @@ namespace StrixMusic.Cores.LocalFiles
     /// <inheritdoc />
     public sealed class LocalFilesCore : FilesCore
     {
+        private Notification? _scannerRequiredNotification;
+        private readonly LocalFilesCoreConfigPanel _configPanel = new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCore"/> class.
         /// </summary>
@@ -30,11 +37,34 @@ namespace StrixMusic.Cores.LocalFiles
             FileSystem = fileSystem;
             NotificationService = notificationService;
             Settings = new LocalFilesCoreSettings(settingsStorage);
-            CoreConfig = new LocalFilesCoreConfig(this);
+
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            Settings.PropertyChanged += OnSettingChanged;
+            _configPanel.RescanButton.Clicked += RescanButton_Clicked;
+            _configPanel.UseFilePropsScannerToggle.StateChanged += UseFilePropsScannerToggle_StateChanged;
+            _configPanel.UseTagLibScannerToggle.StateChanged += UseTagLibScannerToggle_StateChanged;
+        }
+
+        private void DetachEvents()
+        {
+            Settings.PropertyChanged -= OnSettingChanged;
+            _configPanel.RescanButton.Clicked -= RescanButton_Clicked;
+            _configPanel.UseFilePropsScannerToggle.StateChanged -= UseFilePropsScannerToggle_StateChanged;
+            _configPanel.UseTagLibScannerToggle.StateChanged -= UseTagLibScannerToggle_StateChanged;
         }
 
         /// <inheritdoc/>
         public override CoreMetadata Registration { get; } = Metadata;
+
+        /// <inheritdoc />
+        public override AbstractUICollection AbstractConfigPanel => _configPanel;
+
+        /// <inheritdoc />
+        public override MediaPlayerType PlaybackType { get; } = MediaPlayerType.Standard;
 
         /// <summary>
         /// The metadata that identifies this core before instantiation.
@@ -43,9 +73,6 @@ namespace StrixMusic.Cores.LocalFiles
                                                                         displayName: "Local Files",
                                                                         logoUri: new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
                                                                         sdkVer: Version.Parse("0.0.0.0"));
-
-        /// <inheritdoc/>
-        public override ICoreConfig CoreConfig { get; protected set; }
 
         /// <summary>
         /// The settings for this core instance.
@@ -77,11 +104,20 @@ namespace StrixMusic.Cores.LocalFiles
         {
             // Dispose any resources not known to the SDK.
             // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
+            FileMetadataManager?.DisposeAsync();
+
+            _configPanel.ConfigDoneButton.Clicked -= ConfigDoneButtonOnClicked;
+
+            DetachEvents();
+
             return default;
         }
 
         /// <inheritdoc />
         public override event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler? AbstractConfigPanelChanged;
 
         /// <inheritdoc />
         public override event EventHandler<string>? InstanceDescriptorChanged;
@@ -91,15 +127,10 @@ namespace StrixMusic.Cores.LocalFiles
         {
             ChangeCoreState(CoreState.Loading);
 
-            if (CoreConfig is not LocalFilesCoreConfig coreConfig)
-                return;
-
-            await coreConfig.SetupConfigurationServices();
-
-            var ui = coreConfig.CreateGenericConfig();
-            var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
-
             await Settings.LoadAsync();
+            await FileSystem.InitAsync();
+
+        GetConfig:
             var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
             if (configuredFolder is null)
             {
@@ -109,40 +140,122 @@ namespace StrixMusic.Cores.LocalFiles
                 if (pickedFolder is null)
                 {
                     ChangeCoreState(CoreState.Unloaded);
-                    return;
+                    throw new OperationCanceledException();
                 }
 
                 Settings.FolderPath = pickedFolder.Path;
-                await Settings.SaveAsync();
+                _configPanel.Subtitle = pickedFolder.Path;
 
-                ui.Subtitle = pickedFolder.Path;
-
-                coreConfig.SaveAbstractUI(ui);
+                AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
 
                 // Let the user change settings for the selected folder before first scan.
                 ChangeCoreState(CoreState.NeedsSetup);
 
-                _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
+                await Flow.EventAsTask(x => _configPanel.ConfigDoneButton.Clicked += x, x => _configPanel.ConfigDoneButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
-                ChangeCoreState(CoreState.Configured);
-                await InitAsync();
-                return;
+                goto GetConfig;
             }
 
-            ui.Subtitle = configuredFolder.Path;
-
-            coreConfig.SaveAbstractUI(ui);
+            _configPanel.Subtitle = configuredFolder.Path;
+            AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
 
             ChangeCoreState(CoreState.Configured);
 
+            // Load
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
-            await coreConfig.SetupServices(configuredFolder);
-            await Library.Cast<FilesCoreLibrary>().InitAsync();
+            FileMetadataManager = new FileMetadataManager(configuredFolder, FileSystem.RootFolder, NotificationService)
+            {
+                SkipRepoInit = Settings.InitWithEmptyMetadataRepos,
+                ScanTypes = GetScanTypesFromSettings(),
+            };
 
+            await FileMetadataManager.InitAsync();
+            _ = FileMetadataManager.ScanAsync();
+
+            await Library.Cast<FilesCoreLibrary>().InitAsync();
             ChangeCoreState(CoreState.Loaded);
+
+            _configPanel.ConfigDoneButton.Clicked += ConfigDoneButtonOnClicked;
+
             IsInitialized = true;
+        }
+
+        private void ConfigDoneButtonOnClicked(object sender, EventArgs e)
+        {
+            ChangeCoreState(CoreState.Configured);
+            ChangeCoreState(CoreState.Loaded);
+        }
+
+        private MetadataScanTypes GetScanTypesFromSettings()
+        {
+            var scanTypes = MetadataScanTypes.None;
+
+            if (Settings.ScanWithTagLib)
+                scanTypes |= MetadataScanTypes.TagLib;
+
+            if (Settings.ScanWithFileProperties)
+                scanTypes |= MetadataScanTypes.FileProperties;
+
+            return scanTypes;
+        }
+
+        private async void OnSettingChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var isFilePropToggle = e.PropertyName == nameof(LocalFilesCoreSettings.ScanWithFileProperties);
+            var isTagLibToggle = e.PropertyName == nameof(LocalFilesCoreSettings.ScanWithTagLib);
+            var isAnyScannerToggle = isFilePropToggle || isTagLibToggle;
+
+            if (isAnyScannerToggle && !Settings.ScanWithFileProperties && !Settings.ScanWithTagLib)
+            {
+                _scannerRequiredNotification?.Dismiss();
+                _scannerRequiredNotification = NotificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
+
+                if (isFilePropToggle)
+                    _configPanel.UseFilePropsScannerToggle.State = true;
+
+                if (isTagLibToggle)
+                    _configPanel.UseTagLibScannerToggle.State = true;
+            }
+            else
+            {
+                _configPanel.UseFilePropsScannerToggle.State = Settings.ScanWithFileProperties;
+                _configPanel.UseTagLibScannerToggle.State = Settings.ScanWithTagLib;
+                _configPanel.InitWithEmptyReposToggle.State = Settings.InitWithEmptyMetadataRepos;
+            }
+
+            await Settings.SaveAsync();
+        }
+
+        private void RescanButton_Clicked(object sender, EventArgs e) => _ = FileMetadataManager?.ScanAsync();
+
+        private void UseTagLibScannerToggle_StateChanged(object sender, bool e)
+        {
+            Settings.ScanWithTagLib = e;
+
+            if (FileMetadataManager is null)
+                return;
+
+            // Enable or disable this scanner type.
+            if (!FileMetadataManager.ScanTypes.HasFlag(MetadataScanTypes.TagLib) && e)
+                FileMetadataManager.ScanTypes |= MetadataScanTypes.TagLib;
+            else
+                FileMetadataManager.ScanTypes ^= MetadataScanTypes.TagLib;
+        }
+
+        private void UseFilePropsScannerToggle_StateChanged(object sender, bool e)
+        {
+            Settings.ScanWithFileProperties = e;
+
+            if (FileMetadataManager is null)
+                return;
+
+            // Enable or disable this scanner type.
+            if (!FileMetadataManager.ScanTypes.HasFlag(MetadataScanTypes.FileProperties) && e)
+                FileMetadataManager.ScanTypes |= MetadataScanTypes.FileProperties;
+            else
+                FileMetadataManager.ScanTypes ^= MetadataScanTypes.FileProperties;
         }
     }
 }

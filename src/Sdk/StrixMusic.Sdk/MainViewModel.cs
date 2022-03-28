@@ -268,12 +268,14 @@ namespace StrixMusic.Sdk
             // If the core requests setup, cancel the init task.
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
-            
+
             try
             {
+#warning Improper cancellation. Refactor to pass the token directly.
                 await Task.Run(() => core.InitAsync(), setupCancellationTokenSource.Token);
             }
-            catch (TaskCanceledException)
+            #warning Handle special exceptions like HttpException + catch all others
+            catch (OperationCanceledException)
             {
             }
 
@@ -283,7 +285,7 @@ namespace StrixMusic.Sdk
             {
                 setupCancellationTokenSource.Dispose();
             }
-            else if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.Faulted)
+            else if (core.CoreState == CoreState.Unloaded)
             {
                 setupCancellationTokenSource.Dispose();
                 await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);

@@ -59,7 +59,7 @@
       <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="OwlCore">
-      <Version>0.0.58</Version>
+      <Version>0.0.61</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>

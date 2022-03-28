@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
@@ -25,7 +25,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             InstanceId = Guid.NewGuid().ToString();
 
             Library = new MockCoreLibrary(this);
-            CoreConfig = new MockCoreConfig(this);
             Pins = new MockCorePins(this);
             RecentlyPlayed = new MockCoreRecentlyPlayed(this);
             Discoverables = new MockCoreDiscoverables(this);
@@ -52,6 +51,9 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
+        /// <inheritdoc />
+        public event EventHandler? AbstractConfigPanelChanged;
+
         public event EventHandler<string>? InstanceDescriptorChanged;
 
         public CoreMetadata Registration { get; } = new CoreMetadata(nameof(MockCore), "Mock core", new Uri("https://strixmusic.com/"), Version.Parse("0.0.0.0"));
@@ -68,7 +70,11 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             }
         }
 
-        public ICoreConfig CoreConfig { get; set; }
+        /// <inheritdoc />
+        public AbstractUICollection AbstractConfigPanel { get; } = new("test");
+
+        /// <inheritdoc />
+        public MediaPlayerType PlaybackType { get; }
 
         public ICoreUser? User { get; set; } = new MockCoreUser();
 

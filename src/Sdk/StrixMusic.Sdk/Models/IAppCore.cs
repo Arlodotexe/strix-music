@@ -13,11 +13,11 @@ using StrixMusic.Sdk.Plugins.Model;
 namespace StrixMusic.Sdk.Models
 {
     /// <summary>
-    /// Implementations provide a root entrypoint for interaction with the SDK. Allows for interfacing with multiple
+    /// Implementations provide a root entry point for interaction with the SDK. Allows for interfacing with multiple
     /// merged <see cref="ICore"/>s, configuring plugins, and more. 
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAppCore : ICoreBase, ISdkMember, IMerged<ICore>
+    public interface IAppCore : ISdkMember, IMerged<ICore>
     {
         /// <summary>
         /// All available and configured plugins for this instance.

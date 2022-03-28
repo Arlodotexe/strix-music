@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Remoting;
@@ -59,8 +60,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             Discoverables = null!;
             Pins = null!;
             Library = null!;
-
-            CoreConfig = new RemoteCoreConfig(instanceId);
+            AbstractConfigPanel = new AbstractUICollection("TemporaryCollection");
 
             // Registration is set remotely, use placeholder data here.
             Registration = new CoreMetadata(string.Empty, string.Empty, new Uri("/", UriKind.Relative), sdkVer: new Version(0, 0, 0));
@@ -94,12 +94,11 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             if (core.Discoverables is not null)
                 Discoverables = new RemoteCoreDiscoverables(core.Discoverables);
 
-            CoreConfig = core.CoreConfig;
-
             ChangeDevices(core.Devices.Select((x, i) => new CollectionChangedItem<ICoreDevice>(x, i)).ToList(), new List<CollectionChangedItem<ICoreDevice>>());
 
             AttachEvents(core);
 
+            AbstractConfigPanel = _core.AbstractConfigPanel;
             Registration = core.Registration;
             InstanceDescriptor = core.InstanceDescriptor;
             InstanceId = core.InstanceId;
@@ -181,9 +180,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc/>
         public string InstanceId { get; }
 
-        /// <inheritdoc/>
-        public ICoreConfig CoreConfig { get; }
-
         /// <inheritdoc />
         public ICore SourceCore => this;
 
@@ -210,6 +206,14 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
                 InstanceDescriptorChanged?.Invoke(this, value);
             }
         }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public AbstractUICollection AbstractConfigPanel { get; private set; }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public MediaPlayerType PlaybackType { get; private set; }
 
         /// <inheritdoc/>
         [RemoteProperty]
@@ -244,6 +248,9 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler? AbstractConfigPanelChanged;
 
         /// <inheritdoc />
         public event EventHandler<string>? InstanceDescriptorChanged;

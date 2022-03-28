@@ -249,17 +249,17 @@ namespace StrixMusic.Sdk.FileMetadata
         public int DegreesOfParallelism { get; set; } = 2;
 
         /// <inheritdoc />
-        public async Task StartScan()
+        public async Task ScanAsync(CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Scan started");
 
-            if (!(_inProgressScanCancellationTokenSource is null))
+            if (_inProgressScanCancellationTokenSource is not null)
             {
                 _inProgressScanCancellationTokenSource.Cancel();
                 _inProgressScanCancellationTokenSource.Dispose();
             }
 
-            _inProgressScanCancellationTokenSource = new CancellationTokenSource();
+            _inProgressScanCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             var currentToken = _inProgressScanCancellationTokenSource.Token;
 
             DismissNotifs();

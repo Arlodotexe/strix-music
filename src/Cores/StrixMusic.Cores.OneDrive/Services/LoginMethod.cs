@@ -1,7 +1,7 @@
 ﻿namespace StrixMusic.Cores.OneDrive.Services
 {
     /// <summary>
-    /// The methods used to login to OneDrive.
+    /// The methods used to log in to OneDrive.
     /// </summary>
     public enum LoginMethod
     {

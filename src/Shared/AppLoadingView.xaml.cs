@@ -253,7 +253,7 @@ namespace StrixMusic.Shared
                 var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
                 var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
 
-                return new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService, new Launcher());
+                return new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService);
             });
 
             if (CoreRegistry.MetadataRegistry.Count == 0)
@@ -392,7 +392,6 @@ namespace StrixMusic.Shared
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService>(_notificationService);
             services.AddSingleton<ICoreManagementService>(coreManagementService);
-            services.AddSingleton<ILauncher, Launcher>();
 
             var serviceProvider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(serviceProvider);
@@ -587,7 +586,7 @@ namespace StrixMusic.Shared
 #pragma warning disable CS0162 // Unreachable code detected
             _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
-            if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
+            if (core.PlaybackType == MediaPlayerType.Standard)
             {
                 var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 

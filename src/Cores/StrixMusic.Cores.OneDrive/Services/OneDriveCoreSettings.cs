@@ -18,9 +18,18 @@ namespace StrixMusic.Cores.OneDrive.Services
         }
 
         /// <summary>
-        /// A flag that indicates if the user has gone through the first OOBE.
+        /// If true, the user has had the opportunity to tweak core settings during the out of box experience.
         /// </summary>
-        public bool IsFirstSetupComplete
+        public bool UserHasSeenGeneralOobeSettings
+        {
+            get => GetSetting(() => false);
+            set => SetSetting(value);
+        }
+
+        /// <summary>
+        /// If true, the user has had the opportunity to supply custom application keys from Azure to authenticate their Microsoft account against.
+        /// </summary>
+        public bool UserHasSeenAuthClientKeysSettings
         {
             get => GetSetting(() => false);
             set => SetSetting(value);
@@ -54,6 +63,24 @@ namespace StrixMusic.Cores.OneDrive.Services
         }
 
         /// <summary>
+        /// A unique identifier for the account logged in to this core instance.
+        /// </summary>
+        public string AccountIdentifier
+        {
+            get => GetSetting(() => string.Empty);
+            set => SetSetting(value);
+        }
+
+        /// <summary>
+        /// Client ID of a registered MS Graph application that the user will be authenticated against.
+        /// </summary>
+        public string ClientId
+        {
+            get => GetSetting(() => Secrets.ClientId);
+            set => SetSetting(value);
+        }
+
+        /// <summary>
         /// Tenant ID for authenticating the user against a registered MS Graph application.
         /// </summary>
         public string TenantId
@@ -68,15 +95,6 @@ namespace StrixMusic.Cores.OneDrive.Services
         public string RedirectUri
         {
             get => GetSetting(() => Secrets.RedirectUrl);
-            set => SetSetting(value);
-        }
-
-        /// <summary>
-        /// Client ID of a registered MS Graph application that the user will be authenticated against.
-        /// </summary>
-        public string ClientId
-        {
-            get => GetSetting(() => Secrets.ClientId);
             set => SetSetting(value);
         }
     }

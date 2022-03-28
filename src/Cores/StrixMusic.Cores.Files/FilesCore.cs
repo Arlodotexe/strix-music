@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.Files.Services;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
@@ -39,8 +38,11 @@ namespace StrixMusic.Cores.Files
         /// <inheritdoc />
         public virtual string InstanceDescriptor { get; set; } = string.Empty;
 
-        /// <inheritdoc/>
-        public abstract ICoreConfig CoreConfig { get; protected set; }
+        /// <inheritdoc />
+        public abstract AbstractUICollection AbstractConfigPanel { get; }
+
+        /// <inheritdoc />
+        public virtual MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
         /// <inheritdoc />
         public ICore SourceCore => this;
@@ -79,6 +81,9 @@ namespace StrixMusic.Cores.Files
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public abstract event EventHandler? AbstractConfigPanelChanged;
 
         /// <inheritdoc />
         public abstract event EventHandler<string>? InstanceDescriptorChanged;
