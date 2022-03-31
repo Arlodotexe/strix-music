@@ -22,7 +22,6 @@ using StrixMusic.Cores.OneDrive;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
-using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Messages;
@@ -42,6 +41,7 @@ using StrixMusic.Shells.Default;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -56,7 +56,7 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
-        private static List<Assembly> _assemblyLinker = new List<Assembly>();
+        private static List<Assembly> _assemblyLinker = new();
 
         private bool _showingQuip;
         private AppSettings? _settings;
@@ -84,7 +84,7 @@ namespace StrixMusic.Shared
 
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif
@@ -360,14 +360,15 @@ namespace StrixMusic.Shared
 
             _logger?.LogInformation($"Setting up localization");
 
-            _localizationService = new LocalizationResourceLoader();
-            _localizationService.RegisterProvider(Constants.Localization.StartupResource);
-            _localizationService.RegisterProvider(Constants.Localization.QuipsResource);
-
-            _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
-            _localizationService.RegisterProvider(Constants.Localization.CommonResource);
-            _localizationService.RegisterProvider(Constants.Localization.TimeResource);
-            _localizationService.RegisterProvider(Constants.Localization.MusicResource);
+            _localizationService = new LocalizationResourceLoader()
+            {
+                Startup = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Startup)),
+                SuperShell = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.SuperShell)),
+                Common = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Common)),
+                Time = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Time)),
+                Music = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Music)),
+                Quips = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Quips)),
+            };
 
             // TODO: Add debug boot mode.
             // #741
@@ -386,7 +387,7 @@ namespace StrixMusic.Shared
             services.AddSingleton(mainViewModel);
             services.AddSingleton(_mainPage);
 
-            services.AddSingleton<ILocalizationService>(_localizationService);
+            services.AddSingleton(_localizationService);
             services.AddSingleton(_settings);
             services.AddSingleton<ISharedFactory>(new SharedFactory());
             services.AddSingleton<IFileSystemService>(fileSystemService);
@@ -417,9 +418,9 @@ namespace StrixMusic.Shared
             mainViewModel.Plugins.ModelPlugins.Import(new PlaybackHandlerPlugin(_playbackHandlerService));
             mainViewModel.Plugins.ModelPlugins.Import(new PopulateEmptyNamesPlugin()
             {
-                EmptyAlbumName = _localizationService["Music", "UnknownAlbum"],
-                EmptyArtistName = _localizationService["Music", "UnknownArtist"],
-                EmptyDefaultName = _localizationService["Music", "UnknownName"],
+                EmptyAlbumName = _localizationService?.Music?.GetString("UnknownAlbum") ?? "?",
+                EmptyArtistName = _localizationService?.Music?.GetString("UnknownArtist") ?? "?",
+                EmptyDefaultName = _localizationService?.Music?.GetString("UnknownName") ?? "?",
             });
 
             _navService.RegisterCommonPage(_mainPage);
@@ -429,7 +430,7 @@ namespace StrixMusic.Shared
             _logger?.LogInformation($"{nameof(InitializeServicesAsync)} completed");
         }
 
-        private void OnSettingChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnSettingChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (ViewModel is null || _settings is null)
                 return;
@@ -547,7 +548,7 @@ namespace StrixMusic.Shared
 
             var quip = new QuipLoader(CultureInfo.CurrentCulture.TwoLetterISOLanguageName).GetGroupIndexQuip();
 
-            PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
+            PART_Status.Text = _localizationService?.Quips?.GetString($"{quip.Item1}{quip.Item2}") ?? string.Empty;
             _showingQuip = true;
         }
 
@@ -557,7 +558,7 @@ namespace StrixMusic.Shared
                 return;
 
             if (_localizationService != null)
-                text = _localizationService[Constants.Localization.StartupResource, text];
+                text = _localizationService?.Startup?.GetString(text) ?? string.Empty;
 
             PART_Status.Text = text;
         }

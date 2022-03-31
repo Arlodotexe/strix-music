@@ -1,8 +1,7 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Uno.Services.Localization;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using Windows.UI.Xaml.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters.Time
@@ -23,18 +22,19 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Convert(TimeSpan value)
         {
-            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-            string returnValue = string.Empty;
+            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+
+            var returnValue = string.Empty;
 
             // TODO: Make more rigorous cases
             if (value.Hours > 0)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "HrCount"], value.Hours) + " ";
+                returnValue += string.Format(localizationService.Time?.GetString("HrCount") ?? string.Empty, value.Hours) + " ";
 
             if (value.Minutes > 0)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "MinCount"], value.Minutes) + " ";
+                returnValue += string.Format(localizationService.Time?.GetString("MinCount") ?? string.Empty, value.Minutes) + " ";
 
             if (value.Seconds > 0 || returnValue == string.Empty)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "SecCount"], value.Seconds) + " ";
+                returnValue += string.Format(localizationService.Time?.GetString("SecCount") ?? string.Empty, value.Seconds) + " ";
 
             return returnValue;
         }

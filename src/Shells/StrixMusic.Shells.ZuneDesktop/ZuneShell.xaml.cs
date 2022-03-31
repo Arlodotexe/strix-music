@@ -9,7 +9,6 @@ using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views;
-using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Shells.ZuneDesktop.Settings;
@@ -59,7 +58,6 @@ namespace StrixMusic.Shells.ZuneDesktop
             _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
             SetupNavigationService(_navigationService);
             SetupNotificationService();
-            SetupLocalizationService();
 
             var settings = new ZuneDesktopSettings(_settingStorage);
             settings.PropertyChanged += SettingsService_SettingChanged;
@@ -75,11 +73,6 @@ namespace StrixMusic.Shells.ZuneDesktop
             navigationService.BackRequested += ZuneShell_BackRequested;
 
             return navigationService;
-        }
-
-        private void SetupLocalizationService()
-        {
-            Ioc.Default.GetRequiredService<ILocalizationService>().Cast<LocalizationResourceLoader>().RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
         }
 
         private void SetupNotificationService()

@@ -44,7 +44,6 @@ namespace StrixMusic.Shared.ViewModels
         private readonly ICoreManagementService _coreManagementService;
         private readonly AppSettings _settings;
         private readonly INotificationService _notificationService;
-        private readonly ILocalizationService _localizationResourceLoader;
         private bool _isShowingAddNew;
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
@@ -60,7 +59,6 @@ namespace StrixMusic.Shared.ViewModels
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
             _settings = Ioc.Default.GetRequiredService<AppSettings>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            _localizationResourceLoader = Ioc.Default.GetRequiredService<ILocalizationService>();
             _logger = Ioc.Default.GetRequiredService<ILogger<SuperShellViewModel>>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();

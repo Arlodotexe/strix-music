@@ -5,7 +5,7 @@
 		<NoWarn>NU1701;NU1605;</NoWarn>
 		<Nullable>enable</Nullable>
 		<WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>10.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
@@ -27,7 +27,7 @@
 		<UpToDateCheckInput Include="..\Shared\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Remove="Assets\SplashScreen.png" />
+		<None Remove="Assets\SplashScreen.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="WasmCSS\Fonts.css" />
@@ -80,13 +80,13 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Cores\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
-	  <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
-	  <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
-	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
-	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
-	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
+		<ProjectReference Include="..\..\Cores\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
+		<ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
+		<ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
+		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
 	</ItemGroup>
 	<Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>

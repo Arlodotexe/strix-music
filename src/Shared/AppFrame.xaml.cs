@@ -14,6 +14,8 @@ using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Helpers;
+using StrixMusic.Sdk.Uno.Services.Localization;
 
 namespace StrixMusic.Shared
 {
@@ -185,7 +187,7 @@ namespace StrixMusic.Shared
 
         private async void Core_CoreStateChanged(object? sender, Sdk.Models.CoreState e)
         {
-            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
+            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             if (!(sender is ICore core))
                 return;
@@ -200,7 +202,7 @@ namespace StrixMusic.Shared
                     _superShell.ViewModel.CurrentCoreConfig = relevantVm;
                     _superShell.ViewModel.SelectedTabIndex = 1;
 
-                    OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
+                    OverlayPresenter.Show(_superShell, localizationService.Common?.GetString("Settings") ?? string.Empty);
                 });
             }
         }
@@ -225,7 +227,7 @@ namespace StrixMusic.Shared
 
         private void NavServiceOnNavigationRequested(object? sender, NavigateEventArgs<Control> e)
         {
-            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
+            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             switch (e.Page)
             {
@@ -233,7 +235,7 @@ namespace StrixMusic.Shared
                     {
                         _superShell = superShell;
                         if (e.IsOverlay)
-                            OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
+                            OverlayPresenter.Show(_superShell, localizationService.Common?.GetString("Settings") ?? string.Empty);
                         else
                             PART_ContentPresenter.Content = superShell;
                         break;
