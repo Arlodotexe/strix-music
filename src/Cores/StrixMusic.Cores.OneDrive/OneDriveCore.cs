@@ -203,8 +203,11 @@ namespace StrixMusic.Cores.OneDrive
             var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationTokenSource.Token);
             Guard.IsNotNull(authenticationToken, nameof(authenticationToken));
 
+            InstanceDescriptor = authenticationToken.Account.Username;
+            InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
+
             var graphClient = authManager.CreateGraphClient(authenticationToken.AccessToken);
-            
+
             var driveItem = await graphClient.Drive.Items[Settings.SelectedFolderId].Request().GetAsync(cancellationTokenSource.Token);
             Guard.IsNotNull(driveItem, nameof(driveItem));
 
@@ -296,43 +299,41 @@ namespace StrixMusic.Cores.OneDrive
             var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationToken);
             if (authenticationToken is null)
             {
-                var deviceCodeDataTaskCompletionSource = new TaskCompletionSource<DeviceCodeResult?>();
-
-                var authFinishedTask = LoginMethod switch
-                {
-                    LoginMethod.Interactive => authManager.TryAcquireTokenViaInteractiveLoginAsync(cancellationToken),
-                    LoginMethod.DeviceCode => authManager.TryAcquireTokenViaDeviceCodeLoginAsync(x =>
-                    {
-                        deviceCodeDataTaskCompletionSource.SetResult(x);
-                        return Task.CompletedTask;
-                    }, cancellationToken),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                if (LoginMethod == LoginMethod.Interactive)
-                    deviceCodeDataTaskCompletionSource.SetResult(null);
-
-                var codeData = await deviceCodeDataTaskCompletionSource.Task;
-                var uri = codeData is null ? null : new Uri(codeData.VerificationUrl);
-
                 var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
                 _configPanel = oobePanel;
                 ChangeCoreState(CoreState.NeedsSetup);
                 AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
 
-                oobePanel.LoginNavigationRequested += OobePanelOnLoginNavigationRequested;
+                if (LoginMethod == LoginMethod.Interactive)
+                {
+                    oobePanel.DisplayInteractiveLoginStageAsync();
+                    authenticationToken = await authManager.TryAcquireTokenViaInteractiveLoginAsync(cancellationToken);
+                }
+                else if (LoginMethod == LoginMethod.DeviceCode)
+                {
+                    var deviceCodePanel = oobePanel.DisplayDeviceCodeLoginStageAsync();
 
-                authenticationToken = await oobePanel.ExecuteLoginStageAsync(authFinishedTask, LoginMethod, uri, codeData?.UserCode);
+                    deviceCodePanel.AuthenticateButton.Clicked += AuthenticateButtonOnClicked;
 
-                oobePanel.LoginNavigationRequested -= OobePanelOnLoginNavigationRequested;
+                    authenticationToken = await authManager.TryAcquireTokenViaDeviceCodeLoginAsync(x =>
+                    {
+                        deviceCodePanel.VerificationUri = new Uri(x.VerificationUrl);
+                        deviceCodePanel.Code = x.UserCode;
+                        return Task.CompletedTask;
+                    }, cancellationToken);
+
+                    deviceCodePanel.AuthenticateButton.Clicked -= AuthenticateButtonOnClicked;
+
+                    void AuthenticateButtonOnClicked(object sender, EventArgs e) => LoginNavigationRequested?.Invoke(this, deviceCodePanel.VerificationUri ?? ThrowHelper.ThrowArgumentNullException<Uri>(nameof(deviceCodePanel.VerificationUri)));
+                }
+                else
+                    throw new ArgumentOutOfRangeException();
             }
 
             Guard.IsNotNull(authenticationToken, nameof(authenticationToken));
 
             Guard.IsNotNullOrWhiteSpace(authenticationToken.Account.Username, nameof(authenticationToken.Account.Username));
-            return authenticationToken.Account.Username;
-
-            void OobePanelOnLoginNavigationRequested(object sender, Uri e) => LoginNavigationRequested?.Invoke(this, e);
+            return authenticationToken.Account.HomeAccountId.Identifier;
         }
 
         internal void ChangeCoreState(CoreState state)

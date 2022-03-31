@@ -22,13 +22,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register(nameof(ViewModel), typeof(AbstractUICollectionViewModel), typeof(AbstractUICollectionPresenter), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Backing property for <see cref="TemplateSelector"/>.
-        /// </summary>
-        public static readonly DependencyProperty TemplateSelectorProperty =
-            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUICollectionPresenter), new PropertyMetadata(null));
-
+        
         /// <summary>
         /// The ViewModel for this UserControl.
         /// </summary>
@@ -36,15 +30,6 @@ namespace OwlCore.Uno.AbstractUI.Controls
         {
             get => (AbstractUICollectionViewModel)GetValue(ViewModelProperty);
             set => SetValue(ViewModelProperty, value);
-        }
-
-        /// <summary>
-        /// The template selector used to display Abstract UI elements. Use this to define your own custom styles for each control. You may specify the existing, default styles for those you don't want to override.
-        /// </summary>
-        public DataTemplateSelector? TemplateSelector
-        {
-            get => (DataTemplateSelector)GetValue(TemplateSelectorProperty);
-            set => SetValue(TemplateSelectorProperty, value);
         }
     }
 }

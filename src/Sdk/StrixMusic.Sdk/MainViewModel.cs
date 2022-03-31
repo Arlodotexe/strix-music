@@ -269,6 +269,8 @@ namespace StrixMusic.Sdk
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
+            var cancelled = true;
+
             try
             {
 #warning Improper cancellation. Refactor to pass the token directly.
@@ -277,6 +279,7 @@ namespace StrixMusic.Sdk
             #warning Handle special exceptions like HttpException + catch all others
             catch (OperationCanceledException)
             {
+                cancelled = true;
             }
 
             _coreInitCancellationTokens.Remove(core.InstanceId);
@@ -285,7 +288,7 @@ namespace StrixMusic.Sdk
             {
                 setupCancellationTokenSource.Dispose();
             }
-            else if (core.CoreState == CoreState.Unloaded)
+            else if (core.CoreState == CoreState.Unloaded || cancelled)
             {
                 setupCancellationTokenSource.Dispose();
                 await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);

@@ -32,11 +32,13 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             UseTagLibScannerToggle = new AbstractBoolean("useTagLibScannerToggle", "Use TagLib")
             {
                 Subtitle = "TagLib is more accurate and supports more formats, but is slower (not recommended).",
+                State = settings.ScanWithTagLib,
             };
 
             UseFilePropsScannerToggle = new AbstractBoolean("useFilePropsScannerToggle", "Use file properties")
             {
                 Subtitle = "File properties are very fast, but provide less data.",
+                State = settings.ScanWithFileProperties,
             };
 
             var metadataScanType = new AbstractUICollection("metadataScanType")

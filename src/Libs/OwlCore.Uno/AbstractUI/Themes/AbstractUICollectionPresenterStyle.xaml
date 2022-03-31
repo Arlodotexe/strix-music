@@ -93,7 +93,7 @@
                        TextWrapping="WrapWholeWords"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
-            <ItemsControl ItemsSource="{x:Bind}"
+            <ItemsControl ItemsSource="{x:Bind Items}"
                           Margin="0,10,0,0"
                           ItemTemplateSelector="{StaticResource CollectionTemplateSelector}">
                 <ItemsControl.ItemsPanel>

@@ -50,15 +50,10 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             _cancelButton.Clicked -= OnCancelClicked;
         }
 
-        /// <summary>
-        /// Raised when the user requests to visit an external web page for OneDrive login.
-        /// </summary>
-        public event EventHandler<Uri>? LoginNavigationRequested;
-
         public async Task ExecuteSettingsStageAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<object?>();
-            _oobeCancellationSource.Token.Register(taskCompletionSource.SetCanceled);
+            _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
 
@@ -81,7 +76,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         public async Task ExecuteCustomAppKeyStageAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<object?>();
-            _oobeCancellationSource.Token.Register(taskCompletionSource.SetCanceled);
+            _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
 
@@ -93,7 +88,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             if (!appIdentityKeysMissing)
             {
                 var askFirstCompletionSource = new TaskCompletionSource<bool>();
-                _oobeCancellationSource.Token.Register(askFirstCompletionSource.SetCanceled);
+                _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
                 var yesButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}YesButton", "Yes");
                 var noButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}NoButton", "Skip");
@@ -124,7 +119,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             else
             {
                 var missingAppIdentityNoticeCompletionSource = new TaskCompletionSource<bool>();
-                _oobeCancellationSource.Token.Register(missingAppIdentityNoticeCompletionSource.SetCanceled);
+                _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
                 var okButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}Ok", "Ok", type: AbstractButtonType.Confirm);
 
@@ -169,7 +164,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         public async Task<IFolderData?> ExecuteFolderPickerStageAsync(IFolderData rootFolder, string? displayName, string? emailAddress)
         {
             var taskCompletionSource = new TaskCompletionSource<IFolderData?>();
-            _oobeCancellationSource.Token.Register(taskCompletionSource.SetCanceled);
+            _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
 
@@ -219,46 +214,29 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             void OnFileExplorerCanceled(object sender, EventArgs e) => _cancelButton.Click();
         }
 
-        public async Task<AuthenticationResult?> ExecuteLoginStageAsync(Task<AuthenticationResult?> tokenAcquisitionTask, LoginMethod method, Uri? verificationUrl = null, string? code = null)
+        public void DisplayInteractiveLoginStageAsync()
         {
-            var taskCompletionSource = new TaskCompletionSource<object?>();
-            _oobeCancellationSource.Token.Register(taskCompletionSource.SetCanceled);
-
             Clear();
 
-            Action? cleanup = null;
-
-            if (method == LoginMethod.DeviceCode)
+            Add(new AbstractProgressIndicator("interactiveLoginIndeterminate", true)
             {
-                Guard.IsNotNullOrWhiteSpace(code, nameof(code));
-                Guard.IsNotNull(verificationUrl, nameof(verificationUrl));
+                Title = "Logging in...",
+            });
 
-                var deviceCodeLoginPanel = new DeviceCodeLoginPanel(verificationUrl, code);
-                deviceCodeLoginPanel.AuthenticateButton.Clicked += OnNavigateToUrl;
+            Add(_cancelButton);
+        }
 
-                Add(deviceCodeLoginPanel);
+        public DeviceCodeLoginPanel DisplayDeviceCodeLoginStageAsync()
+        {
+            Clear();
 
-                cleanup = () => deviceCodeLoginPanel.AuthenticateButton.Clicked -= OnNavigateToUrl;
+            var deviceCodeLoginPanel = new DeviceCodeLoginPanel();
 
-                void OnNavigateToUrl(object sender, EventArgs e) => LoginNavigationRequested?.Invoke(this, verificationUrl);
-            }
-
-            if (method == LoginMethod.Interactive)
-            {
-                Add(new AbstractProgressIndicator("interactiveLoginIndeterminate", true)
-                {
-                    Title = "Logging in...",
-                });
-            }
+            Add(deviceCodeLoginPanel);
 
             Add(_cancelButton);
 
-            var result = await tokenAcquisitionTask;
-
-            Clear();
-            cleanup?.Invoke();
-
-            return result;
+            return deviceCodeLoginPanel;
         }
 
         private void OnCancelClicked(object sender, EventArgs e) => _oobeCancellationSource.Cancel();
