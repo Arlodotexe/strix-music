@@ -61,8 +61,8 @@
 
             <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}, Mode=OneWay}" Command="{x:Bind ClickCommand}" Padding="0" MinWidth="50">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="5">
-                    <FontIcon Glyph="{x:Bind IconCode}" FontFamily="Segoe MDL2 Assets" Grid.Column="0" FontSize="16"/>
-                    <TextBlock Text="{x:Bind Text}" Grid.Column="1"/>
+                    <FontIcon Glyph="{x:Bind IconCode, Mode=OneWay}" FontFamily="Segoe MDL2 Assets" Grid.Column="0" FontSize="16"/>
+                    <TextBlock Text="{Binding Text}" Grid.Column="1"/>
                 </StackPanel>
             </Button>
         </StackPanel>

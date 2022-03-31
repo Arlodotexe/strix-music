@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.AbstractUI.Models;
+using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -62,9 +64,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
-            CoreConfig = new CoreConfigViewModel(root, core.CoreConfig);
-
             CoreState = _core.CoreState;
+
+            AbstractConfigPanel = new AbstractUICollectionViewModel(_core.AbstractConfigPanel);
 
             AttachEvents();
         }
@@ -74,13 +76,21 @@ namespace StrixMusic.Sdk.ViewModels
             _core.CoreStateChanged += Core_CoreStateChanged;
             _core.DevicesChanged += Core_DevicesChanged;
             _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
+            _core.AbstractConfigPanelChanged += OnAbstractConfigPanelChanged;
         }
+
+        private void OnAbstractConfigPanelChanged(object sender, EventArgs e) => _syncContext.Post(_ =>
+        {
+            AbstractConfigPanel = new AbstractUICollectionViewModel(_core.AbstractConfigPanel);
+            OnPropertyChanged(nameof(AbstractConfigPanel));
+        }, null);
 
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
             _core.DevicesChanged -= Core_DevicesChanged;
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
+            _core.AbstractConfigPanelChanged -= OnAbstractConfigPanelChanged;
         }
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _syncContext.Post(_ =>
@@ -108,7 +118,6 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateConfigured));
                 OnPropertyChanged(nameof(IsCoreStateLoading));
                 OnPropertyChanged(nameof(IsCoreStateLoaded));
-                OnPropertyChanged(nameof(IsCoreStateFaulted));
             }, null);
         }
 
@@ -118,8 +127,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public string InstanceDescriptor => _core.InstanceDescriptor;
 
-        /// <inheritdoc cref="CoreConfigViewModel"/>
-        public CoreConfigViewModel CoreConfig { get; }
+        /// <inheritdoc />
+        AbstractUICollection ICore.AbstractConfigPanel => _core.AbstractConfigPanel;
+
+        /// <inheritdoc cref="ICore.AbstractConfigPanel"/>
+        public AbstractUICollectionViewModel AbstractConfigPanel { get; private set; }
+
+        /// <inheritdoc />
+        public MediaPlayerType PlaybackType => _core.PlaybackType;
 
         /// <summary>
         /// A local path or url pointing to a SVG file containing the logo for this core.
@@ -133,9 +148,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
-
-        /// <inheritdoc cref="ICore.CoreConfig" />
-        ICoreConfig ICore.CoreConfig => _core.CoreConfig;
 
         /// <inheritdoc cref="ICore.CoreState" />
         public CoreState CoreState { get; internal set; }
@@ -171,11 +183,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Faulted"/>.
-        /// </summary>
-        public bool IsCoreStateFaulted => CoreState == CoreState.Faulted;
-
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged
         {
@@ -185,6 +192,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler? AbstractConfigPanelChanged;
 
         /// <inheritdoc />
         public event EventHandler<string>? InstanceDescriptorChanged;
@@ -244,8 +254,7 @@ namespace StrixMusic.Sdk.ViewModels
             if (Pins != null)
                 await Pins.DisposeAsync();
 
-            await CoreConfig.DisposeAsync();
-            await _core.DisposeAsync().ConfigureAwait(false);
+            await _core.DisposeAsync();
         }
 
         /// <inheritdoc/>
