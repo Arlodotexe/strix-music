@@ -2,9 +2,10 @@
   "solution": {
     "path": "StrixMusic.sln",
     "projects": [
-      "Cores\\StrixMusic.Cores.Files\\StrixMusic.Cores.Files.csproj",
-      "Cores\\StrixMusic.Cores.LocalFiles\\StrixMusic.Cores.LocalFiles.csproj",
-      "Cores\\StrixMusic.Cores.OneDrive\\StrixMusic.Cores.OneDrive.csproj",
+      "Cores\\Files\\StrixMusic.Cores.Files\\StrixMusic.Cores.Files.csproj",
+      "Cores\\Files\\StrixMusic.Cores.LocalFiles\\StrixMusic.Cores.LocalFiles.csproj",
+      "Cores\\Files\\StrixMusic.Cores.OneDrive\\StrixMusic.Cores.OneDrive.csproj",
+      "Cores\\Remote\\StrixMusic.Cores.Remote.OwlCore\\StrixMusic.Cores.Remote.OwlCore.csproj",
       "Sdk\\StrixMusic.Sdk.Tests\\StrixMusic.Sdk.Tests.csproj",
       "Sdk\\StrixMusic.Sdk\\StrixMusic.Sdk.csproj"
     ]

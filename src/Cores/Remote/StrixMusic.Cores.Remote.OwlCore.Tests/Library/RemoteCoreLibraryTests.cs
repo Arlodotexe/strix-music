@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 
-namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
+namespace StrixMusic.Cores.Remote.OwlCore.Tests
 {
     [TestClass]
     public partial class RemoteCoreLibraryTests

@@ -1,11 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
-using StrixMusic.Sdk.Tests.Mock.Core;
+using StrixMusic.Cores.Remote.OwlCore.Tests.Mock;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Tests.Mock.Core.Items;
+using StrixMusic.Cores.Remote.OwlCore.Tests.Mock.Items;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
+namespace StrixMusic.Cores.Remote.OwlCore.Tests
 {
     [TestClass]
     public class CoreRemoteTests
