@@ -3,11 +3,11 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.CoreRemote;
-using StrixMusic.Sdk.Tests.Mock.Core;
+using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
+namespace StrixMusic.Cores.OwlCoreRpc.Tests
 {
     public partial class RemoteCoreLibraryTests
     {

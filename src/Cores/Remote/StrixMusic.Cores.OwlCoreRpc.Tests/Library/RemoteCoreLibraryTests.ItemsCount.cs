@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Plugins.CoreRemote;
-using StrixMusic.Sdk.Tests.Mock.Core;
-using StrixMusic.Sdk.Tests.Mock.Core.Library;
+using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
+using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Library;
 
-namespace StrixMusic.Sdk.Tests.Plugins.CoreRemote
+namespace StrixMusic.Cores.OwlCoreRpc.Tests
 {
     public partial class RemoteCoreLibraryTests
     {
