@@ -14,10 +14,6 @@
     xmlns:text="using:Windows.UI.Text"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
-    <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <strix:SafeImage Height="86" Width="86" ImageCollection="{x:Bind}" />
-    </DataTemplate>
-
     <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>
 
     <Style x:Key="DefaultAlbumItemStyle" TargetType="zuneItems:ZuneAlbumItem">
@@ -25,7 +21,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="zuneItems:ZuneAlbumItem">
-                        <Grid Width="99" Margin="5,0,5,12">
+                        <Grid x:Name="PART_RootGrid" Width="99" Margin="5,0,5,12">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:GoToStateAction StateName="PointerOver"/>
@@ -38,7 +34,7 @@
                                 <VisualStateGroup x:Name="Selection">
                                     <VisualState x:Name="Unselected">
                                         <VisualState.Setters>
-                                            <Setter Target="ImageContent.Padding" Value="6"/>
+                                            <Setter Target="PART_AlbumGrid.Padding" Value="6"/>
                                             <Setter Target="SelectedImageOutline.Opacity" Value="0"/>
                                             <Setter Target="ShadowPanel.BlurRadius" Value="0"/>
                                             <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0.8"/>
@@ -46,7 +42,7 @@
                                     </VisualState>
                                     <VisualState x:Name="Selected">
                                         <VisualState.Setters>
-                                            <Setter Target="ImageContent.Padding" Value="0"/>
+                                            <Setter Target="PART_AlbumGrid.Padding" Value="0"/>
                                             <Setter Target="SelectedImageOutline.Opacity" Value="1"/>
                                             <Setter Target="ShadowPanel.BlurRadius" Value="8"/>
                                             <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0"/>
@@ -106,16 +102,14 @@
                             </Grid.RowDefinitions>
 
                             <!--Image-->
-                            <Grid Height="98" Width="99" Padding="6" x:Name="ImageContent">
+                            <Grid x:Name="PART_AlbumGrid" Height="98" Width="99" Padding="6" >
                                 <controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="0.8"
                                                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <controls:DropShadowPanel x:Name="HoverShadowPanel" BlurRadius="0" Color="Black" ShadowOpacity="0.8"
                                                                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                         <Grid Background="#F4F4F4">
-                                            <Grid Height="86" Width="86">
-                                                <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemImageDataTemplate}"
-                                                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-
+                                            <Grid>
+                                                <strix:SafeImage ImageCollection="{Binding }" />
                                                 <Rectangle x:Name="ImageHover" Opacity="0">
                                                     <Rectangle.Fill>
                                                         <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Hover.png"/>
@@ -164,7 +158,7 @@
                             </Grid>
 
                             <!--Text-->
-                            <StackPanel Grid.Row="1" Width="86">
+                            <StackPanel x:Name="PART_LabelPnl" Grid.Row="1" Width="86">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Loaded">
                                         <core:InvokeCommandAction Command="{Binding PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>

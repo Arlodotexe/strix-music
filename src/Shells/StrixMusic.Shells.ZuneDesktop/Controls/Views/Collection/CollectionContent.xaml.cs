@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +22,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         public CollectionContent()
         {
             this.InitializeComponent();
+
+            Loaded += CollectionContent_Loaded;
+        }
+
+        private void CollectionContent_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= CollectionContent_Loaded;
+
+            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
         }
 
         /// <summary>
@@ -60,16 +70,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ArtistsPageSelected(object sender, RoutedEventArgs e)
         {
+            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
+
             SwapPage("Artists");
         }
 
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)
         {
+            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Albums;
+
             SwapPage("Albums");
         }
 
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
+            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Tracks;
+
             SwapPage("Songs");
         }
 
