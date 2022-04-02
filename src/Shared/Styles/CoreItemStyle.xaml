@@ -111,12 +111,6 @@
                             <ProgressRing IsActive="{x:Bind Core.IsCoreStateLoading, Mode=OneWay}" />
                         </Grid>
 
-                        <Grid Grid.Column="0" Visibility="{x:Bind Core.IsCoreStateFaulted, Mode=OneWay}">
-                            <Ellipse Fill="#B43A3A" Width="18" Height="16" />
-                            <TextBlock Text="!" FontSize="12" FontWeight="ExtraBlack" Foreground="{ThemeResource CoreItemBackgroundBrush}"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-
                         <Grid Grid.Column="0" Visibility="{x:Bind Core.IsCoreStateUnloaded, Mode=OneWay}">
                             <Border BorderBrush="{ThemeResource CoreItemBorderBrush}" Width="18" Height="18" />
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE001;" FontSize="14" FontWeight="ExtraBlack" 

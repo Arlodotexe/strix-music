@@ -16,9 +16,9 @@ using NLog.Extensions.Logging;
 using NLog.Targets;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Provisos;
 using StrixMusic.Cores.LocalFiles;
 using StrixMusic.Cores.OneDrive;
+using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
@@ -31,7 +31,6 @@ using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Models;
-using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
@@ -249,11 +248,27 @@ namespace StrixMusic.Shared
 
             CoreRegistry.Register(OneDriveCore.Metadata, async instanceId =>
             {
-                var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
-                var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
-                var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
+            var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
+            var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
+            var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
 
-                return new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService, new Launcher());
+#if !__WASM__
+            var loginMethod = LoginMethod.DeviceCode;
+#else
+            var loginMethod = LoginMethod.Interactive;
+#endif
+            var core = new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService)
+            {
+                LoginMethod = loginMethod,
+#if __WASM__
+                HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
+#endif
+                };
+
+                // TODO: Detach event when unregistered
+                core.LoginNavigationRequested += OnUriNavigationRequested;
+
+                return core;
             });
 
             if (CoreRegistry.MetadataRegistry.Count == 0)
@@ -266,6 +281,8 @@ namespace StrixMusic.Shared
                 _logger?.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
             }
         }
+
+        private void OnUriNavigationRequested(object? sender, Uri e) => Windows.System.Launcher.LaunchUriAsync(e);
 
         private async Task InitializeCoreRankingAsync()
         {
@@ -393,7 +410,6 @@ namespace StrixMusic.Shared
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService>(_notificationService);
             services.AddSingleton<ICoreManagementService>(coreManagementService);
-            services.AddSingleton<ILauncher, Launcher>();
 
             var serviceProvider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(serviceProvider);
@@ -588,7 +604,7 @@ namespace StrixMusic.Shared
 #pragma warning disable CS0162 // Unreachable code detected
             _logger?.LogInformation($"Setting up MediaPlayer for core instance {core.InstanceId}");
 
-            if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
+            if (core.PlaybackType == MediaPlayerType.Standard)
             {
                 var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 

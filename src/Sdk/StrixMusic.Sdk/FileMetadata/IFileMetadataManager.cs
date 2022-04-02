@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.FileMetadata.Repositories;
@@ -58,7 +59,7 @@ namespace StrixMusic.Sdk.FileMetadata
         /// Starts scanning the given folder.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task StartScan();
+        Task ScanAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when metadata scanning has started.

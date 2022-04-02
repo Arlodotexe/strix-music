@@ -22,23 +22,18 @@ namespace StrixMusic.Sdk.Models
         NeedsSetup,
 
         /// <summary>
-        /// The setup process has finished and the core can be initialized.
+        /// The core has all data it needs to be used without user interaction.
         /// </summary>
         Configured,
 
         /// <summary>
-        /// The core is currently loading.
+        /// The core is performing additional setup required before use.
         /// </summary>
         Loading,
 
         /// <summary>
-        /// The core has finished initialization.
+        /// The core has finished loading and is ready to be used.
         /// </summary>
         Loaded,
-
-        /// <summary>
-        /// Something has gone wrong and the core may not function properly.
-        /// </summary>
-        Faulted,
     }
 }

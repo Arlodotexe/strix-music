@@ -57,7 +57,7 @@ namespace StrixMusic.Shared
         /// </summary>
         public AppFrame()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             Guard.IsNotNull(SynchronizationContext.Current, nameof(SynchronizationContext.Current));
 
@@ -158,7 +158,7 @@ namespace StrixMusic.Shared
         }
 
         /// <summary>
-        /// For displaying the UI for a <see cref="Sdk.Models.CoreState.NeedsSetup"/> core state.
+        /// For displaying the UI for a <see cref="CoreState.NeedsSetup"/> core state.
         /// </summary>
         private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -185,14 +185,14 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async void Core_CoreStateChanged(object? sender, Sdk.Models.CoreState e)
+        private async void Core_CoreStateChanged(object? sender, CoreState e)
         {
             var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             if (!(sender is ICore core))
                 return;
 
-            if (e == Sdk.Models.CoreState.NeedsSetup)
+            if (e == CoreState.NeedsSetup)
             {
                 await Threading.OnPrimaryThread(() =>
                 {
