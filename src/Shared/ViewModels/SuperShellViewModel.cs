@@ -168,8 +168,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             foreach (var core in _mainViewModel.Cores.ToArray())
             {
-                if (core.CoreState == CoreState.Unloaded ||
-                    core.CoreState == CoreState.Faulted)
+                if (core.CoreState == CoreState.Unloaded)
                 {
                     await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
                 }
@@ -197,7 +196,7 @@ namespace StrixMusic.Shared.ViewModels
             var core = (ICore)sender;
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
 
-            if (e == CoreState.Configured || e == CoreState.Unloaded || e == CoreState.Faulted)
+            if (e == CoreState.Configured || e == CoreState.Unloaded)
             {
                 await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
                 return;

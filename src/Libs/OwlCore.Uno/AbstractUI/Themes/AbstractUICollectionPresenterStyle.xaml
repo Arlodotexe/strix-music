@@ -61,7 +61,7 @@
 
         <controls:AbstractUICollectionItemTemplateSelector.ElementCollection>
             <DataTemplate x:DataType="abstractUIVm:AbstractUICollectionViewModel">
-                <controls:AbstractUICollectionPresenter />
+                <controls:AbstractUICollectionPresenter ViewModel="{Binding}" />
             </DataTemplate>
         </controls:AbstractUICollectionItemTemplateSelector.ElementCollection>
     </controls:AbstractUICollectionItemTemplateSelector>
@@ -72,6 +72,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:AbstractUICollectionPresenter">
                         <ContentControl  ContentTemplate="{StaticResource DefaultAbstractUICollectionTemplate}"
+                                         Content="{Binding ViewModel, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>

@@ -5,30 +5,28 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Models.Core
 {
     /// <summary>
     /// An <see cref="ICore"/> is a common API surface that can be implemented to allow interfacing with any arbitrary music provider.
     /// </summary>
-    /// <remarks> In a core's constructor, only do basic object initialization. For the rest, use <see cref="InitAsync"/>.
+    /// <remarks> In a core's constructor, only do basic object initialization. For the rest, use <see cref="IAsyncInit.InitAsync"/>.
     /// 
-    /// <para/> During <see cref="InitAsync"/>, if the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
-    ///         and the app will display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user for configuration and setup.
+    /// <para/> During <see cref="IAsyncInit.InitAsync"/>, if the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
+    ///         and the app will display your current <see cref="AbstractConfigPanel"/> to the user for configuration and setup.
     ///         After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
-    ///         <see cref="InitAsync"/> will fire again, at which point you can make sure you have the data you need to finish initialization.
+    ///         <see cref="IAsyncInit.InitAsync"/> will fire again, at which point you can make sure you have the data you need to finish initialization.
     /// 
     /// <para/> There is a 10 minute time limit for the user to complete setup.
     ///         If it takes longer, the SDK will assume something has gone wrong and unload the core until the user manually initiates setup or restarts the app.
     /// </remarks>
-    /// <seealso cref="ICoreBase"/>
     /// <seealso cref="IAppCore"/>
-    public interface ICore : IAsyncInit, ICoreMember, ICoreBase, IAsyncDisposable
+    public interface ICore : IAsyncInit, ICoreMember, IAsyncDisposable
     {
         /// <summary>
         /// The registered metadata for this core. Contains information to identify the core before creating an instance.
@@ -45,8 +43,15 @@ namespace StrixMusic.Sdk.Models.Core
         /// </summary>
         public string InstanceDescriptor { get; }
 
-        /// <inheritdoc cref="ICoreConfigBase" />
-        public ICoreConfig CoreConfig { get; }
+        /// <summary>
+        /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
+        /// </summary>
+        public AbstractUICollection AbstractConfigPanel { get; }
+
+        /// <summary>
+        /// The player type supported by this core.
+        /// </summary>
+        public MediaPlayerType PlaybackType { get; }
 
         /// <summary>
         /// The user that is authenticated with this core, if any. Only one user is supported per core.
@@ -120,6 +125,11 @@ namespace StrixMusic.Sdk.Models.Core
         /// Raised when the contents of <see cref="Devices"/> is changed.
         /// </summary>
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <summary>
+        /// Raised when <see cref="AbstractUIElement"/> is changed.
+        /// </summary>
+        public event EventHandler? AbstractConfigPanelChanged;
 
         /// <summary>
         /// Raised when <see cref="InstanceDescriptor"/> is changed.

@@ -59,7 +59,7 @@
       <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="OwlCore">
-      <Version>0.0.58</Version>
+      <Version>0.0.61</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
@@ -276,15 +276,15 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj">
+    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj">
       <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
       <Name>StrixMusic.Cores.OneDrive</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
+    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
       <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
       <Name>StrixMusic.Cores.Files</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
+    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
       <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
       <Name>StrixMusic.Cores.LocalFiles</Name>
     </ProjectReference>

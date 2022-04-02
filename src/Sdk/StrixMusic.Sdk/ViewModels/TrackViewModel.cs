@@ -34,6 +34,7 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly SemaphoreSlim _populateGenresMutex = new(1, 1);
         private readonly SemaphoreSlim _populateUrlsMutex = new(1, 1);
         private readonly SynchronizationContext _syncContext;
+        private readonly ITrack _model;
 
         /// <summary>
         /// Creates a new instance of <see cref="TrackViewModel"/>.
@@ -45,15 +46,15 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             Root = root;
-            Model = root.Plugins.ModelPlugins.Track.Execute(track);
+            _model = root.Plugins.ModelPlugins.Track.Execute(track);
 
-            SourceCores = Model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
+            SourceCores = _model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
 
-            if (Model.Album != null)
-                Album = new AlbumViewModel(root, Model.Album);
+            if (_model.Album != null)
+                Album = new AlbumViewModel(root, _model.Album);
 
-            if (Model.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(root, Model.RelatedItems);
+            if (_model.RelatedItems != null)
+                RelatedItems = new PlayableCollectionGroupViewModel(root, _model.RelatedItems);
 
             Artists = new ObservableCollection<IArtistCollectionItem>();
             UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
@@ -64,7 +65,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
 
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => Model.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>()));
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _model.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>()));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -114,7 +115,7 @@ namespace StrixMusic.Sdk.ViewModels
             UrlsChanged += TrackViewModel_UrlsChanged;
             UrlsCountChanged += OnUrlsCountChanged;
 
-            Model.PlaybackStateChanged += OnPlaybackStateChanged;
+            _model.PlaybackStateChanged += OnPlaybackStateChanged;
         }
 
         private void DetachEvents()
@@ -146,7 +147,7 @@ namespace StrixMusic.Sdk.ViewModels
             UrlsChanged -= TrackViewModel_UrlsChanged;
             UrlsCountChanged -= OnUrlsCountChanged;
 
-            Model.PlaybackStateChanged -= OnPlaybackStateChanged;
+            _model.PlaybackStateChanged -= OnPlaybackStateChanged;
         }
 
         /// <inheritdoc />
@@ -155,162 +156,162 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public event EventHandler<DownloadInfo>? DownloadInfoChanged
         {
-            add => Model.DownloadInfoChanged += value;
-            remove => Model.DownloadInfoChanged -= value;
+            add => _model.DownloadInfoChanged += value;
+            remove => _model.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<IAlbum?>? AlbumChanged
         {
-            add => Model.AlbumChanged += value;
-            remove => Model.AlbumChanged -= value;
+            add => _model.AlbumChanged += value;
+            remove => _model.AlbumChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int?>? TrackNumberChanged
         {
-            add => Model.TrackNumberChanged += value;
-            remove => Model.TrackNumberChanged -= value;
+            add => _model.TrackNumberChanged += value;
+            remove => _model.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<CultureInfo?>? LanguageChanged
         {
-            add => Model.LanguageChanged += value;
-            remove => Model.LanguageChanged -= value;
+            add => _model.LanguageChanged += value;
+            remove => _model.LanguageChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<ILyrics?>? LyricsChanged
         {
-            add => Model.LyricsChanged += value;
-            remove => Model.LyricsChanged -= value;
+            add => _model.LyricsChanged += value;
+            remove => _model.LyricsChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsExplicitChanged
         {
-            add => Model.IsExplicitChanged += value;
-            remove => Model.IsExplicitChanged -= value;
+            add => _model.IsExplicitChanged += value;
+            remove => _model.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string>? NameChanged
         {
-            add => Model.NameChanged += value;
-            remove => Model.NameChanged -= value;
+            add => _model.NameChanged += value;
+            remove => _model.NameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged
         {
-            add => Model.DescriptionChanged += value;
-            remove => Model.DescriptionChanged -= value;
+            add => _model.DescriptionChanged += value;
+            remove => _model.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add => Model.DurationChanged += value;
-            remove => Model.DurationChanged -= value;
+            add => _model.DurationChanged += value;
+            remove => _model.DurationChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged
         {
-            add => Model.LastPlayedChanged += value;
-            remove => Model.LastPlayedChanged -= value;
+            add => _model.LastPlayedChanged += value;
+            remove => _model.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPlayArtistCollectionAsyncAvailableChanged += value;
-            remove => Model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
+            add => _model.IsPlayArtistCollectionAsyncAvailableChanged += value;
+            remove => _model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPauseArtistCollectionAsyncAvailableChanged += value;
-            remove => Model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
+            add => _model.IsPauseArtistCollectionAsyncAvailableChanged += value;
+            remove => _model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
-            add => Model.IsChangeNameAsyncAvailableChanged += value;
-            remove => Model.IsChangeNameAsyncAvailableChanged -= value;
+            add => _model.IsChangeNameAsyncAvailableChanged += value;
+            remove => _model.IsChangeNameAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
         {
-            add => Model.IsChangeDescriptionAsyncAvailableChanged += value;
-            remove => Model.IsChangeDescriptionAsyncAvailableChanged -= value;
+            add => _model.IsChangeDescriptionAsyncAvailableChanged += value;
+            remove => _model.IsChangeDescriptionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
         {
-            add => Model.IsChangeDurationAsyncAvailableChanged += value;
-            remove => Model.IsChangeDurationAsyncAvailableChanged -= value;
+            add => _model.IsChangeDurationAsyncAvailableChanged += value;
+            remove => _model.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged
         {
-            add => Model.ArtistItemsCountChanged += value;
-            remove => Model.ArtistItemsCountChanged -= value;
+            add => _model.ArtistItemsCountChanged += value;
+            remove => _model.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
         {
-            add => Model.ArtistItemsChanged += value;
-            remove => Model.ArtistItemsChanged -= value;
+            add => _model.ArtistItemsChanged += value;
+            remove => _model.ArtistItemsChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged
         {
-            add => Model.ImagesCountChanged += value;
-            remove => Model.ImagesCountChanged -= value;
+            add => _model.ImagesCountChanged += value;
+            remove => _model.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
-            add => Model.ImagesChanged += value;
-            remove => Model.ImagesChanged -= value;
+            add => _model.ImagesChanged += value;
+            remove => _model.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? GenresCountChanged
         {
-            add => Model.GenresCountChanged += value;
-            remove => Model.GenresCountChanged -= value;
+            add => _model.GenresCountChanged += value;
+            remove => _model.GenresCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IGenre>? GenresChanged
         {
-            add => Model.GenresChanged += value;
-            remove => Model.GenresChanged -= value;
+            add => _model.GenresChanged += value;
+            remove => _model.GenresChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? UrlsCountChanged
         {
-            add => Model.UrlsCountChanged += value;
-            remove => Model.UrlsCountChanged -= value;
+            add => _model.UrlsCountChanged += value;
+            remove => _model.UrlsCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IUrl>? UrlsChanged
         {
-            add => Model.UrlsChanged += value;
-            remove => Model.UrlsChanged -= value;
+            add => _model.UrlsChanged += value;
+            remove => _model.UrlsChanged -= value;
         }
 
         private void Track_TrackNumberChanged(object sender, int? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TrackNumber)), null);
@@ -425,11 +426,6 @@ namespace StrixMusic.Sdk.ViewModels
             CollectionSorting.SortArtists(Artists, artistSorting, sortDirection, UnsortedArtists);
         }
 
-        /// <summary>
-        /// The wrapped model for this <see cref="TrackViewModel"/>.
-        /// </summary>
-        internal ITrack Model { get; }
-
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
@@ -439,7 +435,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The merged sources for this model.
         /// </summary>
-        public IReadOnlyList<ICoreTrack> Sources => Model.GetSources<ICoreTrack>();
+        public IReadOnlyList<ICoreTrack> Sources => _model.GetSources<ICoreTrack>();
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
@@ -483,193 +479,193 @@ namespace StrixMusic.Sdk.ViewModels
         public SortDirection CurrentArtistSortingDirection { get; private set; }
 
         /// <inheritdoc />
-        public TrackType Type => Model.Type;
+        public TrackType Type => _model.Type;
 
         /// <inheritdoc />
-        public TimeSpan Duration => Model.Duration;
+        public TimeSpan Duration => _model.Duration;
 
         /// <inheritdoc />
-        public DateTime? AddedAt => Model.AddedAt;
+        public DateTime? AddedAt => _model.AddedAt;
 
         /// <inheritdoc />
-        public DateTime? LastPlayed => Model.LastPlayed;
+        public DateTime? LastPlayed => _model.LastPlayed;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public string Id => Model.Id;
+        public string Id => _model.Id;
 
         /// <inheritdoc />
-        public string Name => Model.Name;
+        public string Name => _model.Name;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
+        public int TotalArtistItemsCount => _model.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public int TotalImageCount => Model.TotalImageCount;
+        public int TotalImageCount => _model.TotalImageCount;
 
         /// <inheritdoc />
-        public int TotalGenreCount => Model.TotalGenreCount;
+        public int TotalGenreCount => _model.TotalGenreCount;
 
         /// <inheritdoc />
-        public int TotalUrlCount => Model.TotalUrlCount;
+        public int TotalUrlCount => _model.TotalUrlCount;
 
         /// <inheritdoc cref="ITrack.Album" />
         public AlbumViewModel? Album { get; private set; }
 
         /// <inheritdoc />
-        IAlbum? ITrack.Album => Model.Album;
+        IAlbum? ITrack.Album => _model.Album;
 
         /// <inheritdoc />
-        public int? TrackNumber => Model.TrackNumber;
+        public int? TrackNumber => _model.TrackNumber;
 
         /// <inheritdoc/>
-        public int? DiscNumber => Model.DiscNumber;
+        public int? DiscNumber => _model.DiscNumber;
 
         /// <inheritdoc />
-        public CultureInfo? Language => Model.Language;
+        public CultureInfo? Language => _model.Language;
 
         /// <inheritdoc />
-        public ILyrics? Lyrics => Model.Lyrics;
+        public ILyrics? Lyrics => _model.Lyrics;
 
         /// <inheritdoc />
-        public bool IsExplicit => Model.IsExplicit;
+        public bool IsExplicit => _model.IsExplicit;
 
         /// <inheritdoc />
-        public string? Description => Model.Description;
+        public string? Description => _model.Description;
 
         /// <inheritdoc />
         public PlaybackState PlaybackState => Root.ActiveDevice?.NowPlaying?.Track?.Id == Id ? Root.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo => Model.DownloadInfo;
+        public DownloadInfo DownloadInfo => _model.DownloadInfo;
 
         /// <inheritdoc />
-        public bool IsPlayArtistCollectionAsyncAvailable => Model.IsPlayArtistCollectionAsyncAvailable;
+        public bool IsPlayArtistCollectionAsyncAvailable => _model.IsPlayArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseArtistCollectionAsyncAvailable => Model.IsPauseArtistCollectionAsyncAvailable;
+        public bool IsPauseArtistCollectionAsyncAvailable => _model.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncAvailable => Model.IsChangeNameAsyncAvailable;
+        public bool IsChangeNameAsyncAvailable => _model.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncAvailable => Model.IsChangeDescriptionAsyncAvailable;
+        public bool IsChangeDescriptionAsyncAvailable => _model.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncAvailable => Model.IsChangeDurationAsyncAvailable;
+        public bool IsChangeDurationAsyncAvailable => _model.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeAlbumAsyncAvailable => Model.IsChangeAlbumAsyncAvailable;
+        public bool IsChangeAlbumAsyncAvailable => _model.IsChangeAlbumAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeTrackNumberAsyncAvailable => Model.IsChangeTrackNumberAsyncAvailable;
+        public bool IsChangeTrackNumberAsyncAvailable => _model.IsChangeTrackNumberAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeLanguageAsyncAvailable => Model.IsChangeLanguageAsyncAvailable;
+        public bool IsChangeLanguageAsyncAvailable => _model.IsChangeLanguageAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeLyricsAsyncAvailable => Model.IsChangeLyricsAsyncAvailable;
+        public bool IsChangeLyricsAsyncAvailable => _model.IsChangeLyricsAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeIsExplicitAsyncAvailable => Model.IsChangeIsExplicitAsyncAvailable;
+        public bool IsChangeIsExplicitAsyncAvailable => _model.IsChangeIsExplicitAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => Model.IsAddArtistItemAvailableAsync(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _model.IsAddArtistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index) => Model.IsAddImageAvailableAsync(index);
+        public Task<bool> IsAddImageAvailableAsync(int index) => _model.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailableAsync(int index) => Model.IsAddGenreAvailableAsync(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _model.IsAddGenreAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index) => Model.IsAddUrlAvailableAsync(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _model.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => Model.IsRemoveArtistItemAvailableAsync(index);
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _model.IsRemoveArtistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => Model.IsRemoveImageAvailableAsync(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _model.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => Model.IsRemoveGenreAvailableAsync(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _model.IsRemoveGenreAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => Model.IsRemoveUrlAvailableAsync(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _model.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task ChangeAlbumAsync(IAlbum? album) => Model.ChangeAlbumAsync(album);
+        public Task ChangeAlbumAsync(IAlbum? album) => _model.ChangeAlbumAsync(album);
 
         /// <inheritdoc />
-        public Task ChangeTrackNumberAsync(int? trackNumber) => Model.ChangeTrackNumberAsync(trackNumber);
+        public Task ChangeTrackNumberAsync(int? trackNumber) => _model.ChangeTrackNumberAsync(trackNumber);
 
         /// <inheritdoc />
-        public Task ChangeLanguageAsync(CultureInfo language) => Model.ChangeLanguageAsync(language);
+        public Task ChangeLanguageAsync(CultureInfo language) => _model.ChangeLanguageAsync(language);
 
         /// <inheritdoc />
-        public Task ChangeLyricsAsync(ILyrics? lyrics) => Model.ChangeLyricsAsync(lyrics);
+        public Task ChangeLyricsAsync(ILyrics? lyrics) => _model.ChangeLyricsAsync(lyrics);
 
         /// <inheritdoc />
-        public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
+        public Task ChangeIsExplicitAsync(bool isExplicit) => _model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
+        public Task PauseArtistCollectionAsync() => _model.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation) => Model.StartDownloadOperationAsync(operation);
+        public Task StartDownloadOperationAsync(DownloadOperation operation) => _model.StartDownloadOperationAsync(operation);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => Model.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description) => _model.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => Model.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration) => _model.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _model.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => Model.AddImageAsync(image, index);
+        public Task AddImageAsync(IImage image, int index) => _model.AddImageAsync(image, index);
 
         /// <inheritdoc />
-        public Task AddGenreAsync(IGenre genre, int index) => Model.AddGenreAsync(genre, index);
+        public Task AddGenreAsync(IGenre genre, int index) => _model.AddGenreAsync(genre, index);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(IUrl genre, int index) => Model.AddUrlAsync(genre, index);
+        public Task AddUrlAsync(IUrl genre, int index) => _model.AddUrlAsync(genre, index);
 
         /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index) => Model.RemoveArtistItemAsync(index);
+        public Task RemoveArtistItemAsync(int index) => _model.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => Model.RemoveImageAsync(index);
+        public Task RemoveImageAsync(int index) => _model.RemoveImageAsync(index);
 
         /// <inheritdoc />
-        public Task RemoveGenreAsync(int index) => Model.RemoveGenreAsync(index);
+        public Task RemoveGenreAsync(int index) => _model.RemoveGenreAsync(index);
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index) => Model.RemoveUrlAsync(index);
+        public Task RemoveUrlAsync(int index) => _model.RemoveUrlAsync(index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => Model.GetArtistItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _model.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => Model.GetImagesAsync(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _model.GetImagesAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => Model.GetGenresAsync(limit, offset);
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _model.GetGenresAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => Model.GetUrlsAsync(limit, offset);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _model.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => Model.PlayArtistCollectionAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _model.PlayArtistCollectionAsync(artistItem);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => Model.PlayArtistCollectionAsync();
+        public Task PlayArtistCollectionAsync() => _model.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
@@ -798,34 +794,34 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => Model.Equals(other);
+        public bool Equals(ICoreArtistCollectionItem other) => _model.Equals(other);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Model.Equals(other);
+        public bool Equals(ICoreImageCollection other) => _model.Equals(other);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => Model.Equals(other);
+        public bool Equals(ICoreArtistCollection other) => _model.Equals(other);
 
         /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => Model.Equals(other);
+        public bool Equals(ICoreGenreCollection other) => _model.Equals(other);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Model.Equals(other);
+        public bool Equals(ICoreUrlCollection other) => _model.Equals(other);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrack other) => Model.Equals(other);
+        public bool Equals(ICoreTrack other) => _model.Equals(other);
 
         private Task ChangeNameInternalAsync(string? name)
         {
             Guard.IsNotNull(name, nameof(name));
-            return Model.ChangeNameAsync(name);
+            return _model.ChangeNameAsync(name);
         }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
             DetachEvents();
-            return Model.DisposeAsync();
+            return _model.DisposeAsync();
         }
 
         /// <inheritdoc />
