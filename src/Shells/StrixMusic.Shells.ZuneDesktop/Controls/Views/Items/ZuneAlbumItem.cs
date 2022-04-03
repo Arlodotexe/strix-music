@@ -34,25 +34,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// Dependency property for <ses cref="CollectionContent" />.
         /// </summary>
         public static readonly DependencyProperty ZuneCollectionTypeProperty =
-            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumItem), new PropertyMetadata(CollectionContentType.Tracks, (s, e) =>
-            {
-                var zuneAlbumItem = s as ZuneAlbumItem;
-
-                Guard.IsNotNull(zuneAlbumItem, nameof(zuneAlbumItem));
-
-                var newValue = (CollectionContentType)e.NewValue;
-
-                if (newValue == CollectionContentType.Albums)
-                {
-                    zuneAlbumItem.ResizeAlbumItem(isAlbumCollectionView: true);
-
-                    zuneAlbumItem.UpdateLayout();
-                }
-                else
-                {
-                    zuneAlbumItem.ResizeAlbumItem();
-                }
-            }));
+            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumItem), new PropertyMetadata(CollectionContentType.Tracks, (s, e) => OnZuneCollectionTypeChanged(s, e)));
 
         /// <summary>
         /// The AlbumCollection GridView control.
@@ -108,6 +90,26 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             Guard.IsNotNull(PART_PlayIcon, nameof(PART_PlayIcon));
             PART_PlayIcon.Tapped += PART_PlayIcon_Tapped;
             Unloaded += ZuneAlbumItem_Unloaded;
+        }
+
+        private static void OnZuneCollectionTypeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        {
+            var zuneAlbumItem = s as ZuneAlbumItem;
+
+            Guard.IsNotNull(zuneAlbumItem, nameof(zuneAlbumItem));
+
+            var newValue = (CollectionContentType)e.NewValue;
+
+            if (newValue == CollectionContentType.Albums)
+            {
+                zuneAlbumItem.ResizeAlbumItem(isAlbumCollectionView: true);
+
+                zuneAlbumItem.UpdateLayout();
+            }
+            else
+            {
+                zuneAlbumItem.ResizeAlbumItem();
+            }
         }
 
         private void ResizeAlbumItem(bool isAlbumCollectionView = false)
