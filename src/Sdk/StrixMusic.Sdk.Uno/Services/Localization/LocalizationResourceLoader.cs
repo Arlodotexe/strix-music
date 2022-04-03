@@ -1,55 +1,40 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Services;
-using System;
-using System.Collections.Generic;
-using Windows.ApplicationModel.Resources;
+﻿using Windows.ApplicationModel.Resources;
 
 namespace StrixMusic.Sdk.Uno.Services.Localization
 {
     /// <summary>
-    /// A Service for getting localized strings from <see cref="ResourceLoader"/> providers.
+    /// A service for getting localized strings from <see cref="ResourceLoader"/> providers.
     /// </summary>
-    public sealed class LocalizationResourceLoader : ILocalizationService
+    public sealed class LocalizationResourceLoader
     {
-        private readonly Dictionary<string, ResourceLoader> _providers = new Dictionary<string, ResourceLoader>();
-
-        /// <inheritdoc/>
-        public string this[string provider, string key] => _providers.ContainsKey(provider) ? _providers[provider].GetString(key) : "ResourceError";
-
-        /// <inheritdoc/>
-        public string LocalizeIfNullOrEmpty(string value, string provider, string key)
-        {
-            if (string.IsNullOrEmpty(value))
-                return this[provider, key];
-            else
-                return value;
-        }
-
-        /// <inheritdoc/>
-        public string LocalizeIfNullOrEmpty<T>(string value, T sender)
-        {
-            return sender switch
-            {
-                IAlbum _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
-                IArtist _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
-
-                // Default to unknown name
-                _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownName"),
-            };
-        }
+        /// <summary>
+        /// The resource loader for strings related to startup.
+        /// </summary>
+        public ResourceLoader? Startup { get; init; }
 
         /// <summary>
-        /// Registers a new <see cref="ResourceLoader"/> as a provider.
+        /// The resource loader for strings related to the SuperShell.
         /// </summary>
-        /// <param name="path">The path of the provider.</param>
-        public void RegisterProvider(string path)
-        {
-            if (_providers.ContainsKey(path))
-                return;
+        public ResourceLoader? SuperShell { get; init; }
 
-            var loader = ResourceLoader.GetForCurrentView(path);
-            _providers.Add(path, loader);
-        }
+        /// <summary>
+        /// The resource loader for common strings.
+        /// </summary>
+        public ResourceLoader? Common { get; init; }
+
+        /// <summary>
+        /// The resource loader for time-related strings.
+        /// </summary>
+        public ResourceLoader? Time { get; init; }
+
+        /// <summary>
+        /// The resource loader for time-related strings.
+        /// </summary>
+        public ResourceLoader? Music { get; init; }
+
+        /// <summary>
+        /// The resource loader for Quips.
+        /// </summary>
+        public ResourceLoader? Quips { get; init; }
     }
 }

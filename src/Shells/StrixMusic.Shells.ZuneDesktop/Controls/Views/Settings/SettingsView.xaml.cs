@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Windows.ApplicationModel.Resources;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,9 +25,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings
 
             _navigationService = Shell.Ioc.GetRequiredService<INavigationService<Control>>();
 
-            var localizationService = Shell.Ioc.GetRequiredService<LocalizationResourceLoader>();
+            var localizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
 
-            _displayPages = _displayPages.Select(x => localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x].ToUpper()).ToList();
+            _displayPages = _displayPages.Select(x => localizationService.GetString(x).ToUpper()).ToList();
         }
 
         private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;

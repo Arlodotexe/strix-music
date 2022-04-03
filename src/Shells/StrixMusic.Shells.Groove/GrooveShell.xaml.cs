@@ -24,6 +24,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using StrixMusic.Sdk.Uno.Services.Localization;
 
 namespace StrixMusic.Shells.Groove
 {
@@ -47,7 +48,7 @@ namespace StrixMusic.Shells.Groove
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveShell), new PropertyMetadata(null));
 
-        private ILocalizationService _localizationService;
+        private LocalizationResourceLoader _localizationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
@@ -67,7 +68,7 @@ namespace StrixMusic.Shells.Groove
             // Register playlists page navigation
             WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
-            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
+            _localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
@@ -219,7 +220,7 @@ namespace StrixMusic.Shells.Groove
             }
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
-            Title = _localizationService["Music", viewModel.PageTitleResource];
+            Title = _localizationService.Music?.GetString(viewModel.PageTitleResource) ?? viewModel.PageTitleResource;
             ShowLargeHeader = viewModel.ShowLargeHeader;
 
             UpdateSelectedNavigationButton(viewModel);

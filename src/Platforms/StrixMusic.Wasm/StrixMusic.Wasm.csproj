@@ -5,7 +5,7 @@
 		<NoWarn>NU1701;NU1605;</NoWarn>
 		<Nullable>enable</Nullable>
 		<WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>10.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
@@ -27,7 +27,7 @@
 		<UpToDateCheckInput Include="..\Shared\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Remove="Assets\SplashScreen.png" />
+		<None Remove="Assets\SplashScreen.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="WasmCSS\Fonts.css" />
