@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Uno.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,6 +28,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <summary>
+        /// Holds the current state of the zune <see cref="CollectionContent"/>.
+        /// </summary>
+        public CollectionContentType ZuneCollectionType
+        {
+            get { return (CollectionContentType)GetValue(ZuneCollectionTypeProperty); }
+            set { SetValue(ZuneCollectionTypeProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="CollectionContent" />.
+        /// </summary>
+        public static readonly DependencyProperty ZuneCollectionTypeProperty =
+            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumCollection), new PropertyMetadata(null, null));
+
+        /// <summary>
         /// Flag to determine if albums are already loaded.
         /// </summary>
         public bool AlbumsLoaded { get; private set; }
@@ -35,7 +51,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// The AlbumCollection GridView control.
         /// </summary>
         public GridView? PART_Selector { get; private set; }
-
 
         /// <summary>
         /// Collection holding the data for <see cref="AlbumCollection" />
@@ -95,6 +110,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     {
                         zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
                         zuneAlbumItem.Unloaded += ZuneAlbumItem_Unloaded;
+                        zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
                     }
                 }
             }
@@ -102,7 +118,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         private void OnAlbumCollectionChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue is IAlbumCollectionViewModel collection)
+            if (e.NewValue is IAlbumCollectionViewModel collection)
             {
                 collection.Albums.CollectionChanged += Albums_CollectionChanged;
             }
@@ -150,6 +166,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 if (uiElement is ZuneAlbumItem zuneAlbumItem)
                 {
                     zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
+                    zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
                 }
 
                 // This needs to be explicitly casted to UIElement to avoid a compiler error specific to android in uno.
