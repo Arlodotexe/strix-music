@@ -462,7 +462,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collection.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public async Task PopulateMorePlaylistsAsync(int limit)
+        public async Task PopulateMorePlaylistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populatePlaylistsMutex))
             {
@@ -487,7 +487,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
@@ -502,7 +502,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
@@ -517,10 +517,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
+        public Task InitPlaylistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.PlaylistCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         ///<inheritdoc />
         public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection)
@@ -571,14 +571,14 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitPlaylistCollectionAsync());
+            return Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitPlaylistCollectionAsync(cancellationToken));
         }
 
         /// <inheritdoc />

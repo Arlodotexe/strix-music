@@ -70,7 +70,7 @@ namespace StrixMusic.Sdk.FileMetadata
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
@@ -87,11 +87,11 @@ namespace StrixMusic.Sdk.FileMetadata
             if (!SkipRepoInit)
             {
                 _logger.LogInformation($"Initializing repositories.");
-                await Albums.InitAsync();
-                await Artists.InitAsync();
-                await Tracks.InitAsync();
-                await Playlists.InitAsync();
-                await Images.InitAsync();
+                await Albums.InitAsync(cancellationToken);
+                await Artists.InitAsync(cancellationToken);
+                await Tracks.InitAsync(cancellationToken);
+                await Playlists.InitAsync(cancellationToken);
+                await Images.InitAsync(cancellationToken);
             }
 
             AttachEvents();

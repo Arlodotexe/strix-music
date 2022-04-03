@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models;
@@ -37,7 +38,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreLibrary other) => _library.Equals(other);
 
         /// <inheritdoc />
-        public override Task InitAsync()
+        public override Task InitAsync(CancellationToken cancellationToken = default)
         {
             IsInitialized = true;
 

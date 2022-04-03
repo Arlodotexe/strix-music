@@ -683,7 +683,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
-        public async Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
@@ -705,7 +705,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _album.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public async Task PopulateMoreArtistsAsync(int limit)
+        public async Task PopulateMoreArtistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
@@ -714,14 +714,16 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
+                    {
                         if (item is IArtist artist)
                             Artists.Add(new ArtistViewModel(Root, artist));
+                    }
                 }, null);
             }
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
@@ -736,7 +738,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
@@ -751,7 +753,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreGenresAsync(int limit)
+        public async Task PopulateMoreGenresAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateGenresMutex))
             {
@@ -850,16 +852,16 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+        public Task InitArtistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ArtistCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
+        public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollection(this, cancellationToken);
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _album.Equals(other);
@@ -886,14 +888,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreAlbum other) => _album.Equals(other);
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitTrackCollectionAsync(), InitGenreCollectionAsync(), InitArtistCollectionAsync());
+            return Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitTrackCollectionAsync(cancellationToken), InitGenreCollectionAsync(cancellationToken), InitArtistCollectionAsync(cancellationToken));
         }
 
         /// <inheritdoc />

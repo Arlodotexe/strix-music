@@ -264,7 +264,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
 
         /// <inheritdoc />
-        public Task InitAsync() => _core.InitAsync();
+        public Task InitAsync(CancellationToken cancellationToken = default) => _core.InitAsync(cancellationToken);
 
         /// <inheritdoc />
         public bool IsInitialized => _core.IsInitialized;

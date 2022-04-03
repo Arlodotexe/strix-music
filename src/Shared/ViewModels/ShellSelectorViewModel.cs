@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Services;
 
@@ -36,11 +35,11 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Entered {nameof(InitAsync)}");
 
-            await _settings.LoadAsync();
+            await _settings.LoadAsync(cancellationToken);
 
             // Gets the list of loaded shells.
             foreach (var shell in ShellRegistry.MetadataRegistry)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Provisos;
@@ -30,7 +31,7 @@ namespace StrixMusic.Cores.Files.Models
         /// Initializes the collection group base.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public virtual Task InitAsync()
+        public virtual Task InitAsync(CancellationToken cancellationToken = default)
         {
             IsInitialized = true;
             return Task.CompletedTask;

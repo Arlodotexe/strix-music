@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.CoreManagement;
@@ -19,7 +20,7 @@ namespace StrixMusic.Services
         /// <summary>
         /// Creates a new instance of <see cref="CoreManagementService"/>.
         /// </summary>
-        /// <param name="settingsService">Settings service used to store core information.</param>
+        /// <param name="settings">Settings service used to store core information.</param>
         public CoreManagementService(AppSettings settings)
         {
             _settings = settings;
@@ -92,14 +93,14 @@ namespace StrixMusic.Services
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return;
 
             IsInitialized = true;
 
-            await _settings.LoadAsync();
+            await _settings.LoadAsync(cancellationToken);
         }
 
         /// <inheritdoc/>

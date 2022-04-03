@@ -10,7 +10,7 @@
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.61" />
+    <PackageReference Include="OwlCore" Version="0.0.63" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

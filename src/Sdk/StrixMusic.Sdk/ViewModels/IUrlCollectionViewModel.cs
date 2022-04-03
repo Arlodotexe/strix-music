@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Models;
@@ -25,8 +26,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// Populates the next set of urls into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreUrlsAsync(int limit);
+        public Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreUrlsAsync"/>

@@ -30,9 +30,10 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override async Task InitAsync()
+        public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            await _initSemaphore.WaitAsync();
+            using var initReleaseRegistration = cancellationToken.Register(() => _initSemaphore.Release());
+            await _initSemaphore.WaitAsync(cancellationToken);
 
             _fileMetadataManager = SourceCore.Cast<FilesCore>().FileMetadataManager;
 
@@ -43,7 +44,7 @@ namespace StrixMusic.Cores.Files.Models
             TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
             TotalTrackCount = await _fileMetadataManager.Tracks.GetItemCount();
 
-            await base.InitAsync();
+            await base.InitAsync(cancellationToken);
 
             AttachEvents();
 

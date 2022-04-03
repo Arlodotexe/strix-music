@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
@@ -36,7 +37,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             };
         }
 
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             await Task.Delay(500);
 

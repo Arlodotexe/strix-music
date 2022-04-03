@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
@@ -89,7 +90,7 @@ namespace StrixMusic.Cores.Files
         public abstract event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc/>
-        public abstract Task InitAsync();
+        public abstract Task InitAsync(CancellationToken cancellationToken = default);
         
         /// <inheritdoc/>
         public bool IsInitialized { get; protected set; }

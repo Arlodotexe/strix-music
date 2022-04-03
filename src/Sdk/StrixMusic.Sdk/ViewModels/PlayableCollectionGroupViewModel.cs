@@ -879,7 +879,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collectionGroup.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
-        public async Task PopulateMorePlaylistsAsync(int limit)
+        public async Task PopulateMorePlaylistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populatePlaylistsMutex))
             {
@@ -904,7 +904,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
@@ -921,7 +921,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreAlbumsAsync(int limit)
+        public async Task PopulateMoreAlbumsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateAlbumsMutex))
             {
@@ -946,7 +946,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreArtistsAsync(int limit)
+        public async Task PopulateMoreArtistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
@@ -971,7 +971,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreChildrenAsync(int limit)
+        public async Task PopulateMoreChildrenAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateChildrenMutex))
             {
@@ -988,7 +988,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
@@ -1005,7 +1005,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
@@ -1103,19 +1103,19 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+        public Task InitAlbumCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.AlbumCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+        public Task InitArtistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ArtistCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitPlaylistCollectionAsync() => CollectionInit.PlaylistCollection(this);
+        public Task InitPlaylistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.PlaylistCollection(this, cancellationToken);
 
         /// <summary>
         /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
@@ -1262,14 +1262,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreUrlCollection other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
-        public virtual Task InitAsync()
+        public virtual Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitPlaylistCollectionAsync(), InitTrackCollectionAsync(), InitAlbumCollectionAsync(), InitArtistCollectionAsync());
+            return Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitPlaylistCollectionAsync(cancellationToken), InitTrackCollectionAsync(cancellationToken), InitAlbumCollectionAsync(cancellationToken), InitArtistCollectionAsync(cancellationToken));
         }
 
         private Task ChangeNameInternalAsync(string? name)

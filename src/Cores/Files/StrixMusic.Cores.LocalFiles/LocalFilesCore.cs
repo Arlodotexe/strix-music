@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
@@ -123,18 +124,23 @@ namespace StrixMusic.Cores.LocalFiles
         public override event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc/>
-        public async override Task InitAsync()
+        public async override Task InitAsync(CancellationToken cancellationToken = default)
         {
             ChangeCoreState(CoreState.Loading);
 
-            await Settings.LoadAsync();
-            await FileSystem.InitAsync();
+            await Settings.LoadAsync(cancellationToken);
+            await FileSystem.InitAsync(cancellationToken);
 
         GetConfig:
+            cancellationToken.ThrowIfCancellationRequested();
+
             var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (configuredFolder is null)
             {
                 var pickedFolder = await FileSystem.PickFolder();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // No folder selected.
                 if (pickedFolder is null)
@@ -171,10 +177,12 @@ namespace StrixMusic.Cores.LocalFiles
                 ScanTypes = GetScanTypesFromSettings(),
             };
 
-            await FileMetadataManager.InitAsync();
-            _ = FileMetadataManager.ScanAsync();
+            await FileMetadataManager.InitAsync(cancellationToken);
+            _ = FileMetadataManager.ScanAsync(cancellationToken);
 
-            await Library.Cast<FilesCoreLibrary>().InitAsync();
+            await Library.Cast<FilesCoreLibrary>().InitAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
             ChangeCoreState(CoreState.Loaded);
 
             _configPanel.ConfigDoneButton.Clicked += ConfigDoneButtonOnClicked;

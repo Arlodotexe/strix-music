@@ -102,17 +102,17 @@ namespace StrixMusic.Cores.OneDrive
         public override event EventHandler? AbstractConfigPanelChanged;
 
         /// <inheritdoc/>
-        public async override Task InitAsync()
+        public async override Task InitAsync(CancellationToken cancellationToken = default)
         {
-#warning TODO: Pass cancellationToken from InitAsync when implemented
-            var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(CancellationToken.None);
+            var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cancellationToken = cancellationTokenSource.Token;
 
             ChangeCoreState(CoreState.Loading);
 
             _logger.LogInformation("Getting setting values");
             await Settings.LoadAsync();
 
-            cancellationTokenSource.Token.Register(() => ChangeCoreState(CoreState.Unloaded));
+            using var onCancelledRegistration = cancellationTokenSource.Token.Register(() => ChangeCoreState(CoreState.Unloaded));
 
         ValidateSettings:
 
@@ -121,7 +121,7 @@ namespace StrixMusic.Cores.OneDrive
                 string.IsNullOrWhiteSpace(Settings.RedirectUri) ||
                 !Settings.UserHasSeenAuthClientKeysSettings)
             {
-                var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationTokenSource.Token);
+                var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
                 _configPanel = oobePanel;
                 ChangeCoreState(CoreState.NeedsSetup);
                 AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
@@ -135,7 +135,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (!Settings.UserHasSeenGeneralOobeSettings)
             {
-                var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationTokenSource.Token);
+                var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
                 _configPanel = oobePanel;
                 ChangeCoreState(CoreState.NeedsSetup);
                 AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
@@ -151,7 +151,7 @@ namespace StrixMusic.Cores.OneDrive
             {
                 try
                 {
-                    Settings.AccountIdentifier = await AcquireLoginAsync(cancellationTokenSource.Token);
+                    Settings.AccountIdentifier = await AcquireLoginAsync(cancellationToken);
                     await Settings.SaveAsync();
                 }
                 catch (HttpRequestException)
@@ -182,7 +182,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrWhiteSpace(Settings.SelectedFolderId))
             {
-                var folder = await AcquireUserSelectedFolderAsync(cancellationTokenSource.Token);
+                var folder = await AcquireUserSelectedFolderAsync(cancellationToken);
                 if (folder is null)
                 {
                     cancellationTokenSource.Cancel();
@@ -200,7 +200,7 @@ namespace StrixMusic.Cores.OneDrive
                 HttpMessageHandler = HttpMessageHandler,
             };
 
-            var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationTokenSource.Token);
+            var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationToken);
             Guard.IsNotNull(authenticationToken, nameof(authenticationToken));
 
             InstanceDescriptor = authenticationToken.Account.Username;
@@ -208,7 +208,7 @@ namespace StrixMusic.Cores.OneDrive
 
             var graphClient = authManager.CreateGraphClient(authenticationToken.AccessToken);
 
-            var driveItem = await graphClient.Drive.Items[Settings.SelectedFolderId].Request().GetAsync(cancellationTokenSource.Token);
+            var driveItem = await graphClient.Drive.Items[Settings.SelectedFolderId].Request().GetAsync(cancellationToken);
             Guard.IsNotNull(driveItem, nameof(driveItem));
 
             var folderToScan = new OneDriveFolderData(graphClient, driveItem);
@@ -228,8 +228,8 @@ namespace StrixMusic.Cores.OneDrive
             FileMetadataManager.ScanTypes = scanTypes;
             FileMetadataManager.DegreesOfParallelism = 8;
 
-            await FileMetadataManager.InitAsync();
-            _ = FileMetadataManager.ScanAsync(cancellationTokenSource.Token);
+            await FileMetadataManager.InitAsync(cancellationToken);
+            _ = FileMetadataManager.ScanAsync(cancellationToken);
 
             _logger.LogInformation("Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);

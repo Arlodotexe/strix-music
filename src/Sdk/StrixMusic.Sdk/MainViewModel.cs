@@ -164,10 +164,10 @@ namespace StrixMusic.Sdk
         public CoreViewModel GetLoadedCore(ICore reference) => Cores.First(x => x.InstanceId == reference.InstanceId);
 
         /// <summary>
-        /// Initializes and loads the ViewModel, including initializing all cores in the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Initializes and loads the ViewModel, including initializing all registered cores.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             Plugins.ModelPlugins = GlobalModelPluginConnector.Create(Plugins.ModelPlugins);
 
@@ -274,7 +274,7 @@ namespace StrixMusic.Sdk
             try
             {
 #warning Improper cancellation. Refactor to pass the token directly.
-                await Task.Run(() => core.InitAsync(), setupCancellationTokenSource.Token);
+                await core.InitAsync(setupCancellationTokenSource.Token);
             }
             #warning Handle special exceptions like HttpException + catch all others
             catch (OperationCanceledException)

@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Models
         NeedsSetup,
 
         /// <summary>
-        /// The core has all data it needs to be used without user interaction.
+        /// The core has all data it needs to be used without further user interaction.
         /// </summary>
         Configured,
 

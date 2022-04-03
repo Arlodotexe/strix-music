@@ -1,3 +1,6 @@
 [*.cs]
 
 file_header_template = Copyright (c) Arlo Godfrey. All Rights Reserved.\nLicensed under the GNU Lesser General Public License, Version 3.0 with additional terms.\nSee the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
+
+# CA2016: Forward the 'CancellationToken' parameter to methods
+dotnet_diagnostic.CA2016.severity = warning

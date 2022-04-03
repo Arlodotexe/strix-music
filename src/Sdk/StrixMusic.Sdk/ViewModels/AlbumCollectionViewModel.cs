@@ -312,7 +312,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreAlbumsAsync(int limit)
+        public async Task PopulateMoreAlbumsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateAlbumsMutex))
             {
@@ -337,7 +337,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
@@ -352,7 +352,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
@@ -533,10 +533,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
 
         /// <inheritdoc />
-        public Task InitAlbumCollectionAsync() => CollectionInit.AlbumCollection(this);
+        public Task InitAlbumCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.AlbumCollection(this, cancellationToken);
 
         /// <inheritdoc/>
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc />
         public IAsyncRelayCommand InitAlbumCollectionAsyncCommand { get; }
@@ -605,14 +605,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitAlbumCollectionAsync(), InitImageCollectionAsync());
+            return Task.WhenAll(InitAlbumCollectionAsync(cancellationToken), InitImageCollectionAsync(cancellationToken));
         }
 
         /// <inheritdoc />

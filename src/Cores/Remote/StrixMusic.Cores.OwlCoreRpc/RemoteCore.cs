@@ -6,8 +6,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using OwlCore.AbstractUI.Models;
@@ -266,7 +266,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
-        public Task InitAsync() => Task.Run(async () =>
+        public Task InitAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Host)
                 return;

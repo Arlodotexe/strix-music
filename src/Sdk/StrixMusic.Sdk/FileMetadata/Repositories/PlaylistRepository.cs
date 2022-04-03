@@ -52,16 +52,17 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            await _initMutex.WaitAsync();
+            using var initMutexReleaseRegistration = cancellationToken.Register(() => _initMutex.Release());
+            await _initMutex.WaitAsync(cancellationToken);
             if (IsInitialized)
             {
                 _initMutex.Release();
                 return;
             }
 
-            await LoadDataFromDisk();
+            await LoadDataFromDisk(cancellationToken);
 
             IsInitialized = true;
             _initMutex.Release();
@@ -260,7 +261,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
         /// Gets the existing repo data stored on disk.
         /// </summary>
         /// <returns>The <see cref="PlaylistMetadata"/> collection.</returns>
-        private async Task LoadDataFromDisk()
+        private async Task LoadDataFromDisk(CancellationToken cancellationToken)
         {
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
@@ -269,13 +270,21 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
             Guard.IsNotNull(fileData, nameof(fileData));
 
             using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
+            cancellationToken.ThrowIfCancellationRequested();
+
             var bytes = await stream.ToBytesAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (bytes.Length == 0)
                 return;
 
             var str = System.Text.Encoding.UTF8.GetString(bytes);
             var data = JsonConvert.DeserializeObject<List<PlaylistMetadata>>(str);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var mutexReleaseOnCancelRegistration = cancellationToken.Register(() => _storageMutex.Release());
+            await _storageMutex.WaitAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var item in data ?? Enumerable.Empty<PlaylistMetadata>())
             {
@@ -284,6 +293,8 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
             }
+
+            _storageMutex.Release();
         }
 
         private async Task CommitChangesAsync()
