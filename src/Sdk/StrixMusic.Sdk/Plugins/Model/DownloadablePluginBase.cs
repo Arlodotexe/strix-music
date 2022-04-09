@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.Models;
@@ -42,6 +43,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        virtual public Task StartDownloadOperationAsync(DownloadOperation operation) => Inner.StartDownloadOperationAsync(operation);
+        virtual public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => Inner.StartDownloadOperationAsync(operation, cancellationToken);
     }
 }

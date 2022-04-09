@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -155,144 +157,141 @@ namespace StrixMusic.Cores.Files.Models
         public bool IsPauseTrackCollectionAsyncAvailable => false;
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailableAsync(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddUrlAsync(ICoreUrl image, int index)
+        public Task AddUrlAsync(ICoreUrl image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index)
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var trackIds = _playlistMetadata.TrackIds;
 
             Guard.IsNotNull(trackIds, nameof(trackIds));
 
-            var tracks = new List<TrackMetadata>();
             foreach (var id in trackIds)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 var track = await _fileMetadataManager.Tracks.GetByIdAsync(id);
 
                 Guard.IsNotNull(track, nameof(track));
-                tracks.Add(track);
-            }
-
-            foreach (var item in tracks)
-            {
-                yield return new FilesCoreTrack(SourceCore, item);
+                yield return new FilesCoreTrack(SourceCore, track);
             }
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0)
+        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerable.Empty<ICoreUrl>();
         }

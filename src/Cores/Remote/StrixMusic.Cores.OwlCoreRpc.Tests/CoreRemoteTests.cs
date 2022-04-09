@@ -1,3 +1,4 @@
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
@@ -101,7 +102,7 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests
 
             await remoteClientCore.InitAsync();
 
-            core.CoreState = Sdk.Models.CoreState.NeedsSetup;
+            core.CoreState = Sdk.Models.CoreState.NeedsConfiguration;
 
             // Wait for changes to propogate
             await Task.Delay(1000);
@@ -202,15 +203,15 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests
         [DataRow(MockContextIds.SearchHistory)]
         [DataRow(MockContextIds.SearchResults)]
         [DataRow(MockContextIds.Track)]
-        public async Task RemoteGetContextById(string id)
+        public async Task RemoteGetContextByIdAsync(string id)
         {
             var core = new MockCore();
             var remoteClientCore = new RemoteCore(core.InstanceId); // Set up for receiving.
             var remoteHostCore = new RemoteCore(core); // Wrap around the actual core
 
-            var expectedResult = await core.GetContextById(id);
-            var wrappedResult = await remoteHostCore.GetContextById(id);
-            var remotelyReceivedResult = await remoteClientCore.GetContextById(id);
+            var expectedResult = await core.GetContextByIdAsync(id);
+            var wrappedResult = await remoteHostCore.GetContextByIdAsync(id);
+            var remotelyReceivedResult = await remoteClientCore.GetContextByIdAsync(id);
 
             // Local core types should not match remote core types.
             Assert.AreNotEqual(expectedResult?.GetType(), wrappedResult?.GetType());
@@ -238,9 +239,9 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests
 
             var track = new MockCoreTrack(core, id, id);
 
-            var expectedResult = await core.GetMediaSource(track);
-            var wrappedResult = await remoteHostCore.GetMediaSource(track);
-            var remotelyReceivedResult = await remoteClientCore.GetMediaSource(track);
+            var expectedResult = await core.GetMediaSourceAsync(track);
+            var wrappedResult = await remoteHostCore.GetMediaSourceAsync(track);
+            var remotelyReceivedResult = await remoteClientCore.GetMediaSourceAsync(track);
 
             Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), wrappedResult, wrappedResult?.GetType());
             Helpers.SmartAssertEqual(expectedResult, expectedResult?.GetType(), remotelyReceivedResult, remotelyReceivedResult?.GetType());

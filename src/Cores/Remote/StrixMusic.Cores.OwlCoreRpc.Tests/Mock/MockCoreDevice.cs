@@ -3,6 +3,7 @@ using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
@@ -72,12 +73,12 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
         public event EventHandler<double>? VolumeChanged;
         public event EventHandler<double>? PlaybackSpeedChanged;
 
-        public Task ChangePlaybackSpeedAsync(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeVolumeAsync(double volume)
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -87,42 +88,42 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
             throw new NotImplementedException();
         }
 
-        public Task NextAsync()
+        public Task NextAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PauseAsync()
+        public Task PauseAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PreviousAsync()
+        public Task PreviousAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ResumeAsync()
+        public Task ResumeAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task SeekAsync(TimeSpan position)
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task SwitchToAsync()
+        public Task SwitchToAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ToggleRepeatAsync()
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ToggleShuffleAsync()
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

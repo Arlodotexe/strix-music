@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace StrixMusic.Sdk.Models.Base
 {
@@ -16,7 +17,8 @@ namespace StrixMusic.Sdk.Models.Base
         /// Given a query, return suggested completed queries.
         /// </summary>
         /// <param name="query">Search query</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>Suggested completed queries.</returns>
-        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query);
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default);
     }
 }

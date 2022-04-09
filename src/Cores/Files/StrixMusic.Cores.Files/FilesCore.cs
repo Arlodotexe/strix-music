@@ -104,7 +104,7 @@ namespace StrixMusic.Cores.Files
         }
 
         /// <inheritdoc/>
-        public async Task<ICoreMember?> GetContextById(string id)
+        public async Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(FileMetadataManager, nameof(FileMetadataManager));
             
@@ -127,7 +127,7 @@ namespace StrixMusic.Cores.Files
         /// <remarks>
         /// You may override this and return a different MediaSourceConfig if needed, such as a Stream instead of a file path.
         /// </remarks>
-        public virtual Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        public virtual Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             if (!(track is FilesCoreTrack t))
                 return Task.FromResult<IMediaSourceConfig?>(null);

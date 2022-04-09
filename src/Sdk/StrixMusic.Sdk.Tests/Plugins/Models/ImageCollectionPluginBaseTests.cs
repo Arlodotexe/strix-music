@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
@@ -92,19 +93,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event CollectionChangedEventHandler<IImage>? ImagesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public override Task AddImageAsync(IImage image, int index) => throw AccessedException;
+            public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task RemoveImageAsync(int index) => throw AccessedException;
+            public override Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
         }
 
         public class NoOverride : ImageCollectionPluginBase
@@ -139,19 +140,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event CollectionChangedEventHandler<IImage>? ImagesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public Task AddImageAsync(IImage image, int index) => throw AccessedException;
+            public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task RemoveImageAsync(int index) => throw AccessedException;
+            public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
         }
     }
 }

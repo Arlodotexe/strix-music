@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -55,7 +56,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Task AddUrlAsync(IUrl url, int index) => Inner.AddUrlAsync(url, index);
+        virtual public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => Inner.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
@@ -64,15 +65,15 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreUrlCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => Inner.GetUrlsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddUrlAvailableAsync(int index) => Inner.IsAddUrlAvailableAsync(index);
+        virtual public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index) => Inner.IsRemoveUrlAvailableAsync(index);
+        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveUrlAsync(int index) => Inner.RemoveUrlAsync(index);
+        virtual public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveUrlAsync(index, cancellationToken);
     }
 }

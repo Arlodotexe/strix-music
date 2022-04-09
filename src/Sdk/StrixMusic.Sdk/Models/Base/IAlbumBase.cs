@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Base
@@ -18,7 +19,7 @@ namespace StrixMusic.Sdk.Models.Base
         DateTime? DatePublished { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDatePublishedAsync(DateTime)"/> is supported.
+        /// If true, <see cref="ChangeDatePublishedAsync"/> is supported.
         /// </summary>
         bool IsChangeDatePublishedAsyncAvailable { get; }
 
@@ -26,8 +27,9 @@ namespace StrixMusic.Sdk.Models.Base
         /// Changes the <see cref="DatePublished"/> for this album.
         /// </summary>
         /// <param name="datePublished">The new date the album was published.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeDatePublishedAsync(DateTime datePublished);
+        Task ChangeDatePublishedAsync(DateTime datePublished, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when <see cref="DatePublished"/> is changed.

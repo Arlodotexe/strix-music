@@ -200,7 +200,7 @@ namespace StrixMusic.Shared.ViewModels
 
             var relevantCore = mainViewModel.Cores.First(x => x.InstanceId == core.InstanceId);
 
-            if (e == CoreState.NeedsSetup)
+            if (e == CoreState.NeedsConfiguration)
             {
                 _ = Threading.OnPrimaryThread(() => CurrentCoreConfig = relevantCore);
             }

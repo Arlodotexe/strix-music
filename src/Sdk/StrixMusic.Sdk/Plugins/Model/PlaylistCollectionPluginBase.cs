@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -243,22 +244,22 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Task AddImageAsync(IImage image, int index) => InnerImageCollection.AddImageAsync(image, index);
+        virtual public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddPlaylistItemAsync(IPlaylistCollectionItem PlaylistItem, int index) => Inner.AddPlaylistItemAsync(PlaylistItem, index);
+        virtual public Task AddPlaylistItemAsync(IPlaylistCollectionItem PlaylistItem, int index, CancellationToken cancellationToken = default) => Inner.AddPlaylistItemAsync(PlaylistItem, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddUrlAsync(IUrl url, int index) => InnerUrlCollection.AddUrlAsync(url, index);
+        virtual public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeDescriptionAsync(string? description) => InnerPlayable.ChangeDescriptionAsync(description);
+        virtual public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeDurationAsync(TimeSpan duration) => InnerPlayable.ChangeDurationAsync(duration);
+        virtual public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeNameAsync(string name) => InnerPlayable.ChangeNameAsync(name);
+        virtual public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => InnerPlayable.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
         virtual public bool Equals(ICorePlaylistCollectionItem other) => Inner.Equals(other);
@@ -273,52 +274,52 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => InnerImageCollection.GetImagesAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => Inner.GetPlaylistItemsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetPlaylistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => InnerUrlCollection.GetUrlsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
+        virtual public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Inner.IsAddPlaylistItemAvailableAsync(index);
+        virtual public Task<bool> IsAddPlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddPlaylistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
+        virtual public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
+        virtual public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Inner.IsRemovePlaylistItemAvailableAsync(index);
+        virtual public Task<bool> IsRemovePlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemovePlaylistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
+        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PausePlaylistCollectionAsync() => Inner.PausePlaylistCollectionAsync();
+        virtual public Task PausePlaylistCollectionAsync(CancellationToken cancellationToken = default) => Inner.PausePlaylistCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => Inner.PlayPlaylistCollectionAsync(playlistItem);
+        virtual public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default) => Inner.PlayPlaylistCollectionAsync(playlistItem, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PlayPlaylistCollectionAsync() => Inner.PlayPlaylistCollectionAsync();
+        virtual public Task PlayPlaylistCollectionAsync(CancellationToken cancellationToken = default) => Inner.PlayPlaylistCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
+        virtual public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemovePlaylistItemAsync(int index) => Inner.RemovePlaylistItemAsync(index);
+        virtual public Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default) => Inner.RemovePlaylistItemAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
+        virtual public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);
+        virtual public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync()

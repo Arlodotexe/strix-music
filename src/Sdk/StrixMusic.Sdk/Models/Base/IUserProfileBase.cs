@@ -4,6 +4,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Base
@@ -47,27 +48,27 @@ namespace StrixMusic.Sdk.Models.Base
         CultureInfo Region { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDisplayNameAsync(string)"/> is supported.
+        /// If true, <see cref="ChangeDisplayNameAsync(string, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeDisplayNameAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeBirthDateAsync(DateTime)"/> is supported.
+        /// If true, <see cref="ChangeBirthDateAsync(DateTime, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeBirthDateAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeFullNameAsync(string)"/> is supported.
+        /// If true, <see cref="ChangeFullNameAsync(string, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeFullNameAsyncAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeRegionAsync(CultureInfo)"/> is supported.
+        /// If true, <see cref="ChangeRegionAsync(CultureInfo, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeRegionAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeEmailAsync(string?)"/> is supported.
+        /// If true, <see cref="ChangeEmailAsync(string?, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeEmailAsyncAvailable { get; }
 
@@ -75,36 +76,41 @@ namespace StrixMusic.Sdk.Models.Base
         /// Changes the <see cref="DisplayName"/> for this user.
         /// </summary>
         /// <param name="displayName">The new display name.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeDisplayNameAsync(string displayName);
+        Task ChangeDisplayNameAsync(string displayName, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Birthdate"/> for this user.
         /// </summary>
         /// <param name="birthdate">The new birthdate.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeBirthDateAsync(DateTime birthdate);
+        Task ChangeBirthDateAsync(DateTime birthdate, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="FullName"/> for this user.
         /// </summary>
         /// <param name="fullname">The full name.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeFullNameAsync(string fullname);
+        Task ChangeFullNameAsync(string fullname, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Region"/> for this user.
         /// </summary>
         /// <param name="region">The new region.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeRegionAsync(CultureInfo region);
+        Task ChangeRegionAsync(CultureInfo region, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Email"/> for this user.
         /// </summary>
         /// <param name="email">The new email.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeEmailAsync(string? email);
+        Task ChangeEmailAsync(string? email, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the <see cref="DisplayName"/> has changed.

@@ -103,7 +103,7 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 
         public ICore SourceCore { get; set; }
 
-        public Task<ICoreMember?> GetContextById(string id)
+        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<ICoreMember?>(id switch
             {
@@ -124,7 +124,7 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
             });
         }
 
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IMediaSourceConfig?>(new MockMediaSourceConfig(track.Id, track));
         }

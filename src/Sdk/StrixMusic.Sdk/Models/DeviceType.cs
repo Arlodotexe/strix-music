@@ -7,10 +7,13 @@ namespace StrixMusic.Sdk.Models
     /// <summary>
     /// Describes the type of device used for playback.
     /// </summary>
+    /// <remarks>
+    /// If the device type is anything but <see cref="Remote"/>, playback is expected to be handled outside of a core (by a playback handler in the SDK, for example).
+    /// </remarks>
     public enum DeviceType
     {
         /// <summary>
-        /// Audio is played back by the app.
+        /// This device provides playback state for audio that is played on this device.
         /// </summary>
         Local,
 

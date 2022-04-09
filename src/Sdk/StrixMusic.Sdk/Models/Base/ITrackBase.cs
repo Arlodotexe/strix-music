@@ -4,6 +4,7 @@
 
 using System;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Base
@@ -46,12 +47,12 @@ namespace StrixMusic.Sdk.Models.Base
         bool IsChangeAlbumAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeTrackNumberAsync(int?)"/> is supported.
+        /// If true, <see cref="ChangeTrackNumberAsync(int?, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeTrackNumberAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeLanguageAsync(CultureInfo)"/> is supported.
+        /// If true, <see cref="ChangeLanguageAsync(CultureInfo, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeLanguageAsyncAvailable { get; }
 
@@ -61,7 +62,7 @@ namespace StrixMusic.Sdk.Models.Base
         bool IsChangeLyricsAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeIsExplicitAsync(bool)"/> is supported.
+        /// If true, <see cref="ChangeIsExplicitAsync(bool, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeIsExplicitAsyncAvailable { get; }
 
@@ -69,22 +70,25 @@ namespace StrixMusic.Sdk.Models.Base
         /// Changes the <see cref="TrackNumber"/> on this track.
         /// </summary>
         /// <param name="trackNumber">The new track number.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeTrackNumberAsync(int? trackNumber);
+        Task ChangeTrackNumberAsync(int? trackNumber, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Language"/> for this track.
         /// </summary>
         /// <param name="language">The new language for this track.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeLanguageAsync(CultureInfo language);
+        Task ChangeLanguageAsync(CultureInfo language, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="IsExplicit"/> for this track.
         /// </summary>
         /// <param name="isExplicit">The new value.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeIsExplicitAsync(bool isExplicit);
+        Task ChangeIsExplicitAsync(bool isExplicit, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the <see cref="TrackNumber"/> metadata changes.

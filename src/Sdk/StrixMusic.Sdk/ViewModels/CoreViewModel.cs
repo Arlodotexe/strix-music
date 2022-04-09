@@ -164,9 +164,9 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.NeedsSetup"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.NeedsConfiguration"/>.
         /// </summary>
-        public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsSetup;
+        public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsConfiguration;
 
         /// <summary>
         /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Configured"/>.
@@ -258,10 +258,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        public Task<ICoreMember?> GetContextById(string id) => _core.GetContextById(id);
+        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default) => _core.GetContextByIdAsync(id, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
+        public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default) => _core.GetMediaSourceAsync(track, cancellationToken);
 
         /// <inheritdoc />
         public Task InitAsync(CancellationToken cancellationToken = default) => _core.InitAsync(cancellationToken);

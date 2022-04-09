@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
@@ -35,8 +36,9 @@ namespace StrixMusic.Sdk.Models
         /// Changes the <see cref="Lyrics"/> for this track.
         /// </summary>
         /// <param name="lyrics">The new lyrics data.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeLyricsAsync(ILyrics? lyrics);
+        Task ChangeLyricsAsync(ILyrics? lyrics, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the <see cref="Album"/> metadata changes.
@@ -52,7 +54,8 @@ namespace StrixMusic.Sdk.Models
         /// Changes the album for this track.
         /// </summary>
         /// <param name="album">The new album.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeAlbumAsync(IAlbum? album);
+        Task ChangeAlbumAsync(IAlbum? album, CancellationToken cancellationToken = default);
     }
 }

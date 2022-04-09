@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -122,14 +123,10 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            ImagesChanged?.Invoke(this, addedItems, removedItems);
-        }
+            => ImagesChanged?.Invoke(this, addedItems, removedItems);
 
         private void UrlMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
-        {
-            UrlsChanged?.Invoke(this, addedItems, removedItems);
-        }
+            => UrlsChanged?.Invoke(this, addedItems, removedItems);
 
         private void UrlMap_ItemsCountChanged(object sender, int e)
         {
@@ -183,58 +180,31 @@ namespace StrixMusic.Sdk.Models.Merged
         public bool IsChangeEmailAsyncAvailable => _user.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index)
-        {
-            return _user.IsAddImageAvailableAsync(index);
-        }
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _user.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
-        {
-            return _user.IsRemoveImageAvailableAsync(index);
-        }
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _user.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index)
-        {
-            return _user.IsAddUrlAvailableAsync(index);
-        }
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _user.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
-        {
-            return _user.IsRemoveUrlAvailableAsync(index);
-        }
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _user.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDisplayNameAsync(string displayName)
-        {
-            return _user.ChangeDisplayNameAsync(displayName);
-        }
+        public Task ChangeDisplayNameAsync(string displayName, CancellationToken cancellationToken = default) => _user.ChangeDisplayNameAsync(displayName, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeBirthDateAsync(DateTime birthdate)
-        {
-            return _user.ChangeBirthDateAsync(birthdate);
-        }
+        public Task ChangeBirthDateAsync(DateTime birthdate, CancellationToken cancellationToken = default) => _user.ChangeBirthDateAsync(birthdate, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeFullNameAsync(string fullname)
-        {
-            return _user.ChangeFullNameAsync(fullname);
-        }
+        public Task ChangeFullNameAsync(string fullname, CancellationToken cancellationToken = default) => _user.ChangeFullNameAsync(fullname, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeRegionAsync(CultureInfo region)
-        {
-            return _user.ChangeRegionAsync(region);
-        }
+        public Task ChangeRegionAsync(CultureInfo region, CancellationToken cancellationToken = default) => _user.ChangeRegionAsync(region, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeEmailAsync(string? email)
-        {
-            return _user.ChangeEmailAsync(email);
-        }
+        public Task ChangeEmailAsync(string? email, CancellationToken cancellationToken = default) => _user.ChangeEmailAsync(email, cancellationToken);
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
@@ -242,61 +212,39 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _sources;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public ILibrary Library { get; }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
-        {
-            return _imageMap.GetItemsAsync(limit, offset);
-        }
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset)
-        {
-            return _urlMap.GetItemsAsync(limit, offset);
-        }
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index)
-        {
-            return _imageMap.InsertItem(image, index);
-        }
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _imageMap.InsertItemAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
-        {
-            return _user.RemoveImageAsync(index);
-        }
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _user.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(IUrl url, int index)
-        {
-            return _urlMap.InsertItem(url, index);
-        }
+        public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _urlMap.InsertItemAsync(url, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index)
-        {
-            return _urlMap.RemoveAt(index);
-        }
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _urlMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other)
-        {
+        public bool Equals(ICoreImageCollection other) =>
             // Users are never merged.
-            return false;
-        }
+            false;
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other)
-        {
+        public bool Equals(ICoreUrlCollection other) =>
             // User profiles are never merged.
-            return false;
-        }
+            false;
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
@@ -92,19 +93,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event CollectionChangedEventHandler<IGenre>? GenresChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? GenresCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public override Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
+            public override Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
             public override bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddGenreAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveGenreAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task RemoveGenreAsync(int index) => throw AccessedException;
+            public override Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
         }
 
         public class NoOverride : GenreCollectionPluginBase
@@ -139,19 +140,19 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event CollectionChangedEventHandler<IGenre>? GenresChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? GenresCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
+            public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
             public bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddGenreAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveGenreAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task RemoveGenreAsync(int index) => throw AccessedException;
+            public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
         }
     }
 }

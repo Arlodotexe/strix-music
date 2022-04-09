@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -436,87 +437,91 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailableAsync));
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailableAsync));
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailableAsync));
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddUrlAvailableAsync));
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddUrlAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailableAsync));
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailableAsync));
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveUrlAvailableAsync));
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveUrlAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailableAsync));
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsAddGenreAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddGenreAvailableAsync));
+        public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddGenreAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveGenreAvailableAsync));
+        public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveGenreAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDescriptionAsync(string? description) => _memberRemote.ReceiveDataAsync<object>(nameof(ChangeDescriptionAsync));
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => _memberRemote.ReceiveDataAsync<object>(nameof(ChangeDescriptionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDurationAsync(TimeSpan duration) => _memberRemote.RemoteWaitAsync(nameof(ChangeDurationAsync));
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(ChangeDurationAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeNameAsync(string name) => _memberRemote.RemoteWaitAsync(nameof(ChangeNameAsync));
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(ChangeNameAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDatePublishedAsync(DateTime datePublished) => _memberRemote.RemoteWaitAsync(nameof(ChangeDatePublishedAsync));
+        public Task ChangeDatePublishedAsync(DateTime datePublished, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(ChangeDatePublishedAsync));
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PauseArtistCollectionAsync));
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseArtistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseArtistCollectionAsync));
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PlayTrackCollectionAsync));
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => _memberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync(ICoreTrack track) => _memberRemote.RemoteWaitAsync(nameof(PlayTrackCollectionAsync));
-
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task PauseTrackCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
-
-        /// <inheritdoc />
-        [RemoteMethod]
-        public Task PlayTrackCollectionAsync() => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_getArtistsMutex))
             {
@@ -532,7 +537,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_getTracksMutex))
             {
@@ -548,7 +553,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_getImagesMutex))
             {
@@ -564,7 +569,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_getUrlsMutex))
             {
@@ -580,7 +585,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_getGenresMutex))
             {
@@ -596,43 +601,43 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddTrackAsync(ICoreTrack track, int index) => _memberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => _memberRemote.RemoteWaitAsync(nameof(AddArtistItemAsync));
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(AddArtistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddImageAsync(ICoreImage image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddUrlAsync(ICoreUrl image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddUrlAsync));
+        public Task AddUrlAsync(ICoreUrl image, int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(AddUrlAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddGenreAsync(ICoreGenre genre, int index) => _memberRemote.RemoteWaitAsync(nameof(AddGenreAsync));
+        public Task AddGenreAsync(ICoreGenre genre, int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(AddGenreAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveTrackAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveTrackAsync));
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(RemoveTrackAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveArtistItemAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveArtistItemAsync));
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(RemoveArtistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveImageAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveImageAsync));
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(RemoveImageAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveUrlAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveUrlAsync));
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(RemoveUrlAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveGenreAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveGenreAsync));
+        public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => _memberRemote.RemoteWaitAsync(nameof(RemoveGenreAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
