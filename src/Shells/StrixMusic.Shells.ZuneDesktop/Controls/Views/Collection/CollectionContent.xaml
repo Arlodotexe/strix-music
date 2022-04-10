@@ -205,7 +205,7 @@
                 <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
             </Grid.ColumnDefinitions>
 
-            <collections:ArtistCollection x:Name="ArtistCollection" Collection="{x:Bind DataRoot.Library}"
+            <zuneCollections:ZuneArtistCollection x:Name="ArtistCollection" Collection="{x:Bind DataRoot.Library}"
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
