@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
@@ -42,14 +43,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// Populates the next set of playlists into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMorePlaylistsAsync(int limit);
+        public Task PopulateMorePlaylistsAsync(int limit, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Loads the entire collection of <see cref="IPlaylistCollectionItem"/>s and ensures all sources are merged.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task InitPlaylistCollectionAsync();
+        public Task InitPlaylistCollectionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Initializes the list of the <see cref="IPlaylist"/>.

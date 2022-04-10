@@ -4,6 +4,7 @@
 
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Models;
 
@@ -25,8 +26,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// Populates the next set of children items into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreChildrenAsync(int limit);
+        public Task PopulateMoreChildrenAsync(int limit, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreChildrenAsync"/>

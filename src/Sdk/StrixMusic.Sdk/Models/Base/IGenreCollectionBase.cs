@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Base
@@ -21,20 +22,21 @@ namespace StrixMusic.Sdk.Models.Base
         /// Removes a genre from the collection.
         /// </summary>
         /// <param name="index">the position remove the genre from.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RemoveGenreAsync(int index);
+        Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if adding a genre to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new item can be added to the collection.</returns>
-        Task<bool> IsAddGenreAvailableAsync(int index);
+        Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if removing a genre to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the  item can be removed from the collection..</returns>
-        Task<bool> IsRemoveGenreAvailableAsync(int index);
+        Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the merged number of genres in the collection changes.

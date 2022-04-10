@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
@@ -123,18 +124,25 @@ namespace StrixMusic.Cores.LocalFiles
         public override event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc/>
-        public async override Task InitAsync()
+        public async override Task InitAsync(CancellationToken cancellationToken = default)
         {
             ChangeCoreState(CoreState.Loading);
 
-            await Settings.LoadAsync();
-            await FileSystem.InitAsync();
+            await Settings.LoadAsync(cancellationToken);
+            await FileSystem.InitAsync(cancellationToken);
 
-        GetConfig:
+            cancellationToken.ThrowIfCancellationRequested();
+
             var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (configuredFolder is null)
             {
+                // Let the user change settings for the selected folder before first scan.
+                ChangeCoreState(CoreState.NeedsConfiguration);
+
                 var pickedFolder = await FileSystem.PickFolder();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // No folder selected.
                 if (pickedFolder is null)
@@ -148,18 +156,16 @@ namespace StrixMusic.Cores.LocalFiles
 
                 AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
 
-                // Let the user change settings for the selected folder before first scan.
-                ChangeCoreState(CoreState.NeedsSetup);
-
                 await Flow.EventAsTask(x => _configPanel.ConfigDoneButton.Clicked += x, x => _configPanel.ConfigDoneButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
-                goto GetConfig;
+                return;
             }
+
+            ChangeCoreState(CoreState.Configured);
+            ChangeCoreState(CoreState.Loading);
 
             _configPanel.Subtitle = configuredFolder.Path;
             AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
-
-            ChangeCoreState(CoreState.Configured);
 
             // Load
             InstanceDescriptor = configuredFolder.Path;
@@ -171,10 +177,12 @@ namespace StrixMusic.Cores.LocalFiles
                 ScanTypes = GetScanTypesFromSettings(),
             };
 
-            await FileMetadataManager.InitAsync();
-            _ = FileMetadataManager.ScanAsync();
+            await FileMetadataManager.InitAsync(cancellationToken);
+            _ = FileMetadataManager.ScanAsync(cancellationToken);
 
-            await Library.Cast<FilesCoreLibrary>().InitAsync();
+            await Library.Cast<FilesCoreLibrary>().InitAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
             ChangeCoreState(CoreState.Loaded);
 
             _configPanel.ConfigDoneButton.Clicked += ConfigDoneButtonOnClicked;

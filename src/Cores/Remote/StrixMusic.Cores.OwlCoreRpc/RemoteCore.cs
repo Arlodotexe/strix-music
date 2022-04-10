@@ -6,8 +6,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using OwlCore.AbstractUI.Models;
@@ -266,7 +266,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         }
 
         /// <inheritdoc/>
-        public Task InitAsync() => Task.Run(async () =>
+        public Task InitAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             if (_memberRemote.Mode == RemotingMode.Host)
                 return;
@@ -296,15 +296,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        public Task<ICoreMember?> GetContextById(string id) => Task.Run(async () =>
+        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
-            var methodCallToken = $"{nameof(GetContextById)}.{id}";
+            var methodCallToken = $"{nameof(GetContextByIdAsync)}.{id}";
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
                 Guard.IsNotNull(_core, nameof(_core));
 
-                var result = await _core.GetContextById(id);
+                var result = await _core.GetContextByIdAsync(id, cancellationToken);
 
                 ICoreMember? remoteEnabledResult = result switch
                 {
@@ -337,15 +337,15 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => Task.Run(async () =>
+        public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
-            var methodCallToken = $"{nameof(GetMediaSource)}.{track.Id}";
+            var methodCallToken = $"{nameof(GetMediaSourceAsync)}.{track.Id}";
 
             if (_memberRemote.Mode == RemotingMode.Host)
             {
                 Guard.IsNotNull(_core, nameof(_core));
 
-                var result = await _core.GetMediaSource(track);
+                var result = await _core.GetMediaSourceAsync(track);
                 return await _memberRemote.PublishDataAsync(methodCallToken, result);
             }
             else if (_memberRemote.Mode == RemotingMode.Client)

@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -45,37 +46,37 @@ namespace StrixMusic.Sdk.Models.Base
         RepeatState RepeatState { get; }
 
         /// <summary>
-        /// If true, <see cref="IAudioPlayerBase.SeekAsync(TimeSpan)"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.SeekAsync(TimeSpan, CancellationToken)"/> is supported.
         /// </summary>
         bool IsSeekAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="IAudioPlayerBase.ResumeAsync()"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.ResumeAsync(CancellationToken)"/> is supported.
         /// </summary>
         bool IsResumeAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="IAudioPlayerBase.PauseAsync()"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.PauseAsync(CancellationToken)"/> is supported.
         /// </summary>
         bool IsPauseAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="IAudioPlayerBase.ChangeVolumeAsync(double)"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.ChangeVolumeAsync(double, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangeVolumeAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="IAudioPlayerBase.ChangePlaybackSpeedAsync(double)"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.ChangePlaybackSpeedAsync(double, CancellationToken)"/> is supported.
         /// </summary>
         bool IsChangePlaybackSpeedAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="NextAsync()"/> is supported.
+        /// If true, <see cref="NextAsync(CancellationToken)"/> is supported.
         /// </summary>
         bool IsNextAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="PreviousAsync()"/> is supported.
+        /// If true, <see cref="PreviousAsync(CancellationToken)"/> is supported.
         /// </summary>
         bool IsPreviousAsyncAvailable { get; }
 
@@ -92,32 +93,37 @@ namespace StrixMusic.Sdk.Models.Base
         /// <summary>
         /// Advances to the next track. If there is no next track, playback is paused.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task NextAsync();
+        Task NextAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Goes to the previous track.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PreviousAsync();
+        Task PreviousAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ToggleShuffleAsync();
+        Task ToggleShuffleAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Asks the device to toggle to the next repeat state.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ToggleRepeatAsync();
+        Task ToggleRepeatAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Switches to this device.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SwitchToAsync();
+        Task SwitchToAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when <see cref="IsActive"/> changes.

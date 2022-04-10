@@ -1,5 +1,6 @@
 ﻿using StrixMusic.Sdk.MediaPlayback;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
@@ -28,37 +29,37 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             
         }
 
-        public Task ChangePlaybackSpeedAsync(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task ChangeVolumeAsync(double volume)
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task PauseAsync()
+        public Task PauseAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task Play(PlaybackItem sourceConfig)
+        public Task Play(PlaybackItem sourceConfig, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task Preload(PlaybackItem sourceConfig)
+        public Task Preload(PlaybackItem sourceConfig, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task ResumeAsync()
+        public Task ResumeAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task SeekAsync(TimeSpan position)
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
@@ -144,7 +145,7 @@ namespace StrixMusic.Services
         public double PlaybackSpeed => _player.MediaPlayer.PlaybackSession.PlaybackRate;
 
         /// <inheritdoc />
-        public async Task Play(PlaybackItem playbackItem)
+        public async Task Play(PlaybackItem playbackItem, CancellationToken cancellationToken = default)
         {
             var sourceConfig = playbackItem.MediaConfig;
 
@@ -178,7 +179,7 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
-        public Task Preload(PlaybackItem playbackItem)
+        public Task Preload(PlaybackItem playbackItem, CancellationToken cancellationToken = default)
         {
             var sourceConfig = playbackItem.MediaConfig;
 
@@ -190,8 +191,9 @@ namespace StrixMusic.Services
             return Task.CompletedTask;
         }
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task PauseAsync()
+        public Task PauseAsync(CancellationToken cancellationToken = default)
         {
             return Threading.OnPrimaryThread(() =>
             {
@@ -199,8 +201,9 @@ namespace StrixMusic.Services
             });
         }
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task ResumeAsync()
+        public Task ResumeAsync(CancellationToken cancellationToken = default)
         {
             return Threading.OnPrimaryThread(() =>
             {
@@ -209,7 +212,7 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume)
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default)
         {
             return Threading.OnPrimaryThread(() =>
             {
@@ -218,7 +221,7 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default)
         {
             return Threading.OnPrimaryThread(() =>
             {
@@ -227,7 +230,7 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position)
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
         {
             return Threading.OnPrimaryThread(() =>
             {

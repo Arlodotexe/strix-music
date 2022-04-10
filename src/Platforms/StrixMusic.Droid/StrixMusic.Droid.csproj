@@ -98,7 +98,7 @@
       <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="OwlCore">
-      <Version>0.0.58</Version>
+      <Version>0.0.63</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
@@ -109,7 +109,7 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI">
-      <Version>4.0.11</Version>
+      <Version>4.0.13</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging">
       <Version>4.0.11</Version>

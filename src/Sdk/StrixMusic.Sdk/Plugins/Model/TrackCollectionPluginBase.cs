@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -244,22 +245,22 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Task AddImageAsync(IImage image, int index) => InnerImageCollection.AddImageAsync(image, index);
+        virtual public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddTrackAsync(ITrack track, int index) => Inner.AddTrackAsync(track, index);
+        virtual public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => Inner.AddTrackAsync(track, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddUrlAsync(IUrl url, int index) => InnerUrlCollection.AddUrlAsync(url, index);
+        virtual public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeDescriptionAsync(string? description) => InnerPlayable.ChangeDescriptionAsync(description);
+        virtual public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeDurationAsync(TimeSpan duration) => InnerPlayable.ChangeDurationAsync(duration);
+        virtual public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeNameAsync(string name) => InnerPlayable.ChangeNameAsync(name);
+        virtual public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => InnerPlayable.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
         virtual public bool Equals(ICoreTrackCollection other) => Inner.Equals(other);
@@ -271,52 +272,52 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => InnerImageCollection.GetImagesAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => Inner.GetTracksAsync(limit, offset);
+        virtual public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => InnerUrlCollection.GetUrlsAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
+        virtual public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddTrackAvailableAsync(int index) => Inner.IsAddTrackAvailableAsync(index);
+        virtual public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
+        virtual public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
+        virtual public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveTrackAvailableAsync(int index) => Inner.IsRemoveTrackAvailableAsync(index);
+        virtual public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
+        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PauseTrackCollectionAsync() => Inner.PauseTrackCollectionAsync();
+        virtual public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => Inner.PauseTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PlayTrackCollectionAsync(ITrack track) => Inner.PlayTrackCollectionAsync(track);
+        virtual public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => Inner.PlayTrackCollectionAsync(track, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task PlayTrackCollectionAsync() => Inner.PlayTrackCollectionAsync();
+        virtual public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => Inner.PlayTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
+        virtual public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveTrackAsync(int index) => Inner.RemoveTrackAsync(index);
+        virtual public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveTrackAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
+        virtual public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);
+        virtual public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync()

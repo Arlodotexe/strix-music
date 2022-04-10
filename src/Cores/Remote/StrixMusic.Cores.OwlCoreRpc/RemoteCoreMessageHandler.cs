@@ -53,7 +53,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public event EventHandler<IRemoteMessage>? MessageReceived;
 
         /// <inheritdoc/>
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             IsInitialized = true;
             return Task.CompletedTask;

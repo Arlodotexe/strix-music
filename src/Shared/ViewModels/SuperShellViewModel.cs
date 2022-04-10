@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
@@ -11,8 +12,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using NLog;
-using NLog.Targets;
 using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
@@ -23,14 +22,11 @@ using StrixMusic.Sdk.Messages;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno;
-using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.UI.Xaml;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -88,7 +84,7 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return;
@@ -97,11 +93,11 @@ namespace StrixMusic.Shared.ViewModels
 
             IsInitialized = true;
             
-            await _settings.LoadAsync();
+            await _settings.LoadAsync(cancellationToken);
             _loggingToggle.State = _settings.IsLoggingEnabled;
 
             SetupCores();
-            await ShellSelectorViewModel.InitAsync();
+            await ShellSelectorViewModel.InitAsync(cancellationToken);
 
             _logger.LogInformation($"Completed {nameof(InitAsync)}");
         }
@@ -202,7 +198,7 @@ namespace StrixMusic.Shared.ViewModels
 
             var relevantCore = mainViewModel.Cores.First(x => x.InstanceId == core.InstanceId);
 
-            if (e == CoreState.NeedsSetup)
+            if (e == CoreState.NeedsConfiguration)
             {
                 _ = Threading.OnPrimaryThread(() => CurrentCoreConfig = relevantCore);
             }

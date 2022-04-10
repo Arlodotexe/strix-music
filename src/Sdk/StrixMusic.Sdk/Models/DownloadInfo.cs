@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Models
     /// <summary>
     /// Holds information about a download operation.
     /// </summary>
-    public struct DownloadInfo : System.IEquatable<DownloadInfo>
+    public readonly struct DownloadInfo : System.IEquatable<DownloadInfo>
     {
         /// <summary>
         /// Creates an instance of the <see cref="DownloadInfo"/> struct.
@@ -15,6 +15,7 @@ namespace StrixMusic.Sdk.Models
         public DownloadInfo(DownloadState state)
         {
             State = state;
+            Progress = default;
         }
 
         /// <summary>
@@ -29,12 +30,12 @@ namespace StrixMusic.Sdk.Models
         /// <summary>
         /// A value between 0 and 65535 representing how much of this playable item has been downloaded for offline playback.
         /// </summary>
-        public ushort Progress { get; } = default;
+        public ushort Progress { get; }
 
         /// <summary>
         /// The current download state.
         /// </summary>
-        public DownloadState State { get; } = default;
+        public DownloadState State { get; }
 
         /// <inheritdoc />
         public override bool Equals(object obj) => obj is DownloadInfo status && Equals(status);
@@ -42,10 +43,10 @@ namespace StrixMusic.Sdk.Models
         /// <inheritdoc />
         public override int GetHashCode() => State.GetHashCode() + Progress.GetHashCode();
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="Equals(object)" />
         public static bool operator ==(DownloadInfo left, DownloadInfo right) => left.Equals(right);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="Equals(object)" />
         public static bool operator !=(DownloadInfo left, DownloadInfo right) => !(left == right);
 
         /// <inheritdoc />

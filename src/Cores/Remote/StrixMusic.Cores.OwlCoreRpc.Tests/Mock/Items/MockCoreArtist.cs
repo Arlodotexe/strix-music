@@ -4,6 +4,8 @@ using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items
@@ -82,42 +84,42 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items
         public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
         public event EventHandler<int>? GenresCountChanged;
 
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddGenreAsync(ICoreGenre genre, int index)
+        public Task AddGenreAsync(ICoreGenre genre, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddUrlAsync(ICoreUrl url, int index)
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -127,134 +129,134 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items
             throw new NotImplementedException();
         }
 
-        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
             yield return MockCoreItemFactory.CreateAlbum(SourceCore);
         }
 
-        public IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerable.Empty<ICoreGenre>();
         }
 
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
             yield return MockCoreItemFactory.CreateTrack(SourceCore);
         }
 
-        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index)
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddGenreAvailableAsync(int index)
+        public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddTrackAvailableAsync(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddUrlAvailableAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index)
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveGenreAvailableAsync(int index)
+        public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PauseAlbumCollectionAsync()
+        public Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PauseTrackCollectionAsync()
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayAlbumCollectionAsync()
+        public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayTrackCollectionAsync()
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveAlbumItemAsync(int index)
+        public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveGenreAsync(int index)
+        public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveTrackAsync(int index)
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

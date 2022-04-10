@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
@@ -82,7 +83,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override DownloadInfo DownloadInfo => throw AccessedException;
             public override event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public override Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
             public override ValueTask DisposeAsync() => throw AccessedException;
         }
 
@@ -114,7 +115,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
-            public Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
         }
     }
 }

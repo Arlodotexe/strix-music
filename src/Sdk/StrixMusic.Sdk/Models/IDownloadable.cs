@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models
@@ -17,7 +18,7 @@ namespace StrixMusic.Sdk.Models
         /// Begins a download operation for this playable item.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task StartDownloadOperationAsync(DownloadOperation operation);
+        Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when <see cref="DownloadInfo"/> is updated.

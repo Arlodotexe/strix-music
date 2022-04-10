@@ -35,7 +35,6 @@ namespace StrixMusic.Sdk
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
 
-        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new();
         private readonly List<ICore> _sources = new();
 
         private MergedLibrary? _mergedLibrary;
@@ -164,10 +163,10 @@ namespace StrixMusic.Sdk
         public CoreViewModel GetLoadedCore(ICore reference) => Cores.First(x => x.InstanceId == reference.InstanceId);
 
         /// <summary>
-        /// Initializes and loads the ViewModel, including initializing all cores in the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
+        /// Initializes and loads the ViewModel, including initializing all registered cores.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             Plugins.ModelPlugins = GlobalModelPluginConnector.Create(Plugins.ModelPlugins);
 
@@ -236,7 +235,7 @@ namespace StrixMusic.Sdk
             if (coreMetadata.SdkVer != currentSdkVersion)
             {
                 _notificationService.RaiseNotification(
-                    $"{coreMetadata.DisplayName} not compatible", 
+                    $"{coreMetadata.DisplayName} not compatible",
                     $"Uses SDK version {coreMetadata.SdkVer}, which is not compatible with the current version {currentSdkVersion}.");
 
                 return null;
@@ -262,94 +261,38 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         public async Task InitCore(ICore core)
         {
+        Begin:
             var setupCancellationTokenSource = new CancellationTokenSource();
-            _coreInitCancellationTokens.GetOrAdd(core.InstanceId, setupCancellationTokenSource);
 
-            // If the core requests setup, cancel the init task.
-            // Then wait for the core state to change to Configured.
-            core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
-
-            var cancelled = true;
-
-            try
+            if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsConfiguration)
             {
-#warning Improper cancellation. Refactor to pass the token directly.
-                await Task.Run(() => core.InitAsync(), setupCancellationTokenSource.Token);
-            }
-            #warning Handle special exceptions like HttpException + catch all others
-            catch (OperationCanceledException)
-            {
-                cancelled = true;
-            }
-
-            _coreInitCancellationTokens.Remove(core.InstanceId);
-
-            if (core.CoreState == CoreState.Configured || core.CoreState == CoreState.Loaded)
-            {
-                setupCancellationTokenSource.Dispose();
-            }
-            else if (core.CoreState == CoreState.Unloaded || cancelled)
-            {
-                setupCancellationTokenSource.Dispose();
-                await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
-            }
-            else if (setupCancellationTokenSource.IsCancellationRequested)
-            {
-                // TODO: Re-evaluate. Is the loop/EventAsTask needed? Can we just check state and do a recursive local function call?
-                while (true)
+                try
                 {
-                    // Wait for the configuration to complete.
-                    var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
-                    var updatedState = await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
-
-                    // Timed out or cancelled.
-                    if (updatedState is null || updatedState.Value.Result == CoreState.Unloaded)
-                    {
-                        setupCancellationTokenSource.Dispose();
-                        await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
-                        break;
-                    }
-
-                    if (updatedState.Value.Result == CoreState.NeedsSetup)
-                    {
-                        // If the user needs to set up the core, wait for another state change.
-                        // Displaying the config UI is handled in the relevant ViewModel.
-                        continue;
-                    }
-
-                    if (updatedState.Value.Result == CoreState.Configured)
-                    {
-                        await InitCore(core);
-                    }
-
-                    break;
+                    await core.InitAsync(setupCancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    if (!setupCancellationTokenSource.IsCancellationRequested)
+                        setupCancellationTokenSource.Cancel();
                 }
             }
 
-            core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
-
-            setupCancellationTokenSource.Dispose();
-        }
-
-        /// <summary>
-        /// Method fires if core configuration is requested during InitAsync.
-        /// </summary>
-        private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
-        {
-            if (sender is not ICore core)
+            if (setupCancellationTokenSource.IsCancellationRequested || core.CoreState == CoreState.Unloaded)
             {
-                ThrowHelper.ThrowInvalidOperationException();
+                setupCancellationTokenSource.Dispose();
+                await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
                 return;
             }
 
-            if (e == CoreState.NeedsSetup)
+            if (core.CoreState == CoreState.NeedsConfiguration)
             {
-                var cancellationToken = _coreInitCancellationTokens.First(x => x.Key == core.InstanceId).Value;
-
-                cancellationToken.Cancel();
-
-                core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
+                // If the user needs to provide information for setup to continue, wait for another state change.
+                // Display of the configuration UI is handled elsewhere.
+                await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, TimeSpan.FromMinutes(10));
+                goto Begin;
             }
+
+            setupCancellationTokenSource.Dispose();
         }
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)

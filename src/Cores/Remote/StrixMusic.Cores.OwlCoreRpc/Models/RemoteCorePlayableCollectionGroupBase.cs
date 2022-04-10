@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
@@ -506,7 +508,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddChildAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddChildAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddChildAvailableAsync)}.{index}";
 
@@ -526,7 +528,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddPlaylistItemAvailableAsync)}.{index}";
 
@@ -546,7 +548,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddTrackAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddTrackAvailableAsync)}.{index}";
 
@@ -566,7 +568,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddArtistItemAvailableAsync)}.{index}";
 
@@ -586,7 +588,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddAlbumItemAvailableAsync)}.{index}";
 
@@ -606,7 +608,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddImageAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddImageAvailableAsync)}.{index}";
 
@@ -626,7 +628,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddUrlAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsAddUrlAvailableAsync)}.{index}";
 
@@ -646,7 +648,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveTrackAvailableAsync)}.{index}";
 
@@ -666,7 +668,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveImageAvailableAsync)}.{index}";
 
@@ -686,7 +688,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveUrlAvailableAsync)}.{index}";
 
@@ -706,7 +708,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemovePlaylistItemAvailableAsync)}.{index}";
 
@@ -726,7 +728,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveAlbumItemAvailableAsync)}.{index}";
 
@@ -746,7 +748,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveArtistItemAvailableAsync)}.{index}";
 
@@ -766,7 +768,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveChildAvailableAsync(int index) => Task.Run(async () =>
+        public Task<bool> IsRemoveChildAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(IsRemoveChildAvailableAsync)}.{index}";
 
@@ -786,7 +788,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDescriptionAsync(string? description) => Task.Run(async () =>
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(ChangeDescriptionAsync)}.{description}";
 
@@ -806,7 +808,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDurationAsync(TimeSpan duration) => Task.Run(async () =>
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(ChangeDurationAsync)}.{duration}";
 
@@ -826,7 +828,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeNameAsync(string name) => Task.Run(async () =>
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(ChangeNameAsync)}.{name}";
 
@@ -844,9 +846,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseAlbumCollectionAsync() => Task.Run(async () =>
+        public Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PauseAlbumCollectionAsync)}";
 
@@ -864,9 +867,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync() => Task.Run(async () =>
+        public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayAlbumCollectionAsync)}";
 
@@ -884,9 +888,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseArtistCollectionAsync() => Task.Run(async () =>
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PauseArtistCollectionAsync)}";
 
@@ -904,9 +909,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync() => Task.Run(async () =>
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayArtistCollectionAsync)}";
 
@@ -924,9 +930,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlaylistCollectionAsync() => Task.Run(async () =>
+        public Task PausePlaylistCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PausePlaylistCollectionAsync)}";
 
@@ -944,9 +951,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync() => Task.Run(async () =>
+        public Task PlayPlaylistCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayPlaylistCollectionAsync)}";
 
@@ -964,9 +972,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseTrackCollectionAsync() => Task.Run(async () =>
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PauseTrackCollectionAsync)}";
 
@@ -984,9 +993,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync() => Task.Run(async () =>
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayTrackCollectionAsync)}";
 
@@ -1006,7 +1016,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem) => Task.Run(async () =>
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayAlbumCollectionAsync)}";
 
@@ -1024,9 +1034,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync() => Task.Run(async () =>
+        public Task PlayPlayableCollectionGroupAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayPlayableCollectionGroupAsync)}";
 
@@ -1044,9 +1055,10 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
         });
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlayableCollectionGroupAsync() => Task.Run(async () =>
+        public Task PausePlayableCollectionGroupAsync(CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PausePlayableCollectionGroupAsync)}";
 
@@ -1066,7 +1078,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem) => Task.Run(async () =>
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayPlaylistCollectionAsync)}";
 
@@ -1086,7 +1098,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => Task.Run(async () =>
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayArtistCollectionAsync)}";
 
@@ -1106,7 +1118,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup) => Task.Run(async () =>
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayPlayableCollectionGroupAsync)}";
 
@@ -1126,7 +1138,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync(ICoreTrack track) => Task.Run(async () =>
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(PlayTrackCollectionAsync)}";
 
@@ -1146,7 +1158,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetChildrenAsync)}.{limit}.{offset}";
 
@@ -1173,7 +1185,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetPlaylistItemsAsync)}.{limit}.{offset}";
 
@@ -1200,7 +1212,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetAlbumItemsAsync)}.{limit}.{offset}";
 
@@ -1227,7 +1239,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetArtistItemsAsync)}.{limit}.{offset}";
 
@@ -1254,7 +1266,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetTracksAsync)}.{limit}.{offset}";
 
@@ -1281,7 +1293,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetImagesAsync)}.{limit}.{offset}";
 
@@ -1308,7 +1320,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var callToken = $"{nameof(GetUrlsAsync)}.{limit}.{offset}";
 
@@ -1339,7 +1351,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddTrackAsync(ICoreTrack track, int index) => Task.Run(async () =>
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddTrackAsync)}.{index}";
 
@@ -1363,7 +1375,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => Task.Run(async () =>
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddArtistItemAsync)}.{index}";
 
@@ -1387,7 +1399,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index) => Task.Run(async () =>
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddAlbumItemAsync)}.{index}";
 
@@ -1411,7 +1423,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => Task.Run(async () =>
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddPlaylistItemAsync)}.{index}";
 
@@ -1435,7 +1447,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index) => Task.Run(async () =>
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddChildAsync)}.{index}";
 
@@ -1459,7 +1471,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddImageAsync(ICoreImage image, int index) => Task.Run(async () =>
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddImageAsync)}.{index}";
 
@@ -1483,7 +1495,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
-        public Task AddUrlAsync(ICoreUrl url, int index) => Task.Run(async () =>
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(AddUrlAsync)}.{index}";
 
@@ -1503,7 +1515,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveTrackAsync(int index) => Task.Run(async () =>
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveTrackAsync)}.{index}";
 
@@ -1523,7 +1535,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveArtistItemAsync(int index) => Task.Run(async () =>
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveArtistItemAsync)}.{index}";
 
@@ -1543,7 +1555,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveAlbumItemAsync(int index) => Task.Run(async () =>
+        public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveAlbumItemAsync)}.{index}";
 
@@ -1563,7 +1575,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemovePlaylistItemAsync(int index) => Task.Run(async () =>
+        public Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemovePlaylistItemAsync)}.{index}";
 
@@ -1583,7 +1595,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveChildAsync(int index) => Task.Run(async () =>
+        public Task RemoveChildAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveChildAsync)}.{index}";
 
@@ -1603,7 +1615,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveImageAsync(int index) => Task.Run(async () =>
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveImageAsync)}.{index}";
 
@@ -1623,7 +1635,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveUrlAsync(int index) => Task.Run(async () =>
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(RemoveUrlAsync)}.{index}";
 

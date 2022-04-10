@@ -17,12 +17,12 @@ namespace StrixMusic.Sdk.Models
         Unloaded,
 
         /// <summary>
-        /// The core need configuration data and has requested that the setup process be started.
+        /// The core requires input from the user.
         /// </summary>
-        NeedsSetup,
+        NeedsConfiguration,
 
         /// <summary>
-        /// The core has all data it needs to be used without user interaction.
+        /// The core has all data it needs to be used without further user interaction.
         /// </summary>
         Configured,
 

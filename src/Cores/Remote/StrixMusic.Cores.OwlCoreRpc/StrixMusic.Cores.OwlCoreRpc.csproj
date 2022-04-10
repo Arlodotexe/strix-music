@@ -17,7 +17,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
-		<PackageReference Include="OwlCore" Version="0.0.61" />
+		<PackageReference Include="OwlCore" Version="0.0.63" />
 	</ItemGroup>
 
 	<ItemGroup>

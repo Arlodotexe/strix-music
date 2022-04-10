@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -55,7 +56,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Task AddGenreAsync(IGenre gene, int index) => Inner.AddGenreAsync(gene, index);
+        virtual public Task AddGenreAsync(IGenre gene, int index, CancellationToken cancellationToken = default) => Inner.AddGenreAsync(gene, index, cancellationToken);
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
@@ -64,15 +65,15 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => Inner.GetGenresAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddGenreAvailableAsync(int index) => Inner.IsAddGenreAvailableAsync(index);
+        virtual public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveGenreAvailableAsync(int index) => Inner.IsRemoveGenreAvailableAsync(index);
+        virtual public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveGenreAsync(int index) => Inner.RemoveGenreAsync(index);
+        virtual public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveGenreAsync(index, cancellationToken);
     }
 }

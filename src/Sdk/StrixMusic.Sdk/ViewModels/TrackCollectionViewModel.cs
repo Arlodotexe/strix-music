@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _collection.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>((x, y) => _collection.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x)), y));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -77,14 +77,14 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitTrackCollectionAsync());
+            return Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitTrackCollectionAsync(cancellationToken));
         }
 
         private void AttachEvents()
@@ -405,70 +405,70 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailableAsync(int index) => _collection.IsAddTrackAvailableAsync(index);
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsAddTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _collection.IsRemoveTrackAvailableAsync(index);
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsRemoveTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index) => _collection.IsAddImageAvailableAsync(index);
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _collection.IsRemoveImageAvailableAsync(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _collection.IsAddUrlAvailableAsync(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _collection.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation) => _collection.StartDownloadOperationAsync(operation);
+        public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => _collection.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => ChangeNameInternalAsync(name, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index) => _collection.AddTrackAsync(track, index);
+        public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _collection.AddTrackAsync(track, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index) => _collection.RemoveTrackAsync(index);
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => _collection.RemoveTrackAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => _collection.AddImageAsync(image, index);
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _collection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _collection.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(IUrl image, int index) => _collection.AddUrlAsync(image, index);
+        public Task AddUrlAsync(IUrl image, int index, CancellationToken cancellationToken = default) => _collection.AddUrlAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _collection.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _collection.GetTracksAsync(limit, offset);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collection.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collection.GetImagesAsync(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collection.GetUrlsAsync(limit, offset);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _collection.PlayTrackCollectionAsync();
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => _collection.PlayTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => _collection.PlayTrackCollectionAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _collection.PlayTrackCollectionAsync(track, cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _collection.PauseTrackCollectionAsync();
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => _collection.PauseTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => _collection.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _collection.ChangeDurationAsync(duration, cancellationToken);
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -480,11 +480,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
-                var items = await _collection.GetTracksAsync(limit, Tracks.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
+                var items = await _collection.GetTracksAsync(limit, Tracks.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -495,11 +496,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
-                var items = await _collection.GetImagesAsync(limit, Images.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
+                var items = await _collection.GetImagesAsync(limit, Images.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -510,11 +512,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
-                var items = await _collection.GetUrlsAsync(limit, Urls.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
+                var items = await _collection.GetUrlsAsync(limit, Urls.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -525,10 +528,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc/>
-        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollection(this, cancellationToken);
 
         /// <inheritdoc />
         public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
@@ -584,10 +587,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => _collection.Equals(other);
 
-        private Task ChangeNameInternalAsync(string? name)
+        private Task ChangeNameInternalAsync(string? name, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(name, nameof(name));
-            return _collection.ChangeNameAsync(name);
+            return _collection.ChangeNameAsync(name, cancellationToken);
         }
 
         /// <inheritdoc />

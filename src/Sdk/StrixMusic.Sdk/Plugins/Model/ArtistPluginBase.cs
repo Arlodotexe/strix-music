@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -86,7 +87,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
 
         /// <inheritdoc/>
-        public virtual Task StartDownloadOperationAsync(DownloadOperation operation) => InnerDownloadable.StartDownloadOperationAsync(operation);
+        public virtual Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
@@ -96,13 +97,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddImageAvailableAsync(int index) => InnerImageCollection.IsAddImageAvailableAsync(index);
+        public virtual Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveImageAvailableAsync(int index) => InnerImageCollection.IsRemoveImageAvailableAsync(index);
+        public virtual Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task RemoveImageAsync(int index) => InnerImageCollection.RemoveImageAsync(index);
+        public virtual Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual int TotalImageCount => InnerImageCollection.TotalImageCount;
@@ -147,10 +148,10 @@ namespace StrixMusic.Sdk.Plugins.Model
             ((IMerged<ICoreAlbumCollection>)InnerAlbumCollection).Sources;
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => InnerImageCollection.GetImagesAsync(limit, offset);
+        public virtual Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task AddImageAsync(IImage image, int index) => InnerImageCollection.AddImageAsync(image, index);
+        public virtual Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IImage>? ImagesChanged
@@ -163,13 +164,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
         /// <inheritdoc/>
-        public virtual Task RemoveUrlAsync(int index) => InnerUrlCollection.RemoveUrlAsync(index);
+        public virtual Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddUrlAvailableAsync(int index) => InnerUrlCollection.IsAddUrlAvailableAsync(index);
+        public virtual Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index);
+        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<int>? UrlsCountChanged
@@ -182,10 +183,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => InnerUrlCollection.GetUrlsAsync(limit, offset);
+        public virtual Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task AddUrlAsync(IUrl url, int index) => InnerUrlCollection.AddUrlAsync(url, index);
+        public virtual Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IUrl>? UrlsChanged
@@ -198,13 +199,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual int TotalGenreCount => InnerGenreCollection.TotalGenreCount;
 
         /// <inheritdoc/>
-        public virtual Task RemoveGenreAsync(int index) => InnerGenreCollection.RemoveGenreAsync(index);
+        public virtual Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => InnerGenreCollection.RemoveGenreAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddGenreAvailableAsync(int index) => InnerGenreCollection.IsAddGenreAvailableAsync(index);
+        public virtual Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerGenreCollection.IsAddGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveGenreAvailableAsync(int index) => InnerGenreCollection.IsRemoveGenreAvailableAsync(index);
+        public virtual Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerGenreCollection.IsRemoveGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<int>? GenresCountChanged
@@ -217,10 +218,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool Equals(ICoreGenreCollection other) => InnerGenreCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => InnerGenreCollection.GetGenresAsync(limit, offset);
+        public virtual Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerGenreCollection.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task AddGenreAsync(IGenre genre, int index) => InnerGenreCollection.AddGenreAsync(genre, index);
+        public virtual Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => InnerGenreCollection.AddGenreAsync(genre, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IGenre>? GenresChanged
@@ -257,13 +258,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool IsChangeDurationAsyncAvailable => InnerPlayable.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual Task ChangeNameAsync(string name) => InnerPlayable.ChangeNameAsync(name);
+        public virtual Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => InnerPlayable.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task ChangeDescriptionAsync(string? description) => InnerPlayable.ChangeDescriptionAsync(description);
+        public virtual Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task ChangeDurationAsync(TimeSpan duration) => InnerPlayable.ChangeDurationAsync(duration);
+        public virtual Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -334,19 +335,19 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool IsPauseTrackCollectionAsyncAvailable => InnerTrackCollection.IsPauseTrackCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual Task PlayTrackCollectionAsync() => InnerTrackCollection.PlayTrackCollectionAsync();
+        public virtual Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => InnerTrackCollection.PlayTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task PauseTrackCollectionAsync() => InnerTrackCollection.PauseTrackCollectionAsync();
+        public virtual Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => InnerTrackCollection.PauseTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task RemoveTrackAsync(int index) => InnerTrackCollection.RemoveTrackAsync(index);
+        public virtual Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => InnerTrackCollection.RemoveTrackAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddTrackAvailableAsync(int index) => InnerTrackCollection.IsAddTrackAvailableAsync(index);
+        public virtual Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerTrackCollection.IsAddTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveTrackAvailableAsync(int index) => InnerTrackCollection.IsRemoveTrackAvailableAsync(index);
+        public virtual Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerTrackCollection.IsRemoveTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
@@ -373,13 +374,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool Equals(ICoreTrackCollection other) => InnerTrackCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task PlayTrackCollectionAsync(ITrack track) => InnerTrackCollection.PlayTrackCollectionAsync(track);
+        public virtual Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => InnerTrackCollection.PlayTrackCollectionAsync(track, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => InnerTrackCollection.GetTracksAsync(limit, offset);
+        public virtual Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerTrackCollection.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task AddTrackAsync(ITrack track, int index) => InnerTrackCollection.AddTrackAsync(track, index);
+        public virtual Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => InnerTrackCollection.AddTrackAsync(track, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<ITrack>? TracksChanged
@@ -398,19 +399,19 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool IsPauseAlbumCollectionAsyncAvailable => InnerAlbumCollection.IsPauseAlbumCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual Task PlayAlbumCollectionAsync() => InnerAlbumCollection.PlayAlbumCollectionAsync();
+        public virtual Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default) => InnerAlbumCollection.PlayAlbumCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task PauseAlbumCollectionAsync() => InnerAlbumCollection.PauseAlbumCollectionAsync();
+        public virtual Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default) => InnerAlbumCollection.PauseAlbumCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task RemoveAlbumItemAsync(int index) => InnerAlbumCollection.RemoveAlbumItemAsync(index);
+        public virtual Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default) => InnerAlbumCollection.RemoveAlbumItemAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsAddAlbumItemAvailableAsync(int index) => InnerAlbumCollection.IsAddAlbumItemAvailableAsync(index);
+        public virtual Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerAlbumCollection.IsAddAlbumItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => InnerAlbumCollection.IsRemoveAlbumItemAvailableAsync(index);
+        public virtual Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerAlbumCollection.IsRemoveAlbumItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
@@ -440,13 +441,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool Equals(ICoreAlbumCollection other) => InnerAlbumCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => InnerAlbumCollection.PlayAlbumCollectionAsync(albumItem);
+        public virtual Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => InnerAlbumCollection.PlayAlbumCollectionAsync(albumItem, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => InnerAlbumCollection.GetAlbumItemsAsync(limit, offset);
+        public virtual Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerAlbumCollection.GetAlbumItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => InnerAlbumCollection.AddAlbumItemAsync(album, index);
+        public virtual Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => InnerAlbumCollection.AddAlbumItemAsync(album, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged

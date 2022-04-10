@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -59,9 +60,6 @@ namespace StrixMusic.Sdk.Models
         public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
@@ -111,9 +109,6 @@ namespace StrixMusic.Sdk.Models
         public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc />
-        public Uri? Url { get; set; }
-
-        /// <inheritdoc />
         public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc />
@@ -156,91 +151,79 @@ namespace StrixMusic.Sdk.Models
         public bool IsChangeDurationAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailableAsync(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailableAsync(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailableAsync(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index)
-        {
-            return Task.FromResult(true);
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
-        {
-            return Task.FromResult(true);
-        }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync()
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index)
+        public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default)
         {
             Tracks.InsertOrAdd(index, track);
 
@@ -248,7 +231,7 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index)
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             Tracks.RemoveAt(index);
 
@@ -256,7 +239,7 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index)
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default)
         {
             Images.InsertOrAdd(index, image);
 
@@ -264,7 +247,7 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             Images.RemoveAt(index);
 
@@ -272,7 +255,7 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc/>
-        public Task AddUrlAsync(IUrl url, int index)
+        public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default)
         {
             Urls.InsertOrAdd(index, url);
 
@@ -280,7 +263,7 @@ namespace StrixMusic.Sdk.Models
         }
 
         /// <inheritdoc/>
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             Urls.RemoveAt(index);
 
@@ -306,25 +289,25 @@ namespace StrixMusic.Sdk.Models
         public IReadOnlyList<ICoreUrlCollection> Sources => _sources;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IReadOnlyList<IImage>>(Images.Skip(offset).Take(limit).ToList());
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset)
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IReadOnlyList<IUrl>>(Urls.Skip(offset).Take(limit).ToList());
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
+        public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset)
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IReadOnlyList<ITrack>>(Tracks.Skip(offset).Take(limit).ToList());
         }
@@ -334,9 +317,6 @@ namespace StrixMusic.Sdk.Models
 
         /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other) => false;
-
-        /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => false;
 
         /// <inheritdoc/>
         public bool Equals(ICoreUrlCollection other) => false;
@@ -348,9 +328,6 @@ namespace StrixMusic.Sdk.Models
         public bool Equals(ICorePlaylist other) => false;
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
+        public ValueTask DisposeAsync() => default;
     }
 }

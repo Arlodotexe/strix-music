@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
 
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _model.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>()));
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>((x, y) => _model.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(), y));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -572,107 +572,108 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeIsExplicitAsyncAvailable => _model.IsChangeIsExplicitAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _model.IsAddArtistItemAvailableAsync(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsAddArtistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index) => _model.IsAddImageAvailableAsync(index);
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailableAsync(int index) => _model.IsAddGenreAvailableAsync(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsAddGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _model.IsAddUrlAvailableAsync(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _model.IsRemoveArtistItemAvailableAsync(index);
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsRemoveArtistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _model.IsRemoveImageAvailableAsync(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _model.IsRemoveGenreAvailableAsync(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsRemoveGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _model.IsRemoveUrlAvailableAsync(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _model.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeAlbumAsync(IAlbum? album) => _model.ChangeAlbumAsync(album);
+        public Task ChangeAlbumAsync(IAlbum? album, CancellationToken cancellationToken = default) => _model.ChangeAlbumAsync(album, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeTrackNumberAsync(int? trackNumber) => _model.ChangeTrackNumberAsync(trackNumber);
+        public Task ChangeTrackNumberAsync(int? trackNumber, CancellationToken cancellationToken = default) => _model.ChangeTrackNumberAsync(trackNumber, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeLanguageAsync(CultureInfo language) => _model.ChangeLanguageAsync(language);
+        public Task ChangeLanguageAsync(CultureInfo language, CancellationToken cancellationToken = default) => _model.ChangeLanguageAsync(language, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeLyricsAsync(ILyrics? lyrics) => _model.ChangeLyricsAsync(lyrics);
+        public Task ChangeLyricsAsync(ILyrics? lyrics, CancellationToken cancellationToken = default) => _model.ChangeLyricsAsync(lyrics, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeIsExplicitAsync(bool isExplicit) => _model.ChangeIsExplicitAsync(isExplicit);
+        public Task ChangeIsExplicitAsync(bool isExplicit, CancellationToken cancellationToken = default) => _model.ChangeIsExplicitAsync(isExplicit, cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _model.PauseArtistCollectionAsync();
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default) => _model.PauseArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation) => _model.StartDownloadOperationAsync(operation);
+        public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => _model.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => ChangeNameInternalAsync(name, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _model.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => _model.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _model.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _model.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _model.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _model.AddArtistItemAsync(artist, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => _model.AddImageAsync(image, index);
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _model.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddGenreAsync(IGenre genre, int index) => _model.AddGenreAsync(genre, index);
+        public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _model.AddGenreAsync(genre, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(IUrl genre, int index) => _model.AddUrlAsync(genre, index);
+        public Task AddUrlAsync(IUrl genre, int index, CancellationToken cancellationToken = default) => _model.AddUrlAsync(genre, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index) => _model.RemoveArtistItemAsync(index);
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _model.RemoveArtistItemAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _model.RemoveImageAsync(index);
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _model.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveGenreAsync(int index) => _model.RemoveGenreAsync(index);
+        public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => _model.RemoveGenreAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index) => _model.RemoveUrlAsync(index);
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _model.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _model.GetArtistItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _model.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _model.GetImagesAsync(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _model.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _model.GetGenresAsync(limit, offset);
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _model.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _model.GetUrlsAsync(limit, offset);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _model.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _model.PlayArtistCollectionAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _model.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _model.PlayArtistCollectionAsync();
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default) => _model.PlayArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public async Task PopulateMoreArtistsAsync(int limit)
+        public async Task PopulateMoreArtistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
-                var items = await GetArtistItemsAsync(limit, Artists.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateArtistsMutex.Release());
+                var items = await GetArtistItemsAsync(limit, Artists.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -689,11 +690,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
-                var items = await GetImagesAsync(limit, Images.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
+                var items = await GetImagesAsync(limit, Images.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -704,11 +706,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreGenresAsync(int limit)
+        public async Task PopulateMoreGenresAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateGenresMutex))
             {
-                var items = await GetGenresAsync(limit, Genres.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateGenresMutex.Release());
+                var items = await GetGenresAsync(limit, Genres.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -719,11 +722,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
-                var items = await GetUrlsAsync(limit, Urls.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
+                var items = await GetUrlsAsync(limit, Urls.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -779,13 +783,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
         /// <inheritdoc/>
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc/>
-        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+        public Task InitArtistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ArtistCollection(this, cancellationToken);
 
         /// <inheritdoc/>
-        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
+        public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollection(this, cancellationToken);
 
         /// <inheritdoc/>
         public IAsyncRelayCommand InitArtistCollectionAsyncCommand { get; }
@@ -811,10 +815,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public bool Equals(ICoreTrack other) => _model.Equals(other);
 
-        private Task ChangeNameInternalAsync(string? name)
+        private Task ChangeNameInternalAsync(string? name, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(name, nameof(name));
-            return _model.ChangeNameAsync(name);
+            return _model.ChangeNameAsync(name, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -825,12 +829,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (!IsInitialized)
                 return;
 
-            await Task.WhenAll(InitImageCollectionAsync(), InitArtistCollectionAsync(), InitGenreCollectionAsync());
+            await Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitArtistCollectionAsync(cancellationToken), InitGenreCollectionAsync(cancellationToken));
             IsInitialized = true;
         }
 
