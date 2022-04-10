@@ -18,12 +18,6 @@ namespace StrixMusic.Sdk.Services
     public interface ISharedFactory
     {
         /// <summary>
-        /// Creates an <see cref="HttpClientHandler"/> that is guarunteed to work under the current platform.
-        /// </summary>
-        /// <returns>An <see cref="HttpMessageHandler"/> that works under the current platform.</returns>
-        public HttpMessageHandler GetPlatformSpecificHttpClientHandler();
-
-        /// <summary>
         /// Adds Uno helpers to an MSAL <see cref="AcquireTokenInteractiveParameterBuilder"/>.
         /// </summary>
         /// <returns>The given <paramref name="builder"/> with Uno helpers attached.</returns>

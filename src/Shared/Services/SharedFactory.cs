@@ -20,16 +20,6 @@ namespace StrixMusic.Shared.Services
     public class SharedFactory : ISharedFactory
     {
         /// <inheritdoc />
-        public HttpMessageHandler GetPlatformSpecificHttpClientHandler()
-        {
-#if __WASM__
-            return new Uno.UI.Wasm.WasmHttpHandler();
-#else
-            return new HttpClientHandler();
-#endif
-        }
-
-        /// <inheritdoc />
         public AcquireTokenInteractiveParameterBuilder WithUnoHelpers(AcquireTokenInteractiveParameterBuilder builder) => builder.WithUnoHelpers();
 
         /// <inheritdoc />
