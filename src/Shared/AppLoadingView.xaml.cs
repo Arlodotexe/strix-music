@@ -35,7 +35,6 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Services;
-using StrixMusic.Shared.Services;
 using StrixMusic.Shells.Default;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
@@ -419,7 +418,6 @@ namespace StrixMusic.Shared
 
             services.AddSingleton(_localizationService);
             services.AddSingleton(_settings);
-            services.AddSingleton<ISharedFactory>(new SharedFactory());
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService>(_notificationService);
             services.AddSingleton<ICoreManagementService>(coreManagementService);
