@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.ViewModels;
 

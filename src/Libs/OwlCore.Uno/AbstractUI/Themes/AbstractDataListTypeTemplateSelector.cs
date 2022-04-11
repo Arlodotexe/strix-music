@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using OwlCore.AbstractUI.ViewModels;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 
 namespace OwlCore.Uno.AbstractUI.Themes

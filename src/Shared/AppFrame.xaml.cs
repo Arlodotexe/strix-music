@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;

@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using StrixMusic.Shared.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

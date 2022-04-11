@@ -1,6 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace OwlCore.Uno.Converters
 {

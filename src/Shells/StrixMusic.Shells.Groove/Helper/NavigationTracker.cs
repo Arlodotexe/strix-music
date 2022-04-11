@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using StrixMusic.Shells.Groove.Messages.Navigation;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;

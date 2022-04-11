@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using StrixMusic.Sdk.Uno.Controls.Items;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
