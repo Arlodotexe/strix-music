@@ -5,7 +5,7 @@
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.ViewModels

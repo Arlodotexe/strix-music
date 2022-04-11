@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.Uno.Controls.Items;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;

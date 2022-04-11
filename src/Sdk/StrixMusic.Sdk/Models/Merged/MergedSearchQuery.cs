@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Models.Merged
