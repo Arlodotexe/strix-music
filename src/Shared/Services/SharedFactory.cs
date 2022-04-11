@@ -20,12 +20,6 @@ namespace StrixMusic.Shared.Services
     public class SharedFactory : ISharedFactory
     {
         /// <inheritdoc />
-        public AcquireTokenInteractiveParameterBuilder WithUnoHelpers(AcquireTokenInteractiveParameterBuilder builder) => builder.WithUnoHelpers();
-
-        /// <inheritdoc />
-        public PublicClientApplicationBuilder WithUnoHelpers(PublicClientApplicationBuilder builder) => builder.WithUnoHelpers();
-
-        /// <inheritdoc />
         public SynchronizedObservableCollection<T> GetIncrementalCollection<T>(int take, Func<int, Task<List<T>>> loadMoreItems, Action onBatchStart, Action<List<T>> onBatchComplete)
         {
             using (Threading.PrimaryContext)

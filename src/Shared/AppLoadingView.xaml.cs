@@ -39,6 +39,7 @@ using StrixMusic.Shared.Services;
 using StrixMusic.Shells.Default;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
+using Uno.UI.MSAL;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -248,27 +249,39 @@ namespace StrixMusic.Shared
 
             CoreRegistry.Register(OneDriveCore.Metadata, async instanceId =>
             {
-            var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
-            var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
-            var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
+                var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
+                var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
+                var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
 
 #if !__WASM__
-            var loginMethod = LoginMethod.DeviceCode;
+                var loginMethod = LoginMethod.DeviceCode;
 #else
-            var loginMethod = LoginMethod.Interactive;
+                var loginMethod = LoginMethod.Interactive;
 #endif
-            var core = new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService)
-            {
-                LoginMethod = loginMethod,
+                var core = new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, _notificationService)
+                {
+                    LoginMethod = loginMethod,
 #if __WASM__
-                HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
+                    HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
 #endif
                 };
 
                 // TODO: Detach event when unregistered
                 core.LoginNavigationRequested += OnUriNavigationRequested;
+                core.MsalAcquireTokenInteractiveParameterBuilderCreated += OnInteractiveParamBuilderCreated;
+                core.MsalPublicClientApplicationBuilderCreated += OnPublicClientApplicationBuilderCreated;
 
                 return core;
+
+                void OnInteractiveParamBuilderCreated(object sender, AcquireTokenInteractiveParameterBuilderCreatedEventArgs args)
+                {
+                    args.Builder = args.Builder.WithUnoHelpers();
+                }
+
+                void OnPublicClientApplicationBuilderCreated(object sender, MsalPublicClientApplicationBuilderCreatedEventArgs args)
+                {
+                    args.Builder = args.Builder.WithUnoHelpers();
+                }
             });
 
             if (CoreRegistry.MetadataRegistry.Count == 0)

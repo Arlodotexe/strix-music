@@ -18,18 +18,6 @@ namespace StrixMusic.Sdk.Services
     public interface ISharedFactory
     {
         /// <summary>
-        /// Adds Uno helpers to an MSAL <see cref="AcquireTokenInteractiveParameterBuilder"/>.
-        /// </summary>
-        /// <returns>The given <paramref name="builder"/> with Uno helpers attached.</returns>
-        public AcquireTokenInteractiveParameterBuilder WithUnoHelpers(AcquireTokenInteractiveParameterBuilder builder);
-
-        /// <summary>
-        /// Adds Uno helpers to an MSAL <see cref="PublicClientApplicationBuilder"/>.
-        /// </summary>
-        /// <returns>The given <paramref name="builder"/> with Uno helpers attached.</returns>
-        public PublicClientApplicationBuilder WithUnoHelpers(PublicClientApplicationBuilder builder);
-
-        /// <summary>
         /// Constructs a new IncrementalLoadingCollection given the parameters.
         /// </summary>
         /// <typeparam name="T">The type of the items held in the collection.</typeparam>
