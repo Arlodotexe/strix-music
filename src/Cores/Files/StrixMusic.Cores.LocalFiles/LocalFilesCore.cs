@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;

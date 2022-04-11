@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
 using TaskStatus = System.Threading.Tasks.TaskStatus;

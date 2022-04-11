@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;

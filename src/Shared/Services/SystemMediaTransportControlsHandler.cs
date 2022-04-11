@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
 using Windows.Media;

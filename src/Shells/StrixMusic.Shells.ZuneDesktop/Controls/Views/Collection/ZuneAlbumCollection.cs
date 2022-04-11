@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Uno.Controls.Collections;
