@@ -20,17 +20,17 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private object _lockObj = new object();
 
         /// <summary>
-        /// Holds the instnace of the sort textblock.
-        /// </summary>
-        public TextBlock? PART_SortLbl { get; private set; }
-
-        /// <summary>
         /// Creates a new instance of <see cref="ArtistCollection" />.
         /// </summary>
         public ZuneArtistCollection()
         {
             Unloaded += ZuneArtistCollection_Unloaded;
         }
+
+        /// <summary>
+        /// Holds the instnace of the sort textblock.
+        /// </summary>
+        public TextBlock? PART_SortLbl { get; private set; }
 
         /// <summary>
         /// Holds the current sort state of the zune <see cref="ArtistCollection"/>.
@@ -99,17 +99,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
-            var converter = new ZuneSortStateToStringConverter();
-            var sortString = (string)converter.Convert(SortState, typeof(string), string.Empty, string.Empty);
-
-            switch (sortString)
+            switch (SortState)
             {
-                case "A-Z":
+                case ZuneSortState.AZ:
                     Collection.SortArtistCollection(Sdk.ViewModels.ArtistSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
                     SortState = ZuneSortState.ZA;
                     PART_SortLbl.Text = "Z-A";
                     break;
-                case "Z-A":
+                case ZuneSortState.ZA:
                     Collection.SortArtistCollection(Sdk.ViewModels.ArtistSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
                     SortState = ZuneSortState.AZ;
                     PART_SortLbl.Text = "A-Z";
@@ -139,6 +136,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 // Define default sort state of the albums on load.
                 try
                 {
+                    // Gives breathing space to the processor and reduces he odds the where observable collection changed during CollectionChanged event to minimum. 
                     await Task.Delay(100);
 
                     lock (_lockObj)
@@ -146,7 +144,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 }
                 catch (InvalidOperationException)
                 {
-                    // Ignore.
+                    // It handles a rare case where observable collection changed during CollectionChanged event. 
+                    // More precisely "Cannot change ObservableCollection during a CollectionChanged event."
                 }
             }
         }
