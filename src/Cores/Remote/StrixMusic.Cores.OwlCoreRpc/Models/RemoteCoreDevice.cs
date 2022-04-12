@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OwlCore.Remoting;
@@ -146,61 +147,68 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public event EventHandler<double>? PlaybackSpeedChanged;
 
         /// <inheritdoc/>
-        public Task ChangePlaybackSpeedAsync(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task ChangeVolumeAsync(double volume)
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task NextAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task PauseAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task PreviousAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task ResumeAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task NextAsync()
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc/>
-        public Task PauseAsync()
+        public Task SwitchToAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc/>
-        public Task PreviousAsync()
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc/>
-        public Task ResumeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task SeekAsync(TimeSpan position)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task SwitchToAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ToggleRepeatAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ToggleShuffleAsync()
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

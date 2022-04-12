@@ -5,6 +5,15 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Common">
+      <Version>8.0.0-preview3</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Diagnostics">
+      <Version>8.0.0-preview3</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.0.0-preview3</Version>
+    </PackageReference>
     <PackageReference Include="GitInfo">
       <Version>2.2.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,12 +46,6 @@
       <Version>6.2.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics">
-      <Version>7.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Mvvm">
-      <Version>7.1.2</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>7.1.2</Version>
     </PackageReference>
@@ -62,7 +65,7 @@
       <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="OwlCore">
-      <Version>0.0.61</Version>
+      <Version>0.0.64</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>

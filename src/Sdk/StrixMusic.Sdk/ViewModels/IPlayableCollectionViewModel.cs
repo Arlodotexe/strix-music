@@ -3,7 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.ViewModels

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
@@ -158,7 +158,7 @@ namespace StrixMusic.Shared
         }
 
         /// <summary>
-        /// For displaying the UI for a <see cref="CoreState.NeedsSetup"/> core state.
+        /// For displaying the UI for a <see cref="CoreState.NeedsConfiguration"/> core state.
         /// </summary>
         private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -192,7 +192,7 @@ namespace StrixMusic.Shared
             if (!(sender is ICore core))
                 return;
 
-            if (e == CoreState.NeedsSetup)
+            if (e == CoreState.NeedsConfiguration)
             {
                 await Threading.OnPrimaryThread(() =>
                 {

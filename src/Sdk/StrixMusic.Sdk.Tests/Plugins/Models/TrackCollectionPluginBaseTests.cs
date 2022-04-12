@@ -8,6 +8,7 @@ using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
@@ -243,32 +244,32 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public override Task AddImageAsync(IImage image, int index) => throw AccessedException;
-            public override Task AddTrackAsync(ITrack track, int index) => throw AccessedException;
-            public override Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
-            public override Task ChangeDescriptionAsync(string? description) => throw AccessedException;
-            public override Task ChangeDurationAsync(TimeSpan duration) => throw AccessedException;
-            public override Task ChangeNameAsync(string name) => throw AccessedException;
+            public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
             public override ValueTask DisposeAsync() => throw AccessedException;
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public override bool Equals(ICoreTrackCollection? other) => throw AccessedException;
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
-            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => throw AccessedException;
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => throw AccessedException;
-            public override Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
-            public override Task<bool> IsAddTrackAvailableAsync(int index) => throw AccessedException;
-            public override Task<bool> IsAddUrlAvailableAsync(int index) => throw AccessedException;
-            public override Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
-            public override Task<bool> IsRemoveTrackAvailableAsync(int index) => throw AccessedException;
-            public override Task<bool> IsRemoveUrlAvailableAsync(int index) => throw AccessedException;
-            public override Task PauseTrackCollectionAsync() => throw AccessedException;
-            public override Task PlayTrackCollectionAsync(ITrack track) => throw AccessedException;
-            public override Task PlayTrackCollectionAsync() => throw AccessedException;
-            public override Task RemoveImageAsync(int index) => throw AccessedException;
-            public override Task RemoveTrackAsync(int index) => throw AccessedException;
-            public override Task RemoveUrlAsync(int index) => throw AccessedException;
-            public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
         }
 
         internal class NoOverride : TrackCollectionPluginBase
@@ -331,32 +332,32 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public Task AddImageAsync(IImage image, int index) => throw AccessedException;
-            public Task AddTrackAsync(ITrack track, int index) => throw AccessedException;
-            public Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
-            public Task ChangeDescriptionAsync(string? description) => throw AccessedException;
-            public Task ChangeDurationAsync(TimeSpan duration) => throw AccessedException;
-            public Task ChangeNameAsync(string name) => throw AccessedException;
+            public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
             public ValueTask DisposeAsync() => throw AccessedException;
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public bool Equals(ICoreTrackCollection? other) => throw AccessedException;
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
-            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => throw AccessedException;
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => throw AccessedException;
-            public Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
-            public Task<bool> IsAddTrackAvailableAsync(int index) => throw AccessedException;
-            public Task<bool> IsAddUrlAvailableAsync(int index) => throw AccessedException;
-            public Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
-            public Task<bool> IsRemoveTrackAvailableAsync(int index) => throw AccessedException;
-            public Task<bool> IsRemoveUrlAvailableAsync(int index) => throw AccessedException;
-            public Task PauseTrackCollectionAsync() => throw AccessedException;
-            public Task PlayTrackCollectionAsync(ITrack track) => throw AccessedException;
-            public Task PlayTrackCollectionAsync() => throw AccessedException;
-            public Task RemoveImageAsync(int index) => throw AccessedException;
-            public Task RemoveTrackAsync(int index) => throw AccessedException;
-            public Task RemoveUrlAsync(int index) => throw AccessedException;
-            public Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
         }
     }
 }

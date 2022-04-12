@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Uno.Extensions;
@@ -165,7 +166,7 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
 #if NETFX_CORE
             var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries.ToArray();

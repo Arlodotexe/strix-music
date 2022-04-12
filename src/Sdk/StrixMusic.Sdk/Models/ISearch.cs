@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
@@ -20,14 +21,16 @@ namespace StrixMusic.Sdk.Models
         /// Gets search results for a given query.
         /// </summary>
         /// <param name="query">The search query.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A task representing the async operation. Value is <see cref="ISearchResults"/>.</returns>
-        Task<ISearchResults> GetSearchResultsAsync(string query);
+        Task<ISearchResults> GetSearchResultsAsync(string query, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets the items  
+        /// Gets the recent search queries.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>The recent search queries.</returns>
-        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries();
+        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Contains items that the user has recently selected from the search results.

@@ -6,7 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Services;

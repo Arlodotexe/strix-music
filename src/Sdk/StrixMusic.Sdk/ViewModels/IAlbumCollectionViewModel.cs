@@ -3,8 +3,9 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
@@ -42,8 +43,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// Populates the next set of albums into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreAlbumsAsync(int limit);
+        public Task PopulateMoreAlbumsAsync(int limit, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sorts the track collection by <see cref="AlbumSortingType"/>.
@@ -56,7 +58,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Loads the entire collection of <see cref="IAlbumCollectionItem"/> s and ensures all sources are merged.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task InitAlbumCollectionAsync();
+        public Task InitAlbumCollectionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Initializes the list of the <see cref="IAlbum"/>.

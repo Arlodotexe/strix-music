@@ -5,7 +5,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;

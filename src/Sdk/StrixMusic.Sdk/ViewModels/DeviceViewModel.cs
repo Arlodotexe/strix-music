@@ -5,9 +5,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
@@ -263,36 +263,36 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed) => _model.ChangePlaybackSpeedAsync(speed);
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _model.ChangePlaybackSpeedAsync(speed, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume) => _model.ChangeVolumeAsync(volume);
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _model.ChangeVolumeAsync(volume, cancellationToken);
 
         /// <inheritdoc />
-        public Task NextAsync() => _model.NextAsync();
+        public Task NextAsync(CancellationToken cancellationToken = default) => _model.NextAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseAsync() => _model.PauseAsync();
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _model.PauseAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PreviousAsync() => _model.PreviousAsync();
+        public Task PreviousAsync(CancellationToken cancellationToken = default) => _model.PreviousAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ResumeAsync() => _model.ResumeAsync();
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _model.ResumeAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position) => _model.SeekAsync(position);
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _model.SeekAsync(position, cancellationToken);
 
         /// <inheritdoc />
-        public Task SwitchToAsync() => _model.SwitchToAsync();
+        public Task SwitchToAsync(CancellationToken cancellationToken = default) => _model.SwitchToAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ToggleRepeatAsync() => _model.ToggleRepeatAsync();
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default) => _model.ToggleRepeatAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ToggleShuffleAsync() => _model.ToggleShuffleAsync();
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default) => _model.ToggleShuffleAsync(cancellationToken);
 
-        private Task TogglePauseResume() => IsPlaying ? PauseAsync() : ResumeAsync();
+        private Task TogglePauseResume(CancellationToken cancellationToken = default) => IsPlaying ? PauseAsync(cancellationToken) : ResumeAsync(cancellationToken);
 
         /// <summary>
         /// Attempts to change playback speed.

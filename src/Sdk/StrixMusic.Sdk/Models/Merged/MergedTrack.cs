@@ -6,15 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Models.Merged
 {
@@ -52,7 +52,7 @@ namespace StrixMusic.Sdk.Models.Merged
             _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
 
             Name = _preferredSource.Name;
-            
+
             foreach (var item in _sources)
             {
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
@@ -392,13 +392,13 @@ namespace StrixMusic.Sdk.Models.Merged
         public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        public Task PauseArtistCollectionAsync() => _preferredSource.PauseArtistCollectionAsync();
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default) => _preferredSource.PauseArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc/>
-        public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default) => _preferredSource.PlayArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default)
         {
             var targetCore = _preferredSource.SourceCore;
 
@@ -412,118 +412,115 @@ namespace StrixMusic.Sdk.Models.Merged
 
             Guard.IsNotNull(source, nameof(source));
 
-            return _preferredSource.PlayArtistCollectionAsync(source);
+            return _preferredSource.PlayArtistCollectionAsync(source, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task ChangeAlbumAsync(IAlbum? album)
+        public Task ChangeAlbumAsync(IAlbum? album, CancellationToken cancellationToken = default) => _sources.InParallel(x =>
         {
-            return _sources.InParallel(x =>
-            {
-                if (!x.IsChangeAlbumAsyncAvailable)
-                    return Task.CompletedTask;
+            if (!x.IsChangeAlbumAsyncAvailable)
+                return Task.CompletedTask;
 
-                var sourceAlbum = album?.GetSources<ICoreAlbum>().First(y => y.SourceCore == x.SourceCore);
-                return x.ChangeAlbumAsync(sourceAlbum);
-            });
-        }
+            var sourceAlbum = album?.GetSources<ICoreAlbum>().First(y => y.SourceCore == x.SourceCore);
+            return x.ChangeAlbumAsync(sourceAlbum, cancellationToken);
+        });
 
         /// <inheritdoc/>
-        public Task ChangeTrackNumberAsync(int? trackNumber)
+        public Task ChangeTrackNumberAsync(int? trackNumber, CancellationToken cancellationToken = default)
         {
-            return _sources.InParallel(x => x.ChangeTrackNumberAsync(trackNumber));
+            return _sources.InParallel(x => x.ChangeTrackNumberAsync(trackNumber, cancellationToken));
         }
 
         /// <inheritdoc/>
-        public Task ChangeLanguageAsync(CultureInfo language)
+        public Task ChangeLanguageAsync(CultureInfo language, CancellationToken cancellationToken = default)
         {
-            return _preferredSource.ChangeLanguageAsync(language);
+            return _preferredSource.ChangeLanguageAsync(language, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task ChangeLyricsAsync(ILyrics? lyrics)
+        public Task ChangeLyricsAsync(ILyrics? lyrics, CancellationToken cancellationToken = default)
         {
             var sourceToChange = lyrics?.GetSources().First(x => x.SourceCore == _preferredSource.SourceCore);
 
             Guard.IsNotNull(sourceToChange, nameof(sourceToChange));
 
-            return _preferredSource.ChangeLyricsAsync(sourceToChange);
+            return _preferredSource.ChangeLyricsAsync(sourceToChange, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task ChangeIsExplicitAsync(bool isExplicit) => _preferredSource.ChangeIsExplicitAsync(isExplicit);
+        public Task ChangeIsExplicitAsync(bool isExplicit, CancellationToken cancellationToken = default) => _preferredSource.ChangeIsExplicitAsync(isExplicit, cancellationToken);
 
         /// <inheritdoc/>
-        public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => _preferredSource.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string? description) => _preferredSource.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => _preferredSource.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc/>
-        public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _preferredSource.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _preferredSource.IsAddArtistItemAvailableAsync(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _preferredSource.IsAddArtistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailableAsync(int index) => _preferredSource.IsAddImageAvailableAsync(index);
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _preferredSource.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailableAsync(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _genreCollectionMap.IsAddItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _urlCollectionMap.IsAddItemAvailableAsync(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _urlCollectionMap.IsAddItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _artistMap.IsRemoveItemAvailableAsync(index);
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _artistMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _imageCollectionMap.IsRemoveItemAvailableAsync(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _imageCollectionMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailableAsync(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _genreCollectionMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _urlCollectionMap.IsRemoveItemAvailableAsync(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _urlCollectionMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _genreCollectionMap.GetItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _genreCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _urlCollectionMap.GetItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _artistMap.InsertItem(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _artistMap.InsertItemAsync(artist, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => _imageCollectionMap.InsertItem(image, index);
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _imageCollectionMap.InsertItemAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddGenreAsync(IGenre genre, int index) => _genreCollectionMap.InsertItem(genre, index);
+        public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _genreCollectionMap.InsertItemAsync(genre, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(IUrl genre, int index) => _urlCollectionMap.InsertItem(genre, index);
+        public Task AddUrlAsync(IUrl genre, int index, CancellationToken cancellationToken = default) => _urlCollectionMap.InsertItemAsync(genre, index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task RemoveArtistItemAsync(int index) => _artistMap.RemoveAt(index);
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _artistMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _imageCollectionMap.RemoveAt(index);
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _imageCollectionMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveGenreAsync(int index) => _genreCollectionMap.RemoveAt(index);
+        public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => _genreCollectionMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index) => _urlCollectionMap.RemoveAt(index);
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _urlCollectionMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task StartDownloadOperationAsync(DownloadOperation operation)
+        public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
@@ -566,7 +563,7 @@ namespace StrixMusic.Sdk.Models.Merged
         void IMergedMutable<ICoreTrack>.RemoveSource(ICoreTrack itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
-            
+
             _sources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
 

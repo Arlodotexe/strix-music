@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Models.Core;
@@ -49,37 +50,37 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
         public event EventHandler<int>? ImagesCountChanged;
 
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddUrlAsync(ICoreUrl url, int index)
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeBirthDateAsync(DateTime birthdate)
+        public Task ChangeBirthDateAsync(DateTime birthdate, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeDisplayNameAsync(string displayName)
+        public Task ChangeDisplayNameAsync(string displayName, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeEmailAsync(string? email)
+        public Task ChangeEmailAsync(string? email, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeFullNameAsync(string fullname)
+        public Task ChangeFullNameAsync(string fullname, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangeRegionAsync(CultureInfo region)
+        public Task ChangeRegionAsync(CultureInfo region, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -89,42 +90,42 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsAddUrlAvailableAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

@@ -3,8 +3,9 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Base;
@@ -195,34 +196,34 @@ namespace StrixMusic.Sdk.Models.Merged
         public bool IsToggleRepeatAsyncAvailable => _source.IsToggleRepeatAsyncAvailable;
 
         /// <inheritdoc />
-        public Task NextAsync() => _source.NextAsync();
+        public Task NextAsync(CancellationToken cancellationToken = default) => _source.NextAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PreviousAsync() => _source.PreviousAsync();
+        public Task PreviousAsync(CancellationToken cancellationToken = default) => _source.PreviousAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ToggleShuffleAsync() => _source.ToggleShuffleAsync();
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default) => _source.ToggleShuffleAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ToggleRepeatAsync() => _source.ToggleRepeatAsync();
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default) => _source.ToggleRepeatAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position) => _source.SeekAsync(position);
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _source.SeekAsync(position, cancellationToken);
 
         /// <inheritdoc />
-        public Task SwitchToAsync() => _source.SwitchToAsync();
+        public Task SwitchToAsync(CancellationToken cancellationToken = default) => _source.SwitchToAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed) => _source.ChangePlaybackSpeedAsync(speed);
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _source.ChangePlaybackSpeedAsync(speed, cancellationToken);
 
         /// <inheritdoc />
-        public Task ResumeAsync() => _source.ResumeAsync();
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _source.ResumeAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseAsync() => _source.PauseAsync();
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _source.PauseAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume) => _source.ChangeVolumeAsync(volume);
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _source.ChangeVolumeAsync(volume, cancellationToken);
 
         /// <inheritdoc />
         public ICore? SourceCore => _source.SourceCore;

@@ -5,6 +5,8 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
@@ -367,25 +369,25 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public event EventHandler<int>? ImagesCountChanged;
         public event EventHandler<int>? UrlsCountChanged;
 
-        public Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             Description = description;
             return Task.CompletedTask;
         }
 
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             Duration = duration;
             return Task.CompletedTask;
         }
 
-        public Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
         {
             Name = name;
             return Task.CompletedTask;
         }
 
-        public virtual async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -393,7 +395,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreateAlbum(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -401,7 +403,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreateArtist(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -409,7 +411,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreatePlayableCollectionGroup(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -417,7 +419,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreateImage(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -425,7 +427,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreatePlaylist(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -433,7 +435,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreateTrack(SourceCore);
         }
 
-        public virtual async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public virtual async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.Yield();
 
@@ -441,130 +443,130 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 yield return MockCoreItemFactory.CreateUrl(SourceCore);
         }
 
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddChildAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddChildAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddImageAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddTrackAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsAddUrlAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveChildAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveChildAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => Task.FromResult(index % 2 == 0);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Task.FromResult(index % 2 == 0);
 
-        public Task PauseAlbumCollectionAsync()
+        public Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Paused;
             return Task.CompletedTask;
         }
 
-        public Task PauseArtistCollectionAsync()
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Paused;
             return Task.CompletedTask;
         }
 
-        public Task PausePlayableCollectionGroupAsync()
+        public Task PausePlayableCollectionGroupAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Paused;
             return Task.CompletedTask;
         }
 
-        public Task PausePlaylistCollectionAsync()
+        public Task PausePlaylistCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Paused;
             return Task.CompletedTask;
         }
 
-        public Task PauseTrackCollectionAsync()
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Paused;
             return Task.CompletedTask;
         }
 
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem, CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             Name = albumItem.Name;
             return Task.CompletedTask;
         }
 
-        public Task PlayAlbumCollectionAsync()
+        public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             return Task.CompletedTask;
         }
 
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem, CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             Name = artistItem.Name;
             return Task.CompletedTask;
         }
 
-        public Task PlayArtistCollectionAsync()
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             return Task.CompletedTask;
         }
 
-        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             Name = collectionGroup.Name;
             return Task.CompletedTask;
         }
 
-        public Task PlayPlayableCollectionGroupAsync()
+        public Task PlayPlayableCollectionGroupAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             return Task.CompletedTask;
         }
 
-        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             Name = playlistItem.Name;
             return Task.CompletedTask;
         }
 
-        public Task PlayPlaylistCollectionAsync()
+        public Task PlayPlaylistCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             return Task.CompletedTask;
         }
 
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             Name = track.Name;
             return Task.CompletedTask;
         }
 
-        public Task PlayTrackCollectionAsync()
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             PlaybackState = PlaybackState.Playing;
             return Task.CompletedTask;
         }
 
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index, CancellationToken cancellationToken = default)
         {
             _albums.InsertOrAdd(index, album);
             TotalAlbumItemsCount++;
@@ -573,7 +575,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default)
         {
             _artists.InsertOrAdd(index, artist);
             TotalArtistItemsCount++;
@@ -582,7 +584,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index, CancellationToken cancellationToken = default)
         {
             _children.InsertOrAdd(index, child);
             TotalChildrenCount++;
@@ -591,7 +593,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             _images.InsertOrAdd(index, image);
             TotalImageCount++;
@@ -600,7 +602,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default)
         {
             _playlists.InsertOrAdd(index, playlist);
             TotalPlaylistItemsCount++;
@@ -609,7 +611,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
         {
             _tracks.InsertOrAdd(index, track);
             TotalTrackCount++;
@@ -618,7 +620,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task AddUrlAsync(ICoreUrl url, int index)
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default)
         {
             _urls.InsertOrAdd(index, url);
             TotalUrlCount++;
@@ -627,7 +629,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveAlbumItemAsync(int index)
+        public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default)
         {
             _albums.RemoveAt(0);
             TotalAlbumItemsCount--;
@@ -635,7 +637,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveArtistItemAsync(int index)
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default)
         {
             _artists.RemoveAt(index);
             TotalArtistItemsCount--;
@@ -643,7 +645,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveChildAsync(int index)
+        public Task RemoveChildAsync(int index, CancellationToken cancellationToken = default)
         {
             _children.RemoveAt(index);
             TotalChildrenCount--;
@@ -651,7 +653,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             _images.RemoveAt(index);
             TotalImageCount--;
@@ -659,7 +661,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemovePlaylistItemAsync(int index)
+        public Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default)
         {
             _playlists.RemoveAt(index);
             TotalPlaylistItemsCount--;
@@ -667,7 +669,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveTrackAsync(int index)
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             _tracks.RemoveAt(index);
             TotalTrackCount--;
@@ -675,7 +677,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             return Task.CompletedTask;
         }
 
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             _urls.RemoveAt(index);
             TotalUrlCount--;

@@ -3,8 +3,9 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
@@ -113,19 +114,19 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public double PlaybackSpeed => _playbackHandler.PlaybackSpeed;
 
         /// <inheritdoc />
-        public Task ResumeAsync() => _playbackHandler.ResumeAsync();
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _playbackHandler.ResumeAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseAsync() => _playbackHandler.PauseAsync();
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _playbackHandler.PauseAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position) => _playbackHandler.SeekAsync(position);
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _playbackHandler.SeekAsync(position, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed) => _playbackHandler.ChangePlaybackSpeedAsync(speed);
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _playbackHandler.ChangePlaybackSpeedAsync(speed, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume) => _playbackHandler.ChangeVolumeAsync(volume);
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _playbackHandler.ChangeVolumeAsync(volume, cancellationToken);
 
         /// <inheritdoc />
         public string Id => "609EBD5A-EBA1-4DDE-9828-C72B096D35DF";
@@ -188,13 +189,13 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public bool IsToggleRepeatAsyncAvailable => true;
 
         /// <inheritdoc />
-        public Task NextAsync() => _playbackHandler.NextAsync();
+        public Task NextAsync(CancellationToken cancellationToken = default) => _playbackHandler.NextAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PreviousAsync() => _playbackHandler.PreviousAsync();
+        public Task PreviousAsync(CancellationToken cancellationToken = default) => _playbackHandler.PreviousAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task SwitchToAsync()
+        public Task SwitchToAsync(CancellationToken cancellationToken = default)
         {
             IsActive = true;
             IsActiveChanged?.Invoke(this, IsActive);
@@ -218,10 +219,10 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         }
 
         /// <inheritdoc />
-        public Task ToggleShuffleAsync() => _playbackHandler.ToggleShuffleAsync();
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default) => _playbackHandler.ToggleShuffleAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task ToggleRepeatAsync() => _playbackHandler.ToggleRepeatAsync();
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default) => _playbackHandler.ToggleRepeatAsync(cancellationToken);
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

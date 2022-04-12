@@ -4,8 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 
@@ -35,7 +36,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query) => _search.GetSearchAutoCompleteAsync(query);
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchAutoCompleteAsync(query, cancellationToken);
 
         /// <inheritdoc />
         public bool Equals(ICoreSearch other) => _search.Equals(other);
@@ -50,10 +51,10 @@ namespace StrixMusic.Sdk.ViewModels
         public MainViewModel Root { get; }
 
         /// <inheritdoc />
-        public Task<ISearchResults> GetSearchResultsAsync(string query) => _search.GetSearchResultsAsync(query);
+        public Task<ISearchResults> GetSearchResultsAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchResultsAsync(query, cancellationToken);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries() => _search.GetRecentSearchQueries();
+        public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries(CancellationToken cancellationToken = default) => _search.GetRecentSearchQueries(cancellationToken);
 
         /// <inheritdoc />
         ISearchHistory? ISearch.SearchHistory => _search.SearchHistory;

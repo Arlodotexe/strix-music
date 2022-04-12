@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
@@ -55,7 +56,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Task AddImageAsync(IImage image, int index) => Inner.AddImageAsync(image, index);
+        virtual public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => Inner.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
@@ -64,15 +65,15 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreImageCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => Inner.GetImagesAsync(limit, offset);
+        virtual public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddImageAvailableAsync(int index) => Inner.IsAddImageAvailableAsync(index);
+        virtual public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveImageAvailableAsync(int index) => Inner.IsRemoveImageAvailableAsync(index);
+        virtual public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveImageAsync(int index) => Inner.RemoveImageAsync(index);
+        virtual public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveImageAsync(index, cancellationToken);
     }
 }

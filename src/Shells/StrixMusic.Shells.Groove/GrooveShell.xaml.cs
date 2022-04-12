@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services;

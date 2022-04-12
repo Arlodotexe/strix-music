@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
@@ -43,8 +43,8 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <summary>
         /// A map where each index contains the representation of an item returned from a source collection, where the value is that source collection.
         /// </summary>
-        private readonly List<MappedData> _sortedMap = new List<MappedData>();
-        private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
+        private readonly List<MappedData> _sortedMap = new();
+        private readonly List<MergedMappedData> _mergedMappedData = new();
 
         private bool _isDisposed;
 
@@ -66,42 +66,42 @@ namespace StrixMusic.Sdk.Models.Merged
             AttachEvents();
         }
 
-        private static async Task InsertItemIntoCollection<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex)
+        private static async Task InsertItemIntoCollectionAsync<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex, CancellationToken cancellationToken)
             where T : class, ICollectionItemBase, ICoreMember // https://twitter.com/Arlodottxt/status/1351317100959326213?s=20
         {
             switch (sourceCollection)
             {
                 case ICorePlayableCollectionGroup playableCollection:
-                    if (await playableCollection.IsAddChildAvailableAsync(originalIndex))
-                        await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex);
+                    if (await playableCollection.IsAddChildAvailableAsync(originalIndex, cancellationToken))
+                        await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    if (await albumCollection.IsAddAlbumItemAvailableAsync(originalIndex))
-                        await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex);
+                    if (await albumCollection.IsAddAlbumItemAvailableAsync(originalIndex, cancellationToken))
+                        await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    if (await artistCollection.IsAddArtistItemAvailableAsync(originalIndex))
-                        await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex);
+                    if (await artistCollection.IsAddArtistItemAvailableAsync(originalIndex, cancellationToken))
+                        await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    if (await playlistCollection.IsAddPlaylistItemAvailableAsync(originalIndex))
-                        await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex);
+                    if (await playlistCollection.IsAddPlaylistItemAvailableAsync(originalIndex, cancellationToken))
+                        await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    if (await trackCollection.IsAddTrackAvailableAsync(originalIndex))
-                        await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex);
+                    if (await trackCollection.IsAddTrackAvailableAsync(originalIndex, cancellationToken))
+                        await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreImageCollection imageCollection:
-                    if (await imageCollection.IsAddImageAvailableAsync(originalIndex))
-                        await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
+                    if (await imageCollection.IsAddImageAvailableAsync(originalIndex, cancellationToken))
+                        await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreGenreCollection genreCollection:
-                    if (await genreCollection.IsAddGenreAvailableAsync(originalIndex))
-                        await genreCollection.AddGenreAsync((ICoreGenre)itemToAdd, originalIndex);
+                    if (await genreCollection.IsAddGenreAvailableAsync(originalIndex, cancellationToken))
+                        await genreCollection.AddGenreAsync((ICoreGenre)itemToAdd, originalIndex, cancellationToken);
                     break;
                 case ICoreUrlCollection urlCollection:
-                    if (await urlCollection.IsAddUrlAvailableAsync(originalIndex))
-                        await urlCollection.AddUrlAsync((ICoreUrl)itemToAdd, originalIndex);
+                    if (await urlCollection.IsAddUrlAvailableAsync(originalIndex, cancellationToken))
+                        await urlCollection.AddUrlAsync((ICoreUrl)itemToAdd, originalIndex, cancellationToken);
                     break;
                 default:
                     ThrowHelper.ThrowNotSupportedException<IMergedMutable<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
@@ -109,7 +109,7 @@ namespace StrixMusic.Sdk.Models.Merged
             }
         }
 
-        private static async Task InsertExistingItem(TCollectionItem itemToInsert, MappedData mappedData)
+        private static async Task InsertExistingItemAsync(TCollectionItem itemToInsert, MappedData mappedData, CancellationToken cancellationToken)
         {
             foreach (var source in itemToInsert.Sources)
             {
@@ -132,18 +132,18 @@ namespace StrixMusic.Sdk.Models.Merged
 
                 var originalIndex = mappedData.OriginalIndex;
 
-                await InsertItemIntoCollection(sourceCollection, source, originalIndex);
+                await InsertItemIntoCollectionAsync(sourceCollection, source, originalIndex, cancellationToken);
             }
         }
 
-        private static async Task InsertNewItem(IEnumerable<TCoreCollection> sourceCollections, IReadOnlyList<ICore> sourceCores, IInitialData dataToInsert, int index)
+        private static async Task InsertNewItemAsync(IEnumerable<TCoreCollection> sourceCollections, IReadOnlyList<ICore> sourceCores, IInitialData dataToInsert, int index, CancellationToken cancellationToken = default)
         {
             // TODO create setting to let user decide default
             foreach (var source in sourceCollections)
             {
                 IEnumerable<ICore> targetSources = sourceCores;
 
-                if (dataToInsert.TargetSourceCores != null && dataToInsert.TargetSourceCores.Count > 0)
+                if (dataToInsert.TargetSourceCores is { Count: > 0 })
                 {
                     targetSources = dataToInsert.TargetSourceCores;
                 }
@@ -155,19 +155,19 @@ namespace StrixMusic.Sdk.Models.Merged
                     {
                         var coreData = new InitialCorePlaylistData(playlistData, targetCore);
 
-                        await InsertItemIntoCollection(source, coreData, index);
+                        await InsertItemIntoCollectionAsync(source, coreData, index, cancellationToken);
                     }
                 }
             }
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return;
 
-            if (_initCompletionSource?.Task.Status == TaskStatus.Running || _initCompletionSource?.Task.Status == TaskStatus.WaitingForActivation || _initCompletionSource?.Task.Status == TaskStatus.RanToCompletion)
+            if (_initCompletionSource?.Task.Status is TaskStatus.Running or TaskStatus.WaitingForActivation or TaskStatus.RanToCompletion)
             {
                 await _initCompletionSource.Task;
                 return;
@@ -191,7 +191,7 @@ namespace StrixMusic.Sdk.Models.Merged
             set => _isInitialized = value;
         }
 
-        private Task TryInitAsync() => InitAsync();
+        private Task TryInitAsync(CancellationToken cancellationToken) => InitAsync(cancellationToken);
 
         /// <summary>
         /// Fires when a source has been added and the merged collection needs to be re-emitted to include the new source.
@@ -463,14 +463,15 @@ namespace StrixMusic.Sdk.Models.Merged
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>The requested range of items, sorted and merged from the sources in the input collection.</returns>
-        public async Task<IReadOnlyList<TCollectionItem>> GetItemsAsync(int limit, int offset)
+        public async Task<IReadOnlyList<TCollectionItem>> GetItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
-            await TryInitAsync();
+            await TryInitAsync(cancellationToken);
 
             return _config.MergedCollectionSorting switch
             {
-                MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset),
+                MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset, cancellationToken),
                 _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_config.MergedCollectionSorting}\" not supported.")
             };
         }
@@ -480,31 +481,33 @@ namespace StrixMusic.Sdk.Models.Merged
         /// </summary>
         /// <param name="item">The item to insert.</param>
         /// <param name="index">The index to place this item at.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InsertItem(TCollectionItem item, int index)
+        public async Task InsertItemAsync(TCollectionItem item, int index, CancellationToken cancellationToken = default)
         {
-            await TryInitAsync();
+            await TryInitAsync(cancellationToken);
 
             Guard.IsNotNull(item, nameof(item));
 
             if (item is IInitialData createdData)
             {
-                await InsertNewItem(Sources, _collection.GetSourceCores(), createdData, index);
+                await InsertNewItemAsync(Sources, _collection.GetSourceCores(), createdData, index, cancellationToken);
                 return;
             }
 
             // Handle inserting an existing item
-            await InsertExistingItem(item, _sortedMap[index]);
+            await InsertExistingItemAsync(item, _sortedMap[index], cancellationToken);
         }
 
         /// <summary>
         /// Inserts an item into the compatible source collections on the backend.
         /// </summary>
         /// <param name="index">The index to place this item at.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RemoveAt(int index)
+        public async Task RemoveAtAsync(int index, CancellationToken cancellationToken = default)
         {
-            await TryInitAsync();
+            await TryInitAsync(cancellationToken);
 
             // Externally, the app sees non-core items as this internal collection of merged and sorted items and data.
             // When they ask for an item at an index, they're asking for an item at that index that could be merged.
@@ -518,35 +521,35 @@ namespace StrixMusic.Sdk.Models.Merged
                 var sourceCollection = mappedData.SourceCollection;
                 var source = mappedData.CollectionItem;
 
-                var isAvailable = await sourceCollection.IsRemoveAvailable(index);
+                var isAvailable = await sourceCollection.IsRemoveAvailable(index, cancellationToken);
                 if (!isAvailable)
                     continue;
 
                 switch (sourceCollection)
                 {
                     case ICorePlayableCollectionGroup playableCollection:
-                        await playableCollection.RemoveChildAsync(mappedData.OriginalIndex);
+                        await playableCollection.RemoveChildAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreAlbumCollection albumCollection:
-                        await albumCollection.RemoveAlbumItemAsync(mappedData.OriginalIndex);
+                        await albumCollection.RemoveAlbumItemAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreArtistCollection artistCollection:
-                        await artistCollection.RemoveArtistItemAsync(mappedData.OriginalIndex);
+                        await artistCollection.RemoveArtistItemAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICorePlaylistCollection playlistCollection:
-                        await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex);
+                        await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreTrackCollection trackCollection:
-                        await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex);
+                        await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreImageCollection imageCollection:
-                        await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
+                        await imageCollection.RemoveImageAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreGenreCollection genreCollection:
-                        await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
+                        await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     case ICoreUrlCollection urlCollection:
-                        await urlCollection.RemoveUrlAsync(mappedData.OriginalIndex);
+                        await urlCollection.RemoveUrlAsync(mappedData.OriginalIndex, cancellationToken);
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
@@ -559,13 +562,14 @@ namespace StrixMusic.Sdk.Models.Merged
         /// Checks if adding an item to the sorted map is supported.
         /// </summary>
         /// <param name="index">The index to remove.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsAddItemAvailableAsync(int index)
+        public async Task<bool> IsAddItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
-            await TryInitAsync();
+            await TryInitAsync(cancellationToken);
 
             var sourceResults = await _mergedMappedData[index].MergedMapData
-                .InParallel(async x => await x.SourceCollection.IsAddAvailable(x.OriginalIndex));
+                .InParallel(async x => await x.SourceCollection.IsAddAvailable(x.OriginalIndex, cancellationToken));
 
             return sourceResults.Any();
         }
@@ -574,13 +578,14 @@ namespace StrixMusic.Sdk.Models.Merged
         /// Checks if removing an item from the sorted map is supported.
         /// </summary>
         /// <param name="index">The index to remove.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsRemoveItemAvailableAsync(int index)
+        public async Task<bool> IsRemoveItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
-            await TryInitAsync();
+            await TryInitAsync(cancellationToken);
 
             var sourceResults = await _mergedMappedData[index].MergedMapData
-                .InParallel(async x => await x.SourceCollection.IsRemoveAvailable(x.OriginalIndex));
+                .InParallel(async x => await x.SourceCollection.IsRemoveAvailable(x.OriginalIndex, cancellationToken));
 
             return sourceResults.Any();
         }
@@ -677,7 +682,7 @@ namespace StrixMusic.Sdk.Models.Merged
             return returnData;
         }
 
-        private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
+        private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset, CancellationToken cancellationToken = default)
         {
             Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
@@ -720,7 +725,7 @@ namespace StrixMusic.Sdk.Models.Merged
                 var remainingItemsForSource = await OwlCore.APIs.GetAllItemsAsync<TCoreCollectionItem>(
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
-                    async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync().AsTask());
+                    async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync(cancellationToken).AsTask());
 
                 Guard.IsNotNull(remainingItemsForSource, nameof(remainingItemsForSource));
 
@@ -846,7 +851,7 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private async Task ResetDataRanked()
         {
-            await TryInitAsync();
+            await TryInitAsync(CancellationToken.None);
 
             // TODO: Optimize this (these instruction for ranked sorting only)
             // Find where this source lies in the ranking
@@ -868,7 +873,7 @@ namespace StrixMusic.Sdk.Models.Merged
                     continue;
 
                 // The items retrieved will exist in the sorted map.
-                await GetItemsAsync(item.OriginalIndex, i);
+                await GetItemsAsync(item.OriginalIndex, i, CancellationToken.None);
             }
 
             var addedItems = new List<CollectionChangedItem<TCollectionItem>>();
@@ -916,6 +921,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// </remarks>
         void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
+            #warning TODO: AddSource and RemoveSource needs to be async.
             OwlCore.Flow.Catch(() => ResetDataRanked());
         }
 

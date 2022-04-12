@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -43,17 +44,17 @@ namespace StrixMusic.Sdk.Models.Base
         TimeSpan Duration { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeNameAsync(string)"/> can be used.
+        /// If true, <see cref="ChangeNameAsync(string, CancellationToken)"/> can be used.
         /// </summary>
         bool IsChangeNameAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDescriptionAsync(string)"/> can be used.
+        /// If true, <see cref="ChangeDescriptionAsync(string, CancellationToken)"/> can be used.
         /// </summary>
         bool IsChangeDescriptionAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDurationAsync(TimeSpan)"/> can be used.
+        /// If true, <see cref="ChangeDurationAsync(TimeSpan, CancellationToken)"/> can be used.
         /// </summary>
         bool IsChangeDurationAsyncAvailable { get; }
 
@@ -61,22 +62,25 @@ namespace StrixMusic.Sdk.Models.Base
         /// Changes the <see cref="Name"/> of this playable item.
         /// </summary>
         /// <param name="name">The new name to use.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeNameAsync(string name);
+        Task ChangeNameAsync(string name, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Description"/> for this item.
         /// </summary>
         /// <param name="description">The new description for this playable item.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeDescriptionAsync(string? description);
+        Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Changes the <see cref="Duration"/> for this item.
         /// </summary>
         /// <param name="duration">The new duration for this playable item.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeDurationAsync(TimeSpan duration);
+        Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when <see cref="PlaybackState"/> changes.

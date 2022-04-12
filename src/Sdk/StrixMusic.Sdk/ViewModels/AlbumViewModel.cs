@@ -8,9 +8,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -68,8 +68,8 @@ namespace StrixMusic.Sdk.ViewModels
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(x => _album.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x))));
-            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(x => _album.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x))));
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>((x, y) => _album.PlayTrackCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<ITrack>(nameof(x)), y));
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>((x, y) => _album.PlayArtistCollectionAsync(x ?? ThrowHelper.ThrowArgumentNullException<IArtistCollectionItem>(nameof(x)), y));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -545,22 +545,22 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsPauseArtistCollectionAsyncAvailable => _album.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _album.PlayTrackCollectionAsync();
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => _album.PlayTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _album.PauseTrackCollectionAsync();
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => _album.PauseTrackCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _album.PlayArtistCollectionAsync();
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default) => _album.PlayArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync() => _album.PauseArtistCollectionAsync();
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default) => _album.PauseArtistCollectionAsync(cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => _album.PlayTrackCollectionAsync(track);
+        public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _album.PlayTrackCollectionAsync(track, cancellationToken);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => _album.PlayArtistCollectionAsync(artistItem);
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _album.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
         /// <inheritdoc />
         public DateTime? DatePublished => _album.DatePublished;
@@ -587,79 +587,79 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _album.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => ChangeNameInternalAsync(name, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _album.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => _album.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _album.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _album.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index) => _album.IsAddImageAvailableAsync(index);
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailableAsync(int index) => _album.IsAddTrackAvailableAsync(index);
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsAddTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _album.IsAddArtistItemAvailableAsync(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsAddArtistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailableAsync(int index) => _album.IsAddGenreAvailableAsync(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsAddGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index) => _album.IsAddUrlAvailableAsync(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _album.IsRemoveArtistItemAvailableAsync(index);
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsRemoveArtistItemAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index) => _album.IsRemoveImageAvailableAsync(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _album.IsRemoveGenreAvailableAsync(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsRemoveGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _album.IsRemoveTrackAvailableAsync(index);
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsRemoveTrackAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _album.IsRemoveUrlAvailableAsync(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _album.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
+        public Task ChangeDatePublishedAsync(DateTime datePublished, CancellationToken cancellationToken = default) => _album.ChangeDatePublishedAsync(datePublished, cancellationToken);
 
         /// <inheritdoc />
-        public Task StartDownloadOperationAsync(DownloadOperation operation) => _album.StartDownloadOperationAsync(operation);
+        public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => _album.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index) => _album.AddTrackAsync(track, index);
+        public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _album.AddTrackAsync(track, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index) => _album.RemoveTrackAsync(index);
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveTrackAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => _album.AddImageAsync(image, index);
+        public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _album.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _album.RemoveImageAsync(index);
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _album.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _album.AddArtistItemAsync(artist, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index) => _album.RemoveArtistItemAsync(index);
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveArtistItemAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task AddGenreAsync(IGenre genre, int index) => _album.AddGenreAsync(genre, index);
+        public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _album.AddGenreAsync(genre, index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task RemoveGenreAsync(int index) => _album.RemoveGenreAsync(index);
+        public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveGenreAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task AddUrlAsync(IUrl url, int index) => _album.AddUrlAsync(url, index);
+        public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _album.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        public Task RemoveUrlAsync(int index) => _album.RemoveUrlAsync(index);
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveUrlAsync(index, cancellationToken);
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -680,52 +680,57 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public async Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
-                foreach (var item in await _album.GetTracksAsync(limit, Tracks.Count))
+                using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
+                foreach (var item in await _album.GetTracksAsync(limit, Tracks.Count, cancellationToken))
                     Tracks.Add(new TrackViewModel(Root, item));
             }
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _album.GetImagesAsync(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _album.GetArtistItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _album.GetGenresAsync(limit, offset);
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _album.GetUrlsAsync(limit, offset);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public async Task PopulateMoreArtistsAsync(int limit)
+        public async Task PopulateMoreArtistsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
-                var items = await _album.GetArtistItemsAsync(limit, Artists.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateArtistsMutex.Release());
+                var items = await _album.GetArtistItemsAsync(limit, Artists.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
+                    {
                         if (item is IArtist artist)
                             Artists.Add(new ArtistViewModel(Root, artist));
+                    }
                 }, null);
             }
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
+        public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
-                var items = await _album.GetImagesAsync(limit, Images.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
+                var items = await _album.GetImagesAsync(limit, Images.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -736,11 +741,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreUrlsAsync(int limit)
+        public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
-                var items = await _album.GetUrlsAsync(limit, Urls.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
+                var items = await _album.GetUrlsAsync(limit, Urls.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -751,11 +757,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreGenresAsync(int limit)
+        public async Task PopulateMoreGenresAsync(int limit, CancellationToken cancellationToken = default)
         {
             using (await Flow.EasySemaphore(_populateGenresMutex))
             {
-                var items = await _album.GetGenresAsync(limit, Genres.Count);
+                using var releaseReg = cancellationToken.Register(() => _populateGenresMutex.Release());
+                var items = await _album.GetGenresAsync(limit, Genres.Count, cancellationToken);
 
                 _syncContext.Post(_ =>
                 {
@@ -850,16 +857,16 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public Task InitArtistCollectionAsync() => CollectionInit.ArtistCollection(this);
+        public Task InitArtistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ArtistCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync() => CollectionInit.ImageCollection(this);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitTrackCollectionAsync() => CollectionInit.TrackCollection(this);
+        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollection(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitGenreCollectionAsync() => CollectionInit.GenreCollection(this);
+        public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollection(this, cancellationToken);
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _album.Equals(other);
@@ -886,23 +893,23 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreAlbum other) => _album.Equals(other);
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
                 return Task.CompletedTask;
 
             IsInitialized = true;
 
-            return Task.WhenAll(InitImageCollectionAsync(), InitTrackCollectionAsync(), InitGenreCollectionAsync(), InitArtistCollectionAsync());
+            return Task.WhenAll(InitImageCollectionAsync(cancellationToken), InitTrackCollectionAsync(cancellationToken), InitGenreCollectionAsync(cancellationToken), InitArtistCollectionAsync(cancellationToken));
         }
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
-        private Task ChangeNameInternalAsync(string? name)
+        private Task ChangeNameInternalAsync(string? name, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(name, nameof(name));
-            return _album.ChangeNameAsync(name);
+            return _album.ChangeNameAsync(name, cancellationToken);
         }
 
         /// <inheritdoc />

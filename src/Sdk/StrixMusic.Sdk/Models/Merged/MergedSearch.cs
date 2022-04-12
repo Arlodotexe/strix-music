@@ -4,8 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
@@ -41,9 +43,9 @@ namespace StrixMusic.Sdk.Models.Merged
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query)
+        public async IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var sources = await Sources.InParallel(async x => await x.GetSearchAutoCompleteAsync(query).ToListAsync());
+            var sources = await Sources.InParallel(async x => await x.GetSearchAutoCompleteAsync(query, cancellationToken).ToListAsync(cancellationToken));
 
             foreach (var result in sources.SelectMany(x => x))
             {
@@ -52,9 +54,9 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public async Task<ISearchResults> GetSearchResultsAsync(string query)
+        public async Task<ISearchResults> GetSearchResultsAsync(string query, CancellationToken cancellationToken = default)
         {
-            var results = await Sources.InParallel(x => x.GetSearchResultsAsync(query));
+            var results = await Sources.InParallel(x => x.GetSearchResultsAsync(query, cancellationToken));
 
             var merged = new MergedSearchResults(results, _config);
 
@@ -62,9 +64,9 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries()
+        public async IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var sources = await Sources.InParallel(async x => await x.GetRecentSearchQueries().ToListAsync());
+            var sources = await Sources.InParallel(async x => await x.GetRecentSearchQueries(cancellationToken).ToListAsync(cancellationToken));
 
             var results = sources.SelectMany(x => x);
 

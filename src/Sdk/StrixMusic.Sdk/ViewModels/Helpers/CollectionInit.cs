@@ -5,7 +5,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {
@@ -20,13 +20,16 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a track collection view model.
         /// </summary>
         /// <param name="trackCollection">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task TrackCollection(ITrackCollectionViewModel trackCollection)
+        public static async Task TrackCollection(ITrackCollectionViewModel trackCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = trackCollection.Tracks.Count;
 
             while (trackCollection.Tracks.Count < trackCollection.TotalTrackCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await trackCollection.PopulateMoreTracksAsync(trackCollection.TotalTrackCount);
 
                 // nothing was returned
@@ -46,13 +49,16 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a album collection view model.
         /// </summary>
         /// <param name="albumCollection">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task AlbumCollection(IAlbumCollectionViewModel albumCollection)
+        public static async Task AlbumCollection(IAlbumCollectionViewModel albumCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = albumCollection.Albums.Count;
 
             while (albumCollection.Albums.Count < albumCollection.TotalAlbumItemsCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await albumCollection.PopulateMoreAlbumsAsync(albumCollection.TotalAlbumItemsCount);
 
                 // nothing was returned
@@ -72,13 +78,16 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a artist collection view model.
         /// </summary>
         /// <param name="artistCollection">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ArtistCollection(IArtistCollectionViewModel artistCollection)
+        public static async Task ArtistCollection(IArtistCollectionViewModel artistCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = artistCollection.Artists.Count;
 
             while (artistCollection.Artists.Count < artistCollection.TotalArtistItemsCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await artistCollection.PopulateMoreArtistsAsync(artistCollection.TotalArtistItemsCount);
 
                 // nothing was returned
@@ -98,13 +107,16 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a playlists collection view model.
         /// </summary>
         /// <param name="playlistCollection">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection)
+        public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = playlistCollection.Playlists.Count;
 
             while (playlistCollection.Playlists.Count < playlistCollection.TotalPlaylistItemsCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await playlistCollection.PopulateMorePlaylistsAsync(playlistCollection.TotalPlaylistItemsCount);
 
                 // nothing was returned
@@ -124,13 +136,16 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a genre collection view model.
         /// </summary>
         /// <param name="genreCollectionViewModel">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task GenreCollection(IGenreCollectionViewModel genreCollectionViewModel)
+        public static async Task GenreCollection(IGenreCollectionViewModel genreCollectionViewModel, CancellationToken cancellationToken)
         {
             var lastItemCount = genreCollectionViewModel.Genres.Count;
 
             while (genreCollectionViewModel.Genres.Count < genreCollectionViewModel.TotalGenreCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await genreCollectionViewModel.PopulateMoreGenresAsync(genreCollectionViewModel.TotalGenreCount);
 
                 // nothing was returned
@@ -150,8 +165,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// Initialize a image collection view model.
         /// </summary>
         /// <param name="imageCollectionViewModel">The collection to initialize.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel)
+        public static async Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel, CancellationToken cancellationToken)
         {
             await _imagesMutex.WaitAsync();
 
@@ -165,6 +181,8 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
 
             while (imageCollectionViewModel.Images.Count < imageCollectionViewModel.TotalImageCount)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await imageCollectionViewModel.PopulateMoreImagesAsync(imageCollectionViewModel.TotalImageCount);
 
                 // nothing was returned

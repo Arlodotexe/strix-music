@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Remoting;
@@ -156,127 +157,129 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public int TotalUrlCount { get; set; }
 
         /// <inheritdoc/>
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc/>
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PlayTrackCollectionAsync()
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PauseTrackCollectionAsync()
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task RemoveTrackAsync(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackAvailableAsync(int index)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task AddUrlAsync(ICoreUrl url, int index)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task ChangeNameAsync(string name)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string? description)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task RemoveImageAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task RemoveUrlAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddUrlAvailableAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

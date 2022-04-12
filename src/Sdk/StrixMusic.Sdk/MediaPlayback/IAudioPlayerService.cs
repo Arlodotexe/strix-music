@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.MediaPlayback
@@ -17,15 +18,17 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// Plays a track.
         /// </summary>
         /// <param name="sourceConfig">The source configuration for this track.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task Play(PlaybackItem sourceConfig);
+        Task Play(PlaybackItem sourceConfig, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Preloads a track to be played later.
         /// </summary>
         /// <param name="sourceConfig">The track's source data.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task Preload(PlaybackItem sourceConfig);
+        Task Preload(PlaybackItem sourceConfig, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// The currently playing media source.

@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Models.Base
@@ -18,45 +19,48 @@ namespace StrixMusic.Sdk.Models.Base
         int TotalPlaylistItemsCount { get; }
 
         /// <summary>
-        /// If true, <see cref="PlayPlaylistCollectionAsync()"/> can be used.
+        /// If true, <see cref="PlayPlaylistCollectionAsync(CancellationToken)"/> can be used.
         /// </summary>
         bool IsPlayPlaylistCollectionAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="PausePlaylistCollectionAsync()"/> can be used.
+        /// If true, <see cref="PausePlaylistCollectionAsync(CancellationToken)"/> can be used.
         /// </summary>
         bool IsPausePlaylistCollectionAsyncAvailable { get; }
 
         /// <summary>
         /// Attempts to play the Playlist collection, or resumes playback if already playing.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayPlaylistCollectionAsync();
+        Task PlayPlaylistCollectionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Attempts to pause the Playlist collection.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PausePlaylistCollectionAsync();
+        Task PausePlaylistCollectionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Removes the playlist from the collection on the backend.
         /// </summary>
         /// <param name="index">The index of the playlist to remove.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RemovePlaylistItemAsync(int index);
+        Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if the backend supports adding an <see cref="IPlaylistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlaylistCollectionItemBase"/> can be added.</returns>
-        Task<bool> IsAddPlaylistItemAvailableAsync(int index);
+        Task<bool> IsAddPlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="IPlaylistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IPlaylistCollectionItemBase"/> can be removed.</returns>
-        Task<bool> IsRemovePlaylistItemAvailableAsync(int index);
+        Task<bool> IsRemovePlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when <see cref="IsPlayPlaylistCollectionAsyncAvailable"/> changes.

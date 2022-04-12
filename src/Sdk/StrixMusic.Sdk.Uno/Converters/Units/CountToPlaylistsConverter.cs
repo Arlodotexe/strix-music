@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using Windows.UI.Xaml.Data;
 

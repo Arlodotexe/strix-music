@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
@@ -29,8 +30,8 @@ internal class TrackCollectionPlaybackHandlerPlugin : TrackCollectionPluginBase
     }
 
     /// <inheritdoc/>
-    public override Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync(this, Inner);
+    public override Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => _playbackHandler.PlayAsync(this, Inner, cancellationToken);
 
     /// <inheritdoc/>
-    public override Task PlayTrackCollectionAsync(ITrack track) => _playbackHandler.PlayAsync(track, this, Inner);
+    public override Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _playbackHandler.PlayAsync(track, this, Inner, cancellationToken);
 }

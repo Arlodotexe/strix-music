@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Models.Core;
 
@@ -19,20 +20,21 @@ namespace StrixMusic.Sdk.Models.Base
         /// Checks if adding a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IImageBase"/> can be added.</returns>
-        Task<bool> IsAddImageAvailableAsync(int index);
+        Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Checks if removing a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IImageBase"/> can be removed.</returns>
-        Task<bool> IsRemoveImageAvailableAsync(int index);
+        Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Removes the image from the collection on the backend.
         /// </summary>
         /// <param name="index">The index of the image to remove.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RemoveImageAsync(int index);
+        Task RemoveImageAsync(int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// The total number of images in the collection.

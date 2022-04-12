@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Cores.Files.Services;
@@ -30,9 +31,10 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override async Task InitAsync()
+        public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            await _initSemaphore.WaitAsync();
+            using var initReleaseRegistration = cancellationToken.Register(() => _initSemaphore.Release());
+            await _initSemaphore.WaitAsync(cancellationToken);
 
             _fileMetadataManager = SourceCore.Cast<FilesCore>().FileMetadataManager;
 
@@ -43,7 +45,7 @@ namespace StrixMusic.Cores.Files.Models
             TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
             TotalTrackCount = await _fileMetadataManager.Tracks.GetItemCount();
 
-            await base.InitAsync();
+            await base.InitAsync(cancellationToken);
 
             AttachEvents();
 
@@ -274,13 +276,13 @@ namespace StrixMusic.Cores.Files.Models
         public override event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerable.Empty<ICorePlayableCollectionGroup>();
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var playlistsMetadata = await _fileMetadataManager.Playlists.GetItemsAsync(offset, limit);
@@ -294,7 +296,7 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var albumMetadata = await _fileMetadataManager.Albums.GetItemsAsync(offset, limit);
@@ -308,7 +310,7 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var artistMetadata = await _fileMetadataManager.Artists.GetItemsAsync(offset, limit);
@@ -322,7 +324,7 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
             var artistMetadata = await _fileMetadataManager.Tracks.GetItemsAsync(offset, limit);
@@ -335,7 +337,7 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerable.Empty<ICoreUrl>();
         }

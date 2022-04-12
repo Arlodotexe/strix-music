@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Provisos;
@@ -30,7 +31,7 @@ namespace StrixMusic.Cores.Files.Models
         /// Initializes the collection group base.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public virtual Task InitAsync()
+        public virtual Task InitAsync(CancellationToken cancellationToken = default)
         {
             IsInitialized = true;
             return Task.CompletedTask;
@@ -248,301 +249,311 @@ namespace StrixMusic.Cores.Files.Models
         public virtual bool IsInitialized { get; protected set; }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddChildAvailableAsync(int index)
+        public Task<bool> IsAddChildAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddPlaylistItemAvailableAsync(int index)
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackAvailableAsync(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemAvailableAsync(int index)
+        public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddAlbumItemAvailableAsync(int index)
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailableAsync(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddUrlAvailableAsync(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index)
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index, CancellationToken cancellationToken)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index)
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailableAsync(int index)
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveChildAvailableAsync(int index)
+        public Task<bool> IsRemoveChildAvailableAsync(int index, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PausePlaylistCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync()
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+        /// <inheritdoc />
+        public Task PausePlayableCollectionGroupAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync()
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PauseArtistCollectionAsync()
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync()
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PausePlaylistCollectionAsync()
+        public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
+        public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
+        public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
+        public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
-        {
-            throw new NotSupportedException();
-        }
+        public abstract IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync()
-        {
-            throw new NotSupportedException();
-        }
+        public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task PausePlayableCollectionGroupAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
-
-        /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset);
-
-        /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
-
-        /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
-
-        /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0);
-
-        /// <inheritdoc />
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddUrlAsync(ICoreUrl url, int index)
+        public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index)
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index)
+        public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveAlbumItemAsync(int index)
+        public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemovePlaylistItemAsync(int index)
+        public Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveChildAsync(int index)
+        public Task RemoveChildAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index)
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

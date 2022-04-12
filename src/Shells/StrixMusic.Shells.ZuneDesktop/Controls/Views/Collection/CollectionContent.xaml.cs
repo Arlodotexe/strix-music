@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;

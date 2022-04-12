@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
@@ -60,7 +61,7 @@ namespace StrixMusic.Sdk.Models.Core
 
         /// <summary>
         /// The available devices. These should only be populated with remote devices, if supported by the core.
-        /// Local playback is handled by the SDK by calling <see cref="GetMediaSource(ICoreTrack)"/>.
+        /// Local playback is handled by the SDK by calling <see cref="GetMediaSourceAsync"/>.
         /// </summary>
         public IReadOnlyList<ICoreDevice> Devices { get; }
 
@@ -107,14 +108,15 @@ namespace StrixMusic.Sdk.Models.Core
         /// Given the ID of an instance created by this core, return the fully constructed instance.
         /// </summary>
         /// <returns>The requested instance, cast down to <see cref="ICoreMember"/>.</returns>
-        public Task<ICoreMember?> GetContextById(string id);
+        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Converts a <see cref="ICoreTrack"/> into a <see cref="IMediaSourceConfig"/> that can be used to play the track.
         /// </summary>
         /// <param name="track">The track to convert.</param>
+        /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. The value is an <see cref="IMediaSourceConfig"/> that can be used to play the track.</returns>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track);
+        public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised when the <see cref="Models.CoreState"/> has changed.

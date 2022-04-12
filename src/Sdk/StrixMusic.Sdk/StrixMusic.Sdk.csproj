@@ -19,6 +19,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Common" Version="8.0.0-preview3" />
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0-preview3" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview3" />
 		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
@@ -29,11 +32,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
-		<PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
-		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="OwlCore" Version="0.0.61" />
+		<PackageReference Include="OwlCore" Version="0.0.64" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>

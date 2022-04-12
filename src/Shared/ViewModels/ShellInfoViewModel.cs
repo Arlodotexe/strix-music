@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using Windows.Storage;
@@ -53,12 +54,12 @@ namespace StrixMusic.Shared.ViewModels
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc/>
-        public Task InitAsync()
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return SetupImages();
+            return SetupImages(cancellationToken);
         }
 
-        private async Task SetupImages()
+        private async Task SetupImages(CancellationToken cancellationToken)
         {
             var foundFiles = new List<StorageFile>();
 
@@ -68,6 +69,7 @@ namespace StrixMusic.Shared.ViewModels
             {
                 try
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     var fileName = $"{++index}.png";
 
                     var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/ShellPreviews/{Metadata.Id}/{fileName}"));

@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
@@ -283,11 +284,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
-            public override Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task RemoveImageAsync(int index) => throw AccessedException;
+            public override Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override int TotalImageCount => throw AccessedException;
 
@@ -299,11 +300,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override int TotalUrlCount => throw AccessedException;
 
-            public override Task RemoveUrlAsync(int index) => throw AccessedException;
+            public override Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddUrlAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveUrlAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<int>? UrlsCountChanged
             {
@@ -329,11 +330,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool IsChangeDurationAsyncAvailable => throw AccessedException;
 
-            public override Task ChangeNameAsync(string name) => throw AccessedException;
+            public override Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task ChangeDescriptionAsync(string? description) => throw AccessedException;
+            public override Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task ChangeDurationAsync(TimeSpan duration) => throw AccessedException;
+            public override Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<PlaybackState>? PlaybackStateChanged
             {
@@ -391,15 +392,15 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool IsPauseAlbumCollectionAsyncAvailable => throw AccessedException;
 
-            public override Task PlayAlbumCollectionAsync() => throw AccessedException;
+            public override Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task PauseAlbumCollectionAsync() => throw AccessedException;
+            public override Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task RemoveAlbumItemAsync(int index) => throw AccessedException;
+            public override Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddAlbumItemAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
             {
@@ -425,15 +426,15 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool IsPauseTrackCollectionAsyncAvailable => throw AccessedException;
 
-            public override Task PlayTrackCollectionAsync() => throw AccessedException;
+            public override Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task PauseTrackCollectionAsync() => throw AccessedException;
+            public override Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task RemoveTrackAsync(int index) => throw AccessedException;
+            public override Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddTrackAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveTrackAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
             {
@@ -455,11 +456,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override int TotalGenreCount => throw AccessedException;
 
-            public override Task RemoveGenreAsync(int index) => throw AccessedException;
+            public override Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsAddGenreAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<bool> IsRemoveGenreAvailableAsync(int index) => throw AccessedException;
+            public override Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<int>? GenresCountChanged
             {
@@ -469,7 +470,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override DownloadInfo DownloadInfo => throw AccessedException;
 
-            public override Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public override Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event EventHandler<DownloadInfo>? DownloadInfoChanged
             {
@@ -479,9 +480,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task AddImageAsync(IImage image, int index) => throw AccessedException;
+            public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IImage>? ImagesChanged
             {
@@ -491,9 +492,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
+            public override Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IUrl>? UrlsChanged
             {
@@ -507,11 +508,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreAlbumCollection? other) => throw AccessedException;
 
-            public override Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => throw AccessedException;
+            public override Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => throw AccessedException;
+            public override Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged
             {
@@ -521,11 +522,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreTrackCollection? other) => throw AccessedException;
 
-            public override Task PlayTrackCollectionAsync(ITrack track) => throw AccessedException;
+            public override Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task AddTrackAsync(ITrack track, int index) => throw AccessedException;
+            public override Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event CollectionChangedEventHandler<ITrack>? TracksChanged
             {
@@ -535,9 +536,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => throw AccessedException;
+            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
+            public override Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override event CollectionChangedEventHandler<IGenre>? GenresChanged
             {
@@ -576,11 +577,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public ValueTask DisposeAsync() => throw AccessedException;
 
-            public Task<bool> IsAddImageAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveImageAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task RemoveImageAsync(int index) => throw AccessedException;
+            public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public int TotalImageCount => throw AccessedException;
 
@@ -592,11 +593,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public int TotalUrlCount => throw AccessedException;
 
-            public Task RemoveUrlAsync(int index) => throw AccessedException;
+            public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddUrlAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveUrlAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<int>? UrlsCountChanged
             {
@@ -622,11 +623,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool IsChangeDurationAsyncAvailable => throw AccessedException;
 
-            public Task ChangeNameAsync(string name) => throw AccessedException;
+            public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task ChangeDescriptionAsync(string? description) => throw AccessedException;
+            public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task ChangeDurationAsync(TimeSpan duration) => throw AccessedException;
+            public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<PlaybackState>? PlaybackStateChanged
             {
@@ -684,15 +685,15 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool IsPauseAlbumCollectionAsyncAvailable => throw AccessedException;
 
-            public Task PlayAlbumCollectionAsync() => throw AccessedException;
+            public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task PauseAlbumCollectionAsync() => throw AccessedException;
+            public Task PauseAlbumCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task RemoveAlbumItemAsync(int index) => throw AccessedException;
+            public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddAlbumItemAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveAlbumItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
             {
@@ -718,15 +719,15 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool IsPauseTrackCollectionAsyncAvailable => throw AccessedException;
 
-            public Task PlayTrackCollectionAsync() => throw AccessedException;
+            public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task PauseTrackCollectionAsync() => throw AccessedException;
+            public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task RemoveTrackAsync(int index) => throw AccessedException;
+            public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddTrackAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveTrackAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
             {
@@ -748,11 +749,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public int TotalGenreCount => throw AccessedException;
 
-            public Task RemoveGenreAsync(int index) => throw AccessedException;
+            public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsAddGenreAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<bool> IsRemoveGenreAvailableAsync(int index) => throw AccessedException;
+            public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<int>? GenresCountChanged
             {
@@ -762,7 +763,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public DownloadInfo DownloadInfo => throw AccessedException;
 
-            public Task StartDownloadOperationAsync(DownloadOperation operation) => throw AccessedException;
+            public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event EventHandler<DownloadInfo>? DownloadInfoChanged
             {
@@ -790,9 +791,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task AddImageAsync(IImage image, int index) => throw AccessedException;
+            public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event CollectionChangedEventHandler<IImage>? ImagesChanged
             {
@@ -802,9 +803,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task AddUrlAsync(IUrl url, int index) => throw AccessedException;
+            public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event CollectionChangedEventHandler<IUrl>? UrlsChanged
             {
@@ -818,11 +819,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreAlbumCollection? other) => throw AccessedException;
 
-            public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => throw AccessedException;
+            public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => throw AccessedException;
+            public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged
             {
@@ -832,11 +833,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreTrackCollection? other) => throw AccessedException;
 
-            public Task PlayTrackCollectionAsync(ITrack track) => throw AccessedException;
+            public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task AddTrackAsync(ITrack track, int index) => throw AccessedException;
+            public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event CollectionChangedEventHandler<ITrack>? TracksChanged
             {
@@ -846,9 +847,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => throw AccessedException;
+            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task AddGenreAsync(IGenre genre, int index) => throw AccessedException;
+            public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public event CollectionChangedEventHandler<IGenre>? GenresChanged
             {

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Core;
 using Windows.UI.Xaml.Data;

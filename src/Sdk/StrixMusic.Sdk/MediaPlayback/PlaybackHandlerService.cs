@@ -5,8 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
@@ -169,26 +170,26 @@ namespace StrixMusic.Sdk.MediaPlayback
         public void RegisterAudioPlayer(IAudioPlayerService audioPlayer, string instanceId) => _audioPlayerRegistry.Add(instanceId, audioPlayer);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position) => _currentPlayerService?.SeekAsync(position) ?? Task.CompletedTask;
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _currentPlayerService?.SeekAsync(position, cancellationToken) ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed) => _currentPlayerService?.ChangePlaybackSpeedAsync(speed) ?? Task.CompletedTask;
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _currentPlayerService?.ChangePlaybackSpeedAsync(speed, cancellationToken) ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public Task ResumeAsync() => _currentPlayerService?.ResumeAsync() ?? Task.CompletedTask;
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _currentPlayerService?.ResumeAsync(cancellationToken) ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public Task PauseAsync() => _currentPlayerService?.PauseAsync() ?? Task.CompletedTask;
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _currentPlayerService?.PauseAsync(cancellationToken) ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume) => _currentPlayerService?.ResumeAsync() ?? Task.CompletedTask;
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _currentPlayerService?.ResumeAsync(cancellationToken) ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public async Task PlayFromNext(int queueIndex)
+        public async Task PlayFromNext(int queueIndex, CancellationToken cancellationToken = default)
         {
             if (_currentPlayerService != null)
             {
-                await _currentPlayerService.PauseAsync();
+                await _currentPlayerService.PauseAsync(cancellationToken);
                 DetachEvents(_currentPlayerService);
             }
 
@@ -207,11 +208,11 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             CurrentItem = playbackItem;
             _nextItems.Remove(playbackItem);
-            await _currentPlayerService.Play(playbackItem);
+            await _currentPlayerService.Play(playbackItem, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task PlayFromPrevious(int queueIndex)
+        public async Task PlayFromPrevious(int queueIndex, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_currentPlayerService, nameof(_currentPlayerService));
 
@@ -220,18 +221,18 @@ namespace StrixMusic.Sdk.MediaPlayback
             Guard.IsNotNull(playbackItem, nameof(playbackItem));
             Guard.IsNotNull(playbackItem.MediaConfig, nameof(playbackItem.MediaConfig));
 
-            await _currentPlayerService.PauseAsync();
+            await _currentPlayerService.PauseAsync(cancellationToken);
             DetachEvents(_currentPlayerService);
 
             _currentPlayerService = _audioPlayerRegistry[playbackItem.MediaConfig.Track.SourceCore.InstanceId];
             AttachEvents(_currentPlayerService);
 
             // TODO shift queue, move tracks after the played item into next
-            await _currentPlayerService.Play(playbackItem);
+            await _currentPlayerService.Play(playbackItem, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task NextAsync()
+        public async Task NextAsync(CancellationToken cancellationToken = default)
         {
             if (_currentPlayerService == null && CurrentItem != null)
             {
@@ -243,7 +244,7 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             var nextIndex = 0;
 
-            await _currentPlayerService.PauseAsync();
+            await _currentPlayerService.PauseAsync(cancellationToken);
             DetachEvents(_currentPlayerService);
 
             if (RepeatState == RepeatState.All && NextItems.Count == 0)
@@ -289,14 +290,14 @@ namespace StrixMusic.Sdk.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[instanceId];
             AttachEvents(_currentPlayerService);
 
-            await _currentPlayerService.Play(nextItem);
+            await _currentPlayerService.Play(nextItem, cancellationToken);
             _currentPlayerService.CurrentSource = CurrentItem;
 
             CurrentItemChanged?.Invoke(this, nextItem);
         }
 
         /// <inheritdoc />
-        public Task PreviousAsync() => PreviousAsync(true);
+        public Task PreviousAsync(CancellationToken cancellationToken = default) => PreviousAsync(true);
 
         /// <inheritdoc />
         public void InsertNext(int index, PlaybackItem sourceConfig)
@@ -437,7 +438,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public Task ToggleShuffleAsync()
+        public Task ToggleShuffleAsync(CancellationToken cancellationToken = default)
         {
             _shuffleState = !_shuffleState;
 
@@ -538,7 +539,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public Task SetRepeatStateAsync(RepeatState state)
+        public Task SetRepeatStateAsync(RepeatState state, CancellationToken cancellationToken = default)
         {
             _repeatState = state;
 
@@ -548,7 +549,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public Task ToggleRepeatAsync()
+        public Task ToggleRepeatAsync(CancellationToken cancellationToken = default)
         {
             _repeatState = _repeatState switch
             {

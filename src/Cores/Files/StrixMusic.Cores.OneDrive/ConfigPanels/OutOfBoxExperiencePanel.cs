@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Components;
 using OwlCore.AbstractUI.Models;
@@ -53,7 +53,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         public async Task ExecuteSettingsStageAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<object?>();
-            _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
+            using var onCanceledCleanupRegistration = _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
 
@@ -76,7 +76,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         public async Task ExecuteCustomAppKeyStageAsync()
         {
             var taskCompletionSource = new TaskCompletionSource<object?>();
-            _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
+            using var onCanceledCleanupRegistration = _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
 
@@ -88,7 +88,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             if (!appIdentityKeysMissing)
             {
                 var askFirstCompletionSource = new TaskCompletionSource<bool>();
-                _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
+                using var askFirstCleanupRegistration = _oobeCancellationSource.Token.Register(() => askFirstCompletionSource.TrySetCanceled());
 
                 var yesButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}YesButton", "Yes");
                 var noButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}NoButton", "Skip");
@@ -119,7 +119,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             else
             {
                 var missingAppIdentityNoticeCompletionSource = new TaskCompletionSource<bool>();
-                _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
+                using var missingIdentityCleanupRegistration = _oobeCancellationSource.Token.Register(() => missingAppIdentityNoticeCompletionSource.TrySetCanceled());
 
                 var okButton = new AbstractButton($"{nameof(ExecuteCustomAppKeyStageAsync)}Ok", "Ok", type: AbstractButtonType.Confirm);
 
@@ -151,6 +151,8 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             Add(_actionButtons);
 
             await taskCompletionSource.Task;
+
+            _oobeCancellationSource.Token.ThrowIfCancellationRequested();
 
             Clear();
 
@@ -185,13 +187,16 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
                     fileExplorer.Subtitle = emailAddress;
             }
 
-            await fileExplorer.InitAsync();
+            await fileExplorer.InitAsync(_oobeCancellationSource.Token);
+            _oobeCancellationSource.Token.ThrowIfCancellationRequested();
 
             Add(fileExplorer);
 
             var result = await taskCompletionSource.Task;
             if (result is not null)
                 _settings.SelectedFolderId = result.Id ?? ThrowHelper.ThrowArgumentException<string>();
+
+            _oobeCancellationSource.Token.ThrowIfCancellationRequested();
 
             fileExplorer.NavigationFailed -= OnNavigationFailed;
             fileExplorer.FolderSelected -= OnFolderSelected;
