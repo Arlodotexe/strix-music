@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.Uno.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
