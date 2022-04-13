@@ -91,6 +91,12 @@ namespace StrixMusic.Cores.OneDrive
         /// </summary>
         public event EventHandler<Uri>? LoginNavigationRequested;
 
+        /// <inheritdoc cref="MsalPublicClientApplicationBuilderCreatedEventArgs" />
+        public event EventHandler<MsalPublicClientApplicationBuilderCreatedEventArgs>? MsalPublicClientApplicationBuilderCreated;
+
+        /// <inheritdoc cref="AcquireTokenInteractiveParameterBuilderCreatedEventArgs" />
+        public event EventHandler<AcquireTokenInteractiveParameterBuilderCreatedEventArgs>? MsalAcquireTokenInteractiveParameterBuilderCreated;
+
         /// <inheritdoc/>
         public override event EventHandler<CoreState>? CoreStateChanged;
 
@@ -118,6 +124,7 @@ namespace StrixMusic.Cores.OneDrive
                 string.IsNullOrWhiteSpace(Settings.RedirectUri) ||
                 !Settings.UserHasSeenAuthClientKeysSettings)
             {
+                _logger.LogInformation("Need custom app key values");
                 ChangeCoreState(CoreState.NeedsConfiguration);
 
                 var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
@@ -133,6 +140,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (!Settings.UserHasSeenGeneralOobeSettings)
             {
+                _logger.LogInformation("Displaying general OOBE settings");
                 ChangeCoreState(CoreState.NeedsConfiguration);
 
                 var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
@@ -148,6 +156,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrWhiteSpace(Settings.AccountIdentifier))
             {
+                _logger.LogInformation("User needs to login");
                 ChangeCoreState(CoreState.NeedsConfiguration);
                 try
                 {
@@ -182,6 +191,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrWhiteSpace(Settings.SelectedFolderId))
             {
+                _logger.LogInformation("User needs to pick folder");
                 ChangeCoreState(CoreState.NeedsConfiguration);
                 var folder = await AcquireUserSelectedFolderAsync(cancellationToken);
                 if (folder is null)
@@ -241,8 +251,10 @@ namespace StrixMusic.Cores.OneDrive
             var doneButton = new AbstractButton($"{nameof(GeneralCoreConfigPanel)}DoneButton", "Done");
             doneButton.Clicked += GeneralConfigPanelDoneButtonClicked;
 
-            var ui = new GeneralCoreConfigPanel(Settings, NotificationService);
-            ui.Add(doneButton);
+            var ui = new GeneralCoreConfigPanel(Settings, NotificationService)
+            {
+                doneButton
+            };
 
             _configPanel = ui;
             AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
@@ -271,11 +283,17 @@ namespace StrixMusic.Cores.OneDrive
                 HttpMessageHandler = HttpMessageHandler,
             };
 
+            authManager.MsalAcquireTokenInteractiveParameterBuilderCreated += OnInteractiveParamBuilderCreated;
+            authManager.MsalPublicClientApplicationBuilderCreated += OnPublicClientApplicationBuilderCreated;
+
             var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationToken);
             if (authenticationToken is null)
                 return null;
 
             var graphClient = authManager.CreateGraphClient(authenticationToken.AccessToken);
+
+            authManager.MsalAcquireTokenInteractiveParameterBuilderCreated -= OnInteractiveParamBuilderCreated;
+            authManager.MsalPublicClientApplicationBuilderCreated -= OnPublicClientApplicationBuilderCreated;
 
             var user = await graphClient.Users.Request().GetAsync(cancellationToken);
 
@@ -296,6 +314,9 @@ namespace StrixMusic.Cores.OneDrive
             {
                 HttpMessageHandler = HttpMessageHandler,
             };
+
+            authManager.MsalAcquireTokenInteractiveParameterBuilderCreated += OnInteractiveParamBuilderCreated;
+            authManager.MsalPublicClientApplicationBuilderCreated += OnPublicClientApplicationBuilderCreated;
 
             var authenticationToken = await authManager.TryAcquireCachedTokenAsync(Settings.AccountIdentifier, cancellationToken);
             if (authenticationToken is null)
@@ -331,8 +352,11 @@ namespace StrixMusic.Cores.OneDrive
             }
 
             Guard.IsNotNull(authenticationToken, nameof(authenticationToken));
-
             Guard.IsNotNullOrWhiteSpace(authenticationToken.Account.Username, nameof(authenticationToken.Account.Username));
+
+            authManager.MsalAcquireTokenInteractiveParameterBuilderCreated -= OnInteractiveParamBuilderCreated;
+            authManager.MsalPublicClientApplicationBuilderCreated -= OnPublicClientApplicationBuilderCreated;
+
             return authenticationToken.Account.HomeAccountId.Identifier;
         }
 
@@ -359,5 +383,9 @@ namespace StrixMusic.Cores.OneDrive
             _completeGenericSetupButton.Clicked -= CompleteGenericSetupButton_Clicked;
             return base.DisposeAsync();
         }
+
+        private void OnInteractiveParamBuilderCreated(object sender, AcquireTokenInteractiveParameterBuilderCreatedEventArgs args) => MsalAcquireTokenInteractiveParameterBuilderCreated?.Invoke(this, args);
+
+        private void OnPublicClientApplicationBuilderCreated(object sender, MsalPublicClientApplicationBuilderCreatedEventArgs args) => MsalPublicClientApplicationBuilderCreated?.Invoke(this, args);
     }
 }

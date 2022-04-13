@@ -21,9 +21,10 @@ namespace StrixMusic.Cores.OneDrive.Services
     {
         private readonly string _authorityUri = "https://login.microsoftonline.com/consumers";
         private readonly string[] _scopes = { "Files.Read.All", "User.Read", "Files.ReadWrite" };
-
-        private readonly IPublicClientApplication _clientApp;
         private readonly ILogger<AuthenticationManager> _logger;
+        private readonly string _clientId;
+        private readonly string _tenantId;
+        private readonly string? _redirectUri;
 
         /// <summary>
         /// Creates a new instance of <see cref="AuthenticationManager"/>.
@@ -33,31 +34,22 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <param name="redirectUri">The redirect URI to use with the connected application, if any.</param>
         public AuthenticationManager(string clientId, string tenantId, string? redirectUri = null)
         {
+            _clientId = clientId;
+            _tenantId = tenantId;
+            _redirectUri = redirectUri;
             _logger = Ioc.Default.GetRequiredService<ILogger<AuthenticationManager>>();
-
-            _logger.LogInformation($"Creating {nameof(PublicClientApplicationBuilder)}");
-
-            var authority = new Uri($"{_authorityUri}/{tenantId}");
-
-            var builder = PublicClientApplicationBuilder
-                .Create(clientId)
-                .WithAuthority(authority, false);
-
-            if (!string.IsNullOrWhiteSpace(redirectUri))
-                builder.WithRedirectUri(redirectUri);
-
-            _logger.LogInformation($"Adding uno helpers to {nameof(PublicClientApplicationBuilder)}");
-#warning TODO remove UnoHelpers dependency.
-            builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
-
-            _logger.LogInformation($"Building {nameof(IPublicClientApplication)}");
-            _clientApp = builder.Build();
         }
 
         /// <summary>
         /// A custom message handler to use for network requests during authentication.
         /// </summary>
         public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
+
+        /// <inheritdoc cref="MsalPublicClientApplicationBuilderCreatedEventArgs" />
+        public event EventHandler<MsalPublicClientApplicationBuilderCreatedEventArgs>? MsalPublicClientApplicationBuilderCreated;
+
+        /// <inheritdoc cref="AcquireTokenInteractiveParameterBuilderCreatedEventArgs" />
+        public event EventHandler<AcquireTokenInteractiveParameterBuilderCreatedEventArgs>? MsalAcquireTokenInteractiveParameterBuilderCreated;
 
         public GraphServiceClient CreateGraphClient(string accessToken)
         {
@@ -100,6 +92,8 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public async Task<AuthenticationResult?> TryAcquireCachedTokenAsync(string accountIdentifier, CancellationToken cancellationToken = default)
         {
+            var clientApp = BuildPublicClientApplication();
+
             _logger.LogInformation($"Acquiring token from cache.");
 
             if (string.IsNullOrWhiteSpace(accountIdentifier))
@@ -108,10 +102,10 @@ namespace StrixMusic.Cores.OneDrive.Services
             try
             {
                 _logger.LogInformation($"Getting accounts");
-                var account = await _clientApp.GetAccountAsync(accountIdentifier);
+                var account = await clientApp.GetAccountAsync(accountIdentifier);
 
-                _logger.LogInformation($"Executing via {nameof(_clientApp.AcquireTokenSilent)}");
-                return await _clientApp.AcquireTokenSilent(_scopes, account).ExecuteAsync(cancellationToken);
+                _logger.LogInformation($"Executing via {nameof(clientApp.AcquireTokenSilent)}");
+                return await clientApp.AcquireTokenSilent(_scopes, account).ExecuteAsync(cancellationToken);
             }
             catch (MsalUiRequiredException)
             {
@@ -121,14 +115,16 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public Task<AuthenticationResult?> TryAcquireTokenViaInteractiveLoginAsync(CancellationToken cancellationToken = default)
         {
+            var clientApp = BuildPublicClientApplication();
             _logger.LogInformation($"Acquiring token via interactive login");
 
-            _logger.LogInformation($"Building via {nameof(_clientApp.AcquireTokenInteractive)}");
-            var builder = _clientApp.AcquireTokenInteractive(_scopes)
+            _logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenInteractive)}");
+            var builder = clientApp.AcquireTokenInteractive(_scopes)
                 .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount);
 
-            _logger.LogInformation($"Adding Uno helpers");
-            builder = Ioc.Default.GetRequiredService<ISharedFactory>().WithUnoHelpers(builder);
+            var createdArgs = new AcquireTokenInteractiveParameterBuilderCreatedEventArgs(builder);
+            MsalAcquireTokenInteractiveParameterBuilderCreated?.Invoke(this, createdArgs);
+            builder = createdArgs.Builder;
 
             _logger.LogInformation($"Executing builder");
 
@@ -137,13 +133,14 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public async Task<AuthenticationResult?> TryAcquireTokenViaDeviceCodeLoginAsync(Func<DeviceCodeResult, Task> deviceCodeResultCallback, CancellationToken cancellationToken = default)
         {
+            var clientApp = BuildPublicClientApplication();
             _logger.LogInformation($"Acquiring token via device code");
 
-            _logger.LogInformation($"Building via {nameof(_clientApp.AcquireTokenWithDeviceCode)}");
-            var builder = _clientApp.AcquireTokenWithDeviceCode(_scopes, deviceCodeResultCallback);
+            _logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenWithDeviceCode)}");
+            var builder = clientApp.AcquireTokenWithDeviceCode(_scopes, deviceCodeResultCallback);
 
             _logger.LogInformation($"Executing builder");
-            
+
             try
             {
                 return await builder.ExecuteAsync(cancellationToken);
@@ -152,6 +149,23 @@ namespace StrixMusic.Cores.OneDrive.Services
             {
                 return null;
             }
+        }
+
+        private IPublicClientApplication BuildPublicClientApplication()
+        {
+            var authority = new Uri($"{_authorityUri}/{_tenantId}");
+
+            var builder = PublicClientApplicationBuilder
+                .Create(_clientId)
+                .WithAuthority(authority, false);
+
+            if (!string.IsNullOrWhiteSpace(_redirectUri))
+                builder.WithRedirectUri(_redirectUri);
+
+            var createdArgs = new MsalPublicClientApplicationBuilderCreatedEventArgs(builder);
+            MsalPublicClientApplicationBuilderCreated?.Invoke(this, createdArgs);
+
+            return createdArgs.Builder.Build();
         }
     }
 }
