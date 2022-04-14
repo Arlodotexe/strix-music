@@ -8,7 +8,7 @@
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles"
-    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>

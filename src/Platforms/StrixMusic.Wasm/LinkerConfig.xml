@@ -67,7 +67,7 @@
 	<assembly fullname="StrixMusic.Cores.LocalFiles" />
 	<assembly fullname="StrixMusic.Cores.Files" />
 	<assembly fullname="SixLabors.ImageSharp" />
-	<assembly fullname="OwlCore.Uno" />
+	<assembly fullname="OwlCore.WinUI" />
 	<assembly fullname="OwlCore" />
 	<assembly fullname="NLog.Extensions.Logging" />
 	<assembly fullname="NLog" />

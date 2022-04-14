@@ -6,7 +6,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:unitconvert="using:StrixMusic.Sdk.Uno.Converters.Units"
     xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
-    xmlns:a="using:OwlCore.Uno.Attached"
+    xmlns:a="using:OwlCore.WinUI.Attached"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.ArtistCollectionStyle">

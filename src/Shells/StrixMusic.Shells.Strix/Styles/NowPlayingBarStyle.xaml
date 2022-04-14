@@ -5,7 +5,7 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls">
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Strix/Resources/Brushes.xaml" />

@@ -5,7 +5,7 @@
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:vmpages="using:StrixMusic.Shells.Groove.ViewModels.Pages"
-    xmlns:owlconv="using:OwlCore.Uno.Converters"
+    xmlns:owlconv="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveHomePageStyle">
 
     <ResourceDictionary.MergedDictionaries>

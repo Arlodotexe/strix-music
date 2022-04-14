@@ -9,7 +9,7 @@
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
     xmlns:collection="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections"
-    xmlns:a="using:OwlCore.Uno.Attached"
+    xmlns:a="using:OwlCore.WinUI.Attached"
     xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"

@@ -4,7 +4,7 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:converttime="using:OwlCore.Uno.Converters.Time"
+    xmlns:converttime="using:OwlCore.WinUI.Converters.Time"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.TrackItemStyle">
 
     <converttime:TimeSpanToTextConverter x:Key="TimeSpanToTextConverter"/>

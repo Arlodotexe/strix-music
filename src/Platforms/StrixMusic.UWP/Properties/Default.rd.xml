@@ -33,7 +33,7 @@
 		<Assembly Name="System.Collections" Serialize="Auto" />
 
 		<Assembly Name="OwlCore" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-		<Assembly Name="OwlCore.Uno" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+		<Assembly Name="OwlCore.WinUI" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 
 		<Assembly Name="StrixMusic.Sdk" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 		<Assembly Name="StrixMusic.Sdk.Uno" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />

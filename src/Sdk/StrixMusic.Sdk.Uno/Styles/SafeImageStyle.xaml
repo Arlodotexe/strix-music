@@ -4,8 +4,8 @@
     xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    xmlns:owlconverts="using:OwlCore.Uno.Converters"
-    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
+    xmlns:owlconverts="using:OwlCore.WinUI.Converters"
+    xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 

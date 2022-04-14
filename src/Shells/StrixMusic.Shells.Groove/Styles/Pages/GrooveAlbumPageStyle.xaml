@@ -10,7 +10,7 @@
     xmlns:pagevms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:colorconvert="using:OwlCore.Uno.Converters.Color"
+    xmlns:colorconvert="using:OwlCore.WinUI.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveAlbumPageStyle">
 
     <ResourceDictionary.MergedDictionaries>

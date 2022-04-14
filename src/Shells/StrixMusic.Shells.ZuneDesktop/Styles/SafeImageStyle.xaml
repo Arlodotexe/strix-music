@@ -4,8 +4,8 @@
     xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
-    xmlns:owlconverts="using:OwlCore.Uno.Converters"
+    xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
+    xmlns:owlconverts="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.SafeImageStyle">
 
     <Style x:Key="ZuneDesktopSafeImageStyle" TargetType="controls:SafeImage">

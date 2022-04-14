@@ -5,7 +5,7 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:owlcoreuno="using:OwlCore.Uno"
+    xmlns:owlcoreuno="using:OwlCore.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.AlbumItemStyle">

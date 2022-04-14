@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Wasm", "Platform
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{D825BC4B-7DC6-4399-8573-C1741426B572}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore.Uno", "Libs\OwlCore.Uno\OwlCore.Uno.csproj", "{BD87B98B-B958-43EC-B3BF-6058AFEDCDC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore.WinUI", "Libs\OwlCore.WinUI\OwlCore.WinUI.csproj", "{BD87B98B-B958-43EC-B3BF-6058AFEDCDC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Sdk", "Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj", "{B1FAD5F0-4361-4D32-84AB-A809F121F50C}"
 EndProject

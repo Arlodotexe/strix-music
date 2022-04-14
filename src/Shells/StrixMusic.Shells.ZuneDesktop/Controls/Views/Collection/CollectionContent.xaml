@@ -6,7 +6,7 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:zuneCollections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:a="using:OwlCore.Uno.Attached"
+    xmlns:a="using:OwlCore.WinUI.Attached"
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
