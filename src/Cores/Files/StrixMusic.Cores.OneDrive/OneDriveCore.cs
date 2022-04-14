@@ -3,12 +3,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using OwlCore.Services;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.ConfigPanels;
@@ -26,7 +25,6 @@ namespace StrixMusic.Cores.OneDrive
     {
         private readonly IFolderData _metadataStorage;
         private readonly AbstractButton _completeGenericSetupButton;
-        private readonly ILogger<OneDriveCore> _logger;
 
         private AbstractUICollection _configPanel;
 
@@ -45,7 +43,6 @@ namespace StrixMusic.Cores.OneDrive
             Settings = new OneDriveCoreSettings(settingsStorage);
             _configPanel = new AbstractUICollection(string.Empty);
 
-            _logger = Ioc.Default.GetRequiredService<ILogger<OneDriveCore>>();
             _completeGenericSetupButton = new AbstractButton(Guid.NewGuid().ToString(), "OK");
             _completeGenericSetupButton.Clicked += CompleteGenericSetupButton_Clicked;
         }
@@ -114,7 +111,7 @@ namespace StrixMusic.Cores.OneDrive
 
             ChangeCoreState(CoreState.Loading);
 
-            _logger.LogInformation("Getting setting values");
+            Logger.LogInformation("Getting setting values");
             await Settings.LoadAsync();
 
             using var onCancelledRegistration = cancellationTokenSource.Token.Register(() => ChangeCoreState(CoreState.Unloaded));
@@ -124,7 +121,7 @@ namespace StrixMusic.Cores.OneDrive
                 string.IsNullOrWhiteSpace(Settings.RedirectUri) ||
                 !Settings.UserHasSeenAuthClientKeysSettings)
             {
-                _logger.LogInformation("Need custom app key values");
+                Logger.LogInformation("Need custom app key values");
                 ChangeCoreState(CoreState.NeedsConfiguration);
 
                 var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
@@ -140,7 +137,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (!Settings.UserHasSeenGeneralOobeSettings)
             {
-                _logger.LogInformation("Displaying general OOBE settings");
+                Logger.LogInformation("Displaying general OOBE settings");
                 ChangeCoreState(CoreState.NeedsConfiguration);
 
                 var oobePanel = new OutOfBoxExperiencePanel(Settings, NotificationService, cancellationToken);
@@ -156,7 +153,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrWhiteSpace(Settings.AccountIdentifier))
             {
-                _logger.LogInformation("User needs to login");
+                Logger.LogInformation("User needs to login");
                 ChangeCoreState(CoreState.NeedsConfiguration);
                 try
                 {
@@ -191,7 +188,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrWhiteSpace(Settings.SelectedFolderId))
             {
-                _logger.LogInformation("User needs to pick folder");
+                Logger.LogInformation("User needs to pick folder");
                 ChangeCoreState(CoreState.NeedsConfiguration);
                 var folder = await AcquireUserSelectedFolderAsync(cancellationToken);
                 if (folder is null)
@@ -206,7 +203,7 @@ namespace StrixMusic.Cores.OneDrive
                 return;
             }
 
-            _logger.LogInformation("Fully configured, setting state.");
+            Logger.LogInformation("Fully configured, setting state.");
             ChangeCoreState(CoreState.Configured);
             ChangeCoreState(CoreState.Loading);
 
@@ -247,7 +244,7 @@ namespace StrixMusic.Cores.OneDrive
             _ = FileMetadataManager.ScanAsync(cancellationToken);
             ChangeCoreState(CoreState.Loaded);
 
-            _logger.LogInformation("Post config task: setting up generic config UI.");
+            Logger.LogInformation("Post config task: setting up generic config UI.");
             var doneButton = new AbstractButton($"{nameof(GeneralCoreConfigPanel)}DoneButton", "Done");
             doneButton.Clicked += GeneralConfigPanelDoneButtonClicked;
 
@@ -259,7 +256,7 @@ namespace StrixMusic.Cores.OneDrive
             _configPanel = ui;
             AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
 
-            _logger.LogInformation("Initializing library");
+            Logger.LogInformation("Initializing library");
             await Library.Cast<FilesCoreLibrary>().InitAsync();
 
             void RaiseFailedConnectionState()

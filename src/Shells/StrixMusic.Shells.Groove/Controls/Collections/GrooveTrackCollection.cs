@@ -1,12 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

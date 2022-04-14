@@ -91,9 +91,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging">
-      <Version>6.0.0</Version>
-    </PackageReference>
     <PackageReference Include="NLog">
       <Version>4.7.13</Version>
     </PackageReference>
@@ -125,7 +122,6 @@
     </PackageReference>
     <PackageReference Include="Uno.UI.RemoteControl" Version="4.0.11" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.35" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

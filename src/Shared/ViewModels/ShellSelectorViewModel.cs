@@ -1,11 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using OwlCore.Provisos;
+using OwlCore.Services;
 using StrixMusic.Sdk.Uno.Services.ShellManagement;
 using StrixMusic.Services;
 
@@ -17,7 +18,6 @@ namespace StrixMusic.Shared.ViewModels
     public class ShellSelectorViewModel : ObservableObject, IAsyncInit
     {
         private readonly AppSettings _settings;
-        private readonly ILogger<ShellSelectorViewModel> _logger;
         private ShellInfoViewModel? _preferredShell;
         private ShellInfoViewModel? _fallbackShell;
 
@@ -27,7 +27,6 @@ namespace StrixMusic.Shared.ViewModels
         public ShellSelectorViewModel()
         {
             _settings = Ioc.Default.GetRequiredService<AppSettings>();
-            _logger = Ioc.Default.GetRequiredService<ILogger<ShellSelectorViewModel>>();
 
             AllShells = new ObservableCollection<ShellInfoViewModel>();
             FullyResponsiveShells = new ObservableCollection<ShellInfoViewModel>();
@@ -37,7 +36,7 @@ namespace StrixMusic.Shared.ViewModels
         /// <inheritdoc/>
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation($"Entered {nameof(InitAsync)}");
+            Logger.LogInformation($"Entered {nameof(InitAsync)}");
 
             await _settings.LoadAsync(cancellationToken);
 
@@ -45,13 +44,13 @@ namespace StrixMusic.Shared.ViewModels
             foreach (var shell in ShellRegistry.MetadataRegistry)
             {
                 var viewModel = new ShellInfoViewModel(shell);
-                _logger.LogInformation($"Adding {viewModel.Metadata.Id} to available shells");
+                Logger.LogInformation($"Adding {viewModel.Metadata.Id} to available shells");
 
                 AllShells.Add(viewModel);
 
                 if (viewModel.IsFullyResponsive)
                 {
-                    _logger.LogInformation($"Adding {viewModel.Metadata.Id} to fully responsive shells");
+                    Logger.LogInformation($"Adding {viewModel.Metadata.Id} to fully responsive shells");
                     FullyResponsiveShells.Add(viewModel);
                 }
 
@@ -63,18 +62,18 @@ namespace StrixMusic.Shared.ViewModels
                 // Mark the current shell selected or Default (if unset)
                 if (shell.Metadata.Id == _settings.PreferredShell)
                 {
-                    _logger.LogInformation($"Setting preferred shell: {shell.Metadata.Id}");
+                    Logger.LogInformation($"Setting preferred shell: {shell.Metadata.Id}");
                     PreferredShell = shell;
                 }
 
                 if (shell.Metadata.Id == _settings.FallbackShell)
                 {
-                    _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
+                    Logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
                     FallbackShell = shell;
                 }
             }
 
-            _logger.LogInformation($"Exited {nameof(InitAsync)}");
+            Logger.LogInformation($"Exited {nameof(InitAsync)}");
         }
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace StrixMusic.Shared.ViewModels
                 {
                     if (shell.Metadata.Id == _settings.FallbackShell)
                     {
-                        _logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
+                        Logger.LogInformation($"Setting fallback shell: {shell.Metadata.Id}");
                         FallbackShell = shell;
                     }
                 }

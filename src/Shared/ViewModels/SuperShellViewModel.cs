@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -16,9 +15,9 @@ using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Provisos;
+using OwlCore.Services;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
-using StrixMusic.Sdk.Messages;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
@@ -33,7 +32,7 @@ namespace StrixMusic.Shared.ViewModels
     /// <summary>
     /// ViewModel used by the <see cref="SuperShell"/>.
     /// </summary>
-    public class SuperShellViewModel : ObservableRecipient, IRecipient<LogMessage>, IAsyncInit, IDisposable
+    public class SuperShellViewModel : ObservableRecipient, IAsyncInit, IDisposable
     {
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
@@ -44,7 +43,6 @@ namespace StrixMusic.Shared.ViewModels
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
         private AbstractBoolean _loggingToggle;
-        private ILogger<SuperShellViewModel> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShellViewModel"/> class.
@@ -55,12 +53,11 @@ namespace StrixMusic.Shared.ViewModels
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
             _settings = Ioc.Default.GetRequiredService<AppSettings>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            _logger = Ioc.Default.GetRequiredService<ILogger<SuperShellViewModel>>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
             AvailableServices = new ObservableCollection<AvailableServicesItemViewModel>();
-            LogMessages = new ObservableCollection<LogMessage>();
+            LogMessages = new ObservableCollection<LoggerMessageEventArgs>();
 
             _loggingToggle = new AbstractBoolean("loggingToggle", "Use logging")
             {
@@ -89,7 +86,7 @@ namespace StrixMusic.Shared.ViewModels
             if (IsInitialized)
                 return;
 
-            _logger.LogInformation($"Started {nameof(InitAsync)}");
+            Logger.LogInformation($"Started {nameof(InitAsync)}");
 
             IsInitialized = true;
             
@@ -99,7 +96,7 @@ namespace StrixMusic.Shared.ViewModels
             SetupCores();
             await ShellSelectorViewModel.InitAsync(cancellationToken);
 
-            _logger.LogInformation($"Completed {nameof(InitAsync)}");
+            Logger.LogInformation($"Completed {nameof(InitAsync)}");
         }
 
         private void AttachEvents()
@@ -115,6 +112,7 @@ namespace StrixMusic.Shared.ViewModels
 
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
             CurrentWindow.AppFrame.ContentOverlay.Closed += ContentOverlay_Closed;
+            Logger.MessageReceived += Logger_MessageReceived;
         }
 
         private void AttachEvents(ICore core)
@@ -135,11 +133,17 @@ namespace StrixMusic.Shared.ViewModels
 
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
             CurrentWindow.AppFrame.ContentOverlay.Closed -= ContentOverlay_Closed;
+            Logger.MessageReceived -= Logger_MessageReceived;
         }
 
         private void DetachEvents(ICore core)
         {
             core.CoreStateChanged -= Core_CoreStateChanged;
+        }
+
+        private void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
+        {
+            LogMessages.Add(e);
         }
 
         private async void LoadedService_ConfigRequested(object? sender, EventArgs e)
@@ -257,7 +261,7 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Messages logged by the app for debug purposes. 
         /// </summary>
-        public ObservableCollection<LogMessage> LogMessages { get; set; }
+        public ObservableCollection<LoggerMessageEventArgs> LogMessages { get; set; }
 
         /// <summary>
         /// The advanced settings for the app.
@@ -451,20 +455,14 @@ namespace StrixMusic.Shared.ViewModels
             _ = ResetAppAsync();
         }
 
-        /// <inheritdoc/>
-        public void Receive(LogMessage message)
-        {
-            LogMessages.Add(message);
-        }
-
         private void SetupCores()
         {
             var registry = CoreRegistry.MetadataRegistry;
-            _logger.LogInformation($"Setting up {nameof(CoreRegistry)}. Total {registry.Count} items.");
+            Logger.LogInformation($"Setting up {nameof(CoreRegistry)}. Total {registry.Count} items.");
 
             foreach (var metadata in registry)
             {
-                _logger.LogInformation($"Adding {metadata.Id} to {nameof(AvailableServices)} (contains {AvailableServices.Count} items)");
+                Logger.LogInformation($"Adding {metadata.Id} to {nameof(AvailableServices)} (contains {AvailableServices.Count} items)");
                 AvailableServices.Add(new AvailableServicesItemViewModel(metadata)); // Adding to this ObservableCollect kills the thread with no thrown exception?
             }
 
