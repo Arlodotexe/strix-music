@@ -297,9 +297,9 @@
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
       <Name>OwlCore.WinUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj">
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj">
       <Project>{5f63ca91-0f29-4eb3-8954-e649a457acb2}</Project>
-      <Name>StrixMusic.Sdk.Uno</Name>
+      <Name>StrixMusic.Sdk.WinUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj">
       <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>

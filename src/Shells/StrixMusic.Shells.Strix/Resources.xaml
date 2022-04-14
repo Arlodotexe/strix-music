@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:styles="using:StrixMusic.Shells.Strix.Styles"
-    xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
-    xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections">
+    xmlns:ditemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
+    xmlns:dcollectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>

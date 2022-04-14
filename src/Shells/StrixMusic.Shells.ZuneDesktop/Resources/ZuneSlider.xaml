@@ -1,13 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles"
+    xmlns:dstyles="using:StrixMusic.Sdk.WinUI.Styles"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">
 
     <ResourceDictionary.MergedDictionaries>

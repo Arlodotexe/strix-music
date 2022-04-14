@@ -9,7 +9,7 @@
     xmlns:controls="using:OwlCore.WinUI.Controls"
     xmlns:abstractUIControls="using:OwlCore.WinUI.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Styles.Shells"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Styles.Shells"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
     

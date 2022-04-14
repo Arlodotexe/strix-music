@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls">
 
     <ResourceDictionary.MergedDictionaries>
@@ -77,29 +77,29 @@
                                     <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
                                     <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                                         <Button Style="{StaticResource MediaButton}">
-                                            <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </Button>
                                         <owlcoreuno:ToggleContentButton Style="{StaticResource StrixPlayPauseToggleContentButtonStyle}">
                                             <owlcoreuno:ToggleContentButton.CheckedContent>
-                                                <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                                <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                             </owlcoreuno:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </owlcoreuno:ToggleContentButton>
                                         <Button Style="{StaticResource MediaButton}">
-                                            <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </Button>
                                     </StackPanel>
                                     <owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource StrixToggleContentButtonStyle}">
                                         <owlcoreuno:ToggleContentButton.IndeterminateContent>
-                                            <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </owlcoreuno:ToggleContentButton.IndeterminateContent>
                                         <owlcoreuno:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE1CD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE1CD;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </owlcoreuno:ToggleContentButton.CheckedContent>
-                                        <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </owlcoreuno:ToggleContentButton>
                                     <ToggleButton Style="{StaticResource StrixMediaToggleButtonStyle}">
-                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </ToggleButton>
                                 </StackPanel>
                             </Grid>

@@ -2,8 +2,8 @@
     x:Class="StrixMusic.Shells.Strix.Styles.PlayableCollectionGroupPivotStyle"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells">
+    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells">
 
     <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="shells:PlayableCollectionGroupPivot">
         <Style.Setters>

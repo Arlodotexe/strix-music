@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
+    xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
     xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
     xmlns:owlconverts="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.SafeImageStyle">

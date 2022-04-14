@@ -1,14 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.WinUI.Attached"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
     xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.QuickplayAlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.WinUI.Controls;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;

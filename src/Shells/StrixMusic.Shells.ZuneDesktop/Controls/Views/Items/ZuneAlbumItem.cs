@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityToolkit.Diagnostics;
-using StrixMusic.Sdk.Uno.Controls.Items;
+using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using Windows.UI.Xaml;

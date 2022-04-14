@@ -4,10 +4,10 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:viewModels1="using:StrixMusic.Shared.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:models="using:StrixMusic.Sdk.Uno.Models"
+    xmlns:models="using:StrixMusic.Sdk.WinUI.Models"
     xmlns:s="using:System"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:shellMgmt="using:StrixMusic.Sdk.Uno.Services.ShellManagement"
+    xmlns:shellMgmt="using:StrixMusic.Sdk.WinUI.Services.ShellManagement"
     xmlns:strixCoreData="using:StrixMusic.Sdk.Models.Core"
     xmlns:visibilityConverters="using:OwlCore.WinUI.Converters.Bools.Visible"
     x:Class="StrixMusic.Shared.Styles.ShellSelector">

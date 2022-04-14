@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
-    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
+    xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
     xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
     xmlns:collection="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections"
     xmlns:a="using:OwlCore.WinUI.Attached"
@@ -162,7 +162,7 @@
         <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Click="RequestBack">
-            <FontIcon Glyph="&#xE0A6;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" FontSize="12"/>
+            <FontIcon Glyph="&#xE0A6;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" FontSize="12"/>
         </Button>
 
         <!--ZuneBar-->

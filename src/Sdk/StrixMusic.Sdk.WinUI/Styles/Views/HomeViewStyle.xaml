@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
+    xmlns:view="using:StrixMusic.Sdk.WinUI.Controls.Views"
+    xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
+    x:Class="StrixMusic.Sdk.WinUI.Styles.Views.HomeViewStyle">
+
+    <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="sdk:MainViewModel">
+        <UserControl>
+            <shells:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
+                <shells:PlayableCollectionGroupPivot.AllEmptyContent>
+                    <TextBlock x:Uid="/Common/NothingToShowTB" Text="Nothing to show!" />
+                </shells:PlayableCollectionGroupPivot.AllEmptyContent>
+            </shells:PlayableCollectionGroupPivot>
+        </UserControl>
+    </DataTemplate>
+
+    <Style x:Key="DefaultHomeViewStyle" TargetType="view:HomeView">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="view:HomeView">
+                        <ContentControl ContentTemplate="{StaticResource DefaultHomeViewTemplate}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultHomeViewStyle}" TargetType="view:HomeView"/>
+
+</ResourceDictionary>

@@ -6,7 +6,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:sys="using:System"
     xmlns:a="using:OwlCore.WinUI.Attached"
-    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
     xmlns:collectionstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay.QuickplayContent"
     x:Name="RootControl"

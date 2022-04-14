@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.WinUI.Extensions;
-using StrixMusic.Sdk.Uno.Models;
+using StrixMusic.Sdk.WinUI.Models;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.AccessCache;

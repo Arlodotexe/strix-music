@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Uno.Controls;
+﻿using StrixMusic.Sdk.WinUI.Controls;
 using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.Uno.Controls.Views.Secondary;
+using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

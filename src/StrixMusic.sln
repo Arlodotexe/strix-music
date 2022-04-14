@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore.WinUI", "Libs\OwlCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Sdk", "Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj", "{B1FAD5F0-4361-4D32-84AB-A809F121F50C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Sdk.Uno", "Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj", "{5F63CA91-0F29-4EB3-8954-E649A457ACB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Sdk.WinUI", "Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj", "{5F63CA91-0F29-4EB3-8954-E649A457ACB2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shells.ZuneDesktop", "Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj", "{063715B5-1765-4269-8FB0-699FADC840E1}"
 EndProject

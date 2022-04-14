@@ -61,7 +61,7 @@
 	<assembly fullname="StrixMusic.Wasm" />
 	<assembly fullname="StrixMusic.Shells.ZuneDesktop" />
 	<assembly fullname="StrixMusic.Shells.Groove" />
-	<assembly fullname="StrixMusic.Sdk.Uno" />
+	<assembly fullname="StrixMusic.Sdk.WinUI" />
 	<assembly fullname="StrixMusic.Sdk" />
 	<assembly fullname="StrixMusic.Cores.OneDrive" />
 	<assembly fullname="StrixMusic.Cores.LocalFiles" />
