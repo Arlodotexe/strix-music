@@ -1,0 +1,103 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
+    xmlns:shell="using:StrixMusic.Sdk.WinUI.Controls.Shells"
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+    xmlns:conveternum="using:OwlCore.WinUI.Converters.Numerical"
+    xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:vm="using:StrixMusic.Sdk.ViewModels"
+    x:Class="StrixMusic.Sdk.WinUI.Styles.Shells.NowPlayingBarStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.WinUI/Styles/NowPlaying/MediaSliderStyle.xaml" />
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.WinUI/Styles/NowPlaying/MediaTransportStyle.xaml" />
+        <ResourceDictionary>
+            <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter" />
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="vm:DeviceViewModel">
+        <UserControl>
+            <Grid VerticalAlignment="Center">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="Sizes">
+                        <VisualState x:Name="Small">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
+                                <Setter Target="sliderRow.Height" Value="48"/>
+                                <Setter Target="slider.(Grid.Row)" Value="1"/>
+                                <Setter Target="slider.(Grid.Column)" Value="0"/>
+                                <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Large">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="1200"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
+                                <Setter Target="sliderRow.Height" Value="0"/>
+                                <Setter Target="slider.(Grid.Row)" Value="0"/>
+                                <Setter Target="slider.(Grid.Column)" Value="1"/>
+                                <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="96"/>
+                    <RowDefinition x:Name="sliderRow" Height="0"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition x:Name="sliderColumn"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Media info-->
+                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding }"/>
+
+                <!--Media slider control-->
+                <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
+                                                                    IsAdvancing="{x:Bind IsPlaying,Mode=OneWay}"
+                                                                    Value="{x:Bind Position.TotalMilliseconds,Mode=OneWay}"
+                                                                    Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
+                                                                    FlowDirection="LeftToRight">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                            <core:InvokeCommandAction Command="{Binding SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </nowplaying:MediaSlider>
+
+                <!--Media transport controls-->
+                <nowplaying:MediaTransports Device="{Binding }" Grid.Column="2"/>
+            </Grid>
+        </UserControl>
+    </DataTemplate>
+
+    <Style x:Key="DefaultNowPlayingBarStyle" TargetType="shell:NowPlayingBar">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="shell:NowPlayingBar">
+                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" Content="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
+                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultNowPlayingBarStyle}" TargetType="shell:NowPlayingBar"/>
+
+</ResourceDictionary>

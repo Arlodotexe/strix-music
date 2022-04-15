@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Uno.Controls.Collections;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;

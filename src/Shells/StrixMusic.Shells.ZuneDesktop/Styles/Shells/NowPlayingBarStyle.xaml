@@ -3,14 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
     xmlns:zunenowplaying="using:StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
-    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>

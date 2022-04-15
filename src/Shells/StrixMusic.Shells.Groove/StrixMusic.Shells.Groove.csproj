@@ -63,8 +63,8 @@
 		<UpToDateCheckInput Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+		<ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 	<ItemGroup>

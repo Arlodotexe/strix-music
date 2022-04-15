@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Uno.Controls.NowPlaying;
+﻿using StrixMusic.Sdk.WinUI.Controls.NowPlaying;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying
 {

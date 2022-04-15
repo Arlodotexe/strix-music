@@ -82,8 +82,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
 	  <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
-	  <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+	  <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
+	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
 	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
 	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />

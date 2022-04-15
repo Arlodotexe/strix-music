@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
-    xmlns:ditems="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:ditems="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:items="using:StrixMusic.Shells.Groove.Controls.Items"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"

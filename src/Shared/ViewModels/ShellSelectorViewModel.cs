@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
 
 namespace StrixMusic.Shared.ViewModels

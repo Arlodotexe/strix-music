@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Resources.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.WinUI/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="ShadowColor">#FF000000</Color>

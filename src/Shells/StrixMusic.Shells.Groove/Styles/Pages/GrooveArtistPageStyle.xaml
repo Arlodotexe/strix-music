@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:groovecollections="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:groovepages="using:StrixMusic.Shells.Groove.Controls.Pages"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveArtistPageStyle">
 

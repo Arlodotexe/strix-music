@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
-    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">
 
     <Style x:Key="GrooveMediaSliderStyle" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />

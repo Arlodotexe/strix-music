@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+    xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
+    x:Class="StrixMusic.Sdk.WinUI.Styles.NowPlaying.MediaInfoStyle">
+
+    <Style x:Key="DefaultMediaInfoStyle" TargetType="nowplaying:MediaInfo">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="nowplaying:MediaInfo">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Device.NowPlaying.Track.Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                            <TextBlock Text="{Binding Device.NowPlaying.Track.Artists[0].Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Opacity=".5"/>
+                        </StackPanel>
+
+                        <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
+                             ImageCollection="{Binding Device.NowPlaying.Track, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="nowplaying:MediaInfo" BasedOn="{StaticResource DefaultMediaInfoStyle}"/>
+</ResourceDictionary>
