@@ -4,7 +4,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using OwlCore.Services;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
@@ -30,14 +30,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await trackCollection.PopulateMoreTracksAsync(trackCollection.TotalTrackCount);
+                await trackCollection.PopulateMoreTracksAsync(trackCollection.TotalTrackCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == trackCollection.Tracks.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Collection init for {nameof(trackCollection)} {trackCollection.Name} failed. Not all items were returned.");
+                    Logger.LogError($"Collection init for {nameof(trackCollection)} {trackCollection.Name} failed. Not all items were returned.");
                     return;
                 }
 
@@ -59,14 +57,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await albumCollection.PopulateMoreAlbumsAsync(albumCollection.TotalAlbumItemsCount);
+                await albumCollection.PopulateMoreAlbumsAsync(albumCollection.TotalAlbumItemsCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == albumCollection.Albums.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Collection init for {nameof(albumCollection)} {albumCollection.Name} failed. Not all items were returned.");
+                    Logger.LogError($"Collection init for {nameof(albumCollection)} {albumCollection.Name} failed. Not all items were returned.");
                     return;
                 }
 
@@ -88,14 +84,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await artistCollection.PopulateMoreArtistsAsync(artistCollection.TotalArtistItemsCount);
+                await artistCollection.PopulateMoreArtistsAsync(artistCollection.TotalArtistItemsCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == artistCollection.Artists.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Warning: Collection init for {nameof(artistCollection)} {artistCollection.Name} failed. Not all items were returned.");
+                    Logger.LogError($"Warning: Collection init for {nameof(artistCollection)} {artistCollection.Name} failed. Not all items were returned.");
                     return;
                 }
 
@@ -117,14 +111,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await playlistCollection.PopulateMorePlaylistsAsync(playlistCollection.TotalPlaylistItemsCount);
+                await playlistCollection.PopulateMorePlaylistsAsync(playlistCollection.TotalPlaylistItemsCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == playlistCollection.Playlists.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Collection init for {nameof(playlistCollection)} {playlistCollection.Name} failed. Not all items were returned.");
+                    Logger.LogError($"Collection init for {nameof(playlistCollection)} {playlistCollection.Name} failed. Not all items were returned.");
                     return;
                 }
 
@@ -146,14 +138,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await genreCollectionViewModel.PopulateMoreGenresAsync(genreCollectionViewModel.TotalGenreCount);
+                await genreCollectionViewModel.PopulateMoreGenresAsync(genreCollectionViewModel.TotalGenreCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == genreCollectionViewModel.Genres.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Collection init for {nameof(genreCollectionViewModel)} {genreCollectionViewModel.Genres} failed. Not all items were returned.");
+                    Logger.LogError($"Collection init for {nameof(genreCollectionViewModel)} {genreCollectionViewModel.Genres} failed. Not all items were returned.");
                     return;
                 }
 
@@ -169,7 +159,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel, CancellationToken cancellationToken)
         {
-            await _imagesMutex.WaitAsync();
+            await _imagesMutex.WaitAsync(CancellationToken.None);
 
             if (imageCollectionViewModel.Images.Count == imageCollectionViewModel.TotalImageCount)
             {
@@ -183,14 +173,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await imageCollectionViewModel.PopulateMoreImagesAsync(imageCollectionViewModel.TotalImageCount);
+                await imageCollectionViewModel.PopulateMoreImagesAsync(imageCollectionViewModel.TotalImageCount, cancellationToken);
 
                 // nothing was returned
                 if (lastItemCount == imageCollectionViewModel.Images.Count)
                 {
-                    var logger = Ioc.Default.GetRequiredService<ILogger<CollectionInit>>();
-
-                    logger.LogError($"Collection init for {nameof(imageCollectionViewModel)} {imageCollectionViewModel.Images} failed. Not all items were returned.");
+                    Logger.LogError($"Collection init for {nameof(imageCollectionViewModel)} {imageCollectionViewModel.Images} failed. Not all items were returned.");
 
                     _imagesMutex.Release();
                     return;

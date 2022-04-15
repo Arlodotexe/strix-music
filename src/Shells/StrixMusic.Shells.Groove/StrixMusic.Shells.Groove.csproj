@@ -15,8 +15,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-		<PackageReference Include="OwlCore" Version="0.0.64" />
+		<PackageReference Include="OwlCore" Version="0.0.65" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

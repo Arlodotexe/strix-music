@@ -9,10 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
+using OwlCore.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.FileMetadata.Models;
@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
-            _logger.LogInformation($"Started {nameof(ProcessImagesAsync)} for {nameof(IFileData)} at {fileData.Path}");
+            Logger.LogInformation($"Started {nameof(ProcessImagesAsync)} for {nameof(IFileData)} at {fileData.Path}");
 
             var results = new List<ImageMetadata>();
 
@@ -84,7 +84,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     {
                         if (imageMetadata.Id == imageId)
                         {
-                            _logger.LogInformation($"{nameof(ProcessImagesAsync)}: Found existing {nameof(ImageMetadata)} (id {imageId}) for file at {fileData.Path}");
+                            Logger.LogInformation($"{nameof(ProcessImagesAsync)}: Found existing {nameof(ImageMetadata)} (id {imageId}) for file at {fileData.Path}");
                             results.Add(imageMetadata);
                             foundData = true;
                         }
@@ -104,7 +104,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 if (_ongoingImageProcessingTasks.TryGetValue(imageId, out var ongoingTask))
                 {
-                    _logger.LogInformation($"{nameof(ProcessImagesAsync)}: Found / waiting for existing {nameof(ongoingTask)} (id {imageId}) for file at {fileData.Path}");
+                    Logger.LogInformation($"{nameof(ProcessImagesAsync)}: Found / waiting for existing {nameof(ongoingTask)} (id {imageId}) for file at {fileData.Path}");
 
                     _ongoingImageProcessingTasksSemaphore.Release();
                     var relevantImages = await ongoingTask;
@@ -121,7 +121,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 _ongoingImageProcessingTasksSemaphore.Release();
 
-                _logger.LogInformation($"{nameof(ProcessImagesAsync)}: New task (id {imageId}) for file at {fileData.Path}");
+                Logger.LogInformation($"{nameof(ProcessImagesAsync)}: New task (id {imageId}) for file at {fileData.Path}");
                 var imageScanResult = await processImageTask;
                 image.Dispose();
 
@@ -134,7 +134,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 _ongoingImageProcessingTasksSemaphore.Release();
 
-                _logger.LogInformation($"{nameof(ProcessImagesAsync)}: Completed image processing task (id {imageId}) for file at {fileData.Path}");
+                Logger.LogInformation($"{nameof(ProcessImagesAsync)}: Completed image processing task (id {imageId}) for file at {fileData.Path}");
             });
 
             await _batchLock.WaitAsync();

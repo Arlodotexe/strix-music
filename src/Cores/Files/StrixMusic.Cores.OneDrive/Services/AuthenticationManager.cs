@@ -4,13 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.Services;
-using TaskStatus = System.Threading.Tasks.TaskStatus;
+using Logger = OwlCore.Services.Logger;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -21,7 +17,6 @@ namespace StrixMusic.Cores.OneDrive.Services
     {
         private readonly string _authorityUri = "https://login.microsoftonline.com/consumers";
         private readonly string[] _scopes = { "Files.Read.All", "User.Read", "Files.ReadWrite" };
-        private readonly ILogger<AuthenticationManager> _logger;
         private readonly string _clientId;
         private readonly string _tenantId;
         private readonly string? _redirectUri;
@@ -37,7 +32,6 @@ namespace StrixMusic.Cores.OneDrive.Services
             _clientId = clientId;
             _tenantId = tenantId;
             _redirectUri = redirectUri;
-            _logger = Ioc.Default.GetRequiredService<ILogger<AuthenticationManager>>();
         }
 
         /// <summary>
@@ -53,7 +47,7 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public GraphServiceClient CreateGraphClient(string accessToken)
         {
-            _logger.LogInformation($"Creating graph client");
+            Logger.LogInformation($"Creating graph client");
 
             var authProvider = new DelegateAuthenticationProvider(requestMessage =>
             {
@@ -71,21 +65,21 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             try
             {
-                _logger.LogInformation($"Getting user");
+                Logger.LogInformation($"Getting user");
                 var user = await graphClient.Users.Request().GetAsync();
 
                 if (user.Count == 0)
                 {
-                    _logger.LogInformation($"No available users");
+                    Logger.LogInformation($"No available users");
                     return string.Empty;
                 }
 
-                _logger.LogInformation($"Got user. Display name {user.FirstOrDefault()?.DisplayName}");
+                Logger.LogInformation($"Got user. Display name {user.FirstOrDefault()?.DisplayName}");
                 return user[0].DisplayName;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to get user: {ex}");
+                Logger.LogError($"Failed to get user: {ex}");
                 return string.Empty;
             }
         }
@@ -94,17 +88,17 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             var clientApp = BuildPublicClientApplication();
 
-            _logger.LogInformation($"Acquiring token from cache.");
+            Logger.LogInformation($"Acquiring token from cache.");
 
             if (string.IsNullOrWhiteSpace(accountIdentifier))
                 return null;
 
             try
             {
-                _logger.LogInformation($"Getting accounts");
+                Logger.LogInformation($"Getting accounts");
                 var account = await clientApp.GetAccountAsync(accountIdentifier);
 
-                _logger.LogInformation($"Executing via {nameof(clientApp.AcquireTokenSilent)}");
+                Logger.LogInformation($"Executing via {nameof(clientApp.AcquireTokenSilent)}");
                 return await clientApp.AcquireTokenSilent(_scopes, account).ExecuteAsync(cancellationToken);
             }
             catch (MsalUiRequiredException)
@@ -116,9 +110,9 @@ namespace StrixMusic.Cores.OneDrive.Services
         public Task<AuthenticationResult?> TryAcquireTokenViaInteractiveLoginAsync(CancellationToken cancellationToken = default)
         {
             var clientApp = BuildPublicClientApplication();
-            _logger.LogInformation($"Acquiring token via interactive login");
+            Logger.LogInformation($"Acquiring token via interactive login");
 
-            _logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenInteractive)}");
+            Logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenInteractive)}");
             var builder = clientApp.AcquireTokenInteractive(_scopes)
                 .WithPrompt(Microsoft.Identity.Client.Prompt.SelectAccount);
 
@@ -126,7 +120,7 @@ namespace StrixMusic.Cores.OneDrive.Services
             MsalAcquireTokenInteractiveParameterBuilderCreated?.Invoke(this, createdArgs);
             builder = createdArgs.Builder;
 
-            _logger.LogInformation($"Executing builder");
+            Logger.LogInformation($"Executing builder");
 
             return builder.ExecuteAsync(cancellationToken);
         }
@@ -134,12 +128,12 @@ namespace StrixMusic.Cores.OneDrive.Services
         public async Task<AuthenticationResult?> TryAcquireTokenViaDeviceCodeLoginAsync(Func<DeviceCodeResult, Task> deviceCodeResultCallback, CancellationToken cancellationToken = default)
         {
             var clientApp = BuildPublicClientApplication();
-            _logger.LogInformation($"Acquiring token via device code");
+            Logger.LogInformation($"Acquiring token via device code");
 
-            _logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenWithDeviceCode)}");
+            Logger.LogInformation($"Building via {nameof(clientApp.AcquireTokenWithDeviceCode)}");
             var builder = clientApp.AcquireTokenWithDeviceCode(_scopes, deviceCodeResultCallback);
 
-            _logger.LogInformation($"Executing builder");
+            Logger.LogInformation($"Executing builder");
 
             try
             {

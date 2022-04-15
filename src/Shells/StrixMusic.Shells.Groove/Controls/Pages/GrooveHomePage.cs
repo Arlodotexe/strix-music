@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using OwlCore.Extensions;
+﻿using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
