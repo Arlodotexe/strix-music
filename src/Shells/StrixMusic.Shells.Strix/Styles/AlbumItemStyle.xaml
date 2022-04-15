@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumItemStyle">
 

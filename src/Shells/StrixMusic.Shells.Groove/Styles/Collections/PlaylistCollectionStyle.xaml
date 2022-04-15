@@ -6,7 +6,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:converters="using:OwlCore.Uno.Converters"
+    xmlns:converters="using:OwlCore.WinUI.Converters"
     xmlns:groovecolvms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PlaylistCollectionStyle">
 

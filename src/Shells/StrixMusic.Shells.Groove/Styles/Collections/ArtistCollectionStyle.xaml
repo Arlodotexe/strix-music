@@ -2,12 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
-    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
-    xmlns:converter="using:OwlCore.Uno.Converters"
+    xmlns:converter="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.ArtistCollectionStyle">
 
     <converter:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter"/>

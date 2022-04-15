@@ -4,7 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("StrixMusic.Sdk.Uno")]
+[assembly: InternalsVisibleTo("StrixMusic.Sdk.WinUI")]
 [assembly: InternalsVisibleTo("StrixMusic.Sdk.Tests")]
 [assembly: InternalsVisibleTo("StrixMusic")]
 [assembly: InternalsVisibleTo("StrixMusic.Wasm")]

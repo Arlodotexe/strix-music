@@ -61,13 +61,13 @@
 	<assembly fullname="StrixMusic.Wasm" />
 	<assembly fullname="StrixMusic.Shells.ZuneDesktop" />
 	<assembly fullname="StrixMusic.Shells.Groove" />
-	<assembly fullname="StrixMusic.Sdk.Uno" />
+	<assembly fullname="StrixMusic.Sdk.WinUI" />
 	<assembly fullname="StrixMusic.Sdk" />
 	<assembly fullname="StrixMusic.Cores.OneDrive" />
 	<assembly fullname="StrixMusic.Cores.LocalFiles" />
 	<assembly fullname="StrixMusic.Cores.Files" />
 	<assembly fullname="SixLabors.ImageSharp" />
-	<assembly fullname="OwlCore.Uno" />
+	<assembly fullname="OwlCore.WinUI" />
 	<assembly fullname="OwlCore" />
 	<assembly fullname="NLog.Extensions.Logging" />
 	<assembly fullname="NLog" />

@@ -5,11 +5,11 @@
     xmlns:local="using:StrixMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
-    xmlns:controls="using:OwlCore.Uno.Controls"
-    xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
+    xmlns:controls="using:OwlCore.WinUI.Controls"
+    xmlns:abstractUIControls="using:OwlCore.WinUI.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Styles.Shells"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Styles.Shells"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
     

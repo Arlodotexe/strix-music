@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using StrixMusic.Sdk.Uno.Controls.Collections;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.ZuneDesktop.Converters;
 using Windows.UI.Xaml;

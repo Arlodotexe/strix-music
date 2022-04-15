@@ -1,10 +1,10 @@
 ﻿using ClusterNet.Kernels;
 using ClusterNet.Methods;
 using OwlCore;
-using OwlCore.Uno.ColorExtractor;
-using OwlCore.Uno.ColorExtractor.ColorSpaces;
-using OwlCore.Uno.ColorExtractor.Filters;
-using OwlCore.Uno.ColorExtractor.Shapes;
+using OwlCore.WinUI.ColorExtractor;
+using OwlCore.WinUI.ColorExtractor.ColorSpaces;
+using OwlCore.WinUI.ColorExtractor.Filters;
+using OwlCore.WinUI.ColorExtractor.Shapes;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;

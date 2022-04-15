@@ -2,18 +2,18 @@
     x:Class="StrixMusic.Shells.Groove.GrooveShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:groovepvms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
     xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
-    xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:abstractUIControls="using:OwlCore.WinUI.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
-    xmlns:owlconv="using:OwlCore.Uno.Converters"
+    xmlns:owlconv="using:OwlCore.WinUI.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -141,7 +141,7 @@
 
                         <!--Hamburger Button-->
                         <Button Width="48" Style="{StaticResource GrooveButton}" Grid.Row="1" Command="{x:Bind HamburgerPressedCommand}">
-                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
                         <!--Small Header text-->
@@ -151,7 +151,7 @@
                         <!--Search button-->
                         <Button Width="48" Style="{StaticResource GrooveButton}"
                                 Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
-                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                     </Grid>
 
@@ -177,12 +177,12 @@
                     <StackPanel Grid.Row="1">
                         <!--Hamburger Button-->
                         <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Command="{x:Bind HamburgerPressedCommand}">
-                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
 
                         <!--Search Box-->
                         <Button x:Name="SearchButton" Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
-                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                         <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search..." x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
                                         Margin="8" QueryIcon="Find" BorderThickness="0"/>
@@ -196,7 +196,7 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
-                                <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
 
                                 <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
@@ -210,7 +210,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--<SymbolIcon Symbol="Clock"/>-->
-                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
 
                                 <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
@@ -223,7 +223,7 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
-                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
 
                                 <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" Grid.Column="1"/>
                             </Grid>
@@ -247,7 +247,7 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
-                                    <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                    <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
 
                                     <TextBlock x:Uid="/Music/PlaylistsTB" Text="Playlists" Grid.Column="1"/>
                                 </Grid>

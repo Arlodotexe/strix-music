@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno.Controls.Shells;
-using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Shells.Groove.Controls.Pages;
 using StrixMusic.Shells.Groove.Helper;
@@ -24,7 +24,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.WinUI.Services.Localization;
 
 namespace StrixMusic.Shells.Groove
 {

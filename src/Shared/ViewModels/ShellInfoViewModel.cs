@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using Windows.Storage;
 
 namespace StrixMusic.Shared.ViewModels

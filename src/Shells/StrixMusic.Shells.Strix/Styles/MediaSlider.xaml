@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:converters="using:OwlCore.Uno.Converters.Time.Numerical">
+        xmlns:converters="using:OwlCore.WinUI.Converters.Time.Numerical">
     <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter" />
     
     

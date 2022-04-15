@@ -2,16 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sdk="using:StrixMusic.Sdk"
-    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
+    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
-    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+    xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
-    xmlns:colorconvert="using:OwlCore.Uno.Converters.Color"
+    xmlns:colorconvert="using:OwlCore.WinUI.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.GrooveNowPlayingBarStyle">
 
     <ResourceDictionary.MergedDictionaries>

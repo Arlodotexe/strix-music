@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using OwlCore.Provisos;
 using OwlCore.Services;
-using StrixMusic.Sdk.Uno.Services.ShellManagement;
+using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
 
 namespace StrixMusic.Shared.ViewModels

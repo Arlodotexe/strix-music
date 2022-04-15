@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:UI="using:Windows.UI"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controlprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
-    xmlns:a="using:OwlCore.Uno.Attached">
+    xmlns:a="using:OwlCore.WinUI.Attached">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">

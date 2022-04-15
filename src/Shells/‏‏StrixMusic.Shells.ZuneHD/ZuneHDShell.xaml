@@ -2,10 +2,10 @@
     x:Class="StrixMusic.Shells.ZuneHD.ZuneHDShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles"
+    xmlns:dstyles="using:StrixMusic.Sdk.WinUI.Styles"
     mc:Ignorable="d" FlowDirection="LeftToRight">
     <defaultcontrols:Shell.Resources>
         <ResourceDictionary>

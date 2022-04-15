@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:UI="using:Windows.UI"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
 	xmlns:wasm="http://uno.ui/wasm"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

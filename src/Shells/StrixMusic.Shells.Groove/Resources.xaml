@@ -1,17 +1,17 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
     xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
     xmlns:pagestyles="using:StrixMusic.Shells.Groove.Styles.Pages"
-    xmlns:shellstyles="using:StrixMusic.Sdk.Uno.Styles.Shells"
+    xmlns:shellstyles="using:StrixMusic.Sdk.WinUI.Styles.Shells"
     xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
-    xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
-    xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
-    xmlns:dviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views"
-    xmlns:dsecondaryviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views.Secondary">
+    xmlns:dcollectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections"
+    xmlns:ditemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
+    xmlns:dviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views"
+    xmlns:dsecondaryviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views.Secondary">
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>

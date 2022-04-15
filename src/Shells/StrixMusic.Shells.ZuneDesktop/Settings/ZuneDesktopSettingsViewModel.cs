@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings
