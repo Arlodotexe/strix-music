@@ -5,8 +5,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Extensions
 {

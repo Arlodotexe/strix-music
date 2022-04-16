@@ -3,8 +3,8 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.AdapterModels
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Reflection;
-using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.BaseModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 {

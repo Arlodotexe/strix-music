@@ -2,7 +2,6 @@
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models

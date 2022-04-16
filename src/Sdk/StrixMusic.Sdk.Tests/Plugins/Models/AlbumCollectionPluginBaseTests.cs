@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {

@@ -6,9 +6,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 {

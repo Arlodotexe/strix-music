@@ -4,7 +4,7 @@
 
 using System;
 using CommunityToolkit.Mvvm.Input;
-using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.BaseModels;
 
 namespace StrixMusic.Sdk.ViewModels
 {

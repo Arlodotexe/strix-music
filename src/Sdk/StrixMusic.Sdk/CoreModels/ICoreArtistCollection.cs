@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.CoreModels
 {

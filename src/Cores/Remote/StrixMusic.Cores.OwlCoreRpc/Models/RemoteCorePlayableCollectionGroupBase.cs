@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Remoting;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

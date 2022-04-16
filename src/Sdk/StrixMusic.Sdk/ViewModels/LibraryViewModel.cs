@@ -9,7 +9,6 @@ using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {
