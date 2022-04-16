@@ -4,7 +4,7 @@
 
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// Provides accessors for modifying the sources in a <see cref="IMerged{T}"/> class.

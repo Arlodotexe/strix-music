@@ -7,9 +7,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// Merged multiple <see cref="ICoreGenre"/> into a single <see cref="IGenre"/>

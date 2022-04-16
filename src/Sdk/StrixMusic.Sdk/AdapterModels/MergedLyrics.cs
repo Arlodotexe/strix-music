@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// A concrete class that converts a <see cref="ICoreLyrics"/> to a <see cref="ILyrics"/>.

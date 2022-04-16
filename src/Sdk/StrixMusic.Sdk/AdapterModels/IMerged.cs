@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// An item that has been merged.

@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// A class that handles turning a <see cref="ICoreUser"/> into a <see cref="IUser"/>.
@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Models.Merged
     /// <remarks>
     /// Users are not actually merged.
     /// </remarks>
-    public sealed class CoreUserProxy : IUser
+    public sealed class UserAdapter : IUser
     {
         private readonly ICoreUser _user;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
@@ -29,9 +29,9 @@ namespace StrixMusic.Sdk.Models.Merged
         private readonly IReadOnlyList<ICoreUser> _sources;
 
         /// <summary>
-        /// Creates a new instance of <see cref="CoreUserProxy"/>.
+        /// Creates a new instance of <see cref="UserAdapter"/>.
         /// </summary>
-        public CoreUserProxy(ICoreUser user)
+        public UserAdapter(ICoreUser user)
         {
             _user = user ?? ThrowHelper.ThrowArgumentNullException<ICoreUser>(nameof(user));
             

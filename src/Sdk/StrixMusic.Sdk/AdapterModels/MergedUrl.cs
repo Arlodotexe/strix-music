@@ -8,23 +8,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
-    /// Merged multiple <see cref="ICoreImage"/> into a single <see cref="IImage"/>
+    /// Merged multiple <see cref="ICoreUrl"/> into a single <see cref="IUrl"/>
     /// </summary>
-    public class MergedImage : IImage, IMergedMutable<ICoreImage>
+    public class MergedUrl : IUrl, IMergedMutable<ICoreUrl>
     {
-        private readonly ICoreImage _preferredSource;
-        private readonly List<ICoreImage> _sources;
+        private readonly ICoreUrl _preferredSource;
+        private readonly List<ICoreUrl> _sources;
         private readonly List<ICore> _sourceCores;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MergedImage"/> class.
+        /// Initializes a new instance of the <see cref="MergedUrl"/> class.
         /// </summary>
-        public MergedImage(IReadOnlyList<ICoreImage> sources)
+        public MergedUrl(IReadOnlyList<ICoreUrl> sources)
         {
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
@@ -34,22 +35,22 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc/>
-        public Uri Uri => _preferredSource.Uri;
+        public string Label => _preferredSource.Label;
 
         /// <inheritdoc/>
-        public double Height => _preferredSource.Height;
+        public Uri Url => _preferredSource.Url;
 
         /// <inheritdoc/>
-        public double Width => _preferredSource.Width;
+        public UrlType Type => _preferredSource.Type;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
-        public IReadOnlyList<ICoreImage> Sources => _sources;
+        public IReadOnlyList<ICoreUrl> Sources => _sources;
 
         /// <inheritdoc/>
-        void IMergedMutable<ICoreImage>.AddSource(ICoreImage itemToMerge)
+        void IMergedMutable<ICoreUrl>.AddSource(ICoreUrl itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
@@ -58,7 +59,7 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreImage>.RemoveSource(ICoreImage itemToRemove)
+        void IMergedMutable<ICoreUrl>.RemoveSource(ICoreUrl itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
@@ -67,9 +68,11 @@ namespace StrixMusic.Sdk.Models.Merged
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICoreImage other)
+        public bool Equals(ICoreUrl other)
         {
-            return other?.Uri == Uri;
+            return other?.Url == Url && 
+                   other?.Type == Type &&
+                   other?.Label == Label;
         }
 
         /// <inheritdoc />

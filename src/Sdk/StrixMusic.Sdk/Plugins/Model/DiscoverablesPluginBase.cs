@@ -4,9 +4,9 @@
 
 using System.Collections.Generic;
 using OwlCore.ComponentModel;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Plugins.Model;
 

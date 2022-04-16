@@ -3,29 +3,30 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
-    /// A concrete class that merges multiple <see cref="ICoreDiscoverables"/>.
+    /// A concrete class that merges multiple <see cref="ILibraryBase"/>.
     /// </summary>
-    public class MergedDiscoverables : MergedPlayableCollectionGroupBase<ICoreDiscoverables>, IDiscoverables
+    public class MergedLibrary : MergedPlayableCollectionGroupBase<ICoreLibrary>, ILibrary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MergedDiscoverables"/> class.
+        /// Initializes a new instance of the <see cref="MergedLibrary"/> class.
         /// </summary>
-        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources, MergedCollectionConfig config)
+        public MergedLibrary(IEnumerable<ICoreLibrary> sources, MergedCollectionConfig config)
             : base(sources, config)
         {
         }
 
-        /// <inheritdoc />
-        IReadOnlyList<ICoreDiscoverables> IMerged<ICoreDiscoverables>.Sources => StoredSources;
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
+        IReadOnlyList<ICoreLibrary> IMerged<ICoreLibrary>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
-        public override bool Equals(ICoreDiscoverables? other)
+        public override bool Equals(ICoreLibrary? other)
         {
             return other?.Name == Name;
         }
@@ -33,7 +34,7 @@ namespace StrixMusic.Sdk.Models.Merged
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            return ReferenceEquals(this, obj) || (obj is ICoreDiscoverables other && Equals(other));
+            return ReferenceEquals(this, obj) || (obj is ICoreLibrary other && Equals(other));
         }
 
         /// <inheritdoc />

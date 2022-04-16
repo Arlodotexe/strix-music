@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using OwlCore.AbstractStorage;
 using OwlCore.Services;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Shells.Default;
 

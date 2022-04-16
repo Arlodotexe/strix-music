@@ -12,10 +12,10 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _syncContext.Post(_ =>
         {
-            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data)));
+            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new DeviceAdapter(item.Data)));
         }, null);
 
         private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>

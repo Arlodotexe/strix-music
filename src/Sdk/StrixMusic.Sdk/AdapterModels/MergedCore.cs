@@ -7,11 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// Aggregates many <see cref="ICore"/> instances into one.
@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.Models.Merged
             if (_sources.All(x => x.RecentlyPlayed == null))
                 RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
 
-            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new CoreDeviceProxy(device)));
+            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new DeviceAdapter(device)));
 
             AttachEvents();
         }
@@ -60,8 +60,8 @@ namespace StrixMusic.Sdk.Models.Merged
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
-            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
+            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
 
             foreach (var item in itemsToRemove)
                 _devices.RemoveAt(item.Index);

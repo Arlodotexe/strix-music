@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// Translates a <see cref="ICoreDevice"/> to a <see cref="IDevice"/>. Does not provide merging.
     /// </summary>
-    public sealed class CoreDeviceProxy : IDevice
+    public sealed class DeviceAdapter : IDevice
     {
         private readonly ICoreDevice _source;
 
         /// <summary>
-        /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
+        /// Creates a new instance of <see cref="DeviceAdapter"/>.
         /// </summary>
         /// <param name="source"></param>
-        public CoreDeviceProxy(ICoreDevice source)
+        public DeviceAdapter(ICoreDevice source)
         {
             _source = source;
 

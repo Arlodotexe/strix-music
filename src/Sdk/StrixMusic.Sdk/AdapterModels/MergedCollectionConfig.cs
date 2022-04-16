@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace StrixMusic.Sdk.Models.Merged;
+namespace StrixMusic.Sdk.AdapterModels;
 
 /// <summary>
 /// Provides configuration options for a <see cref="MergedCollectionMap"/>.

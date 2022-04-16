@@ -9,9 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Models
 {

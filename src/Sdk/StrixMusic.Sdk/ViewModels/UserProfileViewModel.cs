@@ -13,9 +13,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
             Root = root;
 
-            var userProfileImpl = userProfile.Cast<CoreUserProfileProxy>();
+            var userProfileImpl = userProfile.Cast<UserProfileAdapter>();
 
             _sourceCores = userProfileImpl.SourceCores.Select(root.GetLoadedCore).ToList();
             _sources = userProfileImpl.Sources;

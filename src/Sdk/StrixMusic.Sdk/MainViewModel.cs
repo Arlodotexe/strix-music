@@ -14,11 +14,11 @@ using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Plugins;
 using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Services;
@@ -123,13 +123,13 @@ namespace StrixMusic.Sdk
             {
                 foreach (var device in core.Devices)
                 {
-                    var deviceVm = new DeviceViewModel(this, new CoreDeviceProxy(device));
+                    var deviceVm = new DeviceViewModel(this, new DeviceAdapter(device));
                     Devices.Add(deviceVm);
                     AttachEvents(deviceVm);
                 }
 
                 if (core.User != null)
-                    Users.Add(new UserViewModel(this, new CoreUserProxy(core.User)));
+                    Users.Add(new UserViewModel(this, new UserAdapter(core.User)));
             }, null);
 
             AttachEvents(core);
@@ -206,7 +206,7 @@ namespace StrixMusic.Sdk
                 Discoverables = new DiscoverablesViewModel(this, _mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(this, new CoreDeviceProxy(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(this, new DeviceAdapter(device))))
             {
                 LocalDevice,
             };
@@ -218,7 +218,7 @@ namespace StrixMusic.Sdk
             foreach (var device in Devices)
                 AttachEvents(device);
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(this, new CoreUserProxy(x))));
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(this, new UserAdapter(x))));
 
             _sources.ForEach(AttachEvents);
 
@@ -297,7 +297,7 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(this, new CoreDeviceProxy(x.Data)), x.Index)).ToList();
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(this, new DeviceAdapter(x.Data)), x.Index)).ToList();
             var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
 
             // ReSharper disable once SuspiciousTypeConversion.Global

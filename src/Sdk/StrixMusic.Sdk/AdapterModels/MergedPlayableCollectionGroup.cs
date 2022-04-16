@@ -5,9 +5,8 @@
 using System.Collections.Generic;
 using StrixMusic.Sdk.Models.Base;
 using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Services;
 
-namespace StrixMusic.Sdk.Models.Merged
+namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
     /// A concrete class that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
