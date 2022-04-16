@@ -4,7 +4,7 @@
     xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:sdktemplsel="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
-    xmlns:baseModels="clr-namespace:StrixMusic.Sdk.BaseModels;assembly=StrixMusic.Sdk"
+    xmlns:baseModels="using:StrixMusic.Sdk.BaseModels"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Views.SettingsViewStyle">
 
     <sdktemplsel:CollectionSelector x:Key="CollectionSelector"/>
