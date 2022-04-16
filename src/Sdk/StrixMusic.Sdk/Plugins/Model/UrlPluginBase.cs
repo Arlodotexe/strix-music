@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

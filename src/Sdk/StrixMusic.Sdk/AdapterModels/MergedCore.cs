@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Plugins;
 
 namespace StrixMusic.Sdk.AdapterModels

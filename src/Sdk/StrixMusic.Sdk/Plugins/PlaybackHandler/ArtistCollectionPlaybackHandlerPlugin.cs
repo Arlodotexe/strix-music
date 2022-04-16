@@ -4,8 +4,8 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Plugins.PlaybackHandler;

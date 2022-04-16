@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Remoting;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
@@ -1348,7 +1349,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreTrack"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1372,7 +1373,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreArtistCollectionItem"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1396,7 +1397,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreAlbumCollectionItem"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1420,7 +1421,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreTrack"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1444,7 +1445,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICorePlayableCollectionGroup"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddChildAsync(ICorePlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1468,7 +1469,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreImage"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>
@@ -1492,7 +1493,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         /// <inheritdoc />
         /// <remarks>
         /// Implementations of <see cref="ICoreUrl"/> passed to this method must be in the SDK for deserialization to work.
-        /// Typically this is a RemoteCore model or an implementation of <see cref="Sdk.Models.IInitialData"/>.
+        /// Typically this is a RemoteCore model or an implementation of <see cref="IInitialData"/>.
         /// </remarks>
         [RemoteMethod]
         public Task AddUrlAsync(ICoreUrl url, int index, CancellationToken cancellationToken = default) => Task.Run(async () =>

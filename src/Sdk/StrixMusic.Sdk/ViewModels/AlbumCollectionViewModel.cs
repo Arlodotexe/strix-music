@@ -15,10 +15,10 @@ using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels

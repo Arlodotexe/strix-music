@@ -5,6 +5,7 @@ using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
 using System.Threading.Tasks;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items;
 using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests
 {
@@ -102,7 +103,7 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests
 
             await remoteClientCore.InitAsync();
 
-            core.CoreState = Sdk.Models.CoreState.NeedsConfiguration;
+            core.CoreState = CoreState.NeedsConfiguration;
 
             // Wait for changes to propogate
             await Task.Delay(1000);

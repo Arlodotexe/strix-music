@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

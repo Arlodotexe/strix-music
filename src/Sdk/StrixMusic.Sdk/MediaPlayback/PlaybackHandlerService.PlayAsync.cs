@@ -6,10 +6,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

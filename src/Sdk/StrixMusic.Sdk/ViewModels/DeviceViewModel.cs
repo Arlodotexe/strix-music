@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.ViewModels
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {

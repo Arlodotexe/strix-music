@@ -10,8 +10,9 @@ using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
 using Color = Windows.UI.Color;
-using ISdkImage = StrixMusic.Sdk.Models.IImage;
+using ISdkImage = StrixMusic.Sdk.AppModels.IImage;
 
 namespace StrixMusic.Shells.Groove.Helper
 {
@@ -23,7 +24,7 @@ namespace StrixMusic.Shells.Groove.Helper
         private static SemaphoreSlim _mutex = new SemaphoreSlim(1, 1);
 
         /// <summary>
-        /// Gets an accent color from an <see cref="Sdk.Models.IImage"/>.
+        /// Gets an accent color from an <see cref="Sdk.AppModels.IImage"/>.
         /// </summary>
         /// <param name="sdkImage">The image to get a color from.</param>
         /// <returns>The accent color for the image.</returns>

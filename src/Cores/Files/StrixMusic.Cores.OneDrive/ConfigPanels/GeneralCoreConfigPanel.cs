@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Cores.OneDrive.Services;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.OneDrive.ConfigPanels

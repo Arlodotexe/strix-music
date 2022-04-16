@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.Groove.Controls.Collections

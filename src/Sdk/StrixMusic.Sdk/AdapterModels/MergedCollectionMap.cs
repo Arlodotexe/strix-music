@@ -11,10 +11,10 @@ using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.AdapterModels
 {

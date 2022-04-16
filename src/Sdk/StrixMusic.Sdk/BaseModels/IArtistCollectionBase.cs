@@ -5,7 +5,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.BaseModels
 {

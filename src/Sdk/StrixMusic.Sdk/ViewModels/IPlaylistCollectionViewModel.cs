@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.ViewModels
 {

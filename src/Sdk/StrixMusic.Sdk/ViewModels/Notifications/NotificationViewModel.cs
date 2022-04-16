@@ -7,7 +7,7 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {

@@ -4,13 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Animations;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {

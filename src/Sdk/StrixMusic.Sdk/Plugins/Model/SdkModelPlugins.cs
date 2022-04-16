@@ -1,5 +1,5 @@
 ﻿using OwlCore.ComponentModel;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

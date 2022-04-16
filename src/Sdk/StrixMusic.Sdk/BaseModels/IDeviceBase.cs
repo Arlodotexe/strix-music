@@ -5,8 +5,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.BaseModels
 {

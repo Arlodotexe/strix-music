@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Library;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Search;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock

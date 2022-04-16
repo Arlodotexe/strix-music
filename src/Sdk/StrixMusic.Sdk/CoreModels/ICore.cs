@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
 
 namespace StrixMusic.Sdk.CoreModels
 {
@@ -120,7 +120,7 @@ namespace StrixMusic.Sdk.CoreModels
         public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Raised when the <see cref="Models.CoreState"/> has changed.
+        /// Raised when the <see cref="AppModels.CoreState"/> has changed.
         /// </summary>
         public event EventHandler<CoreState>? CoreStateChanged;
 
