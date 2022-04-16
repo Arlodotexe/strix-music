@@ -5,8 +5,8 @@
 using System.Collections.Generic;
 using OwlCore.Events;
 using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins;
 using StrixMusic.Sdk.Plugins.Model;
 

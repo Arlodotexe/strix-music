@@ -7,11 +7,11 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.Files.Services;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files
 {

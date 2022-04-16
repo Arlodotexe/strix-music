@@ -1,8 +1,8 @@
 ﻿using System;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Tests.Mock.Core;
 using StrixMusic.Sdk.Tests.Mock.Core.Items;
 

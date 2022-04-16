@@ -13,9 +13,9 @@ using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {

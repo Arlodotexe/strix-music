@@ -11,10 +11,10 @@ using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.LocalFiles

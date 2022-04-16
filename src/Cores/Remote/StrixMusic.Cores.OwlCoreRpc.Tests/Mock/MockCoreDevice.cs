@@ -1,10 +1,10 @@
 ﻿using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 {

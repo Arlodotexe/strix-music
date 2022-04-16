@@ -5,8 +5,8 @@ using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models.Core;
 using Windows.UI.Xaml.Data;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.WinUI.Converters
 {

@@ -8,7 +8,6 @@
     xmlns:s="using:System"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:shellMgmt="using:StrixMusic.Sdk.WinUI.Services.ShellManagement"
-    xmlns:strixCoreData="using:StrixMusic.Sdk.Models.Core"
     xmlns:visibilityConverters="using:OwlCore.WinUI.Converters.Bools.Visible"
     x:Class="StrixMusic.Shared.Styles.ShellSelector">
 

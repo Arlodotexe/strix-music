@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.FileMetadata.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Cores.Files.Models
 {

@@ -5,7 +5,6 @@
     xmlns:viewModels1="using:StrixMusic.Shared.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:strixCoreData="using:StrixMusic.Sdk.Models.Core"
     x:Class="StrixMusic.Shared.Styles.CoreItemStyle">
 
     <ResourceDictionary.ThemeDictionaries>

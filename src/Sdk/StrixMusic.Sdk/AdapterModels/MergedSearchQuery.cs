@@ -6,8 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.AdapterModels
 {

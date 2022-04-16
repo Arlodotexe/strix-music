@@ -2,7 +2,7 @@
 using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Sdk.AdapterModels;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Shells.Default;
 

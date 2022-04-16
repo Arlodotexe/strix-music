@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

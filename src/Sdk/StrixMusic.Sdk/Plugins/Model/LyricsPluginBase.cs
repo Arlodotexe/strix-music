@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using OwlCore.ComponentModel;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

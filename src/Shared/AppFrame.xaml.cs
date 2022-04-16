@@ -8,13 +8,13 @@ using OwlCore.WinUI.Controls;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Helpers;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.WinUI.Services.Localization;
 
 namespace StrixMusic.Shared
