@@ -46,4 +46,9 @@
 		<None Remove="LICENSE.ADDITIONAL" />
 		<None Remove="LICENSE.LESSER" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Libs\MemberProxySourceGenerator\MemberProxySourceGenerator.csproj"  
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="True" />
+	</ItemGroup>
 </Project>
