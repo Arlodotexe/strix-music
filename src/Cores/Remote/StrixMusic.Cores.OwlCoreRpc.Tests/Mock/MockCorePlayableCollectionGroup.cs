@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Models.Core;
+﻿using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 {

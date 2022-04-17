@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.BaseModels;
 
 namespace StrixMusic.Sdk.FileMetadata.Models
 {

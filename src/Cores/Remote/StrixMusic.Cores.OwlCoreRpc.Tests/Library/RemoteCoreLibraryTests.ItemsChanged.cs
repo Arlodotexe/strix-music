@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.CoreRemote;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests
 {

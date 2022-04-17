@@ -1,5 +1,5 @@
-﻿using StrixMusic.Sdk.Models.Core;
-using System;
+﻿using System;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core.Search
 {

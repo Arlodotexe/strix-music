@@ -5,7 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

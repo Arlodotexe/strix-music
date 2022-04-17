@@ -1,10 +1,10 @@
 ﻿using System;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock;
 using StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Mock
 {

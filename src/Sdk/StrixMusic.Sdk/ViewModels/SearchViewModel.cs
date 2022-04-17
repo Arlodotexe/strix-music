@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.ViewModels
 {

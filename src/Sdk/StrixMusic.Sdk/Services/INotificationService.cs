@@ -4,7 +4,7 @@
 
 using System;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.Services
 {

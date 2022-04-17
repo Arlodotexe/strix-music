@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.CoreManagement;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Shared.ViewModels
 {

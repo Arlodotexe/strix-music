@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Models;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote

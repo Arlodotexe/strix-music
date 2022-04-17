@@ -1,16 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {

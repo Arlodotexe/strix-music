@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StrixMusic.Sdk.Models.Merged;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Tests.Mock;

@@ -1,10 +1,10 @@
-﻿using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.MediaPlayback;
+﻿using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.BaseModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core
 {

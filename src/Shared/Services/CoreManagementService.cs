@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.CoreManagement;
-using StrixMusic.Sdk.Models.Core;
 using Windows.Storage;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Services
 {

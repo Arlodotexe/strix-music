@@ -3,7 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Globalization;
-using StrixMusic.Sdk.Models.Base;
+using StrixMusic.Sdk.BaseModels;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {

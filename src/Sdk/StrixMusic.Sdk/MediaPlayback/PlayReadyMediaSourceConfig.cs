@@ -4,7 +4,7 @@
 
 using System;
 using System.IO;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

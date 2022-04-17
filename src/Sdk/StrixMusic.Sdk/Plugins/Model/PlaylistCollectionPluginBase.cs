@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {

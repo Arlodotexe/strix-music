@@ -22,7 +22,6 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Services;
@@ -43,6 +42,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Shared
 {

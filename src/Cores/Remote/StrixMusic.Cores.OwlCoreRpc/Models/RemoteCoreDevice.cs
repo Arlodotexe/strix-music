@@ -7,10 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OwlCore.Remoting;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.BaseModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

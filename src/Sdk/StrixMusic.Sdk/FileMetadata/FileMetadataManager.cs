@@ -13,9 +13,9 @@ using OwlCore.AbstractStorage.Scanners;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.FileMetadata.Repositories;
 using StrixMusic.Sdk.FileMetadata.Scanners;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.FileMetadata

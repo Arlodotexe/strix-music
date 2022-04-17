@@ -5,11 +5,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.ViewModels
 {

@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Models.Core;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock.Items
 {

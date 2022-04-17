@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Models;
 using StrixMusic.Sdk.WinUI;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Helpers;
@@ -10,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.WinUI.Controls
 {

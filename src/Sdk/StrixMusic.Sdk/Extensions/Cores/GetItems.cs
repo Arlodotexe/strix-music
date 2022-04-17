@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.BaseModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Extensions
 {

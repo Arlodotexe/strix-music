@@ -12,10 +12,10 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
-using StrixMusic.Sdk.Models.Merged;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _syncContext.Post(_ =>
         {
-            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new CoreDeviceProxy(item.Data)));
+            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(Root, new DeviceAdapter(item.Data)));
         }, null);
 
         private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
@@ -159,27 +159,27 @@ namespace StrixMusic.Sdk.ViewModels
         public MainViewModel Root { get; }
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Unloaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Unloaded"/>.
         /// </summary>
         public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.NeedsConfiguration"/>.
+        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.NeedsConfiguration"/>.
         /// </summary>
         public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsConfiguration;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Configured"/>.
+        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Configured"/>.
         /// </summary>
         public bool IsCoreStateConfigured => CoreState == CoreState.Configured;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loading"/>.
+        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loading"/>.
         /// </summary>
         public bool IsCoreStateLoading => CoreState == CoreState.Loading;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Models.CoreState.Loaded"/>.
+        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loaded"/>.
         /// </summary>
         public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 

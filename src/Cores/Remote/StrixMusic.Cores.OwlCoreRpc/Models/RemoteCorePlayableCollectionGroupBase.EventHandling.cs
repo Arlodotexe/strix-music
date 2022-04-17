@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OwlCore.Events;
 using OwlCore.Remoting;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Plugins.CoreRemote
 {

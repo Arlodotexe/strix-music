@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Base;
-using StrixMusic.Sdk.Models.Core;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.BaseModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

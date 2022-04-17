@@ -18,14 +18,14 @@ using OwlCore.Provisos;
 using OwlCore.Services;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.CoreManagement;
-using StrixMusic.Sdk.Models;
-using StrixMusic.Sdk.Models.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Shared.ViewModels
 {
