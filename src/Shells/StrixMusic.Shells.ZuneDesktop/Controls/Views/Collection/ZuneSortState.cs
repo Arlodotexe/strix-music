@@ -19,6 +19,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <summary>
         /// Alphabetical sorting in descending order.
         /// </summary>
-        ZA
+        ZA,
+        Artists
     }
 }

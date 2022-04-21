@@ -20,6 +20,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Converters
                 {
                     ZuneSortState.AZ => "A-Z",
                     ZuneSortState.ZA => "Z-A",
+                    ZuneSortState.Artists => "Sort by artists",
                     _ => throw new NotImplementedException(),
                 };
             }

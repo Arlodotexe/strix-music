@@ -28,7 +28,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <summary>
-        /// Holds the instnace of the sort textblock.
+        /// Holds the instance of the sort textblock.
         /// </summary>
         public TextBlock? PART_SortLbl { get; private set; }
 
