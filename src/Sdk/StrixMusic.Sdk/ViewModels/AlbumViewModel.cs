@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             Root = root;
-            _album = root.Plugins.ModelPlugins.Album.Execute(album);
+            _album = album;
 
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(root.GetLoadedCore).ToList();
 
@@ -644,7 +644,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _album.AddArtistItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _album.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _album.RemoveArtistItemAsync(index, cancellationToken);

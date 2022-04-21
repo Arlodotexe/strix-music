@@ -671,9 +671,9 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default)
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default)
         {
-            return _artistCollectionMap.InsertItemAsync(artist, index, cancellationToken);
+            return _artistCollectionMap.InsertItemAsync(artistItem, index, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -683,9 +683,9 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default)
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default)
         {
-            return _playlistCollectionMap.InsertItemAsync(playlist, index, cancellationToken);
+            return _playlistCollectionMap.InsertItemAsync(playlistItem, index, cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -760,7 +760,7 @@ namespace StrixMusic.Sdk.AdapterModels
             Guard.IsNotNull(itemToAdd, nameof(itemToAdd));
 
             if (!Equals(itemToAdd))
-                ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
+                ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artistItem that doesn't match. Verify that the item matches before merging the source.");
 
             StoredSources.Add(itemToAdd);
             _sourceCores.Add(itemToAdd.SourceCore);

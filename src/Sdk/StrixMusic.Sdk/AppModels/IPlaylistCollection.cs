@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.AppModels
     public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, ISdkMember, IMerged<ICorePlaylistCollection>
     {
         /// <summary>
-        /// Attempts to play a specific item in the playlist collection. Restarts playback if already playing.
+        /// Attempts to play a specific item in the playlistItem collection. Restarts playback if already playing.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default);
@@ -34,13 +34,13 @@ namespace StrixMusic.Sdk.AppModels
         Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Adds a new playlist to the collection on the backend.
+        /// Adds an <see cref="IPlaylist"/> or <see cref="IPlaylistCollection"/> to this playlist collection.
         /// </summary>
-        /// <param name="playlist">The playlist to create.</param>
-        /// <param name="index">the position to insert the playlist at.</param>
+        /// <param name="playlistItem">The playlistItem to add.</param>
+        /// <param name="index">the position to insert the playlistItem at.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default);
+        Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the items in the backend are changed by something external.

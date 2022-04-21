@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _syncContext = SynchronizationContext.Current;
             Root = root;
-            _collection = root.Plugins.ModelPlugins.AlbumCollection.Execute(collection);
+            _collection = collection;
 
             Albums = new ObservableCollection<IAlbumCollectionItem>();
             UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();

@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _syncContext = SynchronizationContext.Current;
 
-            _collectionGroup = root.Plugins.ModelPlugins.PlayableCollectionGroup.Execute(collectionGroup);
+            _collectionGroup = collectionGroup;
             Root = root;
 
             SourceCores = _collectionGroup.GetSourceCores<ICorePlayableCollectionGroup>().Select(root.GetLoadedCore).ToList();
@@ -819,13 +819,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddAlbumItemAsync(album, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddArtistItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddChildAsync(child, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddPlaylistItemAsync(playlist, index, cancellationToken);
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddTrackAsync(track, index, cancellationToken);

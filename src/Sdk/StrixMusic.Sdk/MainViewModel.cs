@@ -35,12 +35,12 @@ namespace StrixMusic.Sdk
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
 
+        private readonly SynchronizationContext _syncContext;
         private readonly List<ICore> _sources = new();
 
         private MergedLibrary? _mergedLibrary;
         private MergedRecentlyPlayed? _mergedRecentlyPlayed;
         private MergedDiscoverables? _mergedDiscoverables;
-        private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -168,8 +168,6 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            Plugins.ModelPlugins = GlobalModelPluginConnector.Create(Plugins.ModelPlugins);
-
             var coreInstanceRegistry = await _coreManagementService.GetCoreInstanceRegistryAsync();
 
             Guard.IsNotNull(coreInstanceRegistry, nameof(coreInstanceRegistry));
@@ -345,9 +343,6 @@ namespace StrixMusic.Sdk
         /// A consolidated list of all users in the app.
         /// </summary>
         public ObservableCollection<UserViewModel> Users { get; private set; }
-
-        /// <inheritdoc />
-        public PluginManager Plugins { get; } = new();
 
         /// <inheritdoc />
         public MergedCollectionConfig MergeConfig { get; } = new();

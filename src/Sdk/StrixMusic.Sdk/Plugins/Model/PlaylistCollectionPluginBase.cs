@@ -247,7 +247,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddPlaylistItemAsync(IPlaylistCollectionItem PlaylistItem, int index, CancellationToken cancellationToken = default) => Inner.AddPlaylistItemAsync(PlaylistItem, index, cancellationToken);
+        virtual public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => Inner.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
 
         /// <inheritdoc/>
         virtual public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);

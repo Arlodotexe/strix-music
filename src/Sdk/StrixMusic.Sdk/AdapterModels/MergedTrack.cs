@@ -497,7 +497,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _artistMap.InsertItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _artistMap.InsertItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _imageCollectionMap.InsertItemAsync(image, index, cancellationToken);

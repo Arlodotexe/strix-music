@@ -2,8 +2,10 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using OwlCore.Events;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Plugins;
@@ -16,26 +18,8 @@ namespace StrixMusic.Sdk.AppModels
     /// merged <see cref="ICore"/>s, configuring plugins, and more. 
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAppCore : ISdkMember, IMerged<ICore>
+    public interface IAppCore : ISdkMember, IMerged<ICore>, IAsyncInit, IAsyncDisposable
     {
-        /// <summary>
-        /// All available and configured plugins for this instance.
-        /// </summary>
-        /// <remarks>
-        ///         NOTICE:
-        /// <para/> Model plugins cannot be applied automatically to classes which merge core data, as it would hide members 
-        ///         of <see cref="IMergedMutable{T}"/> and prevent you from adding or removing sources. Instead, create your
-        ///         instance of <see cref="IMerged{T}"/>, then pass it to the corresponding plugin builder.
-        ///         
-        /// <para/> Once built, the returned instance will have plugins applied on top of the <see cref="IMergedMutable{T}"/> instance.
-        ///         If no plugins override functionality when accessing a member, the provided <see cref="IMergedMutable{T}"/> will be used instead.
-        /// <para/> See <see cref="SdkModelPlugins"/> for more info.
-        /// </remarks>
-        /// <seealso cref="SdkModelPlugins"/>
-        /// <seealso cref="SdkModelPlugin"/>
-        /// <seealso cref="GlobalModelPluginConnector"/>
-        public PluginManager Plugins { get; }
-
         /// <summary>
         /// Configuration options for merging collections items together.
         /// </summary>

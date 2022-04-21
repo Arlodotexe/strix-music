@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             Root = root;
-            _collection = root.Plugins.ModelPlugins.ArtistCollection.Execute(collection);
+            _collection = collection;
 
             SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(root.GetLoadedCore).ToList();
 
@@ -457,7 +457,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => _collection.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _collection.AddArtistItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _collection.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _collection.RemoveArtistItemAsync(index, cancellationToken);

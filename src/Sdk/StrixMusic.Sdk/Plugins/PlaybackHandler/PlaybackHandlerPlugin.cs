@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.Model;
 
@@ -16,8 +17,8 @@ public class PlaybackHandlerPlugin : SdkModelPlugin
         id: nameof(PlaybackHandlerPlugin),
         displayName: "Playback handler",
         description: "The default playback handler",
-        sdkVer: typeof(SdkModelPlugins).Assembly.GetName().Version);
-    
+        new Version(0, 0, 0));
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaybackHandlerPlugin"/> class.
     /// </summary>
@@ -26,8 +27,8 @@ public class PlaybackHandlerPlugin : SdkModelPlugin
         : base(_metadata)
     {
         ArtistCollection.Add(x => new ArtistCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
-        AlbumCollection.Add(x=> new AlbumCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
-        TrackCollection.Add(x=> new TrackCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
-        PlaylistCollection.Add(x=> new PlaylistCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
+        AlbumCollection.Add(x => new AlbumCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
+        TrackCollection.Add(x => new TrackCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
+        PlaylistCollection.Add(x => new PlaylistCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
     }
 }

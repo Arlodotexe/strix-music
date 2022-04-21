@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -78,9 +79,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
 
-        /// <inheritdoc/>
-        public PluginManager Plugins { get; } = new();
-
         /// <inheritdoc />
         public MergedCollectionConfig MergeConfig { get; }
 
@@ -101,6 +99,9 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public IDiscoverables? Discoverables { get; }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
@@ -133,5 +134,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
             await _sources.InParallel(x => x.DisposeAsync().AsTask());
         }
+
+        /// <inheritdoc />
+        public Task InitAsync(CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
     }
 }

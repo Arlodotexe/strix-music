@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().Playlist;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playlist;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().Playlist;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playlist;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -76,7 +76,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().Playlist;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playlist;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -110,7 +110,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().Playlist;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playlist;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
                 {
@@ -215,7 +215,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public async Task DisposeAsync_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().Playlist;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playlist;
             var defaultImplementation = new NotBlockingDisposeAsync();
             builder.Add(x => new NoOverride(x)
             {

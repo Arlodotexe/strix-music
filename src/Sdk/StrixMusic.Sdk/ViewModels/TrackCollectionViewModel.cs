@@ -43,7 +43,7 @@ namespace StrixMusic.Sdk.ViewModels
         public TrackCollectionViewModel(MainViewModel root, ITrackCollection collection)
         {
             _syncContext = SynchronizationContext.Current;
-            _collection = root.Plugins.ModelPlugins.TrackCollection.Execute(collection);
+            _collection = collection;
             Root = root;
 
             Tracks = new ObservableCollection<TrackViewModel>();

@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal RecentlyPlayedViewModel(MainViewModel root, IRecentlyPlayed recentlyPlayed)
             : base(root, recentlyPlayed)
         {
-            _recentlyPlayed = root.Plugins.ModelPlugins.RecentlyPlayed.Execute(recentlyPlayed);
+            _recentlyPlayed = recentlyPlayed;
         }
 
         /// <inheritdoc />

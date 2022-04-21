@@ -401,7 +401,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _trackCollectionMap.InsertItemAsync(track, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _artistCollectionMap.InsertItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _artistCollectionMap.InsertItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _artistCollectionMap.RemoveAtAsync(index, cancellationToken);

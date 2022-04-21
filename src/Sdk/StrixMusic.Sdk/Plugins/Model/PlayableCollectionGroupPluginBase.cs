@@ -427,7 +427,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerArtistCollection.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public virtual Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => InnerArtistCollection.AddArtistItemAsync(artist, index, cancellationToken);
+        public virtual Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => InnerArtistCollection.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public virtual event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
@@ -561,7 +561,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerPlaylistCollection.GetPlaylistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public virtual Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => InnerPlaylistCollection.AddPlaylistItemAsync(playlist, index, cancellationToken);
+        public virtual Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => InnerPlaylistCollection.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public virtual event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged

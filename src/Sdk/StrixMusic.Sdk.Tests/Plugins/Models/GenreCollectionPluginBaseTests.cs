@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().GenreCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).GenreCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
-            var builder = new SdkModelPlugins().GenreCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).GenreCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -53,7 +53,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginFullyCustom()
         {
-            var builder = new SdkModelPlugins().GenreCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).GenreCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);

@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal SearchHistoryViewModel(MainViewModel root, ISearchHistory searchHistory)
             : base(root, searchHistory)
         {
-            _searchHistory = root.Plugins.ModelPlugins.SearchHistory.Execute(searchHistory);
+            _searchHistory = searchHistory;
         }
 
         /// <inheritdoc />

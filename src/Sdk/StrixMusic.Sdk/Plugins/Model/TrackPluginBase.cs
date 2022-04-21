@@ -369,7 +369,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerArtistCollection.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public virtual Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => InnerArtistCollection.AddArtistItemAsync(artist, index, cancellationToken);
+        public virtual Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => InnerArtistCollection.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public virtual event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged

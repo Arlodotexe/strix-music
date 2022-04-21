@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _syncContext = SynchronizationContext.Current;
 
-            _collection = root.Plugins.ModelPlugins.PlaylistCollection.Execute(collection);
+            _collection = collection;
 
             SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(root.GetLoadedCore).ToList();
             Root = root;
@@ -426,7 +426,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => _collection.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => _collection.AddPlaylistItemAsync(playlist, index, cancellationToken);
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _collection.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _collection.AddImageAsync(image, index, cancellationToken);

@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
         internal SearchResultsViewModel(MainViewModel root, ISearchResults searchResults)
             : base(root, searchResults)
         {
-            _searchResults = root.Plugins.ModelPlugins.SearchResults.Execute(searchResults);
+            _searchResults = searchResults;
         }
 
         /// <inheritdoc />

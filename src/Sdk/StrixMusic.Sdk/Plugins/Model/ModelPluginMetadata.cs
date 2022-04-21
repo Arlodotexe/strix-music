@@ -13,13 +13,14 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="id">A unique identifier for this plugin, including all instances.</param>
         /// <param name="displayName">The user-friendly name of the plugin.</param>
         /// <param name="description">Briefly describes this plugin.</param>
-        /// <param name="sdkVer">The version of the Strix Music SDK that this plugin was built against.</param>
-        public ModelPluginMetadata(string id, string displayName, string description, Version sdkVer)
+        /// <param name="pluginVersion">This plugin's version number.</param>
+        public ModelPluginMetadata(string id, string displayName, string description, Version pluginVersion)
         {
             Id = id;
             DisplayName = displayName;
             Description = description;
-            SdkVer = sdkVer;
+            SdkVersion = typeof(ModelPluginMetadata).Assembly.GetName().Version;
+            PluginVersion = pluginVersion;
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public string Id { get; }
 
         /// <summary>
-        /// A relative path pointing to a SVG file containing the logo for this logo.
+        /// A path pointing to an SVG file containing the logo for this plugin.
         /// </summary>
         public Uri? LogoUri { get; set; }
 
@@ -45,6 +46,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <summary>
         /// The version of the Strix Music SDK that this plugin was built against.
         /// </summary>
-        public Version SdkVer { get; }
+        public Version SdkVersion { get; }
+
+        /// <summary>
+        /// This plugin's version number.
+        /// </summary>
+        public Version PluginVersion { get; set; }
     }
 }

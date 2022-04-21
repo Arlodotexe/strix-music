@@ -36,9 +36,9 @@ namespace StrixMusic.Sdk.AppModels
         Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Adds a new album to the collection on the backend.
+        /// Adds an <see cref="IAlbum"/> or <see cref="IAlbumCollection"/> to this album collection.
         /// </summary>
-        /// <param name="albumItem">The album to create.</param>
+        /// <param name="albumItem">The album to add.</param>
         /// <param name="index">the position to insert the album at.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

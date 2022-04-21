@@ -34,9 +34,9 @@ namespace StrixMusic.Sdk.AppModels
         Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Adds a new track to the collection on the backend.
+        /// Adds an <see cref="ITrack"/> to this track collection.
         /// </summary>
-        /// <param name="track">The track to create.</param>
+        /// <param name="track">The track to add.</param>
         /// <param name="index">the position to insert the track at.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

@@ -337,8 +337,8 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) =>
-            InnerArtistCollection.AddArtistItemAsync(artist, index, cancellationToken);
+        public virtual Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) =>
+            InnerArtistCollection.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => InnerGenreCollection.AddGenreAsync(genre, index, cancellationToken);

@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _syncContext = SynchronizationContext.Current;
 
-            _artist = root.Plugins.ModelPlugins.Artist.Execute(artist);
+            _artist = artist;
             Root = root;
 
             SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(root.GetLoadedCore).ToList();
