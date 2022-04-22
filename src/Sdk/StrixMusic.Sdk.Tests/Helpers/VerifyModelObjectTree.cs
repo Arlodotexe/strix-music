@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Tests;
 
 public static class VerifyModelObjectTree
 {
-    public static void VerifyReturns<T>(IAppCore item)
+    public static void VerifyReturns<T>(IStrixDataRoot item)
     {
         Assert.IsInstanceOfType(item.Discoverables, typeof(T));
         Assert.IsInstanceOfType(item.RecentlyPlayed, typeof(T));

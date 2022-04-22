@@ -15,8 +15,8 @@ public class PluginModelObjectTree
     [TestMethod]
     public void VerifyAppCore()
     {
-        var mock = new MockAppCore();
-        var plugin = new AppCorePluginWrapper(mock, _modelPlugin);
+        var mock = new MockStrixDataRoot();
+        var plugin = new StrixDataRootPluginWrapper(mock, _modelPlugin);
 
         VerifyModelObjectTree.VerifyReturns<IPluginWrapper>(plugin);
     }

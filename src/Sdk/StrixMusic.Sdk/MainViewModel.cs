@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The primary, root view model used to interact with all merged core sources.
     /// </summary>
-    public sealed partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
+    public sealed partial class MainViewModel : ObservableRecipient, IStrixDataRoot, IAsyncInit
     {
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
@@ -351,22 +351,22 @@ namespace StrixMusic.Sdk
         public ObservableCollection<DeviceViewModel> Devices { get; private set; }
 
         /// <inheritdoc />
-        IReadOnlyList<IDevice> IAppCore.Devices => Devices;
+        IReadOnlyList<IDevice> IStrixDataRoot.Devices => Devices;
 
         /// <inheritdoc />
-        ILibrary IAppCore.Library => Library ?? throw new InvalidOperationException($"{nameof(MainViewModel)} not yet initialized.");
+        ILibrary IStrixDataRoot.Library => Library ?? throw new InvalidOperationException($"{nameof(MainViewModel)} not yet initialized.");
 
         /// <inheritdoc />
-        IPlayableCollectionGroup? IAppCore.Pins { get; }
+        IPlayableCollectionGroup? IStrixDataRoot.Pins { get; }
 
         /// <inheritdoc />
-        IRecentlyPlayed? IAppCore.RecentlyPlayed { get; }
+        IRecentlyPlayed? IStrixDataRoot.RecentlyPlayed { get; }
 
         /// <inheritdoc />
-        IDiscoverables? IAppCore.Discoverables { get; }
+        IDiscoverables? IStrixDataRoot.Discoverables { get; }
 
         /// <inheritdoc />
-        ISearch? IAppCore.Search { get; }
+        ISearch? IStrixDataRoot.Search { get; }
 
         /// <summary>
         /// Gets the first active device in <see cref="Devices"/>.

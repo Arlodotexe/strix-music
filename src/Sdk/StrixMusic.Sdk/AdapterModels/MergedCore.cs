@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// <summary>
     /// Aggregates many <see cref="ICore"/> instances into one.
     /// </summary>
-    public sealed class MergedCore : IAppCore
+    public sealed class MergedCore : IStrixDataRoot
     {
         private readonly List<ICore> _sources;
         private readonly List<IDevice> _devices;

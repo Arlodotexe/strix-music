@@ -8,11 +8,11 @@ using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Mock.AppModels
 {
-    public class MockAppCore : IAppCore
+    public class MockStrixDataRoot : IStrixDataRoot
     {
         private readonly List<IDevice> _devices;
 
-        public MockAppCore()
+        public MockStrixDataRoot()
         {
             _devices = new List<IDevice>();
         }

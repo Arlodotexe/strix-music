@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// <para/> There is a 10 minute time limit for the user to complete setup.
     ///         If it takes longer, the SDK will assume something has gone wrong and unload the core until the user manually initiates setup or restarts the app.
     /// </remarks>
-    /// <seealso cref="IAppCore"/>
+    /// <seealso cref="IStrixDataRoot"/>
     public interface ICore : IAsyncInit, ICoreMember, IAsyncDisposable
     {
         /// <summary>
