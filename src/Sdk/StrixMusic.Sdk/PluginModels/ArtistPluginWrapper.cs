@@ -32,10 +32,10 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     /// <param name="plugins">The plugins to import and apply to everything returned from this wrapper.</param>
     internal ArtistPluginWrapper(IArtist artist, params SdkModelPlugin[] plugins)
     {
-        _plugins = plugins;
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
+        _plugins = plugins;
         _artist = ActivePlugins.Artist.Execute(artist);
 
         AttachEvents(_artist);

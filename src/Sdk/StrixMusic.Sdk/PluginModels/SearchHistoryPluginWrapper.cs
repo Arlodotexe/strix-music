@@ -33,7 +33,7 @@ public class SearchHistoryPluginWrapper : PlayableCollectionGroupPluginWrapperBa
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        _searchHistory = searchHistory;
+        _searchHistory = ActivePlugins.SearchHistory.Execute(searchHistory);
     }
 
     /// <inheritdoc/>

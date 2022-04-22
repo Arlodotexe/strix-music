@@ -33,7 +33,7 @@ public class LibraryPluginWrapper : PlayableCollectionGroupPluginWrapperBase, IL
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        _library = library;
+        _library = ActivePlugins.Library.Execute(library);
     }
 
     /// <inheritdoc/>

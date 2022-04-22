@@ -33,7 +33,7 @@ public class DiscoverablesPluginWrapper : PlayableCollectionGroupPluginWrapperBa
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        _discoverables = discoverables;
+        _discoverables = ActivePlugins.Discoverables.Execute(discoverables);
     }
 
     /// <inheritdoc/>

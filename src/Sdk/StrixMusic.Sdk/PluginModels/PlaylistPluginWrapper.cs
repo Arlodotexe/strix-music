@@ -31,13 +31,13 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
     internal PlaylistPluginWrapper(IPlaylist playlist, params SdkModelPlugin[] plugins)
     {
-        _playlist = playlist;
-        _plugins = plugins;
-
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        AttachEvents(playlist);
+        _playlist = ActivePlugins.Playlist.Execute(playlist);
+        _plugins = plugins;
+
+        AttachEvents(_playlist);
 
         if (_playlist.RelatedItems != null)
             RelatedItems = new PlayableCollectionGroupPluginWrapper(_playlist.RelatedItems, plugins);

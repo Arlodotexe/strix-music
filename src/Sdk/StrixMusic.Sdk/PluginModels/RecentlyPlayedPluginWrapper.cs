@@ -33,7 +33,7 @@ public class RecentlyPlayedPluginWrapper : PlayableCollectionGroupPluginWrapperB
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        _recentlyPlayed = recentlyPlayed;
+        _recentlyPlayed = ActivePlugins.RecentlyPlayed.Execute(recentlyPlayed);
     }
 
     /// <inheritdoc/>
