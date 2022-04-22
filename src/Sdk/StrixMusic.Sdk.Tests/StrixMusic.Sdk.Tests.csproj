@@ -4,7 +4,7 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
-
+		<LangVersion>10.0</LangVersion>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
@@ -27,6 +27,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="PluginModels" />
 	</ItemGroup>
 
 </Project>
