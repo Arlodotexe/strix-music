@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of <see cref="IGenre"/>s.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IGenreCollection : IGenreCollectionBase, ISdkMember, IMerged<ICoreGenreCollection>
+    public interface IGenreCollection : IGenreCollectionBase, IAppModel, IMerged<ICoreGenreCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IGenreBase"/>s starting at the given offset.

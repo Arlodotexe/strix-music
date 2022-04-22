@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Holds details about a url.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IUrl : IUrlBase, ISdkMember, IMerged<ICoreUrl>
+    public interface IUrl : IUrlBase, IAppModel, IMerged<ICoreUrl>
     {
     }
 }

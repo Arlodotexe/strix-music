@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Used to browse and discover new music.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IDiscoverables : IDiscoverablesBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreDiscoverables>
+    public interface IDiscoverables : IDiscoverablesBase, IPlayableCollectionGroup, IAppModel, IMerged<ICoreDiscoverables>
     {
     }
 }

@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// <summary>
     /// A device that controls playback of an audio player.
     /// </summary>
-    public interface IDevice : IDeviceBase, ISdkMember
+    public interface IDevice : IDeviceBase, IAppModel
     {
         /// <summary>
         /// The core that created this device, if any.

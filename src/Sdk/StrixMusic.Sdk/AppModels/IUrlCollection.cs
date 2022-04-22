@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of URLs, combined from multiple sources.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IUrlCollection : IUrlCollectionBase, ISdkMember, IMerged<ICoreUrlCollection>
+    public interface IUrlCollection : IUrlCollectionBase, IAppModel, IMerged<ICoreUrlCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IUrlBase"/>s starting at the given offset.

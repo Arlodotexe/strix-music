@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of <see cref="ITrack"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, IUrlCollection, IPlayable, ISdkMember, IMerged<ICoreTrackCollection>
+    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, IUrlCollection, IPlayable, IAppModel, IMerged<ICoreTrackCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the track collection. Restarts playback if already playing.

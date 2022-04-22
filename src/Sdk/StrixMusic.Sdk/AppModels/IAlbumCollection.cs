@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Represents a collection of albums that may contain one or more sources.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, IUrlCollection, IPlayable, ISdkMember, IMerged<ICoreAlbumCollection>
+    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, IUrlCollection, IPlayable, IAppModel, IMerged<ICoreAlbumCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the album collection. Restarts playback if already playing.

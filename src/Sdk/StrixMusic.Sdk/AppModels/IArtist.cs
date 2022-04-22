@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A musician or creator that has published one or more <see cref="ITrack"/>s and <see cref="IAlbum"/>s.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IArtist : IArtistBase, IArtistCollectionItem, IAlbumCollection, ITrackCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreArtist>, IMerged<ICoreArtistCollectionItem>
+    public interface IArtist : IArtistBase, IArtistCollectionItem, IAlbumCollection, ITrackCollection, IGenreCollection, IPlayable, IAppModel, IMerged<ICoreArtist>, IMerged<ICoreArtistCollectionItem>
     {
         /// <summary>
         /// A <see cref="IPlayableCollectionGroup"/> of items related to this item.

@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Contains details about an image.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IImage : IImageBase, ISdkMember, IMerged<ICoreImage>
+    public interface IImage : IImageBase, IAppModel, IMerged<ICoreImage>
     {
     }
 }

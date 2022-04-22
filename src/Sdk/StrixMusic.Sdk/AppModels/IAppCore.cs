@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// merged <see cref="ICore"/>s, configuring plugins, and more. 
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAppCore : ISdkMember, IMerged<ICore>, IAsyncInit, IAsyncDisposable
+    public interface IAppCore : IAppModel, IMerged<ICore>, IAsyncInit, IAsyncDisposable
     {
         /// <summary>
         /// Configuration options for merging collections items together.

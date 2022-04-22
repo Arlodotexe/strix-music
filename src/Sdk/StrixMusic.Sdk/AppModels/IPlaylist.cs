@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of arbitrary songs that the user can edit, rearrange and play back.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IPlaylist : IPlaylistBase, ITrackCollection, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, ISdkMember, IMerged<ICorePlaylist>, IMerged<ICorePlaylistCollectionItem>
+    public interface IPlaylist : IPlaylistBase, ITrackCollection, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, IAppModel, IMerged<ICorePlaylist>, IMerged<ICorePlaylistCollectionItem>
     {
         /// <summary>
         /// Owner of the playable item.

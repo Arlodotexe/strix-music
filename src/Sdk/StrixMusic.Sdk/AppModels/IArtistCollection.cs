@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of <see cref="IArtistCollectionItem"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IUrlCollection, IImageCollection, IPlayable, ISdkMember, IMerged<ICoreArtistCollection>
+    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IUrlCollection, IImageCollection, IPlayable, IAppModel, IMerged<ICoreArtistCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the artistItem collection. Restarts playback if already playing.

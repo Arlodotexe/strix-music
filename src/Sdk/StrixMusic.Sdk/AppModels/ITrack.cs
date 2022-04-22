@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Represents an audio stream with metadata that belongs to an <see cref="ITrackCollection"/>.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreTrack>
+    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, IAppModel, IMerged<ICoreTrack>
     {
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.

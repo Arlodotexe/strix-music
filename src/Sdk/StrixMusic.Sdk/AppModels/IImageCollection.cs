@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of images.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IImageCollection : IImageCollectionBase, ISdkMember, IMerged<ICoreImageCollection>
+    public interface IImageCollection : IImageCollectionBase, IAppModel, IMerged<ICoreImageCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IImageBase"/>s starting at the given offset.
