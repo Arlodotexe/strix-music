@@ -27,6 +27,8 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
+
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
         
         _image = ActivePlugins.Image.Execute(image);
     }

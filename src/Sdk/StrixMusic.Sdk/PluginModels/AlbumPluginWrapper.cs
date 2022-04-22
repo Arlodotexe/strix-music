@@ -35,6 +35,8 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+
         _album = ActivePlugins.Album.Execute(album);
         _plugins = plugins;
         

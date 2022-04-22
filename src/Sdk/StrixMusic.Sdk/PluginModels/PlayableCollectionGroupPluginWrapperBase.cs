@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.PluginModels;
 /// <summary>
 /// Wraps an instance of <see cref="IPlayableCollectionGroup"/> with the provided plugins.
 /// </summary>
-public class PlayableCollectionGroupPluginWrapperBase : IPlayableCollectionGroup
+public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollectionGroup
 {
     private readonly IPlayableCollectionGroup _playableCollectionGroup;
     private readonly SdkModelPlugin[] _plugins;

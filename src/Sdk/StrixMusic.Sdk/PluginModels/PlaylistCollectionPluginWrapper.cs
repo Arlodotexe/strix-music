@@ -34,6 +34,8 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
+
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
         
         _playlistCollection = ActivePlugins.PlaylistCollection.Execute(playlistCollection);
         _plugins = plugins;

@@ -28,6 +28,8 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+
         _search = search;
         
         if (search.SearchHistory is not null)

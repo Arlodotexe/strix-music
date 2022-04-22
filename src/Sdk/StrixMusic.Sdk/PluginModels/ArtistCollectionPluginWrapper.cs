@@ -35,6 +35,8 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+
         _artistCollection = ActivePlugins.ArtistCollection.Execute(artistCollection);
         _plugins = plugins;
 

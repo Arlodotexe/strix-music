@@ -36,6 +36,8 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+
         _track = ActivePlugins.Track.Execute(track);
         _plugins = plugins;
 

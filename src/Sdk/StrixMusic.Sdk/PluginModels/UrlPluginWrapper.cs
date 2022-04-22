@@ -27,6 +27,8 @@ public class UrlPluginWrapper : IUrl, IPluginWrapper
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
+
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
         
         _url = ActivePlugins.Url.Execute(url);
     }

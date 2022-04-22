@@ -27,6 +27,8 @@ public class GenrePluginWrapper : IGenre, IPluginWrapper
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+
         _genre = genre;
     }
     
