@@ -39,22 +39,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="TrackViewModel"/>.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
-        internal TrackViewModel(MainViewModel root, ITrack track)
+        internal TrackViewModel(ITrack track)
         {
             _syncContext = SynchronizationContext.Current;
 
-            Root = root;
             _model = track;
 
-            SourceCores = _model.GetSourceCores<ICoreTrack>().Select(root.GetLoadedCore).ToList();
+            SourceCores = _model.GetSourceCores<ICoreTrack>().Select(x => new CoreViewModel(x)).ToList();
 
             if (_model.Album != null)
-                Album = new AlbumViewModel(root, _model.Album);
+                Album = new AlbumViewModel(_model.Album);
 
             if (_model.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(root, _model.RelatedItems);
+                RelatedItems = new PlayableCollectionGroupViewModel(_model.RelatedItems);
 
             Artists = new ObservableCollection<IArtistCollectionItem>();
             UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
@@ -344,7 +342,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Track_AlbumChanged(object sender, IAlbum? e)
         {
-            Album = e is null ? null : new AlbumViewModel(Root, e);
+            Album = e is null ? null : new AlbumViewModel(e);
             _syncContext.Post(_ => OnPropertyChanged(nameof(Album)), null);
         }
 
@@ -377,8 +375,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IArtist artist => new ArtistViewModel(Root, artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -388,8 +386,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
                 UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IArtist artist => new ArtistViewModel(Root, artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(Root, collection),
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -428,9 +426,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
 
         /// <summary>
         /// The merged sources for this model.
@@ -536,7 +531,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string? Description => _model.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => Root.ActiveDevice?.NowPlaying?.Track?.Id == Id ? Root.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
+        public PlaybackState PlaybackState => _model.PlaybackState;
 
         /// <inheritdoc />
         public DownloadInfo DownloadInfo => _model.DownloadInfo;
@@ -680,10 +675,10 @@ namespace StrixMusic.Sdk.ViewModels
                     foreach (var item in items)
                     {
                         if (item is IArtist artist)
-                            Artists.Add(new ArtistViewModel(Root, artist));
+                            Artists.Add(new ArtistViewModel(artist));
 
                         if (item is IArtistCollection collection)
-                            Artists.Add(new ArtistCollectionViewModel(Root, collection));
+                            Artists.Add(new ArtistCollectionViewModel(collection));
                     }
                 }, null);
             }

@@ -38,12 +38,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="AlbumCollectionViewModel"/>.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="collection">The <see cref="IAlbumCollection"/> to wrap around.</param>
-        public AlbumCollectionViewModel(MainViewModel root, IAlbumCollection collection)
+        public AlbumCollectionViewModel(IAlbumCollection collection)
         {
             _syncContext = SynchronizationContext.Current;
-            Root = root;
             _collection = collection;
 
             Albums = new ObservableCollection<IAlbumCollectionItem>();
@@ -51,7 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
             Images = new ObservableCollection<IImage>();
             Urls = new ObservableCollection<IUrl>();
 
-            SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(root.GetLoadedCore).ToList();
+            SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(x => new CoreViewModel(x)).ToList();
 
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -159,8 +157,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IAlbum album => new AlbumViewModel(Root, album),
-                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -170,8 +168,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
                 UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IAlbum album => new AlbumViewModel(Root, album),
-                    IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -326,10 +324,10 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IAlbum album:
-                                Albums.Add(new AlbumViewModel(Root, album));
+                                Albums.Add(new AlbumViewModel(album));
                                 break;
                             case IAlbumCollection collection:
-                                Albums.Add(new AlbumCollectionViewModel(Root, collection));
+                                Albums.Add(new AlbumCollectionViewModel(collection));
                                 break;
                         }
                     }
@@ -501,9 +499,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _collection.GetSources<ICoreUrlCollection>();
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }

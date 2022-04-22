@@ -42,7 +42,9 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.PluginModels;
 
 namespace StrixMusic.Shared
 {
@@ -323,6 +325,8 @@ namespace StrixMusic.Shared
             _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
 #endif
 
+            #warning TODO: Switch to MergedModels / PluginModels / AppModels pattern.
+            // var mergedLayer = new MergedCore();
             var mainViewModel = new MainViewModel(strixDevice, _notificationService, coreManagementService);
 
             // This event stays attached for the lifetime of the application.
@@ -387,14 +391,17 @@ namespace StrixMusic.Shared
 
             UpdateStatus("SetupPlugins");
             Logger.LogInformation($"Services initialized, setting up plugins");
-
-            mainViewModel.Plugins.ModelPlugins.Import(new PlaybackHandlerPlugin(_playbackHandlerService));
-            mainViewModel.Plugins.ModelPlugins.Import(new PopulateEmptyNamesPlugin()
+            
+            var playbackHandlerPlugin = new PlaybackHandlerPlugin(_playbackHandlerService);
+            var emptyNameFallbackPlugin = new PopulateEmptyNamesPlugin
             {
                 EmptyAlbumName = _localizationService?.Music?.GetString("UnknownAlbum") ?? "?",
                 EmptyArtistName = _localizationService?.Music?.GetString("UnknownArtist") ?? "?",
                 EmptyDefaultName = _localizationService?.Music?.GetString("UnknownName") ?? "?",
-            });
+            };
+            
+#warning TODO: Switch to MergedModels / PluginModels / AppModels pattern.
+            //var pluginLayer = new StrixDataRootPluginWrapper(, emptyNameFallbackPlugin, playbackHandlerPlugin);
 
             _navService.RegisterCommonPage(_mainPage);
             App.AppFrame.SetupMainViewModel(mainViewModel);

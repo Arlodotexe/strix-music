@@ -38,13 +38,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="collection">The base <see cref="ITrackCollection"/> containing properties about this class.</param>
-        public TrackCollectionViewModel(MainViewModel root, ITrackCollection collection)
+        public TrackCollectionViewModel(ITrackCollection collection)
         {
             _syncContext = SynchronizationContext.Current;
             _collection = collection;
-            Root = root;
 
             Tracks = new ObservableCollection<TrackViewModel>();
             Images = new ObservableCollection<IImage>();
@@ -71,7 +69,7 @@ namespace StrixMusic.Sdk.ViewModels
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
             InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
 
-            SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(root.GetLoadedCore).ToList();
+            SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(x => new CoreViewModel(x)).ToList();
 
             AttachEvents();
         }
@@ -163,12 +161,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
             }
             else
             {
                 // Make sure both ordered and unordered tracks are updated. 
-                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
 
                 foreach (var item in UnsortedTracks)
                 {
@@ -384,9 +382,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ObservableCollection<IUrl> Urls { get; }
 
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
-
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
@@ -490,7 +485,7 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                        Tracks.Add(new TrackViewModel(Root, item));
+                        Tracks.Add(new TrackViewModel(item));
                 }, null);
             }
         }

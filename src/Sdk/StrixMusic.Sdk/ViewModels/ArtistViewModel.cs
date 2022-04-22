@@ -41,19 +41,17 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ArtistViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="artist">The <see cref="IArtist"/> to wrap.</param>
-        internal ArtistViewModel(MainViewModel root, IArtist artist)
+        internal ArtistViewModel(IArtist artist)
         {
             _syncContext = SynchronizationContext.Current;
 
             _artist = artist;
-            Root = root;
 
-            SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(root.GetLoadedCore).ToList();
+            SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(x => new CoreViewModel(x)).ToList();
 
             if (_artist.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(root, _artist.RelatedItems);
+                RelatedItems = new PlayableCollectionGroupViewModel(_artist.RelatedItems);
 
             UnsortedTracks = new ObservableCollection<TrackViewModel>();
             UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();
@@ -361,12 +359,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
             }
             else
             {
                 // Make sure both ordered and unordered tracks are updated. 
-                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(Root, x.Data));
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
 
                 foreach (var item in UnsortedTracks)
                 {
@@ -390,8 +388,8 @@ namespace StrixMusic.Sdk.ViewModels
              {
                  Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                  {
-                     IAlbum album => new AlbumViewModel(Root, album),
-                     IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                     IAlbum album => new AlbumViewModel(album),
+                     IAlbumCollection collection => new AlbumCollectionViewModel(collection),
                      _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                          $"{item.Data.GetType()} not supported for adding to {GetType()}")
                  });
@@ -401,8 +399,8 @@ namespace StrixMusic.Sdk.ViewModels
                  // Make sure both ordered and unordered albums are updated. 
                  UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                   {
-                      IAlbum album => new AlbumViewModel(Root, album),
-                      IAlbumCollection collection => new AlbumCollectionViewModel(Root, collection),
+                      IAlbum album => new AlbumViewModel(album),
+                      IAlbumCollection collection => new AlbumCollectionViewModel(collection),
                       _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                           $"{item.Data.GetType()} not supported for adding to {GetType()}")
                   });
@@ -425,9 +423,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
 
         /// <summary>
         /// The sources that were merged to form this member.
@@ -664,7 +659,7 @@ namespace StrixMusic.Sdk.ViewModels
                     {
                         if (item is IAlbum album)
                         {
-                            Albums.Add(new AlbumViewModel(Root, album));
+                            Albums.Add(new AlbumViewModel(album));
                         }
                     }
                 }, null);
@@ -682,7 +677,7 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
-                        Tracks.Add(new TrackViewModel(Root, item));
+                        Tracks.Add(new TrackViewModel(item));
                 }, null);
             }
         }

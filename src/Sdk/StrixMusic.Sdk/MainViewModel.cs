@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk
             _syncContext = SynchronizationContext.Current;
             _coreManagementService = coreManagementService;
             _notificationService = notificationsService;
-            LocalDevice = new DeviceViewModel(this, strixDevice);
+            LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
             Notifications = new NotificationsViewModel(notificationsService);
@@ -121,13 +121,13 @@ namespace StrixMusic.Sdk
             {
                 foreach (var device in core.Devices)
                 {
-                    var deviceVm = new DeviceViewModel(this, new DeviceAdapter(device));
+                    var deviceVm = new DeviceViewModel(new DeviceAdapter(device));
                     Devices.Add(deviceVm);
                     AttachEvents(deviceVm);
                 }
 
                 if (core.User != null)
-                    Users.Add(new UserViewModel(this, new UserAdapter(core.User)));
+                    Users.Add(new UserViewModel(new UserAdapter(core.User)));
             }, null);
 
             AttachEvents(core);
@@ -152,13 +152,6 @@ namespace StrixMusic.Sdk
 
             await relevantVm.DisposeAsync();
         }
-
-        /// <summary>
-        /// Gets a loaded core from the list of loaded <see cref="Cores"/>.
-        /// </summary>
-        /// <param name="reference">The core to look for.</param>
-        /// <returns>The loaded, observable core.</returns>
-        public CoreViewModel GetLoadedCore(ICore reference) => Cores.First(x => x.InstanceId == reference.InstanceId);
 
         /// <summary>
         /// Initializes and loads the ViewModel, including initializing all registered cores.
@@ -187,22 +180,22 @@ namespace StrixMusic.Sdk
                 await InitCore(core);
 
             _mergedLibrary = new MergedLibrary(_sources.Select(x => x.Library), MergeConfig);
-            Library = new LibraryViewModel(this, _mergedLibrary);
+            Library = new LibraryViewModel(_mergedLibrary);
             await Library.InitAsync();
 
             if (_sources.Any(x => x.RecentlyPlayed != null))
             {
                 _mergedRecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), MergeConfig);
-                RecentlyPlayed = new RecentlyPlayedViewModel(this, _mergedRecentlyPlayed);
+                RecentlyPlayed = new RecentlyPlayedViewModel(_mergedRecentlyPlayed);
             }
 
             if (_sources.Any(x => x.Discoverables != null))
             {
                 _mergedDiscoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), MergeConfig);
-                Discoverables = new DiscoverablesViewModel(this, _mergedDiscoverables);
+                Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
             }
 
-            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(this, new DeviceAdapter(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (_, device) => new DeviceViewModel(new DeviceAdapter(device))))
             {
                 LocalDevice,
             };
@@ -214,7 +207,7 @@ namespace StrixMusic.Sdk
             foreach (var device in Devices)
                 AttachEvents(device);
 
-            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(this, new UserAdapter(x))));
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new UserAdapter(x))));
 
             _sources.ForEach(AttachEvents);
 
@@ -245,7 +238,7 @@ namespace StrixMusic.Sdk
             // before the below can be added to the list of MainViewModel.Cores.
             _syncContext.Post(_ =>
             {
-                _ = new CoreViewModel(this, core, coreMetadata);
+                _ = new CoreViewModel(core, coreMetadata);
             }, null);
             return core;
         }
@@ -293,7 +286,7 @@ namespace StrixMusic.Sdk
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(this, new DeviceAdapter(x.Data)), x.Index)).ToList();
+            var wrappedAddedVms = addedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(new DeviceViewModel(new DeviceAdapter(x.Data)), x.Index)).ToList();
             var wrappedRemovedVms = removedItems.Select(x => new CollectionChangedItem<DeviceViewModel>(Devices.ElementAt(x.Index), x.Index)).ToList();
 
             // ReSharper disable once SuspiciousTypeConversion.Global

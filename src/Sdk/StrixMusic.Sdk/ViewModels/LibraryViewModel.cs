@@ -22,10 +22,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of the <see cref="LibraryViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="library">The <see cref="ILibrary"/> to wrap.</param>
-        internal LibraryViewModel(MainViewModel root, ILibrary library)
-            : base(root, library)
+        internal LibraryViewModel(ILibrary library)
+            : base(library)
         {
             _library = library;
         }

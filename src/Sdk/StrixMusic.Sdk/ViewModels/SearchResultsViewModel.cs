@@ -20,10 +20,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchResultsViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="searchResults">The <see cref="ISearchResults"/> to wrap.</param>
-        internal SearchResultsViewModel(MainViewModel root, ISearchResults searchResults)
-            : base(root, searchResults)
+        internal SearchResultsViewModel(ISearchResults searchResults)
+            : base(searchResults)
         {
             _searchResults = searchResults;
         }
