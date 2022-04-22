@@ -23,8 +23,8 @@ public class MockTrack : MockPlayableCollectionGroup, ITrack
     private bool _isChangeLanguageAsyncAvailable;
     private bool _isChangeLyricsAsyncAvailable;
     private bool _isChangeIsExplicitAsyncAvailable;
-    private IAlbum? _album = new MockAlbum();
-    private ILyrics? _lyrics = new MockLyrics();
+    private IAlbum? _album;
+    private ILyrics? _lyrics;
 
     public int TotalGenreCount
     {
