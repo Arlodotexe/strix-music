@@ -117,16 +117,16 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -174,8 +174,14 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     private void OnLyricsChanged(object sender, ILyrics? e) => LyricsChanged?.Invoke(sender, e);
 
-    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => GenresChanged?.Invoke(sender, addedItems, removedItems);
+    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) 
+    {
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
+        GenresChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
+    }
+    
     private void OnIsExplicitChanged(object sender, bool e) => IsExplicitChanged?.Invoke(sender, e);
 
     private void OnLanguageChanged(object sender, CultureInfo? e) => LanguageChanged?.Invoke(sender, e);
@@ -384,7 +390,7 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
     public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
     {
         var results = await _track.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
+        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
     }
 
     /// <inheritdoc/>
@@ -406,8 +412,12 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
     public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _track.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _track.GetArtistItemsAsync(limit, offset, cancellationToken);
-
+    public async Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+    {
+        var results = await _track.GetArtistItemsAsync(limit, offset, cancellationToken);
+        return results.Select(Transform).ToList();
+    }
+    
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _track.AddArtistItemAsync(artistItem, index, cancellationToken);
 

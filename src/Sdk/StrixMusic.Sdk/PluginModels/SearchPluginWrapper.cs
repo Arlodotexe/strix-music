@@ -29,7 +29,7 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
             ActivePlugins.Import(item);
 
         _search = search;
-
+        
         if (search.SearchHistory is not null)
             SearchHistory = new SearchHistoryPluginWrapper(search.SearchHistory, plugins);
     }

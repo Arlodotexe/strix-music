@@ -10,7 +10,6 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Plugins;
 
 namespace StrixMusic.Sdk.AdapterModels
 {

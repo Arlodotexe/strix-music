@@ -9,5 +9,5 @@ public class MockPlaylist : MockPlayableCollectionGroup, IPlaylist
     public bool Equals(ICorePlaylist? other) => false;
     public IReadOnlyList<ICorePlaylist> Sources { get; } = new List<ICorePlaylist>();
     public IUserProfile? Owner { get; }
-    public IPlayableCollectionGroup? RelatedItems { get; }
+    public IPlayableCollectionGroup? RelatedItems { get; set; }
 }

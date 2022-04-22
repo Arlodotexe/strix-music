@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -20,6 +19,13 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 /// </summary>
 public class MockPlayableCollectionGroup : IPlayableCollectionGroup
 {
+    private readonly List<IAlbumCollectionItem> _albums = new();
+    private readonly List<IArtistCollectionItem> _artists = new();
+    private readonly List<IPlaylistCollectionItem> _playlists = new();
+    private readonly List<ITrack> _tracks = new();
+    private readonly List<IPlayableCollectionGroup> _children = new();
+    private readonly List<IImage> _images = new();
+    private readonly List<IUrl> _urls = new();
     private int _totalUrlCount;
     private int _totalImageCount;
     private bool _isChangeNameAsyncAvailable;
@@ -165,8 +171,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalImageCount--;
-        ImagesChanged?.Invoke(this, new List<CollectionChangedItem<IImage>>(), new List<CollectionChangedItem<IImage>> { new(new MockImage(), index) });
+        var removedItem = _images[index];
+        _images.RemoveAt(index);
+
+        TotalImageCount = _images.Count;
+        ImagesChanged?.Invoke(this, new List<CollectionChangedItem<IImage>>(), new List<CollectionChangedItem<IImage>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -185,8 +194,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalUrlCount--;
-        UrlsChanged?.Invoke(this, new List<CollectionChangedItem<IUrl>>(), new List<CollectionChangedItem<IUrl>> { new(new MockUrl(), index) });
+        var removedItem = _urls[index];
+        _urls.RemoveAt(index);
+
+        TotalUrlCount = _urls.Count;
+        UrlsChanged?.Invoke(this, new List<CollectionChangedItem<IUrl>>(), new List<CollectionChangedItem<IUrl>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -354,8 +366,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemovePlaylistItemAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalPlaylistItemsCount--;
-        PlaylistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlaylistCollectionItem>>(), new List<CollectionChangedItem<IPlaylistCollectionItem>> { new(new MockPlaylist(), index) });
+        var removedItem = _playlists[index];
+        _playlists.RemoveAt(index);
+
+        TotalPlaylistItemsCount = _playlists.Count;
+        PlaylistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlaylistCollectionItem>>(), new List<CollectionChangedItem<IPlaylistCollectionItem>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -416,8 +431,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalTrackCount--;
-        TracksChanged?.Invoke(this, new List<CollectionChangedItem<ITrack>>(), new List<CollectionChangedItem<ITrack>> { new(new MockTrack(), index) });
+        var removedItem = _tracks[index];
+        _tracks.RemoveAt(index);
+
+        TotalTrackCount = _tracks.Count;
+        TracksChanged?.Invoke(this, new List<CollectionChangedItem<ITrack>>(), new List<CollectionChangedItem<ITrack>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -478,8 +496,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveAlbumItemAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalAlbumItemsCount--;
-        AlbumItemsChanged?.Invoke(this, new List<CollectionChangedItem<IAlbumCollectionItem>>(), new List<CollectionChangedItem<IAlbumCollectionItem>> { new(new MockAlbum(), index) });
+        var removedItem = _albums[index];
+        _albums.RemoveAt(index);
+
+        TotalAlbumItemsCount = _albums.Count;
+        AlbumItemsChanged?.Invoke(this, new List<CollectionChangedItem<IAlbumCollectionItem>>(), new List<CollectionChangedItem<IAlbumCollectionItem>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -540,8 +561,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalArtistItemsCount--;
-        ArtistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IArtistCollectionItem>>(), new List<CollectionChangedItem<IArtistCollectionItem>> { new(new MockAlbum(), index) });
+        var removedItem = _artists[index];
+        _artists.RemoveAt(index);
+
+        TotalArtistItemsCount = _artists.Count;
+        ArtistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IArtistCollectionItem>>(), new List<CollectionChangedItem<IArtistCollectionItem>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -580,8 +604,11 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task RemoveChildAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalChildrenCount--;
-        ChildItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlayableCollectionGroup>>(), new List<CollectionChangedItem<IPlayableCollectionGroup>> { new(new MockPlayableCollectionGroup(), index) });
+        var removedItem = _children[index];
+        _children.RemoveAt(index);
+
+        TotalChildrenCount = _children.Count;
+        ChildItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlayableCollectionGroup>>(), new List<CollectionChangedItem<IPlayableCollectionGroup>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -632,12 +659,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IImage>>(Enumerable.Range(0, limit).Select(_ => new MockImage()).ToList());
+    public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IImage>>(_images);
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default)
     {
-        TotalImageCount++;
+        _images.Insert(index, image);
+
+        TotalImageCount = _images.Count;
         ImagesChanged?.Invoke(this, new List<CollectionChangedItem<IImage>> { new(image, index) }, new List<CollectionChangedItem<IImage>>());
 
         return Task.CompletedTask;
@@ -647,12 +676,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public bool Equals(ICoreUrlCollection? other) => false;
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IUrl>>(Enumerable.Range(0, limit).Select(_ => new MockUrl()).ToList());
+    public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IUrl>>(_urls);
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default)
     {
-        TotalUrlCount++;
+        _urls.Insert(index, url);
+
+        TotalUrlCount = _urls.Count;
         UrlsChanged?.Invoke(this, new List<CollectionChangedItem<IUrl>> { new(url, index) }, new List<CollectionChangedItem<IUrl>>());
 
         return Task.CompletedTask;
@@ -672,7 +703,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default)
     {
-        DownloadInfo = new DownloadInfo(DownloadState.Downloading);
+        DownloadInfo = new(DownloadState.Downloading);
         return Task.CompletedTask;
     }
 
@@ -690,12 +721,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlaylistCollectionItem>>(Enumerable.Range(0, limit).Select(_ => new MockPlaylist()).ToList());
+    public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlaylistCollectionItem>>(_playlists);
 
     /// <inheritdoc/>
     public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default)
     {
-        TotalPlaylistItemsCount++;
+        _playlists.Insert(index, playlistItem);
+
+        TotalPlaylistItemsCount = _playlists.Count;
         PlaylistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlaylistCollectionItem>> { new(playlistItem, index) }, new List<CollectionChangedItem<IPlaylistCollectionItem>>());
 
         return Task.CompletedTask;
@@ -712,12 +745,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ITrack>>(Enumerable.Range(0, limit).Select(_ => new MockTrack()).ToList());
+    public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ITrack>>(_tracks);
 
     /// <inheritdoc/>
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default)
     {
-        TotalTrackCount++;
+        _tracks.Insert(index, track);
+
+        TotalTrackCount = _tracks.Count;
         TracksChanged?.Invoke(this, new List<CollectionChangedItem<ITrack>> { new(track, index) }, new List<CollectionChangedItem<ITrack>>());
 
         return Task.CompletedTask;
@@ -737,12 +772,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IAlbumCollectionItem>>(Enumerable.Range(0, limit).Select(_ => new MockAlbum()).ToList());
+    public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IAlbumCollectionItem>>(_albums);
 
     /// <inheritdoc/>
     public Task AddAlbumItemAsync(IAlbumCollectionItem albumItem, int index, CancellationToken cancellationToken = default)
     {
-        TotalAlbumItemsCount++;
+        _albums.Insert(index, albumItem);
+
+        TotalAlbumItemsCount = _albums.Count;
         AlbumItemsChanged?.Invoke(this, new List<CollectionChangedItem<IAlbumCollectionItem>> { new(albumItem, index) }, new List<CollectionChangedItem<IAlbumCollectionItem>>());
 
         return Task.CompletedTask;
@@ -762,12 +799,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(Enumerable.Range(0, limit).Select(_ => new MockArtist()).ToList());
+    public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(_artists);
 
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default)
     {
-        TotalArtistItemsCount++;
+        _artists.Insert(index, artistItem);
+
+        TotalArtistItemsCount = _artists.Count;
         ArtistItemsChanged?.Invoke(this, new List<CollectionChangedItem<IArtistCollectionItem>> { new(artistItem, index) }, new List<CollectionChangedItem<IArtistCollectionItem>>());
 
         return Task.CompletedTask;
@@ -784,12 +823,14 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(Enumerable.Range(0, limit).Select(_ => new MockPlayableCollectionGroup()).ToList());
+    public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(_children);
 
     /// <inheritdoc/>
     public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default)
     {
-        TotalChildrenCount++;
+        _children.Insert(index, child);
+
+        TotalChildrenCount = _children.Count;
         ChildItemsChanged?.Invoke(this, new List<CollectionChangedItem<IPlayableCollectionGroup>> { new(child, index) }, new List<CollectionChangedItem<IPlayableCollectionGroup>>());
 
         return Task.CompletedTask;

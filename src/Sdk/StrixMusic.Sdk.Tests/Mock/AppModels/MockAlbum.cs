@@ -12,6 +12,7 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockAlbum : MockPlayableCollectionGroup, IAlbum
 {
+    private readonly List<IGenre> _genres = new();
     private int _totalGenreCount;
     private DateTime? _datePublished;
     private bool _isChangeDatePublishedAsyncAvailable;
@@ -28,8 +29,11 @@ public class MockAlbum : MockPlayableCollectionGroup, IAlbum
 
     public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalGenreCount--;
-        GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>>(), new List<CollectionChangedItem<IGenre>> { new(new MockGenre(), index) });
+        var removedItem = _genres[index];
+        _genres.RemoveAt(index);
+
+        TotalGenreCount = _genres.Count;
+        GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>>(), new List<CollectionChangedItem<IGenre>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -44,11 +48,13 @@ public class MockAlbum : MockPlayableCollectionGroup, IAlbum
 
     IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources { get; } = new List<ICoreGenreCollection>();
 
-    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IGenre>>(Enumerable.Range(0, limit).Select(_ => new MockGenre()).ToList());
+    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IGenre>>(_genres);
 
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) 
     {
-        TotalGenreCount++;
+        _genres.Insert(index, genre);
+
+        TotalGenreCount = _genres.Count;
         GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>> { new(genre, index) }, new List<CollectionChangedItem<IGenre>>());
 
         return Task.CompletedTask;

@@ -8,8 +8,6 @@ using OwlCore.Events;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Plugins;
-using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.AppModels
 {

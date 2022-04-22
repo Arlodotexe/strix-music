@@ -10,7 +10,7 @@ public class MockImage : IImage
 {
     public ValueTask DisposeAsync()  => default;
 
-    public Uri Uri { get; } = new("/");
+    public Uri Uri { get; } = new("https://example.com/");
     public double Height => 0;
     public double Width => 0;
 

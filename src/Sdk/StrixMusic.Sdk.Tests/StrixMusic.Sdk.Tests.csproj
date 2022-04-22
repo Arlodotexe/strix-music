@@ -29,8 +29,4 @@
 		<ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="PluginModels" />
-	</ItemGroup>
-
 </Project>

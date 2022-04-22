@@ -13,8 +13,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockTrack : MockPlayableCollectionGroup, ITrack
 {
-    private int _totalGenreCount;
-    private readonly IReadOnlyList<ICoreGenreCollection> _sources = new List<ICoreGenreCollection>();
     private int? _trackNumber;
     private CultureInfo? _language;
     private bool _isExplicit;
@@ -25,6 +23,9 @@ public class MockTrack : MockPlayableCollectionGroup, ITrack
     private bool _isChangeIsExplicitAsyncAvailable;
     private IAlbum? _album;
     private ILyrics? _lyrics;
+
+    private readonly List<IGenre> _genres = new();
+    private int _totalGenreCount;
 
     public int TotalGenreCount
     {
@@ -38,8 +39,11 @@ public class MockTrack : MockPlayableCollectionGroup, ITrack
 
     public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default)
     {
-        TotalGenreCount--;
-        GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>>(), new List<CollectionChangedItem<IGenre>> { new(new MockGenre(), index) });
+        var removedItem = _genres[index];
+        _genres.RemoveAt(index);
+
+        TotalGenreCount = _genres.Count;
+        GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>>(), new List<CollectionChangedItem<IGenre>> { new(removedItem, index) });
 
         return Task.CompletedTask;
     }
@@ -52,21 +56,21 @@ public class MockTrack : MockPlayableCollectionGroup, ITrack
 
     public bool Equals(ICoreGenreCollection? other) => false;
 
-    IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => _sources;
+    IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources { get; } = new List<ICoreGenreCollection>();
 
-    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IGenre>>(Enumerable.Range(0, limit).Select(_ => new MockGenre()).ToList());
+    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IGenre>>(_genres);
 
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) 
     {
-        TotalGenreCount++;
+        _genres.Insert(index, genre);
+
+        TotalGenreCount = _genres.Count;
         GenresChanged?.Invoke(this, new List<CollectionChangedItem<IGenre>> { new(genre, index) }, new List<CollectionChangedItem<IGenre>>());
 
         return Task.CompletedTask;
     }
 
     public event CollectionChangedEventHandler<IGenre>? GenresChanged;
-    
-    public bool Equals(ICoreArtist? other) => false;
 
     public TrackType Type { get; }
 

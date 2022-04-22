@@ -3,7 +3,6 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -33,7 +32,7 @@ namespace StrixMusic.Sdk.PluginModels
 
             ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
-            Library = new LibraryPluginWrapper(appCore.Library);
+            Library = new LibraryPluginWrapper(appCore.Library, plugins);
 
             if (appCore.Search is not null)
                 Search = new SearchPluginWrapper(appCore.Search, plugins);

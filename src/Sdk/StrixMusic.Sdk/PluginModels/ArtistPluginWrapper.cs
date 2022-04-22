@@ -116,24 +116,30 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnGenresCountChanged(object sender, int e) => GenresCountChanged?.Invoke(sender, e);
 
-    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => GenresChanged?.Invoke(sender, addedItems, removedItems);
+    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) 
+    {
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
+        GenresChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
+    }
+    
     private void OnDownloadInfoChanged(object sender, DownloadInfo e) => DownloadInfoChanged?.Invoke(sender, e);
 
     private void OnAlbumItemsCountChanged(object sender, int e) => AlbumItemsCountChanged?.Invoke(sender, e);
@@ -395,7 +401,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
     {
         var results = await _artist.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
+        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
     }
 
     /// <inheritdoc/>
@@ -477,8 +483,12 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public bool Equals(ICoreGenreCollection other) => _artist.Equals(other);
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetGenresAsync(limit, offset, cancellationToken);
-
+    public async Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default)
+    {
+        var results = await _artist.GetGenresAsync(limit, offset, cancellationToken);
+        return results.Select(x => new GenrePluginWrapper(x, _plugins)).ToList();
+    }
+    
     /// <inheritdoc/>
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _artist.AddGenreAsync(genre, index, cancellationToken);
 

@@ -103,7 +103,13 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
 
     private void OnGenresCountChanged(object sender, int e) => GenresCountChanged?.Invoke(sender, e);
 
-    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => GenresChanged?.Invoke(sender, addedItems, removedItems);
+    private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) 
+    {
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IGenre>(new GenrePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+
+        GenresChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
+    }
 
     private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
     {
@@ -123,16 +129,16 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -391,7 +397,7 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
     {
         var results = await _album.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
+        return results.Select(x => new ImagePluginWrapper(x, _plugins)).ToList();
     }
 
     /// <inheritdoc/>
@@ -404,7 +410,7 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
     {
         var results = await _album.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
+        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
     }
 
     /// <inheritdoc/>
@@ -445,8 +451,12 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _album.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetArtistItemsAsync(limit, offset, cancellationToken);
-
+    public async Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+    {
+        var results = await _album.GetArtistItemsAsync(limit, offset, cancellationToken);
+        return results.Select(Transform).ToList();
+    }
+    
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _album.AddArtistItemAsync(artistItem, index, cancellationToken);
 
@@ -469,7 +479,11 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     public bool Equals(ICoreGenreCollection other) => _album.Equals(other);
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetGenresAsync(limit, offset, cancellationToken);
+    public async Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default)
+    {
+        var results = await _album.GetGenresAsync(limit, offset, cancellationToken);
+        return results.Select(x => new GenrePluginWrapper(x, _plugins)).ToList();
+    }
 
     /// <inheritdoc/>
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _album.AddGenreAsync(genre, index, cancellationToken);

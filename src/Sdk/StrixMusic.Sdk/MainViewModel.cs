@@ -19,8 +19,6 @@ using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Plugins;
-using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;

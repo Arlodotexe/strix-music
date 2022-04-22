@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
 
         public IPlayableCollectionGroup? Pins { get; } = new MockPlayableCollectionGroup();
 
-        public ISearch? Search => throw new System.NotImplementedException();
+        public ISearch? Search { get; } = new MockSearch();
 
         public IRecentlyPlayed? RecentlyPlayed { get; } = new MockRecentlyPlayed();
 

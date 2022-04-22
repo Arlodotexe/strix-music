@@ -96,16 +96,16 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(ActivePlugins.Url.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(ActivePlugins.Image.Execute(x.Data), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
