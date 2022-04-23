@@ -297,11 +297,7 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreAlbumCollection>)_albumCollection).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _albumCollection.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _albumCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _albumCollection.AddImageAsync(image, index, cancellationToken);
@@ -310,11 +306,7 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _albumCollection.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _albumCollection.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _albumCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _albumCollection.AddUrlAsync(url, index, cancellationToken);
@@ -332,10 +324,9 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
     public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => _albumCollection.PlayAlbumCollectionAsync(albumItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
     {
-        var results = await _albumCollection.GetAlbumItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
+        return _albumCollection.GetAlbumItemsAsync(limit, offset, cancellationToken).Select(Transform);
     }
 
     /// <inheritdoc/>

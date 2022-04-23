@@ -297,11 +297,7 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtistCollection>)_artistCollection).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artistCollection.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _artistCollection.AddImageAsync(image, index, cancellationToken);
@@ -310,11 +306,7 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _artistCollection.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artistCollection.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _artistCollection.AddUrlAsync(url, index, cancellationToken);
@@ -332,11 +324,7 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _artistCollection.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artistCollection.GetArtistItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetArtistItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _artistCollection.AddArtistItemAsync(artistItem, index, cancellationToken);

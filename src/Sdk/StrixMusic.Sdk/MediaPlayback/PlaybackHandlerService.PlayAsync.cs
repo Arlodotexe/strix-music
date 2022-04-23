@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(ITrackCollection trackCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            var apiTracks = await trackCollection.GetTracksAsync(1, 0, cancellationToken);
+            var apiTracks = await trackCollection.GetTracksAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
             Guard.HasSizeGreaterThan(apiTracks, 0, nameof(apiTracks));
 
             await PlayAsync(apiTracks[0], trackCollection, context, cancellationToken);
@@ -52,7 +52,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IArtistCollection artistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            var apiArtists = await artistCollection.GetArtistItemsAsync(1, 0, cancellationToken);
+            var apiArtists = await artistCollection.GetArtistItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
+            ;
             Guard.HasSizeGreaterThan(apiArtists, 0, nameof(apiArtists));
 
             await PlayAsync(apiArtists[0], artistCollection, context, cancellationToken);
@@ -88,7 +89,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IPlaylistCollection playlistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            var apiPlaylists = await playlistCollection.GetPlaylistItemsAsync(1, 0, cancellationToken);
+            var apiPlaylists = await playlistCollection.GetPlaylistItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
+            ;
             Guard.HasSizeGreaterThan(apiPlaylists, 0, nameof(apiPlaylists));
 
             await PlayAsync(apiPlaylists[0], playlistCollection, context, cancellationToken);
@@ -97,7 +99,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IAlbumCollection albumCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            var apiItems = await albumCollection.GetAlbumItemsAsync(1, 0, cancellationToken);
+            var apiItems = await albumCollection.GetAlbumItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
+            ;
             Guard.HasSizeGreaterThan(apiItems, 0, nameof(apiItems));
 
             await PlayAsync(apiItems[0], albumCollection, context, cancellationToken);
@@ -210,12 +213,10 @@ namespace StrixMusic.Sdk.MediaPlayback
             var trackPlaybackIndex = 0;
             var reachedTargetTrack = false;
 
-            var tracks = await trackCollection.GetTracksAsync(trackCollection.TotalTrackCount, 0, cancellationToken);
-
-            for (var i = 0; i < trackCollection.TotalTrackCount; i++)
+            var i = -1;
+            await foreach (var item in trackCollection.GetTracksAsync(trackCollection.TotalTrackCount, 0, cancellationToken))
             {
-                var item = tracks[i];
-
+                i++;
                 var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
 
                 var mediaSource = await coreTrack.SourceCore.GetMediaSourceAsync(coreTrack, cancellationToken);
@@ -228,12 +229,12 @@ namespace StrixMusic.Sdk.MediaPlayback
                     trackPlaybackIndex = i;
                 }
 
-                var playbackItem = new PlaybackItem()
+                var playbackItem = new PlaybackItem
                 {
                     MediaConfig = mediaSource,
                     Track = item
                 };
-                
+
                 switch (pushTarget)
                 {
                     case AddTrackPushTarget.Normal when reachedTargetTrack:
@@ -266,10 +267,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
             var offset = 0;
-
-            var albums = await albumCollection.GetAlbumItemsAsync(albumCollection.TotalAlbumItemsCount, offset, cancellationToken);
-
-            foreach (var albumItem in albums)
+            
+            await foreach (var albumItem in albumCollection.GetAlbumItemsAsync(albumCollection.TotalAlbumItemsCount, offset, cancellationToken))
             {
                 if (albumItem is IAlbum album)
                 {
@@ -277,7 +276,7 @@ namespace StrixMusic.Sdk.MediaPlayback
                     if (album.TotalTrackCount < 1)
                         continue;
 
-                    var tracks = await album.GetTracksAsync(1, 0, cancellationToken);
+                    var tracks = await album.GetTracksAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);;
                     var firstTrack = tracks[0];
 
                     if (albumItem.Id == albumCollectionItem?.Id && !foundItemTarget)
@@ -324,10 +323,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
             var offset = 0;
-
-            var artists = await artistCollection.GetArtistItemsAsync(artistCollection.TotalArtistItemsCount, offset, cancellationToken);
-
-            foreach (var artistItem in artists)
+            
+            await foreach (var artistItem in artistCollection.GetArtistItemsAsync(artistCollection.TotalArtistItemsCount, offset, cancellationToken))
             {
                 switch (artistItem)
                 {
@@ -335,7 +332,7 @@ namespace StrixMusic.Sdk.MediaPlayback
                     case IArtist { TotalTrackCount: < 1 }:
                         continue;
                     case IArtist artist:
-                        var tracks = await artist.GetTracksAsync(1, 0, cancellationToken);
+                        var tracks = await artist.GetTracksAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
                         var firstTrack = tracks[0];
 
                         if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
@@ -382,10 +379,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
             var offset = 0;
-
-            var playlists = await playlistCollection.GetPlaylistItemsAsync(playlistCollection.TotalPlaylistItemsCount, offset, cancellationToken);
-
-            foreach (var playlistItem in playlists)
+            
+            await foreach (var playlistItem in playlistCollection.GetPlaylistItemsAsync(playlistCollection.TotalPlaylistItemsCount, offset, cancellationToken))
             {
                 if (playlistItem is IPlaylist playlist)
                 {
@@ -393,7 +388,7 @@ namespace StrixMusic.Sdk.MediaPlayback
                     if (playlist.TotalTrackCount < 1)
                         continue;
 
-                    var tracks = await playlist.GetTracksAsync(1, 0, cancellationToken);
+                    var tracks = await playlist.GetTracksAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
                     var firstTrack = tracks[0];
 
                     if (playlistItem.Id == playlistCollectionItem?.Id && !foundItemTarget)

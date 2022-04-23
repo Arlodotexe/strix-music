@@ -383,43 +383,43 @@ namespace StrixMusic.Sdk.ViewModels
         }, null);
 
         private void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems) => _syncContext.Post(_ =>
-         {
-             if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
-             {
-                 Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                 {
-                     IAlbum album => new AlbumViewModel(album),
-                     IAlbumCollection collection => new AlbumCollectionViewModel(collection),
-                     _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                 });
-             }
-             else
-             {
-                 // Make sure both ordered and unordered albums are updated. 
-                 UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                  {
-                      IAlbum album => new AlbumViewModel(album),
-                      IAlbumCollection collection => new AlbumCollectionViewModel(collection),
-                      _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                          $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                  });
+        {
+            if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
+            {
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                {
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            }
+            else
+            {
+                // Make sure both ordered and unordered albums are updated. 
+                UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                {
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                        $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
 
-                 foreach (var item in UnsortedAlbums)
-                 {
-                     if (!Albums.Contains(item))
-                         Albums.Add(item);
-                 }
+                foreach (var item in UnsortedAlbums)
+                {
+                    if (!Albums.Contains(item))
+                        Albums.Add(item);
+                }
 
-                 foreach (var item in Albums)
-                 {
-                     if (!UnsortedAlbums.Contains(item))
-                         Albums.Remove(item);
-                 }
+                foreach (var item in Albums)
+                {
+                    if (!UnsortedAlbums.Contains(item))
+                        Albums.Remove(item);
+                }
 
-                 SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
-             }
-         }, null);
+                SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+            }
+        }, null);
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -613,19 +613,19 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _artist.PlayTrackCollectionAsync(track, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetTracksAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetAlbumItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetAlbumItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetImagesAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetGenresAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetUrlsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection)
@@ -651,16 +651,16 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateAlbumsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateAlbumsMutex.Release());
-                var items = await _artist.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken))
                     {
                         if (item is IAlbum album)
-                        {
                             Albums.Add(new AlbumViewModel(album));
-                        }
+
+                        if (item is IAlbumCollection albumCollection)
+                            Albums.Add(new AlbumCollectionViewModel(albumCollection));
                     }
                 }, null);
             }
@@ -672,11 +672,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
-                var items = await GetTracksAsync(limit, Tracks.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in GetTracksAsync(limit, Tracks.Count, cancellationToken))
                         Tracks.Add(new TrackViewModel(item));
                 }, null);
             }
@@ -688,14 +687,11 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
-                var items = await _artist.GetImagesAsync(limit, Images.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
-                    {
+                    await foreach (var item in  _artist.GetImagesAsync(limit, Images.Count, cancellationToken))
                         Images.Add(item);
-                    }
                 }, null);
             }
         }
@@ -706,14 +702,11 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateGenresMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateGenresMutex.Release());
-                var items = await _artist.GetGenresAsync(limit, Genres.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
-                    {
+                    await foreach (var item in _artist.GetGenresAsync(limit, Genres.Count, cancellationToken))
                         Genres.Add(item);
-                    }
                 }, null);
             }
         }
@@ -724,11 +717,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
-                var items = await _artist.GetUrlsAsync(limit, Urls.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _artist.GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     {
                         Urls.Add(item);
                     }

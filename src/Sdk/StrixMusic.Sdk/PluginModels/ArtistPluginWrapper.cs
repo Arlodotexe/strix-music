@@ -387,11 +387,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtist>)_artist).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artist.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _artist.AddImageAsync(image, index, cancellationToken);
@@ -400,11 +396,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _artist.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artist.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _artist.AddUrlAsync(url, index, cancellationToken);
@@ -422,11 +414,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _artist.PlayTrackCollectionAsync(track, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artist.GetTracksAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetTracksAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _artist.AddTrackAsync(track, index, cancellationToken);
@@ -441,11 +429,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => _artist.PlayAlbumCollectionAsync(albumItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artist.GetAlbumItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetAlbumItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddAlbumItemAsync(IAlbumCollectionItem albumItem, int index, CancellationToken cancellationToken = default) => _artist.AddAlbumItemAsync(albumItem, index, cancellationToken);
@@ -485,12 +469,8 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     public bool Equals(ICoreGenreCollection other) => _artist.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _artist.GetGenresAsync(limit, offset, cancellationToken);
-        return results.Select(x => new GenrePluginWrapper(x, _plugins)).ToList();
-    }
-    
+    public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetGenresAsync(limit, offset, cancellationToken).Select(x => new GenrePluginWrapper(x, _plugins));
+
     /// <inheritdoc/>
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _artist.AddGenreAsync(genre, index, cancellationToken);
 

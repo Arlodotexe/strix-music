@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -146,7 +146,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 

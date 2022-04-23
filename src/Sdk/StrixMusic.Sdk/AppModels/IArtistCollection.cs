@@ -27,13 +27,13 @@ namespace StrixMusic.Sdk.AppModels
         Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets a requested number of <see cref="IArtist"/>s starting at the given offset in the backend.
+        /// Gets a requested number of <see cref="IArtist"/>s starting at the given offset.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
-        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
+        /// <returns>The requested range of items.</returns>
+        IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds an <see cref="IArtist"/> or <see cref="IArtistCollection"/> to this artist collection.

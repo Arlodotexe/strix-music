@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -146,7 +146,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 

@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);
+        virtual public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
         virtual public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddGenreAvailableAsync(index, cancellationToken);

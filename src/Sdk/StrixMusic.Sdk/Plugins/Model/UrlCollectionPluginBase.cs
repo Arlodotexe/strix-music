@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public bool Equals(ICoreUrlCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetUrlsAsync(limit, offset, cancellationToken);
+        virtual public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
         virtual public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddUrlAvailableAsync(index, cancellationToken);

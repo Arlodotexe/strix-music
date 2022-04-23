@@ -485,13 +485,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _playlist.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0, CancellationToken cancellationToken = default) => _playlist.GetTracksAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetUrlsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
@@ -499,14 +499,11 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
-                var items = await _playlist.GetTracksAsync(limit, Tracks.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _playlist.GetTracksAsync(limit, Tracks.Count, cancellationToken))
                         Tracks.Add(new TrackViewModel(item));
-
-                    _syncContext.Post(_ => OnPropertyChanged(nameof(TotalTrackCount)), null);
                 }, null);
             }
         }
@@ -517,11 +514,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
-                var items = await _playlist.GetImagesAsync(limit, Images.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _playlist.GetImagesAsync(limit, Images.Count, cancellationToken))
                         Images.Add(item);
                 }, null);
             }
@@ -533,11 +529,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
-                var items = await _playlist.GetUrlsAsync(limit, Urls.Count, cancellationToken);
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _playlist.GetUrlsAsync(limit, Urls.Count, cancellationToken))
                         Urls.Add(item);
                 }, null);
             }

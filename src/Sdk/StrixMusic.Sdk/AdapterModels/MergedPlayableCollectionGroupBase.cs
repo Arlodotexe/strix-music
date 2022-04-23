@@ -605,43 +605,43 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _albumCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _artistCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset = 0, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _playableCollectionGroupMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _playlistCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _trackCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _imageCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _urlCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
         }
@@ -755,7 +755,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        void IMergedMutable<TCoreBase>.AddSource(TCoreBase itemToAdd)
+        public void AddSource(TCoreBase itemToAdd)
         {
             Guard.IsNotNull(itemToAdd, nameof(itemToAdd));
 
@@ -775,7 +775,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        void IMergedMutable<TCoreBase>.RemoveSource(TCoreBase itemToRemove)
+        public void RemoveSource(TCoreBase itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 

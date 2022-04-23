@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -500,7 +501,7 @@ namespace StrixMusic.Sdk.ViewModels
             Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(item.Data));
         }, null);
 
-        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)  => _syncContext.Post(_ =>
+        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
             {
@@ -850,28 +851,28 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _collectionGroup.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetChildrenAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetChildrenAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetPlaylistItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetPlaylistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0, CancellationToken cancellationToken = default) => _collectionGroup.GetTracksAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetAlbumItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetAlbumItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetArtistItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _collectionGroup.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetImagesAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetUrlsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _collectionGroup.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit, CancellationToken cancellationToken = default)
@@ -879,11 +880,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populatePlaylistsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populatePlaylistsMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count, cancellationToken))
                     {
                         switch (item)
                         {
@@ -905,11 +905,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateTracksMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetTracksAsync(limit, Tracks.Count, cancellationToken))
                     {
                         Tracks.Add(new TrackViewModel(item));
                     }
@@ -923,11 +922,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateAlbumsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateAlbumsMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken))
                     {
                         switch (item)
                         {
@@ -949,11 +947,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateArtistsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateArtistsMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetArtistItemsAsync(limit, Artists.Count, cancellationToken))
                     {
                         switch (item)
                         {
@@ -975,11 +972,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateChildrenMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateChildrenMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetChildrenAsync(limit, Albums.Count, cancellationToken))
                     {
                         Children.Add(new PlayableCollectionGroupViewModel(item));
                     }
@@ -993,11 +989,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateImagesMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetImagesAsync(limit, Images.Count, cancellationToken))
                     {
                         Images.Add(item);
                     }
@@ -1011,11 +1006,10 @@ namespace StrixMusic.Sdk.ViewModels
             using (await Flow.EasySemaphore(_populateUrlsMutex))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
-                var items = await Task.Run(() => _collectionGroup.GetUrlsAsync(limit, Urls.Count, cancellationToken));
 
-                _syncContext.Post(_ =>
+                _syncContext.Post(async _ =>
                 {
-                    foreach (var item in items)
+                    await foreach (var item in _collectionGroup.GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     {
                         Urls.Add(item);
                     }

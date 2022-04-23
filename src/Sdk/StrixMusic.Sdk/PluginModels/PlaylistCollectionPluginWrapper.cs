@@ -297,11 +297,7 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylistCollection>)_playlistCollection).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlistCollection.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playlistCollection.AddImageAsync(image, index, cancellationToken);
@@ -310,11 +306,7 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     public bool Equals(ICoreUrlCollection other) => _playlistCollection.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlistCollection.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Url.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _playlistCollection.AddUrlAsync(url, index, cancellationToken);
@@ -332,11 +324,7 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default) => _playlistCollection.PlayPlaylistCollectionAsync(playlistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlistCollection.GetPlaylistItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistCollection.GetPlaylistItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _playlistCollection.AddPlaylistItemAsync(playlistItem, index, cancellationToken);

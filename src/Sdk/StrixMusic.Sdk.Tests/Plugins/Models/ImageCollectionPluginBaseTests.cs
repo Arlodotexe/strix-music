@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -146,7 +146,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 

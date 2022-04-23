@@ -26,20 +26,20 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// Holds any tracks that the user wants to add to the playlist on creation.
         /// </summary>
-        public List<ITrack> Tracks { get; set; } = new List<ITrack>();
+        public List<ITrack> Tracks { get; set; } = new();
 
         /// <summary>
         /// Holds any images that the user wants to add to the playlist on creation. These should point to a file that the app has access to.
         /// </summary>
-        public List<IImage> Images { get; set; } = new List<IImage>();
+        public List<IImage> Images { get; set; } = new();
 
         /// <summary>
         /// Holds any urls that the user wants to add to the playlist on creation.
         /// </summary>
-        public List<IUrl> Urls { get; set; } = new List<IUrl>();
+        public List<IUrl> Urls { get; set; } = new();
 
         /// <inheritdoc />
-        public List<ICore>? TargetSourceCores { get; set; } = new List<ICore>();
+        public List<ICore>? TargetSourceCores { get; set; } = new();
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;
@@ -289,16 +289,10 @@ namespace StrixMusic.Sdk.AppModels
         public IReadOnlyList<ICoreUrlCollection> Sources => _sources;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult<IReadOnlyList<IImage>>(Images.Skip(offset).Take(limit).ToList());
-        }
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Images.Skip(offset).Take(limit).ToAsyncEnumerable();
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult<IReadOnlyList<IUrl>>(Urls.Skip(offset).Take(limit).ToList());
-        }
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Urls.Skip(offset).Take(limit).ToAsyncEnumerable();
 
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default)
@@ -307,10 +301,7 @@ namespace StrixMusic.Sdk.AppModels
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult<IReadOnlyList<ITrack>>(Tracks.Skip(offset).Take(limit).ToList());
-        }
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Tracks.Skip(offset).Take(limit).ToAsyncEnumerable();
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => false;

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -27,10 +28,10 @@ namespace StrixMusic.Sdk.AdapterModels
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
     internal sealed class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem>
         : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit, IAsyncDisposable
-            where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
-            where TCoreCollection : class, ICoreCollection
-            where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
-            where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
+        where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
+        where TCoreCollection : class, ICoreCollection
+        where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
+        where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
     {
         // ReSharper disable StaticMemberInGenericType
         private static bool _isInitialized;
@@ -466,15 +467,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>The requested range of items, sorted and merged from the sources in the input collection.</returns>
-        public async Task<IReadOnlyList<TCollectionItem>> GetItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<TCollectionItem> GetItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await TryInitAsync(cancellationToken);
 
-            return _config.MergedCollectionSorting switch
-            {
-                MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset, cancellationToken),
-                _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_config.MergedCollectionSorting}\" not supported.")
-            };
+            await foreach (var item in GetItemsByRank(limit, offset, cancellationToken))
+                yield return item;
         }
 
         /// <summary>
@@ -683,7 +681,7 @@ namespace StrixMusic.Sdk.AdapterModels
             return returnData;
         }
 
-        private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset, CancellationToken cancellationToken = default)
+        private async IAsyncEnumerable<TCollectionItem> GetItemsByRank(int limit, int offset, CancellationToken cancellationToken = default)
         {
             Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
@@ -694,7 +692,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
             // If the offset exceeds the number of items we have, return nothing.
             if (offset >= _sortedMap.Count)
-                return new List<TCollectionItem>();
+                yield break;
 
             // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
             if (offset + limit > _sortedMap.Count)
@@ -762,9 +760,8 @@ namespace StrixMusic.Sdk.AdapterModels
                 // Until then, supply the maximum possible count (as if no items are merged).
                 ItemsCountChanged?.Invoke(this, _sortedMap.Count);
 
-                var merged = allItemsWithData.Select(x => (TCollectionItem)x).ToList();
-
-                return merged;
+                foreach (var item in allItemsWithData.Select(x => (TCollectionItem)x))
+                    yield return item;
             }
         }
 
@@ -874,7 +871,7 @@ namespace StrixMusic.Sdk.AdapterModels
                     continue;
 
                 // The items retrieved will exist in the sorted map.
-                await GetItemsAsync(item.OriginalIndex, i, CancellationToken.None);
+                _ = await GetItemsAsync(item.OriginalIndex, i, CancellationToken.None).ToListAsync();
             }
 
             var addedItems = new List<CollectionChangedItem<TCollectionItem>>();
@@ -922,7 +919,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// </remarks>
         void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
-            #warning TODO: AddSource and RemoveSource needs to be async.
+#warning TODO: AddSource and RemoveSource needs to be async.
             OwlCore.Flow.Catch(() => ResetDataRanked());
         }
 
@@ -934,13 +931,9 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         /// <remarks>
-        /// We're just here for the Merged, not the Equatable.
-        /// TSourceCollection and MergedCollectionMap have no overlap and never equal each other.
+        /// <typeparamref name="TCoreCollection"/> and <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/> have no overlap and never equal each other, this method always returns false.
         /// </remarks>
-        public bool Equals(TCoreCollection other)
-        {
-            return false;
-        }
+        public bool Equals(TCoreCollection other) => false;
 
         private class MappedData
         {

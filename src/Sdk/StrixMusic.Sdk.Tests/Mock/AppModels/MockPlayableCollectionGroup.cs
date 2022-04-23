@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -659,7 +660,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IImage>>(_images);
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _images.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default)
@@ -676,7 +677,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public bool Equals(ICoreUrlCollection? other) => false;
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IUrl>>(_urls);
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urls.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default)
@@ -721,7 +722,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlaylistCollectionItem>>(_playlists);
+    public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlists.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default)
@@ -745,7 +746,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ITrack>>(_tracks);
+    public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _tracks.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default)
@@ -772,7 +773,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IAlbumCollectionItem>>(_albums);
+    public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _albums.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddAlbumItemAsync(IAlbumCollectionItem albumItem, int index, CancellationToken cancellationToken = default)
@@ -799,7 +800,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(_artists);
+    public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artists.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default)
@@ -823,7 +824,7 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(_children);
+    public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _children.ToAsyncEnumerable();
 
     /// <inheritdoc/>
     public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default)

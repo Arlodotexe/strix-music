@@ -216,10 +216,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeEmailAsync(string? email, CancellationToken cancellationToken = default) => _userProfile.ChangeEmailAsync(email, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetImagesAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetUrlsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _userProfile.RemoveImageAsync(index, cancellationToken);
@@ -236,11 +236,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
-            var items = await GetImagesAsync(limit, Images.Count, cancellationToken);
-
-            _syncContext.Post(_ =>
+            _syncContext.Post(async _ =>
             {
-                foreach (var item in items)
+                await foreach (var item in GetImagesAsync(limit, Images.Count, cancellationToken))
                     Images.Add(item);
             }, null);
         }
@@ -248,11 +246,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            var items = await GetUrlsAsync(limit, Urls.Count, cancellationToken);
-
-            _syncContext.Post(_ =>
+            _syncContext.Post(async _ =>
             {
-                foreach (var item in items)
+                await foreach (var item in GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     Urls.Add(item);
             }, null);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OwlCore;
@@ -156,7 +157,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IAlbum));
         added = null;
 
-        var albumItems = await item.GetAlbumItemsAsync(1, 0);
+        var albumItems = await item.GetAlbumItemsAsync(1, 0).ToListAsync();
         Assert.IsInstanceOfType(albumItems[0], typeof(T));
         Assert.IsInstanceOfType(albumItems[0], typeof(IAlbum));
 
@@ -174,7 +175,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IAlbumCollection));
         added = null;
 
-        var albumCollection = await item.GetAlbumItemsAsync(1, 0);
+        var albumCollection = await item.GetAlbumItemsAsync(1, 0).ToListAsync();
         Assert.IsInstanceOfType(albumCollection[0], typeof(T));
         Assert.IsInstanceOfType(albumCollection[0], typeof(IAlbumCollection));
 
@@ -214,7 +215,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IArtist));
         added = null;
 
-        var artistItems = await item.GetArtistItemsAsync(1, 0);
+        var artistItems = await item.GetArtistItemsAsync(1, 0).ToListAsync();
         Assert.IsInstanceOfType(artistItems[0], typeof(T));
         Assert.IsInstanceOfType(artistItems[0], typeof(IArtist));
 
@@ -232,7 +233,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IArtistCollection));
         added = null;
 
-        var artistCollection = await item.GetArtistItemsAsync(1, 0);
+        var artistCollection = await item.GetArtistItemsAsync(1, 0).ToListAsync();
         Assert.IsInstanceOfType(artistCollection[0], typeof(T));
         Assert.IsInstanceOfType(artistCollection[0], typeof(IArtistCollection));
 
@@ -268,6 +269,10 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(T));
         Assert.IsInstanceOfType(added[0].Data, typeof(ITrack));
         added = null;
+
+        var trackCollection = await item.GetTracksAsync(1, 0).ToListAsync();
+        Assert.IsInstanceOfType(trackCollection[0], typeof(T));
+        Assert.IsInstanceOfType(trackCollection[0], typeof(ITrack));
         
         await item.RemoveTrackAsync(0);
         Assert.IsNotNull(removed);
@@ -305,7 +310,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IPlaylist));
         added = null;
 
-        var playlistItems = await item.GetPlaylistItemsAsync(1, 0);
+        var playlistItems = await item.GetPlaylistItemsAsync(1, 0).ToListAsync();;
         Assert.IsInstanceOfType(playlistItems[0], typeof(T));
         Assert.IsInstanceOfType(playlistItems[0], typeof(IPlaylist));
 
@@ -323,7 +328,7 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(IPlaylistCollection));
         added = null;
 
-        var playlistCollection = await item.GetPlaylistItemsAsync(1, 0);
+        var playlistCollection = await item.GetPlaylistItemsAsync(1, 0).ToListAsync();
         Assert.IsInstanceOfType(playlistCollection[0], typeof(T));
         Assert.IsInstanceOfType(playlistCollection[0], typeof(IPlaylistCollection));
 
@@ -359,6 +364,10 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(T));
         Assert.IsInstanceOfType(added[0].Data, typeof(IUrl));
         added = null;
+
+        var urlCollection = await item.GetUrlsAsync(1, 0).ToListAsync();
+        Assert.IsInstanceOfType(urlCollection[0], typeof(T));
+        Assert.IsInstanceOfType(urlCollection[0], typeof(IUrl));
         
         await item.RemoveUrlAsync(0);
         Assert.IsNotNull(removed);
@@ -392,6 +401,10 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(T));
         Assert.IsInstanceOfType(added[0].Data, typeof(IImage));
         added = null;
+
+        var imageCollection = await item.GetImagesAsync(1, 0).ToListAsync();
+        Assert.IsInstanceOfType(imageCollection[0], typeof(T));
+        Assert.IsInstanceOfType(imageCollection[0], typeof(IImage));
         
         await item.RemoveImageAsync(0);
         Assert.IsNotNull(removed);
@@ -425,6 +438,10 @@ public static class VerifyModelObjectTree
         Assert.IsInstanceOfType(added[0].Data, typeof(T));
         Assert.IsInstanceOfType(added[0].Data, typeof(IGenre));
         added = null;
+
+        var genreCollection = await item.GetGenresAsync(1, 0).ToListAsync();
+        Assert.IsInstanceOfType(genreCollection[0], typeof(T));
+        Assert.IsInstanceOfType(genreCollection[0], typeof(IGenre));
         
         await item.RemoveGenreAsync(0);
         Assert.IsNotNull(removed);

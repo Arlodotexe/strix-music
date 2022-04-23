@@ -526,11 +526,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlayableCollectionGroup>)_playableCollectionGroup).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playableCollectionGroup.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => new ImagePluginWrapper(x, _plugins)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddImageAsync(image, index, cancellationToken);
@@ -539,11 +535,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public bool Equals(ICoreUrlCollection other) => _playableCollectionGroup.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playableCollectionGroup.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddUrlAsync(url, index, cancellationToken);
@@ -564,11 +556,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayPlaylistCollectionAsync(playlistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playableCollectionGroup.GetPlaylistItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetPlaylistItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
@@ -580,11 +568,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayTrackCollectionAsync(track, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playableCollectionGroup.GetTracksAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetTracksAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddTrackAsync(track, index, cancellationToken);
@@ -599,11 +583,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayAlbumCollectionAsync(albumItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playableCollectionGroup.GetAlbumItemsAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetAlbumItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddAlbumItemAsync(IAlbumCollectionItem albumItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddAlbumItemAsync(albumItem, index, cancellationToken);
@@ -618,11 +598,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayArtistCollectionAsync(artistItem, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var items = await _playableCollectionGroup.GetArtistItemsAsync(limit, offset, cancellationToken);
-        return items.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetArtistItemsAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddArtistItemAsync(artistItem, index, cancellationToken);
@@ -634,11 +610,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var items = await _playableCollectionGroup.GetChildrenAsync(limit, offset, cancellationToken);
-        return items.Select(x => new PlayableCollectionGroupPluginWrapper(x, _plugins)).ToList();
-    }
+    public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetChildrenAsync(limit, offset, cancellationToken).Select(x => new PlayableCollectionGroupPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddChildAsync(child, index, cancellationToken);

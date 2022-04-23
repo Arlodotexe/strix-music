@@ -302,11 +302,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylist>)_playlist).SourceCores;
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlist.GetImagesAsync(limit, offset, cancellationToken);
-        return results.Select(x => ActivePlugins.Image.Execute(x)).ToList();
-    }
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playlist.AddImageAsync(image, index, cancellationToken);
@@ -315,11 +311,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _playlist.Equals(other);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlist.GetUrlsAsync(limit, offset, cancellationToken);
-        return results.Select(x => new UrlPluginWrapper(x, _plugins)).ToList();
-    }
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _playlist.AddUrlAsync(url, index, cancellationToken);
@@ -339,11 +331,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _playlist.PlayTrackCollectionAsync(track, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
-    {
-        var results = await _playlist.GetTracksAsync(limit, offset, cancellationToken);
-        return results.Select(Transform).ToList();
-    }
+    public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetTracksAsync(limit, offset, cancellationToken).Select(Transform);
 
     /// <inheritdoc/>
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _playlist.AddTrackAsync(track, index, cancellationToken);

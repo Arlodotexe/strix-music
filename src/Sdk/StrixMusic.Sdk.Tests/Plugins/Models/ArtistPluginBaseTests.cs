@@ -480,7 +480,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -492,7 +492,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -510,7 +510,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -524,7 +524,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -536,7 +536,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -791,7 +791,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -803,7 +803,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -821,7 +821,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -835,7 +835,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -847,7 +847,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreGenreCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 

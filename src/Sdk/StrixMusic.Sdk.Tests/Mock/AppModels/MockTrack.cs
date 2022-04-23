@@ -58,7 +58,7 @@ public class MockTrack : MockPlayableCollectionGroup, ITrack
 
     IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources { get; } = new List<ICoreGenreCollection>();
 
-    public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<IGenre>>(_genres);
+    public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => _genres.ToAsyncEnumerable();
 
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) 
     {
