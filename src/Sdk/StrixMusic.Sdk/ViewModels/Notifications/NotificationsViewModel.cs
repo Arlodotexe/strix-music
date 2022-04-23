@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore;
 using StrixMusic.Sdk.AppModels;
@@ -19,6 +20,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     [Bindable(true)]
     public sealed class NotificationsViewModel : ObservableObject, IDisposable
     {
+        private readonly SynchronizationContext _syncContext;
         private readonly INotificationService _notificationService;
         private bool _isHandled;
 
@@ -28,6 +30,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         /// <param name="notificationService"></param>
         public NotificationsViewModel(INotificationService notificationService)
         {
+            _syncContext = SynchronizationContext.Current;
             _notificationService = notificationService;
 
             AttachEvents();
@@ -59,19 +62,19 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             _notificationService.NotificationDismissed -= NotificationService_NotificationDismissed;
         }
 
-        private void NotificationService_NotificationDismissed(object sender, Notification e) => _ = Threading.OnPrimaryThread(() =>
+        private void NotificationService_NotificationDismissed(object sender, Notification e) => _syncContext.Post(_ =>
         {
             var relevantNotification = Notifications.FirstOrDefault(x => ReferenceEquals(x.Model, e));
             if (relevantNotification is null)
                 return;
 
             Notifications.Remove(relevantNotification);
-        });
+        }, null);
 
-        private void NotificationService_NotificationRaised(object sender, Notification e) => _ = Threading.OnPrimaryThread(() =>
+        private void NotificationService_NotificationRaised(object sender, Notification e) => _syncContext.Post(_ =>
         {
             Notifications.Add(new NotificationViewModel(e));
-        });
+        }, null);
 
         /// <inheritdoc />
         public void Dispose() => DetachEvents();

@@ -155,17 +155,17 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
 
-        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
         {
             Images.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void ArtistCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _syncContext.Post(_ =>
         {
             Urls.ChangeCollection(addedItems, removedItems);
-        });
+        }, null);
 
-        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _ = Threading.OnPrimaryThread(() =>
+        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
@@ -202,7 +202,7 @@ namespace StrixMusic.Sdk.ViewModels
 
                 SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
             }
-        });
+        }, null);
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -495,7 +495,7 @@ namespace StrixMusic.Sdk.ViewModels
                 using var releaseReg = cancellationToken.Register(() => _populateArtistsMutex.Release());
                 var items = await _collection.GetArtistItemsAsync(limit, Artists.Count, cancellationToken);
 
-                await Threading.OnPrimaryThread(() =>
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
                     {
@@ -509,7 +509,7 @@ namespace StrixMusic.Sdk.ViewModels
                                 break;
                         }
                     }
-                });
+                }, null);
             }
         }
 
@@ -520,14 +520,14 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
                 var items = await _collection.GetImagesAsync(limit, Images.Count, cancellationToken);
-
-                await Threading.OnPrimaryThread(() =>
+                
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
                     {
                         Images.Add(item);
                     }
-                });
+                }, null);
             }
         }
 
@@ -538,14 +538,14 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
                 var items = await _collection.GetUrlsAsync(limit, Urls.Count, cancellationToken);
-
-                _ = Threading.OnPrimaryThread(() =>
+                
+                _syncContext.Post(_ =>
                 {
                     foreach (var item in items)
                     {
                         Urls.Add(item);
                     }
-                });
+                }, null);
             }
         }
 
