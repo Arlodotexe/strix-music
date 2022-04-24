@@ -22,28 +22,30 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// </summary>
     public class ZuneAlbumCollection : AlbumCollection
     {
+        private object _lockObj = new object();
+
         /// <summary>
         /// Creates a new instance of <see cref="ZuneAlbumCollection"/>.
         /// </summary>
         public ZuneAlbumCollection()
         {
-            AlbumGroupedByArtistCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>();
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>();
         }
 
         /// <summary>
         /// Holds the current state of the zune <see cref="CollectionContent"/>.
         /// </summary>
-        public ObservableGroupedCollection<string, IAlbumCollectionItem> AlbumGroupedByArtistCollection
+        public ObservableGroupedCollection<string, IAlbumCollectionItem> AlbumGroupedByCollection
         {
-            get { return (ObservableGroupedCollection<string, IAlbumCollectionItem>)GetValue(AlbumGroupedByArtistCollectionProperty); }
-            set { SetValue(AlbumGroupedByArtistCollectionProperty, value); }
+            get { return (ObservableGroupedCollection<string, IAlbumCollectionItem>)GetValue(AlbumGroupedByCollectionProperty); }
+            set { SetValue(AlbumGroupedByCollectionProperty, value); }
         }
 
         /// <summary>
         /// Dependency property for <ses cref="CollectionContent" />.
         /// </summary>
-        public static readonly DependencyProperty AlbumGroupedByArtistCollectionProperty =
-            DependencyProperty.Register(nameof(AlbumGroupedByArtistCollection), typeof(ObservableGroupedCollection<string, List<IAlbumCollectionItem>>), typeof(ZuneAlbumCollection), new PropertyMetadata(null, null));
+        public static readonly DependencyProperty AlbumGroupedByCollectionProperty =
+            DependencyProperty.Register(nameof(AlbumGroupedByCollection), typeof(ObservableGroupedCollection<string, List<IAlbumCollectionItem>>), typeof(ZuneAlbumCollection), new PropertyMetadata(null, null));
 
         /// <summary>
         /// Holds the current state of the zune <see cref="CollectionContent"/>.
@@ -145,6 +147,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             switch (SortState)
             {
+                // State defines the next sort state in queue which differs from the current state.
                 case ZuneSortState.AZ:
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
                     PART_Selector.ItemsSource = Collection.Albums;
@@ -152,15 +155,26 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     PART_SortLbl.Text = "Z-A";
                     break;
                 case ZuneSortState.ZA:
-                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
-                    PART_Selector.ItemsSource = Collection.Albums;
+                    PopulateAlbumGroupedByArtists();
                     SortState = ZuneSortState.Artists;
-                    PART_SortLbl.Text = "A-Z";
+                    PART_SortLbl.Text = "By Artists";
                     break;
                 case ZuneSortState.Artists:
-                    PART_SortLbl.Text = "Sort by Artists";
+                    PopulateAlbumGroupedByReleaseYear();
+                    SortState = ZuneSortState.ReleaseYear;
+                    PART_SortLbl.Text = "By Release Year";
+                    break;
+                case ZuneSortState.ReleaseYear:
+                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.DateAdded, Sdk.ViewModels.SortDirection.Ascending);
+                    PART_Selector.ItemsSource = Collection.Albums;
+                    SortState = ZuneSortState.DateAdded;
+                    PART_SortLbl.Text = "By DateAdded";
+                    break;
+                case ZuneSortState.DateAdded:
+                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
+                    PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.AZ;
-                    PopulateAlbumGroupedByArtists();
+                    PART_SortLbl.Text = "A-Z";
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -190,6 +204,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         zuneAlbumItem.Unloaded += ZuneAlbumItem_Unloaded;
                         zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
                     }
+                }
+
+                try
+                {
+                    // Gives breathing space to the processor and reduces he odds the where observable collection changed during CollectionChanged event to minimum. 
+                    lock (_lockObj)
+                        Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
+                }
+                catch (InvalidOperationException)
+                {
+                    // It handles a rare case where observable collection changed during CollectionChanged event. 
+                    // More precisely "Cannot change ObservableCollection during a CollectionChanged event."
                 }
             }
         }
@@ -260,13 +286,33 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             FadeInAlbumCollectionItems(uiElments);
         }
 
+        private void PopulateAlbumGroupedByReleaseYear()
+        {
+            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+
+            AlbumGroupedByCollection.Clear();
+
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
+            Collection.Albums.GroupBy(c => ((AlbumViewModel)c).DatePublished?.Year.ToString() ?? "Year Not Available")
+            .OrderBy(g => g.Key));
+
+            // Set up the CollectionViewSource.
+            var cvs = new CollectionViewSource
+            {
+                IsSourceGrouped = true,
+                Source = AlbumGroupedByCollection,
+            };
+
+            PART_Selector.ItemsSource = cvs.View;
+        }
+
         private void PopulateAlbumGroupedByArtists()
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
 
-            AlbumGroupedByArtistCollection.Clear();
+            AlbumGroupedByCollection.Clear();
 
-            AlbumGroupedByArtistCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
            Collection.Albums.GroupBy(c => ((AlbumViewModel)c).Artists.FirstOrDefault()?.Name ?? "Untitled")
            .OrderBy(g => g.Key));
 
@@ -274,7 +320,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             var cvs = new CollectionViewSource
             {
                 IsSourceGrouped = true,
-                Source = AlbumGroupedByArtistCollection,
+                Source = AlbumGroupedByCollection,
             };
 
             PART_Selector.ItemsSource = cvs.View;

@@ -20,6 +20,20 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// Alphabetical sorting in descending order.
         /// </summary>
         ZA,
-        Artists
+
+        /// <summary>
+        /// Groups the collection by artists.
+        /// </summary>
+        Artists,
+
+        /// <summary>
+        /// Groups the collection by release year.
+        /// </summary>
+        ReleaseYear,
+
+        /// <summary>
+        /// Sorts the collection by added date.
+        /// </summary>
+        DateAdded,
     }
 }
