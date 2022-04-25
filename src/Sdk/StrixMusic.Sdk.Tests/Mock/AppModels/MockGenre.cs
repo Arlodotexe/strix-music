@@ -15,5 +15,5 @@ public class MockGenre : IGenre
     public bool Equals(ICoreGenre? other) => false;
 
     public IReadOnlyList<ICoreGenre> Sources { get; } = new List<ICoreGenre>();
-    public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
+    public event EventHandler? SourcesChanged;
 }

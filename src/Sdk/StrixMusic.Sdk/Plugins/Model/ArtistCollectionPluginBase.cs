@@ -109,9 +109,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         virtual public int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtistCollection>)Inner).SourceCores;
-
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => ((IMerged<ICoreArtistCollectionItem>)Inner).Sources;
 
@@ -123,6 +120,13 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc />
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => ((IMerged<ICoreUrlCollection>)InnerUrlCollection).Sources;
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
         virtual public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged

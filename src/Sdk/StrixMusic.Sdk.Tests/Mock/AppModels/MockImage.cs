@@ -17,5 +17,5 @@ public class MockImage : IImage
     public bool Equals(ICoreImage? other) => default;
 
     public IReadOnlyList<ICoreImage> Sources => new List<ICoreImage>();
-    public IReadOnlyList<ICore> SourceCores => new List<ICore>();
+    public event EventHandler? SourcesChanged;
 }

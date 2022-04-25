@@ -47,6 +47,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     private void AttachEvents(ITrackCollection trackCollection)
     {
+        trackCollection.SourcesChanged += OnSourcesChanged;
         trackCollection.ImagesCountChanged += OnImagesCountChanged;
         trackCollection.UrlsCountChanged += OnUrlsCountChanged;
         trackCollection.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -68,6 +69,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     private void DetachEvents(ITrackCollection trackCollection)
     {
+        trackCollection.SourcesChanged -= OnSourcesChanged;
         trackCollection.ImagesCountChanged -= OnImagesCountChanged;
         trackCollection.UrlsCountChanged -= OnUrlsCountChanged;
         trackCollection.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -86,6 +88,8 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
         trackCollection.DownloadInfoChanged -= OnDownloadInfoChanged;
         trackCollection.TracksChanged -= OnTracksChanged;
     }
+    
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnTracksChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
     {
@@ -189,6 +193,9 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     /// <inheritdoc/>
     public event CollectionChangedEventHandler<ITrack>? TracksChanged;
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public int TotalImageCount => _trackCollection.TotalImageCount;
@@ -288,9 +295,6 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     /// <inheritdoc/>
     IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => ((IMerged<ICoreTrackCollection>)_trackCollection).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreTrackCollection>)_trackCollection).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

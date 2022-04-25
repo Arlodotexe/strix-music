@@ -48,6 +48,7 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
 
     private void AttachEvents(IPlaylistCollection playlistCollection)
     {
+        playlistCollection.SourcesChanged += OnSourcesChanged;
         playlistCollection.ImagesCountChanged += OnImagesCountChanged;
         playlistCollection.UrlsCountChanged += OnUrlsCountChanged;
         playlistCollection.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -69,6 +70,7 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
 
     private void DetachEvents(IPlaylistCollection playlistCollection)
     {
+        playlistCollection.SourcesChanged -= OnSourcesChanged;
         playlistCollection.ImagesCountChanged -= OnImagesCountChanged;
         playlistCollection.UrlsCountChanged -= OnUrlsCountChanged;
         playlistCollection.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -87,6 +89,8 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
         playlistCollection.DownloadInfoChanged -= OnDownloadInfoChanged;
         playlistCollection.PlaylistItemsChanged -= OnPlaylistItemsChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnPlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
     {
@@ -139,6 +143,9 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -292,9 +299,6 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
 
     /// <inheritdoc/>
     IReadOnlyList<ICorePlaylistCollection> IMerged<ICorePlaylistCollection>.Sources => ((IMerged<ICorePlaylistCollection>)_playlistCollection).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylistCollection>)_playlistCollection).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

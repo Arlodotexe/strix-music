@@ -44,9 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _collection = collection;
-
-            SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
@@ -203,6 +201,13 @@ namespace StrixMusic.Sdk.ViewModels
                 SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
             }
         }, null);
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _collection.SourcesChanged += value;
+            remove => _collection.SourcesChanged -= value;
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -391,9 +396,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
         /// The sources that were merged to form this member.

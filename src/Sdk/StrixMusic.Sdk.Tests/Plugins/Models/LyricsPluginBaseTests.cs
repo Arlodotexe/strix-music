@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class LyricsPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -109,6 +109,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public ITrack Track => throw AccessedException;
 
             public Dictionary<TimeSpan, string>? TimedLyrics => throw AccessedException;
@@ -116,8 +117,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public string? TextLyrics => throw AccessedException;
 
             public IReadOnlyList<ICoreLyrics> Sources => throw AccessedException;
-
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public bool Equals(ICoreLyrics? other)
             {

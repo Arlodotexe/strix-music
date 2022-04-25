@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
     public class UrlCollectionTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod]
         public void AccessedThroughPlayable()
@@ -20,6 +20,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
+                customFilter: NoInnerOrSources,
                 typesToExclude: typeof(IAsyncDisposable));
         }
 
@@ -35,6 +36,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure a Playable plugin can still be accessed through UrlCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, UrlCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
+                customFilter: NoInnerOrSources,
                 typesToExclude: typeof(IAsyncDisposable));
         }
 

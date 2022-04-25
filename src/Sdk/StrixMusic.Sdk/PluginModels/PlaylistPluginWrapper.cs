@@ -50,6 +50,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
 
     private void AttachEvents(IPlaylist playlist)
     {
+        playlist.SourcesChanged += OnSourcesChanged;
         playlist.ImagesCountChanged += OnImagesCountChanged;
         playlist.UrlsCountChanged += OnUrlsCountChanged;
         playlist.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -71,6 +72,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
 
     private void DetachEvents(IPlaylist playlist)
     {
+        playlist.SourcesChanged -= OnSourcesChanged;
         playlist.ImagesCountChanged -= OnImagesCountChanged;
         playlist.UrlsCountChanged -= OnUrlsCountChanged;
         playlist.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -89,6 +91,8 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
         playlist.DownloadInfoChanged -= OnDownloadInfoChanged;
         playlist.TracksChanged -= OnTracksChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnTracksChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
     {
@@ -141,6 +145,9 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -297,9 +304,6 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
 
     /// <inheritdoc/>
     IReadOnlyList<ICorePlaylist> IMerged<ICorePlaylist>.Sources => ((IMerged<ICorePlaylist>)_playlist).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylist>)_playlist).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

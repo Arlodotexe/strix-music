@@ -54,7 +54,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores => _collection.SourceCores;
+        public event EventHandler? SourcesChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
@@ -138,12 +138,12 @@ namespace StrixMusic.Sdk.AdapterModels
             }
         }
 
-        private static async Task InsertNewItemAsync(IEnumerable<TCoreCollection> sourceCollections, IReadOnlyList<ICore> sourceCores, IInitialData dataToInsert, int index, CancellationToken cancellationToken = default)
+        private static async Task InsertNewItemAsync(IEnumerable<TCoreCollection> sourceCollections, IEnumerable<ICore> sourceCores, IInitialData dataToInsert, int index, CancellationToken cancellationToken = default)
         {
             // TODO create setting to let user decide default
             foreach (var source in sourceCollections)
             {
-                IEnumerable<ICore> targetSources = sourceCores;
+                var targetSources = sourceCores;
 
                 if (dataToInsert.TargetSourceCores is { Count: > 0 })
                 {
@@ -490,7 +490,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
             if (item is IInitialData createdData)
             {
-                await InsertNewItemAsync(Sources, _collection.GetSourceCores(), createdData, index, cancellationToken);
+                await InsertNewItemAsync(Sources, _collection.GetSources().Select(x => x.SourceCore), createdData, index, cancellationToken);
                 return;
             }
 
@@ -917,14 +917,14 @@ namespace StrixMusic.Sdk.AdapterModels
         /// Then re-emit ALL data
         /// </para>
         /// </remarks>
-        void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
+        public void AddSource(TCoreCollection itemToMerge)
         {
 #warning TODO: AddSource and RemoveSource needs to be async.
             OwlCore.Flow.Catch(() => ResetDataRanked());
         }
 
         /// <inheritdoc />
-        void IMergedMutable<TCoreCollection>.RemoveSource(TCoreCollection itemToRemove)
+        public void RemoveSource(TCoreCollection itemToRemove)
         {
             OwlCore.Flow.Catch(() => ResetDataRanked());
         }

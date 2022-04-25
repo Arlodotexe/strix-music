@@ -44,9 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _collection = collection;
-
-            SourceCores = _collection.GetSourceCores<ICorePlaylistCollection>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             Playlists = new ObservableCollection<IPlaylistCollectionItem>();
             Images = new ObservableCollection<IImage>();
             Urls = new ObservableCollection<IUrl>();
@@ -184,6 +182,13 @@ namespace StrixMusic.Sdk.ViewModels
                 SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
             }
         }, null);
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _collection.SourcesChanged += value;
+            remove => _collection.SourcesChanged -= value;
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -354,9 +359,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ObservableCollection<IUrl> Urls { get; }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;

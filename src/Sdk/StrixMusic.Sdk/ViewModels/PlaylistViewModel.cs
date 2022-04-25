@@ -45,9 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _playlist = playlist;
-
-            SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
@@ -135,6 +133,13 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= PlaylistViewModel_ImagesChanged;
             UrlsCountChanged -= PlaylistViewModel_UrlsCountChanged;
             UrlsChanged -= PlaylistViewModel_UrlsChanged;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _playlist.SourcesChanged += value;
+            remove => _playlist.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -322,9 +327,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public TrackSortingType CurrentTracksSortingType { get; private set; }

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,7 +26,6 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
-        private readonly IReadOnlyList<ICore> _sourceCores;
         private readonly SynchronizationContext _syncContext;
 
         /// <summary>
@@ -42,7 +40,6 @@ namespace StrixMusic.Sdk.ViewModels
 
             var userProfileImpl = userProfile.Cast<UserProfileAdapter>();
 
-            _sourceCores = userProfileImpl.SourceCores.Select(x => new CoreViewModel(x)).ToList();
             _sources = userProfileImpl.Sources;
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -63,6 +60,13 @@ namespace StrixMusic.Sdk.ViewModels
             IsInitialized = true;
 
             return InitImageCollectionAsync(cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _userProfile.SourcesChanged += value;
+            remove => _userProfile.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -127,12 +131,6 @@ namespace StrixMusic.Sdk.ViewModels
             add => _userProfile.UrlsChanged += value;
             remove => _userProfile.UrlsChanged -= value;
         }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => _sourceCores;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => _sourceCores;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;

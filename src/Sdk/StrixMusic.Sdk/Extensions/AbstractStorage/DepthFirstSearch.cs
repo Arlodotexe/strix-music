@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Extensions
     /// <summary>
     /// <see cref="IFolderData"/> extension methods.
     /// </summary>
-    public static class FolderDataExtensions
+    public static class AbstractStorage
     {
         /// <summary>
         /// Searches all files in a folder and including sub folders if any.

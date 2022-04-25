@@ -48,9 +48,7 @@ namespace StrixMusic.Sdk.ViewModels
             UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();
             Images = new ObservableCollection<IImage>();
             Urls = new ObservableCollection<IUrl>();
-
-            SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
@@ -189,6 +187,13 @@ namespace StrixMusic.Sdk.ViewModels
                 SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
             }
         }, null);
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _collection.SourcesChanged += value;
+            remove => _collection.SourcesChanged -= value;
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -494,9 +499,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _collection.GetSources<ICoreUrlCollection>();
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync(CancellationToken cancellationToken = default) => _collection.PlayAlbumCollectionAsync(cancellationToken);

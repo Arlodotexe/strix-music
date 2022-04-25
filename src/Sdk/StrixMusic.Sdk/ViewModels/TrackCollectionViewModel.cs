@@ -68,9 +68,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             InitImageCollectionAsyncCommand = new AsyncRelayCommand(InitImageCollectionAsync);
             InitTrackCollectionAsyncCommand = new AsyncRelayCommand(InitTrackCollectionAsync);
-
-            SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             AttachEvents();
         }
 
@@ -193,6 +191,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Urls.ChangeCollection(addedItems, removedItems);
         }, null);
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _collection.SourcesChanged += value;
+            remove => _collection.SourcesChanged -= value;
+        }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
@@ -381,9 +386,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ObservableCollection<IUrl> Urls { get; }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
         /// The sources that were merged into this collection.

@@ -70,6 +70,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// A wrapped implementation which member access can be delegated to. Defaults to <see cref="Inner"/>.
         /// </summary>
         public IUrlCollection InnerUrlCollection { get; set; }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
         
         /// <inheritdoc/>
         public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
@@ -112,9 +119,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         IReadOnlyList<ICorePlaylist> IMerged<ICorePlaylist>.Sources => ((IMerged<ICorePlaylist>)Inner).Sources;
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlaylist>)Inner).SourceCores;
-        
         /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
 

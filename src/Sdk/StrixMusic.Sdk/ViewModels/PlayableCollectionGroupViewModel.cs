@@ -50,9 +50,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _collectionGroup = collectionGroup;
-
-            SourceCores = _collectionGroup.GetSourceCores<ICorePlayableCollectionGroup>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
@@ -182,6 +180,13 @@ namespace StrixMusic.Sdk.ViewModels
             PlaylistItemsChanged -= PlayableCollectionGroupViewModel_PlaylistItemsChanged;
             ChildItemsChanged -= PlayableCollectionGroupViewModel_ChildItemsChanged;
             ImagesChanged -= PlayableCollectionGroupViewModel_ImagesChanged;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _collectionGroup.SourcesChanged += value;
+            remove => _collectionGroup.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -579,9 +584,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
         /// The merged sources for this item.

@@ -32,9 +32,7 @@ namespace StrixMusic.Sdk.AdapterModels
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre> _genreCollectionMap;
         private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlCollectionMap;
-
-        private readonly List<ICore> _sourceCores;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedTrack"/> class.
         /// </summary>
@@ -42,7 +40,6 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             _config = config;
             _sources = tracks.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             // TODO: Use top Preferred core.
             _preferredSource = _sources.First();
@@ -275,9 +272,9 @@ namespace StrixMusic.Sdk.AdapterModels
             add => throw new NotSupportedException();
             remove => throw new NotSupportedException();
         }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreTrack> IMerged<ICoreTrack>.Sources => Sources;
@@ -548,29 +545,29 @@ namespace StrixMusic.Sdk.AdapterModels
         public override int GetHashCode() => _preferredSource.Id.GetHashCode();
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreTrack>.AddSource(ICoreTrack itemToMerge)
+        public void AddSource(ICoreTrack itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
-            _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            _artistMap.AddSource(itemToMerge);
+            _imageCollectionMap.AddSource(itemToMerge);
+            _urlCollectionMap.AddSource(itemToMerge);
 
-            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToMerge);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
-            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().AddSource(itemToMerge);
+            _sources.Add(itemToMerge);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreTrack>.RemoveSource(ICoreTrack itemToRemove)
+        public void RemoveSource(ICoreTrack itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
-            _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            _artistMap.RemoveSource(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _urlCollectionMap.RemoveSource(itemToRemove);
 
-            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
-            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().RemoveSource(itemToRemove);
+            _sources.Remove(itemToRemove);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

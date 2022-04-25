@@ -90,6 +90,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         public IUrlCollection InnerUrlCollection { get; set; }
 
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
         /// <inheritdoc />
         public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
 
@@ -157,9 +164,6 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc />
         public IReadOnlyList<ICorePlayableCollectionGroup> Sources => ((IMerged<ICorePlayableCollectionGroup>)Inner).Sources;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-        public IReadOnlyList<ICore> SourceCores => InnerUrlCollection.SourceCores;
 
         /// <inheritdoc />
         public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);

@@ -9,20 +9,27 @@ using StrixMusic.Sdk.CoreModels;
 namespace StrixMusic.Sdk.AdapterModels
 {
     /// <summary>
-    /// An item that has been merged.
+    /// An item that has been merged from multiple sources.
     /// </summary>
     /// <typeparam name="T">The type that makes up this merged item.</typeparam>
-    public interface IMerged<T> : IEquatable<T>
+    public interface IMerged<T> : IEquatable<T>, IMerged
         where T : ICoreMember
     {
         /// <summary>
         /// The sources that make up this merged item.
         /// </summary>
         IReadOnlyList<T> Sources { get; }
+    }
 
+    /// <summary>
+    /// A non-generic version of <see cref="IMerged{T}"/> that provides notification support for when any of the merged sources have changed.
+    /// </summary>
+    /// <seealso cref="IMerged{T}"/>
+    public interface IMerged
+    {
         /// <summary>
-        /// The source cores which created the parent.
+        /// Raised when any of the sources have changed.
         /// </summary>
-        IReadOnlyList<ICore> SourceCores { get; }
+        public event EventHandler? SourcesChanged;
     }
 }

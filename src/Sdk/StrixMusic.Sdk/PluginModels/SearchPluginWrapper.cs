@@ -2,9 +2,11 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Plugins.Model;
@@ -34,13 +36,27 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
         
         if (search.SearchHistory is not null)
             SearchHistory = new SearchHistoryPluginWrapper(search.SearchHistory, plugins);
+        
+        AttachEvents(_search);
+    }
+
+    private void AttachEvents(ISearch search)
+    {
+        search.SourcesChanged += OnSourcesChanged;
+    }
+
+    private void DetachEvents(ISearch search)
+    {
+        search.SourcesChanged -= OnSourcesChanged;
     }
 
     /// <inheritdoc/>
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _search.DisposeAsync();
+    
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchAutoCompleteAsync(query, cancellationToken);
@@ -52,9 +68,6 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
     public IReadOnlyList<ICoreSearch> Sources => _search.Sources;
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICore> SourceCores => _search.SourceCores;
-
-    /// <inheritdoc/>
     public Task<ISearchResults> GetSearchResultsAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchResultsAsync(query, cancellationToken);
 
     /// <inheritdoc/>
@@ -62,4 +75,11 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
 
     /// <inheritdoc/>
     public ISearchHistory? SearchHistory { get; }
+
+    /// <inheritdoc/>
+    public ValueTask DisposeAsync()
+    {
+        DetachEvents(_search);
+        return _search.DisposeAsync();
+    }
 }

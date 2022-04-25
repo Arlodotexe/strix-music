@@ -55,6 +55,7 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     private void AttachEvents(ITrack track)
     {
+        track.SourcesChanged += OnSourcesChanged;
         track.ImagesCountChanged += OnImagesCountChanged;
         track.UrlsCountChanged += OnUrlsCountChanged;
         track.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -83,6 +84,7 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     private void DetachEvents(ITrack track)
     {
+        track.SourcesChanged -= OnSourcesChanged;
         track.ImagesCountChanged -= OnImagesCountChanged;
         track.UrlsCountChanged -= OnUrlsCountChanged;
         track.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -108,6 +110,8 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
         track.LyricsChanged -= OnLyricsChanged;
         track.AlbumChanged -= OnAlbumChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
     {
@@ -191,6 +195,9 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
     private void OnTrackNumberChanged(object sender, int? e) => TrackNumberChanged?.Invoke(sender, e);
 
     private void OnGenresCountChanged(object sender, int e) => GenresCountChanged?.Invoke(sender, e);
+
+    /// <inheritdoc cref="IMerged.SourcesChanged" />
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -371,9 +378,6 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreGenreCollection> Sources => ((IMerged<ICoreGenreCollection>)_track).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreTrack>)_track).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _track.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

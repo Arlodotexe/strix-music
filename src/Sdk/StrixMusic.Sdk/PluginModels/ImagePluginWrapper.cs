@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Plugins.Model;
@@ -31,13 +32,27 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
         ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
         
         _image = ActivePlugins.Image.Execute(image);
+        
+        AttachEvents(_image);
     }
     
     /// <inheritdoc/>
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _image.DisposeAsync();
+    private void AttachEvents(IImage image)
+    {
+        image.SourcesChanged += OnSourcesChanged;
+    }
+
+    private void DetachEvents(IImage image)
+    {
+        image.SourcesChanged -= OnSourcesChanged;
+    }
+    
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public Uri Uri => _image.Uri;
@@ -55,5 +70,10 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
     public IReadOnlyList<ICoreImage> Sources => _image.Sources;
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICore> SourceCores => _image.SourceCores;
+    public ValueTask DisposeAsync()
+    {
+        DetachEvents(_image);
+        return _image.DisposeAsync();
+    }
+
 }

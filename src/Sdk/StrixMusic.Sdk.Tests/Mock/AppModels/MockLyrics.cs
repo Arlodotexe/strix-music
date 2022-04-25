@@ -11,6 +11,6 @@ public class MockLyrics : ILyrics
     public string? TextLyrics { get; } = string.Empty;
     public bool Equals(ICoreLyrics? other) => false;
     public IReadOnlyList<ICoreLyrics> Sources { get; } = new List<ICoreLyrics>();
-    public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
     public ITrack Track { get; } = new MockTrack();
+    public event EventHandler? SourcesChanged;
 }

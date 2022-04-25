@@ -49,6 +49,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICoreUrl> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
     }
 }

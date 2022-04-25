@@ -20,5 +20,5 @@ public class MockUrl : IUrl
 
     public IReadOnlyList<ICoreUrl> Sources => new List<ICoreUrl>();
 
-    public IReadOnlyList<ICore> SourceCores => new List<ICore>();
+    public event EventHandler? SourcesChanged;
 }

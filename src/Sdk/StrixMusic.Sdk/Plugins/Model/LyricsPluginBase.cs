@@ -23,6 +23,13 @@ namespace StrixMusic.Sdk.Plugins.Model
             Inner = inner;
         }
 
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
         /// <inheritdoc />
         public ModelPluginMetadata Metadata { get; }
 
@@ -44,7 +51,5 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public IReadOnlyList<ICoreLyrics> Sources => Inner.Sources;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
     }
 }

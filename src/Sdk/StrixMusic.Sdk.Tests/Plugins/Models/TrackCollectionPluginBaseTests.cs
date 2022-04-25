@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class TrackCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -294,7 +294,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class Unimplemented : ITrackCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
-
+            
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalTrackCount => throw AccessedException;
             public bool IsPlayTrackCollectionAsyncAvailable => throw AccessedException;
             public bool IsPauseTrackCollectionAsyncAvailable => throw AccessedException;
@@ -311,7 +312,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public DownloadInfo DownloadInfo => throw AccessedException;
             public int TotalImageCount => throw AccessedException;
             public IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             public int TotalUrlCount => throw AccessedException;
             IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;
             IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => throw AccessedException;

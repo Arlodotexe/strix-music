@@ -33,13 +33,17 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IImageCollection Inner { get; set; }
 
         /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
+        /// <inheritdoc/>
         virtual public int TotalImageCount => Inner.TotalImageCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImageCollection> Sources => Inner.Sources;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         virtual public event CollectionChangedEventHandler<IImage>? ImagesChanged

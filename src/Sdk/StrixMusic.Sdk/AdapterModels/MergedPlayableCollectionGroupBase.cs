@@ -31,7 +31,6 @@ namespace StrixMusic.Sdk.AdapterModels
         private readonly MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup> _playableCollectionGroupMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlCollectionMap;
-        private readonly List<ICore> _sourceCores;
         private readonly SemaphoreSlim _disposeSemaphore = new(1, 1);
 
         private bool _isDisposed;
@@ -49,7 +48,6 @@ namespace StrixMusic.Sdk.AdapterModels
             Guard.HasSizeGreaterThan(StoredSources, 0, nameof(StoredSources));
 
             PreferredSource = StoredSources[0];
-            _sourceCores = StoredSources.Select(x => x.SourceCore).ToList();
 
             _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
             _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, config);
@@ -338,9 +336,9 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         IReadOnlyList<ICorePlayableCollectionGroupChildren> IMerged<ICorePlayableCollectionGroupChildren>.Sources => StoredSources;
@@ -763,15 +761,16 @@ namespace StrixMusic.Sdk.AdapterModels
                 ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artistItem that doesn't match. Verify that the item matches before merging the source.");
 
             StoredSources.Add(itemToAdd);
-            _sourceCores.Add(itemToAdd.SourceCore);
 
-            _albumCollectionMap.Cast<IMergedMutable<ICoreAlbumCollection>>().AddSource(itemToAdd);
-            _artistCollectionMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToAdd);
-            _playableCollectionGroupMap.Cast<IMergedMutable<ICorePlayableCollectionGroup>>().AddSource(itemToAdd);
-            _playlistCollectionMap.Cast<IMergedMutable<ICorePlaylistCollection>>().AddSource(itemToAdd);
-            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().AddSource(itemToAdd);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToAdd);
-            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().AddSource(itemToAdd);
+            _albumCollectionMap.AddSource(itemToAdd);
+            _artistCollectionMap.AddSource(itemToAdd);
+            _playableCollectionGroupMap.AddSource(itemToAdd);
+            _playlistCollectionMap.AddSource(itemToAdd);
+            _trackCollectionMap.AddSource(itemToAdd);
+            _imageCollectionMap.AddSource(itemToAdd);
+            _urlCollectionMap.AddSource(itemToAdd);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
@@ -780,15 +779,16 @@ namespace StrixMusic.Sdk.AdapterModels
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             StoredSources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _albumCollectionMap.Cast<IMergedMutable<ICoreAlbumCollection>>().RemoveSource(itemToRemove);
-            _artistCollectionMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
-            _playableCollectionGroupMap.Cast<IMergedMutable<ICorePlayableCollectionGroup>>().RemoveSource(itemToRemove);
-            _playlistCollectionMap.Cast<IMergedMutable<ICorePlaylistCollection>>().RemoveSource(itemToRemove);
-            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().RemoveSource(itemToRemove);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
-            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().RemoveSource(itemToRemove);
+            _albumCollectionMap.RemoveSource(itemToRemove);
+            _artistCollectionMap.RemoveSource(itemToRemove);
+            _playableCollectionGroupMap.RemoveSource(itemToRemove);
+            _playlistCollectionMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _urlCollectionMap.RemoveSource(itemToRemove);
+
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

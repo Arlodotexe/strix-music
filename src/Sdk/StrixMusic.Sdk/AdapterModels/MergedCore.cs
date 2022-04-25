@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -34,7 +35,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
-            SourceCores = _sources.Select(x => x.SourceCore).ToList();
             MergeConfig = config;
 
             _library = new MergedLibrary(_sources.Select(x => x.Library), config);
@@ -78,9 +78,6 @@ namespace StrixMusic.Sdk.AdapterModels
             DevicesChanged?.Invoke(this, itemsToAdd, itemsToRemove);
         }
 
-        /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores { get; }
-
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
 
@@ -111,6 +108,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
 
+        /// <inheritdoc cref="IMerged.SourcesChanged" />
+        public event EventHandler? SourcesChanged;
+
         /// <inheritdoc />
         /// <remarks>
         /// Cores can be merged, but are never matched conditionally.
@@ -137,6 +137,8 @@ namespace StrixMusic.Sdk.AdapterModels
                 _pins.AddSource(itemToMerge.Pins);
 
             AttachEvents(itemToMerge);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
@@ -146,6 +148,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 ThrowHelper.ThrowArgumentException(nameof(itemToRemove), "Cannot remove an item that doesn't exist in the collection.");
 
             _sources.Remove(itemToRemove);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

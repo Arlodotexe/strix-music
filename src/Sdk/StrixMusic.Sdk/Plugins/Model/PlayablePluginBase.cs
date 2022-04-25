@@ -97,10 +97,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => InnerUrlCollection.Sources;
 
         /// <inheritdoc/>
-        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => InnerImageCollection.SourceCores;
-
-        /// <inheritdoc/>
-        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => InnerUrlCollection.SourceCores;
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
         virtual public event EventHandler<PlaybackState>? PlaybackStateChanged

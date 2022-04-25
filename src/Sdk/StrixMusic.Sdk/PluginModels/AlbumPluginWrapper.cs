@@ -51,6 +51,7 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
 
     private void AttachEvents(IAlbum album)
     {
+        album.SourcesChanged += OnSourcesChanged;
         album.ImagesCountChanged += OnImagesCountChanged;
         album.UrlsCountChanged += OnUrlsCountChanged;
         album.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -78,6 +79,7 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
 
     private void DetachEvents(IAlbum album)
     {
+        album.SourcesChanged -= OnSourcesChanged;
         album.ImagesCountChanged -= OnImagesCountChanged;
         album.UrlsCountChanged -= OnUrlsCountChanged;
         album.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -102,6 +104,8 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
         album.GenresChanged += OnGenresChanged;
         album.GenresCountChanged += OnGenresCountChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnGenresCountChanged(object sender, int e) => GenresCountChanged?.Invoke(sender, e);
 
@@ -178,6 +182,9 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -391,9 +398,6 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
 
     /// <inheritdoc/>
     IReadOnlyList<ICoreAlbum> IMerged<ICoreAlbum>.Sources => ((IMerged<ICoreAlbum>)_album).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreAlbum>)_album).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _album.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

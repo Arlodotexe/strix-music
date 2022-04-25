@@ -33,13 +33,17 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IGenreCollection Inner { get; set; }
 
         /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
+        /// <inheritdoc/>
         virtual public int TotalGenreCount => Inner.TotalGenreCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreGenreCollection> Sources => Inner.Sources;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         virtual public event CollectionChangedEventHandler<IGenre>? GenresChanged

@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class ImagePluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -120,6 +120,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public Uri Uri => throw AccessedException;
 
             public double Height => throw AccessedException;
@@ -127,8 +128,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public double Width => throw AccessedException;
 
             public IReadOnlyList<ICoreImage> Sources => throw AccessedException;
-
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public ValueTask DisposeAsync() => throw AccessedException;
 

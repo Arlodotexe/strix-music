@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -20,8 +21,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
         public bool Equals(ICore? other) => false;
 
         public IReadOnlyList<ICore> Sources { get; } = new List<ICore>();
-
-        public IReadOnlyList<ICore> SourceCores => Sources;
 
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
@@ -52,6 +51,7 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
         public IDiscoverables? Discoverables { get; } = new MockDiscoverables();
 
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+        public event EventHandler? SourcesChanged;
     }
 
 }

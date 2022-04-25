@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class AlbumCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -303,7 +303,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public bool IsPauseAlbumCollectionAsyncAvailable => throw AccessedException;
             public DateTime? AddedAt => throw AccessedException;
             public IReadOnlyList<ICoreAlbumCollectionItem> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             public string Id => throw AccessedException;
             public string Name => throw AccessedException;
             public string? Description => throw AccessedException;
@@ -320,6 +319,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;
             IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => throw AccessedException;
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<bool>? IsPauseAlbumCollectionAsyncAvailableChanged { add => throw AccessedException; remove => throw AccessedException; }

@@ -31,6 +31,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         virtual public IImage Inner { get; }
 
         /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
+        /// <inheritdoc/>
         virtual public Uri Uri => Inner.Uri;
 
         /// <inheritdoc/>
@@ -41,9 +48,6 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
 
         /// <inheritdoc/>
         virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();

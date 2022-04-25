@@ -44,6 +44,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     private void AttachEvents(IPlayableCollectionGroup playableCollectionGroup)
     {
+        playableCollectionGroup.SourcesChanged += OnSourcesChanged;
         playableCollectionGroup.ImagesCountChanged += OnImagesCountChanged;
         playableCollectionGroup.UrlsCountChanged += OnUrlsCountChanged;
         playableCollectionGroup.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -79,6 +80,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     private void DetachEvents(IPlayableCollectionGroup playableCollectionGroup)
     {
+        playableCollectionGroup.SourcesChanged -= OnSourcesChanged;
         playableCollectionGroup.ImagesCountChanged -= OnImagesCountChanged;
         playableCollectionGroup.UrlsCountChanged -= OnUrlsCountChanged;
         playableCollectionGroup.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -111,6 +113,8 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
         playableCollectionGroup.ArtistItemsChanged -= OnArtistItemsChanged;
         playableCollectionGroup.ChildItemsChanged -= OnChildItemsChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems)
     {
@@ -215,6 +219,9 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -521,9 +528,6 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     /// <inheritdoc/>
     IReadOnlyList<ICorePlayableCollectionGroup> IMerged<ICorePlayableCollectionGroup>.Sources => ((IMerged<ICorePlayableCollectionGroup>)_playableCollectionGroup).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICorePlayableCollectionGroup>)_playableCollectionGroup).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

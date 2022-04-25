@@ -656,9 +656,6 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     IReadOnlyList<ICorePlayableCollectionGroup> IMerged<ICorePlayableCollectionGroup>.Sources { get; } = new List<ICorePlayableCollectionGroup>();
 
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
-
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _images.ToAsyncEnumerable();
 
@@ -842,4 +839,6 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
 
     /// <inheritdoc/>
     public ValueTask DisposeAsync() => default;
+
+    public event EventHandler? SourcesChanged;
 }

@@ -60,6 +60,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IImageCollection InnerImageCollection { get; set; }
 
         /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
+        /// <inheritdoc/>
         virtual public int TotalTrackCount => Inner.TotalTrackCount;
 
         /// <inheritdoc/>
@@ -111,19 +118,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICoreTrackCollection> Sources => ((IMerged<ICoreTrackCollection>)Inner).Sources;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreTrackCollection>)Inner).SourceCores;
-
-        /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => InnerUrlCollection.Sources;
-
-        /// <inheritdoc/>
-        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => InnerImageCollection.SourceCores;
-
-        /// <inheritdoc/>
-        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => InnerUrlCollection.SourceCores;
 
         /// <inheritdoc/>
         virtual public event CollectionChangedEventHandler<ITrack>? TracksChanged

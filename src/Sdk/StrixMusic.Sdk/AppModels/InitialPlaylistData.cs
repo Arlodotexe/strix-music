@@ -95,6 +95,9 @@ namespace StrixMusic.Sdk.AppModels
             add => throw new NotSupportedException();
             remove => throw new NotSupportedException();
         }
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public int TotalImageCount => Images.Count;
@@ -269,9 +272,6 @@ namespace StrixMusic.Sdk.AppModels
 
             return Task.CompletedTask;
         }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;

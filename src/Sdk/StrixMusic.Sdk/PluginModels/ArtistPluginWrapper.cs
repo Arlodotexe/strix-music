@@ -48,6 +48,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
 
     private void AttachEvents(IArtist artist)
     {
+        artist.SourcesChanged += OnSourcesChanged;
         artist.ImagesCountChanged += OnImagesCountChanged;
         artist.UrlsCountChanged += OnUrlsCountChanged;
         artist.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -75,6 +76,7 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
 
     private void DetachEvents(IArtist artist)
     {
+        artist.SourcesChanged -= OnSourcesChanged;
         artist.ImagesCountChanged -= OnImagesCountChanged;
         artist.UrlsCountChanged -= OnUrlsCountChanged;
         artist.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -99,6 +101,8 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
         artist.GenresChanged -= OnGenresChanged;
         artist.GenresCountChanged -= OnGenresCountChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnAlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
     {
@@ -175,6 +179,9 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+    
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -382,9 +389,6 @@ public class ArtistPluginWrapper : IArtist, IPluginWrapper
 
     /// <inheritdoc/>
     IReadOnlyList<ICoreArtist> IMerged<ICoreArtist>.Sources => ((IMerged<ICoreArtist>)_artist).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtist>)_artist).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

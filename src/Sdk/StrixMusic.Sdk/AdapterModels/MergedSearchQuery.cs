@@ -17,7 +17,6 @@ namespace StrixMusic.Sdk.AdapterModels
     public sealed class MergedSearchQuery : ISearchQuery, IMergedMutable<ICoreSearchQuery>
     {
         private readonly List<ICoreSearchQuery> _sources;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearchQuery"/>.
@@ -26,7 +25,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedSearchQuery(IReadOnlyList<ICoreSearchQuery> sources)
         {
             _sources = sources.ToList();
-            _sourceCores = sources.Select(x => x.SourceCore).ToList();
 
             // Make sure all items in the given collection match.
             for (var i = 0; i < sources.Count; i++)
@@ -57,26 +55,26 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearchQuery> Sources => _sources;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
-        /// <inheritdoc />
-        void IMergedMutable<ICoreSearchQuery>.AddSource(ICoreSearchQuery itemToMerge)
+        public void AddSource(ICoreSearchQuery itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreSearchQuery>.RemoveSource(ICoreSearchQuery itemToRemove)
+        public void RemoveSource(ICoreSearchQuery itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

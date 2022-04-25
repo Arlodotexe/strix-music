@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,9 +51,19 @@ namespace StrixMusic.Sdk.PluginModels
             AttachEvents(_strixDataRoot);
         }
 
-        private void AttachEvents(IStrixDataRoot strixDataRoot) => strixDataRoot.DevicesChanged += OnDevicesChanged;
+        private void AttachEvents(IStrixDataRoot strixDataRoot)
+        {
+            strixDataRoot.SourcesChanged += OnSourcesChanged;
+            strixDataRoot.DevicesChanged += OnDevicesChanged;
+        }
 
-        private void DetachEvents(IStrixDataRoot strixDataRoot) => strixDataRoot.DevicesChanged += OnDevicesChanged;
+        private void DetachEvents(IStrixDataRoot strixDataRoot)
+        {
+            strixDataRoot.SourcesChanged -= OnSourcesChanged;
+            strixDataRoot.DevicesChanged -= OnDevicesChanged;
+        }
+        
+        private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
         private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems) => DevicesChanged?.Invoke(this, addedItems, removedItems);
 
@@ -61,6 +72,9 @@ namespace StrixMusic.Sdk.PluginModels
 
         /// <inheritdoc/>
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc/>
         public MergedCollectionConfig MergeConfig => _strixDataRoot.MergeConfig;
@@ -85,9 +99,6 @@ namespace StrixMusic.Sdk.PluginModels
 
         /// <inheritdoc/>
         public IReadOnlyList<ICore> Sources => _strixDataRoot.Sources;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => _strixDataRoot.SourceCores;
 
         /// <inheritdoc/>
         public bool IsInitialized => _strixDataRoot.IsInitialized;

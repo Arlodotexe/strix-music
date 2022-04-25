@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Plugins.Model;
@@ -31,22 +32,39 @@ public class UrlPluginWrapper : IUrl, IPluginWrapper
         ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
         
         _url = ActivePlugins.Url.Execute(url);
+        AttachEvents(_url);
     }
-    
+
+    private void AttachEvents(IUrl url)
+    {
+        url.SourcesChanged += OnSourcesChanged;
+    }
+
+    private void DetachEvents(IUrl url)
+    {
+        url.SourcesChanged -= OnSourcesChanged;
+    }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+
     /// <inheritdoc/>
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync() => _url.DisposeAsync();
+    public ValueTask DisposeAsync()
+    {
+        DetachEvents(_url);
+        return _url.DisposeAsync();
+    }
 
     /// <inheritdoc/>
     public bool Equals(ICoreUrl other) => _url.Equals(other);
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreUrl> Sources => _url.Sources;
-
-    /// <inheritdoc/>
-    public IReadOnlyList<ICore> SourceCores => _url.SourceCores;
+        
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public string Label => _url.Label;

@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class ArtistCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -298,12 +298,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalArtistItemsCount => throw AccessedException;
             public bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;
             public bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;
             public DateTime? AddedAt => throw AccessedException;
             public IReadOnlyList<ICoreArtistCollectionItem> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             public string Id => throw AccessedException;
             public string Name => throw AccessedException;
             public string? Description => throw AccessedException;

@@ -46,9 +46,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _album = album;
-
-            SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(x => new CoreViewModel(x)).ToList();
-
+            
             Tracks = new ObservableCollection<TrackViewModel>();
             Artists = new ObservableCollection<IArtistCollectionItem>();
             UnsortedTracks = new ObservableCollection<TrackViewModel>();
@@ -147,6 +145,13 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= AlbumViewModel_ImagesChanged;
             GenresCountChanged -= OnGenresItemsCountChanged;
             GenresChanged -= OnGenresChanged;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _album.SourcesChanged += value;
+            remove => _album.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -439,9 +444,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public string Id => _album.Id;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
         /// The merged sources for this album.

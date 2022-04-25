@@ -118,9 +118,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreArtist>)Inner).SourceCores;
-
         /// <inheritdoc/>
         public IReadOnlyList<ICoreArtist> Sources => ((IMerged<ICoreArtist>)Inner).Sources;
 
@@ -131,7 +128,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => ((IMerged<ICoreArtist>)Inner).Sources;
 
         /// <inheritdoc/>
-        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => ((IMerged<ICoreAlbum>)Inner).Sources;
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => ((IMerged<ICoreAlbumCollectionItem>)Inner).Sources;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
@@ -265,6 +262,13 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => InnerPlayable.ChangeDurationAsync(duration, cancellationToken);
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
         public virtual event EventHandler<PlaybackState>? PlaybackStateChanged

@@ -62,6 +62,9 @@ namespace StrixMusic.Sdk
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged;
+
         private void AttachEvents()
         {
             _coreManagementService.CoreInstanceRegistered += CoreManagementService_CoreInstanceRegistered;
@@ -413,7 +416,5 @@ namespace StrixMusic.Sdk
         /// <inheritdoc />
         IReadOnlyList<ICore> IMerged<ICore>.Sources => _sources;
 
-        /// <inheritdoc />
-        IReadOnlyList<ICore> IMerged<ICore>.SourceCores => _sources;
     }
 }

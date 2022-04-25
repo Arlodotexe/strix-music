@@ -89,9 +89,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual int TotalGenreCount => InnerGenreCollection.TotalGenreCount;
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreAlbum>)Inner).SourceCores;
-
         /// <inheritdoc/>
         public IReadOnlyList<ICoreAlbum> Sources => ((IMerged<ICoreAlbum>)Inner).Sources;
 
@@ -173,6 +170,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual bool IsPauseArtistCollectionAsyncAvailable =>
             InnerArtistCollection.IsPauseArtistCollectionAsyncAvailable;
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
         public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged

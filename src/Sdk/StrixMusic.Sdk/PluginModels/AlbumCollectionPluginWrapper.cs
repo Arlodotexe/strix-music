@@ -48,6 +48,7 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
 
     private void AttachEvents(IAlbumCollection albumCollection)
     {
+        albumCollection.SourcesChanged += OnSourcesChanged;
         albumCollection.ImagesCountChanged += OnImagesCountChanged;
         albumCollection.UrlsCountChanged += OnUrlsCountChanged;
         albumCollection.PlaybackStateChanged += OnPlaybackStateChanged;
@@ -69,6 +70,7 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
 
     private void DetachEvents(IAlbumCollection albumCollection)
     {
+        albumCollection.SourcesChanged -= OnSourcesChanged;
         albumCollection.ImagesCountChanged -= OnImagesCountChanged;
         albumCollection.UrlsCountChanged -= OnUrlsCountChanged;
         albumCollection.PlaybackStateChanged -= OnPlaybackStateChanged;
@@ -87,6 +89,8 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
         albumCollection.DownloadInfoChanged -= OnDownloadInfoChanged;
         albumCollection.AlbumItemsChanged -= OnAlbumItemsChanged;
     }
+
+    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnAlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
     {
@@ -139,6 +143,9 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
     private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
     private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+
+    /// <inheritdoc cref="IMerged.SourcesChanged"/>
+    public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
     public event EventHandler<int>? ImagesCountChanged;
@@ -292,9 +299,6 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
 
     /// <inheritdoc/>
     IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => ((IMerged<ICoreAlbumCollection>)_albumCollection).Sources;
-
-    /// <inheritdoc cref="IMerged{T}.SourceCores"/>
-    public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreAlbumCollection>)_albumCollection).SourceCores;
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _albumCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));

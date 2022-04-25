@@ -78,6 +78,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         public IUrlCollection InnerUrlCollection { get; set; }
 
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
+
         /// <inheritdoc />
         public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
 
@@ -109,9 +116,6 @@ namespace StrixMusic.Sdk.Plugins.Model
             add => InnerImageCollection.ImagesCountChanged += value;
             remove => InnerImageCollection.ImagesCountChanged -= value;
         }
-
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreTrack>)Inner).SourceCores;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreGenreCollection> Sources => InnerGenreCollection.Sources;

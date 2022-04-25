@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class UrlCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
@@ -131,11 +131,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalUrlCount => throw AccessedException;
 
             public IReadOnlyList<ICoreUrlCollection> Sources => throw AccessedException;
-
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
