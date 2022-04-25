@@ -32,7 +32,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <!--  SemanticZoom grouped sourc  -->
+                            <!--  SemanticZoom grouped source  -->
 
                             <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
 
