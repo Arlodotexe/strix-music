@@ -42,8 +42,7 @@
 
                                 <TextBlock x:Name="PART_SortLbl" Width="100"
                                            Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}"
-                                           Foreground="#C8CACB" FontSize="12" FontWeight="Bold"   a:TextHelpers.CharacterCasing="Upper" />
-
+                                           Foreground="#C8CACB" FontSize="12" FontWeight="Bold" a:TextHelpers.CharacterCasing="Upper" />
 
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
