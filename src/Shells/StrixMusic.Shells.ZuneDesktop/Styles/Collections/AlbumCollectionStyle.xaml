@@ -48,7 +48,7 @@
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums,Mode=OneWay}"
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, Mode=OneWay}"
                                         ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                                         Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                                 <GridView.GroupStyle>
