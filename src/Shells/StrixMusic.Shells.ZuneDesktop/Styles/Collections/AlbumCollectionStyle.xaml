@@ -34,7 +34,6 @@
 
                             <!--  SemanticZoom grouped sourc  -->
 
-
                             <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
 
                             <StackPanel Margin="24,0,0,0" Spacing="5" Orientation="Horizontal">
