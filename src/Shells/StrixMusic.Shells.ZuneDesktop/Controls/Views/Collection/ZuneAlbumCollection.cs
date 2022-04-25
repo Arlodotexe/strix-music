@@ -168,7 +168,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.DateAdded, Sdk.ViewModels.SortDirection.Ascending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.DateAdded;
-                    PART_SortLbl.Text = "By DateAdded";
+                    PART_SortLbl.Text = "By Date Added";
                     break;
                 case ZuneSortState.DateAdded:
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
