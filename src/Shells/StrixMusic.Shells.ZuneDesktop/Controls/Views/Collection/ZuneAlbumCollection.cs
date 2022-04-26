@@ -246,9 +246,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void ZuneAlbumCollection_Unloaded(object sender, RoutedEventArgs e)
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
             PART_Selector.Loaded -= PART_Selector_Loaded;
             Unloaded -= ZuneAlbumCollection_Unloaded;
+            PART_SortLbl.Tapped -= PART_SortLbl_Tapped;
         }
 
         private void PART_Selector_Loaded(object sender, RoutedEventArgs e)
