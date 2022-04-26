@@ -11,6 +11,7 @@ using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -23,6 +24,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     public class ZuneAlbumCollection : AlbumCollection
     {
         private object _lockObj = new object();
+        private ResourceLoader _loacalizationService;
 
         /// <summary>
         /// Creates a new instance of <see cref="ZuneAlbumCollection"/>.
@@ -30,6 +32,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         public ZuneAlbumCollection()
         {
             AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>();
+
+            _loacalizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
         }
 
         /// <summary>
@@ -152,29 +156,29 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.ZA;
-                    PART_SortLbl.Text = "Z-A";
+                    PART_SortLbl.Text = _loacalizationService.GetString("Z-A");
                     break;
                 case ZuneSortState.ZA:
                     PopulateAlbumGroupedByArtists();
                     SortState = ZuneSortState.Artists;
-                    PART_SortLbl.Text = "By Artists";
+                    PART_SortLbl.Text = _loacalizationService.GetString("By Artists");
                     break;
                 case ZuneSortState.Artists:
                     PopulateAlbumGroupedByReleaseYear();
                     SortState = ZuneSortState.ReleaseYear;
-                    PART_SortLbl.Text = "By Release Year";
+                    PART_SortLbl.Text = _loacalizationService.GetString("By Release Year");
                     break;
                 case ZuneSortState.ReleaseYear:
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.DateAdded, Sdk.ViewModels.SortDirection.Ascending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.DateAdded;
-                    PART_SortLbl.Text = "By Date Added";
+                    PART_SortLbl.Text = _loacalizationService.GetString("By Date Added");
                     break;
                 case ZuneSortState.DateAdded:
                     Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.AZ;
-                    PART_SortLbl.Text = "A-Z";
+                    PART_SortLbl.Text = _loacalizationService.GetString("A-Z");
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -292,8 +296,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             AlbumGroupedByCollection.Clear();
 
+            var typecastedAlbums = Collection.Albums.Where(c => c is AlbumViewModel).Cast<AlbumViewModel>();
+
             AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
-            Collection.Albums.GroupBy(c => ((AlbumViewModel)c).DatePublished?.Year.ToString() ?? "Year Not Available")
+            typecastedAlbums.GroupBy(c => c.DatePublished?.Year.ToString() ?? "Unknown")
             .OrderBy(g => g.Key));
 
             // Set up the CollectionViewSource.
@@ -312,8 +318,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             AlbumGroupedByCollection.Clear();
 
+            var typecastedAlbums = Collection.Albums.Where(c => c is AlbumViewModel).Cast<AlbumViewModel>();
+
             AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
-           Collection.Albums.GroupBy(c => ((AlbumViewModel)c).Artists.FirstOrDefault()?.Name ?? "Untitled")
+           typecastedAlbums.GroupBy(c => c.Artists.FirstOrDefault()?.Name ?? "Untitled")
            .OrderBy(g => g.Key));
 
             // Set up the CollectionViewSource.

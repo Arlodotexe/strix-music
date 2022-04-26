@@ -54,10 +54,7 @@
                                     <GroupStyle HidesIfEmpty="True">
                                         <GroupStyle.HeaderTemplate>
                                             <DataTemplate>
-                                                <TextBlock
-                                                             FontSize="24"
-                                                             Foreground="Black"
-                                                              Text="{Binding Key}" />
+                                                <TextBlock   FontSize="20"  Foreground="Black"  Text="{Binding Key}" />
                                             </DataTemplate>
                                         </GroupStyle.HeaderTemplate>
                                     </GroupStyle>

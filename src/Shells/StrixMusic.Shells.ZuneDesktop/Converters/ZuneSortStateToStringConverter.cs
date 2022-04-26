@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Data;
 
 namespace StrixMusic.Shells.ZuneDesktop.Converters
@@ -16,11 +17,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Converters
         {
             if (value is ZuneSortState zss)
             {
+                var loacalizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
+
                 return zss switch
                 {
-                    ZuneSortState.AZ => "A-Z",
-                    ZuneSortState.ZA => "Z-A",
-                    ZuneSortState.Artists => "Sort by artists",
+                    ZuneSortState.AZ => loacalizationService.GetString("A-Z"),
+                    ZuneSortState.ZA => loacalizationService.GetString("Z-A"),
+                    ZuneSortState.Artists => loacalizationService.GetString("By Artists"),
+                    ZuneSortState.ReleaseYear => loacalizationService.GetString("By Release Year"),
+                    ZuneSortState.DateAdded => loacalizationService.GetString("By Date Added"),
                     _ => throw new NotImplementedException(),
                 };
             }

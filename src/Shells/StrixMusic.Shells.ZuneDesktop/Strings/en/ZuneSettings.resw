@@ -174,4 +174,19 @@
   <data name="Cells" xml:space="preserve">
     <value>Cells</value>
   </data>
+  <data name="A-Z" xml:space="preserve">
+    <value>A-Z</value>
+  </data>
+  <data name="By Artists" xml:space="preserve">
+    <value>By Artists</value>
+  </data>
+  <data name="By Date Added" xml:space="preserve">
+    <value>By Date Added</value>
+  </data>
+  <data name="By Release Year" xml:space="preserve">
+    <value>By Release Year</value>
+  </data>
+  <data name="Z-A" xml:space="preserve">
+    <value>Z-A</value>
+  </data>
 </root>
