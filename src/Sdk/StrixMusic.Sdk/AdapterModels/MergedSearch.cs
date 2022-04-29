@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearch"/>.
         /// </summary>
-        public MergedSearch(IReadOnlyList<ICoreSearch> sources, MergedCollectionConfig config)
+        public MergedSearch(IEnumerable<ICoreSearch> sources, MergedCollectionConfig config)
         {
             _config = config;
             _sources = sources.ToList();

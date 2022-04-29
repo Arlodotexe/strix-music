@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.CoreModels;
 
-namespace StrixMusic.Sdk.CoreManagement
+namespace StrixMusic.Services.CoreManagement
 {
     /// <summary>
     /// Manages added and removing core instances.

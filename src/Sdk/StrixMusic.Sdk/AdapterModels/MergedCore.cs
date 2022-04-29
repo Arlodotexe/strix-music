@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
@@ -28,6 +29,7 @@ namespace StrixMusic.Sdk.AdapterModels
         private readonly MergedPlayableCollectionGroup _pins;
         private readonly MergedRecentlyPlayed _recentlyPlayed;
         private readonly MergedLibrary _library;
+        private readonly MergedSearch _search;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
@@ -35,6 +37,11 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
+            Guard.HasSizeGreaterThan(_sources, 0, nameof(_sources));
+
+            foreach (var core in _sources)
+                CheckSdkVersion(core.Registration);
+
             MergeConfig = config;
 
             _library = new MergedLibrary(_sources.Select(x => x.Library), config);
@@ -44,15 +51,13 @@ namespace StrixMusic.Sdk.AdapterModels
             _discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), config);
             _pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), config);
             _recentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
+            _search = new MergedSearch(_sources.Select(x => x.Search).PruneNull(), config);
 
             _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new DeviceAdapter(device)));
 
             foreach (var source in _sources)
                 AttachEvents(source);
         }
-
-        /// <inheritdoc />
-        public Task InitAsync(CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
 
         private void AttachEvents(ICore core)
         {
@@ -64,11 +69,18 @@ namespace StrixMusic.Sdk.AdapterModels
             core.DevicesChanged -= Core_DevicesChanged;
         }
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+
+        /// <inheritdoc cref="IMerged.SourcesChanged" />
+        public event EventHandler? SourcesChanged;
+
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
             var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
             var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
 
+#warning TODO: Compute actual indices for merged device list.
             foreach (var item in itemsToRemove)
                 _devices.RemoveAt(item.Index);
 
@@ -94,7 +106,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public IPlayableCollectionGroup? Pins => _pins;
 
         /// <inheritdoc />
-        public ISearch? Search { get; }
+        public ISearch? Search => _search;
 
         /// <inheritdoc />
         public IRecentlyPlayed? RecentlyPlayed => _recentlyPlayed;
@@ -106,10 +118,49 @@ namespace StrixMusic.Sdk.AdapterModels
         public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+        public async Task InitAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var core in _sources)
+                await InitCore(core, cancellationToken);
 
-        /// <inheritdoc cref="IMerged.SourcesChanged" />
-        public event EventHandler? SourcesChanged;
+            IsInitialized = true;
+        }
+
+        private async Task InitCore(ICore core, CancellationToken cancellationToken)
+        {
+            Begin:
+            var setupCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsConfiguration)
+            {
+                try
+                {
+                    await core.InitAsync(setupCancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    if (!setupCancellationTokenSource.IsCancellationRequested)
+                        setupCancellationTokenSource.Cancel();
+                }
+            }
+
+            if (setupCancellationTokenSource.IsCancellationRequested || core.CoreState == CoreState.Unloaded)
+            {
+                setupCancellationTokenSource.Dispose();
+                RemoveSource(core);
+                return;
+            }
+
+            if (core.CoreState == CoreState.NeedsConfiguration)
+            {
+                // If the user needs to provide information for setup to continue, wait for another state change.
+                // Display of the core's AbstractConfigPanel handled by the host application.
+                await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, TimeSpan.FromMinutes(10));
+                goto Begin;
+            }
+
+            setupCancellationTokenSource.Dispose();
+        }
 
         /// <inheritdoc />
         /// <remarks>
@@ -123,7 +174,8 @@ namespace StrixMusic.Sdk.AdapterModels
             if (_sources.Contains(itemToMerge))
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Cannot add the same source twice.");
 
-            _sources.Add(itemToMerge);
+            CheckSdkVersion(itemToMerge.Registration);
+
             _devices.AddRange(itemToMerge.Devices.Select(x => new DeviceAdapter(x)));
             _library.AddSource(itemToMerge.Library);
 
@@ -136,8 +188,12 @@ namespace StrixMusic.Sdk.AdapterModels
             if (itemToMerge.Pins is not null)
                 _pins.AddSource(itemToMerge.Pins);
 
+            if (itemToMerge.Search is not null)
+                _search.AddSource(itemToMerge.Search);
+
+            _sources.Add(itemToMerge);
             AttachEvents(itemToMerge);
-            
+
             SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -147,17 +203,46 @@ namespace StrixMusic.Sdk.AdapterModels
             if (!_sources.Contains(itemToRemove))
                 ThrowHelper.ThrowArgumentException(nameof(itemToRemove), "Cannot remove an item that doesn't exist in the collection.");
 
+            _devices.RemoveAll(x => itemToRemove.Devices.Any(y => y.Id == x.Id) && x.SourceCore?.InstanceId == itemToRemove.InstanceId);
+            _library.RemoveSource(itemToRemove.Library);
+
+            if (itemToRemove.Discoverables is not null)
+                _discoverables.RemoveSource(itemToRemove.Discoverables);
+
+            if (itemToRemove.RecentlyPlayed is not null)
+                _recentlyPlayed.RemoveSource(itemToRemove.RecentlyPlayed);
+
+            if (itemToRemove.Pins is not null)
+                _pins.RemoveSource(itemToRemove.Pins);
+
+            if (itemToRemove.Search is not null)
+                _search.RemoveSource(itemToRemove.Search);
+
             _sources.Remove(itemToRemove);
+            DetachEvents(itemToRemove);
             SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            foreach (var source in _sources)
-                DetachEvents(source);
+            if (IsInitialized)
+                return;
 
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
+            foreach (var source in _sources)
+            {
+                DetachEvents(source);
+                await source.DisposeAsync();
+            }
+
+            IsInitialized = false;
+        }
+
+        private void CheckSdkVersion(CoreMetadata coreMetadata)
+        {
+            var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
+            if (coreMetadata.SdkVer != currentSdkVersion)
+                throw new IncompatibleSdkVersionException(coreMetadata.SdkVer, coreMetadata.DisplayName);
         }
     }
 }

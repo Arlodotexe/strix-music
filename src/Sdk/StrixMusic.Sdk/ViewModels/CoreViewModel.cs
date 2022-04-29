@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
         /// </summary>
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
-        internal CoreViewModel(ICore core)
+        public CoreViewModel(ICore core)
             : this(core, core.Registration)
         {
 
@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         /// <param name="coreMetadata">The metadata that was used to construct this core instance.</param>
-        internal CoreViewModel(ICore core, CoreMetadata coreMetadata)
+        public CoreViewModel(ICore core, CoreMetadata coreMetadata)
         {
             _syncContext = SynchronizationContext.Current;
 

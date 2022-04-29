@@ -3,11 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:view="using:StrixMusic.Sdk.WinUI.Controls.Views"
-    xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:appModels="using:StrixMusic.Sdk.AppModels"
     xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Views.HomeViewStyle">
 
-    <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="sdk:MainViewModel">
+    <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="appModels:IStrixDataRoot">
         <UserControl>
             <shells:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
                 <shells:PlayableCollectionGroupPivot.AllEmptyContent>

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using StrixMusic.Sdk.CoreManagement;
-using Windows.Storage;
 using StrixMusic.Sdk.CoreModels;
+using Windows.Storage;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Services.CoreManagement
 {
     /// <summary>
     /// Manages added and removing core instances.
@@ -66,7 +65,7 @@ namespace StrixMusic.Services
                 _settings.CoreRanking.Remove(instanceId);
             }
 
-            // TODO: Wait for MainViewModel to fully dispose of core.
+            // TODO: Wait to fully dispose of core.
             CoreInstanceUnregistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, value));
 
             var rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);

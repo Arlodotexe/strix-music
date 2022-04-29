@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StrixMusic.Sdk.AdapterModels;
 
@@ -14,6 +15,22 @@ public class MergedCollectionConfig
 {
     private MergedCollectionSorting _mergedCollectionSorting;
     private IReadOnlyList<string> _coreRanking = new List<string>();
+
+    /// <summary>
+    /// Creates a new instance of <see cref="MergedCollectionConfig"/>.
+    /// </summary>
+    public MergedCollectionConfig()
+    {
+    }
+    
+    /// <summary>
+    /// Creates a new instance of <see cref="MergedCollectionConfig"/>.
+    /// </summary>
+    public MergedCollectionConfig(MergedCollectionSorting mergedCollectionSorting, IEnumerable<string> coreRanking)
+    {
+        _mergedCollectionSorting = mergedCollectionSorting;
+        _coreRanking = coreRanking.ToList();
+    }
 
     /// <summary>
     /// The user's preference for how items in a collection from multiple sources are sorted. 

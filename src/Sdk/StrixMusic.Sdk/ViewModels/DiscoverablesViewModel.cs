@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of the <see cref="DiscoverablesViewModel"/> class.
         /// </summary>
         /// <param name="discoverables">The <see cref="IDiscoverables"/> to wrap.</param>
-        internal DiscoverablesViewModel(IDiscoverables discoverables)
+        public DiscoverablesViewModel(IDiscoverables discoverables)
             : base(discoverables)
         {
             _discoverables = discoverables;

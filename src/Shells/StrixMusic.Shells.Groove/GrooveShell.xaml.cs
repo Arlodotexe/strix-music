@@ -1,22 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using CommunityToolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using OwlCore.Extensions;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
-using StrixMusic.Sdk.ViewModels.Notifications;
-using StrixMusic.Shells.Groove.Controls.Pages;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
-using StrixMusic.Shells.Groove.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
-using StrixMusic.Shells.Groove.ViewModels.Pages;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
@@ -24,7 +19,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using StrixMusic.Sdk.WinUI.Services.Localization;
 
 namespace StrixMusic.Shells.Groove
 {
@@ -92,7 +86,7 @@ namespace StrixMusic.Shells.Groove
 
             Guard.IsNotNull(DataRoot, nameof(DataRoot));
 
-            DataRoot.Notifications.IsHandled = true;
+            Notifications.IsHandled = true;
             NavigationTracker.Instance.Initialize();
         }
 
@@ -110,13 +104,13 @@ namespace StrixMusic.Shells.Groove
 
             PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel
             {
-                PlaylistCollection = DataRoot.Library
+                PlaylistCollection = (LibraryViewModel)DataRoot.Library
             };
 
             if (DataRoot?.Library != null)
             {
                 Bindings.Update();
-                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(DataRoot.Library));
+                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)DataRoot.Library));
             }
         }
 
@@ -182,11 +176,11 @@ namespace StrixMusic.Shells.Groove
                 {
                     case "MyMusic":
                         Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
-                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(DataRoot.Library));
+                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)DataRoot.Library));
                         break;
                     case "Playlists":
                         Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
-                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage(DataRoot.Library));
+                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage((LibraryViewModel)DataRoot.Library));
                         break;
                 }
             }

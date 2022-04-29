@@ -39,10 +39,9 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <controls:StrixIcon x:Name="StrixIcon" Grid.Row="1" Height="315" MaxWidth="612"
+        <controls:StrixIcon x:Name="PART_StrixIcon" Grid.Row="1" Height="315" MaxWidth="612"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ShowText="True" PlayIntro="True" IsAnimated="True"
-                            AnimationFinished="StrixIconAnimation_Finished"/>
+                            ShowText="True" PlayIntro="True" IsAnimated="True"/>
 
         <StackPanel Grid.Row="2" VerticalAlignment="Top">
 
@@ -51,7 +50,7 @@
                 <TextBlock x:Name="PART_Status" Text="Starting up..." FontSize="20" Foreground="White" />
             </StackPanel>
 
-            <GridView ItemsSource="{x:Bind ViewModel.Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <GridView ItemsSource="{x:Bind Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:CoreViewModel">
                         <StackPanel Spacing="8" Width="75">

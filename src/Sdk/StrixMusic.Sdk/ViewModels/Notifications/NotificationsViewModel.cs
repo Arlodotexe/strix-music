@@ -15,7 +15,7 @@ using StrixMusic.Sdk.Services;
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// Manages the notifications coming from the <see cref="INotificationService"/>.
+    /// Manages the notifications coming from an instance of <see cref="INotificationService"/>.
     /// </summary>
     [Bindable(true)]
     public sealed class NotificationsViewModel : ObservableObject, IDisposable
@@ -39,7 +39,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         /// <summary>
         /// The currently display notifications.
         /// </summary>
-        public ObservableCollection<NotificationViewModel> Notifications { get; set; } = new ObservableCollection<NotificationViewModel>();
+        public ObservableCollection<NotificationViewModel> Notifications { get; set; } = new();
 
         /// <summary>
         /// Gets or sets whether or not notifications are handled and shouldn't be displayed.

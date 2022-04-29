@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of <see cref="SearchViewModel"/>.
         /// </summary>
         /// <param name="search">The model to wrap around.</param>
-        internal SearchViewModel(ISearch search)
+        public SearchViewModel(ISearch search)
         {
             _search = search;
 

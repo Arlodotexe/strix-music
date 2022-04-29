@@ -8,6 +8,8 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Notifications;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Shells
 {
@@ -44,21 +46,36 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         }
 
         /// <summary>
-        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// A ViewModel wrapper for all merged core data.
         /// </summary>
-        public MainViewModel? DataRoot
+        public StrixDataRootViewModel? DataRoot
         {
-            get { return (MainViewModel)GetValue(DataRootProperty); }
-            set { SetValue(DataRootProperty, value); }
+            get => (StrixDataRootViewModel)GetValue(DataRootProperty);
+            set => SetValue(DataRootProperty, value);
         }
 
         /// <summary>
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(Shell), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(Shell), new PropertyMetadata(null));
 
-        private void ShellControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        /// <summary>
+        /// A ViewModel for notifications displayed to the user.
+        /// </summary>
+        public NotificationsViewModel Notifications
+        {
+            get => (NotificationsViewModel)GetValue(NotificationsProperty);
+            set => SetValue(NotificationsProperty, value);
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="Notifications"/>.
+        /// </summary>
+        public static readonly DependencyProperty NotificationsProperty =
+            DependencyProperty.Register(nameof(Notifications), typeof(NotificationsViewModel), typeof(Shell), new PropertyMetadata(null));
+
+        private void ShellControl_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= ShellControl_Loaded;
             SetupTitleBar();

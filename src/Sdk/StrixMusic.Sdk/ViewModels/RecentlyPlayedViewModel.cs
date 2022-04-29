@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="RecentlyPlayedViewModel"/> class.
         /// </summary>
         /// <param name="recentlyPlayed">The <see cref="IRecentlyPlayed"/> to wrap.</param>
-        internal RecentlyPlayedViewModel(IRecentlyPlayed recentlyPlayed)
+        public RecentlyPlayedViewModel(IRecentlyPlayed recentlyPlayed)
             : base(recentlyPlayed)
         {
             _recentlyPlayed = recentlyPlayed;

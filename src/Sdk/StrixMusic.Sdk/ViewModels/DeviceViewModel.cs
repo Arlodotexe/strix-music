@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
         /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
-        internal DeviceViewModel(IDevice device)
+        public DeviceViewModel(IDevice device)
         {
             _syncContext = SynchronizationContext.Current;
 

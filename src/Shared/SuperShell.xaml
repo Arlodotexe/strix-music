@@ -60,8 +60,6 @@
 			<visibilityConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
 			<visibilityConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
 			<visibilityConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-
-
 		</ResourceDictionary>
 	</UserControl.Resources>
 
@@ -97,18 +95,18 @@
 		<controls:StrixIcon x:Name="StrixLogo" ShowText="True" MaxHeight="96" MaxWidth="288" Margin="0,12,0,8"/>
 
 		<!-- Will be replaced with NavigationView eventually -->
-		<Pivot x:Name="MainPivot" Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}" MinHeight="0">
+		<Pivot x:Name="MainPivot" Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind SelectedTabIndex, Mode=TwoWay}" MinHeight="0">
 			<PivotItem x:Uid="/SuperShell/AppSkinPVI" Header="Skins" Padding="30,20">
-				<ContentControl ContentTemplate="{StaticResource DefaultShellSelector}" DataContext="{x:Bind ViewModel.ShellSelectorViewModel}"
+				<ContentControl ContentTemplate="{StaticResource DefaultShellSelector}" DataContext="{x:Bind ShellSelectorViewModel}"
                                 VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 			</PivotItem>
 			<PivotItem x:Uid="/SuperShell/ServicesPVI" Header="Services">
 				<ScrollViewer>
 					<Grid HorizontalAlignment="Center">
 						<!-- TODO A bit messy, clean up or use a better approach -->
-						<Grid x:Name="ExistingOrNewCoreGrid" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}">
-							<GridView ItemTemplateSelector="{StaticResource ServicesItemTemplateSelector}" ItemsSource="{x:Bind ViewModel.Services}" SelectionMode="None"
-                                      Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+						<Grid x:Name="ExistingOrNewCoreGrid" Visibility="{x:Bind CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}">
+							<GridView ItemTemplateSelector="{StaticResource ServicesItemTemplateSelector}" ItemsSource="{x:Bind Services}" SelectionMode="None"
+                                      Visibility="{x:Bind IsShowingAddNew, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
                                       Padding="20,30">
 								<GridView.ItemContainerStyle>
 									<Style TargetType="FrameworkElement">
@@ -117,9 +115,9 @@
 								</GridView.ItemContainerStyle>
 							</GridView>
 
-							<StackPanel Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay}" Padding="20,30">
+							<StackPanel Visibility="{x:Bind IsShowingAddNew, Mode=OneWay}" Padding="20,30">
 
-								<GridView ItemsSource="{x:Bind ViewModel.AvailableServices}" ItemTemplate="{StaticResource NewCoreItemTemplate}"
+								<GridView ItemsSource="{x:Bind AvailableServices}" ItemTemplate="{StaticResource NewCoreItemTemplate}"
                                           HorizontalAlignment="Center"
                                           SelectionMode="None">
 									<GridView.ItemContainerStyle>
@@ -130,7 +128,7 @@
 								</GridView>
 
 								<StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Spacing="10">
-									<Button Command="{x:Bind ViewModel.CancelAddNewCommand}" HorizontalAlignment="Left" Opacity="0.7"
+									<Button Command="{x:Bind CancelAddNewCommand}" HorizontalAlignment="Left" Opacity="0.7"
                                             Background="Transparent" BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2" Width="38" Padding="8">
 										<Button.Content>
 											<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" FontSize="16"/>
@@ -142,9 +140,9 @@
 							</StackPanel>
 						</Grid>
 
-						<StackPanel Spacing="0" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}">
+						<StackPanel Spacing="0" Visibility="{x:Bind CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}">
 							<!--<StackPanel Orientation="Horizontal" Spacing="15">
-                                <Button HorizontalAlignment="Left" Command="{x:Bind ViewModel.CancelConfigCoreCommand}">
+                                <Button HorizontalAlignment="Left" Command="{x:Bind CancelConfigCoreCommand}">
                                     <Button.Content>
                                         <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" />
                                     </Button.Content>
@@ -152,17 +150,17 @@
 
                                 <Image Height="35" Width="35">
                                     <Image.Source>
-                                        <SvgImageSource UriSource="{x:Bind ViewModel.CurrentCoreConfig.LogoSvgUrl, Mode=OneWay}" />
+                                        <SvgImageSource UriSource="{x:Bind CurrentCoreConfig.LogoSvgUrl, Mode=OneWay}" />
                                     </Image.Source>
                                 </Image>
 
                                 <TextBlock FontSize="18" VerticalAlignment="Center">
                                     <Run Text="Configure" />
-                                    <Run Text="{x:Bind ViewModel.CurrentCoreConfig.Name, Mode=OneWay}" />
+                                    <Run Text="{x:Bind CurrentCoreConfig.Name, Mode=OneWay}" />
                                 </TextBlock>
                             </StackPanel>-->
 
-							<auic:AbstractUICollectionPresenter ViewModel="{x:Bind ViewModel.CurrentCoreConfig.AbstractConfigPanel, Mode=OneWay}" />
+							<auic:AbstractUICollectionPresenter ViewModel="{x:Bind CurrentCoreConfig.AbstractConfigPanel, Mode=OneWay}" />
 						</StackPanel>
 					</Grid>
 				</ScrollViewer>
@@ -177,7 +175,7 @@
 						<StackPanel Margin="0,12" HorizontalAlignment="Center" Spacing="20" Grid.Row="0">
 							<TextBlock FontSize="16" HorizontalAlignment="Center">
                                 <Run Text="Strix Music Version:" FontWeight="SemiBold"/>
-                                <Run Text="{x:Bind ViewModel.AppVersion}" FontWeight="SemiLight"/>
+                                <Run Text="{x:Bind AppVersion}" FontWeight="SemiLight"/>
 							</TextBlock>
 
 							<TextBlock Text="Thank you for supporting the prerelease of Strix Music v2."/>
@@ -219,7 +217,7 @@
 			</PivotItem>
 			<PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
 				<StackPanel Spacing="15" HorizontalAlignment="Center" Padding="0,0,0,10">
-					<auic:AbstractUICollectionPresenter ViewModel="{x:Bind ViewModel.AdvancedSettings}" />
+					<auic:AbstractUICollectionPresenter ViewModel="{x:Bind AdvancedSettings}" />
 				</StackPanel>
 			</PivotItem>
 		</Pivot>

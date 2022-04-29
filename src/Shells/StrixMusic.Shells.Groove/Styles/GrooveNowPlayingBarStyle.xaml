@@ -14,97 +14,92 @@
     xmlns:colorconvert="using:OwlCore.WinUI.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.GrooveNowPlayingBarStyle">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/NowPlaying/MediaSliderStyle.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-    
-    <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter"/>
-    <colorconvert:NullableBackupColorConverter x:Key="NullableBackupColorConverter" BackupColor="{ThemeResource SystemAccentColorDark3}"/>
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/NowPlaying/MediaSliderStyle.xaml" />
+	</ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="GrooveNowPlayingBarDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
-        <UserControl>
-            <Grid VerticalAlignment="Center" Height="96">
-                <Grid.Background>
-                    <AcrylicBrush TintColor="{ThemeResource SystemAccentColorDark3}"
+	<convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter"/>
+	<colorconvert:NullableBackupColorConverter x:Key="NullableBackupColorConverter" BackupColor="{ThemeResource SystemAccentColorDark3}"/>
+
+	<Style x:Key="GrooveNowPlayingBarStyle" TargetType="controls:GrooveNowPlayingBar">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="controls:GrooveNowPlayingBar">
+						<UserControl>
+							<Grid VerticalAlignment="Center" Height="96">
+								<Grid.Background>
+									<AcrylicBrush TintColor="{ThemeResource SystemAccentColorDark3}"
                                   TintOpacity=".7" BackgroundSource="Backdrop"/>
-                    <!--<AcrylicBrush TintColor="{x:Bind BackgroundColor, Converter={StaticResource NullableBackupColorConverter}, Mode=OneWay}"
+									<!--<AcrylicBrush TintColor="{x:Bind BackgroundColor, Converter={StaticResource NullableBackupColorConverter}, Mode=OneWay}"
                                   TintOpacity=".7" BackgroundSource="Backdrop"/>-->
-                </Grid.Background>
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="Sizes">
-                        <VisualState x:Name="Large">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="600"/>
-                            </VisualState.StateTriggers>
-                        </VisualState>
-                        <VisualState x:Name="Small">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
-                                <Setter Target="sliderRow.Height" Value="26"/>
-                                <Setter Target="slider.(Grid.Column)" Value="0"/>
-                                <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
-                                <Setter Target="sliderColumn.Width" Value="0"/>
-                                <!--Fix removing album-->
-                                <!--<Setter Target="mediaInfo.(nowplaying:MediaInfo.IsAlbumVisible)" Value="False"/>-->
-                                <Setter Target="NowPlayingButton.(Grid.RowSpan)" Value="1"/>
-                                <Setter Target="MediaTransports.(Grid.Column)" Value="2"/>
-                                <Setter Target="MediaTransports.HorizontalAlignment" Value="Right"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
+								</Grid.Background>
+								<VisualStateManager.VisualStateGroups>
+									<VisualStateGroup x:Name="Sizes">
+										<VisualState x:Name="Large">
+											<VisualState.StateTriggers>
+												<AdaptiveTrigger MinWindowWidth="600"/>
+											</VisualState.StateTriggers>
+										</VisualState>
+										<VisualState x:Name="Small">
+											<VisualState.StateTriggers>
+												<AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+											</VisualState.StateTriggers>
+											<VisualState.Setters>
+												<!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
+												<Setter Target="sliderRow.Height" Value="26"/>
+												<Setter Target="slider.(Grid.Column)" Value="0"/>
+												<Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
+												<Setter Target="sliderColumn.Width" Value="0"/>
+												<!--Fix removing album-->
+												<!--<Setter Target="mediaInfo.(nowplaying:MediaInfo.IsAlbumVisible)" Value="False"/>-->
+												<Setter Target="NowPlayingButton.(Grid.RowSpan)" Value="1"/>
+												<Setter Target="MediaTransports.(Grid.Column)" Value="2"/>
+												<Setter Target="MediaTransports.HorizontalAlignment" Value="Right"/>
+											</VisualState.Setters>
+										</VisualState>
+									</VisualStateGroup>
+								</VisualStateManager.VisualStateGroups>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition x:Name="sliderRow" Height="36"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition x:Name="sliderColumn"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition/>
+									<RowDefinition x:Name="sliderRow" Height="36"/>
+								</Grid.RowDefinitions>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition x:Name="sliderColumn"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
 
-                <!--Media info-->
-                <Button x:Name="NowPlayingButton" MinWidth="300" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
+								<!--Media info-->
+								<Button x:Name="NowPlayingButton" MinWidth="300" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
                                         BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
-                    <nowplaying:MediaInfo x:Name="mediaInfo" Device="{Binding ActiveDevice}"/>
-                </Button>
+									<nowplaying:MediaInfo x:Name="mediaInfo" Device="{TemplateBinding ActiveDevice}"/>
+								</Button>
 
-                <!--Media transport controls-->
-                <nowplaying:MediaTransports x:Name="MediaTransports" Device="{Binding ActiveDevice}" Grid.Column="1" HorizontalAlignment="Center"/>
+								<!--Media transport controls-->
+								<nowplaying:MediaTransports x:Name="MediaTransports" Device="{TemplateBinding ActiveDevice}" Grid.Column="1" HorizontalAlignment="Center"/>
 
-                <!--Media slider control-->
-                <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                        IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
-                                        Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
+								<!--Media slider control-->
+								<nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
+                                        IsAdvancing="{Binding ActiveDevice.IsPlaying, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Value="{Binding ActiveDevice.Position.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Maximum="{Binding ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
+									<interactivity:Interaction.Behaviors>
+										<core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+											<core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                       CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </nowplaying:MediaSlider>
-            </Grid>
-        </UserControl>
-    </DataTemplate>
+										</core:EventTriggerBehavior>
+									</interactivity:Interaction.Behaviors>
+								</nowplaying:MediaSlider>
+							</Grid>
+						</UserControl>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
 
-    <Style x:Key="GrooveNowPlayingBarStyle" TargetType="controls:GrooveNowPlayingBar">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="controls:GrooveNowPlayingBar">
-                        <ContentControl ContentTemplate="{StaticResource GrooveNowPlayingBarDataTemplate}"
-                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
-
-    <Style BasedOn="{StaticResource GrooveNowPlayingBarStyle}" TargetType="controls:GrooveNowPlayingBar"/>
+	<Style BasedOn="{StaticResource GrooveNowPlayingBarStyle}" TargetType="controls:GrooveNowPlayingBar"/>
 
 </ResourceDictionary>

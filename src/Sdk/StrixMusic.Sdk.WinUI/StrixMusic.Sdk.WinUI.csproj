@@ -30,6 +30,13 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Services\MediaPlayback\**" />
+    <EmbeddedResource Remove="Services\MediaPlayback\**" />
+    <None Remove="Services\MediaPlayback\**" />
+    <Page Remove="Services\MediaPlayback\**" />
+    <UpToDateCheckInput Remove="Services\MediaPlayback\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="DefaultShell.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -142,8 +149,5 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.10" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.0" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\MediaPlayback\" />
   </ItemGroup>
 </Project>

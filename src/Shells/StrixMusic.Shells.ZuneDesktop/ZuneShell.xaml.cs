@@ -31,16 +31,23 @@ namespace StrixMusic.Shells.ZuneDesktop
     {
         private readonly IFolderData _settingStorage;
         private INavigationService<Control>? _navigationService;
+        private readonly ZuneDesktopSettings _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell(IFolderData settingStorage)
+        public ZuneShell(IFolderData settingStorage, NotificationService notificationService)
         {
             this.InitializeComponent();
 
             Loaded += ZuneShell_Loaded;
+            Unloaded += OnUnloaded;
             _settingStorage = settingStorage;
+
+            _settings = new ZuneDesktopSettings(_settingStorage);
+
+            notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
         }
 
         /// <summary>
@@ -57,12 +64,8 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
             SetupNavigationService(_navigationService);
-            SetupNotificationService();
 
-            var settings = new ZuneDesktopSettings(_settingStorage);
-            settings.PropertyChanged += SettingsService_SettingChanged;
-
-            services.AddSingleton(settings);
+            services.AddSingleton(_settings);
 
             return base.InitServices(services);
         }
@@ -75,20 +78,19 @@ namespace StrixMusic.Shells.ZuneDesktop
             return navigationService;
         }
 
-        private void SetupNotificationService()
-        {
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-
-            notificationService.Cast<NotificationService>().ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
-            notificationService.Cast<NotificationService>().ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
-        }
-
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= ZuneShell_Loaded;
+            _settings.PropertyChanged += SettingsService_SettingChanged;
 
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
             _ = SetupBackgroundImage();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= OnUnloaded;
+            _settings.PropertyChanged -= SettingsService_SettingChanged;
         }
 
         private async Task SetupBackgroundImage()

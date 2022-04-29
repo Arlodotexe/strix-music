@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
         /// </summary>
         /// <param name="album"><inheritdoc cref="IAlbum"/></param>
-        internal AlbumViewModel(IAlbum album)
+        public AlbumViewModel(IAlbum album)
         {
             _syncContext = SynchronizationContext.Current;
 

@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
     public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup, IMergedMutable<TCoreBase>
-        where TCoreBase : class, ICorePlayableCollectionGroup
+        where TCoreBase : class, ICorePlayableCollectionGroup, IAsyncDisposable
     {
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionMap;
         private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistCollectionMap;
@@ -859,7 +859,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 await _imageCollectionMap.DisposeAsync();
                 await _urlCollectionMap.DisposeAsync();
 
-                await Sources.InParallel(x => x.Cast<ICorePlayableCollectionGroup>().DisposeAsync().AsTask());
+                await Sources.InParallel(x => x.DisposeAsync().AsTask());
 
                 _isDisposed = true;
             }

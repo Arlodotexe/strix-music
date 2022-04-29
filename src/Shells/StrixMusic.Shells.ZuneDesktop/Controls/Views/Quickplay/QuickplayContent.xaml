@@ -526,7 +526,7 @@
                       VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="1">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind DataRoot.Library.InitAlbumCollectionAsyncCommand}" />
+                    <core:InvokeCommandAction Command="{Binding DataRoot.Library.InitAlbumCollectionAsyncCommand}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
 

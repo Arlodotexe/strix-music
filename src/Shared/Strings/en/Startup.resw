@@ -120,9 +120,6 @@
   <data name="CreatingCores" xml:space="preserve">
     <value>Creating core instances</value>
   </data>
-  <data name="ErrSettingsInit" xml:space="preserve">
-    <value>Fatal internal error: Settings service wasn't initialized.</value>
-  </data>
   <data name="InitCoreReg" xml:space="preserve">
     <value>Initializing core registry</value>
   </data>
@@ -135,16 +132,10 @@
   <data name="InitServices" xml:space="preserve">
     <value>Initializing services</value>
   </data>
-  <data name="SetupMedia" xml:space="preserve">
-    <value>Setting up media players</value>
-  </data>
   <data name="StrixMusicMusicTB.Text" xml:space="preserve">
     <value>Music</value>
   </data>
   <data name="StrixMusicStrixTB.Text" xml:space="preserve">
     <value>Strix</value>
-  </data>
-  <data name="SetupPlugins" xml:space="preserve">
-    <value>Setting up plugins</value>
   </data>
 </root>

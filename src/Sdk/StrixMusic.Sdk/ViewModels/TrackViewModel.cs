@@ -40,7 +40,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of <see cref="TrackViewModel"/>.
         /// </summary>
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
-        internal TrackViewModel(ITrack track)
+        public TrackViewModel(ITrack track)
         {
             _syncContext = SynchronizationContext.Current;
 

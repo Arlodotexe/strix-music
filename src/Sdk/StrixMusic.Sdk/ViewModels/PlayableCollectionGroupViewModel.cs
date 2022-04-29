@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
-        internal PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
+        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
         {
             _syncContext = SynchronizationContext.Current;
 

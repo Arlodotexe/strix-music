@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.WinUI.Controls;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Helpers;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Helpers;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Sdk.WinUI.Services.Localization;
+using Windows.ApplicationModel.Resources;
+using StrixMusic.Services;
+using StrixMusic.Services.CoreManagement;
 
 namespace StrixMusic.Shared
 {
@@ -24,33 +25,13 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppFrame : UserControl
     {
-        private NotificationService? _notificationService;
         private SuperShell? _superShell;
 
         /// <summary>
-        /// The Window handle this AppFrame was created on.
+        /// The backing dependency property for <see cref="Notifications" />.
         /// </summary>
-        public Window Window { get; } = Window.Current;
-
-        /// <summary>
-        /// The root view model used throughout the app.
-        /// </summary>
-        public MainViewModel? ViewModel
-        {
-            get => (MainViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
-        }
-
-        /// <summary>
-        /// The backing dependency property for <see cref="ViewModel" />.
-        /// </summary>
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(MainViewModel), typeof(AppFrame), new PropertyMetadata(null));
-
-        /// <summary>
-        /// The content overlay used as a popup dialog for the entire app.
-        /// </summary>
-        public ContentOverlay? ContentOverlay { get; private set; }
+        public static readonly DependencyProperty NotificationsProperty =
+            DependencyProperty.Register(nameof(Notifications), typeof(NotificationsViewModel), typeof(AppFrame), new PropertyMetadata(null));
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -60,59 +41,62 @@ namespace StrixMusic.Shared
             InitializeComponent();
 
             Guard.IsNotNull(SynchronizationContext.Current, nameof(SynchronizationContext.Current));
-
             Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
-            Threading.SetPrimaryThreadInvokeHandler(a => Window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
 
-            SetupPlatformHelper();
+            var window = Window.Current;
+            Threading.SetPrimaryThreadInvokeHandler(a => window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
+
+            NotificationService = new NotificationService();
+            Notifications = new NotificationsViewModel(NotificationService);
+            LocalizationService = new()
+            {
+                Startup = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Startup)),
+                SuperShell = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.SuperShell)),
+                Common = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Common)),
+                Time = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Time)),
+                Music = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Music)),
+                Quips = ResourceLoader.GetForCurrentView(nameof(LocalizationResourceLoader.Quips)),
+            };
 
             AttachEvents();
-        }
-
-        private static void SetupPlatformHelper()
-        {
-#if __WASM__
-            var currentPlatform = Platform.WASM;
-#elif __ANDROID__
-            var currentPlatform = Platform.Droid;
-#elif WINDOWS_UWP
-            var currentPlatform = Platform.UWP;
-#endif
-            PlatformHelper.Current = currentPlatform;
+            AttachEvents(NotificationService);
         }
 
         /// <summary>
-        /// Setup handling of any app-level content that requires an instance of a <see cref="MainViewModel"/>..
+        /// A ViewModel for notifications displayed to the user.
         /// </summary>
-        public void SetupMainViewModel(MainViewModel mainViewModel)
+        public NotificationsViewModel Notifications
         {
-            ViewModel = mainViewModel;
-
-            AttachEvents(mainViewModel);
+            get => (NotificationsViewModel)GetValue(NotificationsProperty);
+            set => SetValue(NotificationsProperty, value);
         }
 
         /// <summary>
-        /// Setup handling of any app-level content that requires an instance of a <see cref="NotificationService"/>.
+        /// The content overlay used as a popup dialog for the entire app.
         /// </summary>
-        /// <param name="notificationService"></param>
-        public void SetupNotificationService(NotificationService notificationService)
-        {
-            _notificationService = notificationService;
-            AttachEvents(notificationService);
-        }
+        public ContentOverlay? ContentOverlay { get; private set; }
+
+        /// <summary>
+        /// A service that facilitates raising notifications.
+        /// </summary>
+        public NotificationService NotificationService { get; }
+
+        /// <summary>
+        ///  A service for getting localized strings from <see cref="ResourceLoader"/> providers.
+        /// </summary>
+        public LocalizationResourceLoader LocalizationService { get; }
 
         /// <summary>
         /// Navigates top the primary app content to the given <paramref name="element" />.
         /// </summary>
         /// <param name="element"></param>
-        public void NavigateTo(FrameworkElement element)
+        public void Present(FrameworkElement element)
         {
             PART_ContentPresenter.Content = element;
         }
 
         private void AttachEvents()
         {
-            CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
             Loaded += AppFrame_Loaded;
             Unloaded += AppFrame_Unloaded;
         }
@@ -135,76 +119,43 @@ namespace StrixMusic.Shared
             notificationService.NotificationAlignmentChanged -= NotificationService_NotificationAlignmentChanged;
         }
 
-        private void AttachEvents(MainViewModel mainViewModel)
-        {
-            mainViewModel.Cores.CollectionChanged += Cores_CollectionChanged;
-        }
-
-        private void DetachEvents(MainViewModel mainViewModel)
-        {
-            mainViewModel.Cores.CollectionChanged -= Cores_CollectionChanged;
-        }
-
         private void DetachEvents()
         {
             Unloaded -= AppFrame_Unloaded;
-            CurrentWindow.NavigationService.NavigationRequested -= NavServiceOnNavigationRequested;
 
-            if (DataContext is MainViewModel mainViewModel)
-                DetachEvents(mainViewModel);
-
-            if (!(_notificationService is null))
-                DetachEvents(_notificationService);
+            if (!(NotificationService is null))
+                DetachEvents(NotificationService);
         }
 
         /// <summary>
-        /// For displaying the UI for a <see cref="CoreState.NeedsConfiguration"/> core state.
+        /// Displays the AbstractUI panel for the given core.
         /// </summary>
-        private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        public void DisplayAbstractUIPanel(ICore core, AppSettings appSettings, IReadOnlyList<ICore> loadedCores, ICoreManagementService coreManagementService)
         {
-            if (!(e.NewItems is null))
+            _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in e.NewItems)
-                {
-                    if (!(item is ICore core))
-                        continue;
+                _superShell ??= new SuperShell(appSettings, coreManagementService);
+                _superShell.LoadedCores = loadedCores;
 
-                    core.CoreStateChanged += Core_CoreStateChanged;
-                }
-            }
+                _superShell.CurrentCoreConfig = new CoreViewModel(core);
+                _superShell.SelectedTabIndex = 1;
 
-            if (!(e.OldItems is null))
-            {
-                foreach (var item in e.OldItems)
-                {
-                    if (!(item is ICore core))
-                        continue;
-
-                    core.CoreStateChanged -= Core_CoreStateChanged;
-                }
-            }
+                OverlayPresenter.Show(_superShell, LocalizationService.Common?.GetString("Settings") ?? string.Empty);
+            });
         }
 
-        private async void Core_CoreStateChanged(object? sender, CoreState e)
+        /// <summary>
+        /// Opens the SuperShell.
+        /// </summary>
+        public void DisplaySuperShell(AppSettings appSettings, IReadOnlyList<ICore> loadedCores, ICoreManagementService coreManagementService)
         {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
-            if (!(sender is ICore core))
-                return;
-
-            if (e == CoreState.NeedsConfiguration)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                await Threading.OnPrimaryThread(() =>
-                {
-                    _superShell ??= new SuperShell();
+                _superShell ??= new SuperShell(appSettings, coreManagementService);
+                _superShell.LoadedCores = loadedCores;
 
-                    var relevantVm = Ioc.Default.GetRequiredService<MainViewModel>().Cores.First(x => x.InstanceId == core.InstanceId);
-                    _superShell.ViewModel.CurrentCoreConfig = relevantVm;
-                    _superShell.ViewModel.SelectedTabIndex = 1;
-
-                    OverlayPresenter.Show(_superShell, localizationService.Common?.GetString("Settings") ?? string.Empty);
-                });
-            }
+                OverlayPresenter.Show(_superShell, LocalizationService.Common?.GetString("Settings") ?? string.Empty);
+            });
         }
 
         private void NotificationService_NotificationMarginChanged(object? sender, Thickness e)
@@ -220,36 +171,6 @@ namespace StrixMusic.Shared
 
         private void AppFrame_Unloaded(object? sender, RoutedEventArgs e) => DetachEvents();
 
-        private void AppFrame_OnLoaded(object? sender, RoutedEventArgs e)
-        {
-            NavigateTo(new AppLoadingView());
-        }
-
-        private void NavServiceOnNavigationRequested(object? sender, NavigateEventArgs<Control> e)
-        {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
-            switch (e.Page)
-            {
-                case SuperShell superShell:
-                    {
-                        _superShell = superShell;
-                        if (e.IsOverlay)
-                            OverlayPresenter.Show(_superShell, localizationService.Common?.GetString("Settings") ?? string.Empty);
-                        else
-                            PART_ContentPresenter.Content = superShell;
-                        break;
-                    }
-
-                case MainPage mainPage:
-                    {
-                        PART_ContentPresenter.Content = mainPage;
-                        break;
-                    }
-
-                default:
-                    return;
-            }
-        }
+        private void AppFrame_OnLoaded(object? sender, RoutedEventArgs e) => Present(new AppLoadingView());
     }
 }

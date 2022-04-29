@@ -9,9 +9,7 @@ using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.WinUI.Services.NotificationService
 {
-    /// <summary>
-    /// A Service for handling notifications between the Cores and Shell.
-    /// </summary>
+     /// <inheritdoc />
     public sealed class NotificationService : INotificationService
     {
         private readonly List<Notification> _pendingNotifications;

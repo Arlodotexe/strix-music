@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        internal UserProfileViewModel(IUserProfile userProfile)
+        public UserProfileViewModel(IUserProfile userProfile)
         {
             _syncContext = SynchronizationContext.Current;
 

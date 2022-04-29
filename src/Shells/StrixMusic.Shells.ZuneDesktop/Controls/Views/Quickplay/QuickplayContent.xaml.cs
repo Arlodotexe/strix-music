@@ -2,6 +2,7 @@
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 {
@@ -21,11 +22,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         }
 
         /// <summary>
-        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// The root <see cref="StrixDataRootViewModel" /> used by the shell.
         /// </summary>
-        public MainViewModel DataRoot
+        public StrixDataRootViewModel DataRoot
         {
-            get { return (MainViewModel)GetValue(DataRootProperty); }
+            get { return (StrixDataRootViewModel)GetValue(DataRootProperty); }
             set { SetValue(DataRootProperty, value); }
         }
 
@@ -33,7 +34,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
 
         /// <summary>
         /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.

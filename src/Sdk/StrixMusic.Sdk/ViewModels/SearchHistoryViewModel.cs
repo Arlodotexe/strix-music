@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="RecentlyPlayedViewModel"/> class.
         /// </summary>
         /// <param name="searchHistory">The <see cref="ISearchHistory"/> to wrap.</param>
-        internal SearchHistoryViewModel(ISearchHistory searchHistory)
+        public SearchHistoryViewModel(ISearchHistory searchHistory)
             : base(searchHistory)
         {
             _searchHistory = searchHistory;

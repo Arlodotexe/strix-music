@@ -40,7 +40,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
         /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
-        internal PlaylistViewModel(IPlaylist playlist)
+        public PlaylistViewModel(IPlaylist playlist)
         {
             _syncContext = SynchronizationContext.Current;
 

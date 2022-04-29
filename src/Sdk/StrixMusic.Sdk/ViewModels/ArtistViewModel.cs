@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="ArtistViewModel"/> class.
         /// </summary>
         /// <param name="artist">The <see cref="IArtist"/> to wrap.</param>
-        internal ArtistViewModel(IArtist artist)
+        public ArtistViewModel(IArtist artist)
         {
             _syncContext = SynchronizationContext.Current;
 
