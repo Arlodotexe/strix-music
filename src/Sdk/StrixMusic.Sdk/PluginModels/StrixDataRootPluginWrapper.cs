@@ -20,6 +20,7 @@ namespace StrixMusic.Sdk.PluginModels
     public class StrixDataRootPluginWrapper : IStrixDataRoot, IPluginWrapper
     {
         private readonly IStrixDataRoot _strixDataRoot;
+        private readonly SdkModelPlugin[] _plugins;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StrixDataRootPluginWrapper"/> class.
@@ -48,6 +49,7 @@ namespace StrixMusic.Sdk.PluginModels
                 RecentlyPlayed = new RecentlyPlayedPluginWrapper(strixDataRoot.RecentlyPlayed, plugins);
 
             _strixDataRoot = strixDataRoot;
+            _plugins = plugins;
             AttachEvents(_strixDataRoot);
         }
 
@@ -55,12 +57,46 @@ namespace StrixMusic.Sdk.PluginModels
         {
             strixDataRoot.SourcesChanged += OnSourcesChanged;
             strixDataRoot.DevicesChanged += OnDevicesChanged;
+            strixDataRoot.DevicesChanged += OnDevicesChanged;
+            strixDataRoot.PinsChanged += OnPinsChanged;
+            strixDataRoot.RecentlyPlayedChanged += OnRecentlyPlayedChanged;
+            strixDataRoot.DiscoverablesChanged += OnDiscoverablesChanged;
+            strixDataRoot.SearchChanged += OnSearchChanged;
         }
 
         private void DetachEvents(IStrixDataRoot strixDataRoot)
         {
             strixDataRoot.SourcesChanged -= OnSourcesChanged;
             strixDataRoot.DevicesChanged -= OnDevicesChanged;
+            strixDataRoot.DevicesChanged -= OnDevicesChanged;
+            strixDataRoot.PinsChanged -= OnPinsChanged;
+            strixDataRoot.RecentlyPlayedChanged -= OnRecentlyPlayedChanged;
+            strixDataRoot.DiscoverablesChanged -= OnDiscoverablesChanged;
+            strixDataRoot.SearchChanged -= OnSearchChanged;
+        }
+
+        private void OnDiscoverablesChanged(object sender, IDiscoverables e)
+        {
+            Discoverables = new DiscoverablesPluginWrapper(e, _plugins);
+            DiscoverablesChanged?.Invoke(this, Discoverables);
+        }
+
+        private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
+        {
+            RecentlyPlayed = new RecentlyPlayedPluginWrapper(e, _plugins);
+            RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
+        }
+
+        private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
+        {
+            Pins = new PlayableCollectionGroupPluginWrapper(e, _plugins);
+            PinsChanged?.Invoke(this, Pins);
+        }
+
+        private void OnSearchChanged(object sender, ISearch e)
+        {
+            Search = new SearchPluginWrapper(e, _plugins);
+            SearchChanged?.Invoke(this, Search);
         }
         
         private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
@@ -69,12 +105,24 @@ namespace StrixMusic.Sdk.PluginModels
 
         /// <inheritdoc/>
         public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
-
-        /// <inheritdoc/>
-        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
         
         /// <inheritdoc cref="IMerged.SourcesChanged"/>
         public event EventHandler? SourcesChanged;
+
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<IPlayableCollectionGroup>? PinsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<IDiscoverables>? DiscoverablesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<ISearch>? SearchChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
 
         /// <inheritdoc/>
         public MergedCollectionConfig MergeConfig => _strixDataRoot.MergeConfig;
@@ -86,16 +134,16 @@ namespace StrixMusic.Sdk.PluginModels
         public ILibrary Library { get; }
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? Pins { get; }
+        public IPlayableCollectionGroup? Pins  { get; private set; }
 
         /// <inheritdoc/>
-        public ISearch? Search { get; }
+        public ISearch? Search  { get; private set; }
 
         /// <inheritdoc/>
-        public IRecentlyPlayed? RecentlyPlayed { get; }
+        public IRecentlyPlayed? RecentlyPlayed { get; private set; }
 
         /// <inheritdoc/>
-        public IDiscoverables? Discoverables { get; }
+        public IDiscoverables? Discoverables { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyList<ICore> Sources => _strixDataRoot.Sources;

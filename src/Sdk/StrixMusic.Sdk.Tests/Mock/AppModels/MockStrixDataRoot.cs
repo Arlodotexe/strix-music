@@ -49,6 +49,10 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
         public IRecentlyPlayed? RecentlyPlayed { get; } = new MockRecentlyPlayed();
 
         public IDiscoverables? Discoverables { get; } = new MockDiscoverables();
+        public event EventHandler<IPlayableCollectionGroup>? PinsChanged;
+        public event EventHandler<ISearch>? SearchChanged;
+        public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
+        public event EventHandler<IDiscoverables>? DiscoverablesChanged;
 
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
         public event EventHandler? SourcesChanged;

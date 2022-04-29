@@ -54,6 +54,26 @@ namespace StrixMusic.Sdk.AppModels
         public IDiscoverables? Discoverables { get; }
 
         /// <summary>
+        /// Raised when <see cref="Pins"/> is changed.
+        /// </summary>
+        public event EventHandler<IPlayableCollectionGroup>? PinsChanged;
+
+        /// <summary>
+        /// Raised when <see cref="Search"/> is changed.
+        /// </summary>
+        public event EventHandler<ISearch>? SearchChanged;
+
+        /// <summary>
+        /// Raised when <see cref="RecentlyPlayed"/> is changed.
+        /// </summary>
+        public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
+
+        /// <summary>
+        /// Raised when <see cref="Discoverables"/> is changed.
+        /// </summary>
+        public event EventHandler<IDiscoverables>? DiscoverablesChanged;
+
+        /// <summary>
         /// Raised when the contents of <see cref="Devices"/> is changed.
         /// </summary>
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;

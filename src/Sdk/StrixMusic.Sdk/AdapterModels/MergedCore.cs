@@ -25,11 +25,11 @@ namespace StrixMusic.Sdk.AdapterModels
         private readonly List<ICore> _sources;
         private readonly List<IDevice> _devices;
 
-        private readonly MergedDiscoverables _discoverables;
-        private readonly MergedPlayableCollectionGroup _pins;
-        private readonly MergedRecentlyPlayed _recentlyPlayed;
         private readonly MergedLibrary _library;
-        private readonly MergedSearch _search;
+        private MergedDiscoverables? _discoverables;
+        private MergedPlayableCollectionGroup? _pins;
+        private MergedRecentlyPlayed? _recentlyPlayed;
+        private MergedSearch? _search;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
@@ -48,10 +48,17 @@ namespace StrixMusic.Sdk.AdapterModels
 
             // These items have no notification support for changing after construction,
             // so they need to be initialized every time in case a new source is added with a non-null value.
-            _discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), config);
-            _pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), config);
-            _recentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
-            _search = new MergedSearch(_sources.Select(x => x.Search).PruneNull(), config);
+            if (_sources.Any(x => x.Discoverables != null))
+                _discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), config);
+
+            if (_sources.Any(x => x.Pins != null))
+                _pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), config);
+
+            if (_sources.Any(x => x.RecentlyPlayed != null))
+                _recentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
+
+            if (_sources.Any(x => x.Search != null))
+                _search = new MergedSearch(_sources.Select(x => x.Search).PruneNull(), config);
 
             _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new DeviceAdapter(device)));
 
@@ -74,6 +81,18 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc cref="IMerged.SourcesChanged" />
         public event EventHandler? SourcesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IPlayableCollectionGroup>? PinsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<ISearch>? SearchChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IDiscoverables>? DiscoverablesChanged;
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
@@ -128,7 +147,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
         private async Task InitCore(ICore core, CancellationToken cancellationToken)
         {
-            Begin:
+        Begin:
             var setupCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsConfiguration)
@@ -180,16 +199,56 @@ namespace StrixMusic.Sdk.AdapterModels
             _library.AddSource(itemToMerge.Library);
 
             if (itemToMerge.Discoverables is not null)
-                _discoverables.AddSource(itemToMerge.Discoverables);
+            {
+                if (_discoverables is not null)
+                {
+                    _discoverables.AddSource(itemToMerge.Discoverables);
+                }
+                else
+                {
+                    _discoverables = new MergedDiscoverables(itemToMerge.Discoverables.IntoList(), MergeConfig);
+                    DiscoverablesChanged?.Invoke(this, _discoverables);
+                }
+            }
 
             if (itemToMerge.RecentlyPlayed is not null)
-                _recentlyPlayed.AddSource(itemToMerge.RecentlyPlayed);
+            {
+                if (_recentlyPlayed is not null)
+                {
+                    _recentlyPlayed.AddSource(itemToMerge.RecentlyPlayed);
+                }
+                else
+                {
+                    _recentlyPlayed = new MergedRecentlyPlayed(itemToMerge.RecentlyPlayed.IntoList(), MergeConfig);
+                    RecentlyPlayedChanged?.Invoke(this, _recentlyPlayed);
+                }
+            }
 
             if (itemToMerge.Pins is not null)
-                _pins.AddSource(itemToMerge.Pins);
+            {
+                if (_pins is not null)
+                {
+                    _pins.AddSource(itemToMerge.Pins);
+                }
+                else
+                {
+                    _pins = new MergedPlayableCollectionGroup(itemToMerge.Pins.IntoList(), MergeConfig);
+                    PinsChanged?.Invoke(this, _pins);
+                }
+            }
 
             if (itemToMerge.Search is not null)
-                _search.AddSource(itemToMerge.Search);
+            {
+                if (_search is not null)
+                {
+                    _search.AddSource(itemToMerge.Search);
+                }
+                else
+                {
+                    _search = new MergedSearch(itemToMerge.Search.IntoList(), MergeConfig);
+                    SearchChanged?.Invoke(this, _search);
+                }
+            }
 
             _sources.Add(itemToMerge);
             AttachEvents(itemToMerge);
@@ -207,16 +266,29 @@ namespace StrixMusic.Sdk.AdapterModels
             _library.RemoveSource(itemToRemove.Library);
 
             if (itemToRemove.Discoverables is not null)
+            {
+
+                Guard.IsNotNull(_discoverables);
                 _discoverables.RemoveSource(itemToRemove.Discoverables);
+            }
 
             if (itemToRemove.RecentlyPlayed is not null)
+            {
+                Guard.IsNotNull(_recentlyPlayed);
                 _recentlyPlayed.RemoveSource(itemToRemove.RecentlyPlayed);
+            }
 
             if (itemToRemove.Pins is not null)
+            {
+                Guard.IsNotNull(_pins);
                 _pins.RemoveSource(itemToRemove.Pins);
+            }
 
             if (itemToRemove.Search is not null)
+            {
+                Guard.IsNotNull(_search);
                 _search.RemoveSource(itemToRemove.Search);
+            }
 
             _sources.Remove(itemToRemove);
             DetachEvents(itemToRemove);
