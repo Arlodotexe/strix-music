@@ -254,11 +254,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
 
         private void ImagesCollectionMap_ItemsCountChanged(object sender, int e)
         {
@@ -389,7 +385,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; } = new TimeSpan(0);

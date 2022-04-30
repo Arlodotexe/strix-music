@@ -119,11 +119,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public event EventHandler<int>? UrlsCountChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
         
         /// <inheritdoc cref="IMerged.SourcesChanged"/>
         public event EventHandler? SourcesChanged;
@@ -355,7 +351,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; }

@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
             LastPlayedChanged += CollectionGroupLastPlayedChanged;
-            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged += OnDownloadInfoChanged);
+            DownloadInfoChanged += OnDownloadInfoChanged;
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged += CollectionGroupOnTrackItemsCountChanged;
@@ -152,7 +152,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
             LastPlayedChanged -= CollectionGroupLastPlayedChanged;
-            Flow.Catch<NotSupportedException>(() => DownloadInfoChanged -= OnDownloadInfoChanged);
+            DownloadInfoChanged -= OnDownloadInfoChanged;
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
             TracksCountChanged -= CollectionGroupOnTrackItemsCountChanged;
