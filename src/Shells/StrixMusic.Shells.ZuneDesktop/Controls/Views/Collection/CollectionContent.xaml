@@ -217,11 +217,11 @@
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
                                             SelectionChanged="PlaylistSelected"/>
 
-            <collections:TrackCollection x:Name="TrackCollection" Collection="{x:Bind DataRoot.Library}"
+            <zuneCollections:ZuneTrackCollection x:Name="TrackCollection" Collection="{x:Bind DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackListControlStyle}"
                                          Margin="0,0,8,0" Grid.Column="2"/>
 
-            <collections:TrackCollection x:Name="TrackTable" Collection="{x:Bind DataRoot.Library}"
+            <zuneCollections:ZuneTrackCollection x:Name="TrackTable" Collection="{x:Bind DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
                                          Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
 
