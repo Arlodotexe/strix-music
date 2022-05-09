@@ -19,7 +19,6 @@ using StrixMusic.Cores.OneDrive;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Services;
@@ -109,7 +108,7 @@ namespace StrixMusic.Shared
             ShowQuip(localizationService); // TODO: Add debug boot mode / #741
 
             Logger.LogInformation("Setting up playback and SMTP handlers");
-            var playbackHandlerService = SetupPlaybackHandler();
+            var playbackHandlerService = new PlaybackHandlerService();
             var smtpHandler = new SystemMediaTransportControlsHandler(playbackHandlerService);
 
             Logger.LogInformation("Setting up navigation service");
@@ -127,20 +126,20 @@ namespace StrixMusic.Shared
             await fileSystemService.InitAsync();
 
             Logger.LogInformation($"Initializing {nameof(CoreManagementService)}");
-            var cores = new List<ICore>();
+            var cores = new HashSet<ICore>();
             var coreManagementService = new CoreManagementService(settings);
             await coreManagementService.InitAsync();
-            coreManagementService.CoreInstanceRegistered += PreOutOfBox_CoreInstanceRegistered;
+            coreManagementService.CoreInstanceRegistered += OutOfBox_CoreInstanceRegistered;
 
             Logger.LogInformation("Checking for valid core registry");
             var registry = await coreManagementService.GetCoreInstanceRegistryAsync();
             if (registry.Count == 0)
             {
                 Logger.LogInformation("No registered core instances. Displaying OOBE, waiting for at least 1 core to be configured.");
-                await WaitForTempOutOfBoxSetupAsync(coreManagementService, appFrame.NotificationService, settings, cores);
+                await WaitForTempOutOfBoxSetupAsync(coreManagementService, appFrame.NotificationService, settings, cores.ToList());
             }
 
-            coreManagementService.CoreInstanceRegistered -= PreOutOfBox_CoreInstanceRegistered;
+            coreManagementService.CoreInstanceRegistered -= OutOfBox_CoreInstanceRegistered;
             Guard.IsTrue(settings.CoreInstanceRegistry.Count > 0, nameof(settings.CoreInstanceRegistry));
 
             Logger.LogInformation($"Initializing core ranking");
@@ -153,7 +152,7 @@ namespace StrixMusic.Shared
             foreach (var entry in registeredCoreInstances)
             {
                 var core = await CoreRegistry.CreateCoreAsync(entry.Value.Id, entry.Key);
-                core.CoreStateChanged += CoreOnCoreStateChanged;
+                core.CoreStateChanged += RegisteredCore_OnStateChanged;
                 cores.Add(core);
                 Cores.Add(new CoreViewModel(core));
             }
@@ -175,7 +174,8 @@ namespace StrixMusic.Shared
             Logger.LogInformation("Setting up misc lifetime events");
             Guard.IsNotNull(appFrame.ContentOverlay);
             appFrame.ContentOverlay.Closed += ContentOverlay_Closed;
-            coreManagementService.CoreInstanceRegistered += AfterInit_CoreInstanceRegistered;
+            coreManagementService.CoreInstanceRegistered += Lifetime_CoreInstanceRegistered;
+            coreManagementService.CoreInstanceUnregistered += OnCoreInstanceUnregistered;
 
             UpdateStatus("InitServices", localizationService);
             Logger.LogInformation("Setting up IoC");
@@ -193,8 +193,12 @@ namespace StrixMusic.Shared
                 Ioc.Default.ConfigureServices(services.BuildServiceProvider());
             }
 
+            Logger.LogInformation("Initializing data root and cores");
+            UpdateStatus("InitCores", localizationService);
+            await rootViewModel.InitAsync();
+
             Logger.LogInformation("Setting up primary app view");
-            var mainPage = new MainPage(rootViewModel);
+            var mainPage = new MainPage(rootViewModel, settings, coreManagementService);
 
             Logger.LogInformation("Setting up audio containers");
             foreach (var core in cores)
@@ -206,10 +210,6 @@ namespace StrixMusic.Shared
                 }
             }
 
-            Logger.LogInformation("Initializing data root and cores");
-            UpdateStatus("InitCores", localizationService);
-            await rootViewModel.InitAsync();
-
             Logger.LogInformation("Loading completed, saving settings");
             await settings.SaveAsync();
             UpdateStatusRaw("Done loading");
@@ -220,19 +220,16 @@ namespace StrixMusic.Shared
 
             foreach (var core in Cores.ToList())
             {
-                await Task.Delay(75);
                 Cores.Remove(core);
+                await Task.Delay(75);
             }
 
             appFrame.Present(mainPage);
 
-            foreach (var core in cores)
-                core.CoreStateChanged -= CoreOnCoreStateChanged;
-
-            void CoreOnCoreStateChanged(object sender, CoreState e)
+            void RegisteredCore_OnStateChanged(object sender, CoreState e)
             {
                 if (e == CoreState.NeedsConfiguration)
-                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, cores, coreManagementService);
+                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, cores.ToList(), coreManagementService);
             }
 
             async void ContentOverlay_Closed(object? sender, EventArgs e)
@@ -249,21 +246,43 @@ namespace StrixMusic.Shared
                 }
             }
 
-            async void PreOutOfBox_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
+            async void OutOfBox_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
                 cores.Add(core);
+                core.CoreStateChanged += Core_CoreStateChanged;
 
                 await core.InitAsync();
 
+                core.CoreStateChanged -= Core_CoreStateChanged;
+
+                void Core_CoreStateChanged(object sender, CoreState e)
+                {
+                    if (e == CoreState.NeedsConfiguration)
+                        appFrame.DisplayAbstractUIPanel(core, settings, cores.ToList(), coreManagementService);
+                }
             }
 
-            async void AfterInit_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
+            async void Lifetime_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
                 mergedLayer.AddSource(core);
 
                 await core.InitAsync();
+            }
+
+            void Core_CoreStateChanged(object sender, CoreState e)
+            {
+                if (e == CoreState.NeedsConfiguration)
+                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, rootViewModel.Sources, coreManagementService);
+            }
+
+            void OnCoreInstanceUnregistered(object sender, CoreInstanceEventArgs e)
+            {
+                var sourceToRemove = mergedLayer.Sources.First(x => x.InstanceId == e.InstanceId);
+                sourceToRemove.CoreStateChanged -= Core_CoreStateChanged;
+                mergedLayer.RemoveSource(sourceToRemove);
+                cores.Remove(sourceToRemove);
             }
         }
 
@@ -274,9 +293,9 @@ namespace StrixMusic.Shared
             var shellFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Shells", Windows.Storage.CreationCollisionOption.OpenIfExists);
             var zuneSettingsStorage = await shellFolder.CreateFolderAsync(ZuneShell.Metadata.Id, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
-            ShellRegistry.Register(DefaultShell.Metadata, () => new DefaultShell());
-            ShellRegistry.Register(GrooveShell.Metadata, () => new GrooveShell());
-            ShellRegistry.Register(ZuneShell.Metadata, () => new ZuneShell(new FolderData(zuneSettingsStorage), notificationService));
+            ShellRegistry.Register(DefaultShell.Metadata, dataRoot => new DefaultShell(dataRoot));
+            ShellRegistry.Register(GrooveShell.Metadata, dataRoot => new GrooveShell(dataRoot));
+            ShellRegistry.Register(ZuneShell.Metadata, dataRoot => new ZuneShell(dataRoot, new FolderData(zuneSettingsStorage), notificationService));
 
             if (ShellRegistry.MetadataRegistry.Count == 0)
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(ShellRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 shell.");
@@ -457,19 +476,6 @@ namespace StrixMusic.Shared
         private void UpdateStatusRaw(string text)
         {
             PART_Status.Text = text;
-        }
-
-        private static IPlaybackHandlerService SetupPlaybackHandler()
-        {
-            var playbackHandlerService = new PlaybackHandlerService();
-
-            var strixDevice = new StrixDevice(playbackHandlerService);
-            playbackHandlerService.SetStrixDevice(strixDevice);
-
-#warning TODO: Connect with remote devices from cores.
-            playbackHandlerService.ActiveDevice = strixDevice;
-
-            return playbackHandlerService;
         }
 
         private async static Task<AppSettings> InitAppSettings()

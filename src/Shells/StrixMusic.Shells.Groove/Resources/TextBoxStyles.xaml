@@ -5,7 +5,7 @@
     xmlns:default="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:local="using:StrixMusic.Shells.Groove.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 

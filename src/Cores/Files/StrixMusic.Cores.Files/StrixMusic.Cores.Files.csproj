@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="OwlCore" Version="0.0.65" />
+    <PackageReference Include="OwlCore" Version="0.0.66" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

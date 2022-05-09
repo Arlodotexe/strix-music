@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Shells
 {
@@ -19,6 +20,51 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         public NowPlayingBar()
         {
             this.DefaultStyleKey = typeof(NowPlayingBar);
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            Unloaded += NowPlayingBar_Unloaded;
+
+            foreach (var device in Devices)
+                AttachEvents(device);
+        }
+
+        private void DetachEvents()
+        {
+            Unloaded -= NowPlayingBar_Unloaded;
+
+            foreach (var device in Devices)
+                DetachEvents(device);
+        }
+
+        private void AttachEvents(IDevice device)
+        {
+            device.IsActiveChanged += Device_IsActiveChanged;
+        }
+
+        private void DetachEvents(IDevice device)
+        {
+            device.IsActiveChanged -= Device_IsActiveChanged;
+        }
+
+        private void Device_IsActiveChanged(object sender, bool e)
+        {
+            if (e)
+            {
+                var device = (IDevice)sender;
+
+                if (device is not DeviceViewModel dvm)
+                    dvm = new DeviceViewModel(device);
+
+                ActiveDevice = dvm;
+            }
+        }
+
+        private void NowPlayingBar_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DetachEvents();
         }
 
         /// <summary>
@@ -33,9 +79,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// A list of devices that can be selected from for displaying playback status.
         /// </summary>
-        public ObservableCollection<IDevice> Devices
+        public IReadOnlyList<IDevice> Devices
         {
-            get => (ObservableCollection<IDevice>)GetValue(DevicesProperty);
+            get => (IReadOnlyList<IDevice>)GetValue(DevicesProperty);
             set => SetValue(DevicesProperty, value);
         }
 
@@ -43,7 +89,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// The backing dependency property for <see cref="Devices"/>.
         /// </summary>
         public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register(nameof(Devices), typeof(ObservableCollection<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<NowPlayingBar>().OnDevicesChanged()));
+            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(new List<IDevice>(), (s, e) => s.Cast<NowPlayingBar>().OnDevicesChanged(e.OldValue.Cast<IReadOnlyList<IDevice>>(), e.NewValue.Cast<IReadOnlyList<IDevice>>())));
 
         /// <summary>
         /// Backing dependency property for <see cref="ActiveDevice"/>.
@@ -51,9 +97,15 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         private static readonly DependencyProperty ActiveDeviceProperty =
             DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null));
 
-        private void OnDevicesChanged()
+        private void OnDevicesChanged(IReadOnlyList<IDevice> oldValue, IReadOnlyList<IDevice> newValue)
         {
-            var targetDevice = Devices.FirstOrDefault(x => x.IsActive);
+            foreach (var item in oldValue)
+                DetachEvents(item);
+
+            foreach (var item in newValue)
+                AttachEvents(item);
+
+            var targetDevice = newValue.FirstOrDefault(x => x.IsActive);
             if (targetDevice is null)
                 return;
 

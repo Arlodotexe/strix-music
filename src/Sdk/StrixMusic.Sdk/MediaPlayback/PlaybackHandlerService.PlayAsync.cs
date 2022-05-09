@@ -13,6 +13,9 @@ using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
+    /// <summary>
+    /// Test
+    /// </summary>
     public partial class PlaybackHandlerService
     {
         /// <inheritdoc />
@@ -27,8 +30,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(ITrack track, ITrackCollection trackCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-
             var canPlay = await PrepareToPlayCollection(cancellationToken);
             if (!canPlay)
                 return;
@@ -40,20 +41,16 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             if (ShuffleState)
                 ShuffleOnInternal();
-
-            var nextItem = _nextItems[0];
+            
+            CurrentItemContext = context;
             await PlayFromNext(0, cancellationToken);
-
-            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
-
-            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
         public async Task PlayAsync(IArtistCollection artistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
             var apiArtists = await artistCollection.GetArtistItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
-            ;
+            
             Guard.HasSizeGreaterThan(apiArtists, 0, nameof(apiArtists));
 
             await PlayAsync(apiArtists[0], artistCollection, context, cancellationToken);
@@ -62,8 +59,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollection artistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-
             var canPlay = await PrepareToPlayCollection(cancellationToken);
             if (!canPlay)
             {
@@ -78,21 +73,18 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             if (ShuffleState)
                 ShuffleOnInternal();
-
-            var nextItem = _nextItems[0];
+            
+            CurrentItemContext = context;
             await PlayFromNext(0, cancellationToken);
-
-            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
-            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
         public async Task PlayAsync(IPlaylistCollection playlistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
             var apiPlaylists = await playlistCollection.GetPlaylistItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
-            ;
+            
             Guard.HasSizeGreaterThan(apiPlaylists, 0, nameof(apiPlaylists));
-
+            
             await PlayAsync(apiPlaylists[0], playlistCollection, context, cancellationToken);
         }
 
@@ -100,7 +92,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         public async Task PlayAsync(IAlbumCollection albumCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
             var apiItems = await albumCollection.GetAlbumItemsAsync(1, 0, cancellationToken).ToListAsync(cancellationToken);
-            ;
+            
             Guard.HasSizeGreaterThan(apiItems, 0, nameof(apiItems));
 
             await PlayAsync(apiItems[0], albumCollection, context, cancellationToken);
@@ -109,8 +101,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IAlbumCollectionItem albumCollectionItem, IAlbumCollection albumCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-
             var canPlay = await PrepareToPlayCollection(cancellationToken);
             if (!canPlay)
             {
@@ -125,20 +115,14 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             if (ShuffleState)
                 ShuffleOnInternal();
-
-            var nextItem = _nextItems[0];
+            
+            CurrentItemContext = context;
             await PlayFromNext(0, cancellationToken);
-
-            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
-
-            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <inheritdoc />
         public async Task PlayAsync(IPlaylistCollectionItem playlistCollectionItem, IPlaylistCollection playlistCollection, IPlayableBase context, CancellationToken cancellationToken = default)
         {
-            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-
             var canPlay = await PrepareToPlayCollection(cancellationToken);
             if (!canPlay)
             {
@@ -154,12 +138,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             if (ShuffleState)
                 ShuffleOnInternal();
 
-            var nextItem = _nextItems[0];
+            CurrentItemContext = context;
             await PlayFromNext(0, cancellationToken);
-
-            Guard.IsNotNull(nextItem.MediaConfig, nameof(nextItem.MediaConfig));
-
-            _strixDevice.SetPlaybackData(context, nextItem);
         }
 
         /// <summary>
@@ -168,8 +148,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <returns>True if playback should continue locally, false if playback should continue remotely.</returns>
         private async Task<bool> PrepareToPlayCollection(CancellationToken cancellationToken = default)
         {
-            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
-
             // Pause the active player first.
             if (ActiveDevice is not null)
                 await ActiveDevice.PauseAsync(cancellationToken);
@@ -177,9 +155,8 @@ namespace StrixMusic.Sdk.MediaPlayback
             // If there is no active device, activate the device used for local playback.
             if (ActiveDevice is null)
             {
-                // Switching to the device should activate it and set it as our active device via events,
-                // via the same mechanism used for switching to remote devices.
-                await _strixDevice.SwitchToAsync(cancellationToken);
+                ActiveDevice = _localDevice;
+                await _localDevice.SwitchToAsync(cancellationToken);
             }
 
             Guard.IsNotNull(ActiveDevice, nameof(ActiveDevice));

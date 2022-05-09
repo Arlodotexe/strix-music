@@ -1,16 +1,16 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Shells.Groove.Helper;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.AppModels;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
-using StrixMusic.Shells.Groove.Helper;
 
 namespace StrixMusic.Shells.Groove.Controls
 {
@@ -35,8 +35,7 @@ namespace StrixMusic.Shells.Groove.Controls
         /// The backing dependency property for <see cref="Devices"/>.
         /// </summary>
         public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register(nameof(Devices), typeof(ObservableCollection<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<GrooveNowPlayingBar>().OnDevicesChanged()));
-
+            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<GrooveNowPlayingBar>().OnDevicesChanged()));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveNowPlayingBar"/> class.
@@ -49,9 +48,9 @@ namespace StrixMusic.Shells.Groove.Controls
         /// <summary>
         /// A list of devices that can be selected from for displaying playback status.
         /// </summary>
-        public ObservableCollection<IDevice> Devices
+        public IReadOnlyList<IDevice> Devices
         {
-            get => (ObservableCollection<IDevice>)GetValue(DevicesProperty);
+            get => (IReadOnlyList<IDevice>)GetValue(DevicesProperty);
             set => SetValue(DevicesProperty, value);
         }
 
@@ -87,7 +86,7 @@ namespace StrixMusic.Shells.Groove.Controls
         {
             // Load images if there aren't images loaded.
             // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.
-            // MAybe just ask the api for the first image directly, glhf.
+            // Maybe just ask the api for the first image directly, glhf.
             Guard.IsNotNull(e.Track, nameof(e.Track));
 
             if (e.Track.TotalImageCount != 0)

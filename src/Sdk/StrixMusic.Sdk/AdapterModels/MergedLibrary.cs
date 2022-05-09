@@ -22,9 +22,6 @@ namespace StrixMusic.Sdk.AdapterModels
         {
         }
 
-        /// <inheritdoc cref="IMerged{T}.Sources"/>
-        public IReadOnlyList<ICoreLibrary> Sources => StoredSources;
-
         /// <inheritdoc cref="Equals(object?)" />
         public override bool Equals(ICoreLibrary? other)
         {

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -31,6 +31,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             Loaded -= CollectionContent_Loaded;
 
             ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
+            SwapPage("Artists");
         }
 
         /// <summary>

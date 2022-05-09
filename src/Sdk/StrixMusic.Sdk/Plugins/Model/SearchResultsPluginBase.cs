@@ -21,7 +21,7 @@ public class SearchResultsPluginBase : PlayableCollectionGroupPluginBase, IModel
     /// </summary>
     /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
     /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-    protected internal SearchResultsPluginBase(ModelPluginMetadata registration, ISearchResults inner)
+    internal protected SearchResultsPluginBase(ModelPluginMetadata registration, ISearchResults inner)
         : base(registration, inner)
     {
         Inner = inner;

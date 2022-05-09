@@ -133,6 +133,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            GetConfiguredFolder:
             var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -155,10 +156,9 @@ namespace StrixMusic.Cores.LocalFiles
                 _configPanel.Subtitle = pickedFolder.Path;
 
                 AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
-
                 await Flow.EventAsTask(x => _configPanel.ConfigDoneButton.Clicked += x, x => _configPanel.ConfigDoneButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
-                return;
+                goto GetConfiguredFolder;
             }
 
             ChangeCoreState(CoreState.Configured);

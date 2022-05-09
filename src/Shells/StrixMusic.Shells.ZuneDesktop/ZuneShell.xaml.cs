@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
@@ -36,10 +35,9 @@ namespace StrixMusic.Shells.ZuneDesktop
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell(IFolderData settingStorage, NotificationService notificationService)
+        public ZuneShell(StrixDataRootViewModel strixDataRootViewModel, IFolderData settingStorage, NotificationService notificationService)
+            : base(strixDataRootViewModel)
         {
-            this.InitializeComponent();
-
             Loaded += ZuneShell_Loaded;
             Unloaded += OnUnloaded;
             _settingStorage = settingStorage;
@@ -48,16 +46,19 @@ namespace StrixMusic.Shells.ZuneDesktop
 
             notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
             notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
+
+            this.InitializeComponent();
         }
 
         /// <summary>
         /// Metadata used to identify this shell before instantiation.
         /// </summary>
-        public static ShellMetadata Metadata { get; } = new ShellMetadata(id: "Zune.Desktop.4.8",
-                                                                          displayName: "Zune Desktop",
-                                                                          description: "A faithful recreation of the iconic Zune client for Windows",
-                                                                          inputMethods: InputMethods.Mouse,
-                                                                          minWindowSize: new Size(width: 700, height: 600));
+        public static ShellMetadata Metadata { get; } =
+            new ShellMetadata(id: "Zune.Desktop.4.8",
+                displayName: "Zune Desktop",
+                description: "A faithful recreation of the iconic Zune client for Windows",
+                inputMethods: InputMethods.Mouse,
+                minWindowSize: new Size(width: 700, height: 600));
 
         /// <inheritdoc/>
         public override Task InitServices(IServiceCollection services)

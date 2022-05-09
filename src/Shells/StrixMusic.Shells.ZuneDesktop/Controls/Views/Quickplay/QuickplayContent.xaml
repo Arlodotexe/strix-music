@@ -524,12 +524,6 @@
 
         <ScrollViewer x:Name="MainScroller" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="1">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{Binding DataRoot.Library.InitAlbumCollectionAsyncCommand}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-
             <Grid x:Name="MainWrapper" VerticalAlignment="Top" Padding="0,60,0,0" SizeChanged="MainWrapper_SizeChanged">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

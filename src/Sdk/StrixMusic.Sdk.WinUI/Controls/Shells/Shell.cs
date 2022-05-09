@@ -1,15 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Notifications;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.ViewModels.Notifications;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Shells
 {
@@ -21,8 +20,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// Initializes a new instance of the <see cref="Shell"/> class.
         /// </summary>
-        protected Shell()
+        protected Shell(StrixDataRootViewModel dataRootViewModel)
         {
+            DataRoot = dataRootViewModel;
             Loaded += ShellControl_Loaded;
 
             // Creating a new instance here so the old Ioc is wiped even if they don't call base.InitServices();
@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// A ViewModel wrapper for all merged core data.
         /// </summary>
-        public StrixDataRootViewModel? DataRoot
+        public StrixDataRootViewModel DataRoot
         {
             get => (StrixDataRootViewModel)GetValue(DataRootProperty);
             set => SetValue(DataRootProperty, value);

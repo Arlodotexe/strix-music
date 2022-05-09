@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.WinUI.Models
         }
 
         /// <inheritdoc/>
-        public string Id => Path;
+        public string Id => StorageFile.FolderRelativeId;
 
         /// <inheritdoc/>
         public string Path => StorageFile.Path;

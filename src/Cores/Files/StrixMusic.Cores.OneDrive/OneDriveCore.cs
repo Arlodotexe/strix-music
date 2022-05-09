@@ -132,7 +132,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.UserHasSeenAuthClientKeysSettings = true;
                 await Settings.SaveAsync();
-                return;
             }
 
             if (!Settings.UserHasSeenGeneralOobeSettings)
@@ -148,7 +147,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.UserHasSeenGeneralOobeSettings = true;
                 await Settings.SaveAsync();
-                return;
             }
 
             if (string.IsNullOrWhiteSpace(Settings.AccountIdentifier))
@@ -182,8 +180,6 @@ namespace StrixMusic.Cores.OneDrive
                         return;
                     }
                 }
-
-                return;
             }
 
             if (string.IsNullOrWhiteSpace(Settings.SelectedFolderId))
@@ -199,8 +195,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.SelectedFolderId = folder.Id ?? string.Empty;
                 await Settings.SaveAsync();
-
-                return;
             }
 
             Logger.LogInformation("Fully configured, setting state.");

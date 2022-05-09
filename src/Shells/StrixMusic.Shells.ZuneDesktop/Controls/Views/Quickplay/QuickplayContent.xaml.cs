@@ -3,6 +3,8 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.ViewModels;
+using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 {
@@ -19,6 +21,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         public QuickplayContent()
         {
             this.InitializeComponent();
+
+            Loaded += QuickplayContent_Loaded;
         }
 
         /// <summary>
@@ -35,6 +39,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
             DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
+
+        private void QuickplayContent_Loaded(object sender, RoutedEventArgs e)
+        {
+            Guard.IsNotNull(DataRoot);
+
+            var library = DataRoot.Library.Cast<LibraryViewModel>();
+            if (library.InitAlbumCollectionAsyncCommand.CanExecute(null))
+                library.InitAlbumCollectionAsyncCommand.Execute(null);
+        }
 
         /// <summary>
         /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.

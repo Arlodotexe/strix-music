@@ -34,21 +34,22 @@ namespace StrixMusic.Sdk.PluginModels
 
             ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
-            Library = new LibraryPluginWrapper(strixDataRoot.Library, plugins);
+            _strixDataRoot = ActivePlugins.StrixDataRoot.Execute(strixDataRoot);
 
-            if (strixDataRoot.Search is not null)
-                Search = new SearchPluginWrapper(strixDataRoot.Search, plugins);
+            Library = new LibraryPluginWrapper(_strixDataRoot.Library, plugins);
 
-            if (strixDataRoot.Pins is not null)
-                Pins = new PlayableCollectionGroupPluginWrapper(strixDataRoot.Pins, plugins);
+            if (_strixDataRoot.Search is not null)
+                Search = new SearchPluginWrapper(_strixDataRoot.Search, plugins);
 
-            if (strixDataRoot.Discoverables is not null)
-                Discoverables = new DiscoverablesPluginWrapper(strixDataRoot.Discoverables, plugins);
+            if (_strixDataRoot.Pins is not null)
+                Pins = new PlayableCollectionGroupPluginWrapper(_strixDataRoot.Pins, plugins);
 
-            if (strixDataRoot.RecentlyPlayed is not null)
-                RecentlyPlayed = new RecentlyPlayedPluginWrapper(strixDataRoot.RecentlyPlayed, plugins);
+            if (_strixDataRoot.Discoverables is not null)
+                Discoverables = new DiscoverablesPluginWrapper(_strixDataRoot.Discoverables, plugins);
 
-            _strixDataRoot = strixDataRoot;
+            if (_strixDataRoot.RecentlyPlayed is not null)
+                RecentlyPlayed = new RecentlyPlayedPluginWrapper(_strixDataRoot.RecentlyPlayed, plugins);
+
             _plugins = plugins;
             AttachEvents(_strixDataRoot);
         }

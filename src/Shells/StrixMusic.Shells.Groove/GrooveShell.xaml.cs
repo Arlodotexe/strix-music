@@ -47,7 +47,8 @@ namespace StrixMusic.Shells.Groove
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
         /// </summary>
-        public GrooveShell()
+        public GrooveShell(StrixDataRootViewModel dataRootViewModel)
+            : base(dataRootViewModel)
         {
             this.InitializeComponent();
 
@@ -77,8 +78,8 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public static ShellMetadata Metadata { get; }
             = new ShellMetadata(id: "GrooveMusic.10.21061.10121.0",
-                                displayName: "Groove Music",
-                                description: "A faithful recreation of the Groove Music app from Windows 10");
+                displayName: "Groove Music",
+                description: "A faithful recreation of the Groove Music app from Windows 10");
 
         private void GrooveShell_Loaded(object sender, RoutedEventArgs e)
         {
@@ -88,6 +89,7 @@ namespace StrixMusic.Shells.Groove
 
             Notifications.IsHandled = true;
             NavigationTracker.Instance.Initialize();
+            OnDataRootChanged();
         }
 
         private void GrooveShell_Unloaded(object sender, RoutedEventArgs e)

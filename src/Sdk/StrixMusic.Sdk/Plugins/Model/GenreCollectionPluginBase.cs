@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal GenreCollectionPluginBase(ModelPluginMetadata registration, IGenreCollection inner)
+        internal protected GenreCollectionPluginBase(ModelPluginMetadata registration, IGenreCollection inner)
         {
             Metadata = registration;
             Inner = inner;
@@ -40,44 +40,44 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public int TotalGenreCount => Inner.TotalGenreCount;
+        public virtual int TotalGenreCount => Inner.TotalGenreCount;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreGenreCollection> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        virtual public event CollectionChangedEventHandler<IGenre>? GenresChanged
+        public virtual event CollectionChangedEventHandler<IGenre>? GenresChanged
         {
             add => Inner.GenresChanged += value;
             remove => Inner.GenresChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<int>? GenresCountChanged
+        public virtual event EventHandler<int>? GenresCountChanged
         {
             add => Inner.GenresCountChanged += value;
             remove => Inner.GenresCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public Task AddGenreAsync(IGenre gene, int index, CancellationToken cancellationToken = default) => Inner.AddGenreAsync(gene, index, cancellationToken);
+        public virtual Task AddGenreAsync(IGenre gene, int index, CancellationToken cancellationToken = default) => Inner.AddGenreAsync(gene, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
+        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        virtual public bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>
-        virtual public IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);
+        public virtual IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddGenreAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsAddGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveGenreAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => Inner.IsRemoveGenreAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveGenreAsync(index, cancellationToken);
+        public virtual Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveGenreAsync(index, cancellationToken);
     }
 }

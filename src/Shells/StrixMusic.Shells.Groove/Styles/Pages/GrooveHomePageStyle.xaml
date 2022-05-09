@@ -9,7 +9,7 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveHomePageStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../PivotStyle.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/PivotStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="GrooveHomePageStyle" TargetType="pages:GrooveHomePage">

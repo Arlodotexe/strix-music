@@ -34,6 +34,11 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Metadata { get; }
 
         /// <summary>
+        /// All plugins that provide overridden behavior for <see cref="IStrixDataRoot"/>.
+        /// </summary>
+        public ChainedProxyBuilder<StrixDataRootPluginBase, IStrixDataRoot> StrixDataRoot { get; } = new();
+
+        /// <summary>
         /// All plugins that provide overridden behavior for <see cref="IDownloadable"/>.
         /// </summary>
         public ChainedProxyBuilder<DownloadablePluginBase, IDownloadable> Downloadable { get; } = new();
@@ -150,13 +155,15 @@ namespace StrixMusic.Sdk.Plugins.Model
         public void Import(SdkModelPlugin modelPlugin)
         {
             var currentSdkVersion = typeof(SdkModelPlugin).Assembly.GetName().Version;
-            
+
             if (modelPlugin.Metadata.SdkVersion.Major != currentSdkVersion.Major)
             {
                 ThrowHelper.ThrowArgumentException($"The imported plugin [{modelPlugin.Metadata.Id}] \"{modelPlugin.Metadata.DisplayName}\" was built against SDK " +
                                                    $"version {modelPlugin.Metadata.SdkVersion} and is incompatible with the running version {currentSdkVersion}. " +
                                                    $"Please ask the author to update the plugin to the latest release of the Strix Music SDK.");
             }
+
+            StrixDataRoot.AddRange(modelPlugin.StrixDataRoot);
 
             Playable.AddRange(modelPlugin.Playable);
             Downloadable.AddRange(modelPlugin.Downloadable);

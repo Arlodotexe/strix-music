@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal ImagePluginBase(ModelPluginMetadata registration, IImage inner)
+        internal protected ImagePluginBase(ModelPluginMetadata registration, IImage inner)
         {
             Metadata = registration;
             Inner = inner;
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Metadata { get; }
 
         /// <inheritdoc/>
-        virtual public IImage Inner { get; }
+        public virtual IImage Inner { get; }
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged
@@ -38,21 +38,21 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public Uri Uri => Inner.Uri;
+        public virtual Uri Uri => Inner.Uri;
 
         /// <inheritdoc/>
-        virtual public double Height => Inner.Height;
+        public virtual double Height => Inner.Height;
 
         /// <inheritdoc/>
-        virtual public double Width => Inner.Width;
+        public virtual double Width => Inner.Width;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
+        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        virtual public bool Equals(ICoreImage other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
     }
 }

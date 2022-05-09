@@ -10,7 +10,7 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PanePlaylistCollectionStyle">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="PanePlaylistCollectionDataTemplate" x:DataType="groovevms:GroovePlaylistCollectionViewModel">

@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
+        internal protected PlayablePluginBase(ModelPluginMetadata registration, IPlayable inner)
         {
             Metadata = registration;
 
@@ -55,40 +55,40 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IPlayable Inner { get; }
 
         /// <inheritdoc/>
-        virtual public DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
+        public virtual DownloadInfo DownloadInfo => InnerDownloadable.DownloadInfo;
 
         /// <inheritdoc/>
-        virtual public string Id => Inner.Id;
+        public virtual string Id => Inner.Id;
 
         /// <inheritdoc/>
-        virtual public string Name => Inner.Name;
+        public virtual string Name => Inner.Name;
 
         /// <inheritdoc/>
-        virtual public string? Description => Inner.Description;
+        public virtual string? Description => Inner.Description;
 
         /// <inheritdoc/>
-        virtual public DateTime? LastPlayed => Inner.LastPlayed;
+        public virtual DateTime? LastPlayed => Inner.LastPlayed;
 
         /// <inheritdoc/>
-        virtual public PlaybackState PlaybackState => Inner.PlaybackState;
+        public virtual PlaybackState PlaybackState => Inner.PlaybackState;
 
         /// <inheritdoc/>
-        virtual public TimeSpan Duration => Inner.Duration;
+        public virtual TimeSpan Duration => Inner.Duration;
 
         /// <inheritdoc/>
-        virtual public bool IsChangeNameAsyncAvailable => Inner.IsChangeNameAsyncAvailable;
+        public virtual bool IsChangeNameAsyncAvailable => Inner.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc/>
-        virtual public bool IsChangeDescriptionAsyncAvailable => Inner.IsChangeDescriptionAsyncAvailable;
+        public virtual bool IsChangeDescriptionAsyncAvailable => Inner.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        virtual public bool IsChangeDurationAsyncAvailable => Inner.IsChangeDurationAsyncAvailable;
+        public virtual bool IsChangeDurationAsyncAvailable => Inner.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        virtual public int TotalImageCount => InnerImageCollection.TotalImageCount;
+        public virtual int TotalImageCount => InnerImageCollection.TotalImageCount;
 
         /// <inheritdoc/>
-        virtual public int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
+        public virtual int TotalUrlCount => InnerUrlCollection.TotalUrlCount;
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => InnerImageCollection.Sources;
@@ -104,146 +104,146 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<PlaybackState>? PlaybackStateChanged
+        public virtual event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => Inner.PlaybackStateChanged += value;
             remove => Inner.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<string>? NameChanged
+        public virtual event EventHandler<string>? NameChanged
         {
             add => Inner.NameChanged += value;
             remove => Inner.NameChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<string?>? DescriptionChanged
+        public virtual event EventHandler<string?>? DescriptionChanged
         {
             add => Inner.DescriptionChanged += value;
             remove => Inner.DescriptionChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<TimeSpan>? DurationChanged
+        public virtual event EventHandler<TimeSpan>? DurationChanged
         {
             add => Inner.DurationChanged += value;
             remove => Inner.DurationChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<DateTime?>? LastPlayedChanged
+        public virtual event EventHandler<DateTime?>? LastPlayedChanged
         {
             add => Inner.LastPlayedChanged += value;
             remove => Inner.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        public virtual event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
             add => Inner.IsChangeNameAsyncAvailableChanged += value;
             remove => Inner.IsChangeNameAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        public virtual event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
         {
             add => Inner.IsChangeDescriptionAsyncAvailableChanged += value;
             remove => Inner.IsChangeDescriptionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        public virtual event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
         {
             add => Inner.IsChangeDurationAsyncAvailableChanged += value;
             remove => Inner.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<int>? ImagesCountChanged
+        public virtual event EventHandler<int>? ImagesCountChanged
         {
             add => InnerImageCollection.ImagesCountChanged += value;
             remove => InnerImageCollection.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<int>? UrlsCountChanged
+        public virtual event EventHandler<int>? UrlsCountChanged
         {
             add => InnerUrlCollection.UrlsCountChanged += value;
             remove => InnerUrlCollection.UrlsCountChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
         {
             add => InnerDownloadable.DownloadInfoChanged += value;
             remove => InnerDownloadable.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event CollectionChangedEventHandler<IImage>? ImagesChanged
+        public virtual event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => InnerImageCollection.ImagesChanged += value;
             remove => InnerImageCollection.ImagesChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public event CollectionChangedEventHandler<IUrl>? UrlsChanged
+        public virtual event CollectionChangedEventHandler<IUrl>? UrlsChanged
         {
             add => InnerUrlCollection.UrlsChanged += value;
             remove => InnerUrlCollection.UrlsChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => Inner.ChangeDescriptionAsync(description, cancellationToken);
+        public virtual Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => Inner.ChangeDescriptionAsync(description, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => Inner.ChangeDurationAsync(duration, cancellationToken);
+        public virtual Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => Inner.ChangeDurationAsync(duration, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => Inner.ChangeNameAsync(name, cancellationToken);
+        public virtual Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => Inner.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsAddImageAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsAddImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsAddUrlAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsAddUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsRemoveImageAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.IsRemoveImageAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index, cancellationToken);
+        public virtual Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.IsRemoveUrlAvailableAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.RemoveImageAsync(index, cancellationToken);
+        public virtual Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => InnerImageCollection.RemoveImageAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.RemoveUrlAsync(index, cancellationToken);
+        public virtual Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => InnerUrlCollection.RemoveUrlAsync(index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
+        public virtual Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
+        public virtual IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
+        public virtual Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
 
         /// <inheritdoc/>
-        virtual public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
+        public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
+        public virtual Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        virtual public bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
 
         /// <inheritdoc/>
-        virtual public ValueTask DisposeAsync()
+        public virtual ValueTask DisposeAsync()
         {
             var uniqueInstances = new HashSet<IAsyncDisposable>()
             {

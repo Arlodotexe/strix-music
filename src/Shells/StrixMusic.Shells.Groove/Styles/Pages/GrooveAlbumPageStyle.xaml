@@ -14,8 +14,8 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveAlbumPageStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
-        <ResourceDictionary Source="../../Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.WinUI/Styles/Collections/TrackCollectionStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 

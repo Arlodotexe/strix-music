@@ -143,11 +143,11 @@
                 </Pivot.LeftHeader>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI" Header="quickplay"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind DataRoot}" />
+                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind DataRoot, Mode=OneWay}" />
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI" Header="collection"
                            a:TextHelpers.CharacterCasing="Lower" >
-                    <collection:CollectionContent DataRoot="{x:Bind DataRoot}"  x:Name="PART_CollectionContent"/>
+                    <collection:CollectionContent DataRoot="{x:Bind DataRoot, Mode=OneWay}" x:Name="PART_CollectionContent"/>
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI" Header="browse"
                            a:TextHelpers.CharacterCasing="Lower">
@@ -178,6 +178,6 @@
         <!--NowPlayingOverlay-->
         <views:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-        <shells:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" Devices="{Binding DataRoot.Devices, Mode=OneWay}" />
+        <shells:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" Devices="{x:Bind DataRoot.Devices, Mode=OneWay}" />
     </Grid>
 </shells:Shell>

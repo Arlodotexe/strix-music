@@ -13,10 +13,10 @@ namespace StrixMusic.Sdk.Plugins.PlaybackHandler;
 /// </summary>
 public class PlaybackHandlerPlugin : SdkModelPlugin
 {
-    private readonly static ModelPluginMetadata _metadata = new(
+    private static readonly ModelPluginMetadata _metadata = new(
         id: nameof(PlaybackHandlerPlugin),
         displayName: "Playback handler",
-        description: "The default playback handler",
+        description: "Intercepts playback requests to play them locally on your device",
         new Version(0, 0, 0));
 
     /// <summary>
@@ -26,6 +26,7 @@ public class PlaybackHandlerPlugin : SdkModelPlugin
     public PlaybackHandlerPlugin(IPlaybackHandlerService playbackHandler)
         : base(_metadata)
     {
+        StrixDataRoot.Add(x => new StrixDataRootPlaybackHandlerPlugin(_metadata, x, playbackHandler));
         ArtistCollection.Add(x => new ArtistCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
         AlbumCollection.Add(x => new AlbumCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
         TrackCollection.Add(x => new TrackCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));

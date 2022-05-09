@@ -17,7 +17,6 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         public GroovePlaylistCollection()
         {
             this.DefaultStyleKey = typeof(GroovePlaylistCollection);
-            DataContext = new GroovePlaylistCollectionViewModel();
         }
 
         /// <summary>
@@ -27,17 +26,27 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
             DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
 
         /// <summary>
-        /// The ViewModel for a <see cref="GroovePlaylistCollection"/>.
+        /// A view model for this control.
         /// </summary>
-        public GroovePlaylistCollectionViewModel ViewModel => (GroovePlaylistCollectionViewModel)DataContext;
+        public GroovePlaylistCollectionViewModel ViewModel
+        {
+            get => (GroovePlaylistCollectionViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+
+        /// <summary>
+        /// The backing Dependency Property for <see cref="ViewModel"/>.
+        /// </summary>
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(GroovePlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(new GroovePlaylistCollectionViewModel()));
 
         /// <summary>
         /// The playlist collection to display.
         /// </summary>
         public IPlaylistCollectionViewModel Collection
         {
-            get { return (IPlaylistCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (IPlaylistCollectionViewModel)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         private void OnPlaylistCollectionChanged()
@@ -50,8 +59,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public void ClearSelected()
         {
-            if (!(ViewModel is null))
-                ViewModel.SelectedPlaylist = null!;
+            ViewModel.SelectedPlaylist = null!;
         }
     }
 }

@@ -25,13 +25,17 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class MainPage : UserControl
     {
+        private readonly AppSettings _settings;
+        private readonly ICoreManagementService _coreManagementService;
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
-        public MainPage(StrixDataRootViewModel dataRoot)
+        public MainPage(StrixDataRootViewModel dataRoot, AppSettings settings, ICoreManagementService coreManagementService)
         {
+            _settings = settings;
+            _coreManagementService = coreManagementService;
             DataRoot = dataRoot;
             InitializeComponent();
             Loaded += MainPage_Loaded;
@@ -82,10 +86,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// Fires when the Super buttons is clicked. Temporary until a proper trigger mechanism is found for touch devices.
         /// </summary>
-        public void Button_Click(object? sender, RoutedEventArgs e)
-        {
-            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
-        }
+        public void Button_Click(object? sender, RoutedEventArgs e) => Window.Current.GetAppFrame().DisplaySuperShell(_settings, DataRoot.Sources, _coreManagementService);
 
         private void AttachEvents()
         {
@@ -185,7 +186,7 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                var shell = ShellRegistry.CreateShell(shellMetadata);
+                var shell = ShellRegistry.CreateShell(shellMetadata, DataRoot);
 
                 shell.DataRoot = DataRoot;
                 shell.Notifications = Window.Current.GetAppFrame().Notifications;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
@@ -10,6 +11,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
     /// </summary>
     public partial class MediaSlider : SliderEx
     {
+        private readonly SynchronizationContext _syncContext;
         private ThreadPoolTimer _updateIntervalTimer;
         private DateTime _startTime = DateTime.Now;
         private bool _isManipulating;
@@ -20,6 +22,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
         public MediaSlider()
         {
             DefaultStyleKey = typeof(MediaSlider);
+            _syncContext = SynchronizationContext.Current;
 
             _updateIntervalTimer = ThreadPoolTimer.CreatePeriodicTimer(UpdateIntervalTimer_Tick, TimeSpan.FromMilliseconds(UpdateFrequency));
 
@@ -149,9 +152,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
             DetachEvents();
         }
 
-        private async void UpdateIntervalTimer_Tick(ThreadPoolTimer timer)
+        private void UpdateIntervalTimer_Tick(ThreadPoolTimer timer)
         {
-            await UpdateSliderValue();
+            UpdateSliderValue();
         }
 
         private void MediaSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
@@ -183,9 +186,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
             _updateIntervalTimer?.Cancel();
         }
 
-        private async Task UpdateSliderValue()
+        private void UpdateSliderValue()
         {
-            await OwlCore.Threading.OnPrimaryThread(() => Value = (DateTime.Now - _startTime).TotalMilliseconds);
+            _syncContext.Post(_ => Value = (DateTime.Now - _startTime).TotalMilliseconds, null);
         }
     }
 }

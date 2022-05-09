@@ -22,6 +22,7 @@ namespace StrixMusic.Sdk.WinUI.Models
         public FolderData(StorageFolder folder)
         {
             StorageFolder = folder;
+            Id = folder.FolderRelativeId;
         }
 
         /// <inheritdoc/>

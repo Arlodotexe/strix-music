@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
@@ -135,7 +136,7 @@ namespace StrixMusic.Shared
             _ = Threading.OnPrimaryThread(() =>
             {
                 _superShell ??= new SuperShell(appSettings, coreManagementService);
-                _superShell.LoadedCores = loadedCores;
+                _superShell.LoadedCores = loadedCores.ToList();
 
                 _superShell.CurrentCoreConfig = new CoreViewModel(core);
                 _superShell.SelectedTabIndex = 1;
@@ -152,7 +153,7 @@ namespace StrixMusic.Shared
             _ = Threading.OnPrimaryThread(() =>
             {
                 _superShell ??= new SuperShell(appSettings, coreManagementService);
-                _superShell.LoadedCores = loadedCores;
+                _superShell.LoadedCores = loadedCores.ToList();
 
                 OverlayPresenter.Show(_superShell, LocalizationService.Common?.GetString("Settings") ?? string.Empty);
             });

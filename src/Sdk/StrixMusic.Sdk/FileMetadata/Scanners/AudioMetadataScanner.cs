@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
     /// </summary>
     public sealed partial class AudioMetadataScanner : IDisposable
     {
-        private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
+        private readonly static string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
         private readonly int _scanBatchSize;
 
         private readonly FileMetadataManager _metadataManager;
@@ -164,7 +164,8 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         private static void AssignMissingRequiredData(IFileData fileData, Models.FileMetadata metadata)
         {
             // If titles are missing, we leave it empty so the UI can localize the "Untitled" name.
-            metadata.Id = fileData.Path.HashMD5Fast();
+            Guard.IsNotNullOrWhiteSpace(fileData.Id);
+            metadata.Id = fileData.Id.HashMD5Fast();
 
             Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
             Guard.IsNotNull(metadata.TrackMetadata, nameof(metadata.TrackMetadata));

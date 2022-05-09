@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal DownloadablePluginBase(ModelPluginMetadata registration, IDownloadable inner)
+        internal protected DownloadablePluginBase(ModelPluginMetadata registration, IDownloadable inner)
         {
             Metadata = registration;
             Inner = inner;
@@ -30,19 +30,19 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IDownloadable Inner { get; set; }
 
         /// <inheritdoc/>
-        virtual public DownloadInfo DownloadInfo => Inner.DownloadInfo;
+        public virtual DownloadInfo DownloadInfo => Inner.DownloadInfo;
 
         /// <inheritdoc/>
-        virtual public event EventHandler<DownloadInfo>? DownloadInfoChanged
+        public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
         {
             add => Inner.DownloadInfoChanged += value;
             remove => Inner.DownloadInfoChanged -= value;
         }
 
         /// <inheritdoc/>
-        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
+        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        virtual public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => Inner.StartDownloadOperationAsync(operation, cancellationToken);
+        public virtual Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => Inner.StartDownloadOperationAsync(operation, cancellationToken);
     }
 }

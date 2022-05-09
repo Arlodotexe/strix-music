@@ -7,7 +7,7 @@
 		<RootNamespace>StrixMusic.Shells.ZuneDesktop</RootNamespace>
 		<AssemblyName>StrixMusic.Shells.ZuneDesktop</AssemblyName>
 		<Nullable>enable</Nullable>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>9</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -23,7 +23,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-		<PackageReference Include="OwlCore" Version="0.0.65" />
+		<PackageReference Include="OwlCore" Version="0.0.66" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

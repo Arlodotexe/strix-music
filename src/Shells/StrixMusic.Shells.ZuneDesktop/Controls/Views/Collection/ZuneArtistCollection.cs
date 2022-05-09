@@ -50,7 +50,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <summary>
         /// Backing dependency property for <see cref="ArtistCollection" />.
         /// </summary>
-        public new IArtistCollectionViewModel Collection
+        public new IArtistCollectionViewModel? Collection
         {
             get { return (IArtistCollectionViewModel)GetValue(CollectionProperty); }
             set { SetValue(CollectionProperty, value); }
@@ -92,11 +92,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             PART_SortLbl.Tapped -= PART_SortLbl_Tapped;
 
             Unloaded -= ZuneArtistCollection_Unloaded;
-            Collection.Artists.CollectionChanged -= Artists_CollectionChanged;
+
+            if (Collection is not null)
+                Collection.Artists.CollectionChanged -= Artists_CollectionChanged;
         }
 
         private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            Guard.IsNotNull(Collection);
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
             switch (SortState)

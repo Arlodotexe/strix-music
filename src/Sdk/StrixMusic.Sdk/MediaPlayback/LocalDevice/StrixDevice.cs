@@ -209,7 +209,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         /// </summary>
         /// <param name="playbackContext">The playback context.</param>
         /// <param name="nowPlaying">The track that is playing.</param>
-        internal void SetPlaybackData(IPlayableBase playbackContext, PlaybackItem nowPlaying)
+        internal void SetPlaybackData(IPlayableBase? playbackContext, PlaybackItem nowPlaying)
         {
             PlaybackContext = playbackContext;
             PlaybackContextChanged?.Invoke(this, playbackContext);

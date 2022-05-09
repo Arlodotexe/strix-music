@@ -11,8 +11,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.Events;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
@@ -34,7 +32,6 @@ namespace StrixMusic.Sdk.ViewModels
         public CoreViewModel(ICore core)
             : this(core, core.Registration)
         {
-
         }
 
         /// <summary>
@@ -51,24 +48,6 @@ namespace StrixMusic.Sdk.ViewModels
             DisplayName = coreMetadata.DisplayName;
             LogoUri = coreMetadata.LogoUri;
 
-            var emptyMergeConfig = new MergedCollectionConfig();
-            
-            Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList(), emptyMergeConfig));
-
-            if (_core.RecentlyPlayed != null)
-                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList(), emptyMergeConfig));
-
-            if (_core.Discoverables != null)
-                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList(), emptyMergeConfig));
-
-            if (_core.Pins != null)
-                Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList(), emptyMergeConfig));
-
-            if (_core.Search != null)
-                Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList(), emptyMergeConfig));
-
-            Devices = new ObservableCollection<DeviceViewModel>();
-
             CoreState = _core.CoreState;
 
             AbstractConfigPanel = new AbstractUICollectionViewModel(_core.AbstractConfigPanel);
@@ -79,7 +58,6 @@ namespace StrixMusic.Sdk.ViewModels
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
-            _core.DevicesChanged += Core_DevicesChanged;
             _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
             _core.AbstractConfigPanelChanged += OnAbstractConfigPanelChanged;
         }
@@ -93,15 +71,9 @@ namespace StrixMusic.Sdk.ViewModels
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
-            _core.DevicesChanged -= Core_DevicesChanged;
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
             _core.AbstractConfigPanelChanged -= OnAbstractConfigPanelChanged;
         }
-
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems) => _syncContext.Post(_ =>
-        {
-            Devices.ChangeCollection(addedItems, removedItems, item => new DeviceViewModel(new DeviceAdapter(item.Data)));
-        }, null);
 
         private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
         {
@@ -204,38 +176,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         IReadOnlyList<ICoreDevice> ICore.Devices => _core.Devices;
 
-        /// <inheritdoc cref="ICore.Devices" />
-        public ObservableCollection<DeviceViewModel> Devices { get; }
-
         /// <inheritdoc cref="ICore.Library" />
         ICoreLibrary ICore.Library => _core.Library;
-
-        /// <inheritdoc cref="LibraryViewModel"/>
-        public LibraryViewModel Library { get; }
 
         /// <inheritdoc />
         ICoreSearch? ICore.Search { get; }
 
-        /// <inheritdoc cref="SearchViewModel"/>
-        public SearchViewModel? Search { get; }
-
         /// <inheritdoc cref="ICore.RecentlyPlayed" />
         ICoreRecentlyPlayed? ICore.RecentlyPlayed => _core.RecentlyPlayed;
-
-        /// <inheritdoc cref="RecentlyPlayed"/>
-        public RecentlyPlayedViewModel? RecentlyPlayed { get; }
 
         /// <inheritdoc cref="ICore.Discoverables" />
         ICoreDiscoverables? ICore.Discoverables => _core.Discoverables;
 
-        /// <inheritdoc cref="DiscoverablesViewModel" />
-        public DiscoverablesViewModel? Discoverables { get; }
-
         /// <inheritdoc cref="ICore.Pins" />
         ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;
-
-        /// <inheritdoc cref="ICore.Pins" />
-        public PlayableCollectionGroupViewModel? Pins { get; }
 
         /// <inheritdoc cref="CoreMetadata"/>
         public CoreMetadata Registration => _core.Registration;
@@ -244,17 +198,6 @@ namespace StrixMusic.Sdk.ViewModels
         public async ValueTask DisposeAsync()
         {
             DetachEvents();
-
-            await Library.DisposeAsync();
-
-            if (RecentlyPlayed != null)
-                await RecentlyPlayed.DisposeAsync();
-
-            if (Discoverables != null)
-                await Discoverables.DisposeAsync();
-
-            if (Pins != null)
-                await Pins.DisposeAsync();
 
             await _core.DisposeAsync();
         }
