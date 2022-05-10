@@ -17,6 +17,7 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// A <see cref="IPlayableCollectionGroupBase"/> of items related to this item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IPlayableCollectionGroup? RelatedItems { get; }
     }
 }

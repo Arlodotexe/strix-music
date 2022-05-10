@@ -17,11 +17,13 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// Owner of the playable item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IUserProfile? Owner { get; }
 
         /// <summary>
         /// A <see cref="IPlayableCollectionGroup"/> of items related to this item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IPlayableCollectionGroup? RelatedItems { get; }
     }
 }

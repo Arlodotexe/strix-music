@@ -35,6 +35,7 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// Contains items that the user has recently selected from the search results.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         ISearchHistory? SearchHistory { get; }
     }
 }

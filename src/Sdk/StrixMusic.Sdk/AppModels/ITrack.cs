@@ -28,8 +28,9 @@ namespace StrixMusic.Sdk.AppModels
         ILyrics? Lyrics { get; }
 
         /// <summary>
-        /// A <see cref="IPlayableBase"/> of items related to this item.
+        /// An <see cref="IPlayableCollectionGroup"/> of items related to this item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <summary>
