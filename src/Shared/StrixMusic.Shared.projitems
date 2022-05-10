@@ -40,6 +40,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
+    <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreManagementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreInstanceEventArgs.cs" />
