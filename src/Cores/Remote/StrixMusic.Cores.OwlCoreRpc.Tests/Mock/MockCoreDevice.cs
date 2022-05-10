@@ -65,7 +65,7 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 
         public event EventHandler<ICoreTrack>? NowPlayingChanged;
         public event EventHandler<bool>? IsActiveChanged;
-        public event EventHandler<IPlayableBase>? PlaybackContextChanged;
+        public event EventHandler<IPlayableBase?>? PlaybackContextChanged;
         public event EventHandler<bool>? ShuffleStateChanged;
         public event EventHandler<RepeatState>? RepeatStateChanged;
         public event EventHandler<TimeSpan>? PositionChanged;
