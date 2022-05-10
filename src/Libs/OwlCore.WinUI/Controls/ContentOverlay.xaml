@@ -14,7 +14,7 @@
 
     <UserControl.Resources>
         <Storyboard x:Name="ShowAnimation">
-            <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
+            <DoubleAnimation Duration="0:0:0.3" To="0.8" From="0"
                              Storyboard.TargetName="BackgroundFill" Storyboard.TargetProperty="Opacity">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase/>
@@ -39,9 +39,9 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-        
+
         <Storyboard x:Name="HideAnimation" Completed="HideAnimation_Completed">
-            <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
+            <DoubleAnimation Duration="0:0:0.3" To="0" From="0.8"
                              Storyboard.TargetName="BackgroundFill" Storyboard.TargetProperty="Opacity">
                 <DoubleAnimation.EasingFunction>
                     <CircleEase/>
@@ -101,7 +101,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <Rectangle x:Name="BackgroundFill"
-                   Fill="#d6d1d5"
+                   Fill="{ThemeResource SystemAltMediumHighColor}"
                    Tapped="Background_OnTapped"/>
 
         <Grid x:Name="PART_Content" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
