@@ -178,7 +178,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Albums.Add(item);
                 }
 
-                foreach (var item in Albums)
+                foreach (var item in Albums.ToArray())
                 {
                     if (!UnsortedAlbums.Contains(item))
                         Albums.Remove(item);
@@ -328,10 +328,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IAlbum album:
-                                Albums.Add(new AlbumViewModel(album));
+                                var avm = new AlbumViewModel(album);
+                                Albums.Add(avm);
+                                UnsortedAlbums.Add(avm);
                                 break;
                             case IAlbumCollection collection:
-                                Albums.Add(new AlbumCollectionViewModel(collection));
+                                var acvm = new AlbumCollectionViewModel(collection);
+                                Albums.Add(acvm);
+                                UnsortedAlbums.Add(acvm);
                                 break;
                         }
                     }

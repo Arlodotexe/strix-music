@@ -384,7 +384,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Tracks.Add(item);
                 }
 
-                foreach (var item in Tracks)
+                foreach (var item in Tracks.ToArray())
                 {
                     if (!UnsortedTracks.Contains(item))
                         Tracks.Remove(item);
@@ -423,7 +423,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Artists.Add(item);
                 }
 
-                foreach (var item in Artists)
+                foreach (var item in Artists.ToArray())
                 {
                     if (!UnsortedArtists.Contains(item))
                         Artists.Remove(item);
@@ -689,7 +689,11 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(async _ =>
                 {
                     await foreach (var item in _album.GetTracksAsync(limit, Tracks.Count, cancellationToken))
-                        Tracks.Add(new TrackViewModel(item));
+                    {
+                        var tvm = new TrackViewModel(item);
+                        Tracks.Add(tvm);
+                        UnsortedTracks.Add(tvm);
+                    }
                 }, null);
             }
         }
@@ -717,8 +721,19 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     await foreach (var item in _album.GetArtistItemsAsync(limit, Artists.Count, cancellationToken))
                     {
-                        if (item is IArtist artist)
-                            Artists.Add(new ArtistViewModel(artist));
+                        switch (item)
+                        {
+                            case IArtist artist:
+                                var avm = new ArtistViewModel(artist);
+                                Artists.Add(avm);
+                                UnsortedArtists.Add(avm);
+                                break;
+                            case IArtistCollection collection:
+                                var acvm = new ArtistCollectionViewModel(collection);
+                                Artists.Add(acvm);
+                                UnsortedArtists.Add(acvm);
+                                break;
+                        }
                     }
                 }, null);
             }

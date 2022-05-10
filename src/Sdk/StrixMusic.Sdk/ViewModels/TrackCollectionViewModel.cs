@@ -172,7 +172,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Tracks.Add(item);
                 }
 
-                foreach (var item in Tracks)
+                foreach (var item in Tracks.ToArray())
                 {
                     if (!UnsortedTracks.Contains(item))
                         Tracks.Remove(item);
@@ -486,7 +486,11 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(async _ =>
                 {
                     await foreach (var item in _collection.GetTracksAsync(limit, Tracks.Count, cancellationToken))
-                        Tracks.Add(new TrackViewModel(item));
+                    {
+                        var tvm = new TrackViewModel(item);
+                        Tracks.Add(tvm);
+                        UnsortedTracks.Add(tvm);
+                    }
                 }, null);
             }
         }

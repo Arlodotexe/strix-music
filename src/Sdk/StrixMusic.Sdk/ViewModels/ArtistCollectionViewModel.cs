@@ -192,7 +192,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Artists.Add(item);
                 }
 
-                foreach (var item in Artists)
+                foreach (var item in Artists.ToArray())
                 {
                     if (!UnsortedArtists.Contains(item))
                         Artists.Remove(item);
@@ -503,10 +503,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IArtist artist:
-                                Artists.Add(new ArtistViewModel(artist));
+                                var avm = new ArtistViewModel(artist);
+                                Artists.Add(avm);
+                                UnsortedArtists.Add(avm);
                                 break;
                             case IArtistCollection collection:
-                                Artists.Add(new ArtistCollectionViewModel(collection));
+                                var acvm = new ArtistCollectionViewModel(collection);
+                                Artists.Add(acvm);
+                                UnsortedArtists.Add(acvm);
                                 break;
                         }
                     }

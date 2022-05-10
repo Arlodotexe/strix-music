@@ -173,10 +173,10 @@ namespace StrixMusic.Sdk.ViewModels
                         Playlists.Add(item);
                 }
 
-                foreach (var item in Playlists)
+                foreach (var item in Playlists.ToArray())
                 {
                     if (!UnsortedPlaylists.Contains(item))
-                        UnsortedPlaylists.Remove(item);
+                        Playlists.Remove(item);
                 }
 
                 SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
@@ -472,10 +472,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                Playlists.Add(new PlaylistViewModel(playlist));
+                                var pvm = new PlaylistViewModel(playlist);
+                                Playlists.Add(pvm);
+                                UnsortedPlaylists.Add(pvm);
                                 break;
                             case IPlaylistCollection collection:
-                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                var pcvm = new PlaylistCollectionViewModel(collection);
+                                Playlists.Add(pcvm);
+                                UnsortedPlaylists.Add(pcvm);
                                 break;
                         }
                     }

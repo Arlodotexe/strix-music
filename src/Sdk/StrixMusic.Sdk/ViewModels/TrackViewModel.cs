@@ -675,11 +675,19 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     await foreach (var item in GetArtistItemsAsync(limit, Artists.Count, cancellationToken))
                     {
-                        if (item is IArtist artist)
-                            Artists.Add(new ArtistViewModel(artist));
-
-                        if (item is IArtistCollection collection)
-                            Artists.Add(new ArtistCollectionViewModel(collection));
+                        switch (item)
+                        {
+                            case IArtist artist:
+                                var avm = new ArtistViewModel(artist);
+                                Artists.Add(avm);
+                                UnsortedArtists.Add(avm);
+                                break;
+                            case IArtistCollection collection:
+                                var acvm = new ArtistCollectionViewModel(collection);
+                                Artists.Add(acvm);
+                                UnsortedArtists.Add(acvm);
+                                break;
+                        }
                     }
                 }, null);
             }

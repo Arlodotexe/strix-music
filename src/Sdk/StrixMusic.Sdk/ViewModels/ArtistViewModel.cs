@@ -377,7 +377,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Tracks.Add(item);
                 }
 
-                foreach (var item in Tracks)
+                foreach (var item in Tracks.ToArray())
                 {
                     if (!UnsortedTracks.Contains(item))
                         Tracks.Remove(item);
@@ -416,7 +416,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Albums.Add(item);
                 }
 
-                foreach (var item in Albums)
+                foreach (var item in Albums.ToArray())
                 {
                     if (!UnsortedAlbums.Contains(item))
                         Albums.Remove(item);
@@ -657,13 +657,18 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(async _ =>
                 {
                     await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken))
-                    {
-                        if (item is IAlbum album)
-                            Albums.Add(new AlbumViewModel(album));
-
-                        if (item is IAlbumCollection albumCollection)
-                            Albums.Add(new AlbumCollectionViewModel(albumCollection));
-                    }
+                        {
+                            case IAlbum album:
+                                var avm = new AlbumViewModel(album);
+                                Albums.Add(avm);
+                                UnsortedAlbums.Add(avm);
+                                break;
+                            case IAlbumCollection collection:
+                                var acvm = new AlbumCollectionViewModel(collection);
+                                Albums.Add(acvm);
+                                UnsortedAlbums.Add(acvm);
+                                break;
+                        }
                 }, null);
             }
         }
@@ -678,7 +683,11 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(async _ =>
                 {
                     await foreach (var item in GetTracksAsync(limit, Tracks.Count, cancellationToken))
-                        Tracks.Add(new TrackViewModel(item));
+                    {
+                        var tvm = new TrackViewModel(item);
+                        Tracks.Add(tvm);
+                        UnsortedTracks.Add(tvm);
+                    }
                 }, null);
             }
         }

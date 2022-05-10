@@ -481,7 +481,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Albums.Add(item);
                 }
 
-                foreach (var item in Albums)
+                foreach (var item in Albums.ToArray())
                 {
                     if (!UnsortedAlbums.Contains(item))
                         Albums.Remove(item);
@@ -535,10 +535,10 @@ namespace StrixMusic.Sdk.ViewModels
                         Playlists.Add(item);
                 }
 
-                foreach (var item in Playlists)
+                foreach (var item in Playlists.ToArray())
                 {
                     if (!UnsortedPlaylists.Contains(item))
-                        UnsortedPlaylists.Remove(item);
+                        Playlists.Remove(item);
                 }
 
                 SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
@@ -562,7 +562,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Tracks.Add(item);
                 }
 
-                foreach (var item in Tracks)
+                foreach (var item in Tracks.ToArray())
                 {
                     if (!UnsortedTracks.Contains(item))
                         Tracks.Remove(item);
@@ -890,10 +890,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                Playlists.Add(new PlaylistViewModel(playlist));
+                                var pvm = new PlaylistViewModel(playlist);
+                                Playlists.Add(pvm);
+                                UnsortedPlaylists.Add(pvm);
                                 break;
                             case IPlaylistCollection collection:
-                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                var pcvm = new PlaylistCollectionViewModel(collection);
+                                Playlists.Add(pcvm);
+                                UnsortedPlaylists.Add(pcvm);
                                 break;
                         }
                     }
@@ -912,7 +916,9 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     await foreach (var item in _collectionGroup.GetTracksAsync(limit, Tracks.Count, cancellationToken))
                     {
-                        Tracks.Add(new TrackViewModel(item));
+                        var tvm = new TrackViewModel(item);
+                        Tracks.Add(tvm);
+                        UnsortedTracks.Add(tvm);
                     }
                 }, null);
             }
@@ -932,10 +938,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IAlbum album:
-                                Albums.Add(new AlbumViewModel(album));
+                                var avm = new AlbumViewModel(album);
+                                Albums.Add(avm);
+                                UnsortedAlbums.Add(avm);
                                 break;
                             case IAlbumCollection collection:
-                                Albums.Add(new AlbumCollectionViewModel(collection));
+                                var acvm = new AlbumCollectionViewModel(collection);
+                                Albums.Add(acvm);
+                                UnsortedAlbums.Add(acvm);
                                 break;
                         }
                     }
@@ -957,10 +967,14 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IArtist artist:
-                                Artists.Add(new ArtistViewModel(artist));
+                                var avm = new ArtistViewModel(artist);
+                                Artists.Add(avm);
+                                UnsortedArtists.Add(avm);
                                 break;
                             case IArtistCollection collection:
-                                Artists.Add(new ArtistCollectionViewModel(collection));
+                                var acvm = new ArtistCollectionViewModel(collection);
+                                Artists.Add(acvm);
+                                UnsortedArtists.Add(acvm);
                                 break;
                         }
                     }
