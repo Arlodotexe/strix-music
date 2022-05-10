@@ -50,6 +50,5 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreLyrics> Sources => Inner.Sources;
-
     }
 }

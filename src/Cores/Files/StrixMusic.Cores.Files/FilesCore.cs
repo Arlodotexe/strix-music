@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;

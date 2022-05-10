@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Shells.ZuneDesktop.Converters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -134,6 +134,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         private async void Artists_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if (Collection is null)
+                return;
+
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 // Define default sort state of the albums on load.

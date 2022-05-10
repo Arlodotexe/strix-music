@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.Default
 {

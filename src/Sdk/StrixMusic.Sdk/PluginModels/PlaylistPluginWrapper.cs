@@ -328,6 +328,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
 
     /// <inheritdoc/>
     public bool Equals(ICorePlaylistCollectionItem other) => _playlist.Equals(other);
+
     /// <inheritdoc/>
     public bool Equals(ICoreTrackCollection other) => _playlist.Equals(other);
 

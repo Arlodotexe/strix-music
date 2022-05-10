@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.WinUI.Controls;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.WinUI.Services.NotificationService;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Sdk.WinUI.Services.Localization;
-using Windows.ApplicationModel.Resources;
+using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Services;
 using StrixMusic.Services.CoreManagement;
+using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {

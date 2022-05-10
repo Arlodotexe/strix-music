@@ -9,7 +9,7 @@ using System.Linq;
 namespace StrixMusic.Sdk.AdapterModels;
 
 /// <summary>
-/// Provides configuration options for a <see cref="MergedCollectionMap"/>.
+/// Provides configuration options for a <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
 /// </summary>
 public class MergedCollectionConfig
 {

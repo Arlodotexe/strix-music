@@ -75,5 +75,4 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
         DetachEvents(_image);
         return _image.DisposeAsync();
     }
-
 }

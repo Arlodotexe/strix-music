@@ -31,7 +31,7 @@ public class DiscoverablesPluginBase : PlayableCollectionGroupPluginBase, IModel
     public virtual bool Equals(ICoreDiscoverables other) => Inner.Equals(other);
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)Inner).Sources;
+    public new IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)Inner).Sources;
 
     /// <inheritdoc />
     public new IDiscoverables Inner { get; }

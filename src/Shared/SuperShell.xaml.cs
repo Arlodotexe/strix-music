@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using Windows.ApplicationModel;
-using StrixMusic.Shared.ViewModels;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore;
@@ -18,6 +14,10 @@ using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services;
 using StrixMusic.Services.CoreManagement;
+using StrixMusic.Shared.ViewModels;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {

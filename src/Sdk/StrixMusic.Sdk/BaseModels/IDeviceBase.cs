@@ -134,7 +134,7 @@ namespace StrixMusic.Sdk.BaseModels
         /// <summary>
         /// Fires when <see cref="PlaybackContext"/> changes.
         /// </summary>
-        event EventHandler<IPlayableBase>? PlaybackContextChanged;
+        event EventHandler<IPlayableBase?>? PlaybackContextChanged;
 
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.

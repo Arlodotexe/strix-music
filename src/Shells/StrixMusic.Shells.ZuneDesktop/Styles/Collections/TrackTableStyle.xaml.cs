@@ -1,6 +1,6 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using System;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.ViewModels;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 

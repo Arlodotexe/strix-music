@@ -1,5 +1,5 @@
-﻿using OwlCore.Extensions;
-using System;
+﻿using System;
+using OwlCore.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -76,7 +76,7 @@ namespace StrixMusic.Controls
         public void FinishAnimation()
         {
             _isAnimationEnding = true;
-            
+
             RepeatedAnimation.Stop();
             EndingAnimation.Begin();
         }
@@ -88,7 +88,8 @@ namespace StrixMusic.Controls
                 if (PlayIntro)
                 {
                     StartingAnimation.Begin();
-                } else
+                }
+                else
                 {
                     RepeatedAnimation.Begin();
                 }

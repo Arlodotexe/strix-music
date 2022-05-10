@@ -2,21 +2,21 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
+using StrixMusic.Services.CoreManagement;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Services.CoreManagement;
 
 namespace StrixMusic.Shared
 {
@@ -67,7 +67,7 @@ namespace StrixMusic.Shared
             Unloaded += MainPage_Unloaded;
             
             LoadRegisteredMediaPlayerElements();
-            await SetupShellsFromSettings();
+            SetupShellsFromSettings();
             Guard.IsNotNull(PreferredShell, nameof(PreferredShell));
 
             await SetupShell(PreferredShell);
@@ -157,10 +157,10 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async Task SetupShellsFromSettings()
+        private void SetupShellsFromSettings()
         {
             // Gets the preferred shell from settings.
-            var preferredShellId = Ioc.Default.GetRequiredService<AppSettings>().PreferredShell;
+            var preferredShellId = _settings.PreferredShell;
 
             PreferredShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == preferredShellId);
             if (PreferredShell == default)
@@ -170,7 +170,7 @@ namespace StrixMusic.Shared
             }
 
             // Gets the preferred shell from settings.
-            var fallbackShellId = Ioc.Default.GetRequiredService<AppSettings>().FallbackShell;
+            var fallbackShellId = _settings.FallbackShell;
             FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == fallbackShellId);
         }
 

@@ -94,7 +94,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_PlaybackSpeedChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackSpeed)), null);
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
+        private void Device_PlaybackContextChanged(object sender, IPlayableBase? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
 
         private void Device_IsActiveChanged(object sender, bool e)
         {
@@ -205,7 +205,7 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IPlayableBase>? PlaybackContextChanged
+        public event EventHandler<IPlayableBase?>? PlaybackContextChanged
         {
             add => _model.PlaybackContextChanged += value;
             remove => _model.PlaybackContextChanged -= value;

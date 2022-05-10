@@ -12,7 +12,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// The items are ranked by user preference.
         /// </summary>
-        /// <seealso cref="SettingsKeys.CoreRanking"/>
         Ranked,
 
         /// <summary>

@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.AdapterModels
             AttachEvents();
         }
 
-        private async static Task InsertItemIntoCollectionAsync<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex, CancellationToken cancellationToken)
+        private static async Task InsertItemIntoCollectionAsync<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex, CancellationToken cancellationToken)
             where T : class, ICollectionItemBase, ICoreMember // https://twitter.com/Arlodottxt/status/1351317100959326213?s=20
         {
             switch (sourceCollection)
@@ -112,7 +112,7 @@ namespace StrixMusic.Sdk.AdapterModels
             }
         }
 
-        private async static Task InsertExistingItemAsync(TCollectionItem itemToInsert, MappedData mappedData, CancellationToken cancellationToken)
+        private static async Task InsertExistingItemAsync(TCollectionItem itemToInsert, MappedData mappedData, CancellationToken cancellationToken)
         {
             foreach (var source in itemToInsert.Sources)
             {
@@ -139,7 +139,7 @@ namespace StrixMusic.Sdk.AdapterModels
             }
         }
 
-        private async static Task InsertNewItemAsync(IEnumerable<TCoreCollection> sourceCollections, IEnumerable<ICore> sourceCores, IInitialData dataToInsert, int index, CancellationToken cancellationToken = default)
+        private static async Task InsertNewItemAsync(IEnumerable<TCoreCollection> sourceCollections, IEnumerable<ICore> sourceCores, IInitialData dataToInsert, int index, CancellationToken cancellationToken = default)
         {
             // TODO create setting to let user decide default
             foreach (var source in sourceCollections)
@@ -697,7 +697,7 @@ namespace StrixMusic.Sdk.AdapterModels
             return returnData;
         }
 
-        private async IAsyncEnumerable<TCollectionItem> GetItemsByRank(int limit, int offset, CancellationToken cancellationToken = default)
+        private async IAsyncEnumerable<TCollectionItem> GetItemsByRank(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));

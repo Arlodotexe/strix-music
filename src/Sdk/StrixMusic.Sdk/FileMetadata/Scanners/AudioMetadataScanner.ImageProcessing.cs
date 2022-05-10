@@ -22,15 +22,15 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 {
     public partial class AudioMetadataScanner
     {
-        private readonly static IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512 };
-        private readonly static IReadOnlyList<int> _highPerfImageSizes = new int[] { 64, 128 };
-        private readonly static IReadOnlyList<int> _ultraHighPerfImageSizes = new int[] { 64 };
+        private static readonly IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512 };
+        private static readonly IReadOnlyList<int> _highPerfImageSizes = new int[] { 64, 128 };
+        private static readonly IReadOnlyList<int> _ultraHighPerfImageSizes = new int[] { 64 };
 
         private readonly ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>> _ongoingImageProcessingTasks;
         private readonly SemaphoreSlim _ongoingImageProcessingTasksSemaphore;
         private readonly SemaphoreSlim _ongoingImageProcessingSemaphore;
 
-        private async static Task<string> GenerateImageIdAsync(Stream imageStream)
+        private static async Task<string> GenerateImageIdAsync(Stream imageStream)
         {
             // Create a unique ID for the image by
             // collecting every 64th byte in the data

@@ -117,6 +117,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             switch (SortState)
             {
@@ -290,6 +291,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void PopulateAlbumGroupedByReleaseYear()
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             AlbumGroupedByCollection.Clear();
 
@@ -312,6 +314,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void PopulateAlbumGroupedByArtists()
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             AlbumGroupedByCollection.Clear();
 

@@ -86,7 +86,7 @@ public class RecoverySettingsPanel : AbstractUICollection, IDisposable
         }
     }
 
-    async Task PeformNuke(Action onComplete)
+    private async Task PeformNuke(Action onComplete)
     {
         await EmptyFolder(ApplicationData.Current.LocalFolder);
         await EmptyFolder(ApplicationData.Current.LocalCacheFolder);
@@ -127,7 +127,6 @@ public class RecoverySettingsPanel : AbstractUICollection, IDisposable
                 }
             }
         }
-
     }
 
     /// <inheritdoc />

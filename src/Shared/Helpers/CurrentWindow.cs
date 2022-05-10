@@ -1,6 +1,6 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using StrixMusic.Sdk.Services.Navigation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
@@ -13,8 +13,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// Gets the <see cref="AppFrame"/> instance in the current window.
         /// </summary>
-        /// <param name="window"></param>
-        /// <returns></returns>
+        /// <returns>The current <see cref="AppFrame"/>.</returns>
         public static AppFrame GetAppFrame(this Window window) => (AppFrame)window.Content;
         
         /// <summary>

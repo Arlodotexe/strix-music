@@ -16,6 +16,7 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="AvailableServicesItemViewModel"/> class.
         /// </summary>
+        /// <param name="coreManagementService">A core management service where cores can be re-registered.</param>
         /// <param name="metadata">The core metadata to wrap around.</param>
         public AvailableServicesItemViewModel(ICoreManagementService coreManagementService, CoreMetadata metadata)
         {

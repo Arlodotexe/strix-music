@@ -38,9 +38,9 @@ namespace StrixMusic.Cores.Files.Models
             await _initSemaphore.WaitAsync(cancellationToken);
 
             _fileMetadataManager = SourceCore.Cast<FilesCore>().FileMetadataManager;
-            AttachEvents(_fileMetadataManager);
-
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
+            AttachEvents(_fileMetadataManager);
 
             TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
             TotalArtistItemsCount = await _fileMetadataManager.Artists.GetItemCount();

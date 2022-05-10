@@ -267,7 +267,6 @@ namespace StrixMusic.Sdk.AdapterModels
 
             if (itemToRemove.Discoverables is not null)
             {
-
                 Guard.IsNotNull(_discoverables);
                 _discoverables.RemoveSource(itemToRemove.Discoverables);
             }

@@ -13,21 +13,29 @@ using NLog.Config;
 using NLog.Targets;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using OwlCore.Services;
+using StrixMusic.Controls;
 using StrixMusic.Cores.LocalFiles;
 using StrixMusic.Cores.OneDrive;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Helpers;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.PluginModels;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Models;
 using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
+using StrixMusic.Services.CoreManagement;
 using StrixMusic.Shells.Default;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
@@ -39,14 +47,6 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Extensions;
-using StrixMusic.Controls;
-using StrixMusic.Sdk.AdapterModels;
-using StrixMusic.Sdk.AppModels;
-using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.PluginModels;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Services.CoreManagement;
 
 namespace StrixMusic.Shared
 {
@@ -57,7 +57,6 @@ namespace StrixMusic.Shared
     {
         private MergedCollectionConfig _mergedCollectionConfig = new();
         private bool _showingQuip;
-        private INavigationService<Control>? _navService;
 
         /// <summary>
         /// The cores displayed in the loading UI.
@@ -374,7 +373,7 @@ namespace StrixMusic.Shared
 
         private static async Task<List<string>> InitializeCoreRankingAsync(ICoreManagementService coreManager)
         {
-#warning Move into core management service.
+#warning TODO: Move into core management service.
             var coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
 
             Guard.IsGreaterThan(coreInstanceRegistry.Count, 0, nameof(coreInstanceRegistry.Count));
@@ -423,15 +422,15 @@ namespace StrixMusic.Shared
         private async static Task WaitForTempOutOfBoxSetupAsync(ICoreManagementService coreManagementService, INotificationService notificationService, AppSettings settings, IReadOnlyList<ICore> loadedCores)
         {
             var doneButton = new AbstractButton($"{nameof(AppLoadingView)}.OOBEFinishedButton", "Done", null, AbstractButtonType.Confirm);
-            var notification = notificationService.RaiseNotification(new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
+            var tempOOBEContinuationUI = new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
             {
                 Title = "First time?",
                 Subtitle = "Set up your skins and services before proceeding. A proper OOBE will come later.",
-                Items = new List<AbstractUIElement>()
-                {
-                    doneButton,
-                },
-            });
+            };
+
+            tempOOBEContinuationUI.Add(doneButton);
+
+            var notification = notificationService.RaiseNotification(tempOOBEContinuationUI);
 
             // TODO Need a real OOBE instead of using SuperShell
             Window.Current.GetAppFrame().DisplaySuperShell(settings, loadedCores, coreManagementService);

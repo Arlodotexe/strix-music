@@ -45,5 +45,5 @@ public class PlayableCollectionGroupPluginWrapper : PlayableCollectionGroupPlugi
     public IReadOnlyList<ICorePlayableCollectionGroup> Sources => ((IMerged<ICorePlayableCollectionGroup>)_playableCollectionGroup).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICorePlayableCollectionGroup other) => _playableCollectionGroup.Equals(other);
+    public new bool Equals(ICorePlayableCollectionGroup other) => _playableCollectionGroup.Equals(other);
 }

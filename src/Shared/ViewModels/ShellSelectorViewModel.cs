@@ -91,11 +91,11 @@ namespace StrixMusic.Shared.ViewModels
             set
             {
                 SetProperty(ref _preferredShell, value, nameof(PreferredShell));
-                _ = UpdateFallbackShell();
+                UpdateFallbackShell();
             }
         }
 
-        private async Task UpdateFallbackShell()
+        private void UpdateFallbackShell()
         {
             if (PreferredShell is null)
                 return;
@@ -118,7 +118,7 @@ namespace StrixMusic.Shared.ViewModels
             }
         }
 
-        /// <inheritdoc cref="SettingsKeysUI.FallbackShell"/>
+        /// <inheritdoc cref="AppSettings.FallbackShell"/>
         public ShellInfoViewModel? FallbackShell
         {
             get => _fallbackShell;

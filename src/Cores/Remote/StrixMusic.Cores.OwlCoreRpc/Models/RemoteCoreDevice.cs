@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
         public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableBase>? PlaybackContextChanged;
+        public event EventHandler<IPlayableBase?>? PlaybackContextChanged;
 
         /// <inheritdoc/>
         public event EventHandler<bool>? ShuffleStateChanged;

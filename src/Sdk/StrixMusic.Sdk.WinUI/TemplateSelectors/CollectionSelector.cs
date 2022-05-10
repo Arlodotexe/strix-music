@@ -1,7 +1,7 @@
-﻿using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.BaseModels;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.BaseModels;
 
 namespace StrixMusic.Sdk.WinUI.TemplateSelectors
 {

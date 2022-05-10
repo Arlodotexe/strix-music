@@ -29,8 +29,8 @@ namespace StrixMusic.Shells.ZuneDesktop
     public sealed partial class ZuneShell : Shell
     {
         private readonly IFolderData _settingStorage;
-        private INavigationService<Control>? _navigationService;
         private readonly ZuneDesktopSettings _settings;
+        private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
@@ -85,7 +85,7 @@ namespace StrixMusic.Shells.ZuneDesktop
             _settings.PropertyChanged += SettingsService_SettingChanged;
 
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
-            _ = SetupBackgroundImage();
+            SetupBackgroundImage();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -94,13 +94,11 @@ namespace StrixMusic.Shells.ZuneDesktop
             _settings.PropertyChanged -= SettingsService_SettingChanged;
         }
 
-        private async Task SetupBackgroundImage()
+        private void SetupBackgroundImage()
         {
-            var settingsService = Ioc.GetRequiredService<ZuneDesktopSettings>();
-            await settingsService.LoadAsync();
+            var settings = Ioc.GetRequiredService<ZuneDesktopSettings>();
 
-            var backgroundImage = settingsService.BackgroundImage;
-
+            var backgroundImage = settings.BackgroundImage;
             if (backgroundImage.IsNone)
             {
                 BackgroundImage.Visibility = Visibility.Collapsed;

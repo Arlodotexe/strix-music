@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="trackCollection">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task TrackCollection(ITrackCollectionViewModel trackCollection, CancellationToken cancellationToken)
+        public static async Task TrackCollection(ITrackCollectionViewModel trackCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = trackCollection.Tracks.Count;
 
@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="albumCollection">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task AlbumCollection(IAlbumCollectionViewModel albumCollection, CancellationToken cancellationToken)
+        public static async Task AlbumCollection(IAlbumCollectionViewModel albumCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = albumCollection.Albums.Count;
 
@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="artistCollection">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task ArtistCollection(IArtistCollectionViewModel artistCollection, CancellationToken cancellationToken)
+        public static async Task ArtistCollection(IArtistCollectionViewModel artistCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = artistCollection.Artists.Count;
 
@@ -102,7 +102,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="playlistCollection">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection, CancellationToken cancellationToken)
+        public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection, CancellationToken cancellationToken)
         {
             var lastItemCount = playlistCollection.Playlists.Count;
 
@@ -129,7 +129,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="genreCollectionViewModel">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task GenreCollection(IGenreCollectionViewModel genreCollectionViewModel, CancellationToken cancellationToken)
+        public static async Task GenreCollection(IGenreCollectionViewModel genreCollectionViewModel, CancellationToken cancellationToken)
         {
             var lastItemCount = genreCollectionViewModel.Genres.Count;
 
@@ -156,7 +156,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="imageCollectionViewModel">The collection to initialize.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async static Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel, CancellationToken cancellationToken)
+        public static async Task ImageCollection(IImageCollectionViewModel imageCollectionViewModel, CancellationToken cancellationToken)
         {
             await _imagesMutex.WaitAsync(CancellationToken.None);
 

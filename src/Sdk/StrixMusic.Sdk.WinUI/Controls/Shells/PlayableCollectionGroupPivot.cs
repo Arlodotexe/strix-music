@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
     /// </summary>
     public sealed partial class PlayableCollectionGroupPivot : Control
     {
-        private static readonly Dictionary<string, int> _pivotItemPositionMemo = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> _pivotItemPositionMemo = new();
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="RestoreSelectedPivot"/> property.
@@ -195,7 +195,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// Used to handle saving of most recently selected pivot.
         /// </summary>
-        public async void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (PART_Pivot == null)
                 return;

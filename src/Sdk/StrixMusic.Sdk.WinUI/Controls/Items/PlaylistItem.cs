@@ -1,7 +1,6 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
+﻿using System.Threading.Tasks;
 using StrixMusic.Sdk.ViewModels;
-using System.Threading.Tasks;
+using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

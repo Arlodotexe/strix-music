@@ -182,11 +182,12 @@ namespace StrixMusic.Services
 
             // Images
             if (e.Track.TotalImageCount == 0)
+            {
                 updater.Thumbnail = null;
+            }
             else
             {
                 // Just the first, we don't care about the size.
-
                 var images = await e.Track.GetImagesAsync(1, 0).ToListAsync();
 
                 foreach (var image in images)
@@ -217,7 +218,6 @@ namespace StrixMusic.Services
 
             // Artist info
             // Just the first (primary) artist.
-
             var artists = await e.Track.GetArtistItemsAsync(1, 0).ToListAsync();
 
             foreach (var artist in artists)

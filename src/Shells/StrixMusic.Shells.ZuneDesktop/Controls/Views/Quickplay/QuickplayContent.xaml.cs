@@ -1,10 +1,8 @@
-﻿using StrixMusic.Sdk;
-using System;
+﻿using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
-using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 {
@@ -30,8 +28,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         /// </summary>
         public StrixDataRootViewModel DataRoot
         {
-            get { return (StrixDataRootViewModel)GetValue(DataRootProperty); }
-            set { SetValue(DataRootProperty, value); }
+            get => (StrixDataRootViewModel)GetValue(DataRootProperty);
+            set => SetValue(DataRootProperty, value);
         }
 
         /// <summary>

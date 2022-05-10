@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 /// </summary>
 public class PopulateEmptyNamesPlugin : SdkModelPlugin
 {
-    private readonly static ModelPluginMetadata _metadata = new(
+    private static readonly ModelPluginMetadata _metadata = new(
         id: nameof(PopulateEmptyNamesPlugin),
         displayName: "Populate empty names",
         description: "Provides a fallback value for items that are missing a name.",

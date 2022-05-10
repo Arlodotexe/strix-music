@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
     /// </summary>
     public sealed partial class AudioMetadataScanner : IDisposable
     {
-        private readonly static string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
+        private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
         private readonly int _scanBatchSize;
 
         private readonly FileMetadataManager _metadataManager;

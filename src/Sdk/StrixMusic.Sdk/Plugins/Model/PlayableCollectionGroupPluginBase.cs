@@ -16,7 +16,6 @@ using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Plugins.Model
 {
-
     /// <summary>
     /// An implementation of <see cref="IPlayableCollectionGroup"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.

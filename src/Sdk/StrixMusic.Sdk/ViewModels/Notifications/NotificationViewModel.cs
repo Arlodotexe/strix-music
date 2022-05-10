@@ -18,8 +18,8 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     [Bindable(true)]
     public sealed class NotificationViewModel : ObservableObject, IDisposable
     {
-        private AbstractUINotificationViewModel _abstractUINotificationViewModel;
         private readonly SynchronizationContext _syncContext;
+        private AbstractUINotificationViewModel _abstractUINotificationViewModel;
 
         /// <summary>
         /// The original notification model.

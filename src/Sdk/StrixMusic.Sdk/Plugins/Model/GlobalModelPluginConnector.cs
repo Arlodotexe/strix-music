@@ -42,6 +42,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         ///         chain with all provided user-added plugins preceding it.
         /// </remarks>
         /// <param name="plugins">A plugin container which contains existing plugins to weave with the global plugin connector.</param>
+        /// <returns>A new instance of <see cref="SdkModelPlugin"/> with the provided plugins applied to all common types.</returns>
         public static SdkModelPlugin Create(SdkModelPlugin plugins)
         {
             // Create plugin connectors inside of a buildable plugin.
@@ -687,5 +688,4 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
     }
-
 }
