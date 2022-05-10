@@ -77,7 +77,7 @@
                         <triggers:ControlSizeTrigger MaxHeight="1000" TargetElement="{Binding ElementName=RootGrid}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Content.Margin" Value="0" />
+                        <Setter Target="PART_Content.Margin" Value="0" />
                         <Setter Target="Presenter.Padding"  Value="0" />
                         <Setter Target="HeaderText.Visibility"  Value="Collapsed" />
                         <Setter Target="CloseButton.(Grid.Row)"  Value="1" />
