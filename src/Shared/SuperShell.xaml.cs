@@ -39,7 +39,7 @@ namespace StrixMusic.Shared
         {
             _appSettings = appSettings;
             _coreManagementService = coreManagementService;
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
             CancelAddNewCommand = new RelayCommand(() => IsShowingAddNew = false);
             CancelConfigCoreCommand = new RelayCommand(() => CurrentCoreConfig = null);
             InitializeComponent();

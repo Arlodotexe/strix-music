@@ -229,10 +229,13 @@ namespace StrixMusic.Shared
 
             appFrame.Present(mainPage);
 
-            void RegisteredCore_OnStateChanged(object sender, CoreState e)
+            void RegisteredCore_OnStateChanged(object? sender, CoreState e)
             {
+                var core = sender as ICore;
+                Guard.IsNotNull(core);
+
                 if (e == CoreState.NeedsConfiguration)
-                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, cores, coreManagementService);
+                    appFrame.DisplayAbstractUIPanel(core, settings, cores, coreManagementService);
             }
 
             async void ContentOverlay_Closed(object? sender, EventArgs e)
@@ -249,7 +252,7 @@ namespace StrixMusic.Shared
                 }
             }
 
-            async void OutOfBox_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
+            async void OutOfBox_CoreInstanceRegistered(object? sender, CoreInstanceEventArgs args)
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
                 cores.Add(core);
@@ -260,14 +263,14 @@ namespace StrixMusic.Shared
 
                 core.CoreStateChanged -= Core_CoreStateChanged;
 
-                void Core_CoreStateChanged(object sender, CoreState e)
+                void Core_CoreStateChanged(object? sender, CoreState e)
                 {
                     if (e == CoreState.NeedsConfiguration)
                         appFrame.DisplayAbstractUIPanel(core, settings, cores, coreManagementService);
                 }
             }
 
-            async void Lifetime_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
+            async void Lifetime_CoreInstanceRegistered(object? sender, CoreInstanceEventArgs args)
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
                 core.CoreStateChanged += RegisteredCore_OnStateChanged;
@@ -286,13 +289,16 @@ namespace StrixMusic.Shared
                 }
             }
 
-            void Core_CoreStateChanged(object sender, CoreState e)
+            void Core_CoreStateChanged(object? sender, CoreState e)
             {
+                var core = sender as ICore;
+                Guard.IsNotNull(core);
+
                 if (e == CoreState.NeedsConfiguration)
-                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, rootViewModel.Sources, coreManagementService);
+                    appFrame.DisplayAbstractUIPanel(core, settings, rootViewModel.Sources, coreManagementService);
             }
 
-            void OnCoreInstanceUnregistered(object sender, CoreInstanceEventArgs e)
+            void OnCoreInstanceUnregistered(object? sender, CoreInstanceEventArgs e)
             {
                 var sourceToRemove = mergedLayer.Sources.First(x => x.InstanceId == e.InstanceId);
                 sourceToRemove.CoreStateChanged -= Core_CoreStateChanged;
@@ -301,7 +307,7 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async static Task InitializeShellRegistryAsync(NotificationService notificationService)
+        private static async Task InitializeShellRegistryAsync(NotificationService notificationService)
         {
             ShellRegistry.ShellRegistered += OnShellRegistered;
 
@@ -338,7 +344,7 @@ namespace StrixMusic.Shared
                 var coreInstanceAbstractFolder = new FolderData(coreInstanceFolder);
 
                 var loginMethod = LoginMethod.DeviceCode;
-                var messageHandler = new HttpClientHandler();
+                HttpMessageHandler messageHandler = new HttpClientHandler();
                 var settings = new OneDriveCoreSettings(coreInstanceAbstractFolder);
                 await settings.LoadAsync();
 
@@ -371,8 +377,8 @@ namespace StrixMusic.Shared
 
                 return core;
 
-                void OnInteractiveParamBuilderCreated(object sender, AcquireTokenInteractiveParameterBuilderCreatedEventArgs args) => args.Builder = args.Builder.WithUnoHelpers();
-                void OnPublicClientApplicationBuilderCreated(object sender, MsalPublicClientApplicationBuilderCreatedEventArgs args) => args.Builder = args.Builder.WithUnoHelpers();
+                void OnInteractiveParamBuilderCreated(object? sender, AcquireTokenInteractiveParameterBuilderCreatedEventArgs args) => args.Builder = args.Builder.WithUnoHelpers();
+                void OnPublicClientApplicationBuilderCreated(object? sender, MsalPublicClientApplicationBuilderCreatedEventArgs args) => args.Builder = args.Builder.WithUnoHelpers();
             });
 
             if (CoreRegistry.MetadataRegistry.Count == 0)
@@ -432,7 +438,7 @@ namespace StrixMusic.Shared
                 _mergedCollectionConfig.MergedCollectionSorting = appSettings.MergedCollectionSorting;
         }
 
-        private async static Task WaitForTempOutOfBoxSetupAsync(ICoreManagementService coreManagementService, INotificationService notificationService, AppSettings settings, IReadOnlyList<ICore> loadedCores)
+        private static async Task WaitForTempOutOfBoxSetupAsync(ICoreManagementService coreManagementService, INotificationService notificationService, AppSettings settings, IReadOnlyList<ICore> loadedCores)
         {
             var doneButton = new AbstractButton($"{nameof(AppLoadingView)}.OOBEFinishedButton", "Done", null, AbstractButtonType.Confirm);
             var tempOOBEContinuationUI = new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
@@ -506,7 +512,7 @@ namespace StrixMusic.Shared
             PART_Status.Text = text;
         }
 
-        private async static Task<AppSettings> InitAppSettings()
+        private static async Task<AppSettings> InitAppSettings()
         {
             var settingsDirectory = await ApplicationData.Current.LocalFolder.CreateFolderAsync(nameof(AppSettings), Windows.Storage.CreationCollisionOption.OpenIfExists);
             var settings = new AppSettings(new FolderData(settingsDirectory));
@@ -563,7 +569,7 @@ namespace StrixMusic.Shared
             }
         }
 
-        private static void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
+        private static void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
         {
             var message = $"{DateTime.UtcNow:O} [{e.Level}] [Thread {Thread.CurrentThread.ManagedThreadId}] L{e.CallerLineNumber} {System.IO.Path.GetFileName(e.CallerFilePath)} {e.CallerMemberName} {(e.Exception is not null ? $"Exception: {e.Exception} |" : string.Empty)} {e.Message}";
 

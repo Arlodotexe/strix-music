@@ -63,10 +63,10 @@ namespace StrixMusic.Services.CoreManagement
             {
                 _settings.CoreInstanceRegistry.Remove(instanceId);
                 _settings.CoreRanking.Remove(instanceId);
-            }
 
-            // TODO: Wait to fully dispose of core.
-            CoreInstanceUnregistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, value));
+                // TODO: Wait to fully dispose of core.
+                CoreInstanceUnregistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, value));
+            }
 
             var rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
             await rootStorageFolder.DeleteAsync();
