@@ -46,8 +46,4 @@
 		<None Remove="LICENSE.ADDITIONAL" />
 		<None Remove="LICENSE.LESSER" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Helpers" />
-	</ItemGroup>
 </Project>
