@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _artist = artist;
-            
+
             if (_artist.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_artist.RelatedItems);
 
@@ -657,6 +657,8 @@ namespace StrixMusic.Sdk.ViewModels
                 _syncContext.Post(async _ =>
                 {
                     await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken))
+                    {
+                        switch (item)
                         {
                             case IAlbum album:
                                 var avm = new AlbumViewModel(album);
@@ -669,6 +671,7 @@ namespace StrixMusic.Sdk.ViewModels
                                 UnsortedAlbums.Add(acvm);
                                 break;
                         }
+                    }
                 }, null);
             }
         }
@@ -701,7 +704,7 @@ namespace StrixMusic.Sdk.ViewModels
 
                 _syncContext.Post(async _ =>
                 {
-                    await foreach (var item in  _artist.GetImagesAsync(limit, Images.Count, cancellationToken))
+                    await foreach (var item in _artist.GetImagesAsync(limit, Images.Count, cancellationToken))
                         Images.Add(item);
                 }, null);
             }
