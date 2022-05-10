@@ -25,7 +25,7 @@
                         <AdaptiveTrigger MinWindowHeight="500" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="StrixIcon.Visibility" Value="Visible" />
+                        <Setter Target="PART_StrixIcon.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimum">
@@ -33,7 +33,7 @@
                         <AdaptiveTrigger MinWindowHeight="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="StrixIcon.Visibility" Value="Collapsed" />
+                        <Setter Target="PART_StrixIcon.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
