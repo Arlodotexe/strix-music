@@ -126,7 +126,7 @@ namespace StrixMusic.Shared
             await fileSystemService.InitAsync();
 
             Logger.LogInformation($"Initializing {nameof(CoreManagementService)}");
-            var cores = new HashSet<ICore>();
+            var cores = new List<ICore>();
             var coreManagementService = new CoreManagementService(settings);
             await coreManagementService.InitAsync();
             coreManagementService.CoreInstanceRegistered += OutOfBox_CoreInstanceRegistered;
@@ -136,7 +136,7 @@ namespace StrixMusic.Shared
             if (registry.Count == 0)
             {
                 Logger.LogInformation("No registered core instances. Displaying OOBE, waiting for at least 1 core to be configured.");
-                await WaitForTempOutOfBoxSetupAsync(coreManagementService, appFrame.NotificationService, settings, cores.ToList());
+                await WaitForTempOutOfBoxSetupAsync(coreManagementService, appFrame.NotificationService, settings, cores);
             }
 
             coreManagementService.CoreInstanceRegistered -= OutOfBox_CoreInstanceRegistered;
@@ -151,9 +151,13 @@ namespace StrixMusic.Shared
             var registeredCoreInstances = await coreManagementService.GetCoreInstanceRegistryAsync();
             foreach (var entry in registeredCoreInstances)
             {
-                var core = await CoreRegistry.CreateCoreAsync(entry.Value.Id, entry.Key);
+                if (cores.FirstOrDefault(x => x.InstanceId == entry.Key) is not ICore core)
+                {
+                    core = await CoreRegistry.CreateCoreAsync(entry.Value.Id, entry.Key);
+                    cores.Add(core);
+                }
+
                 core.CoreStateChanged += RegisteredCore_OnStateChanged;
-                cores.Add(core);
                 Cores.Add(new CoreViewModel(core));
             }
 
@@ -170,6 +174,9 @@ namespace StrixMusic.Shared
             var mergedLayer = new MergedCore(cores, _mergedCollectionConfig);
             var pluginLayer = new StrixDataRootPluginWrapper(mergedLayer, emptyNameFallbackPlugin, playbackHandlerPlugin);
             var rootViewModel = new StrixDataRootViewModel(pluginLayer);
+
+            Logger.LogInformation("Setting up primary app view");
+            var mainPage = new MainPage(rootViewModel, settings, coreManagementService);
 
             Logger.LogInformation("Setting up misc lifetime events");
             Guard.IsNotNull(appFrame.ContentOverlay);
@@ -196,9 +203,6 @@ namespace StrixMusic.Shared
             Logger.LogInformation("Initializing data root and cores");
             UpdateStatus("InitCores", localizationService);
             await rootViewModel.InitAsync();
-
-            Logger.LogInformation("Setting up primary app view");
-            var mainPage = new MainPage(rootViewModel, settings, coreManagementService);
 
             Logger.LogInformation("Setting up audio containers");
             foreach (var core in cores)
@@ -229,7 +233,7 @@ namespace StrixMusic.Shared
             void RegisteredCore_OnStateChanged(object sender, CoreState e)
             {
                 if (e == CoreState.NeedsConfiguration)
-                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, cores.ToList(), coreManagementService);
+                    appFrame.DisplayAbstractUIPanel((ICore)sender, settings, cores, coreManagementService);
             }
 
             async void ContentOverlay_Closed(object? sender, EventArgs e)
@@ -250,6 +254,7 @@ namespace StrixMusic.Shared
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
                 cores.Add(core);
+
                 core.CoreStateChanged += Core_CoreStateChanged;
 
                 await core.InitAsync();
@@ -259,16 +264,27 @@ namespace StrixMusic.Shared
                 void Core_CoreStateChanged(object sender, CoreState e)
                 {
                     if (e == CoreState.NeedsConfiguration)
-                        appFrame.DisplayAbstractUIPanel(core, settings, cores.ToList(), coreManagementService);
+                        appFrame.DisplayAbstractUIPanel(core, settings, cores, coreManagementService);
                 }
             }
 
             async void Lifetime_CoreInstanceRegistered(object sender, CoreInstanceEventArgs args)
             {
                 var core = await CoreRegistry.CreateCoreAsync(args.CoreMetadata.Id, args.InstanceId);
+                core.CoreStateChanged += RegisteredCore_OnStateChanged;
+
                 mergedLayer.AddSource(core);
 
+                cores.Add(core);
+                Cores.Add(new CoreViewModel(core));
+
                 await core.InitAsync();
+                
+                if (core.PlaybackType == MediaPlayerType.Standard)
+                {
+                    var audioPlayer = new AudioPlayerService(mainPage.CreateMediaPlayerElement());
+                    playbackHandlerService.RegisterAudioPlayer(audioPlayer, core.InstanceId);
+                }
             }
 
             void Core_CoreStateChanged(object sender, CoreState e)

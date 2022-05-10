@@ -26,9 +26,10 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class SuperShell : UserControl
     {
+        private readonly AppSettings _appSettings;
         private readonly ICoreManagementService _coreManagementService;
         private readonly SynchronizationContext _syncContext;
-        private readonly AdvancedAppSettingsPanel _advancedSettings;
+        private AdvancedAppSettingsPanel? _advancedSettings;
         private readonly LoadedServicesItemViewModel _addNewItem;
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace StrixMusic.Shared
         /// </summary>
         public SuperShell(AppSettings appSettings, ICoreManagementService coreManagementService)
         {
+            _appSettings = appSettings;
             _coreManagementService = coreManagementService;
             _syncContext = SynchronizationContext.Current;
             CancelAddNewCommand = new RelayCommand(() => IsShowingAddNew = false);
@@ -54,10 +56,18 @@ namespace StrixMusic.Shared
             _addNewItem = new LoadedServicesItemViewModel(true, null);
             Services.Add(_addNewItem);
 
-            _advancedSettings = new AdvancedAppSettingsPanel(appSettings);
-            AdvancedSettings = new AbstractUICollectionViewModel(_advancedSettings);
+            // The instance is kept in memory and reused in xaml.
+            // Loaded and Unloaded are called as needed when added to and removed from the visual tree,
+            // but the constructor is only called once.
+            Loaded += SuperShell_Loaded;
+        }
 
+        private void SuperShell_Loaded(object sender, RoutedEventArgs e)
+        {
             AttachEvents();
+
+            _advancedSettings = new AdvancedAppSettingsPanel(_appSettings);
+            AdvancedSettings = new AbstractUICollectionViewModel(_advancedSettings);
         }
 
         private void AttachEvents()
@@ -72,6 +82,7 @@ namespace StrixMusic.Shared
 
         private void DetachEvents()
         {
+            Unloaded -= OnUnloaded;
             var appFrame = Window.Current.GetAppFrame();
             Guard.IsNotNull(appFrame.ContentOverlay, nameof(appFrame.ContentOverlay));
 
@@ -82,7 +93,7 @@ namespace StrixMusic.Shared
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             DetachEvents();
-            _advancedSettings.Dispose();
+            _advancedSettings?.Dispose();
         }
 
         /// <summary>
@@ -154,7 +165,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The advanced settings for the app.
         /// </summary>
-        public AbstractUICollectionViewModel AdvancedSettings
+        public AbstractUICollectionViewModel? AdvancedSettings
         {
             get => (AbstractUICollectionViewModel)GetValue(AdvancedSettingsProperty);
             set => SetValue(AdvancedSettingsProperty, value);
