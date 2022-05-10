@@ -217,7 +217,7 @@
 			</PivotItem>
 			<PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
 				<StackPanel Spacing="15" HorizontalAlignment="Center" Padding="0,0,0,10">
-					<auic:AbstractUICollectionPresenter ViewModel="{x:Bind AdvancedSettings}" />
+					<auic:AbstractUICollectionPresenter ViewModel="{x:Bind AdvancedSettings, Mode=OneWay}" />
 				</StackPanel>
 			</PivotItem>
 		</Pivot>
