@@ -14,7 +14,9 @@ using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Cores.Files
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// A common base class for all cores that handle scanning any kind of file system for audio files.
+    /// </summary>
     public abstract class FilesCore : ICore
     {
         /// <summary>

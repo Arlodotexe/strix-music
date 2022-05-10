@@ -278,7 +278,7 @@ namespace StrixMusic.Shared
                 Cores.Add(new CoreViewModel(core));
 
                 await core.InitAsync();
-                
+
                 if (core.PlaybackType == MediaPlayerType.Standard)
                 {
                     var audioPlayer = new AudioPlayerService(mainPage.CreateMediaPlayerElement());
@@ -339,13 +339,26 @@ namespace StrixMusic.Shared
 
                 var loginMethod = LoginMethod.DeviceCode;
                 var messageHandler = new HttpClientHandler();
+                var settings = new OneDriveCoreSettings(coreInstanceAbstractFolder);
+                await settings.LoadAsync();
+
+                if (string.IsNullOrWhiteSpace(settings.ClientId))
+                    settings.ClientId = Secrets.OneDriveClientId;
+
+                if (string.IsNullOrWhiteSpace(settings.TenantId))
+                    settings.TenantId = Secrets.OneDriveTenantId;
+
+                if (string.IsNullOrWhiteSpace(settings.RedirectUri))
+                    settings.RedirectUri = Secrets.OneDriveRedirectUri;
+
+                await settings.SaveAsync();
 
 #if __WASM__
                 loginMethod = LoginMethod.Interactive;
                 messageHandler = new Uno.UI.Wasm.WasmHttpHandler();
 #endif
 
-                var core = new OneDriveCore(instanceId, coreInstanceAbstractFolder, coreInstanceAbstractFolder, notificationService)
+                var core = new OneDriveCore(instanceId, settings, coreInstanceAbstractFolder, notificationService)
                 {
                     LoginMethod = loginMethod,
                     HttpMessageHandler = messageHandler,

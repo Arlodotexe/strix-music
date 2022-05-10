@@ -42,6 +42,27 @@ namespace StrixMusic.Cores.LocalFiles
             AttachEvents();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilesCore"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This overload allows passing preconfigured settings that, if all values are valid, will allow initialization to complete without 
+        /// any interaction from the user.
+        /// </remarks>
+        /// <param name="instanceId">A unique identifier for this core instance.</param>
+        /// <param name="settings">A preconfigured instance of <see cref="LocalFilesCoreSettings"/> that will be used instead of a new instance with default values.</param>
+        /// <param name="fileSystem">An abstraction of the local file system.</param>
+        /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
+        public LocalFilesCore(string instanceId, LocalFilesCoreSettings settings, IFileSystemService fileSystem, INotificationService notificationService)
+            : base(instanceId)
+        {
+            FileSystem = fileSystem;
+            NotificationService = notificationService;
+            Settings = settings;
+
+            AttachEvents();
+        }
+
         private void AttachEvents()
         {
             Settings.PropertyChanged += OnSettingChanged;
