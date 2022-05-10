@@ -57,7 +57,6 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         private void PlaybackHandler_CurrentItemChanged(object sender, PlaybackItem? e)
         {
             Guard.IsNotNull(e, nameof(e));
-            Guard.IsNotNull(PlaybackContext, nameof(PlaybackContext));
 
             SetPlaybackData(PlaybackContext, e);
         }
