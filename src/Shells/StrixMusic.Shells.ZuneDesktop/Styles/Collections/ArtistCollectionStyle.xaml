@@ -36,11 +36,12 @@
 
                             <ContentControl x:Name="RelativeSourceRelay" Visibility="Collapsed" Content="{Binding Collection, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
 
-                            <StackPanel Margin="24,0,0,12" Orientation="Horizontal" Spacing="10">
+                            <StackPanel Margin="24,0,0,12" Orientation="Horizontal" Spacing="5">
                                 <TextBlock Text="{Binding Collection.TotalArtistItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CountToArtistsConverter}, Mode=OneWay}"
                                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
-                                <TextBlock x:Name="PART_SortLbl"  Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}" Foreground="#C8CACB" FontSize="11" FontWeight="Bold"   a:TextHelpers.CharacterCasing="Upper" />
+                                <TextBlock x:Name="PART_SortLbl"  Width="100"  Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}"
+                                           Foreground="#C8CACB" FontSize="12" FontWeight="Bold" a:TextHelpers.CharacterCasing="Upper" />
                            
                                 <ProgressBar IsIndeterminate="True"
                                              Visibility="{Binding Collection.PopulateMoreArtistsCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
