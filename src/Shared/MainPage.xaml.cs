@@ -120,7 +120,7 @@ namespace StrixMusic.Shared
         {
             if (e.PropertyName == nameof(AppSettings.FallbackShell) || e.PropertyName == nameof(AppSettings.PreferredShell))
             {
-                await SetupShellsFromSettings();
+                SetupShellsFromSettings();
 
                 if (PreferredShell is null)
                     return;

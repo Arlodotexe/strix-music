@@ -5,7 +5,7 @@ using System.Threading;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
 using OwlCore.WinUI.Controls;
-using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Sdk.WinUI.Services.Localization;
