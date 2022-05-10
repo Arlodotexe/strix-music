@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
 using Windows.Storage;
 using CreationCollisionOption = OwlCore.AbstractStorage.CreationCollisionOption;
 
@@ -22,7 +23,7 @@ namespace StrixMusic.Sdk.WinUI.Models
         public FolderData(StorageFolder folder)
         {
             StorageFolder = folder;
-            Id = folder.FolderRelativeId;
+            Id = folder.Path.HashMD5Fast();
         }
 
         /// <inheritdoc/>
