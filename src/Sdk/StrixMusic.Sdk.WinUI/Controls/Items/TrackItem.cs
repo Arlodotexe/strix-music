@@ -59,7 +59,12 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
 
         private void TrackItem_Unloaded(object sender, RoutedEventArgs e) => DetachHandlers();
 
-        private void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
+        /// <summary>
+        /// Subscribes to the PlaybackState on track change.
+        /// </summary>
+        /// <param name="oldValue">The old track instance.</param>
+        /// <param name="newValue">The new track instance.</param>
+        public virtual void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
         {
             if (oldValue != null)
                 oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;
