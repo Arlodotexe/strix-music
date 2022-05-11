@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
     /// <summary>
     /// A Templated <see cref="Control"/> for the NowPlaying bar in a Shell.
     /// </summary>
-    public sealed partial class NowPlayingBar : Control
+    public partial class NowPlayingBar : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NowPlayingBar"/> class.
@@ -39,12 +39,18 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
                 DetachEvents(device);
         }
 
-        private void AttachEvents(IDevice device)
+        /// <summary>
+        /// Attaches events to the provided devices.
+        /// </summary>
+        protected virtual void AttachEvents(IDevice device)
         {
             device.IsActiveChanged += Device_IsActiveChanged;
         }
 
-        private void DetachEvents(IDevice device)
+        /// <summary>
+        /// Detaches events from the provided devices.
+        /// </summary>
+        protected virtual void DetachEvents(IDevice device)
         {
             device.IsActiveChanged -= Device_IsActiveChanged;
         }
@@ -95,9 +101,19 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// Backing dependency property for <see cref="ActiveDevice"/>.
         /// </summary>
         private static readonly DependencyProperty ActiveDeviceProperty =
-            DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<NowPlayingBar>().OnActiveDeviceChanged(e.OldValue.Cast<DeviceViewModel>(), e.NewValue.Cast<DeviceViewModel>())));
 
-        private void OnDevicesChanged(IReadOnlyList<IDevice> oldValue, IReadOnlyList<IDevice> newValue)
+        /// <summary>
+        /// Callback for when the <see cref="ActiveDevice"/> property is changed.
+        /// </summary>
+        protected virtual void OnActiveDeviceChanged(DeviceViewModel? oldValue, DeviceViewModel? newValue)
+        {
+        }
+
+        /// <summary>
+        /// Callback for when the <see cref="Devices"/> property is changed.
+        /// </summary>
+        protected virtual void OnDevicesChanged(IReadOnlyList<IDevice> oldValue, IReadOnlyList<IDevice> newValue)
         {
             foreach (var item in oldValue)
                 DetachEvents(item);
