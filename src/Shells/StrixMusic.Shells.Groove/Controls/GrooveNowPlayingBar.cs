@@ -17,14 +17,8 @@ namespace StrixMusic.Shells.Groove.Controls
     /// <summary>
     /// A <see cref="Control"/> to display the now playing bar.
     /// </summary>
-    public partial class GrooveNowPlayingBar : Control
+    public sealed partial class GrooveNowPlayingBar : NowPlayingBar
     {
-        /// <summary>
-        /// Backing dependency property for <see cref="ActiveDevice"/>.
-        /// </summary>
-        public static readonly DependencyProperty ActiveDeviceProperty =
-            DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(GrooveNowPlayingBar), new PropertyMetadata(null, (d, e) => d.Cast<GrooveNowPlayingBar>().OnActiveDeviceChanged((DeviceViewModel?)e.OldValue, (DeviceViewModel?)e.NewValue)));
-        
         /// <summary>
         /// Backing dependency property for <see cref="BackgroundColor"/>.
         /// </summary>
@@ -32,35 +26,11 @@ namespace StrixMusic.Shells.Groove.Controls
             DependencyProperty.Register(nameof(BackgroundColor), typeof(Color?), typeof(GrooveNowPlayingBar), new PropertyMetadata(null));
 
         /// <summary>
-        /// The backing dependency property for <see cref="Devices"/>.
-        /// </summary>
-        public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<GrooveNowPlayingBar>().OnDevicesChanged()));
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="GrooveNowPlayingBar"/> class.
         /// </summary>
         public GrooveNowPlayingBar()
         {
             DefaultStyleKey = typeof(GrooveNowPlayingBar);
-        }
-
-        /// <summary>
-        /// A list of devices that can be selected from for displaying playback status.
-        /// </summary>
-        public IReadOnlyList<IDevice> Devices
-        {
-            get => (IReadOnlyList<IDevice>)GetValue(DevicesProperty);
-            set => SetValue(DevicesProperty, value);
-        }
-
-        /// <summary>
-        /// Holds active devices and track playback information.
-        /// </summary>
-        public DeviceViewModel? ActiveDevice
-        {
-            get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
-            set => SetValue(ActiveDeviceProperty, value);
         }
         
         /// <summary>
@@ -72,12 +42,14 @@ namespace StrixMusic.Shells.Groove.Controls
             set => SetValue(BackgroundColorProperty, value);
         }
 
-        private void AttachEvents(DeviceViewModel device)
+        /// <inheritdoc/>
+        private void AttachEvents_ActiveDevice(IDevice device)
         {
             device.NowPlayingChanged += ActiveDevice_NowPlayingChanged;
         }
-
-        private void DetachEvents(DeviceViewModel device)
+        
+        /// <inheritdoc/>
+        private void DetachEvents_ActiveDevice(IDevice device)
         {
             device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
@@ -99,25 +71,14 @@ namespace StrixMusic.Shells.Groove.Controls
             }
         }
 
-        private void OnActiveDeviceChanged(DeviceViewModel? oldValue, DeviceViewModel? newValue)
+        /// <inheritdoc/>
+        protected override void OnActiveDeviceChanged(DeviceViewModel? oldValue, DeviceViewModel? newValue)
         {
             if (!(oldValue is null))
-                DetachEvents(oldValue);
+                DetachEvents_ActiveDevice(oldValue);
 
             if (!(newValue is null))
-                AttachEvents(newValue);
-        }
-
-        private void OnDevicesChanged()
-        {
-            var targetDevice = Devices.FirstOrDefault(x => x.IsActive);
-            if (targetDevice is null)
-                return;
-
-            if (targetDevice is not DeviceViewModel dvm)
-                dvm = new DeviceViewModel(targetDevice);
-
-            ActiveDevice = dvm;
+                AttachEvents_ActiveDevice(newValue);
         }
     }
 }
