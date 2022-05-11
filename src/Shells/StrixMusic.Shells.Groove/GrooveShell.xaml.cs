@@ -51,7 +51,8 @@ namespace StrixMusic.Shells.Groove
             : base(dataRootViewModel)
         {
             this.InitializeComponent();
-
+            
+            #warning TODO: Remove usage of static WeakReferenceMessener in all shells. Does not support multi-instancing.
             // Register home page navigation
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 

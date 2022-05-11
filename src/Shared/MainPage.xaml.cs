@@ -65,7 +65,7 @@ namespace StrixMusic.Shared
         {
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
-            
+
             LoadRegisteredMediaPlayerElements();
             SetupShellsFromSettings();
             Guard.IsNotNull(PreferredShell, nameof(PreferredShell));
@@ -94,7 +94,7 @@ namespace StrixMusic.Shared
 
 #warning Remove me when live core editing is stable.
             var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
-            
+
             coreManagementService.CoreInstanceRegistered += ShowEditCoresWarning;
             coreManagementService.CoreInstanceUnregistered += ShowEditCoresWarning;
         }
@@ -104,7 +104,7 @@ namespace StrixMusic.Shared
             Unloaded -= MainPage_Unloaded;
 
             Ioc.Default.GetRequiredService<AppSettings>().PropertyChanged -= OnSettingChanged;
-            
+
             var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
             coreManagementService.CoreInstanceRegistered -= ShowEditCoresWarning;
             coreManagementService.CoreInstanceUnregistered -= ShowEditCoresWarning;
@@ -178,6 +178,9 @@ namespace StrixMusic.Shared
         {
             using (Threading.PrimaryContext)
             {
+                if (ActiveShell is not null && ActiveShell.Id == shellMetadata.Id)
+                    return Task.CompletedTask;
+
                 var notificationService = Ioc.Default.GetRequiredService<INotificationService>().Cast<NotificationService>();
 
                 notificationService.ChangeNotificationMargins(new Thickness(25, 35, 25, 35));
@@ -193,8 +196,9 @@ namespace StrixMusic.Shared
                 shell.Notifications.IsHandled = false;
                 shell.InitServices(new ServiceCollection());
                 ShellDisplay.Content = shell;
-
                 ActiveShell = shellMetadata;
+
+                return Task.CompletedTask;
             }
 
             return Task.CompletedTask;
