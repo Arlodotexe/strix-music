@@ -139,7 +139,7 @@ namespace StrixMusic.Cores.OneDrive.Services
             {
                 return await builder.ExecuteAsync(cancellationToken);
             }
-            catch (MsalServiceException ex)
+            catch (MsalServiceException)
             {
                 return null;
             }

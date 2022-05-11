@@ -67,7 +67,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             UseFilePropsScannerToggle.StateChanged -= OnUseFilePropsScannerToggleChanged;
         }
 
-        protected async void OnSettingChanged(object sender, PropertyChangedEventArgs e)
+        private async void OnSettingChanged(object sender, PropertyChangedEventArgs e)
         {
             var isFilePropToggle = e.PropertyName == nameof(OneDriveCoreSettings.ScanWithFileProperties);
             var isTagLibToggle = e.PropertyName == nameof(OneDriveCoreSettings.ScanWithTagLib);
