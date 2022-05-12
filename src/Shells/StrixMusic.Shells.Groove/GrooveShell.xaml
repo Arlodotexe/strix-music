@@ -264,7 +264,7 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:GroovePlaylistCollection x:Name="PlaylistList" Collection="{Binding DataRoot.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                    <collections:GroovePlaylistCollection x:Name="PlaylistList" Collection="{x:Bind DataRoot.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>

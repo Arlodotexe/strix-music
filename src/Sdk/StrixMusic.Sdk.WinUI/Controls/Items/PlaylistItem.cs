@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
@@ -22,46 +23,68 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
 
         private void AttachEvents()
         {
-            Loaded += AlbumItem_Loaded;
-            Unloaded += AlbumItem_Unloaded;
+            Loaded += PlaylistItem_Loaded;
+            Unloaded += PlaylistItem_Unloaded;
         }
 
         private void DetachEvents()
         {
-            Unloaded -= AlbumItem_Unloaded;
+            Unloaded -= PlaylistItem_Unloaded;
         }
 
-        private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PlaylistItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             DetachEvents();
         }
 
-        private async void AlbumItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PlaylistItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Loaded -= AlbumItem_Loaded;
-
-            await InitAsync();
-        }
-
-        private async Task InitAsync()
-        {
-            if (!Playlist.PopulateMoreTracksCommand.IsRunning)
-                await Playlist.PopulateMoreTracksCommand.ExecuteAsync(5);
+            Loaded -= PlaylistItem_Loaded;
         }
 
         /// <summary>
         /// Backing dependency property for <see cref="Playlist"/>.
         /// </summary>
-        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistItem),
-                                                                   new PropertyMetadata(null, null));
+        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(IPlaylist), typeof(PlaylistItem),
+                                                                   new PropertyMetadata(null, (s, e) => ((PlaylistItem)s).OnPlaylistChanged()));
+
+        /// <summary>
+        /// Backing dependency property for <see cref="PlaylistVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty PlaylistVmProperty = DependencyProperty.Register(nameof(PlaylistVm), typeof(PlaylistViewModel), typeof(PlaylistItem),
+                                                                   new PropertyMetadata(null));
 
         /// <summary>
         /// The playlist to display.
         /// </summary>
-        public PlaylistViewModel Playlist
+        public IPlaylist? Playlist
         {
-            get { return (PlaylistViewModel)GetValue(PlaylistProperty); }
-            set { SetValue(PlaylistProperty, value); }
+            get => (IPlaylist?)GetValue(PlaylistProperty);
+            set => SetValue(PlaylistProperty, value);
+        }
+
+        /// <summary>
+        /// The Playlist view model to display.
+        /// </summary>
+        public PlaylistViewModel? PlaylistVm
+        {
+            get => (PlaylistViewModel?)GetValue(PlaylistVmProperty);
+            set => SetValue(PlaylistVmProperty, value);
+        }
+
+        private void OnPlaylistChanged()
+        {
+            if (Playlist is null)
+            {
+                PlaylistVm = null;
+                return;
+            }
+
+            if (Playlist is not PlaylistViewModel pvm)
+                pvm = new PlaylistViewModel(Playlist);
+
+            PlaylistVm = pvm;
+            _ = PlaylistVm.InitAsync();
         }
     }
 }

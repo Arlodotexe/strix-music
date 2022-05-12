@@ -19,29 +19,33 @@ namespace StrixMusic.Sdk.WinUI.Controls.Views.Secondary
         {
             this.DefaultStyleKey = typeof(PlaylistView);
             DataContext = playlistViewModel;
-
-            LoadAsync().Forget();
         }
 
         /// <summary>
         /// Backing dependency property for <see cref="Playlist"/>.
         /// </summary>
-        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistView),
-                                                                   new PropertyMetadata(null, null));
+        public static readonly DependencyProperty PlaylistProperty = 
+            DependencyProperty.Register(nameof(Playlist),
+                                        typeof(PlaylistViewModel),
+                                        typeof(PlaylistView),
+                                        new PropertyMetadata(null, (s, e) => ((PlaylistView)s).OnPlaylistChanged()));
 
         /// <summary>
         /// The playlist to display.
         /// </summary>
-        public PlaylistViewModel Playlist
+        public PlaylistViewModel? Playlist
         {
             get { return (PlaylistViewModel)GetValue(PlaylistProperty); }
             set { SetValue(PlaylistProperty, value); }
         }
 
-        private async Task LoadAsync()
+        private void OnPlaylistChanged()
         {
-            if (!Playlist.PopulateMoreTracksCommand.IsRunning)
-                await Playlist.PopulateMoreTracksCommand.ExecuteAsync(5);
+            if (Playlist is null)
+                return;
+
+            if (!Playlist.InitTrackCollectionAsyncCommand.IsRunning)
+                _ = Playlist.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
         }
     }
 }

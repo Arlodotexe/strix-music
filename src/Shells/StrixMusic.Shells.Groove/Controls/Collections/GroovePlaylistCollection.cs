@@ -1,4 +1,5 @@
 ﻿using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
@@ -16,6 +17,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public GroovePlaylistCollection()
         {
+            DataContext = this;
             this.DefaultStyleKey = typeof(GroovePlaylistCollection);
         }
 
@@ -23,7 +25,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency property for <see cref="Collection"/>.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
+            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollection), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
 
         /// <summary>
         /// A view model for this control.
@@ -43,15 +45,22 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// <summary>
         /// The playlist collection to display.
         /// </summary>
-        public IPlaylistCollectionViewModel Collection
+        public IPlaylistCollection? Collection
         {
-            get => (IPlaylistCollectionViewModel)GetValue(CollectionProperty);
+            get => (IPlaylistCollection)GetValue(CollectionProperty);
             set => SetValue(CollectionProperty, value);
         }
 
         private void OnPlaylistCollectionChanged()
         {
-            ViewModel.PlaylistCollection = Collection;
+            if (Collection is null)
+                return;
+
+            if (Collection is not IPlaylistCollectionViewModel pvm)
+                pvm = new PlaylistCollectionViewModel(Collection);
+
+            _ = pvm.InitPlaylistCollectionAsync();
+            ViewModel.PlaylistCollection = pvm;
         }
 
         /// <summary>
