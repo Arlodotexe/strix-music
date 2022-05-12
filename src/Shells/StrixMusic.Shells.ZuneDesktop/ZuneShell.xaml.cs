@@ -65,8 +65,9 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
             SetupNavigationService(_navigationService);
-
+            
             services.AddSingleton(_settings);
+            services.AddSingleton(_navigationService);
 
             return base.InitServices(services);
         }
