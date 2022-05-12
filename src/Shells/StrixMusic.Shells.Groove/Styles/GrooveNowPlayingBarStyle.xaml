@@ -82,7 +82,6 @@
 
 								<!--Media slider control-->
 								<nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                        IsAdvancing="{Binding ActiveDevice.IsPlaying, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                         Value="{Binding ActiveDevice.Position.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                         Maximum="{Binding ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
 									<interactivity:Interaction.Behaviors>

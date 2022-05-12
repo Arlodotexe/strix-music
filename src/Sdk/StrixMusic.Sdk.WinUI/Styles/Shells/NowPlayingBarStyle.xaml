@@ -68,7 +68,6 @@
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    IsAdvancing="{x:Bind IsPlaying,Mode=OneWay}"
                                                                     Value="{x:Bind Position.TotalMilliseconds,Mode=OneWay}"
                                                                     Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
