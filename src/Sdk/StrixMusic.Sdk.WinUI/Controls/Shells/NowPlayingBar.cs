@@ -20,6 +20,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         public NowPlayingBar()
         {
             this.DefaultStyleKey = typeof(NowPlayingBar);
+            this.DataContext = this;
             AttachEvents();
         }
 
@@ -76,7 +77,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// Holds active devices and track playback information.
         /// </summary>
-        private DeviceViewModel? ActiveDevice
+        public DeviceViewModel? ActiveDevice
         {
             get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
             set => SetValue(ActiveDeviceProperty, value);
@@ -100,7 +101,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// Backing dependency property for <see cref="ActiveDevice"/>.
         /// </summary>
-        private static readonly DependencyProperty ActiveDeviceProperty =
+        public static readonly DependencyProperty ActiveDeviceProperty =
             DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<NowPlayingBar>().OnActiveDeviceChanged(e.OldValue.Cast<DeviceViewModel>(), e.NewValue.Cast<DeviceViewModel>())));
 
         /// <summary>
