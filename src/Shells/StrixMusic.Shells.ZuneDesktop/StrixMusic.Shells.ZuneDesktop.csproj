@@ -46,6 +46,7 @@
 		<None Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
 		<None Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
+		<None Remove="LICENSE.txt" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
 		<None Remove="Resources\Brushes.xaml" />

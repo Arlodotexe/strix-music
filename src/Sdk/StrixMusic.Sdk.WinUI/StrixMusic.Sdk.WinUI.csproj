@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="DefaultShell.xaml" />
+    <None Remove="LICENSE.txt" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />

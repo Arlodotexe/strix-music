@@ -7,6 +7,10 @@
 		<Authors>Arlo Godfrey</Authors>
 		<AssemblyVersion>0.0.0</AssemblyVersion>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="LICENSE" />
+	  <None Remove="LICENSE.LESSER" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />

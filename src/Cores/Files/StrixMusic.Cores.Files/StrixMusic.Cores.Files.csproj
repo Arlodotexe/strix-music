@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="LICENSE" />
+    <None Remove="LICENSE.LESSER" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="OwlCore" Version="0.0.66" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

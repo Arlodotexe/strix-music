@@ -61,6 +61,7 @@
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
+    <None Remove="LICENSE" />
     <None Remove="Themes\CenteredPivotHeadersStyle.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>

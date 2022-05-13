@@ -32,6 +32,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="GrooveShell.xaml" />
+		<None Remove="LICENSE.txt" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
