@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityToolkit.Diagnostics;
-using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,8 +26,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// </summary>
         public CollectionContentType ZuneCollectionType
         {
-            get { return (CollectionContentType)GetValue(ZuneCollectionTypeProperty); }
-            set { SetValue(ZuneCollectionTypeProperty, value); }
+            get => (CollectionContentType)GetValue(ZuneCollectionTypeProperty);
+            set => SetValue(ZuneCollectionTypeProperty, value);
         }
 
         /// <summary>

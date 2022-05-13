@@ -23,10 +23,9 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellSelectorViewModel"/> class.
         /// </summary>
-        public ShellSelectorViewModel()
+        public ShellSelectorViewModel(AppSettings settings)
         {
-            _settings = Ioc.Default.GetRequiredService<AppSettings>();
-
+            _settings = settings;
             AllShells = new ObservableCollection<ShellInfoViewModel>();
             FullyResponsiveShells = new ObservableCollection<ShellInfoViewModel>();
             SaveSelectedShellAsyncCommand = new AsyncRelayCommand(SaveSelectedShell);
@@ -36,8 +35,6 @@ namespace StrixMusic.Shared.ViewModels
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             Logger.LogInformation($"Entered {nameof(InitAsync)}");
-
-            await _settings.LoadAsync(cancellationToken);
 
             // Gets the list of loaded shells.
             foreach (var shell in ShellRegistry.MetadataRegistry)
@@ -94,12 +91,11 @@ namespace StrixMusic.Shared.ViewModels
             set
             {
                 SetProperty(ref _preferredShell, value, nameof(PreferredShell));
-
-                _ = UpdateFallbackShell();
+                UpdateFallbackShell();
             }
         }
 
-        private async Task UpdateFallbackShell()
+        private void UpdateFallbackShell()
         {
             if (PreferredShell is null)
                 return;
@@ -122,7 +118,7 @@ namespace StrixMusic.Shared.ViewModels
             }
         }
 
-        /// <inheritdoc cref="SettingsKeysUI.FallbackShell"/>
+        /// <inheritdoc cref="AppSettings.FallbackShell"/>
         public ShellInfoViewModel? FallbackShell
         {
             get => _fallbackShell;

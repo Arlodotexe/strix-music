@@ -16,31 +16,31 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of <see cref="IPlaylistCollectionItem"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, ISdkMember, IMerged<ICorePlaylistCollection>
+    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, IPlayable, IAppModel, IMerged<ICorePlaylistCollection>
     {
         /// <summary>
-        /// Attempts to play a specific item in the playlist collection. Restarts playback if already playing.
+        /// Attempts to play a specific item in the playlistItem collection. Restarts playback if already playing.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Gets a requested number of <see cref="IPlaylistCollectionItemBase"/>s starting at the given offset in the backend.
+        /// Gets a requested number of <see cref="IPlaylistCollectionItemBase"/>s starting at the given offset.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
-        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
+        /// <returns>The requested range of items.</returns>
+        IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Adds a new playlist to the collection on the backend.
+        /// Adds an <see cref="IPlaylist"/> or <see cref="IPlaylistCollection"/> to this playlist collection.
         /// </summary>
-        /// <param name="playlist">The playlist to create.</param>
-        /// <param name="index">the position to insert the playlist at.</param>
+        /// <param name="playlistItem">The playlistItem to add.</param>
+        /// <param name="index">the position to insert the playlistItem at.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default);
+        Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Fires when the items in the backend are changed by something external.

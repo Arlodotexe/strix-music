@@ -27,23 +27,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
-        internal DeviceViewModel(MainViewModel root, IDevice device)
+        public DeviceViewModel(IDevice device)
         {
             _syncContext = SynchronizationContext.Current;
 
             _model = device;
-            Root = root;
 
             if (_model.NowPlaying != null)
                 _nowPlaying = _model.NowPlaying;
 
             if (device.SourceCore != null)
-                SourceCore = root.GetLoadedCore(device.SourceCore);
+                SourceCore = new CoreViewModel(device.SourceCore);
 
             if (_model.PlaybackQueue != null)
-                PlaybackQueue = new TrackCollectionViewModel(root, _model.PlaybackQueue);
+                PlaybackQueue = new TrackCollectionViewModel(_model.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -96,7 +94,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_PlaybackSpeedChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackSpeed)), null);
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
+        private void Device_PlaybackContextChanged(object sender, IPlayableBase? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
 
         private void Device_IsActiveChanged(object sender, bool e)
         {
@@ -114,10 +112,9 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(e.Track, nameof(e.Track));
 
-            NowPlaying = new PlaybackItem() 
+            NowPlaying = e with
             {
-                MediaConfig = e.MediaConfig, 
-                Track = new TrackViewModel(Root, e.Track)
+                Track = new TrackViewModel(e.Track)
             };
 
             NowPlayingChanged?.Invoke(sender, e);
@@ -128,9 +125,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ICoreDevice? Source => _model.Source;
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
 
         /// <inheritdoc />
         public string Id => _model.Id;
@@ -211,7 +205,7 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IPlayableBase>? PlaybackContextChanged
+        public event EventHandler<IPlayableBase?>? PlaybackContextChanged
         {
             add => _model.PlaybackContextChanged += value;
             remove => _model.PlaybackContextChanged -= value;

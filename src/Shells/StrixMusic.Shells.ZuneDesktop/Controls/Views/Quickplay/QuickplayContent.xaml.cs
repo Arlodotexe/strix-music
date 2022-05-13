@@ -1,5 +1,6 @@
-﻿using StrixMusic.Sdk;
-using System;
+﻿using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -18,22 +19,33 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         public QuickplayContent()
         {
             this.InitializeComponent();
+
+            Loaded += QuickplayContent_Loaded;
         }
 
         /// <summary>
-        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// The root <see cref="StrixDataRootViewModel" /> used by the shell.
         /// </summary>
-        public MainViewModel DataRoot
+        public StrixDataRootViewModel DataRoot
         {
-            get { return (MainViewModel)GetValue(DataRootProperty); }
-            set { SetValue(DataRootProperty, value); }
+            get => (StrixDataRootViewModel)GetValue(DataRootProperty);
+            set => SetValue(DataRootProperty, value);
         }
 
         /// <summary>
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(QuickplayContent), new PropertyMetadata(null));
+
+        private void QuickplayContent_Loaded(object sender, RoutedEventArgs e)
+        {
+            Guard.IsNotNull(DataRoot);
+
+            var library = DataRoot.Library.Cast<LibraryViewModel>();
+            if (library.InitAlbumCollectionAsyncCommand.CanExecute(null))
+                library.InitAlbumCollectionAsyncCommand.Execute(null);
+        }
 
         /// <summary>
         /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.

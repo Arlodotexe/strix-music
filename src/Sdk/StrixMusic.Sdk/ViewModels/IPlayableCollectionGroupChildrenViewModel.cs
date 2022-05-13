@@ -3,8 +3,8 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.AppModels;
 

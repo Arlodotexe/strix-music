@@ -1,5 +1,4 @@
 ﻿using System;
-using StrixMusic.Sdk.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -81,10 +80,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 
         private void CreateLayout()
         {
-            // Temporarily disabled. Causes major issues on WASM.
-            if (PlatformHelper.Current == Platform.WASM)
-                return;
-
             var columns = RootGrid.ColumnDefinitions;
             columns.Clear();
             _rectangles = new Rectangle[BarCount];

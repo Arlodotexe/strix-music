@@ -176,13 +176,13 @@ namespace StrixMusic.Sdk.FileMetadata
             var artistMetadata = fileMetadata.Select(x => x.ArtistMetadata).PruneNull().ToArray();
             var albumMetadata = fileMetadata.Select(x => x.AlbumMetadata).PruneNull().ToArray();
 
-            await Images.AddOrUpdateAsync(imageMetadata);
-            await Tracks.AddOrUpdateAsync(trackMetadata);
-
             // Artists and albums reference each other, so update repos in parallel
             // and cross your fingers that they internally add all data before emitting changed events 
             // and that one doesn't finish first.
             await Task.WhenAll(Artists.AddOrUpdateAsync(artistMetadata), Albums.AddOrUpdateAsync(albumMetadata));
+
+            await Images.AddOrUpdateAsync(imageMetadata);
+            await Tracks.AddOrUpdateAsync(trackMetadata);
         }
 
         /// <inheritdoc />

@@ -2,14 +2,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
-     xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
+    xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
     xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:a="using:OwlCore.WinUI.Attached"
-      xmlns:mvvmCollections="using:CommunityToolkit.Mvvm.Collections"
-     xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
+    xmlns:mvvmCollections="using:CommunityToolkit.Mvvm.Collections"
+    xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
@@ -26,7 +26,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:ZuneAlbumCollection">
-                        <Grid  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition />
@@ -47,7 +47,7 @@
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, Mode=OneWay}"
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                                         Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                                 <GridView.GroupStyle>
@@ -61,7 +61,7 @@
                                 </GridView.GroupStyle>
 
                                 <GridView.ItemTemplate>
-                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
+                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
                                         <zuneItems:ZuneAlbumItem Album="{Binding}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">

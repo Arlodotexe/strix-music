@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Represents a collection of albums that may contain one or more sources.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, IUrlCollection, IPlayable, ISdkMember, IMerged<ICoreAlbumCollection>
+    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, IUrlCollection, IPlayable, IAppModel, IMerged<ICoreAlbumCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the album collection. Restarts playback if already playing.
@@ -32,13 +32,13 @@ namespace StrixMusic.Sdk.AppModels
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
-        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
+        /// <returns>The requested range of items.</returns>
+        IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Adds a new album to the collection on the backend.
+        /// Adds an <see cref="IAlbum"/> or <see cref="IAlbumCollection"/> to this album collection.
         /// </summary>
-        /// <param name="albumItem">The album to create.</param>
+        /// <param name="albumItem">The album to add.</param>
         /// <param name="index">the position to insert the album at.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

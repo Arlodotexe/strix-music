@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Provides various search-related activities.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ISearch : ISearchBase, ISdkMember, IMerged<ICoreSearch>
+    public interface ISearch : ISearchBase, IAppModel, IMerged<ICoreSearch>
     {
         /// <summary>
         /// Gets search results for a given query.
@@ -35,6 +35,7 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// Contains items that the user has recently selected from the search results.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         ISearchHistory? SearchHistory { get; }
     }
 }

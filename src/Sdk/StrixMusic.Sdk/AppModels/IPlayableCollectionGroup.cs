@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Multiple playable collections that are grouped together under a single context.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IPlayableCollectionGroup : IPlayableCollectionGroupBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection, IPlayableCollectionGroupChildren, IPlayable, ISdkMember, IMerged<ICorePlayableCollectionGroup>
+    public interface IPlayableCollectionGroup : IPlayableCollectionGroupBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection, IPlayableCollectionGroupChildren, IPlayable, IAppModel, IMerged<ICorePlayableCollectionGroup>
     {
     }
 }

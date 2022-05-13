@@ -2,6 +2,9 @@
 
 namespace StrixMusic.Shared.Styles
 {
+    /// <summary>
+    /// The backing resource dictionary for <see cref="CoreItemStyle"/>.
+    /// </summary>
     public partial class CoreItemStyle : ResourceDictionary
     {
         /// <summary>

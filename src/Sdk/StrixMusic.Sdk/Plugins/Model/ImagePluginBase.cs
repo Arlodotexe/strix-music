@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) Arlo Godfrey. All Rights Reserved.
+// Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
+// See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
@@ -18,7 +22,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal ImagePluginBase(ModelPluginMetadata registration, IImage inner)
+        internal protected ImagePluginBase(ModelPluginMetadata registration, IImage inner)
         {
             Metadata = registration;
             Inner = inner;
@@ -28,27 +32,31 @@ namespace StrixMusic.Sdk.Plugins.Model
         public ModelPluginMetadata Metadata { get; }
 
         /// <inheritdoc/>
-        virtual public IImage Inner { get; }
+        public virtual IImage Inner { get; }
 
         /// <inheritdoc/>
-        virtual public Uri Uri => Inner.Uri;
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
-        virtual public double Height => Inner.Height;
+        public virtual Uri Uri => Inner.Uri;
 
         /// <inheritdoc/>
-        virtual public double Width => Inner.Width;
+        public virtual double Height => Inner.Height;
+
+        /// <inheritdoc/>
+        public virtual double Width => Inner.Width;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => Inner.SourceCores;
+        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        virtual public ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
-        virtual public bool Equals(ICoreImage other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
     }
 }

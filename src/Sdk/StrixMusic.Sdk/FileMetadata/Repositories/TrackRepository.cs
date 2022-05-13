@@ -172,6 +172,14 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
             if (limit == -1)
                 return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks);
 
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allTracks.Count)
+                return Task.FromResult<IReadOnlyList<TrackMetadata>>(new List<TrackMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allTracks.Count)
+                limit = allTracks.Count - offset;
+
             return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks.GetRange(offset, limit));
         }
 

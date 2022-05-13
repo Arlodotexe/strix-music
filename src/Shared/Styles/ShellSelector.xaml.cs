@@ -2,6 +2,9 @@
 
 namespace StrixMusic.Shared.Styles
 {
+    /// <summary>
+    /// The backing resource dictionary for <see cref="ShellSelector"/>.
+    /// </summary>
     public partial class ShellSelector : ResourceDictionary
     {
         /// <summary>

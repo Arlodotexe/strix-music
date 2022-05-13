@@ -64,7 +64,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// Dependency property for <ses cref="CollectionContent" />.
         /// </summary>
         public static readonly DependencyProperty ZuneCollectionTypeProperty =
-            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumCollection), new PropertyMetadata(null, null));
+            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumCollection), new PropertyMetadata(CollectionContentType.Albums, null));
 
         /// <summary>
         /// Holds the instance of the sort textblock.
@@ -82,15 +82,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         public GridView? PART_Selector { get; private set; }
 
         /// <summary>
-        /// Collection holding the data for <see cref="AlbumCollection" />
-        /// </summary>
-        public new IAlbumCollectionViewModel Collection
-        {
-            get { return (IAlbumCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
-        }
-
-        /// <summary>
         /// Dependency property for <see cref="SortState" />.
         /// </summary>
         public static readonly DependencyProperty SortStateProperty =
@@ -105,55 +96,34 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             set { SetValue(SortStateProperty, value); }
         }
 
-        /// <inheritdoc/>
-        protected override async Task LoadMore()
-        {
-            if (!Collection.PopulateMoreAlbumsCommand.IsRunning)
-                await Collection.PopulateMoreAlbumsCommand.ExecuteAsync(25);
-        }
-
-        /// <summary>
-        /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
-        /// </summary>
-        public static readonly new DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(ZuneAlbumCollection), new PropertyMetadata(null, (s, e) =>
-            {
-                if (s is ZuneAlbumCollection zc)
-                {
-                    zc.OnAlbumCollectionChanged(s, e);
-                }
-            }));
-
         /// <inheritdoc />
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             PART_Selector = GetTemplateChild(nameof(PART_Selector)) as GridView;
-
             PART_SortLbl = GetTemplateChild(nameof(PART_SortLbl)) as TextBlock;
-            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
 
             PART_Selector.Loaded += PART_Selector_Loaded;
             Unloaded += ZuneAlbumCollection_Unloaded;
 
             PART_SortLbl.Tapped += PART_SortLbl_Tapped;
-
-            PART_Selector.ItemsSource = Collection.Albums;
         }
 
         private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             switch (SortState)
             {
                 // State defines the next sort state in queue which differs from the current state.
                 case ZuneSortState.AZ:
-                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
+                    Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Descending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.ZA;
                     PART_SortLbl.Text = _loacalizationService.GetString("Z-A");
@@ -169,13 +139,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     PART_SortLbl.Text = _loacalizationService.GetString("By Release Year");
                     break;
                 case ZuneSortState.ReleaseYear:
-                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.DateAdded, Sdk.ViewModels.SortDirection.Ascending);
+                    Collection.SortAlbumCollection(AlbumSortingType.DateAdded, SortDirection.Ascending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.DateAdded;
                     PART_SortLbl.Text = _loacalizationService.GetString("By Date Added");
                     break;
                 case ZuneSortState.DateAdded:
-                    Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
+                    Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Ascending);
                     PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.AZ;
                     PART_SortLbl.Text = _loacalizationService.GetString("A-Z");
@@ -191,8 +161,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 // Intentional delay (for safe side), this doesn't freeze anything as event attachment can be done silently, it waits for the emitted album to load in Visual Tree.
                 // There is no event on GridView that tells when a UI Element is added to Items list.
+                // ------------
+                // TODO: We shouldn't be using a delay to do this.
+                // ------------
+                // TODO: this method of getting a loaded item does not work with virtualization.
+                // Instead
+                // - Create a custom ViewModel that wraps around AlbumViewModel
+                // - Give it a "RequestPlaybackCommand" we can invoke from XAML, and a "PlaybackRequested" event that's raised by the command.
+                // - Put it in a new ObservableCollection<TheNewViewModel> property. Bind to that in the UI instead of what we use now.
+                // - Use behaviors in XAML to invoke this new command when the "ZuneAlbumItem.AlbumPlaybackTriggered" event fires.
+                // - Sync the new ObservableCollection with the source, wrapping the data with our new ViewModel.
+                // - Listen to the event on each item in this new ViewModel and invoke playback when it's called
+                // - Clean up all the code from the existing approach.
                 await Task.Delay(1000);
-                Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+                
+                Guard.IsNotNull(PART_Selector);
+                Guard.IsNotNull(Collection);
 
                 foreach (var item in e.NewItems)
                 {
@@ -200,8 +184,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                     var index = Collection.Albums.IndexOf((IAlbumCollectionItem)item);
                     var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(index);
-                    var uiElement = gridViewItem.ContentTemplateRoot;
 
+                    // PATCH! HACK! See above TODO.
+                    if (gridViewItem is null)
+                    {
+                        continue;
+                    }
+
+                    var uiElement = gridViewItem.ContentTemplateRoot;
                     if (uiElement is ZuneAlbumItem zuneAlbumItem)
                     {
                         zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
@@ -212,9 +202,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 try
                 {
-                    // Gives breathing space to the processor and reduces he odds the where observable collection changed during CollectionChanged event to minimum. 
+                    // Gives breathing space to the processor and reduces the odds the where observable collection changed during CollectionChanged event to minimum. 
                     lock (_lockObj)
-                        Collection.SortAlbumCollection(Sdk.ViewModels.AlbumSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
+                        Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Ascending);
                 }
                 catch (InvalidOperationException)
                 {
@@ -224,17 +214,20 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private void OnAlbumCollectionChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        /// <inheritdoc/>
+        protected override void OnCollectionChanged(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
-            if (e.OldValue is IAlbumCollectionViewModel col)
+            if (oldValue is IAlbumCollectionViewModel oldCollection)
             {
-                col.Albums.CollectionChanged -= Albums_CollectionChanged;
+                oldCollection.Albums.CollectionChanged -= Albums_CollectionChanged;
             }
 
-            if (e.NewValue is IAlbumCollectionViewModel collection)
+            if (newValue is IAlbumCollectionViewModel newCollection)
             {
-                collection.Albums.CollectionChanged += Albums_CollectionChanged;
+                newCollection.Albums.CollectionChanged += Albums_CollectionChanged;
             }
+
+            base.OnCollectionChanged(oldValue, newValue);
         }
 
         private void ZuneAlbumItem_Unloaded(object sender, RoutedEventArgs e)
@@ -263,6 +256,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// </summary>
         public void AnimateCollection()
         {
+            if (Collection is null)
+                return;
+
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
 
             var uiElments = new List<UIElement>();
@@ -295,6 +291,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void PopulateAlbumGroupedByReleaseYear()
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             AlbumGroupedByCollection.Clear();
 
@@ -317,6 +314,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void PopulateAlbumGroupedByArtists()
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            Guard.IsNotNull(Collection, nameof(Collection));
 
             AlbumGroupedByCollection.Clear();
 
@@ -336,8 +334,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             PART_Selector.ItemsSource = cvs.View;
         }
 
-        private async void ZuneAlbumItem_AlbumPlaybackTriggered(object sender, Sdk.ViewModels.AlbumViewModel e)
+        private async void ZuneAlbumItem_AlbumPlaybackTriggered(object sender, AlbumViewModel e)
         {
+            Guard.IsNotNull(Collection);
             await Collection.PlayAlbumCollectionAsync(e);
         }
 

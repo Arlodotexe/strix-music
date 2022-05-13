@@ -28,7 +28,6 @@ namespace StrixMusic.Sdk.AdapterModels
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
         private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlMap;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedTrackCollection"/>.
@@ -36,7 +35,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections, MergedCollectionConfig config)
         {
             _sources = collections.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
@@ -140,6 +138,9 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -190,11 +191,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
 
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
@@ -209,7 +206,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState => _preferredSource.PlaybackState;
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc />
         public TimeSpan Duration => _preferredSource.Duration;
@@ -294,9 +291,6 @@ namespace StrixMusic.Sdk.AdapterModels
             throw new NotSupportedException();
         }
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc />
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => _sources;
 
@@ -307,13 +301,13 @@ namespace StrixMusic.Sdk.AdapterModels
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _trackMap.InsertItemAsync(track, index, cancellationToken);
@@ -334,29 +328,29 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => _urlMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreTrackCollection>.AddSource(ICoreTrackCollection itemToMerge)
+        public void AddSource(ICoreTrackCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
-            _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            _trackMap.AddSource(itemToMerge);
+            _imageMap.AddSource(itemToMerge);
+            _urlMap.AddSource(itemToMerge);
 
-            _trackMap.Cast<IMergedMutable<ICoreTrackCollection>>().AddSource(itemToMerge);
-            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
-            _urlMap.Cast<IMergedMutable<ICoreUrlCollection>>().AddSource(itemToMerge);
+            _sources.Add(itemToMerge);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreTrackCollection>.RemoveSource(ICoreTrackCollection itemToRemove)
+        public void RemoveSource(ICoreTrackCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
-            _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            _trackMap.RemoveSource(itemToRemove);
+            _imageMap.RemoveSource(itemToRemove);
+            _urlMap.RemoveSource(itemToRemove);
 
-            _trackMap.Cast<IMergedMutable<ICoreTrackCollection>>().RemoveSource(itemToRemove);
-            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
-            _urlMap.Cast<IMergedMutable<ICoreUrlCollection>>().RemoveSource(itemToRemove);
+            _sources.Remove(itemToRemove);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

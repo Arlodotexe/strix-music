@@ -1,7 +1,7 @@
-﻿using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
-using StrixMusic.Sdk.WinUI.Controls.Items;
+﻿using System.Threading.Tasks;
 using StrixMusic.Sdk.ViewModels;
-using System.Threading.Tasks;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
+using StrixMusic.Sdk.WinUI.Controls.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

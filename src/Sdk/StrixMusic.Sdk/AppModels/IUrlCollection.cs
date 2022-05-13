@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of URLs, combined from multiple sources.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IUrlCollection : IUrlCollectionBase, ISdkMember, IMerged<ICoreUrlCollection>
+    public interface IUrlCollection : IUrlCollectionBase, IAppModel, IMerged<ICoreUrlCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IUrlBase"/>s starting at the given offset.
@@ -24,8 +24,8 @@ namespace StrixMusic.Sdk.AppModels
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
-        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default);
+        /// <returns>The requested range of items.</returns>
+        IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds a new url to the collection.

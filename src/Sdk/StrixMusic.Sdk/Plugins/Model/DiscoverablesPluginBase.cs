@@ -21,7 +21,7 @@ public class DiscoverablesPluginBase : PlayableCollectionGroupPluginBase, IModel
     /// </summary>
     /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
     /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-    protected internal DiscoverablesPluginBase(ModelPluginMetadata registration, IDiscoverables inner)
+    internal protected DiscoverablesPluginBase(ModelPluginMetadata registration, IDiscoverables inner)
         : base(registration, inner)
     {
         Inner = inner;
@@ -31,7 +31,7 @@ public class DiscoverablesPluginBase : PlayableCollectionGroupPluginBase, IModel
     public virtual bool Equals(ICoreDiscoverables other) => Inner.Equals(other);
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)Inner).Sources;
+    public new IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)Inner).Sources;
 
     /// <inheritdoc />
     public new IDiscoverables Inner { get; }

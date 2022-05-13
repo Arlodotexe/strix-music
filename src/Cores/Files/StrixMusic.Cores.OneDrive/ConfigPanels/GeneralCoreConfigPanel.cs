@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.AppModels;
@@ -69,7 +67,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             UseFilePropsScannerToggle.StateChanged -= OnUseFilePropsScannerToggleChanged;
         }
 
-        protected async void OnSettingChanged(object sender, PropertyChangedEventArgs e)
+        private async void OnSettingChanged(object sender, PropertyChangedEventArgs e)
         {
             var isFilePropToggle = e.PropertyName == nameof(OneDriveCoreSettings.ScanWithFileProperties);
             var isTagLibToggle = e.PropertyName == nameof(OneDriveCoreSettings.ScanWithTagLib);
@@ -103,11 +101,6 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         private void OnUseTagLibScannerToggleChanged(object sender, bool e) => _settings.ScanWithTagLib = e;
 
         /// <summary>
-        /// A toggle that indicates if the file metadata scanner should ignore and previously scanned data.
-        /// </summary>
-        public AbstractBoolean InitWithEmptyReposToggle { get; }
-
-        /// <summary>
         /// A toggle that indicates if TagLibSharp should be used to read metadata from audio files.
         /// </summary>
         public AbstractBoolean UseTagLibScannerToggle { get; }
@@ -116,11 +109,6 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
         /// A toggle that indicates if file properties should be used to read metadata from audio files.
         /// </summary>
         public AbstractBoolean UseFilePropsScannerToggle { get; }
-
-        /// <summary>
-        /// A button that, when clicked, should trigger a rescan of metadata.
-        /// </summary>
-        public AbstractButton RescanButton { get; }
 
         /// <inheritdoc />
         public void Dispose() => DetachEvents();

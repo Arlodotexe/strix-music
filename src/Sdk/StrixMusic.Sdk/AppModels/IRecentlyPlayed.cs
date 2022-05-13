@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Contains recently played albums, artists, tracks, playlists, etc.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IRecentlyPlayed : IRecentlyPlayedBase, IPlayableCollectionGroup, IPlayable, ISdkMember, IMerged<ICoreRecentlyPlayed>
+    public interface IRecentlyPlayed : IRecentlyPlayedBase, IPlayableCollectionGroup, IPlayable, IAppModel, IMerged<ICoreRecentlyPlayed>
     {
     }
 }

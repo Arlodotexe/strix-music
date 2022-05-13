@@ -9,7 +9,7 @@ using StrixMusic.Sdk.AppModels;
 namespace StrixMusic.Sdk.Services
 {
     /// <summary>
-    /// A Service for handling notifications from Cores
+    /// A service that facilitates raising <see cref="Notification"/>s.
     /// </summary>
     public interface INotificationService
     {

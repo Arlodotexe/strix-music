@@ -7,7 +7,7 @@ namespace StrixMusic.Cores.OneDrive.Services
     /// <summary>
     /// A container for <see cref="OneDriveCore"/> settings.
     /// </summary>
-    public class OneDriveCoreSettings : SettingsBase
+    public sealed class OneDriveCoreSettings : SettingsBase
     {
         /// <summary>
         /// Creates a new instance of <see cref="OneDriveCoreSettings"/>.
@@ -76,7 +76,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// </summary>
         public string ClientId
         {
-            get => GetSetting(() => Secrets.ClientId);
+            get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
 
@@ -85,7 +85,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// </summary>
         public string TenantId
         {
-            get => GetSetting(() => Secrets.TenantId);
+            get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
 
@@ -94,7 +94,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// </summary>
         public string RedirectUri
         {
-            get => GetSetting(() => Secrets.RedirectUrl);
+            get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
     }

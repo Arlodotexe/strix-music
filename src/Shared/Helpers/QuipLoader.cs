@@ -1,6 +1,6 @@
-﻿using StrixMusic.Helpers.TimeSpanRules;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using StrixMusic.Helpers.TimeSpanRules;
 
 namespace StrixMusic.Helpers
 {

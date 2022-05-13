@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
 
         private void EvaluateSupportedItems()
         {
-            foreach (var value in _model.Items)
+            foreach (var value in _model)
             {
                 if (value is AbstractProgressIndicator progressUIElement && ProgressIndicator is null)
                 {

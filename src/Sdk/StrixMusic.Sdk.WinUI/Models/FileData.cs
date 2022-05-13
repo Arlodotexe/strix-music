@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 using FileAccessMode = OwlCore.AbstractStorage.FileAccessMode;
 
 namespace StrixMusic.Sdk.WinUI.Models
@@ -25,10 +25,11 @@ namespace StrixMusic.Sdk.WinUI.Models
         {
             StorageFile = storageFile;
             Properties = new FileDataProperties(storageFile);
+            Id = StorageFile.Path.HashMD5Fast();
         }
 
         /// <inheritdoc/>
-        public string Id => Path;
+        public string Id { get; }
 
         /// <inheritdoc/>
         public string Path => StorageFile.Path;

@@ -40,12 +40,11 @@
 
                         <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding NowPlaying.Track}"/>
 
-                         <TextBlock Text="{Binding NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+                         <TextBlock Text="{Binding NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
 
                         <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    IsAdvancing="{x:Bind IsPlaying,Mode=OneWay}"
                                     Value="{x:Bind Position.TotalMilliseconds,Mode=OneWay}"
                                     Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                     FlowDirection="LeftToRight">

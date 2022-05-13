@@ -20,7 +20,6 @@ namespace StrixMusic.Sdk.AdapterModels
     {
         private readonly ICoreUrl _preferredSource;
         private readonly List<ICoreUrl> _sources;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedUrl"/> class.
@@ -29,10 +28,12 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
         }
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc/>
         public string Label => _preferredSource.Label;
@@ -43,28 +44,25 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc/>
         public UrlType Type => _preferredSource.Type;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreUrl> Sources => _sources;
 
         /// <inheritdoc/>
-        void IMergedMutable<ICoreUrl>.AddSource(ICoreUrl itemToMerge)
+        public void AddSource(ICoreUrl itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreUrl>.RemoveSource(ICoreUrl itemToRemove)
+        public void RemoveSource(ICoreUrl itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc/>

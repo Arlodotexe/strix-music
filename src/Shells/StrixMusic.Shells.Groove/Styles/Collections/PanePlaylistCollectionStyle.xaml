@@ -10,24 +10,24 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PanePlaylistCollectionStyle">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="PanePlaylistCollectionDataTemplate" x:DataType="groovevms:GroovePlaylistCollectionViewModel">
-        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind PlaylistCollection.Playlists, Mode=OneWay}"
-                  HorizontalAlignment="Stretch" SelectedItem="{x:Bind SelectedPlaylist, Mode=TwoWay}"
+    <DataTemplate x:Key="PanePlaylistCollectionDataTemplate" x:DataType="collections:GroovePlaylistCollection">
+        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind ViewModel.PlaylistCollection.Playlists, Mode=OneWay}"
+                  HorizontalAlignment="Stretch" SelectedItem="{x:Bind ViewModel.SelectedPlaylist, Mode=TwoWay}"
                   SelectionMode="Single" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind PlaylistCollection.InitPlaylistCollectionAsyncCommand}"/>
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.PlaylistCollection.InitPlaylistCollectionAsyncCommand, Mode=OneWay}"/>
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.Header>
                 <Grid>
-                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PlaylistCollection.PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.PlaylistCollection.PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
                     <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
                 </Grid>
             </ListView.Header>

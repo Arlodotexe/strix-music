@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// The query and related data about something the user searched for. 
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ISearchQuery : ISearchQueryBase, ISdkMember, IMerged<ICoreSearchQuery>
+    public interface ISearchQuery : ISearchQueryBase, IAppModel, IMerged<ICoreSearchQuery>
     {
     }
 }

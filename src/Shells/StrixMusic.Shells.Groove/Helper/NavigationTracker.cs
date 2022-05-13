@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.Messaging;
 using StrixMusic.Shells.Groove.Messages.Navigation;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
-using System.Collections.Generic;
 
 namespace StrixMusic.Shells.Groove.Helper
 {

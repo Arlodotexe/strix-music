@@ -19,11 +19,21 @@ namespace StrixMusic.Sdk.MediaPlayback
     public interface IPlaybackHandlerService : IAudioPlayerBase, IDisposable
     {
         /// <summary>
-        /// Associating an <see cref="IAudioPlayerService"/> with a specific <see cref="ICore"/>.
+        /// Registers an <see cref="IAudioPlayerService"/> to be used for actual local audio playback when a track from a certain core is played.
         /// </summary>
-        /// <param name="audioPlayer">The player that will be used exclusively by the given core.</param>
+        /// <param name="audioPlayer">The player that will be used for local playback by cores with a matching <paramref name="instanceId"/>.</param>
         /// <param name="instanceId">A core instance ID to associate this audio player with.</param>
         void RegisterAudioPlayer(IAudioPlayerService audioPlayer, string instanceId);
+
+        /// <summary>
+        /// Gets or sets the device which is being currently being used for playback, if any.
+        /// </summary>
+        public IDevice? ActiveDevice { get; set; }
+
+        /// <summary>
+        /// Gets a device which represents all local playback done by this <see cref="IPlaybackHandlerService"/>.
+        /// </summary>
+        public IDevice LocalDevice { get; }
 
         /// <summary>
         /// The items that should be played next.
@@ -39,6 +49,11 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// The currently playing item.
         /// </summary>
         PlaybackItem? CurrentItem { get; }
+
+        /// <summary>
+        /// The collection which the <see cref="CurrentItem"/> is playing from.
+        /// </summary>
+        IPlayableBase? CurrentItemContext { get; }
 
         /// <summary>
         /// True if the player is using a shuffled track list.
@@ -240,6 +255,6 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Raised when a quantum of data is processed. 
         /// </summary>
-         event EventHandler<float[]>? QuantumProcessed;
+        event EventHandler<float[]>? QuantumProcessed;
     }
 }

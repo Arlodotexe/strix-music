@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
@@ -30,39 +29,45 @@ namespace StrixMusic.Shells.ZuneDesktop
     public sealed partial class ZuneShell : Shell
     {
         private readonly IFolderData _settingStorage;
+        private readonly ZuneDesktopSettings _settings;
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell(IFolderData settingStorage)
+        public ZuneShell(StrixDataRootViewModel strixDataRootViewModel, IFolderData settingStorage, NotificationService notificationService)
+            : base(strixDataRootViewModel)
         {
-            this.InitializeComponent();
-
             Loaded += ZuneShell_Loaded;
+            Unloaded += OnUnloaded;
             _settingStorage = settingStorage;
+
+            _settings = new ZuneDesktopSettings(_settingStorage);
+
+            notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
+
+            this.InitializeComponent();
         }
 
         /// <summary>
         /// Metadata used to identify this shell before instantiation.
         /// </summary>
-        public static ShellMetadata Metadata { get; } = new ShellMetadata(id: "Zune.Desktop.4.8",
-                                                                          displayName: "Zune Desktop",
-                                                                          description: "A faithful recreation of the iconic Zune client for Windows",
-                                                                          inputMethods: InputMethods.Mouse,
-                                                                          minWindowSize: new Size(width: 700, height: 600));
+        public static ShellMetadata Metadata { get; } =
+            new ShellMetadata(id: "Zune.Desktop.4.8",
+                displayName: "Zune Desktop",
+                description: "A faithful recreation of the iconic Zune client for Windows",
+                inputMethods: InputMethods.Mouse,
+                minWindowSize: new Size(width: 700, height: 600));
 
         /// <inheritdoc/>
         public override Task InitServices(IServiceCollection services)
         {
             _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
             SetupNavigationService(_navigationService);
-            SetupNotificationService();
-
-            var settings = new ZuneDesktopSettings(_settingStorage);
-            settings.PropertyChanged += SettingsService_SettingChanged;
-
-            services.AddSingleton(settings);
+            
+            services.AddSingleton(_settings);
+            services.AddSingleton(_navigationService);
 
             return base.InitServices(services);
         }
@@ -75,29 +80,26 @@ namespace StrixMusic.Shells.ZuneDesktop
             return navigationService;
         }
 
-        private void SetupNotificationService()
-        {
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-
-            notificationService.Cast<NotificationService>().ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
-            notificationService.Cast<NotificationService>().ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
-        }
-
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= ZuneShell_Loaded;
+            _settings.PropertyChanged += SettingsService_SettingChanged;
 
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
-            _ = SetupBackgroundImage();
+            SetupBackgroundImage();
         }
 
-        private async Task SetupBackgroundImage()
+        private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            var settingsService = Ioc.GetRequiredService<ZuneDesktopSettings>();
-            await settingsService.LoadAsync();
+            Unloaded -= OnUnloaded;
+            _settings.PropertyChanged -= SettingsService_SettingChanged;
+        }
 
-            var backgroundImage = settingsService.BackgroundImage;
+        private void SetupBackgroundImage()
+        {
+            var settings = Ioc.GetRequiredService<ZuneDesktopSettings>();
 
+            var backgroundImage = settings.BackgroundImage;
             if (backgroundImage.IsNone)
             {
                 BackgroundImage.Visibility = Visibility.Collapsed;

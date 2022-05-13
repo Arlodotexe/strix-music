@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>10.0</LangVersion>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+    </PropertyGroup>
+</Project>

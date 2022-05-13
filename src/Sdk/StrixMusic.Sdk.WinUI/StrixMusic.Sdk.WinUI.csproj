@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.65" />
+    <PackageReference Include="OwlCore" Version="0.0.66" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +28,13 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Services\MediaPlayback\**" />
+    <EmbeddedResource Remove="Services\MediaPlayback\**" />
+    <None Remove="Services\MediaPlayback\**" />
+    <Page Remove="Services\MediaPlayback\**" />
+    <UpToDateCheckInput Remove="Services\MediaPlayback\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="DefaultShell.xaml" />
@@ -142,8 +149,5 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.10" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.0" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\MediaPlayback\" />
   </ItemGroup>
 </Project>

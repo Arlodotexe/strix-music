@@ -205,23 +205,23 @@
                 <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
             </Grid.ColumnDefinitions>
 
-            <zuneCollections:ZuneArtistCollection x:Name="ArtistCollection" Collection="{x:Bind DataRoot.Library}"
+            <zuneCollections:ZuneArtistCollection x:Name="ArtistCollection" Collection="{Binding DataRoot.Library}"
                                           Margin="8,0,-3,0" Grid.Column="0"
                                           SelectionChanged="ArtistSelected"/>
 
-            <zuneCollections:ZuneAlbumCollection x:Name="ZuneAlbumCollection" Collection="{x:Bind DataRoot.Library}"
+            <zuneCollections:ZuneAlbumCollection x:Name="ZuneAlbumCollection" Collection="{Binding DataRoot.Library}"
                                                    Margin="8,0" Grid.Column="1"
                                                    SelectionChanged="AlbumSelected"/>
 
-            <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{x:Bind DataRoot.Library}"
+            <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{Binding DataRoot.Library}"
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
                                             SelectionChanged="PlaylistSelected"/>
 
-            <collections:TrackCollection x:Name="TrackCollection" Collection="{x:Bind DataRoot.Library}"
+            <collections:TrackCollection x:Name="TrackCollection" Collection="{Binding DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackListControlStyle}"
                                          Margin="0,0,8,0" Grid.Column="2"/>
 
-            <collections:TrackCollection x:Name="TrackTable" Collection="{x:Bind DataRoot.Library}"
+            <collections:TrackCollection x:Name="TrackTable" Collection="{Binding DataRoot.Library}"
                                          Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
                                          Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
 

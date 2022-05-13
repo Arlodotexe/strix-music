@@ -12,12 +12,12 @@ namespace StrixMusic.Sdk.MediaPlayback
     public record PlaybackItem
     {
         /// <summary>
-        /// The media source to be played.
+        /// The relevant media source that can be used to play the <see cref="Track"/>.
         /// </summary>
         public IMediaSourceConfig? MediaConfig { get; set; }
 
         /// <summary>
-        /// The track that holds information of from all merged source.
+        /// The relevant track.
         /// </summary>
         public ITrack? Track { get; set; }
     }

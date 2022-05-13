@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Represents an audio stream with metadata that belongs to an <see cref="ITrackCollection"/>.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreTrack>
+    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, IPlayable, IAppModel, IMerged<ICoreTrack>
     {
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.
@@ -28,8 +28,9 @@ namespace StrixMusic.Sdk.AppModels
         ILyrics? Lyrics { get; }
 
         /// <summary>
-        /// A <see cref="IPlayableBase"/> of items related to this item.
+        /// An <see cref="IPlayableCollectionGroup"/> of items related to this item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <summary>

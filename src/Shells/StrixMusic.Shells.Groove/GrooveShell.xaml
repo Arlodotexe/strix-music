@@ -269,9 +269,9 @@
             </SplitView.Pane>
         </SplitView>
 
-        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" ActiveDevice="{x:Bind DataRoot.ActiveDevice, Mode=OneWay}"/>
+        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" Devices="{x:Bind DataRoot.Devices, Mode=OneWay}"/>
 
-        <ItemsControl ItemsSource="{x:Bind DataRoot.Notifications.Notifications, Mode=OneWay}">
+        <ItemsControl ItemsSource="{x:Bind Notifications.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">
                     <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
@@ -281,7 +281,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractUIControls:AbstractUICollectionPresenter ViewModel="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource DefaultNotificationAbstractUICollectionStyle}" />
+                        <abstractUIControls:AbstractUICollectionPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource DefaultNotificationAbstractUICollectionStyle}" />
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"
                                 Grid.Column="1" Width="40" Height="40" Background="Transparent" Padding="0"

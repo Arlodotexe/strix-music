@@ -64,12 +64,11 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Media info-->
-                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding }"/>
+                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding}"/>
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    IsAdvancing="{x:Bind IsPlaying,Mode=OneWay}"
-                                                                    Value="{x:Bind Position.TotalMilliseconds,Mode=OneWay}"
+                                                                    Value="{x:Bind Position.TotalMilliseconds, Mode=OneWay}"
                                                                     Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
                     <interactivity:Interaction.Behaviors>
@@ -80,7 +79,7 @@
                 </nowplaying:MediaSlider>
 
                 <!--Media transport controls-->
-                <nowplaying:MediaTransports Device="{Binding }" Grid.Column="2"/>
+                <nowplaying:MediaTransports Device="{Binding}" Grid.Column="2"/>
             </Grid>
         </UserControl>
     </DataTemplate>

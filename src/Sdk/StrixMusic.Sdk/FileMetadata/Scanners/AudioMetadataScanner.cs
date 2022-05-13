@@ -164,7 +164,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         private static void AssignMissingRequiredData(IFileData fileData, Models.FileMetadata metadata)
         {
             // If titles are missing, we leave it empty so the UI can localize the "Untitled" name.
-            metadata.Id = fileData.Path.HashMD5Fast();
+            metadata.Id = fileData.Id ?? fileData.Path.HashMD5Fast();
 
             Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
             Guard.IsNotNull(metadata.TrackMetadata, nameof(metadata.TrackMetadata));

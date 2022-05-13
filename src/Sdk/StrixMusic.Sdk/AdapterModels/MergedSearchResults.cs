@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc cref="Equals(object?)" />
         public override bool Equals(ICoreSearchResults? other)
         {
-            // TODO: Merge together based on query (post search refactor)
+            // TODO: Merge together based on query
             // return other?.Name == Name;
             return false;
         }

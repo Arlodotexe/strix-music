@@ -1,7 +1,14 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Shells.Groove.Helper;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -10,40 +17,68 @@ namespace StrixMusic.Shells.Groove.Controls
     /// <summary>
     /// A <see cref="Control"/> to display the now playing bar.
     /// </summary>
-    public partial class GrooveNowPlayingBar : Control
+    public sealed partial class GrooveNowPlayingBar : NowPlayingBar
     {
+        /// <summary>
+        /// Backing dependency property for <see cref="BackgroundColor"/>.
+        /// </summary>
+        public static readonly DependencyProperty BackgroundColorProperty =
+            DependencyProperty.Register(nameof(BackgroundColor), typeof(Color?), typeof(GrooveNowPlayingBar), new PropertyMetadata(null));
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveNowPlayingBar"/> class.
         /// </summary>
         public GrooveNowPlayingBar()
         {
             DefaultStyleKey = typeof(GrooveNowPlayingBar);
-            DataContext = new GrooveNowPlayingBarViewModel();
+        }
+        
+        /// <summary>
+        /// Gets or sets the color of the <see cref="Controls.GrooveNowPlayingBar"/> background.
+        /// </summary>
+        public Color? BackgroundColor
+        {
+            get => (Color?)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
         }
 
-        /// <summary>
-        /// Backing dependency property for <see cref="MainViewModel"/>.
-        /// </summary>
-        public static readonly DependencyProperty ActiveDeviceProperty =
-            DependencyProperty.Register(nameof(DeviceViewModel), typeof(DeviceViewModel), typeof(GrooveNowPlayingBar), new PropertyMetadata(null, (d, e) => d.Cast<GrooveNowPlayingBar>().OnActiveDeviceChanged()));
-
-        /// <summary>
-        /// The <see cref="GrooveNowPlayingBarViewModel"/> for the <see cref="GrooveNowPlayingBar"/> template.
-        /// </summary>
-        public GrooveNowPlayingBarViewModel ViewModel => (GrooveNowPlayingBarViewModel)DataContext;
-
-        /// <summary>
-        /// Holds active devices and track playback information.
-        /// </summary>
-        public DeviceViewModel? ActiveDevice
+        /// <inheritdoc/>
+        private void AttachEvents_ActiveDevice(IDevice device)
         {
-            get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
-            set => SetValue(ActiveDeviceProperty, value);
+            device.NowPlayingChanged += ActiveDevice_NowPlayingChanged;
+        }
+        
+        /// <inheritdoc/>
+        private void DetachEvents_ActiveDevice(IDevice device)
+        {
+            device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
-        private void OnActiveDeviceChanged()
+        private async void ActiveDevice_NowPlayingChanged(object sender, PlaybackItem e)
         {
-            ViewModel.ActiveDevice = ActiveDevice;
+            // Load images if there aren't images loaded.
+            // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.
+            // Maybe just ask the api for the first image directly, glhf.
+            Guard.IsNotNull(e.Track, nameof(e.Track));
+
+            if (e.Track.TotalImageCount != 0)
+            {
+                // If there are images, grab the color from the first image.
+                var images = await e.Track.GetImagesAsync(1, 0).ToListAsync();
+
+                foreach (var image in images)
+                    BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(image.Uri));
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnActiveDeviceChanged(DeviceViewModel? oldValue, DeviceViewModel? newValue)
+        {
+            if (!(oldValue is null))
+                DetachEvents_ActiveDevice(oldValue);
+
+            if (!(newValue is null))
+                AttachEvents_ActiveDevice(newValue);
         }
     }
 }

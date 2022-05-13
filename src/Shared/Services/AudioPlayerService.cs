@@ -154,6 +154,7 @@ namespace StrixMusic.Services
             await Threading.OnPrimaryThread(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
+                {
                     if (sourceConfig.MediaSourceUri.IsFile)
                     {
                         var file = await StorageFile.GetFileFromPathAsync(sourceConfig.MediaSourceUri.LocalPath);
@@ -166,6 +167,7 @@ namespace StrixMusic.Services
                         var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
                         _player.MediaPlayer.Source = source;
                     }
+                }
                 else if (sourceConfig.FileStreamSource != null)
                 {
                     var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);

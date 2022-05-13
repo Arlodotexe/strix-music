@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Arlo Godfrey. All Rights Reserved.
-// Licensed under the GNU Lesser General public License, Version 3.0 with additional terms.
+// Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        protected internal AlbumPluginBase(ModelPluginMetadata registration, IAlbum inner)
+        internal protected AlbumPluginBase(ModelPluginMetadata registration, IAlbum inner)
         {
             Metadata = registration;
             Inner = inner;
@@ -88,9 +88,6 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual int TotalGenreCount => InnerGenreCollection.TotalGenreCount;
-
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => ((IMerged<ICoreAlbum>)Inner).SourceCores;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreAlbum> Sources => ((IMerged<ICoreAlbum>)Inner).Sources;
@@ -173,6 +170,13 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <inheritdoc/>
         public virtual bool IsPauseArtistCollectionAsyncAvailable =>
             InnerArtistCollection.IsPauseArtistCollectionAsyncAvailable;
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => Inner.SourcesChanged += value;
+            remove => Inner.SourcesChanged -= value;
+        }
 
         /// <inheritdoc/>
         public virtual event EventHandler<DownloadInfo>? DownloadInfoChanged
@@ -337,8 +341,8 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) =>
-            InnerArtistCollection.AddArtistItemAsync(artist, index, cancellationToken);
+        public virtual Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) =>
+            InnerArtistCollection.AddArtistItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc/>
         public virtual Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => InnerGenreCollection.AddGenreAsync(genre, index, cancellationToken);
@@ -400,23 +404,23 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual bool Equals(ICoreArtistCollection other) => InnerArtistCollection.Equals(other);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
+        public virtual IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
             InnerArtistCollection.GetArtistItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
+        public virtual IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
             InnerGenreCollection.GetGenresAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
+        public virtual IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
             InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
+        public virtual IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
             InnerTrackCollection.GetTracksAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
+        public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) =>
             InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>

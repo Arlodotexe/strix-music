@@ -76,7 +76,7 @@ namespace StrixMusic.Shared.ViewModels
 
                     foundFiles.Add(file);
                 }
-                catch (Exception ex)
+                catch
                 {
                     break;
                 }

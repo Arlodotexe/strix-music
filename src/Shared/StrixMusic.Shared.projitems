@@ -21,6 +21,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\AdvancedAppSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\LoggingSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RecoverySettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml.cs">
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
@@ -36,8 +39,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
+    <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagementService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreManagementService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreInstanceEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreRegistry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\ICoreManagementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
@@ -55,7 +63,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoadedServicesItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellInfoViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellSelectorViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SuperShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">

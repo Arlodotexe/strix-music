@@ -36,7 +36,6 @@ namespace StrixMusic.Sdk.AdapterModels
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
             _sources = _userProfile.IntoList();
-            SourceCores = _userProfile.SourceCore.IntoList();
 
             TotalImageCount = _userProfile.TotalImageCount;
             TotalUrlCount = _userProfile.TotalUrlCount;
@@ -231,9 +230,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// The sources that were combined to form the data in this instance.
         /// </summary>
         /// <remarks>
-        /// Use this properly, but do not yet rely on it. Merging of users and user profiles are TODO.
+        /// Merging of users and user profiles are TODO.
         /// </remarks>
-        public IReadOnlyList<ICoreUserProfile> Sources => _sources; 
+        public IReadOnlyList<ICoreUserProfile> Sources => _sources;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
@@ -241,17 +243,14 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _sources;
 
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
-
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _imageMap.GetItemsAsync(limit, offset, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             return _urlMap.GetItemsAsync(limit, offset, cancellationToken);
         }
@@ -280,19 +279,15 @@ namespace StrixMusic.Sdk.AdapterModels
             return _urlMap.RemoveAtAsync(index, cancellationToken);
         }
 
-        /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other)
-        {
-            // User profiles are never merged.
-            return false;
-        }
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>false. User profiles are never merged.</returns>
+        public bool Equals(ICoreImageCollection other) => false;
 
-        /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other)
-        {
-            // User profiles are never merged.
-            return false;
-        }
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>false. User profiles are never merged.</returns>
+        public bool Equals(ICoreUrlCollection other) => false;
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
