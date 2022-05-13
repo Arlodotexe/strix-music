@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
@@ -11,11 +12,11 @@ namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 /// </summary>
 public class PopulateEmptyNamesPlugin : SdkModelPlugin
 {
-    private readonly static ModelPluginMetadata _metadata = new(
+    private static readonly ModelPluginMetadata _metadata = new(
         id: nameof(PopulateEmptyNamesPlugin),
         displayName: "Populate empty names",
         description: "Provides a fallback value for items that are missing a name.",
-        sdkVer: typeof(SdkModelPlugins).Assembly.GetName().Version);
+        new Version(0, 0, 0));
 
     private string _emptyAlbumName = string.Empty;
     private string _emptyArtistName = string.Empty;

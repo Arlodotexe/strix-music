@@ -19,29 +19,21 @@ namespace StrixMusic.Sdk.WinUI.Controls.Views
             this.DefaultStyleKey = typeof(SearchView);
             _query = query;
 
-            // TODO: Load query results after DataContext assigned.
-            //this.DataContextChanged += SearchView_DataContextChanged;
         }
 
-        //private async void SearchView_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
-        //{
-        //    await ViewModel!.GlobalSearchResultsAsync(_query);
-        //}
-
         /// <summary>
-        /// The viewmodel that holds application's main data.
+        /// The viewmodel that holds application's data root.
         /// </summary>
-        public MainViewModel Main
+        public StrixDataRootViewModel Main
         {
-            get { return (MainViewModel)GetValue(MainProperty); }
+            get { return (StrixDataRootViewModel)GetValue(MainProperty); }
             set { SetValue(MainProperty, value); }
         }
 
         /// <summary>
-        /// Dependency property for <see cref="MainViewModel"/>.
+        /// Backing dependency property for <see cref="Main"/>.
         /// </summary>
-        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MainProperty =
-            DependencyProperty.Register("MainProperty", typeof(MainViewModel), typeof(SearchView), new PropertyMetadata(0));
+            DependencyProperty.Register("MainProperty", typeof(StrixDataRootViewModel), typeof(SearchView), new PropertyMetadata(null));
     }
 }

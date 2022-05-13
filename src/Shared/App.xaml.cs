@@ -1,9 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using StrixMusic.Shared;
+﻿using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace StrixMusic
 {
@@ -13,22 +11,11 @@ namespace StrixMusic
     public sealed partial class App : Application
     {
         /// <summary>
-        /// The internal AppFrame used to host top level app content.
-        /// </summary>
-        /// <remarks>If/when the app is made to handle multiple instances, this needs to be reworked.</remarks>
-        public static AppFrame AppFrame { internal get; set; } = null!;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
-#if WINDOWS_UWP
-            if (!string.IsNullOrWhiteSpace(Sdk.Helpers.Secrets.AppCenterId))
-                Microsoft.AppCenter.AppCenter.Start(Sdk.Helpers.Secrets.AppCenterId, typeof(Microsoft.AppCenter.Analytics.Analytics), typeof(Microsoft.AppCenter.Crashes.Crashes));
-#endif
-
             InitializeComponent();
             Suspending += OnSuspending;
         }
@@ -64,7 +51,7 @@ namespace StrixMusic
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = AppFrame = new AppFrame();
+                Window.Current.Content = new AppFrame();
             }
 
             // Bi-directional language support
@@ -73,11 +60,11 @@ namespace StrixMusic
             var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
             if (flowDirectionSetting == "LTR")
             {
-                AppFrame.FlowDirection = FlowDirection.LeftToRight;
+                Window.Current.GetAppFrame().FlowDirection = FlowDirection.LeftToRight;
             }
             else
             {
-                AppFrame.FlowDirection = FlowDirection.RightToLeft;
+                Window.Current.GetAppFrame().FlowDirection = FlowDirection.RightToLeft;
             }
 #endif
         }

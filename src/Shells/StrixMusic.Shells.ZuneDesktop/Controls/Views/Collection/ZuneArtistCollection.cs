@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Shells.ZuneDesktop.Converters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,7 +28,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <summary>
-        /// Holds the instnace of the sort textblock.
+        /// Holds the instance of the sort textblock.
         /// </summary>
         public TextBlock? PART_SortLbl { get; private set; }
 
@@ -50,7 +50,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <summary>
         /// Backing dependency property for <see cref="ArtistCollection" />.
         /// </summary>
-        public new IArtistCollectionViewModel Collection
+        public new IArtistCollectionViewModel? Collection
         {
             get { return (IArtistCollectionViewModel)GetValue(CollectionProperty); }
             set { SetValue(CollectionProperty, value); }
@@ -92,11 +92,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             PART_SortLbl.Tapped -= PART_SortLbl_Tapped;
 
             Unloaded -= ZuneArtistCollection_Unloaded;
-            Collection.Artists.CollectionChanged -= Artists_CollectionChanged;
+
+            if (Collection is not null)
+                Collection.Artists.CollectionChanged -= Artists_CollectionChanged;
         }
 
         private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            Guard.IsNotNull(Collection);
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
             switch (SortState)
@@ -131,6 +134,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         private async void Artists_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if (Collection is null)
+                return;
+
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 // Define default sort state of the albums on load.

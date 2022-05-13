@@ -4,6 +4,7 @@ using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.Tests.Mock;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 using StrixMusic.Sdk.Tests.Mock.Core;
 
 namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
@@ -30,12 +31,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreEqual(1, plugin.Track.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Playable.Count, IncorrectPluginCountMsg);
 
-            var core = new MockCore();
-            var album = (MergedAlbum)MockItemFactory.CreateAlbum(core);
-            var artist = (MergedArtist)MockItemFactory.CreateArtist(core);
-            var playlist = (MergedPlaylist)MockItemFactory.CreatePlaylist(core);
-            var track = (MergedTrack)MockItemFactory.CreateTrack(core);
-            var playableCollectionGroup = (MergedPlayableCollectionGroup)MockItemFactory.CreatePlayableCollectionGroup(core);
+            var album = new MockAlbum();
+            var artist = new MockArtist();
+            var playlist = new MockPlaylist();
+            var track = new MockTrack();
+            var playableCollectionGroup = new MockPlayableCollectionGroup();
 
             album.Name = string.Empty;
             artist.Name = string.Empty;
@@ -73,12 +73,30 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreEqual(1, plugin.Track.Count, IncorrectPluginCountMsg);
             Assert.AreEqual(1, plugin.Playable.Count, IncorrectPluginCountMsg);
 
-            var core = new MockCore();
-            var album = (MergedAlbum)MockItemFactory.CreateAlbum(core);
-            var artist = (MergedArtist)MockItemFactory.CreateArtist(core);
-            var playlist = (MergedPlaylist)MockItemFactory.CreatePlaylist(core);
-            var track = (MergedTrack)MockItemFactory.CreateTrack(core);
-            var playableCollectionGroup = (MergedPlayableCollectionGroup)MockItemFactory.CreatePlayableCollectionGroup(core);
+            var album = new MockAlbum
+            {
+                Name = Guid.NewGuid().ToString(),
+            };
+            
+            var artist = new MockArtist
+            {
+                Name = Guid.NewGuid().ToString(),
+            };
+            
+            var playlist = new MockPlaylist
+            {
+                Name = Guid.NewGuid().ToString(),
+            };
+            
+            var track = new MockTrack
+            {
+                Name = Guid.NewGuid().ToString(),
+            };
+            
+            var playableCollectionGroup = new MockPlayableCollectionGroup
+            {
+                Name = Guid.NewGuid().ToString(),
+            };
 
             var albumWithPlugin = plugin.Album.Execute(album);
             var artistWithPlugin = plugin.Artist.Execute(artist);
@@ -112,12 +130,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreNotEqual(string.Empty, plugin.EmptyPlaylistName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyDefaultName);
 
-            var core = new MockCore();
-            var album = (MergedAlbum)MockItemFactory.CreateAlbum(core);
-            var artist = (MergedArtist)MockItemFactory.CreateArtist(core);
-            var playlist = (MergedPlaylist)MockItemFactory.CreatePlaylist(core);
-            var track = (MergedTrack)MockItemFactory.CreateTrack(core);
-            var playableCollectionGroup = (MergedPlayableCollectionGroup)MockItemFactory.CreatePlayableCollectionGroup(core);
+            var album = new MockAlbum();
+            var artist = new MockArtist();
+            var playlist = new MockPlaylist();
+            var track = new MockTrack();
+            var playableCollectionGroup = new MockPlayableCollectionGroup();
 
             album.Name = string.Empty;
             artist.Name = string.Empty;
@@ -222,11 +239,11 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreNotEqual(string.Empty, plugin.EmptyPlaylistName);
             Assert.AreNotEqual(string.Empty, plugin.EmptyDefaultName);
 
-            var core = new MockCore();
-            var album = (MergedAlbum)MockItemFactory.CreateAlbum(core);
-            var artist = (MergedArtist)MockItemFactory.CreateArtist(core);
-            var playlist = (MergedPlaylist)MockItemFactory.CreatePlaylist(core);
-            var track = (MergedTrack)MockItemFactory.CreateTrack(core);
+            var album = new MockAlbum();
+            var artist = new MockArtist();
+            var playlist = new MockPlaylist();
+            var track = new MockTrack();
+            var playableCollectionGroup = new MockPlayableCollectionGroup();
 
             album.Name = string.Empty;
             artist.Name = string.Empty;

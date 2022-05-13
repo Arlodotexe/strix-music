@@ -9,6 +9,9 @@ using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Extensions
 {
+    /// <summary>
+    /// Extension methods for generic operations on core members.
+    /// </summary>
     public static partial class Cores
     {
         /// <summary>

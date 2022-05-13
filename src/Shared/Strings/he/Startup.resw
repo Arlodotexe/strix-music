@@ -135,9 +135,6 @@
   <data name="InitServices" xml:space="preserve">
     <value>אתחול שירותים</value>
   </data>
-  <data name="SetupMedia" xml:space="preserve">
-    <value>אתחול נגני מדיה</value>
-  </data>
   <data name="StrixMusicMusicTB.Text" xml:space="preserve">
     <value>מוסיקה</value>
   </data>

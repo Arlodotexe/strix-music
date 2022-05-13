@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Contains a history of playable items which were selected from search results.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ISearchHistory : ISearchHistoryBase, IPlayableCollectionGroup, IPlayable, ISdkMember, IMerged<ICoreSearchHistory>
+    public interface ISearchHistory : ISearchHistoryBase, IPlayableCollectionGroup, IPlayable, IAppModel, IMerged<ICoreSearchHistory>
     {
     }
 }

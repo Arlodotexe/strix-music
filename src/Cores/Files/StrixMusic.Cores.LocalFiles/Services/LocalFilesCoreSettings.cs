@@ -7,7 +7,7 @@ namespace StrixMusic.Cores.LocalFiles.Services
     /// <summary>
     /// A container for <see cref="LocalFilesCore"/> settings.
     /// </summary>
-    internal class LocalFilesCoreSettings : SettingsBase
+    public sealed class LocalFilesCoreSettings : SettingsBase
     {
         /// <summary>
         /// Creates a new instance of <see cref="LocalFilesCoreSettings"/>.

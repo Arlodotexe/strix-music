@@ -2,19 +2,18 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
+using StrixMusic.Services.CoreManagement;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,14 +25,18 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class MainPage : UserControl
     {
-        private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
-        private INavigationService<Control>? _navigationService;
+        private readonly AppSettings _settings;
+        private readonly ICoreManagementService _coreManagementService;
+        private readonly List<MediaPlayerElement> _mediaPlayerElements = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
-        public MainPage()
+        public MainPage(StrixDataRootViewModel dataRoot, AppSettings settings, ICoreManagementService coreManagementService)
         {
+            _settings = settings;
+            _coreManagementService = coreManagementService;
+            DataRoot = dataRoot;
             InitializeComponent();
             Loaded += MainPage_Loaded;
         }
@@ -41,7 +44,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The currently loaded shell, if any.
         /// </summary>
-        internal ShellMetadata? ActiveShellModel { get; private set; }
+        internal ShellMetadata? ActiveShell { get; private set; }
 
         /// <summary>
         /// The user's preferred shell.
@@ -53,16 +56,18 @@ namespace StrixMusic.Shared
         /// </summary>
         internal ShellMetadata? FallbackShell { get; private set; }
 
+        /// <summary>
+        /// The data root the page was initialized with.
+        /// </summary>
+        public StrixDataRootViewModel DataRoot { get; }
+
         private async void MainPage_Loaded(object? sender, RoutedEventArgs e)
         {
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
-            var settingsService = Ioc.Default.GetRequiredService<AppSettings>();
-            _navigationService = CurrentWindow.NavigationService;
-
             LoadRegisteredMediaPlayerElements();
-            await SetupShellsFromSettings();
+            SetupShellsFromSettings();
             Guard.IsNotNull(PreferredShell, nameof(PreferredShell));
 
             await SetupShell(PreferredShell);
@@ -81,24 +86,17 @@ namespace StrixMusic.Shared
         /// <summary>
         /// Fires when the Super buttons is clicked. Temporary until a proper trigger mechanism is found for touch devices.
         /// </summary>
-        public void Button_Click(object? sender, RoutedEventArgs e)
-        {
-            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
-        }
+        public void Button_Click(object? sender, RoutedEventArgs e) => Window.Current.GetAppFrame().DisplaySuperShell(_settings, DataRoot.Sources, _coreManagementService);
 
         private void AttachEvents()
         {
             Ioc.Default.GetRequiredService<AppSettings>().PropertyChanged += OnSettingChanged;
 
 #warning Remove me when live core editing is stable.
-            Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceRegistered += ShowEditCoresWarning;
-            Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceUnregistered += ShowEditCoresWarning;
+            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
 
-            void ShowEditCoresWarning(object? sender, CoreInstanceEventArgs args)
-            {
-                Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Restart recommended",
-                    "Editing cores while the app is running is not stable yet");
-            }
+            coreManagementService.CoreInstanceRegistered += ShowEditCoresWarning;
+            coreManagementService.CoreInstanceUnregistered += ShowEditCoresWarning;
         }
 
         private void DetachEvents()
@@ -106,13 +104,23 @@ namespace StrixMusic.Shared
             Unloaded -= MainPage_Unloaded;
 
             Ioc.Default.GetRequiredService<AppSettings>().PropertyChanged -= OnSettingChanged;
+
+            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            coreManagementService.CoreInstanceRegistered -= ShowEditCoresWarning;
+            coreManagementService.CoreInstanceUnregistered -= ShowEditCoresWarning;
+        }
+
+        private void ShowEditCoresWarning(object? sender, CoreInstanceEventArgs args)
+        {
+            Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Restart recommended",
+                "Editing cores while the app is running is not stable yet");
         }
 
         private async void OnSettingChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(AppSettings.FallbackShell) || e.PropertyName == nameof(AppSettings.PreferredShell))
             {
-                await SetupShellsFromSettings();
+                SetupShellsFromSettings();
 
                 if (PreferredShell is null)
                     return;
@@ -149,24 +157,20 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async Task SetupShellsFromSettings()
+        private void SetupShellsFromSettings()
         {
-            Guard.IsNotNull(_navigationService, nameof(_navigationService));
-
             // Gets the preferred shell from settings.
-            var preferredShellId = Ioc.Default.GetRequiredService<AppSettings>().PreferredShell;
+            var preferredShellId = _settings.PreferredShell;
 
             PreferredShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == preferredShellId);
-
             if (PreferredShell == default)
             {
-                _navigationService.NavigateTo(typeof(SuperShell), true);
+                CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
                 return;
             }
 
             // Gets the preferred shell from settings.
-            var fallbackShellId = Ioc.Default.GetRequiredService<AppSettings>().FallbackShell;
-
+            var fallbackShellId = _settings.FallbackShell;
             FallbackShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == fallbackShellId);
         }
 
@@ -174,6 +178,9 @@ namespace StrixMusic.Shared
         {
             using (Threading.PrimaryContext)
             {
+                if (ActiveShell is not null && ActiveShell.Id == shellMetadata.Id)
+                    return Task.CompletedTask;
+
                 var notificationService = Ioc.Default.GetRequiredService<INotificationService>().Cast<NotificationService>();
 
                 notificationService.ChangeNotificationMargins(new Thickness(25, 35, 25, 35));
@@ -182,17 +189,16 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+                var shell = ShellRegistry.CreateShell(shellMetadata, DataRoot);
 
-                mainViewModel.Notifications.IsHandled = false;
-
-                var shell = ShellRegistry.CreateShell(shellMetadata);
-
-                shell.DataRoot = mainViewModel;
+                shell.DataRoot = DataRoot;
+                shell.Notifications = Window.Current.GetAppFrame().Notifications;
+                shell.Notifications.IsHandled = false;
                 shell.InitServices(new ServiceCollection());
                 ShellDisplay.Content = shell;
+                ActiveShell = shellMetadata;
 
-                ActiveShellModel = shellMetadata;
+                return Task.CompletedTask;
             }
 
             return Task.CompletedTask;
@@ -211,13 +217,13 @@ namespace StrixMusic.Shared
 
         private async void MainPage_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
-            if (ActiveShellModel is null || PreferredShell is null || FallbackShell is null)
+            if (ActiveShell is null || PreferredShell is null || FallbackShell is null)
             {
                 // Ignore this during initialization
                 return;
             }
 
-            if (ActiveShellModel != PreferredShell)
+            if (ActiveShell != PreferredShell)
             {
                 if (CheckShellModelSupport(PreferredShell))
                 {
@@ -225,7 +231,7 @@ namespace StrixMusic.Shared
                         await SetupShell(PreferredShell);
                 }
             }
-            else if (!CheckShellModelSupport(ActiveShellModel))
+            else if (!CheckShellModelSupport(ActiveShell))
             {
                 if (FallbackShell != PreferredShell)
                     await SetupShell(FallbackShell);

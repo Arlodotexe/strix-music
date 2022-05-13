@@ -20,7 +20,9 @@ using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Cores.OneDrive
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Scan and play audio files from OneDrive.
+    /// </summary>
     public sealed class OneDriveCore : FilesCore
     {
         private readonly IFolderData _metadataStorage;
@@ -41,6 +43,29 @@ namespace StrixMusic.Cores.OneDrive
             _metadataStorage = metadataStorage;
             NotificationService = notificationService;
             Settings = new OneDriveCoreSettings(settingsStorage);
+            _configPanel = new AbstractUICollection(string.Empty);
+
+            _completeGenericSetupButton = new AbstractButton(Guid.NewGuid().ToString(), "OK");
+            _completeGenericSetupButton.Clicked += CompleteGenericSetupButton_Clicked;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OneDriveCore"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This overload allows passing preconfigured settings that, if all values are valid, will allow initialization to complete without 
+        /// any interaction from the user.
+        /// </remarks>
+        /// <param name="instanceId">A unique identifier for this core instance.</param>
+        /// <param name="settings">A preconfigured instance of <see cref="OneDriveCoreSettings"/> that will be used instead of a new instance with default values.</param>
+        /// <param name="metadataStorage">A folder abstraction where this core can persist metadata for scanned files.</param>
+        /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
+        public OneDriveCore(string instanceId, OneDriveCoreSettings settings, IFolderData metadataStorage, INotificationService notificationService)
+            : base(instanceId)
+        {
+            _metadataStorage = metadataStorage;
+            NotificationService = notificationService;
+            Settings = settings;
             _configPanel = new AbstractUICollection(string.Empty);
 
             _completeGenericSetupButton = new AbstractButton(Guid.NewGuid().ToString(), "OK");
@@ -132,7 +157,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.UserHasSeenAuthClientKeysSettings = true;
                 await Settings.SaveAsync();
-                return;
             }
 
             if (!Settings.UserHasSeenGeneralOobeSettings)
@@ -148,7 +172,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.UserHasSeenGeneralOobeSettings = true;
                 await Settings.SaveAsync();
-                return;
             }
 
             if (string.IsNullOrWhiteSpace(Settings.AccountIdentifier))
@@ -182,8 +205,6 @@ namespace StrixMusic.Cores.OneDrive
                         return;
                     }
                 }
-
-                return;
             }
 
             if (string.IsNullOrWhiteSpace(Settings.SelectedFolderId))
@@ -199,8 +220,6 @@ namespace StrixMusic.Cores.OneDrive
 
                 Settings.SelectedFolderId = folder.Id ?? string.Empty;
                 await Settings.SaveAsync();
-
-                return;
             }
 
             Logger.LogInformation("Fully configured, setting state.");

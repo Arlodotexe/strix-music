@@ -28,6 +28,7 @@ namespace StrixMusic.Cores.Files.Models
         public FilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
+            AttachEvents();
         }
 
         /// <inheritdoc/>
@@ -37,8 +38,9 @@ namespace StrixMusic.Cores.Files.Models
             await _initSemaphore.WaitAsync(cancellationToken);
 
             _fileMetadataManager = SourceCore.Cast<FilesCore>().FileMetadataManager;
-
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
+            AttachEvents(_fileMetadataManager);
 
             TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
             TotalArtistItemsCount = await _fileMetadataManager.Artists.GetItemCount();
@@ -47,8 +49,6 @@ namespace StrixMusic.Cores.Files.Models
 
             await base.InitAsync(cancellationToken);
 
-            AttachEvents();
-
             IsInitialized = true;
 
             _initSemaphore.Release();
@@ -56,36 +56,71 @@ namespace StrixMusic.Cores.Files.Models
 
         private void AttachEvents()
         {
-            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-
-            _fileMetadataManager.Tracks.MetadataAdded += Tracks_MetadataAdded;
-            _fileMetadataManager.Albums.MetadataAdded += Albums_MetadataAdded;
-            _fileMetadataManager.Artists.MetadataAdded += Artists_MetadataAdded;
-            _fileMetadataManager.Playlists.MetadataAdded += Playlists_MetadataAdded;
-
-            _fileMetadataManager.Tracks.MetadataRemoved += Tracks_MetadataRemoved;
-            _fileMetadataManager.Albums.MetadataRemoved += Albums_MetadataRemoved;
-            _fileMetadataManager.Artists.MetadataRemoved += Artists_MetadataRemoved;
-            _fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
+            base.TracksCountChanged += FilesCoreLibrary_TracksCountChanged;
+            base.ArtistItemsCountChanged += FilesCoreLibrary_ArtistItemsCountChanged;
+            base.AlbumItemsCountChanged += FilesCoreLibrary_AlbumItemsCountChanged;
+            base.PlaylistItemsCountChanged += FilesCoreLibrary_PlaylistItemsCountChanged;
+            base.ImagesCountChanged += FilesCoreLibrary_ImagesCountChanged;
         }
 
-        private async Task DetachEvents()
+        private void DetachEvents()
         {
-            // _fileMetadataManager can be null if InitAsync hasn't been called.
-            if (!IsInitialized && _fileMetadataManager is null)
-                return;
+            base.TracksCountChanged -= FilesCoreLibrary_TracksCountChanged;
+            base.ArtistItemsCountChanged -= FilesCoreLibrary_ArtistItemsCountChanged;
+            base.AlbumItemsCountChanged -= FilesCoreLibrary_AlbumItemsCountChanged;
+            base.PlaylistItemsCountChanged -= FilesCoreLibrary_PlaylistItemsCountChanged;
+            base.ImagesCountChanged -= FilesCoreLibrary_ImagesCountChanged;
+        }
 
-            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        private void AttachEvents(IFileMetadataManager fileMetadataManager)
+        {
+            fileMetadataManager.Tracks.MetadataAdded += Tracks_MetadataAdded;
+            fileMetadataManager.Albums.MetadataAdded += Albums_MetadataAdded;
+            fileMetadataManager.Artists.MetadataAdded += Artists_MetadataAdded;
+            fileMetadataManager.Playlists.MetadataAdded += Playlists_MetadataAdded;
 
-            _fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
-            _fileMetadataManager.Albums.MetadataAdded -= Albums_MetadataAdded;
-            _fileMetadataManager.Artists.MetadataAdded -= Artists_MetadataAdded;
-            _fileMetadataManager.Playlists.MetadataAdded -= Playlists_MetadataAdded;
+            fileMetadataManager.Tracks.MetadataRemoved += Tracks_MetadataRemoved;
+            fileMetadataManager.Albums.MetadataRemoved += Albums_MetadataRemoved;
+            fileMetadataManager.Artists.MetadataRemoved += Artists_MetadataRemoved;
+            fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
+        }
 
-            _fileMetadataManager.Tracks.MetadataRemoved -= Tracks_MetadataRemoved;
-            _fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
-            _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
-            _fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataRemoved;
+        private void DetachEvents(IFileMetadataManager fileMetadataManager)
+        {
+            fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
+            fileMetadataManager.Albums.MetadataAdded -= Albums_MetadataAdded;
+            fileMetadataManager.Artists.MetadataAdded -= Artists_MetadataAdded;
+            fileMetadataManager.Playlists.MetadataAdded -= Playlists_MetadataAdded;
+
+            fileMetadataManager.Tracks.MetadataRemoved -= Tracks_MetadataRemoved;
+            fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
+            fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
+            fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataRemoved;
+        }
+
+        private void FilesCoreLibrary_PlaylistItemsCountChanged(object sender, int e)
+        {
+            PlaylistItemsCountChanged?.Invoke(sender, e);
+        }
+
+        private void FilesCoreLibrary_AlbumItemsCountChanged(object sender, int e)
+        {
+            AlbumItemsCountChanged?.Invoke(sender, e);
+        }
+
+        private void FilesCoreLibrary_ArtistItemsCountChanged(object sender, int e)
+        {
+            ArtistItemsCountChanged?.Invoke(sender, e);
+        }
+
+        private void FilesCoreLibrary_ImagesCountChanged(object sender, int e)
+        {
+            ImagesCountChanged?.Invoke(this, e);
+        }
+
+        private void FilesCoreLibrary_TracksCountChanged(object sender, int e)
+        {
+            TracksCountChanged?.Invoke(sender, e);
         }
 
         private void Playlists_MetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
@@ -353,7 +388,10 @@ namespace StrixMusic.Cores.Files.Models
                 if (!IsInitialized)
                     return;
 
-                await DetachEvents();
+                if (_fileMetadataManager is not null)
+                    DetachEvents(_fileMetadataManager);
+
+                DetachEvents();
                 await base.DisposeAsync();
 
                 IsInitialized = false;

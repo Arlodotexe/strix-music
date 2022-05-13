@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// An item that belongs in an <see cref="IAlbumCollection"/> or <see cref="IAlbum"/> that may have more than one source.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAlbumCollectionItem : IAlbumCollectionItemBase, IPlayable, ISdkMember, IMerged<ICoreAlbumCollectionItem>
+    public interface IAlbumCollectionItem : IAlbumCollectionItemBase, IPlayable, IAppModel, IMerged<ICoreAlbumCollectionItem>
     {
     }
 }

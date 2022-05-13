@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Holds details about a genre.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IGenre : IGenreBase, ISdkMember, IMerged<ICoreGenre>
+    public interface IGenre : IGenreBase, IAppModel, IMerged<ICoreGenre>
     {
     }
 }

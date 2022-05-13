@@ -36,22 +36,22 @@ namespace StrixMusic.Sdk.AdapterModels
         public string? TextLyrics => _source.TextLyrics;
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores => _source.SourceCore.IntoList();
-
-        /// <inheritdoc />
-        void IMergedMutable<ICoreLyrics>.AddSource(ICoreLyrics itemToMerge)
+        public void AddSource(ICoreLyrics itemToMerge)
         {
             ThrowHelper.ThrowNotSupportedException($"Merging lyrics from multiple sources not yet supported.");
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreLyrics>.RemoveSource(ICoreLyrics itemToRemove)
+        public void RemoveSource(ICoreLyrics itemToRemove)
         {
             ThrowHelper.ThrowNotSupportedException($"Merging lyrics from multiple sources not yet supported.");
         }
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreLyrics> Sources { get; }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public ITrack Track { get; }

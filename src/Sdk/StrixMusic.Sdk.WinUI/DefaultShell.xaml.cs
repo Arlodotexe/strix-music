@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
@@ -24,7 +25,8 @@ namespace StrixMusic.Shells.Default
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultShell"/> class.
         /// </summary>
-        public DefaultShell()
+        public DefaultShell(StrixDataRootViewModel dataRootViewModel)
+            : base(dataRootViewModel)
         {
             InitializeComponent();
 
@@ -41,9 +43,10 @@ namespace StrixMusic.Shells.Default
         /// <summary>
         /// Metadata used to identify this shell before instantiation.
         /// </summary>
-        public static ShellMetadata Metadata { get; } = new ShellMetadata(id: "default.sandbox",
-                                                                          displayName: "Sandbox",
-                                                                          description: "Used by devs to test and create default controls for other shells.");
+        public static ShellMetadata Metadata { get; } =
+            new(id: "default.sandbox",
+                displayName: "Sandbox",
+                description: "Used by devs to test and create default controls for other shells.");
 
         private INavigationService<Control> SetupNavigationService()
         {
@@ -80,7 +83,7 @@ namespace StrixMusic.Shells.Default
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
-                
+
                 // No sense checking the NavigationItems if the type is an overlay
                 return;
             }

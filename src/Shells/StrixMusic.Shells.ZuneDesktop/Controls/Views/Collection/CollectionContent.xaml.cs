@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -31,14 +31,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             Loaded -= CollectionContent_Loaded;
 
             ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
+            SwapPage("Artists");
         }
 
         /// <summary>
-        /// The root <see cref="MainViewModel" /> used by the shell.
+        /// The root <see cref="StrixDataRootViewModel" /> used by the shell.
         /// </summary>
-        public MainViewModel? DataRoot
+        public StrixDataRootViewModel? DataRoot
         {
-            get { return (MainViewModel)GetValue(DataRootProperty); }
+            get { return (StrixDataRootViewModel)GetValue(DataRootProperty); }
             set { SetValue(DataRootProperty, value); }
         }
 
@@ -46,7 +47,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(MainViewModel), typeof(CollectionContent), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(CollectionContent), new PropertyMetadata(null));
 
         /// <summary>
         /// Trigger animation on the <see cref="ZuneAlbumCollection"/> if its visible.
@@ -141,11 +142,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
             Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
 
-            ArtistCollection.Collection = DataRoot.Library;
-            ZuneAlbumCollection.Collection = DataRoot.Library;
-            TrackCollection.Collection = DataRoot.Library;
-            TrackTable.Collection = DataRoot.Library;
-            PlaylistCollection.Collection = DataRoot.Library;
+            ArtistCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            ZuneAlbumCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            TrackCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            TrackTable.Collection = (LibraryViewModel)DataRoot.Library;
+            PlaylistCollection.Collection = (LibraryViewModel)DataRoot.Library;
 
             DetailsPane.DataContext = null;
         }

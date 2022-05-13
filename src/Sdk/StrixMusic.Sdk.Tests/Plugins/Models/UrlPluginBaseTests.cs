@@ -13,12 +13,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class UrlPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().Url;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Url;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
-            var builder = new SdkModelPlugins().Url;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Url;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -51,7 +51,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginFullyCustom()
         {
-            var builder = new SdkModelPlugins().Url;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Url;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -104,14 +104,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class Unimplemented : IUrl
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
-
+            
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public ValueTask DisposeAsync() => throw AccessedException;
             public string Label => throw AccessedException;
             public Uri Url => throw AccessedException;
             public UrlType Type => throw AccessedException;
             public bool Equals(ICoreUrl? other) => throw AccessedException;
             public IReadOnlyList<ICoreUrl> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
         }
     }
 }

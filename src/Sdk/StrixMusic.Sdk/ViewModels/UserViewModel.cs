@@ -16,14 +16,13 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// A ViewModel for <see cref="IUser"/>.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="user">The <see cref="IUser"/> to wrap.</param>
-        public UserViewModel(MainViewModel root, IUser user)
-            : base(root, user)
+        public UserViewModel(IUser user)
+            : base(user)
         {
             Guard.IsNotNull(user, nameof(user));
 
-            Library = new LibraryViewModel(root, user.Library);
+            Library = new LibraryViewModel(user.Library);
         }
 
         /// <inheritdoc cref="ILibraryBase"/>

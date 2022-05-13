@@ -25,7 +25,6 @@ namespace StrixMusic.Sdk.AdapterModels
     {
         private readonly List<ICorePlaylist> _sources;
         private readonly ICorePlaylist _preferredSource;
-        private readonly List<ICore> _sourceCores;
 
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
@@ -37,7 +36,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedPlaylist(IEnumerable<ICorePlaylist> sources, MergedCollectionConfig config)
         {
             _sources = sources.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
@@ -121,11 +119,10 @@ namespace StrixMusic.Sdk.AdapterModels
         public event EventHandler<int>? UrlsCountChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         private void AttachEvents(ICorePlaylist source)
         {
@@ -221,7 +218,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _urlCollectionMap.InsertItemAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        void IMergedMutable<ICorePlaylist>.AddSource(ICorePlaylist itemToMerge)
+        public void AddSource(ICorePlaylist itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
@@ -229,37 +226,31 @@ namespace StrixMusic.Sdk.AdapterModels
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
 
-            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().AddSource(itemToMerge);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
+            _trackCollectionMap.AddSource(itemToMerge);
+            _imageCollectionMap.AddSource(itemToMerge);
+
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICorePlaylist>.RemoveSource(ICorePlaylist itemToRemove)
+        public void RemoveSource(ICorePlaylist itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().RemoveSource(itemToRemove);
-            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICorePlaylistCollectionItem>.AddSource(ICorePlaylistCollectionItem itemToMerge)
-        {
-            if (itemToMerge is ICorePlaylist col)
-                ((IMergedMutable<ICorePlaylist>)this).AddSource(col);
-        }
+        public void AddSource(ICorePlaylistCollectionItem itemToMerge) => AddSource((ICorePlaylist)itemToMerge);
 
         /// <inheritdoc />
-        void IMergedMutable<ICorePlaylistCollectionItem>.RemoveSource(ICorePlaylistCollectionItem itemToRemove)
-        {
-            if (itemToRemove is ICorePlaylist col)
-                ((IMergedMutable<ICorePlaylist>)this).RemoveSource(col);
-        }
+        public void RemoveSource(ICorePlaylistCollectionItem itemToRemove) => RemoveSource((ICorePlaylist)itemToRemove);
 
         /// <inheritdoc/>
         public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _trackCollectionMap.InsertItemAsync(track, index, cancellationToken);
@@ -274,13 +265,13 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => _preferredSource.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlCollectionMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
         public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => _trackCollectionMap.IsAddItemAvailableAsync(index, cancellationToken);
@@ -360,7 +351,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; }
@@ -385,9 +376,6 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;

@@ -1,15 +1,14 @@
-﻿using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.WinUI;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.ViewModels.Helpers;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
-using StrixMusic.Sdk.AppModels;
 
 namespace StrixMusic.Sdk.WinUI.Controls
 {
@@ -75,7 +74,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 return;
             }
 
-            var images = await ImageCollection.GetImagesAsync(1, 0);
+            var images = await ImageCollection.GetImagesAsync(1, 0).ToListAsync();
             if (images.Count == 0)
             {
                 PART_ImageBrush.ImageSource = null;

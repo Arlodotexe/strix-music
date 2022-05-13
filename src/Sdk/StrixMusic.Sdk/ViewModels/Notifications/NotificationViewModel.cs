@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore;
@@ -17,6 +18,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     [Bindable(true)]
     public sealed class NotificationViewModel : ObservableObject, IDisposable
     {
+        private readonly SynchronizationContext _syncContext;
         private AbstractUINotificationViewModel _abstractUINotificationViewModel;
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         /// <param name="model">The backing model.</param>
         public NotificationViewModel(Notification model)
         {
+            _syncContext = SynchronizationContext.Current;
             Model = model;
 
             _abstractUINotificationViewModel = new AbstractUINotificationViewModel(model.AbstractUICollection);
@@ -45,7 +48,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             set
             {
                 _abstractUINotificationViewModel = value;
-                _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(AbstractUINotificationViewModel)));
+               _syncContext.Post(_ => OnPropertyChanged(nameof(AbstractUINotificationViewModel)), null);
             }
         }
 

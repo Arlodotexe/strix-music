@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -21,26 +22,24 @@ namespace StrixMusic.Sdk.AdapterModels
     {
         private readonly MergedCollectionConfig _config;
         private readonly List<ICoreSearch> _sources;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearch"/>.
         /// </summary>
-        public MergedSearch(IReadOnlyList<ICoreSearch> sources, MergedCollectionConfig config)
+        public MergedSearch(IEnumerable<ICoreSearch> sources, MergedCollectionConfig config)
         {
             _config = config;
             _sources = sources.ToList();
-            _sourceCores = Sources.Select(x => x.SourceCore).ToList();
 
             if (Sources.Any(x => x.SearchHistory != null))
                 SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), config);
         }
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearch> Sources => _sources;
-
-        /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
         public async IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -87,7 +86,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                     if (mergedData[i].Equals(item))
                     {
-                        mergedData[i].Cast<IMergedMutable<ICoreSearchQuery>>().AddSource(item);
+                        mergedData[i].AddSource(item);
                         break;
                     }
 
@@ -109,29 +108,27 @@ namespace StrixMusic.Sdk.AdapterModels
         public ISearchHistory? SearchHistory { get; }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreSearch>.AddSource(ICoreSearch itemToMerge)
+        public void AddSource(ICoreSearch itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreSearch>.RemoveSource(ICoreSearch itemToRemove)
+        public void RemoveSource(ICoreSearch itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <inheritdoc />
-        public bool Equals(ICoreSearch other)
-        {
-            // We always merge together search sources.
-            return true;
-        }
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>true. We always merge together search sources.</returns>
+        public bool Equals(ICoreSearch other) => true;
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()

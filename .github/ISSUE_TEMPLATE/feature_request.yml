@@ -1,0 +1,51 @@
+name: Feature request
+description: Request a new feature or propose other changes. 
+title: "[Feature]"
+labels: "enhancement"
+body:
+- type: textarea
+  id: problem-description
+  validations: 
+    required: true
+  attributes: 
+    label: Describe the problem
+    description: Describe the problem this feature would solve.
+    placeholder: |
+       A clear and concise description of what the problem is, starting with the user story.
+
+       Describe or link to any existing issues or discussions.
+       
+       Provide examples of the restrictions in the current environment that hinders the work you want to perform, where this feature would help.
+- type: textarea
+  id: change-description
+  validations: 
+    required: true
+  attributes: 
+    label: Describe the proposed change
+    description: Describe the change that would solve the problem
+    placeholder: |
+       A clear and concise description of what you want to happen. Define how do you think it will help the community and the value it adds to the toolkit.
+
+- type: textarea
+  id: alternatives
+  attributes: 
+    label: Alternatives
+    description: Describe alternatives you've considered
+    placeholder: |
+       A clear and concise description of any alternative solutions or features you've considered.
+
+- type: textarea
+  id: additional-info
+  attributes:
+    label: Additional info
+    description: Add any other context or screenshots about the feature request here.
+
+- type: dropdown
+  id: contribution
+  attributes:
+     label: Help us help you
+     description: Would you like to contribute a solution to this issue?
+     options:
+       - Yes, I'd like to be assigned to work on this item.
+       - Yes, but only if others can assist.
+       - No, I'm unable to contribute a solution.

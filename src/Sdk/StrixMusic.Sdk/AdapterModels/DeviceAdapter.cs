@@ -84,7 +84,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayableBase>? PlaybackContextChanged
+        public event EventHandler<IPlayableBase?>? PlaybackContextChanged
         {
             add => _source.PlaybackContextChanged += value;
             remove => _source.PlaybackContextChanged -= value;

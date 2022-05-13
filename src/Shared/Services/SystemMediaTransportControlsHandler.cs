@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
@@ -181,12 +182,13 @@ namespace StrixMusic.Services
 
             // Images
             if (e.Track.TotalImageCount == 0)
+            {
                 updater.Thumbnail = null;
+            }
             else
             {
                 // Just the first, we don't care about the size.
-
-                var images = await e.Track.GetImagesAsync(1, 0);
+                var images = await e.Track.GetImagesAsync(1, 0).ToListAsync();
 
                 foreach (var image in images)
                 {
@@ -205,7 +207,7 @@ namespace StrixMusic.Services
             // Genres
             musicProperties.Genres.Clear();
 
-            var genres = await e.Track.GetGenresAsync(1, 0);
+            var genres = await e.Track.GetGenresAsync(1, 0).ToListAsync();
 
             foreach (var genre in genres)
                 musicProperties.Genres.Add(genre.Name);
@@ -216,8 +218,7 @@ namespace StrixMusic.Services
 
             // Artist info
             // Just the first (primary) artist.
-
-            var artists = await e.Track.GetArtistItemsAsync(1, 0);
+            var artists = await e.Track.GetArtistItemsAsync(1, 0).ToListAsync();
 
             foreach (var artist in artists)
             {

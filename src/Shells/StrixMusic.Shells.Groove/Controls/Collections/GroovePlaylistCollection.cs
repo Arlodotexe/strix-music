@@ -1,4 +1,5 @@
 ﻿using OwlCore.Extensions;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
@@ -16,33 +17,50 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public GroovePlaylistCollection()
         {
+            DataContext = this;
             this.DefaultStyleKey = typeof(GroovePlaylistCollection);
-            DataContext = new GroovePlaylistCollectionViewModel();
         }
 
         /// <summary>
         /// The backing dependency property for <see cref="Collection"/>.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
+            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollection), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
 
         /// <summary>
-        /// The ViewModel for a <see cref="GroovePlaylistCollection"/>.
+        /// A view model for this control.
         /// </summary>
-        public GroovePlaylistCollectionViewModel ViewModel => (GroovePlaylistCollectionViewModel)DataContext;
+        public GroovePlaylistCollectionViewModel ViewModel
+        {
+            get => (GroovePlaylistCollectionViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+
+        /// <summary>
+        /// The backing Dependency Property for <see cref="ViewModel"/>.
+        /// </summary>
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(GroovePlaylistCollectionViewModel), typeof(GroovePlaylistCollection), new PropertyMetadata(new GroovePlaylistCollectionViewModel()));
 
         /// <summary>
         /// The playlist collection to display.
         /// </summary>
-        public IPlaylistCollectionViewModel Collection
+        public IPlaylistCollection? Collection
         {
-            get { return (IPlaylistCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (IPlaylistCollection)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         private void OnPlaylistCollectionChanged()
         {
-            ViewModel.PlaylistCollection = Collection;
+            if (Collection is null)
+                return;
+
+            if (Collection is not IPlaylistCollectionViewModel pvm)
+                pvm = new PlaylistCollectionViewModel(Collection);
+
+            _ = pvm.InitPlaylistCollectionAsync();
+            ViewModel.PlaylistCollection = pvm;
         }
 
         /// <summary>
@@ -50,8 +68,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// </summary>
         public void ClearSelected()
         {
-            if (!(ViewModel is null))
-                ViewModel.SelectedPlaylist = null!;
+            ViewModel.SelectedPlaylist = null!;
         }
     }
 }

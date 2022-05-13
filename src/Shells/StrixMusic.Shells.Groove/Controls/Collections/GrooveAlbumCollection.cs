@@ -29,17 +29,12 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         public RelayCommand<AlbumViewModel> NavigateToAlbumCommand { get; private set; }
 
         /// <summary>
-        /// The ViewModel for a <see cref="GrooveAlbumCollection"/>.
-        /// </summary>
-        public GrooveAlbumCollectionViewModel ViewModel => (GrooveAlbumCollectionViewModel)DataContext;
-
-        /// <summary>
         /// The album collection to display.
         /// </summary>
         public IAlbumCollectionViewModel? AlbumCollection
         {
-            get { return (IAlbumCollectionViewModel)GetValue(AlbumCollectionProperty); }
-            set { SetValue(AlbumCollectionProperty, value); }
+            get => (IAlbumCollectionViewModel)GetValue(AlbumCollectionProperty);
+            set => SetValue(AlbumCollectionProperty, value);
         }
 
         /// <summary>

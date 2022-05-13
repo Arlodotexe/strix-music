@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class TrackCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().TrackCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).TrackCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().TrackCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).TrackCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().TrackCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).TrackCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -100,7 +100,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().TrackCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).TrackCollection;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -184,7 +184,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public async Task DisposeAsync_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().TrackCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).TrackCollection;
             var defaultImplementation = new NotBlockingDisposeAsync();
             builder.Add(x => new NoOverride(x)
             {
@@ -254,9 +254,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public override bool Equals(ICoreTrackCollection? other) => throw AccessedException;
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -294,7 +294,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class Unimplemented : ITrackCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
-
+            
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalTrackCount => throw AccessedException;
             public bool IsPlayTrackCollectionAsyncAvailable => throw AccessedException;
             public bool IsPauseTrackCollectionAsyncAvailable => throw AccessedException;
@@ -311,7 +312,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public DownloadInfo DownloadInfo => throw AccessedException;
             public int TotalImageCount => throw AccessedException;
             public IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             public int TotalUrlCount => throw AccessedException;
             IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;
             IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => throw AccessedException;
@@ -342,9 +342,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public bool Equals(ICoreTrackCollection? other) => throw AccessedException;
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;

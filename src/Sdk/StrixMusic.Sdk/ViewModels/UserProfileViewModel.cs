@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,24 +26,20 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
-        private readonly IReadOnlyList<ICore> _sourceCores;
         private readonly SynchronizationContext _syncContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        internal UserProfileViewModel(MainViewModel root, IUserProfile userProfile)
+        public UserProfileViewModel(IUserProfile userProfile)
         {
             _syncContext = SynchronizationContext.Current;
 
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
-            Root = root;
 
             var userProfileImpl = userProfile.Cast<UserProfileAdapter>();
 
-            _sourceCores = userProfileImpl.SourceCores.Select(root.GetLoadedCore).ToList();
             _sources = userProfileImpl.Sources;
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -65,6 +60,13 @@ namespace StrixMusic.Sdk.ViewModels
             IsInitialized = true;
 
             return InitImageCollectionAsync(cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _userProfile.SourcesChanged += value;
+            remove => _userProfile.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -129,15 +131,6 @@ namespace StrixMusic.Sdk.ViewModels
             add => _userProfile.UrlsChanged += value;
             remove => _userProfile.UrlsChanged -= value;
         }
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => _sourceCores;
-
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => _sourceCores;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
@@ -221,10 +214,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeEmailAsync(string? email, CancellationToken cancellationToken = default) => _userProfile.ChangeEmailAsync(email, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetImagesAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetImagesAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetUrlsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _userProfile.GetUrlsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => _userProfile.RemoveImageAsync(index, cancellationToken);
@@ -241,11 +234,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
-            var items = await GetImagesAsync(limit, Images.Count, cancellationToken);
-
-            _syncContext.Post(_ =>
+            _syncContext.Post(async _ =>
             {
-                foreach (var item in items)
+                await foreach (var item in GetImagesAsync(limit, Images.Count, cancellationToken))
                     Images.Add(item);
             }, null);
         }
@@ -253,11 +244,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            var items = await GetUrlsAsync(limit, Urls.Count, cancellationToken);
-
-            _syncContext.Post(_ =>
+            _syncContext.Post(async _ =>
             {
-                foreach (var item in items)
+                await foreach (var item in GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     Urls.Add(item);
             }, null);
         }

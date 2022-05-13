@@ -24,7 +24,6 @@ namespace StrixMusic.Sdk.AdapterModels
     public class MergedPlaylistCollection : IPlaylistCollection, IMergedMutable<ICorePlaylistCollection>
     {
         private readonly List<ICorePlaylistCollection> _sources;
-        private readonly List<ICore> _sourceCores;
         private readonly ICorePlaylistCollection _preferredSource;
         private readonly MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem> _playlistMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
@@ -36,7 +35,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedPlaylistCollection(IEnumerable<ICorePlaylistCollection> collections, MergedCollectionConfig config)
         {
             _sources = collections.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
@@ -197,11 +195,10 @@ namespace StrixMusic.Sdk.AdapterModels
         public event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged"/>
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
@@ -216,7 +213,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
@@ -311,9 +308,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _urlMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
-        /// <inheritdoc cref="IMerged{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc cref="IMerged{T}.Sources" />
         public IReadOnlyList<ICorePlaylistCollection> Sources => _sources;
 
@@ -330,16 +324,16 @@ namespace StrixMusic.Sdk.AdapterModels
         IReadOnlyList<ICorePlaylistCollection> IMerged<ICorePlaylistCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlistMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index, CancellationToken cancellationToken = default) => _playlistMap.InsertItemAsync(playlist, index, cancellationToken);
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _playlistMap.InsertItemAsync(playlistItem, index, cancellationToken);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _imageMap.InsertItemAsync(image, index, cancellationToken);
@@ -363,29 +357,27 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICorePlaylistCollection>.AddSource(ICorePlaylistCollection itemToMerge)
+        public void AddSource(ICorePlaylistCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Remove(itemToMerge.SourceCore);
 
-            _playlistMap.Cast<IMergedMutable<ICorePlaylistCollection>>().AddSource(itemToMerge);
-            _imageMap.Cast<IMergedMutable<ICorePlaylistCollection>>().AddSource(itemToMerge);
-            _urlMap.Cast<IMergedMutable<ICorePlaylistCollection>>().AddSource(itemToMerge);
+            _playlistMap.AddSource(itemToMerge);
+            _imageMap.AddSource(itemToMerge);
+            _urlMap.AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICorePlaylistCollection>.RemoveSource(ICorePlaylistCollection itemToRemove)
+        public void RemoveSource(ICorePlaylistCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _playlistMap.Cast<IMergedMutable<ICorePlaylistCollection>>().RemoveSource(itemToRemove);
-            _imageMap.Cast<IMergedMutable<ICorePlaylistCollection>>().RemoveSource(itemToRemove);
-            _urlMap.Cast<IMergedMutable<ICorePlaylistCollection>>().RemoveSource(itemToRemove);
+            _playlistMap.RemoveSource(itemToRemove);
+            _imageMap.RemoveSource(itemToRemove);
+            _urlMap.RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />

@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Describes a generic user profile.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IUserProfile : IUserProfileBase, IUrlCollection, IImageCollection, ISdkMember
+    public interface IUserProfile : IUserProfileBase, IUrlCollection, IImageCollection, IAppModel
     {
     }
 }

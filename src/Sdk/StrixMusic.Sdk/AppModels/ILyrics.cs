@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// Contains the lyrics to a track.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ILyrics : ILyricsBase, ISdkMember, IMerged<ICoreLyrics>
+    public interface ILyrics : ILyricsBase, IAppModel, IMerged<ICoreLyrics>
     {
         /// <summary>
         /// The track that these lyrics belong to.

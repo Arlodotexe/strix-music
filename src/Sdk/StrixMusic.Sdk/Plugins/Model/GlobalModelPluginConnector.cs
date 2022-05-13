@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) Arlo Godfrey. All Rights Reserved.
+// Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
+// See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
+
+using System;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 
@@ -7,8 +11,8 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// <summary>
     /// The global plugin connector applies common interface plugins to other plugins that derive them.
     /// <para/>
-    /// For example, if you create a plugin for <see cref="SdkModelPlugins.Downloadable"/>, that plugin is applied to
-    /// <see cref="SdkModelPlugins.AlbumCollection"/>, <see cref="SdkModelPlugins.TrackCollection"/>, and every other
+    /// For example, if you create a plugin for <see cref="SdkModelPlugin.Downloadable"/>, that plugin is applied to
+    /// <see cref="SdkModelPlugin.AlbumCollection"/>, <see cref="SdkModelPlugin.TrackCollection"/>, and every other
     /// plugin which implements <see cref="IDownloadable"/>.
     /// </summary>
     public static class GlobalModelPluginConnector
@@ -20,16 +24,16 @@ namespace StrixMusic.Sdk.Plugins.Model
             id: "GlobalModelPluginConnector",
             displayName: "Global Model Plugin Connector",
             description: "Required for common plugins to be applied globally. Should always be last in the load order.",
-            sdkVer: new Version(0, 0, 0));
+            new Version(0, 0, 0));
 
         /// <summary>
-        /// Creates a new instance of <see cref="SdkModelPlugins"/> from the provided <paramref name="plugins"/> and
+        /// Creates a new instance of <see cref="SdkModelPlugin"/> from the provided <paramref name="plugins"/> and
         /// inserts a new "Global Model Plugin Connector" plugin at the end of each plugin chain, which applies common
         /// interface plugins to other plugins that derive them.
         /// <para/>
         /// <example>
-        /// For example, if you create a plugin for <see cref="SdkModelPlugins.Downloadable"/>, that plugin is applied to
-        /// <see cref="SdkModelPlugins.AlbumCollection"/>, <see cref="SdkModelPlugins.TrackCollection"/>, and every other
+        /// For example, if you create a plugin for <see cref="SdkModelPlugin.Downloadable"/>, that plugin is applied to
+        /// <see cref="SdkModelPlugin.AlbumCollection"/>, <see cref="SdkModelPlugin.TrackCollection"/>, and every other
         /// plugin which implements <see cref="IDownloadable"/>.
         /// </example>
         /// </summary>
@@ -42,7 +46,8 @@ namespace StrixMusic.Sdk.Plugins.Model
         ///         chain with all provided user-added plugins preceding it.
         /// </remarks>
         /// <param name="plugins">A plugin container which contains existing plugins to weave with the global plugin connector.</param>
-        public static SdkModelPlugins Create(SdkModelPlugins plugins)
+        /// <returns>A new instance of <see cref="SdkModelPlugin"/> with the provided plugins applied to all common types.</returns>
+        public static SdkModelPlugin Create(SdkModelPlugin plugins)
         {
             // Create plugin connectors inside of a buildable plugin.
             // Note that only plugins which derived other plugin-enabled interfaces need setup here.
@@ -68,7 +73,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             // Global connectors must be added to a new instance, otherwise some global connectors could
             // treat other global connectors as a user-added plugin and attempt to ingest them, causing
             // undesired behavior.
-            var pluginsWithGlobalConnectors = new SdkModelPlugins();
+            var pluginsWithGlobalConnectors = new SdkModelPlugin(PluginMetadata);
             pluginsWithGlobalConnectors.Import(plugins);
             
             pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, playableBuilder.Execute(x)));
@@ -92,7 +97,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             return pluginsWithGlobalConnectors;
         }
 
-        private static ChainedProxyBuilder<PlayablePluginBase, IPlayable> GenerateGlobalPlayablePluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<PlayablePluginBase, IPlayable> GenerateGlobalPlayablePluginBuilder(SdkModelPlugin plugins) => new()
         {
             x => new PlayablePluginBase(PluginMetadata, x)
             {
@@ -102,7 +107,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<PlayableCollectionGroupPluginBase, IPlayableCollectionGroup> GenerateGlobalPlayableCollectionGroupPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<PlayableCollectionGroupPluginBase, IPlayableCollectionGroup> GenerateGlobalPlayableCollectionGroupPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -164,7 +169,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<LibraryPluginBase, ILibrary> GenerateGlobalLibraryPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<LibraryPluginBase, ILibrary> GenerateGlobalLibraryPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -226,7 +231,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<DiscoverablesPluginBase, IDiscoverables> GenerateGlobalDiscoverablesPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<DiscoverablesPluginBase, IDiscoverables> GenerateGlobalDiscoverablesPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -288,7 +293,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<RecentlyPlayedPluginBase, IRecentlyPlayed> GenerateGlobalRecentlyPlayedPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<RecentlyPlayedPluginBase, IRecentlyPlayed> GenerateGlobalRecentlyPlayedPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -350,7 +355,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<SearchHistoryPluginBase, ISearchHistory> GenerateGlobalSearchHistoryPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<SearchHistoryPluginBase, ISearchHistory> GenerateGlobalSearchHistoryPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -412,7 +417,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<SearchResultsPluginBase, ISearchResults> GenerateGlobalSearchResultsPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<SearchResultsPluginBase, ISearchResults> GenerateGlobalSearchResultsPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -474,7 +479,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<ArtistCollectionPluginBase, IArtistCollection> GenerateGlobalArtistCollectionPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<ArtistCollectionPluginBase, IArtistCollection> GenerateGlobalArtistCollectionPluginBuilder(SdkModelPlugin plugins) => new()
         {
             x => new ArtistCollectionPluginBase(PluginMetadata, x)
             {
@@ -494,7 +499,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<AlbumCollectionPluginBase, IAlbumCollection> GenerateGlobalAlbumCollectionPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<AlbumCollectionPluginBase, IAlbumCollection> GenerateGlobalAlbumCollectionPluginBuilder(SdkModelPlugin plugins) => new()
         {
             x => new AlbumCollectionPluginBase(PluginMetadata, x)
             {
@@ -514,7 +519,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<TrackCollectionPluginBase, ITrackCollection> GenerateGlobalTrackCollectionPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<TrackCollectionPluginBase, ITrackCollection> GenerateGlobalTrackCollectionPluginBuilder(SdkModelPlugin plugins) => new()
         {
             x => new TrackCollectionPluginBase(PluginMetadata, x)
             {
@@ -533,7 +538,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<AlbumPluginBase, IAlbum> GenerateGlobalAlbumPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<AlbumPluginBase, IAlbum> GenerateGlobalAlbumPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -577,7 +582,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<ArtistPluginBase, IArtist> GenerateGlobalArtistPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<ArtistPluginBase, IArtist> GenerateGlobalArtistPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -621,7 +626,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> GenerateGlobalPlaylistPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> GenerateGlobalPlaylistPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -653,7 +658,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<TrackPluginBase, ITrack> GenerateGlobalTrackPluginBuilder(SdkModelPlugins plugins) => new()
+        private static ChainedProxyBuilder<TrackPluginBase, ITrack> GenerateGlobalTrackPluginBuilder(SdkModelPlugin plugins) => new()
         {
             // Downloadable members
             // UrlCollection members
@@ -687,5 +692,4 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
     }
-
 }

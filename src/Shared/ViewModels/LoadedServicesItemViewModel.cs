@@ -4,19 +4,17 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Services.CoreManagement;
 
 namespace StrixMusic.Shared.ViewModels
 {
     /// <summary>
     /// Used to display an item in the service section of <see cref="SuperShell"/>.
     /// </summary>
-    public class LoadedServicesItemViewModel : ObservableObject, IDisposable
+    public class LoadedServicesItemViewModel : ObservableObject
     {
-        private readonly MainViewModel _mainViewModel;
-        private bool _canDeleteCore;
+        private bool _canDeleteCore = true;
 
         /// <summary>
         /// Creates a new instance of <see cref="LoadedServicesItemViewModel"/>.
@@ -25,32 +23,12 @@ namespace StrixMusic.Shared.ViewModels
         /// <param name="core">The core associated with this item, if applicable.</param>
         public LoadedServicesItemViewModel(bool isAddItem, CoreViewModel? core)
         {
-            _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-
-            CanDeleteCore = _mainViewModel.Cores.Count > 1;
             IsAddItem = isAddItem;
             Core = core;
 
             AddNewItemCommand = new RelayCommand(AddNewItem);
             DeleteCoreCommand = new AsyncRelayCommand(DeleteCore);
             ConfigureCoreCommand = new RelayCommand(ConfigureCore);
-
-            AttachEvents();
-        }
-
-        private void AttachEvents()
-        {
-            _mainViewModel.Cores.CollectionChanged += Cores_CollectionChanged;
-        }
-
-        private void DetachEvents()
-        {
-            _mainViewModel.Cores.CollectionChanged -= Cores_CollectionChanged;
-        }
-
-        private void Cores_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            CanDeleteCore = _mainViewModel.Cores.Count > 1;
         }
 
         /// <summary>
@@ -114,12 +92,6 @@ namespace StrixMusic.Shared.ViewModels
         private void ConfigureCore()
         {
             ConfigRequested?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            DetachEvents();
         }
     }
 }

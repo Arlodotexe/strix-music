@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A collection of images.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IImageCollection : IImageCollectionBase, ISdkMember, IMerged<ICoreImageCollection>
+    public interface IImageCollection : IImageCollectionBase, IAppModel, IMerged<ICoreImageCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IImageBase"/>s starting at the given offset.
@@ -24,8 +24,8 @@ namespace StrixMusic.Sdk.AppModels
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
-        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default);
+        /// <returns>The requested range of items.</returns>
+        IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds a new image to the collection.

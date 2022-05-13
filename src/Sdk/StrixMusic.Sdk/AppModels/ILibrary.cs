@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.AppModels
     /// A group of collections that represent a music library.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface ILibrary : ILibraryBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreLibrary>
+    public interface ILibrary : ILibraryBase, IPlayableCollectionGroup, IAppModel, IMerged<ICoreLibrary>
     {
     }
 }

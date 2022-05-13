@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class ArtistCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().ArtistCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ArtistCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().ArtistCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ArtistCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().ArtistCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ArtistCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -100,7 +100,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().ArtistCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ArtistCollection;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -184,7 +184,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public async Task DisposeAsync_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().ArtistCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ArtistCollection;
             var defaultImplementation = new NotBlockingDisposeAsync();
             builder.Add(x => new NoOverride(x)
             {
@@ -246,7 +246,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public override Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -257,9 +257,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public override bool Equals(ICoreArtistCollection? other) => throw AccessedException;
-            public override Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -298,12 +298,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalArtistItemsCount => throw AccessedException;
             public bool IsPlayArtistCollectionAsyncAvailable => throw AccessedException;
             public bool IsPauseArtistCollectionAsyncAvailable => throw AccessedException;
             public DateTime? AddedAt => throw AccessedException;
             public IReadOnlyList<ICoreArtistCollectionItem> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             public string Id => throw AccessedException;
             public string Name => throw AccessedException;
             public string? Description => throw AccessedException;
@@ -338,7 +338,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event CollectionChangedEventHandler<IUrl>? UrlsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? UrlsCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
-            public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -349,9 +349,9 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public bool Equals(ICoreArtistCollection? other) => throw AccessedException;
-            public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;

@@ -11,7 +11,8 @@ namespace StrixMusic.Sdk.AppModels
     /// Contains information about a user.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IUser : IUserBase, IUserProfile, ISdkMember
+    #warning Need user system reevaluation and overhaul
+    public interface IUser : IUserBase, IUserProfile, IAppModel
     {
         /// <summary>
         /// This user's library.

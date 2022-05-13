@@ -11,6 +11,7 @@ using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 
 namespace StrixMusic.Sdk.MediaPlayback
@@ -25,11 +26,10 @@ namespace StrixMusic.Sdk.MediaPlayback
         private readonly List<PlaybackItem> _nextItems = new();
 
         private int[] _shuffleMap;
-
-        private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
         private RepeatState _repeatState;
         private bool _shuffleState;
+        private StrixDevice _localDevice;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
@@ -37,12 +37,8 @@ namespace StrixMusic.Sdk.MediaPlayback
         public PlaybackHandlerService()
         {
             _shuffleMap = Array.Empty<int>();
+            _localDevice = new StrixDevice(this);
         }
-
-        /// <summary>
-        /// Sets the local playback device for this playback handler.
-        /// </summary>
-        public void SetStrixDevice(StrixDevice strixDevice) => _strixDevice = strixDevice;
 
         private void AttachEvents(IAudioPlayerService audioPlayerService)
         {
@@ -135,9 +131,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         public event EventHandler<float[]>? QuantumProcessed;
 
         /// <summary>
-        /// Gets or sets the device which is being currently being used for playback.
+        /// Gets or sets the device which is being currently being used for playback, if any.
         /// </summary>
         public IDevice? ActiveDevice { get; set; }
+
+        /// <summary>
+        /// Gets a device which represents all local playback done by this <see cref="IPlaybackHandlerService"/>.
+        /// </summary>
+        public IDevice LocalDevice => _localDevice;
 
         /// <inheritdoc />
         public IReadOnlyList<PlaybackItem> NextItems => _nextItems;
@@ -147,6 +148,11 @@ namespace StrixMusic.Sdk.MediaPlayback
 
         /// <inheritdoc />
         public PlaybackItem? CurrentItem { get; internal set; }
+
+        /// <summary>
+        /// The collection which the <see cref="CurrentItem"/> is playing from.
+        /// </summary>
+        public IPlayableBase? CurrentItemContext { get; private set; }
 
         /// <inheritdoc />
         public bool ShuffleState => _shuffleState;
@@ -194,7 +200,6 @@ namespace StrixMusic.Sdk.MediaPlayback
             }
 
             var playbackItem = NextItems.ElementAtOrDefault(queueIndex);
-
             if (playbackItem is null)
                 return;
 
@@ -208,6 +213,13 @@ namespace StrixMusic.Sdk.MediaPlayback
 
             CurrentItem = playbackItem;
             _nextItems.Remove(playbackItem);
+
+            if (ActiveDevice == LocalDevice)
+            {
+                Guard.IsNotNull(playbackItem.MediaConfig, nameof(playbackItem.MediaConfig));
+                _localDevice.SetPlaybackData(CurrentItemContext, playbackItem);
+            }
+
             await _currentPlayerService.Play(playbackItem, cancellationToken);
         }
 

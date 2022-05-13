@@ -1,18 +1,14 @@
-﻿using ClusterNet.Kernels;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using ClusterNet.Kernels;
 using ClusterNet.Methods;
 using OwlCore;
 using OwlCore.WinUI.ColorExtractor;
 using OwlCore.WinUI.ColorExtractor.ColorSpaces;
 using OwlCore.WinUI.ColorExtractor.Filters;
 using OwlCore.WinUI.ColorExtractor.Shapes;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using StrixMusic.Sdk.AppModels;
 using Color = Windows.UI.Color;
-using ISdkImage = StrixMusic.Sdk.AppModels.IImage;
 
 namespace StrixMusic.Shells.Groove.Helper
 {

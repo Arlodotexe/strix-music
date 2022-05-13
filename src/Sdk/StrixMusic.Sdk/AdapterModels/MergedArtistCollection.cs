@@ -24,7 +24,6 @@ namespace StrixMusic.Sdk.AdapterModels
     public class MergedArtistCollection : IArtistCollection, IMergedMutable<ICoreArtistCollection>
     {
         private readonly List<ICoreArtistCollection> _sources;
-        private readonly List<ICore> _sourceCores;
         private readonly ICoreArtistCollection _preferredSource;
         private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
@@ -36,7 +35,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public MergedArtistCollection(IEnumerable<ICoreArtistCollection> collections, MergedCollectionConfig config)
         {
             _sources = collections?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreArtistCollection>>(nameof(collections));
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
@@ -85,6 +83,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
             _imageMap.ItemsChanged -= ImageCollectionMap_ItemsChanged;
             _imageMap.ItemsCountChanged -= ImageCollectionMap_ItemsCountChanged;
+            _urlMap.ItemsChanged -= UrlCollectionMap_ItemsChanged;
+            _urlMap.ItemsCountChanged -= UrlCollectionMap_ItemsCountChanged;
             _artistMap.ItemsChanged -= ArtistMap_ItemsChanged;
             _artistMap.ItemsCountChanged -= ArtistMap_ItemsCountChanged;
         }
@@ -195,11 +195,10 @@ namespace StrixMusic.Sdk.AdapterModels
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DownloadInfo>? DownloadInfoChanged
-        {
-            add => throw new NotSupportedException();
-            remove => throw new NotSupportedException();
-        }
+        public event EventHandler<DownloadInfo>? DownloadInfoChanged;
+        
+        /// <inheritdoc cref="IMerged.SourcesChanged" />
+        public event EventHandler? SourcesChanged;
 
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
@@ -214,7 +213,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public DownloadInfo DownloadInfo => throw new NotSupportedException();
+        public DownloadInfo DownloadInfo => default;
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
@@ -309,9 +308,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => _urlMap.IsRemoveItemAvailableAsync(index, cancellationToken);
 
-        /// <inheritdoc cref="IMerged{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => _sources;
 
@@ -340,16 +336,16 @@ namespace StrixMusic.Sdk.AdapterModels
         public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default) => _artistMap.RemoveAtAsync(index, cancellationToken);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index, CancellationToken cancellationToken = default) => _artistMap.InsertItemAsync(artist, index, cancellationToken);
+        public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _artistMap.InsertItemAsync(artistItem, index, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _imageMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _urlMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistMap.GetItemsAsync(limit, offset, cancellationToken);
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistMap.GetItemsAsync(limit, offset, cancellationToken);
 
         /// <inheritdoc/>
         public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default)
@@ -358,29 +354,31 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreArtistCollection>.AddSource(ICoreArtistCollection itemToMerge)
+        public void AddSource(ICoreArtistCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
 
-            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToMerge);
-            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
-            _imageMap.Cast<IMergedMutable<ICoreUrlCollection>>().AddSource(itemToMerge);
+            _artistMap.AddSource(itemToMerge);
+            _imageMap.AddSource(itemToMerge);
+            _imageMap.AddSource(itemToMerge);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreArtistCollection>.RemoveSource(ICoreArtistCollection itemToRemove)
+        public void RemoveSource(ICoreArtistCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
-            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
-            _artistMap.Cast<IMergedMutable<ICoreUrlCollection>>().RemoveSource(itemToRemove);
+            _imageMap.RemoveSource(itemToRemove);
+            _artistMap.RemoveSource(itemToRemove);
+            _artistMap.RemoveSource(itemToRemove);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

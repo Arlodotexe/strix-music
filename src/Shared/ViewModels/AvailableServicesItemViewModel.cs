@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using StrixMusic.Sdk.CoreManagement;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Services.CoreManagement;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -18,14 +16,14 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="AvailableServicesItemViewModel"/> class.
         /// </summary>
+        /// <param name="coreManagementService">A core management service where cores can be re-registered.</param>
         /// <param name="metadata">The core metadata to wrap around.</param>
-        public AvailableServicesItemViewModel(CoreMetadata metadata)
+        public AvailableServicesItemViewModel(ICoreManagementService coreManagementService, CoreMetadata metadata)
         {
+            _coreManagementService = coreManagementService;
             Metadata = metadata;
 
-            _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
-
-            CreateCoreInstanceCommand = new AsyncRelayCommand(CreateCoreInstance);
+            CreateCoreInstanceCommand = new AsyncRelayCommand(CreateCoreInstanceAsync);
         }
 
         /// <inheritdoc cref="CoreMetadata"/>
@@ -36,11 +34,6 @@ namespace StrixMusic.Shared.ViewModels
         /// </summary>
         public IAsyncRelayCommand CreateCoreInstanceCommand { get; }
 
-        private async Task CreateCoreInstance()
-        {
-            Guard.IsNotNull(_coreManagementService, nameof(_coreManagementService));
-
-            await _coreManagementService.RegisterCoreInstanceAsync(Metadata);
-        }
+        private Task CreateCoreInstanceAsync() => _coreManagementService.RegisterCoreInstanceAsync(Metadata);
     }
 }

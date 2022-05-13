@@ -13,12 +13,12 @@
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GroovePlaylistsPageStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
-        <ResourceDictionary Source="../../Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="GroovePlaylistsPageTemplate" x:DataType="pagevms:GroovePlaylistsPageViewModel">
-        <groovecol:GroovePlaylistCollection Collection="{x:Bind PlaylistCollection}"/>
+        <groovecol:GroovePlaylistCollection Collection="{x:Bind PlaylistCollection, Mode=OneWay}"/>
     </DataTemplate>
 
     <Style x:Key="GroovePlaylistsPageStyle" TargetType="groovepages:GroovePlaylistsPage">

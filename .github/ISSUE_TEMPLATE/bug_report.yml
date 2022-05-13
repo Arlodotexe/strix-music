@@ -1,0 +1,78 @@
+name: Bug report
+description: Create a report to help us fix something that isn't working as expected
+labels: "bug"
+body:
+- type: markdown
+  attributes: 
+    value: |
+      ## Before you begin
+      🚨 **Please do not skip instructions**🚨
+      
+      This info is essential for investigating your bug report. Issues with missing information may be closed without investigation.
+            
+- type: textarea
+  id: description
+  validations:
+    required: true
+  attributes:
+     label: Describe the bug
+     description: A clear and concise description of what the bug is.
+- type: checkboxes
+  id: affected-area
+  attributes:
+     label: Affected area
+     description: What area of the repo does this affect? (If unknown, select App and we'll investigate)
+     options:
+       - label: Strix Music SDK
+       - label: Strix Music App
+- type: input
+  id: last-working-version
+  attributes:
+      label: Regression
+      description: If this is a regression, what version did you last see it work? (either app or SDK version)
+      placeholder: 
+  validations:
+      required: false
+- type: textarea
+  id: repro-steps
+  validations:
+    required: true
+  attributes:
+     label: Steps to reproduce
+     render: text
+     description: Provide steps to reproduce the issue, or let us know why it can't be reproduced
+     placeholder: |
+        Example repro steps:
+        1. Given the following environment (cores, platform, shell, etc)
+        2. Go to '...'
+        3. Click on '....'
+        4. Switch to '....'
+        5. Observe error
+- type: textarea
+  id: visual-repro
+  attributes:
+     label: Visual repro steps
+     description: If applicable, add screenshots or a short video to help explain the problem.
+- type: textarea
+  id: expected-behavior
+  validations:
+    required: true
+  attributes:
+     label: Expected behavior
+     description: A clear and concise description of what you expected to happen.
+- type: textarea
+  id: additional-context
+  attributes:
+     label: Additional context
+     description: Add any other context about the problem here.
+- type: dropdown
+  id: contribution
+  validations:
+    required: true
+  attributes:
+     label: Help us help you
+     description: Would you like to contribute a solution to this issue?
+     options:
+       - Yes, I'd like to be assigned to work on this item.
+       - Yes, but only if others can assist.
+       - No, I'm unable to contribute a solution.

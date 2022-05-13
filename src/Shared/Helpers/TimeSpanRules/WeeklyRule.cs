@@ -12,7 +12,7 @@ namespace StrixMusic.Helpers.TimeSpanRules
         /// <summary>
         /// Initializes a new instance of the <see cref="DailyRangeRule"/> class.
         /// </summary>
-        /// <param name="start">The day of the week.</param>
+        /// <param name="day">The day of the week.</param>
         public WeeklyRule(DayOfWeek day)
         {
             _day = day;

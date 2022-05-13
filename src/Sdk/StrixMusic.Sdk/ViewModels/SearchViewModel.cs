@@ -2,8 +2,8 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,17 +22,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="SearchViewModel"/>.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="search">The model to wrap around.</param>
-        internal SearchViewModel(MainViewModel root, ISearch search)
+        public SearchViewModel(ISearch search)
         {
-            Root = root;
             _search = search;
 
             if (search.SearchHistory != null)
-                SearchHistory = new SearchHistoryViewModel(root, search.SearchHistory);
+                SearchHistory = new SearchHistoryViewModel(search.SearchHistory);
+        }
 
-            SourceCores = search.SourceCores.Select(root.GetLoadedCore).ToList();
+        /// <inheritdoc/>
+        public event EventHandler? SourcesChanged
+        {
+            add => _search.SourcesChanged += value;
+            remove => _search.SourcesChanged -= value;
         }
 
         /// <inheritdoc />
@@ -43,12 +46,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearch> Sources => _search.Sources;
-
-        /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <inheritdoc/>
-        public MainViewModel Root { get; }
 
         /// <inheritdoc />
         public Task<ISearchResults> GetSearchResultsAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchResultsAsync(query, cancellationToken);

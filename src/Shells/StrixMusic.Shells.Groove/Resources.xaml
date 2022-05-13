@@ -14,11 +14,11 @@
     xmlns:dsecondaryviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views.Secondary">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Resources/Brushes.xaml"/>
-        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
-        <ResourceDictionary Source="Resources/TextBoxStyles.xaml"/>
-        <ResourceDictionary Source="Styles/NowPlaying/MediaSliderStyle.xaml"/>
-        <ResourceDictionary Source="Styles/PivotStyle.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/TextBoxStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/NowPlaying/MediaSliderStyle.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/PivotStyle.xaml"/>
 
 
         <!--Collection related styles-->

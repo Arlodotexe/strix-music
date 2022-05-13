@@ -79,7 +79,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 foreach (var track in artCollection.Tracks)
                 {
                     // Artists list is empty here, so they need to be fetched.
-                    var artists = await track.GetArtistItemsAsync(5, 0);
+                    var artists = await track.GetArtistItemsAsync(track.TotalArtistItemsCount, 0).ToListAsync();
                     if (artists.Count > 1)
                         PART_ArtistColumn.Visibility = Visibility.Visible;
                 }

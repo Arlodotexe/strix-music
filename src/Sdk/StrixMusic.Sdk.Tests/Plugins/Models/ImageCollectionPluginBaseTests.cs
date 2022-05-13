@@ -15,12 +15,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class ImageCollectionPluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().ImageCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginNoOverride()
         {
-            var builder = new SdkModelPlugins().ImageCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -53,7 +53,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void PluginFullyCustom()
         {
-            var builder = new SdkModelPlugins().ImageCollection;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).ImageCollection;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
@@ -131,11 +131,10 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public int TotalImageCount => throw AccessedException;
 
             public IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
-
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
 
             public event CollectionChangedEventHandler<IImage>? ImagesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
@@ -146,7 +145,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 

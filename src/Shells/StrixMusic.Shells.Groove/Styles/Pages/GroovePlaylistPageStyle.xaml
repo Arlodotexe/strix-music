@@ -8,8 +8,8 @@
     xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Pages">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../Resources/Brushes.xaml"/>
-        <ResourceDictionary Source="../../Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DefaultPlaylistViewControlStyle" TargetType="groovepages:GroovePlaylistPage">

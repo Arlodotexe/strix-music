@@ -20,7 +20,6 @@ namespace StrixMusic.Sdk.AdapterModels
     {
         private readonly ICoreImage _preferredSource;
         private readonly List<ICoreImage> _sources;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedImage"/> class.
@@ -29,7 +28,6 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
         }
@@ -43,28 +41,30 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc/>
         public double Width => _preferredSource.Width;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreImage> Sources => _sources;
 
         /// <inheritdoc/>
-        void IMergedMutable<ICoreImage>.AddSource(ICoreImage itemToMerge)
+        public event EventHandler? SourcesChanged;
+
+        /// <inheritdoc/>
+        public void AddSource(ICoreImage itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreImage>.RemoveSource(ICoreImage itemToRemove)
+        public void RemoveSource(ICoreImage itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc/>

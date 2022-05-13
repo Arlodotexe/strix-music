@@ -1,5 +1,5 @@
-﻿using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
+using StrixMusic.Sdk.MediaPlayback;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;

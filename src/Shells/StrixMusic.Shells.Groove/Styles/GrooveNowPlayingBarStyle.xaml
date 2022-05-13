@@ -17,11 +17,11 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Styles/NowPlaying/MediaSliderStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter"/>
     <colorconvert:NullableBackupColorConverter x:Key="NullableBackupColorConverter" BackupColor="{ThemeResource SystemAccentColorDark3}"/>
 
-    <DataTemplate x:Key="GrooveNowPlayingBarDataTemplate" x:DataType="vms:GrooveNowPlayingBarViewModel">
+    <DataTemplate x:Key="GrooveNowPlayingBarTemplate" x:DataType="controls:GrooveNowPlayingBar">
         <UserControl>
             <Grid VerticalAlignment="Center" Height="96">
                 <Grid.Background>
@@ -70,20 +70,19 @@
                 <!--Media info-->
                 <Button x:Name="NowPlayingButton" MinWidth="300" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
                                         BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
-                    <nowplaying:MediaInfo x:Name="mediaInfo" Device="{Binding ActiveDevice}"/>
+                    <nowplaying:MediaInfo x:Name="mediaInfo" Device="{x:Bind ActiveDevice, Mode=OneWay}"/>
                 </Button>
 
                 <!--Media transport controls-->
-                <nowplaying:MediaTransports x:Name="MediaTransports" Device="{Binding ActiveDevice}" Grid.Column="1" HorizontalAlignment="Center"/>
+                <nowplaying:MediaTransports x:Name="MediaTransports" Device="{x:Bind ActiveDevice, Mode=OneWay}" Grid.Column="1" HorizontalAlignment="Center"/>
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                        IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
-                                        Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
-                                        Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}">
+                                                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
                                                       CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
@@ -97,8 +96,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:GrooveNowPlayingBar">
-                        <ContentControl ContentTemplate="{StaticResource GrooveNowPlayingBarDataTemplate}"
-                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                        ContentTemplate="{StaticResource GrooveNowPlayingBarTemplate}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

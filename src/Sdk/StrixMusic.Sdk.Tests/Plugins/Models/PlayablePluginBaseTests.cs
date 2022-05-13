@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     public class PlayablePluginBaseTests
     {
         private static bool NoInner(MemberInfo x) => !x.Name.Contains("Inner");
-        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && x.Name != "get_Sources" && x.Name != "get_SourceCores";
+        private static bool NoInnerOrSources(MemberInfo x) => NoInner(x) && !x.Name.ToLower().Contains("sources");
 
         [Flags]
         public enum PossiblePlugins
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [TestMethod, Timeout(1000)]
         public void NoPlugins()
         {
-            var builder = new SdkModelPlugins().Playable;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginNoOverride()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().Playable;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public void PluginFullyCustom()
         {
             // No plugins.
-            var builder = new SdkModelPlugins().Playable;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playable;
             var finalTestClass = new Unimplemented();
 
             var emptyChain = builder.Execute(finalTestClass);
@@ -100,7 +100,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
-            var builder = new SdkModelPlugins().Playable;
+            var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Playable;
             var defaultImplementation = new Unimplemented();
             builder.Add(x => new NoOverride(x)
             {
@@ -223,8 +223,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override ValueTask DisposeAsync() => throw AccessedException;
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
-            public override Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public override IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -257,6 +257,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new AccessedException<Unimplemented>();
 
+            public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
             public DownloadInfo DownloadInfo => throw AccessedException;
             public string Id => throw AccessedException;
             public string Name => throw AccessedException;
@@ -270,7 +271,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public int TotalImageCount => throw AccessedException;
             public int TotalUrlCount => throw AccessedException;
             public IReadOnlyList<ICoreImageCollection> Sources => throw AccessedException;
-            public IReadOnlyList<ICore> SourceCores => throw AccessedException;
             IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw AccessedException;
 
             public event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
@@ -295,8 +295,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public ValueTask DisposeAsync() => throw AccessedException;
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
-            public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
-            public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;

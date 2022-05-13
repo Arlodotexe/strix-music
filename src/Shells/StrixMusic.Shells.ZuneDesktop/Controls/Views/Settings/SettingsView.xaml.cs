@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Windows.ApplicationModel.Resources;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Shells.ZuneDesktop.Settings;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

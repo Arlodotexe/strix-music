@@ -11,7 +11,6 @@ namespace StrixMusic.Sdk.AppModels
     /// <summary>
     /// Represents a notification containing basic ui elements that can be dismissed.
     /// </summary>
-    [RemoteOptions(RemotingDirection.Bidirectional)]
     public sealed class Notification
     {
         /// <summary>
@@ -36,7 +35,6 @@ namespace StrixMusic.Sdk.AppModels
         /// <summary>
         /// Raises the <see cref="Dismissed"/> event.
         /// </summary>
-        [RemoteMethod]
         public void Dismiss()
         {
             Dismissed?.Invoke(this, EventArgs.Empty);

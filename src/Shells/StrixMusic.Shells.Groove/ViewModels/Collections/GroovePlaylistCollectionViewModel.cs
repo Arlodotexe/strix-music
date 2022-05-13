@@ -28,7 +28,7 @@ namespace StrixMusic.Shells.Groove.ViewModels.Collections
         public IPlaylistCollectionViewModel? PlaylistCollection
         {
             get => _playlistCollectionViewModel;
-            set => SetProperty(ref _playlistCollectionViewModel, value);
+            set => SetProperty(ref _playlistCollectionViewModel, value, nameof(PlaylistCollection));
         }
 
         /// <summary>

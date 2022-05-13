@@ -2,6 +2,7 @@
 // Licensed under the GNU Lesser General Public License, Version 3.0 with additional terms.
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +20,6 @@ namespace StrixMusic.Sdk.AdapterModels
     {
         private readonly ICoreGenre _preferredSource;
         private readonly List<ICoreGenre> _sources;
-        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedGenre"/> class.
@@ -28,7 +28,6 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
-            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
         }
@@ -36,28 +35,30 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc/>
         public string Name => _preferredSource.Name;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreGenre> Sources => _sources;
 
         /// <inheritdoc/>
-        void IMergedMutable<ICoreGenre>.AddSource(ICoreGenre itemToMerge)
+        public event EventHandler? SourcesChanged;
+
+        /// <inheritdoc/>
+        public void AddSource(ICoreGenre itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
-        void IMergedMutable<ICoreGenre>.RemoveSource(ICoreGenre itemToRemove)
+        public void RemoveSource(ICoreGenre itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
+            
+            SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc/>

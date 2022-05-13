@@ -16,7 +16,6 @@ using OwlCore.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.FileMetadata.Models;
-using StrixMusic.Sdk.Helpers;
 using ImageMetadata = StrixMusic.Sdk.FileMetadata.Models.ImageMetadata;
 
 namespace StrixMusic.Sdk.FileMetadata.Scanners
@@ -52,11 +51,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
         private async Task ProcessImagesAsync(IFileData fileData, Models.FileMetadata fileMetadata, IEnumerable<Stream> imageStreams)
         {
-            // Image processing is extremely slow on WASM and makes the app borderline unusable. 
-            // Until WASM gets multithreading, we need to disable images.
-            if (PlatformHelper.Current == Platform.WASM)
-                return;
-
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
 
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)

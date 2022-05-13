@@ -17,12 +17,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// Adds a new source to this merged item.
         /// </summary>
         /// <param name="itemToMerge">The source to remove.</param>
-        internal void AddSource(T itemToMerge);
+        public void AddSource(T itemToMerge);
 
         /// <summary>
         /// Removes a source from the merged collection.
         /// </summary>
         /// <param name="itemToRemove">The source to remove.</param>
-        internal void RemoveSource(T itemToRemove);
+        public void RemoveSource(T itemToRemove);
     }
 }

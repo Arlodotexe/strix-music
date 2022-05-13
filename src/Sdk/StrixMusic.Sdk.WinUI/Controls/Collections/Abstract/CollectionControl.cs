@@ -139,7 +139,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
 
             AttachHandlers();
 
-            CheckScrollPosition();
+            _ = LoadMore();
         }
 
         private void CollectionControl_Unloaded(object sender, RoutedEventArgs e)

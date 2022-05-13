@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
@@ -10,12 +10,13 @@ using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.FileMetadata;
-using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Cores.Files
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// A common base class for all cores that handle scanning any kind of file system for audio files.
+    /// </summary>
     public abstract class FilesCore : ICore
     {
         /// <summary>
@@ -133,10 +134,6 @@ namespace StrixMusic.Cores.Files
                 return Task.FromResult<IMediaSourceConfig?>(null);
 
             Guard.IsNotNullOrWhiteSpace(t.LocalTrackPath, nameof(t.LocalTrackPath));
-
-            // TODO: Open stream on WebAssembly. File paths will not work.
-            if (PlatformHelper.Current == Platform.WASM)
-                return Task.FromResult<IMediaSourceConfig?>(null);
 
             var mediaSource = new MediaSourceConfig(track, track.Id, new Uri(t.LocalTrackPath));
             return Task.FromResult<IMediaSourceConfig?>(mediaSource);

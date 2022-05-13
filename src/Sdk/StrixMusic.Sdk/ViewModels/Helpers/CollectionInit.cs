@@ -5,7 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Services;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {

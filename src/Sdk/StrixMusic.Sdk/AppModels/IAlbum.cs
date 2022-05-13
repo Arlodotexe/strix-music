@@ -12,11 +12,12 @@ namespace StrixMusic.Sdk.AppModels
     /// A published album containing one or more tracks, discs, artist, etc.
     /// </summary>
     /// <remarks>Instances of this class may contain data merged from one or more sources.</remarks>
-    public interface IAlbum : IAlbumBase, IAlbumCollectionItem, IArtistCollection, ITrackCollection, IImageCollection, IUrlCollection, IGenreCollection, IPlayable, ISdkMember, IMerged<ICoreAlbum>, IMerged<ICoreAlbumCollectionItem>
+    public interface IAlbum : IAlbumBase, IAlbumCollectionItem, IArtistCollection, ITrackCollection, IImageCollection, IUrlCollection, IGenreCollection, IPlayable, IAppModel, IMerged<ICoreAlbum>, IMerged<ICoreAlbumCollectionItem>
     {
         /// <summary>
         /// A <see cref="IPlayableCollectionGroupBase"/> of items related to this item.
         /// </summary>
+        #warning TODO needs a changed event to facilitate merging in new sources with non-null values.
         IPlayableCollectionGroup? RelatedItems { get; }
     }
 }

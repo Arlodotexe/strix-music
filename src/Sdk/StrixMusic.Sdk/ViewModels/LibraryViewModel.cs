@@ -22,10 +22,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of the <see cref="LibraryViewModel"/> class.
         /// </summary>
-        /// <param name="root">The <see cref="MainViewModel"/> that this or the object that created this originated from.</param>
         /// <param name="library">The <see cref="ILibrary"/> to wrap.</param>
-        internal LibraryViewModel(MainViewModel root, ILibrary library)
-            : base(root, library)
+        public LibraryViewModel(ILibrary library)
+            : base(library)
         {
             _library = library;
         }
@@ -35,14 +34,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreLibrary other) => _library.Equals(other);
-
-        /// <inheritdoc />
-        public override Task InitAsync(CancellationToken cancellationToken = default)
-        {
-            IsInitialized = true;
-
-            // TODO sync library completely or pull from cache
-            return Task.CompletedTask;
-        }
     }
 }
