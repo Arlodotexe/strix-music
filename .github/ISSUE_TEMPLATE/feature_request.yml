@@ -21,8 +21,8 @@ body:
   validations: 
     required: true
   attributes: 
-    label: Describe the proposed
-    description: Describe the solution to the problem.
+    label: Describe the proposed change
+    description: Describe the change that would solve the problem
     placeholder: |
        A clear and concise description of what you want to happen. Define how do you think it will help the community and the value it adds to the toolkit.
 
@@ -40,7 +40,6 @@ body:
     label: Additional info
     description: Add any other context or screenshots about the feature request here.
 
-
 - type: dropdown
   id: contribution
   attributes:
@@ -49,4 +48,4 @@ body:
      options:
        - Yes, I'd like to be assigned to work on this item.
        - Yes, but only if others can assist.
-       - No.
+       - No, I'm unable to contribute a solution.
