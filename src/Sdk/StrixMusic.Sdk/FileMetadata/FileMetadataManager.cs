@@ -173,13 +173,18 @@ namespace StrixMusic.Sdk.FileMetadata
 
             var imageMetadata = fileMetadata.Where(x => x.ImageMetadata != null).SelectMany(x => x.ImageMetadata).ToArray();
             var trackMetadata = fileMetadata.Select(x => x.TrackMetadata).PruneNull().ToArray();
-            var artistMetadata = fileMetadata.Select(x => x.ArtistMetadata).PruneNull().ToArray();
+            var artistMetadatas = fileMetadata.Select(x => x.ArtistMetadataCollection).PruneNull().ToArray();
             var albumMetadata = fileMetadata.Select(x => x.AlbumMetadata).PruneNull().ToArray();
 
             // Artists and albums reference each other, so update repos in parallel
             // and cross your fingers that they internally add all data before emitting changed events 
             // and that one doesn't finish first.
-            await Task.WhenAll(Artists.AddOrUpdateAsync(artistMetadata), Albums.AddOrUpdateAsync(albumMetadata));
+
+            foreach (var artist in artistMetadatas)
+            {
+                Guard.IsNotNull(artist, nameof(artist));
+                await Task.WhenAll(Artists.AddOrUpdateAsync(artist.PruneNull().ToArray()), Albums.AddOrUpdateAsync(albumMetadata));
+            }
 
             await Images.AddOrUpdateAsync(imageMetadata);
             await Tracks.AddOrUpdateAsync(trackMetadata);
@@ -356,7 +361,7 @@ namespace StrixMusic.Sdk.FileMetadata
             };
 
             elementGroup.Add(new AbstractProgressIndicator(NewGuid(), true));
-            
+
             return _filesFoundNotification = _notificationService.RaiseNotification(elementGroup);
         }
 
@@ -379,7 +384,7 @@ namespace StrixMusic.Sdk.FileMetadata
                 Title = $"Scanning {scanningTypeStr}",
                 Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolderToScan.Path}",
             };
-            
+
             elementGroup.Add(_progressUIElement);
 
             return _filesScannedNotification = _notificationService.RaiseNotification(elementGroup);
