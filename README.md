@@ -3,7 +3,7 @@ An open music protocol that breaks down the walls between services by defining a
 
 # Welcome to the open source alpha
 
-We spent the last 2 years were designing and refining the SDK, making sure it could cleanly handle anything we threw at it. 
+We spent the last 2 years designing and refining the SDK, making sure it could cleanly handle anything we threw at it.
 
 The foundation has been laid, and we've entered the next stage in development: **open source alpha**.
 
