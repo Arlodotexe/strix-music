@@ -1,5 +1,5 @@
 # <a href="https://strixmusic.com/" target="_blank"><img align="left" src="www/favicon.ico" height="100" /></a> Strix Music
-An open music protocol that breaks down the walls between services by defining a standardized and highly flexible API surface.
+An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.
 
 # Welcome to the open source alpha
 
@@ -211,7 +211,7 @@ This project was built on these core values, and they serve as a promise to our 
 
 
 ## Perpetually free
-"Open standard" means community focused and no paywalls. You'll never be charged to use the Strix Music Protocol, Strix Music SDK or the Strix Music App. 
+"Open standard" means community focused and no paywalls. You'll never be charged to build with or use the Strix Music standard, Strix Music SDK or the Strix Music App. 
  
 To fund our efforts, we rely on donations from users like you.
 
