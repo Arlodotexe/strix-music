@@ -13,9 +13,9 @@ The foundation has been laid, and we've entered the next stage in development: *
 
 ✔ Provide feedback, feature suggestions or bug reports to improve the SDK for everyone.
 
-❌ Build WinUI applications using our inbox control library
+❌ Build WinUI applications using our inbox control library (not ready)
 
-❌ Download the Strix Music App, our incubation and demo project for the SDK.
+❌ Download the Strix Music App, our incubation and demo project for the SDK (not ready)
  
 
 ## **The Strix Music SDK**
@@ -32,7 +32,7 @@ The foundation has been laid, and we've entered the next stage in development: *
   - Multi-platform, powered by the Uno Platform.
   - Multi-skinnable, thanks to the highly refined data structure in the SDK and the MVVM architecture built on top.
 
-## **Cores: interchangeable music sources**
+## **The Cores: interchangeable music sources**
 A core is any music source implemented with our CoreModel APIs - a standardized, flexible and refined data structure designed to fit the needs of different types of music sources.
 
 ### Basic core usage
@@ -127,12 +127,12 @@ Here are some ideas for cores we'd like to see join the Strix ecosystem (click t
 
   </details>
 
-## Model Plugins
+## Model Plugins: Easy customization
 [Model plugins](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.Plugins.Model.html) are an _extremely_ modular and flexible way to customize the SDK. 
 
 In short, a model plugin modifies data or behavior for any [AppModel](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.AppModels.html) in the SDK by wrapping around it and selectively overriding members, then taking the place of the original model.
 
-One you have at least one model plugin, use the [PluginModels](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.PluginModels.html) layer to wrap around an existing data [root](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.AppModels.IStrixDataRoot.html), and provide plugins that you want applied to all interface implementations in the data structure. For example, an [ImageCollection](http://strixmusic.com/docs/reference/api/StrixMusic.Sdk.Plugins.Model.ImageCollectionPluginBase.html) plugin is applied to `IAlbum`, `IArtist`, `IPlaylist`, etc..
+Once you have at least one model plugin, use the [PluginModels](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.PluginModels.html) layer to wrap around an existing [data root](https://strixmusic.com/docs/reference/api/StrixMusic.Sdk.AppModels.IStrixDataRoot.html), and provide plugins that you want applied to all interface implementations in the data structure. For example, an [ImageCollection](http://strixmusic.com/docs/reference/api/StrixMusic.Sdk.Plugins.Model.ImageCollectionPluginBase.html) plugin is applied to `IAlbum`, `IArtist`, `IPlaylist`, etc..
 
 Then, simply take the place of the original data root.
 
@@ -219,11 +219,11 @@ To fund our efforts, we rely on donations from users like you.
 No logs are generated and no servers are contacted unless you say so. Your data is exclusively put into your hands.
 
 ## Permanent
-The entire project (docs, website, build process, dependencies, SDK, app, etc) are perpetually preserved in every released binary, and on [IPFS](https://ipfs.io/).
+The entire project (docs, website, build process, dependencies, SDK, app, etc) are perpetually preserved in every released binary and on our website, all hosted on [IPFS](https://ipfs.io/). If _anyone_ has these things, you'll be able to access it over IPFS
 
-If _anyone_ has these things, you'll be able to access it over IPFS, and the code will never break from a server going down. Not even an apocalypse could ruin our hard work.
+The code cannot be taken down or censored, and will never break from a server outage.
 
- 
+Not even an apocalypse could ruin our hard work.
 
 ---
 
