@@ -24,7 +24,7 @@ if ($PSVersionTable.Platform -eq "Unix") {
 
     $monoDevelRes = Invoke-Expression -Command ("dpkg -l | grep mono-devel");
     if ($monoDevelRes -eq "") {
-        Write-Error "mono-devel is not installed. Please install it and try again, or include the -autoInstallMissing parameter.";
+        Write-Error "mono-devel is not installed. Please install it and try again.";
         exit -1;
     }
 
