@@ -20,7 +20,6 @@ namespace StrixMusic.Sdk.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the folders in this directory.</returns>
         public static async Task<IList<IFileData>> RecursiveDepthFileSearchAsync(this IFolderData folder)
         {
-            // TODO https://dev.azure.com/arloappx/Strix-Music/_backlogs/backlog/Strix-Music%20Team/Epics/?workitem=459
             // Move out of an extension method
             var files = await folder.GetFilesAsync();
 

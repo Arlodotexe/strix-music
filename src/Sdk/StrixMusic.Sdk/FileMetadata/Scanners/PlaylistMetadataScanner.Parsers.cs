@@ -314,7 +314,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                         break;
 
                     case "type":
-                    // TODO: No idea what this is supposed to mean.
+                    // No idea what this is supposed to mean.
                     // It's not documented anywhere. Probably supposed to be an enum.
                     default:
                         // Unsupported attribute
@@ -385,7 +385,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     }
                     else
                     {
-                        // TODO: Is there a better way to do this
+                        // TODO: Is there a better way to do this?
                         metaTemp += Encoding.UTF8.GetChars(new[] { b })[0];
                     }
                 }
