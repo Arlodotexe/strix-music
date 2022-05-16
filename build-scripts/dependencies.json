@@ -1,0 +1,8 @@
+[
+    {
+        "name": "docfx",
+        "outputFileName": "docfx.zip",
+        "latestRelease": "https://github.com/dotnet/docfx/releases/latest/download/docfx.zip",
+        "ipfsFallback": "ipfs://QmUXothUyJRHfCCpB2VHxB1u7HY9tdboxnjR5Estz9SAvj"
+    }
+]
