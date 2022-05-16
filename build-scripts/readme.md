@@ -36,7 +36,7 @@ fallbackOnly          System.Management.Automation.SwitchParameter  Only downloa
 
 ---
 ### `GenerateDocs.ps1`
-Sets up the DocFX binaries to build the project and generate the code documentation website.
+Sets up the DocFX binaries, builds the project and generates the code documentation as a website (in `docs/wwwroot/`)
 
 This is supported on both Windows and Linux, but Linux requires you to install `mono-devel` (direct from mono, not your OS vendor). We are not yet able to supply a snapshot backup of this dependency.
 
