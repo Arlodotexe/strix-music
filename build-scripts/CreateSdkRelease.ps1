@@ -43,6 +43,11 @@ if ($tags -isnot [array]) {
     $tags = @($tags);
 }
 
+if ($tags.Length -eq 0) {
+    Write-Error "No sdk tags were found. Create an initial release and try again."
+    exit -1;
+}
+
 function SaveVersion([string]$newVersion) {
     foreach ($item in $projectXaml.Project) {
         foreach ($propGroup in $item.PropertyGroup) {
