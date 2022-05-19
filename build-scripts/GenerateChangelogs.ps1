@@ -5,6 +5,7 @@ Param (
     [Parameter(HelpMessage = "Which changelog to generate (app or sdk)", Mandatory = $true)]
     [ValidateSet('sdk', 'app')]
     [string]$target,
+
     [Parameter(HelpMessage = "The path where generated markdown file is placed", Mandatory = $true)]
     [string]$outputPath,
 
@@ -111,6 +112,7 @@ foreach ($logItem in $logItems) {
     $matches = $null;
     if ($message -Match "\[(breaking|fix|improvement|new|refactor|cleanup)\]") {
         $category = $matches[1];
+        $message = $message -Replace "[$category]", ""
     }
     else {
         $category = "Other"
