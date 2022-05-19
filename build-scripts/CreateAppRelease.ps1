@@ -9,7 +9,7 @@ $pathToManifest = "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/Package.appxman
 Write-Output "Loading $pathToManifest"
 $manifestContent = Get-Content $pathToManifest -Force -Raw;
 
-if(!($manifestContent -Match "Version=`"([0-9]+?\.[0-9]+?\.[0-9]+?)\.[0-9]+?`"")) {
+if(!($manifestContent -Match "[^A-Za-z1-9]Version=`"([0-9]+?\.[0-9]+?\.[0-9]+?)\.[0-9]+?`"")) {
     Write-Error "Couldn't extract version number from appxmanifest"   
 }
 
@@ -38,10 +38,10 @@ if ($tags -isnot [array]) {
 }
 
 function SaveVersion([string]$newVersion) {
-    $manifestContent = $manifestContent -Replace  "Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", "Version=`"$newVersion.0`""
+    $manifestContent = $manifestContent -Replace  "[^A-Za-z1-9]Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", " Version=`"$newVersion.0`""
 
     Write-Output "Saving $pathToManifest";
-    Set-Content -Path $pathToManifest -Value $manifestContent;
+    Set-Content -Path $pathToManifest -Value $manifestContent.TrimEnd();
 }
 
 # Check if the current App version matches the most recent release tag
