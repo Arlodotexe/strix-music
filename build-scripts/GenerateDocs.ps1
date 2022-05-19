@@ -1,41 +1,53 @@
 Param (
-    [Parameter(HelpMessage = "The path where dependencies are unzipped on disk.", Mandatory = $true)]
-    [string]$outputPath,
+    [Parameter(HelpMessage = "The path where dependencies are unzipped on disk.")]
+    [string]$workingDirectory = "$PSScriptRoot/build",
 
-    [Parameter(HelpMessage = "The path to a zip file containing a docfx release", Mandatory = $true)]
-    [string]$docfxArchivePath,
+    [Parameter(HelpMessage = "The path to a dependencies.json file")]
+    [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json",
     
-    [Parameter(HelpMessage = "If true, the script will auto-install missing dependencies.")] 
-    [switch]$autoInstallMissing = $false
+    [Parameter(HelpMessage = "Skip download of docfx archive")] 
+    [switch]$skipDownload = $false,
+    
+    [Parameter(HelpMessage = "Skip extraction of docfx archive")] 
+    [switch]$skipExtract = $false,
+    
+    [Parameter(HelpMessage = "Only download the fallback dependencies.")] 
+    [switch]$fallbackOnly = $false
 )
 
-$extractPath = Resolve-Path -Relative -Path $outputPath -ErrorAction Stop;
-$archivePath = Resolve-Path -Relative -Path $docfxArchivePath -ErrorAction Stop;
+New-Item -ItemType Directory -Force -Path $workingDirectory | out-null;
 
-if ($autoInstallMissing) {
-    ./GatherDependencies.ps1 -outputPath ./build -dependencyName docfx
+$dependencies = Get-Content -Path $dependencySourcesPath | ConvertFrom-Json -ErrorAction Stop;
+$dependency = $dependencies | Where-Object { $_.name -eq "docfx" };
+
+if ($skipDownload -eq $false) {
+    ./GatherDependencies.ps1 -outputPath $workingDirectory -dependencyName docfx -fallbackOnly:$fallbackOnly
 }
 
-Expand-Archive -Path $archivePath -DestinationPath "$extractPath/docfx" -Force
+$archivePath = Resolve-Path -Relative -Path "$workingDirectory/$($dependency.outputPath)" -ErrorAction Stop;
 
-if ($PSVersionTable.Platform -eq "Unix") {
+if ($skipExtract -eq $false) {
+    Expand-Archive -Path $archivePath -DestinationPath "$workingDirectory/docfx" -Force
+}
+
+ if ($PSVersionTable.Platform -eq "Unix") {
     Write-Output "Linux detected"
     Write-Output "Checking if mono-devel is installed";
 
     $monoDevelRes = Invoke-Expression -Command ("dpkg -l | grep mono-devel");
     if ($monoDevelRes -eq "") {
-        Write-Error "mono-devel is not installed. Please install it and try again.";
+        Write-Error "mono-devel is not installed. Please install it directly from mono (not your vendor) and try again.";
         exit -1;
     }
 
     Write-Output "Building docs"
 
     try {
-        mono build/docfx/docfx.exe metadata ../docs/docfx.json
-        mono build/docfx/docfx.exe metadata ../docs/docfx.json
+        mono $workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json
+        mono $workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json
         
         ./../docs/build-scripts/unflatten-namespaces.ps1 ../docs/reference/api/toc.yml
-        mono build/docfx/docfx.exe build ../docs/docfx.json
+        mono $workingDirectory/docfx/docfx.exe build ../docs/docfx.json
     }
     catch {
         Write-Warning "Errors detected with build. Ensure you've installed mono-devel from mono directly, not from your vendor. This dependency does not yet have a fallback source on IPFS."
@@ -46,13 +58,12 @@ if ($PSVersionTable.Platform -eq "Win32NT" -or $PSVersionTable.PSEdition -eq "De
     Write-Output "Windows detected"
     Write-Output "Building docs"
 
-    build/docfx/docfx.exe metadata ../docs/docfx.json
-    build/docfx/docfx.exe metadata ../docs/docfx.json
+    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json"
+    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json"
     
     ./../docs/build-scripts/unflatten-namespaces.ps1 ../docs/reference/api/toc.yml
-    build/docfx/docfx.exe build ../docs/docfx.json
+    Invoke-Expression "$workingDirectory/docfx/docfx.exe build ../docs/docfx.json"
 }
 
-Remove-Item -Recurse $extractPath;
 
 Write-Output "Done"

@@ -208,3 +208,7 @@ project.lock.json
 docs/reference/api/*.yml
 docs/reference/api/.manifest
 docs/wwwroot/**
+
+# Allow the folder but lose the contents
+# Used for loading restored nuget packages from ipfs
+src/.nuget/*

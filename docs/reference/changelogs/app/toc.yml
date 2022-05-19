@@ -1,0 +1,21 @@
+- name: API Reference
+  href: ../../../api
+  homepage: ../../../api/
+- name: Changelogs
+  href: ../../
+  homepage: ../../
+  items:
+  - name: Strix Music SDK
+    href: ../sdk/
+    homepage: ../sdk
+    items:
+    - name: Alpha builds
+      href: ../sdk/alpha
+      homepage: ../sdk/alpha
+  - name: Strix Music App
+    href: .
+    homepage: .
+    items:
+    - name: Alpha builds
+      href: alpha
+      homepage: alpha

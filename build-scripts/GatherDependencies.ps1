@@ -1,9 +1,11 @@
+# Downloads dependencies from the provided json file. Uses IPFS as a fallback if the links are dead.
+
 Param (
-    [Parameter(HelpMessage = "The path where dependencies are downloaded to on disk.", Mandatory = $true)]
-    [string]$outputPath,
+    [Parameter(HelpMessage = "The path where dependencies are downloaded to on disk.")]
+    [string]$outputPath = "$PSScriptRoot/build",
 
     [Parameter(HelpMessage = "The path to a dependencies.json file")]
-    [string]$dependencySourcesPath = "./dependencies.json",
+    [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json",
     
     [Parameter(HelpMessage = "The name of a specific dependency to download.")]
     [string]$dependencyName = "all",
@@ -18,7 +20,7 @@ Param (
 $ipfsVersion = "";
 
 Write-Verbose "Setting up output folder"
-New-Item -ItemType Directory -Force -Path $outputPath | out-null;
+New-Item -ItemType Directory -Force -Path $outputPath -ErrorAction Stop | out-null;
 $outputFolder = Resolve-Path -Relative -Path $outputPath -ErrorAction Stop;
 
 $dependencyJsonPath = Resolve-Path -Relative -Path $dependencySourcesPath -ErrorAction Stop;
@@ -48,9 +50,18 @@ function DownloadFromIpfs() {
         }
     }
 
-    $cid = ($dependency.ipfsFallback) -Replace "ipfs://", "";
+    $path = "$outputFolder/$($dependency.outputPath)"
 
-    ipfs get $cid -o "$outputFolder/$($dependency.outputFileName)";
+    ipfs get $dependency.cid -o $path
+    
+    if ($dependency.name -eq "nupkg") {
+        foreach ($nupkg in Get-ChildItem -Recurse -Path "$path/*.nupkg") {
+            $fileName = $nupkg | Select-Object -ExpandProperty Name;
+            $dest = "$PSScriptRoot/../src/.nuget/$fileName";
+            Write-Output "Copying $fileName to $dest";
+            Copy-Item -Path $nupkg -Destination $dest;
+        }
+    }
 }
 
 foreach ($dependency in $dependencies) {
@@ -58,19 +69,23 @@ foreach ($dependency in $dependencies) {
         continue;
     }
 
-    Write-Output "Downloading latest $($dependency.name) release"
+    if (!(Test-Path "$outputFolder/$($dependency.outputPath)")) {
+        New-Item -ItemType File -Force -Path "$outputFolder/$($dependency.outputPath)" | Out-Null;
+    }
     
-    if ($fallbackOnly) {
+    if ($fallbackOnly -or $null -eq ($dependency.originalUrl)) {
         DownloadFromIpfs
         continue;
     }
+    
+    Write-Output "Downloading latest $($dependency.name)"
 
     try {
-        Invoke-WebRequest -Uri $dependency.latestRelease -OutFile "$outputFolder/$($dependency.outputFileName)";
+        Invoke-WebRequest -Uri ($dependency.originalUrl) -OutFile "$outputFolder/$($dependency.outputPath)";
     }
     catch {
         if ($latestOnly) {
-            Write-Error "Failed to download $($dependency.latestRelease)";
+            Write-Error "Failed to download $($dependency.originalUrl)";
             exit -1;
         }
 
