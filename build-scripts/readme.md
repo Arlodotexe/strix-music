@@ -1,5 +1,4 @@
-# Strix Music
-## Build scripts
+# Build scripts
 
 Strix Music is part of the permanant web. We believe in preserving our software, making sure it functions the same now as it would decades from now.
 
@@ -10,17 +9,17 @@ IPFS is self-described as:
 > designed to preserve and grow humanity's knowledge
 > by making the web upgradeable, resilient, and more open.
 
-## Making a release?
+# Making a release?
 Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your snapshotted dependencies on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
 
-## Getting started
+# Getting started
 When developers download the dependencies to their IPFS node, they temporarily host for the data to other nodes who want it to access it. The more devs holding onto the data, the faster and more available the dependencies will become.
 
 Finally, if you have a machine where you used this recently (even once), you can set up a brand new machine on your local network to do it again, without internet access, and even if the original links all 404.
 
 Not even an apocalypse could ruin our hard work. 
 
-## Snapshot scripts
+# Snapshot scripts
 These are scripts which download as much of our dependency chain as possible, uploads it to IPFS, captures the CID, and records it in a `dependency.json` file for others to find later.
 
 - **SnapshotDotnetSdk.ps1**
@@ -41,7 +40,7 @@ These are scripts which download as much of our dependency chain as possible, up
   - Scrapes the go-ipfs release page, finds the latest version, and downloads the archived binaries to the given location.
   - Downloaded dependencies are NOT imported to IPFS and recorded in [dependencies.json](dependencies.json).
 
-## Restoring dependencies
+# Restoring dependencies
 Download a dependency from a known source, and use ipfs as a fallback if the original sources fail.
 
 - **GatherDependencies.ps1**
@@ -53,7 +52,7 @@ Download a dependency from a known source, and use ipfs as a fallback if the ori
   - Provide a `-dependencyName name` argument to download a specific dependency from [dependencies.json](dependencies.json)
   - Provide a `-dependencySourcesPath ./some/path/somefile.json` argument to specify the dependency json to pull links and CIDs from.
 
-## Generating 
+# Generating 
 These are scripts which build, tag, and generate things.
 
   - **CreateSdkRelease.ps1**
@@ -80,12 +79,12 @@ These are scripts which build, tag, and generate things.
     - Automatically gathers the docfx binaries needed and generates documentation using the `./docs/docfx.json` file.
     - Has limited support on linux. Make sure you install `mono-devel` from mono directly (not your vendor).
 
-## Organizing
+# Organizing
 
 - **OrganizeReleaseContent.ps1**
   - When given a path to the compiled documentation, the compiled WASM app, and the raw website, it organizes the content into the default folder structure for a release.
 
-## Publishing
+# Publishing
 
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
