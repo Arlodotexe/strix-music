@@ -4,10 +4,7 @@ Param (
     [string[]]$variants = @("all"),
     
     [Parameter(HelpMessage = "The path where binaries are downloaded to.", Mandatory = $true)]
-    [string]$outputPath,
-
-    [Parameter(HelpMessage = "The path where dependencies are unzipped on disk.", Mandatory = $true)]
-    [string]$workingDirectory
+    [string]$outputPath
 )
 
 New-Item -ItemType Directory -Path $outputPath -Force -ErrorAction Stop | Out-Null;
