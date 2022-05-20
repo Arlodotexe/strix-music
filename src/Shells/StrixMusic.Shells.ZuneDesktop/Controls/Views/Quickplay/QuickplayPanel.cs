@@ -186,7 +186,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 
         private Size ArrangeTiles(Size finalSize)
         {
-            // TODO: Allow inverted direction
             ArrangeConfig arrangeConfig = new ArrangeConfig(Seed);
             ArrangeState arrangeState = new ArrangeState(finalSize.Height, ItemMargin);
 

@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.AppModels
         public IReadOnlyList<IDevice> Devices { get; }
 
         /// <summary>
-        /// Gets the library for the user on this core.
+        /// Gets the library.
         /// </summary>
         public ILibrary Library { get; }
 

@@ -47,7 +47,6 @@
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
-                                        <!--TODO: Upon necessity-->
                                     </VisualState>
                                     <VisualState x:Name="Checked">
                                         <VisualState.Storyboard>
@@ -105,7 +104,6 @@
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="CheckedDisabled">
-                                        <!--TODO: Upon necessity-->
                                     </VisualState>
                                     <VisualState x:Name="Indeterminate">
                                         <VisualState.Storyboard>
@@ -162,7 +160,6 @@
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="IndeterminateDisabled">
-                                        <!--TODO: Upon necessity-->
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>

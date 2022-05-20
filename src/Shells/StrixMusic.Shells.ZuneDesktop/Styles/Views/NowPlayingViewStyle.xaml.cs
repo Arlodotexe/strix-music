@@ -20,7 +20,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Views
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            // TODO: Save settings changes
             Shell.Ioc.GetService<INavigationService<Control>>()!.GoBack();
         }
     }
