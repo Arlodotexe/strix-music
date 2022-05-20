@@ -107,6 +107,7 @@ These are scripts which build, tag, and generate things.
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
 # - Automatically push generated changes.
 # - Require an internet connection (for snapshotting binaries)
+# - Need to be run from the build-scripts directory
 
 #################
 # Snapshot build dependencies (needs a machine with IPFS)
@@ -178,7 +179,7 @@ msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /p:AppxBundlePl
 #################
 # Organize and publish assets
 #################
-./OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath /tmp/StrixMusicWebsite
+./OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
 
-./PublishToIpfs.ps1 /tmp/StrixMusicWebsite -ipnsKey StrixMusicWebsite
+./PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
 ```
