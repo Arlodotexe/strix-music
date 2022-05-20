@@ -142,7 +142,6 @@ namespace StrixMusic.Shells.Strix
         {
             OverlayContent.Content = page;
 
-            // TODO: Different overlay VisualStates dependent on overlay types
             VisualStateManager.GoToState(this, _overlayTypeMapping[page.GetType()], true);
         }
 

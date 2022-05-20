@@ -209,8 +209,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             }
             catch (UnknownImageFormatException)
             {
-                // TODO: Handle this better? Might be easier to just skip unsupported image formats.
-                // Perhaps just filter them out before calling this method?
                 _ongoingImageProcessingSemaphore.Release();
                 return Enumerable.Empty<ImageMetadata>();
             }

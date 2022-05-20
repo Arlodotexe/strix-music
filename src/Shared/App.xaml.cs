@@ -45,11 +45,6 @@ namespace StrixMusic
             // just ensure that the window is active
             if (!(Window.Current.Content is FrameworkElement rootElement))
             {
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    // TODO: Load state from previously suspended application
-                }
-
                 // Place the frame in the current Window
                 Window.Current.Content = new AppFrame();
             }
@@ -80,7 +75,6 @@ namespace StrixMusic
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            // TODO: Save application state and stop any background activity
             deferral.Complete();
         }
 
