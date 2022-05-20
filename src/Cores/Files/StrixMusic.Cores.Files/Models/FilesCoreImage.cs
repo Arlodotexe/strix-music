@@ -31,8 +31,6 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
-        // TODO: Fix these placeholder exception (what should these properties do if _imageMetadata properties are null?).
-
         /// <inheritdoc />
         public Uri Uri { get; }
 

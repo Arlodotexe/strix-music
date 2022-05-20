@@ -108,7 +108,6 @@ namespace StrixMusic.Sdk.WinUI.Models
         /// <inheritdoc/>
         public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
         {
-            // TODO
             var foldersData = await StorageFolder.GetFoldersAsync();
 
             return foldersData.Select(x => new FolderData(x));

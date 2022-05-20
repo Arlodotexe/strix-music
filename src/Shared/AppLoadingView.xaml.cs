@@ -104,7 +104,7 @@ namespace StrixMusic.Shared
             var localizationService = appFrame.LocalizationService;
 
             Logger.LogInformation("Enabling quips");
-            ShowQuip(localizationService); // TODO: Add debug boot mode / #741
+            ShowQuip(localizationService); // TODO: Add debug boot mode
 
             Logger.LogInformation("Setting up playback and SMTP handlers");
             var playbackHandlerService = new PlaybackHandlerService();
