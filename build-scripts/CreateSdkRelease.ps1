@@ -6,7 +6,9 @@ Param (
     [switch]$noAutoTag = $false
 )
 
-# Get the assembly version from the SDK
+# Get the version from the SDK
+# Version and AssemblyVersion should be in sync.
+# Version uses $variant, AssemblyVersion does not.
 $pathToCsProj = "$PSScriptRoot/../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj";
 Write-Output "Loading $pathToCsProj"
 $projectXaml = New-Object System.Xml.XmlDocument
@@ -57,6 +59,7 @@ function SaveVersion([string]$newVersion) {
             if ($null -ne $propGroup.AssemblyVersion -and $propGroup.AssemblyVersion -ne "") {
                 Write-Output "Assigned new version $newVersion";
                 $propGroup.AssemblyVersion = $newVersion
+                $propGroup.Version = "$newVersion-$variant"
                 break;
             }
         }
