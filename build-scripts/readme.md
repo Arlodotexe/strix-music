@@ -158,7 +158,8 @@ if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.len
   }
 
   # Push the changes
-  git push -f origin
+  git push
+  git push -f origin --tags
 }
 
 #################
