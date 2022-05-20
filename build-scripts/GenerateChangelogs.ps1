@@ -94,8 +94,8 @@ $log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=forma
 $logItems = $log -Split "`n"
 
 if ($logItems.length -eq 0) {
-    Write-Error "Fatal: No changes were found between releases. Either 2 tags were added to the same commit, or something went wrong."
-    exit -1; 
+    Write-Warning "No changes were found between releases."
+    exit 0; 
 }
 
 $logData = @();
@@ -200,10 +200,10 @@ $changelog = "$changelogMarkdownHeader`n$markdownBody";
 Write-Output "Markdown created"
 
 Write-Output "Saving to $outputPath/$releaseLabel.md"
-Set-Content -Path "$outputPath/$releaseLabel.md" -Value $changelog
+Set-Content -Path "$outputPath/$releaseLabel.md" -Value $changelog -ErrorAction Stop
 
 Write-Output "Loading toc.yml"
-$tocYml = Get-Content -Path $tocYmlPath -Raw;
+$tocYml = Get-Content -Path $tocYmlPath -Raw -ErrorAction Stop;
 
 if ($null -eq $tocYml) {
     $tocYml = "";
@@ -238,6 +238,6 @@ $tocYml = $newTocEntry + $tocYml;
 
 
 Write-Output "Saving to $tocYmlPath"
-Set-Content -Path $tocYmlPath -Value $tocYml.TrimEnd();
+Set-Content -Path $tocYmlPath -Value $tocYml.TrimEnd() -ErrorAction Stop;
 
 Write-Output "Done";
