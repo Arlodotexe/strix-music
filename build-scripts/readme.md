@@ -1,8 +1,10 @@
 # Build scripts
 
-Strix Music is part of the permanant web. We believe in preserving our software, making sure it functions the same now as it would decades from now.
+Apps that work standalone and offline are a lost art.
 
-Our build process reflects that. Cross platform PowerShell scripts are used to automate all the things we would have done by hand, and [IPFS](https://ipfs.io/) is used to store and distribute as much of our dependency chain as possible.
+We want to build software where _that version_ will always work, whether on Day 1 and Day 10,000, and the same goes for our developer experience.
+
+Cross platform PowerShell scripts are used to automate the creation of each release, and [IPFS](https://ipfs.io/) is used to store and distribute as much of our dependency chain as possible.
 
 IPFS is self-described as:
 > A peer-to-peer hypermedia protocol
@@ -40,6 +42,9 @@ These are scripts which download as much of our dependency chain as possible, up
   - Scrapes the go-ipfs release page, finds the latest version, and downloads the archived binaries to the given location.
   - Downloaded dependencies are NOT imported to IPFS and recorded in [dependencies.json](dependencies.json).
 
+- **SnapshotGitRepo.ps1**
+  - Cleans the repository, removing all files that aren't checked in, and copies it into a new folder. The exact same as re-cloning the repo, but without contacting the remote to do it.
+
 # Restoring dependencies
 Download a dependency from a known source, and use ipfs as a fallback if the original sources fail.
 
@@ -69,7 +74,7 @@ These are scripts which build, tag, and generate things.
 
   - **GenerateChangelogs.ps1**
     - Can be called with either `-variant sdk` or `-variant app`.
-      - `app` will generate changelogs from most non-sdk folders that affect the end user to generate changelogs (shells, cores, platforms, etc)
+      - `app` will generate changelogs from most non-sdk folders that affect the end user (shells, cores, platforms, etc)
       - `sdk` will only use the sdk folder to generate a list of changes
     - Finds all the changes since the last tag and uses the commit data to generate markdown
     - Squashing all your PRs is recommended, since all commits between the tags will show, including merge commits.
@@ -88,3 +93,92 @@ These are scripts which build, tag, and generate things.
 
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
+
+# Putting it all together
+
+
+```powershell
+# The following combines all the above commands in the correct order, with the correct parameters, to create a release.
+
+# You can use the script in full, or pick parts out and use them in a CI agent.
+
+#  NOTICE: This script will
+# - Revert untracked changes in your working branch
+# - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
+# - Automatically push generated changes.
+# - Require an internet connection (for snapshotting binaries)
+
+#################
+# Snapshot build dependencies (needs a machine with IPFS)
+#################
+.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
+.\SnapshotGitRepo.ps1 -outputPath build/source -force
+.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
+.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
+
+#################
+# Version bumps
+#################
+$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha | select -Last 1
+$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" sdk ../docs/reference/changelogs/sdk/alpha ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
+$emptySdkChangelog = $sdkChangelogLastOutput.Contains("no changes");
+
+$appTag = &".\CreateAppRelease.ps1" -variant alpha | select -Last 1
+$appChangelogLastOutput = &".\GenerateChangelogs.ps1" app ../docs/reference/changelogs/app/alpha ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
+$emptyAppChangelog = $appChangelogLastOutput.Contains("no changes");
+
+#################
+# Commit changes
+#################
+$releaseCommitMessages = @();
+
+if (!$emptyAppChangelog) {
+  $releaseCommitMessages += "-m `"Release $appTag`"";
+}
+
+if (!$emptySdkChangelog) {
+  $releaseCommitMessages += "-m `"Release $sdkTag`"";
+}
+
+if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.length -gt 0) {
+  # Stage files and create a new commit.
+  git add .
+  git commit $(releaseCommitMessages.Join(" "))
+
+  # Move tags to new release commit
+  if ($!emptyAppChangelog) {
+    git push origin :refs/tags/$appTag
+    git tag -fa $appTag;
+  }
+
+  if ($!emptySdkChangelog) {
+    git push origin :refs/tags/$sdkTag
+    git tag -fa $sdkTag;
+  }
+
+  # Push the changes
+  git push -f origin
+}
+
+#################
+# Compile documentation
+#################
+.\GenerateDocs.ps1
+
+#################
+# Compile apps
+#################
+
+# Build WebAssembly
+./dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm /t:"Clean" /r /p:Platform="Any CPU" /p:Configuration="Release"'
+
+# Build UWP
+msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageDir="$PSSriptRoot/build"
+
+#################
+# Organize and publish assets
+#################
+./OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath /tmp/StrixMusicWebsite
+
+./PublishToIpfs.ps1 /tmp/StrixMusicWebsite -ipnsKey StrixMusicWebsite
+```
