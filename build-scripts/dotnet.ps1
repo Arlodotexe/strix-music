@@ -69,7 +69,7 @@ if ($skipExtract -eq $false) {
         tar xzvf $workingDirectory/$($dependency.outputPath) -C $extractPath
     }
     elseif (($dependency.outputPath).Contains('.zip')) {
-        Expand-Archive -Path "$workingDirectory/$($dependency.outputPath)" -DestinationPath $extractPath -ErrorAction Stop
+        Expand-Archive -Path "$workingDirectory/$($dependency.outputPath)" -DestinationPath $extractPath -Force -ErrorAction Stop
     }
 }
 
