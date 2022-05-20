@@ -4,8 +4,20 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
-		<Authors>Arlo Godfrey</Authors>
 		<AssemblyVersion>0.0.0</AssemblyVersion>
+
+		<Product>Strix Music SDK</Product>
+		<Description>An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.</Description>
+		<Version>0.0.0-alpha</Version>
+		<Authors>Arlo Godfrey</Authors>
+		<PackageIcon>logo.png</PackageIcon>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+
+		<!-- Include symbol files (*.pdb) in the built .nupkg -->
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,6 +28,9 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<DebugType>embedded</DebugType>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,8 +40,8 @@
 		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
@@ -42,8 +57,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="LICENSE" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="LICENSE.ADDITIONAL" />
 		<None Remove="LICENSE.LESSER" />
+		<None Remove="LICENSE" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 </Project>
