@@ -11,6 +11,9 @@ Param (
     [Parameter(HelpMessage = "The path to a directory containing the compiled documentation website.", Mandatory = $true)]
     [string]$docsPath,
 
+    [Parameter(HelpMessage = "The path to a directory containing the output from dotnet pack (nuget packages / symbols).", Mandatory = $true)]
+    [string]$sdkNupkgFolder,
+
     [Parameter(HelpMessage = "The path to a directory containing the git repo, without any artifacts.", Mandatory = $true)]
     [string]$cleanRepoPath,
 
@@ -24,6 +27,7 @@ Param (
 $docsdest = "$outputPath/docs"
 $wasmdest = "$outputPath/app/web"
 $uwpdest = "$outputPath/app/windows"
+$sdkdest = "$outputPath/sdk/nupkg"
 $gitdest = "$outputPath/git"
 $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
@@ -40,6 +44,9 @@ mkdir $wasmdest
 Write-Host "Creating folder $uwpdest"
 mkdir $uwpdest
 
+Write-Host "Creating folder $sdkdest"
+mkdir $sdkdest
+
 Write-Host "Creating folder $gitdest"
 mkdir $gitdest
 
@@ -55,8 +62,11 @@ Copy-Item -PassThru -Recurse -Path $docsPath -Destination $docsdest
 Write-Host "Copying contents from $uwpSideloadBuildPath to $uwpdest"
 Copy-Item -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest
 
-Write-Host "Copying contents from $wasmsrc to $wasmdest"
+Write-Host "Copying contents from $wasmAppPath to $wasmdest"
 Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest
+
+Write-Host "Copying contents from $sdkNupkgFolder to $sdkdest"
+Copy-Item -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest
 
 Write-Host "Copying contents from $cleanRepoPath/* to $gitdest"
 Copy-Item -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest
