@@ -1,47 +1,33 @@
 <!--
-
-🚨 Please do not skip any instructions. They are all required and essential to evaluate and test the PR. 🚨
-
-👉 If there is no open issue related to your PR, please open one first. PRs without linked issues will be closed.
-
-📝 Keep the "☑️ Allow edits by maintainers" button checked in the Pull Request Template.
-This can let us quickly make fixes for minor typos or forgotten StyleCop issues during review without needing to wait on you doing extra work.
-
-Let us help you help us! 🎉
-
+To categorize this PR in the generated changelog, include one of the following in the PR title: 
+[breaking], [fix], [improvement], [new], [refactor], [cleanup]
 -->
 
 ## Overview
-This pull request is a:
-<!-- Please uncomment one or more options below that apply to this PR. -->
-
-<!-- - Bugfix -->
-<!-- - Feature -->
-<!-- - Code style update (formatting) -->
-<!-- - Refactoring (no functional changes, no api changes) -->
-<!-- - Build or CI related changes -->
-<!-- - Documentation content changes -->
-<!-- - Sample app changes -->
-<!-- - Other... Please describe: -->
-
-<!-- Change to the relevant issue number. This will auto-close the issue once the PR is merged. -->
+<!-- Replace with the issue number. This will auto-close the issue once the PR is merged. If no issue exists, open one first. -->
 Closes #0
 
 <!-- Add a brief overview here of the change. -->
 
-<!-- Try including screenshots or a short video demonstrating the change -->
+<!-- Include screenshots or a short video demonstrating the change, if possible -->
 
 ## Checklist
-Make sure your PR meets these requirements:
-
-- [ ] Based off latest master branch. Your branch must be up to date before closing.
-- [ ] Chnages were tested and contain **NO** breaking changes or known regressions
-- [ ] Tests for bug fixes / features have been added (or this option is not applicable)
+<!-- Note: Changes to the Sdk MUST be accompanied by unit tests, even if there were none before. -->
+This PR meets the following requirements:
+- [ ] Tested and contains **NO** breaking changes or known regressions.
+- [ ] Tested with the upstream branch merged in.
+- [ ] Tests have been added for bug fixes / features (or this option is not applicable)
 - [ ] All new code has been documented (or this option is not applicable)
 - [ ] Headers have been added to all new source files (or this option is not applicable)
 
-<!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications below.
-Please note that breaking changes are likely to be rejected within minor release cycles or held until major versions. -->
+<!-- 
+Is this a breaking change?
+Please describe the impact and migration path for existing applications below.
+-->
 
-## Other information
-<!-- Please add any other information that might be helpful to reviewers. -->
+## Additional info
+<!--
+Please add any other information that might be helpful to reviewers.
+-->
+
+Not provided
