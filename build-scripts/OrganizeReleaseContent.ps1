@@ -2,6 +2,9 @@ Param (
     [Parameter(HelpMessage = "The path to the directory containing the compiled webassembly app", Mandatory = $true)]
     [string]$wasmAppPath,
 
+    [Parameter(HelpMessage = "The path to the directory containing the compiled UWP app", Mandatory = $true)]
+    [string]$uwpSideloadBuildPath,
+
     [Parameter(HelpMessage = "The path to a directory containing ready-to-deploy files for the website root", Mandatory = $true)]
     [string]$websitePath,
 
@@ -19,7 +22,8 @@ Param (
 )
 
 $docsdest = "$outputPath/docs"
-$wasmdest = "$outputPath/app"
+$wasmdest = "$outputPath/app/web"
+$uwpdest = "$outputPath/app/windows"
 $gitdest = "$outputPath/git"
 $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
@@ -33,6 +37,9 @@ mkdir $docsdest
 Write-Host "Creating folder $wasmdest"
 mkdir $wasmdest
 
+Write-Host "Creating folder $uwpdest"
+mkdir $uwpdest
+
 Write-Host "Creating folder $gitdest"
 mkdir $gitdest
 
@@ -43,7 +50,10 @@ Write-Host "Copying contents from $websitePath to $websitedest"
 Copy-Item -PassThru -Recurse -Path $websitePath -Destination $websitedest
 
 Write-Host "Copying contents from $docsPath to $docsdest"
-Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $docsdest
+Copy-Item -PassThru -Recurse -Path $docsPath -Destination $docsdest
+
+Write-Host "Copying contents from $uwpSideloadBuildPath to $uwpdest"
+Copy-Item -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest
 
 Write-Host "Copying contents from $wasmsrc to $wasmdest"
 Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest
