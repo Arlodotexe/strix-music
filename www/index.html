@@ -2,9 +2,10 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="author" content="Arlo Godfrey"/>
-    <meta name="description" content="The last music player you'll ever need. All your music services in one convenient place.">
-    <title>Coming soon</title>
+    <meta name="author" content="Arlo Godfrey" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="An open music standard that breaks down the walls between services.">
+    <title>Strix Music • Home</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +14,7 @@
 
         body {
             padding: 20px;
-            background-color: #09070c;
+            background-color: #1E1E23;
         }
 
         .image-container {
@@ -22,11 +23,6 @@
         }
 
         p.tagline {
-            opacity: 0;
-            animation-duration: 1.5s;
-            animation-delay: 3s;
-            animation-name: fadeIn, down;
-            animation-fill-mode: forwards;
             font-family: K2D;
             font-weight: 600;
             font-size: 17px;
@@ -35,43 +31,64 @@
             text-align: center;
         }
 
-        p.tagline.intro {
-            animation-duration: 2.5s;
-            animation-delay: 1s;
-            animation-name: fadeInDownThenFadeOutUp;
-            animation-fill-mode: forwards;
-        }
-
-        .learn-more {
-            opacity: 0;
-            animation-duration: 1s;
-            animation-delay: 7s;
-            animation-timing-function: ease-out;
-            animation-name: fadeIn, longDown;
-            animation-fill-mode: forwards;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 600;
-            font-size: 17px;
-            letter-spacing: 0.1em;
-            line-height: 1.7em;
-            text-align: center;
-        }
-
-        .learn-more::after {
-            content: "▽";
-            display: block;
-            font-size: 22px;
-            font-weight: 300;
-        }
-
         .logo {
             object-fit: scale-down;
             object-position: 50% 50%;
             max-width: 800px;
             width: 80%;
-            opacity: 0;
-            animation: fadeIn 1s ease-in 5s;
-            animation-fill-mode: forwards;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav a {
+            margin: 0 15
+        }
+
+        nav button {
+            appearance: none;
+            background-color: transparent;
+            border: 2px solid #e8e8e8;
+            border-radius: 15px;
+            box-sizing: border-box;
+            color: #ebebeb;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-size: 16px;
+            font-weight: 600;
+            line-height: normal;
+            margin: 5px;
+            min-height: 30px;
+            min-width: 0;
+            outline: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: 100%;
+            will-change: transform;
+        }
+
+        nav button:disabled {
+            pointer-events: none;
+        }
+
+        nav button:hover {
+            color: rgb(0, 0, 0);
+            background-color: #dadaec;
+            font-weight: 800;
+        }
+
+        nav button:active {
+            box-shadow: none;
+            transform: translateY(-2);
         }
 
         .detail-container {
@@ -181,17 +198,17 @@
 
         @font-face {
             font-family: Bonkers;
-            src: url(fonts/Bonkers.otf);
+            src: url(assets/fonts/Bonkers.otf);
         }
 
         @font-face {
             font-family: K2D;
-            src: url(fonts/K2D-Regular.ttf);
+            src: url(assets/fonts/K2D-Regular.ttf);
         }
 
         @font-face {
             font-family: Avenir;
-            src: url(fonts/AvenirLTStd-Book.otf);
+            src: url(assets/fonts/AvenirLTStd-Book.otf);
         }
 
         @keyframes fadeIn {
@@ -249,23 +266,26 @@
 </head>
 
 <body>
-    <div class="image-container" style="margin-top: 200px;">
+    <div class="image-container" style="margin-top:  75px;">
         <img class="logo" src="Wide_HighRes.png" />
     </div>
 
-    <p class="tagline intro">Introducing</p>
+    <p class="tagline">The ultimate music standard,</p>
 
-    <p class="tagline">The last music app you'll ever need</p>
+    <p class="tagline">sdk and app</p>
 
-    <div class="image-container" style="margin-top: 50px;">
+    <div class="image-container">
         <img class="logo" src="services.webp" />
     </div>
 
-    <p class="learn-more">
-        Learn more
-    </p>
+    <nav>
+        <a href="docs"><button>View Docs</button></a>
+        <a href="git"><button>View Source</button></a>
+        <a href="https://github.com/Arlodotexe/strix-music/"><button>View on GitHub</button></a>
+        <a href="sdk"><button>Get the SDK</button></a>
+    </nav>
 
-    <div class="detail-container" style="margin-top: 500px">
+    <div class="detail-container" style="margin-top: 70px">
         <div class="grid">
             <div class="title" id="item1">Listen without limits</div>
 
@@ -285,7 +305,8 @@
 
             <div class="desc" style="max-width: 500px" id="item6">
                 <p>
-                    Strix Music is set to support Windows, Android, iOS, Linux, MacOS and web browsers. We've got you covered.
+                    Strix Music is set to support Windows, Android, iOS, Linux, MacOS and web browsers. We've got you
+                    covered.
                 </p>
             </div>
 
