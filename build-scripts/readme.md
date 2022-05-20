@@ -99,19 +99,18 @@ These are scripts which build, tag, and generate things.
 
 ```powershell
 # The following combines all the above commands in the correct order, with the correct parameters, to create a release.
-
 # You can use the script in full, or pick parts out and use them in a CI agent.
 
 #  NOTICE: This script will
 # - Revert untracked changes in your working branch
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
 # - Automatically push generated changes.
-# - Require an internet connection (for snapshotting binaries)
 # - Need to be run from the build-scripts directory
 
 #################
-# Snapshot build dependencies (needs a machine with IPFS)
+# Snapshot
 #################
+# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
 .\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
 .\SnapshotGitRepo.ps1 -outputPath build/source -force
 .\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
@@ -131,20 +130,14 @@ $emptyAppChangelog = $appChangelogLastOutput.Contains("no changes");
 #################
 # Commit changes
 #################
-$releaseCommitMessages = @();
-
-if (!$emptyAppChangelog) {
-  $releaseCommitMessages += "-m `"Release $appTag`"";
-}
-
-if (!$emptySdkChangelog) {
-  $releaseCommitMessages += "-m `"Release $sdkTag`"";
-}
+$commitMessages = "";
+if (!$emptyAppChangelog) { $commitMessages += "-m `"Release $appTag`""; }
+if (!$emptySdkChangelog) { $commitMessages += "-m `"Release $sdkTag`""; }
 
 if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.length -gt 0) {
   # Stage files and create a new commit.
   git add .
-  git commit $(releaseCommitMessages.Join(" "))
+  git commit $commitMessages
 
   # Move tags to new release commit
   if ($!emptyAppChangelog) {
@@ -163,24 +156,29 @@ if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.len
 }
 
 #################
-# Compile documentation
+# Compile
 #################
+# Build documentation website
 .\GenerateDocs.ps1
 
-#################
-# Compile apps
-#################
-
 # Build WebAssembly
-./dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm /t:"Clean" /r /p:Platform="Any CPU" /p:Configuration="Release"'
+.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm /t:"Clean" /r /p:Platform="Any CPU" /p:Configuration="Release"'
 
 # Build UWP
 msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageDir="$PSSriptRoot/build"
 
-#################
-# Organize and publish assets
-#################
-./OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
+# Create SDK nuget package
+.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release'
+.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release --output build/sdk/$sdkTag' -skipExtract -skipDownload 
 
-./PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
+#################
+# Organize
+#################
+.\OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
+
+#################
+# Publish
+#################
+# If organized using the above script, the folder can be uploaded anywhere (not just ipfs)
+.\PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
 ```
