@@ -1,6 +1,9 @@
 Param (
     [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1). Used to create release tag.")]
-    [string]$variant = "alpha"
+    [string]$variant = "alpha",
+    
+    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version. Make sure to add the tag or revert the changes before running this script again.")] 
+    [switch]$noAutoTag = $false
 )
 
 # Get the identity version from the UWP appxmanifest
@@ -9,7 +12,7 @@ $pathToManifest = "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/Package.appxman
 Write-Output "Loading $pathToManifest"
 $manifestContent = Get-Content $pathToManifest -Force -Raw;
 
-if(!($manifestContent -Match "[^A-Za-z1-9]Version=`"([0-9]+?\.[0-9]+?\.[0-9]+?)\.[0-9]+?`"")) {
+if (!($manifestContent -Match "[^A-Za-z1-9]Version=`"([0-9]+?\.[0-9]+?\.[0-9]+?)\.[0-9]+?`"")) {
     Write-Error "Couldn't extract version number from appxmanifest"   
 }
 
@@ -38,7 +41,7 @@ if ($tags -isnot [array]) {
 }
 
 function SaveVersion([string]$newVersion) {
-    $manifestContent = $manifestContent -Replace  "[^A-Za-z1-9]Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", " Version=`"$newVersion.0`""
+    $manifestContent = $manifestContent -Replace "[^A-Za-z1-9]Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", " Version=`"$newVersion.0`""
 
     Write-Output "Saving $pathToManifest";
     Set-Content -Path $pathToManifest -Value $manifestContent.TrimEnd();
@@ -60,8 +63,10 @@ if ($versionAlreadyReleased) {
 
     SaveVersion $newVersion;
 
-    # Then create a new tag marking the release 
-    Invoke-Expression 'git tag -a $newVersion-app-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
+    if (!$noAutoTag) {
+        # Then create a new tag marking the release 
+        Invoke-Expression 'git tag -a $newVersion-app-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
+    }
 }
 else {
     Write-Output "Updating project with existing tag $($tags[0])"
@@ -85,3 +90,4 @@ else {
 }
 
 Write-Host "Changes complete. Please review your working tree before pushing."
+return "$newVersion-app-$variant"

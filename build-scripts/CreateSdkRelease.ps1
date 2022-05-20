@@ -1,6 +1,9 @@
 Param (
     [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1). Used to create release tag.")]
-    [string]$variant = "alpha"
+    [string]$variant = "alpha",
+    
+    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version. Make sure to add the tag or revert the changes before running this script again.")] 
+    [switch]$noAutoTag = $false
 )
 
 # Get the assembly version from the SDK
@@ -79,8 +82,10 @@ if ($versionAlreadyReleased) {
 
     SaveVersion $newVersion;
 
-    # Then create a new tag marking the release 
-    Invoke-Expression 'git tag -a $newVersion-sdk-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
+    if (!$noAutoTag) {
+        # Then create a new tag marking the release 
+        Invoke-Expression 'git tag -a $newVersion-sdk-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
+    }
 }
 else {
     Write-Output "Updating project with existing tag $($tags[0])"
@@ -104,3 +109,4 @@ else {
 }
 
 Write-Host "Changes complete. Please review your working tree before pushing."
+return "$newVersion-sdk-$variant"
