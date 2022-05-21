@@ -102,19 +102,9 @@ These are scripts which build, tag, and generate things.
 # You can use the script in full, or pick parts out and use them in a CI agent.
 
 #  NOTICE: This script will
-# - Revert untracked changes in your working branch
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
 # - Automatically push generated changes.
 # - Need to be run from the build-scripts directory
-
-#################
-# Snapshot
-#################
-# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
-.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
-.\SnapshotGitRepo.ps1 -outputPath build/source -force
-.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
-.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
 
 #################
 # Version bumps
@@ -156,6 +146,15 @@ if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.len
 }
 
 #################
+# Snapshot
+#################
+# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
+.\SnapshotGitRepo.ps1 -outputPath build/source
+.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
+.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
+.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
+
+#################
 # Compile
 #################
 # Build documentation website
@@ -174,7 +173,7 @@ msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /p:AppxBundlePl
 #################
 # Organize
 #################
-.\OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
+.\OrganizeReleaseContent.ps1 -wasmAppPath FIXME -uwpSideloadBuildPath FIXME -websitePath ../www/ -docsPath ../docs/wwwroot/ -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
 
 #################
 # Publish
