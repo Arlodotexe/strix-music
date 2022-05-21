@@ -204,10 +204,13 @@ FakesAssemblies/
 # Custom ignores
 gallery.xml
 project.lock.json
+BundleArtifacts
 
 docs/reference/api/*.yml
 docs/reference/api/.manifest
 docs/wwwroot/**
+
+*[Ss]ecrets.[Rr]elease*
 
 # Allow the folder but lose the contents
 # Used for loading restored nuget packages from ipfs
