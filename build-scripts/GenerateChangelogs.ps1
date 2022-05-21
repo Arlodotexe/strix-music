@@ -94,7 +94,7 @@ $log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=forma
 $logItems = $log -Split "`n"
 
 if ($logItems.length -eq 0) {
-    Write-Warning "No changes were found between releases."
+    Write-Output "No changes were found between releases."
     exit 0; 
 }
 
