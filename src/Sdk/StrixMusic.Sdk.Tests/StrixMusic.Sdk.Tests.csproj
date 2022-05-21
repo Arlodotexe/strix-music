@@ -29,4 +29,19 @@
 		<ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Services\MetadataScanner\Samples\sample.aac">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Services\MetadataScanner\Samples\sample.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Services\MetadataScanner\Samples\sample.ogg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Services\MetadataScanner\Samples\sample2.mp3">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
