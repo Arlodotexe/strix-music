@@ -103,6 +103,12 @@ $logData = @();
 # Gather structured commit data
 foreach ($logItem in $logItems) {
     $parts = $logItem.Split(" || ");
+
+    # Ignore multiline commit messages
+    if ($parts.length -le 1) {
+        continue;
+    }
+
     $date = $parts[0];
     $commitHash = $parts[1];
     $authorName = $parts[2];
