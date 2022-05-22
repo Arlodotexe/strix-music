@@ -19,7 +19,7 @@ ipfs files mkdir /strixmusicapp/
 # Import content
 ##########
 Write-Host "Adding content to IPFS"
-$result = iex "ipfs add -r $releaseContentPath";
+$result = iex "ipfs add -H --fscache -r $releaseContentPath";
 
 Write-Host "Getting new CID from output"
 $lines = $result.Split([Environment]::NewLine);
