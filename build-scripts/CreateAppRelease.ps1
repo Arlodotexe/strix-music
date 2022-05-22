@@ -2,8 +2,8 @@ Param (
     [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1). Used to create release tag.")]
     [string]$variant = "alpha",
     
-    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version. Make sure to add the tag or revert the changes before running this script again.")] 
-    [switch]$noAutoTag = $false
+    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version and no content on disk will be updated.")] 
+    [switch]$dryRun = $false
 )
 
 # Get the identity version from the UWP appxmanifest
@@ -41,6 +41,10 @@ if ($tags -isnot [array]) {
 }
 
 function SaveVersion([string]$newVersion) {
+    if ($dryRun) {
+        return;
+    }
+
     $manifestContent = $manifestContent -Replace "[^A-Za-z1-9]Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", " Version=`"$newVersion.0`""
 
     Write-Output "Saving $pathToManifest";
@@ -63,7 +67,7 @@ if ($versionAlreadyReleased) {
 
     SaveVersion $newVersion;
 
-    if (!$noAutoTag) {
+    if (!$dryRun) {
         # Then create a new tag marking the release 
         Invoke-Expression 'git tag -a $newVersion-app-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
     }
