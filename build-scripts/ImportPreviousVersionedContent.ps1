@@ -27,7 +27,7 @@ if (!$noCid) {
 }
 
 if (!$noUrl) {
-    $ipfsCid = ipfs name resolve $url
+    try { $ipfsCid = ipfs name resolve $url} catch { }
 }
 
 if ($ipfsCid.length -eq 0) {
@@ -43,10 +43,10 @@ $versionsJsonPath = "$outputPath/versions.json";
 Write-Output "Importing content"
 
 # Strix Music SDK Nuget packages
-ipfs get --output $outputPath/sdk/nupkg/ $ipfsCid/sdk/nupkg/
+try { ipfs get --output $outputPath/sdk/nupkg/ $ipfsCid/sdk/nupkg/ } catch { }
 
 # List of previous versions
-ipfs get --output $outputPath/versions.json $ipfsCid/versions.json
+try { ipfs get --output $outputPath/versions.json $ipfsCid/versions.json } catch { }
 
 Write-Output "Updating versions.json";
 if (Test-Path $versionsJsonPath) {
@@ -72,3 +72,4 @@ $versions += [PSCustomObject]@{
 
 Set-Content -Path $versionsJsonPath -Value ($versions | ConvertTo-Json);
 Write-Output "Archived CID of previous version under $versionsJsonPath"
+exit 0
