@@ -112,7 +112,7 @@ These are scripts which build, tag, and generate things.
 # Version bumps
 #################
 $sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | select -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -outputPath ../docs/reference/changelogs/sdk/alpha -tocYmlPath ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
+$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -forceTag $sdkTag -outputPath ../docs/reference/changelogs/sdk/alpha -tocYmlPath ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptySdkChangelog) {
@@ -121,7 +121,7 @@ if (!$emptySdkChangelog) {
 }
 
 $appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | select -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -outputPath ../docs/reference/changelogs/app/alpha -tocYmlPath ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
+$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -forceTag $appTag -outputPath ../docs/reference/changelogs/app/alpha -tocYmlPath ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptyAppChangelog) {
@@ -202,7 +202,7 @@ msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundl
 .\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net5.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath build/StrixMusicRelease
 
 # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
-.\ImportPreviousVersionedContent.ps1 -url strixmusic.com -outputPath build/StrixMusicRelease
+.\ImportPreviousVersionedContent.ps1 -url latest.strixmusic.com -outputPath build/StrixMusicRelease
 
 #################
 # Publish!

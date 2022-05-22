@@ -10,7 +10,10 @@ Param (
     [string]$outputPath,
 
     [Parameter(HelpMessage = "The path to a toc.yml where the generated changelog should be inserted", Mandatory = $true)]
-    [string]$tocYmlPath
+    [string]$tocYmlPath,
+
+    [Parameter(HelpMessage = "When a tag is provided, the script will treat the current commit as if it is tagged with it")]
+    [string]$forceTag = ""
 )
 
 $commitLogSuffix = ""
@@ -35,7 +38,15 @@ if ($tags -isnot [array]) {
     $tags = @($tags);
 }
 
+if ($forceTag.Length -gt 0) {
+    $tags = $forceTag, $tags;
+}
+
 function IsTagCurrentHead ([string]$tag) {
+    if ($forceTag.Length -gt 0 -and $forceTag -eq $tag) {
+        return $true;
+    }
+    
     $tagCommitHash = Invoke-Expression "git rev-list -n 1 $tag";
     $res = (Invoke-Expression "git log $tagCommitHash...HEAD --pretty=format:'%h'")
     return $null -eq $res -or $res.length -eq 0;
