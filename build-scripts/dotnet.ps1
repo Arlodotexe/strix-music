@@ -22,7 +22,8 @@ Param (
 
 function Get-Machine-Architecture {
     if ($IsLinux -or $IsMacOS) {
-        $arch = uname -p;
+        $arch = uname -m;
+
         return $arch;
     }
 
@@ -47,7 +48,7 @@ if ($IsWin) { $runtime += "win"; }
 if ($IsLin) { $runtime += "linux"; }
 if ($IsMac) { $runtime += "osx"; }
 
-$arch = (Get-Machine-Architecture).ToLower() -Replace "x86_64", "x64" -Replace "amd64", "x64";
+$arch = (Get-Machine-Architecture).ToLower() -Replace "x86_64", "x64" -Replace "amd64", "x64" -Replace "armv[3-7]h?l?", "arm" -Replace "armv8", "arm64" -Replace "aarch64", "arm64"
 
 $runtime += "-$arch";
 
