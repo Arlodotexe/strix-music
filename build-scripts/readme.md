@@ -100,7 +100,7 @@ These are scripts which build, tag, and generate things.
 # Putting it all together
 ```powershell
 # The following combines all the above commands in the correct order, with the correct parameters, to create a release.
-# You can use the script in full, or pick parts out and use them in a CI agent.
+# You can use the script in full, or pick it apart and use them in a CI agent.
 
 #  NOTICE: This script will
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
@@ -111,13 +111,23 @@ These are scripts which build, tag, and generate things.
 #################
 # Version bumps
 #################
-$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha | select -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" sdk ../docs/reference/changelogs/sdk/alpha ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
+$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | select -Last 1
+$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -outputPath ../docs/reference/changelogs/sdk/alpha -tocYmlPath ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
-$appTag = &".\CreateAppRelease.ps1" -variant alpha | select -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" app ../docs/reference/changelogs/app/alpha ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
+if (!$emptySdkChangelog) {
+  # Excluding -dryRun allows creation of tags and writing to disk.
+  &".\CreateSdkRelease.ps1" -variant alpha
+}
+
+$appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | select -Last 1
+$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -outputPath ../docs/reference/changelogs/app/alpha -tocYmlPath ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
+
+if (!$emptyAppChangelog) {
+  # Excluding -dryRun allows creation of tags and writing to disk.
+  &".\CreateAppRelease.ps1" -variant alpha
+}
 
 #################
 # Snapshot dependencies
@@ -145,22 +155,14 @@ if ((!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -g
     # Move tags to new release commit
     Write-Output "Creating app release tag $appTag";
     git push origin :refs/tags/$appTag
-    git tag -fa $appTag;
-  } else {
-    # If no changes, revert tag creation
-    Write-Output "Cleaning up app release tag $appTag";
-    git tag -d $appTag;
+    git tag -fa $appTag -m "Release $appTag";
   }
 
   if (!$emptySdkChangelog) {
     # Move tags to new release commit
     Write-Output "Creating sdk release tag $sdkTag";
     git push origin :refs/tags/$sdkTag
-    git tag -fa $sdkTag;
-  } else {
-    # If no changes, revert tag creation
-    Write-Output "Cleaning up sdk release tag $sdkTag";
-    git tag -d $sdkTag;
+    git tag -fa $sdkTag -m "Release $sdkTag";
   }
 
   # Push the changes
@@ -198,8 +200,7 @@ msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundl
 # Organize
 #################
 # The resulting folder can be uploaded anywhere (not just ipfs)
-.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net5.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath 
-build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
+.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net5.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath build/StrixMusicRelease
 
 # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
 .\ImportPreviousVersionedContent.ps1 -url strixmusic.com -outputPath build/StrixMusicRelease
@@ -207,5 +208,6 @@ build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixM
 #################
 # Publish!
 #################
+# Change "YourKeyName" to the name of an imported IPNS key.
 .\PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
 ```
