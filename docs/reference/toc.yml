@@ -1,3 +1,6 @@
 - name: API Reference
-  href: /api
+  href: api
   homepage: api/
+- name: Changelogs
+  href: changelogs
+  homepage: changelogs

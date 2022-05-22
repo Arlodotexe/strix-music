@@ -1,0 +1,60 @@
+[
+  {
+    "name": "docfx",
+    "outputPath": "docfx.zip",
+    "originalUrl": "https://github.com/dotnet/docfx/releases/latest/download/docfx.zip",
+    "cid": "QmUXothUyJRHfCCpB2VHxB1u7HY9tdboxnjR5Estz9SAvj"
+  },
+  {
+    "name": "nupkg",
+    "cid": "QmbXKrgEEfan1tjPVJEfX5JZJzG3KrRnmM2afectLTdZYB"
+  },
+  {
+    "name": "dotnet-sdk-win-x64",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-win-x64.zip",
+    "cid": "QmR3Uv21h2QD5ty4EJgs4LxJjLCPSmF8AjkATauyAKqg98",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-win-x64.zip"
+  },
+  {
+    "name": "dotnet-sdk-win-x86",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-win-x86.zip",
+    "cid": "QmeSf8jhaCNwvwzee9kXYEQQVjWttvpNfP8S1cpkCPZYHx",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-win-x86.zip"
+  },
+  {
+    "name": "dotnet-sdk-win-arm",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-win-arm.zip",
+    "cid": "QmUmAB5Hs7rcTR4dPy8sP7ps3b4NfGMC4SXzJs4bXkAaAC",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-win-arm.zip"
+  },
+  {
+    "name": "dotnet-sdk-win-arm64",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-win-arm64.zip",
+    "cid": "QmeeC3ZVJos1iV5Gyo5Zgz5RYGPJJyB9CibcYXX5iWcVr9",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-win-arm64.zip"
+  },
+  {
+    "name": "dotnet-sdk-osx-x64",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-osx-x64.tar.gz",
+    "cid": "QmTruuhWHx4BXded2Xskek52AFhpdpSY3SkrQSPHgGrvML",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-osx-x64.tar.gz"
+  },
+  {
+    "name": "dotnet-sdk-linux-x64",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-linux-x64.tar.gz",
+    "cid": "QmS6TLJRjv3SPiUduU4jGUzqhPR7J3DEgWdegP51foryPd",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-linux-x64.tar.gz"
+  },
+  {
+    "name": "dotnet-sdk-linux-arm",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-linux-arm.tar.gz",
+    "cid": "QmakaafYejGGS1UDYXarL3p9SPiHXH74jEDhDzCAg69gTd",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-linux-arm.tar.gz"
+  },
+  {
+    "name": "dotnet-sdk-linux-arm64",
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/6.0.300/dotnet-sdk-6.0.300-linux-arm64.tar.gz",
+    "cid": "QmTq6gnkiQCV2FArB2PSXh6RBzBphzny96gLdR3nwnDAVP",
+    "outputPath": "dotnet/dotnet-sdk-6.0.300-linux-arm64.tar.gz"
+  }
+]
