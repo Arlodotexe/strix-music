@@ -94,9 +94,9 @@ if ($versionAlreadyReleased) {
         Invoke-Expression 'git tag -a $newVersion-sdk-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
     }
 }
+# If no, use the new version number instead of bumping automatically
 else {
     Write-Output "Updating project with existing tag $($tags[0])"
-    # If no, use the new version number instead of bumping automatically
     $taggedVersion = $tags[0].Split("-")[0]
 
     # Ensure this version is an increment over previous releases.
@@ -112,6 +112,7 @@ else {
         exit -1
     }
 
+    $newVersion = $taggedVersion;
     SaveVersion $taggedVersion
 }
 
