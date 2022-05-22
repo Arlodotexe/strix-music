@@ -67,7 +67,7 @@ if (($versions | Where-Object {$_.cid -eq $ipfsCid})) {
 
 $versions += [PSCustomObject]@{
     cid = $ipfsCid
-    unixTimestamp = ((([System.DateTime]::Now) - ([System.DateTime]::UnixEpoch)).TotalSeconds)
+    unixTimeArchived = ((([System.DateTime]::Now) - ([System.DateTime]::UnixEpoch)).TotalSeconds)
 }
 
 Set-Content -Path $versionsJsonPath -Value ($versions | ConvertTo-Json);
