@@ -2,8 +2,8 @@ Param (
     [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1). Used to create release tag.")]
     [string]$variant = "alpha",
     
-    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version. Make sure to add the tag or revert the changes before running this script again.")] 
-    [switch]$noAutoTag = $false
+    [Parameter(HelpMessage = "If true, the current commit will not be tagged with the updated version and no content on disk will be updated.")] 
+    [switch]$dryRun = $false
 )
 
 # Get the version from the SDK
@@ -54,6 +54,10 @@ if ($tags.Length -eq 0) {
 }
 
 function SaveVersion([string]$newVersion) {
+    if ($dryRun) {
+        return;
+    }
+
     foreach ($item in $projectXaml.Project) {
         foreach ($propGroup in $item.PropertyGroup) {
             if ($null -ne $propGroup.AssemblyVersion -and $propGroup.AssemblyVersion -ne "") {
@@ -85,7 +89,7 @@ if ($versionAlreadyReleased) {
 
     SaveVersion $newVersion;
 
-    if (!$noAutoTag) {
+    if (!$dryRun) {
         # Then create a new tag marking the release 
         Invoke-Expression 'git tag -a $newVersion-sdk-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
     }

@@ -10,6 +10,9 @@ Param (
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json"
 )
 
+Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.sh -OutFile dotnet-install.sh
+Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+
 function Get-UrlStatusCode([string] $Url) {
     try {
         (Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -Method head).StatusCode
@@ -43,7 +46,7 @@ function GetDownloadUrl([string] $osTarget, [string] $arch) {
     if ($osTarget -eq "linux" -or $osTarget -eq "osx") {
         $globalJson = Get-Content -Path ../global.json | ConvertFrom-Json -ErrorAction Stop;
 
-        $result = bash dotnet-install.sh -Version $($globalJson.sdk.version) -Architecture $arch --os $osTarget -DryRun 6>&1
+        $result = Invoke-Expression "bash dotnet-install.sh -Version $($globalJson.sdk.version) -Architecture $arch --os $osTarget -DryRun" 6>&1
         
         return GetUrlFromDryRun $result;
     }

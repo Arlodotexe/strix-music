@@ -94,7 +94,7 @@ $log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=forma
 $logItems = $log -Split "`n"
 
 if ($logItems.length -eq 0) {
-    Write-Warning "No changes were found between releases."
+    Write-Output "No changes were found between releases."
     exit 0; 
 }
 
@@ -103,6 +103,12 @@ $logData = @();
 # Gather structured commit data
 foreach ($logItem in $logItems) {
     $parts = $logItem.Split(" || ");
+
+    # Ignore multiline commit messages
+    if ($parts.length -le 1) {
+        continue;
+    }
+
     $date = $parts[0];
     $commitHash = $parts[1];
     $authorName = $parts[2];

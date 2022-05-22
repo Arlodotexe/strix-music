@@ -28,7 +28,7 @@ $docsdest = "$outputPath/docs"
 $wasmdest = "$outputPath/app/web"
 $uwpdest = "$outputPath/app/windows"
 $sdkdest = "$outputPath/sdk/nupkg"
-$gitdest = "$outputPath/git"
+$gitdest = "$outputPath/source"
 $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
 
@@ -54,22 +54,22 @@ Write-Host "Creating folder $builddepdest"
 mkdir $builddepdest
 
 Write-Host "Copying contents from $websitePath to $websitedest"
-Copy-Item -PassThru -Recurse -Path $websitePath -Destination $websitedest
+Copy-Item -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop
 
 Write-Host "Copying contents from $docsPath to $docsdest"
-Copy-Item -PassThru -Recurse -Path $docsPath -Destination $docsdest
+Copy-Item -PassThru -Recurse -Path $docsPath -Destination $docsdest -ErrorAction Stop
 
 Write-Host "Copying contents from $uwpSideloadBuildPath to $uwpdest"
-Copy-Item -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest
+Copy-Item -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest -ErrorAction Stop
 
 Write-Host "Copying contents from $wasmAppPath to $wasmdest"
-Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest
+Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest -ErrorAction Stop
 
 Write-Host "Copying contents from $sdkNupkgFolder to $sdkdest"
-Copy-Item -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest
+Copy-Item -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest -ErrorAction Stop
 
 Write-Host "Copying contents from $cleanRepoPath/* to $gitdest"
-Copy-Item -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest
+Copy-Item -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest -ErrorAction Stop
 
 Write-Host "Copying contents from $buildDependenciesPath to $builddepdest"
-Copy-Item -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest
+Copy-Item -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop

@@ -43,7 +43,7 @@ These are scripts which download as much of our dependency chain as possible, up
   - Downloaded dependencies are NOT imported to IPFS and recorded in [dependencies.json](dependencies.json).
 
 - **SnapshotGitRepo.ps1**
-  - Cleans the repository, removing all files that aren't checked in, and copies it into a new folder. The exact same as re-cloning the repo, but without contacting the remote to do it.
+  - Creates a `repo.bundle` snapshot, then clones the bundle into a the provided output folder. The exact same as re-cloning the repo, but without contacting the remote to do it.
 
 # Restoring dependencies
 Download a dependency from a known source, and use ipfs as a fallback if the original sources fail.
@@ -89,65 +89,80 @@ These are scripts which build, tag, and generate things.
 - **OrganizeReleaseContent.ps1**
   - When given a path to the compiled documentation, the compiled WASM app, and the raw website, it organizes the content into the default folder structure for a release.
 
+- **ImportPreviousVersionedContent.ps1**
+  - Given a IPNS-enabled `url` or a raw `cid` to an existing release, imports all previous versioned content into the provided `outputPath`.    
+
 # Publishing
 
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
 
 # Putting it all together
-
-
 ```powershell
 # The following combines all the above commands in the correct order, with the correct parameters, to create a release.
-# You can use the script in full, or pick parts out and use them in a CI agent.
+# You can use the script in full, or pick it apart and use them in a CI agent.
 
 #  NOTICE: This script will
-# - Revert untracked changes in your working branch
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
 # - Automatically push generated changes.
 # - Need to be run from the build-scripts directory
-
-#################
-# Snapshot
-#################
-# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
-.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
-.\SnapshotGitRepo.ps1 -outputPath build/source -force
-.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
-.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
+# - Require an installation of IPFS for most of it.
 
 #################
 # Version bumps
 #################
-$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha | select -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" sdk ../docs/reference/changelogs/sdk/alpha ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
-$emptySdkChangelog = $sdkChangelogLastOutput.Contains("no changes");
+$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | select -Last 1
+$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -outputPath ../docs/reference/changelogs/sdk/alpha -tocYmlPath ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
+$emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
-$appTag = &".\CreateAppRelease.ps1" -variant alpha | select -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" app ../docs/reference/changelogs/app/alpha ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
-$emptyAppChangelog = $appChangelogLastOutput.Contains("no changes");
+if (!$emptySdkChangelog) {
+  # Excluding -dryRun allows creation of tags and writing to disk.
+  &".\CreateSdkRelease.ps1" -variant alpha
+}
+
+$appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | select -Last 1
+$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -outputPath ../docs/reference/changelogs/app/alpha -tocYmlPath ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
+$emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
+
+if (!$emptyAppChangelog) {
+  # Excluding -dryRun allows creation of tags and writing to disk.
+  &".\CreateAppRelease.ps1" -variant alpha
+}
+
+#################
+# Snapshot dependencies
+#################
+# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
+.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
+.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
+.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
+.\GatherDependencies.ps1 -outputPath build/dependencies/ -dependencyName docfx
 
 #################
 # Commit changes
 #################
+# This should be done after versions are bumped, changelogs are generated and dependencies.json is updated.
 $commitMessages = "";
-if (!$emptyAppChangelog) { $commitMessages += "-m `"Release $appTag`""; }
-if (!$emptySdkChangelog) { $commitMessages += "-m `"Release $sdkTag`""; }
+if (!$emptyAppChangelog) { $commitMessages += " -m `"Release $appTag`""; }
+if (!$emptySdkChangelog) { $commitMessages += " -m `"Release $sdkTag`""; }
 
-if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.length -gt 0) {
+if ((!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -gt 0) {
   # Stage files and create a new commit.
-  git add .
-  git commit $commitMessages
+  git add .  -- "$(Get-Location)/../"
+  Invoke-Expression "git commit $commitMessages"
 
-  # Move tags to new release commit
-  if ($!emptyAppChangelog) {
+  if (!$emptyAppChangelog) {
+    # Move tags to new release commit
+    Write-Output "Creating app release tag $appTag";
     git push origin :refs/tags/$appTag
-    git tag -fa $appTag;
+    git tag -fa $appTag -m "Release $appTag";
   }
 
-  if ($!emptySdkChangelog) {
+  if (!$emptySdkChangelog) {
+    # Move tags to new release commit
+    Write-Output "Creating sdk release tag $sdkTag";
     git push origin :refs/tags/$sdkTag
-    git tag -fa $sdkTag;
+    git tag -fa $sdkTag -m "Release $sdkTag";
   }
 
   # Push the changes
@@ -156,29 +171,43 @@ if (!$emptyAppChangelog -and !$emptySdkChangelog -and $releaseCommitMessages.len
 }
 
 #################
+# Snapshot git repo
+#################
+# This should be done after everything is committed.
+.\SnapshotGitRepo.ps1 -outputPath build/source
+
+#################
 # Compile
 #################
+# Before compiling the apps, make sure you've added the appropriate "Secrets.Release.cs" file to /src/Shared/.
+# This should match the existing "/src/Shared/Secrets.cs" file, but with an inverse compilation conditional and valid strings for Release mode.
+
 # Build documentation website
 .\GenerateDocs.ps1
 
 # Build WebAssembly
-.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm /t:"Clean" /r /p:Platform="Any CPU" /p:Configuration="Release"'
+.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Platform="Any CPU" /p:Configuration="Release"'
 
-# Build UWP
-msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageDir="$PSSriptRoot/build"
+# Build UWP (Requires Windows with correct tooling installed)
+msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
 
 # Create SDK nuget package
-.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release'
-.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release --output build/sdk/$sdkTag' -skipExtract -skipDownload 
+# Include -skipExtract -skipDownload if you've already successfully run dotnet.ps1 at least once to avoid unecessary operations
+.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release' -skipExtract -skipDownload
+.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release --output build/sdk/$sdkTag' -skipExtract -skipDownload
 
 #################
 # Organize
 #################
-.\OrganizeReleaseContent.ps1 -wasmAppPath $wasmDist -uwpSideloadBuildPath $uwpPath -websitePath ../www/ -docsPath ../docs/wwwroot/ -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/ -outputPath build/StrixMusicRelease
+# The resulting folder can be uploaded anywhere (not just ipfs)
+.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net5.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath build/StrixMusicRelease
+
+# Grab previous versioned content such as nuget packages and app installers (requires ipfs)
+.\ImportPreviousVersionedContent.ps1 -url strixmusic.com -outputPath build/StrixMusicRelease
 
 #################
-# Publish
+# Publish!
 #################
-# If organized using the above script, the folder can be uploaded anywhere (not just ipfs)
+# Change "YourKeyName" to the name of an imported IPNS key.
 .\PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
 ```
