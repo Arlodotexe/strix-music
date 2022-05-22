@@ -127,7 +127,7 @@
     <script src="../assets/marked.min.js"></script>
     <script>
         (async () => {
-            var response = await fetch("../git/README.md");
+            var response = await fetch("README.md");
             var text = await response.text();
 
             document.getElementById('content').innerHTML =
