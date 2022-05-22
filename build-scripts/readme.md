@@ -133,7 +133,6 @@ if (!$emptyAppChangelog) {
 # Snapshot dependencies
 #################
 # Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
-.\SnapshotGoIpfsBinaries.ps1 -outputPath build/dependencies/binaries/go-ipfs
 .\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
 .\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
 .\GatherDependencies.ps1 -outputPath build/dependencies/ -dependencyName docfx
