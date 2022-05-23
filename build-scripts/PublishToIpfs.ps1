@@ -31,5 +31,5 @@ $cid = $match.matches.groups[1].value;
 # Publish IPNS
 ##########
 Write-Output "Publishing IPNS to /ipfs/$cid"
-ipfs name publish /ipfs/$cid -key=$ipnsKey
+Invoke-Expression "ipfs name publish /ipfs/$cid --key=$ipnsKey"
 ipfs pin add $cid
