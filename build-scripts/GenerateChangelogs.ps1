@@ -101,7 +101,7 @@ else {
 Write-Output "Generating $target changelog as $releaseLabel for commits since tag $previousTag"
 
 # Crawl all commits between previous tag commit and current HEAD. Merges should be squash commits.
-$log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=format:'%ci || %h || %cn || %ce || %s %b'$($commitLogSuffix)"
+$log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=format:'%ci ||| %h ||| %cn ||| %ce ||| %s'$($commitLogSuffix)"
 $logItems = $log -Split "`n"
 
 if ($logItems.length -eq 0) {
@@ -113,7 +113,7 @@ $logData = @();
 
 # Gather structured commit data
 foreach ($logItem in $logItems) {
-    $parts = $logItem.Split(" || ");
+    $parts = $logItem.Split(" ||| ");
 
     # Ignore multiline commit messages
     if ($parts.length -le 1) {
@@ -129,7 +129,8 @@ foreach ($logItem in $logItems) {
     $matches = $null;
     if ($message -Match "\[(breaking|fix|improvement|new|refactor|cleanup)\]") {
         $category = $matches[1];
-        $message = $message -Replace "[$category]", ""
+        
+        $message = $message -Replace "\[$category\]", ""
     }
     else {
         $category = "Other"
@@ -152,7 +153,7 @@ $changelogMarkdownLines = @();
 $groupedCommitData = $logData | Group-Object -Property Category;
 
 function GetGroupByName([string] $groupName) {
-    return $groupedCommitData | Where-Object { $_.Name -eq $groupName } | Select-Object -ExpandProperty Group;
+    return $groupedCommitData | Where-Object { $_.Name -eq $groupName } | Select-Object -ExpandProperty Group | Where-Object { $_.Message.length -gt 0 };
 }
 
 if ((GetGroupByName "breaking").length -gt 0) {
@@ -211,7 +212,10 @@ $releaseMessage
 
 Generated on $(Get-Date -AsUTC) UTC";
 
-$markdownBody = $changelogMarkdownLines -Join "`n - ";
+# Not all lines are bullet points, so the lines with empty bullet points get removed manually
+$markdownBody = $changelogMarkdownLines -Join "`n - "
+
+$markdownBody = ($markdownBody -Split "`n" | Where-Object {$_.Trim() -ne "-"}) -Join "`n"
 
 $changelog = "$changelogMarkdownHeader`n$markdownBody";
 Write-Output "Markdown created"
