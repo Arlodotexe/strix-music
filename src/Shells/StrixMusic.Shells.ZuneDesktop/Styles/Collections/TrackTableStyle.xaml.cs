@@ -47,7 +47,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 
         private void Row_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            // TODO: Investiage better DoubleTapped handling for DataGridRow. This is super hacky, but currently the only method
             if (_grid == null)
                 return;
 

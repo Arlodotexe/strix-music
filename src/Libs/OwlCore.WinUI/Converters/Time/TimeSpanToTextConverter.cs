@@ -19,9 +19,10 @@ namespace OwlCore.WinUI.Converters.Time
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Convert(TimeSpan value)
         {
-            // TODO: Make more rigorous cases
-            if (value.Hours > 0) return value.ToString(@"h\:mm\:ss");
-            else return value.ToString(@"m\:ss");
+            if (value.Hours > 0)
+                return value.ToString(@"h\:mm\:ss");
+            else
+                return value.ToString(@"m\:ss");
         }
 
         /// <inheritdoc/>

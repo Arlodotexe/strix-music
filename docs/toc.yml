@@ -17,3 +17,6 @@
   - name: API Reference
     href: reference/api
     homepage: reference/api
+  - name: Changelogs
+    href: reference/changelogs
+    homepage: reference/changelogs

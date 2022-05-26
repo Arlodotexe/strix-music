@@ -29,8 +29,8 @@ namespace StrixMusic.Shared
         private readonly AppSettings _appSettings;
         private readonly ICoreManagementService _coreManagementService;
         private readonly SynchronizationContext _syncContext;
-        private AdvancedAppSettingsPanel? _advancedSettings;
         private readonly LoadedServicesItemViewModel _addNewItem;
+        private AdvancedAppSettingsPanel? _advancedSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
