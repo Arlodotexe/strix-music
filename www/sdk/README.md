@@ -1,7 +1,3 @@
-An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.
-
----
-
 # Welcome to the open source alpha
 
 We spent the last 2 years designing and refining the SDK, making sure it could cleanly handle anything we threw at it.

@@ -362,6 +362,26 @@ article h4 {
 }
 
 /* CODE HIGHLIGHT */
+code {
+  color: #e6e6e6;
+  background-color: #1e2125;
+}
+
+a code {
+  color: #337ab7;
+  background-color: #1e2125;
+}
+
+.alert code {
+  color: #e6e6e6;
+  background-color: #313135;
+}
+
+.alert a code {
+  color: #337ab7;
+  background-color: #313135;
+}
+
 pre {
   padding: 9.5px;
   margin: 0 0 10px;
@@ -440,4 +460,10 @@ svg:hover path {
 .toc-filter {
   background-color: var(--accent-dim);
   border-radius: 2px;
+}
+
+/* CUSTOM */
+details span {
+  color: var(--highlight-light);
+  cursor: pointer;
 }

@@ -11,7 +11,7 @@ We currently have 2 release channels, with more coming as the project evolves (r
 
 You rely on the Strix Music SDK for your apps, so we built our own app to catch bugs, test new features, and push boundaries.
 
-This project is the **Strix Music App**, and much like how Surface is Microsoft's visual for making the most of Windows, this app is _our_ vision for making the most out of the Strix Music SDK.
+This project is the **Strix Music App**, and much like how Surface is Microsoft's vision for making the most of Windows, this app is _our_ vision for making the most out of the Strix Music SDK.
 
 The development history of these two things are very closely intertwined. Since commit history is used to generate changelogs, the changelogs for both can be found here.
 
