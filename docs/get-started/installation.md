@@ -17,7 +17,7 @@ Assuming you have your nuget sources configured, use any of these installation m
 3. Restore nuget packages if needed.
 
 > [!TIP] 
-> If you don't have the dotnet cli or have the wrong version, you can download it automatically and execute any command using `.\dotnet.ps1` in the `build-scripts` directory. This command will download and extract from official sources, or download archived binaries from ipfs as a fallback if you don't have an internet connection.
+> If you don't have the dotnet cli or have the wrong version, you can download it automatically and execute any command using `.\dotnet.ps1` in the `build-scripts` directory. This command will download and extract from official sources, or download archived binaries from ipfs as a fallback if the download fails.
 
 
 ### PowerShell
@@ -36,7 +36,7 @@ For advanced scenarios, or when all else fails.
 # Installation sources
 
 ### Direct from NuGet
-This option is recommend when available. The latest versions are automatically published to [nuget.org](https://www.nuget.org/packages/StrixMusic.Sdk/).
+This option is recommended when available. The latest versions are automatically published to [nuget.org](https://www.nuget.org/packages/StrixMusic.Sdk/).
 
 If you have NuGet configured as a package source, you can use any of the above installation methods with no additional work.
 

@@ -3,13 +3,16 @@
   homepage: index.html
 - name: Get started
   href: get-started/
-  topicHref: get-started/installation.md
+  topicHref: get-started/introduction.md
 - name: Cores
   href: cores/
+  topicHref: cores/
 - name: Plugins
   href: plugins/
+  topicHref: plugins/
 - name: Reference
   href: reference/
+  topicHref: reference/
   items:
   - name: API Reference
     href: reference/api
