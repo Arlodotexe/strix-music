@@ -28,7 +28,6 @@ Rapidly interface with any music service to build new apps and tools.
 
 > [!WARNING] 
 >
-> ###### **This SDK is still in alpha**. 
 > Until we reach our golden release `1.0.0-sdk-stable`:
 > - We are in a rapid release cycle. Builds are automatically published every other weekday.
 > - Breaking changes may be introduced as we address feedback from the community.
