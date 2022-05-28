@@ -3,7 +3,7 @@
 > [!TIP]
 > For a better understanding of terms like "CoreModels" and "AppModels", see [How it works](./how-it-works.md).
 
-#### Collect your cores
+#### Set up your cores
 
 Cores can be distributed as Nuget packages, or created and included directly in your project.
 
@@ -27,8 +27,17 @@ Cores should also provide a constructor overload that exposes all the neccesary 
 
 > [!WARNING]
 > When possible, avoid building your application on top of CoreModels directly. These are intended as data sources only, and are not interchangable with AppModels or the tools/plugins built with them.
+> ​
+> ​<br/><br/>
+> If you decide to do this, you'll need to call `InitAsync` on the core itself:
+> 
+> ```csharp
+> // Only if using a core standalone (not recommended)
+> // Perform any async initialization needed. Authenticating, connecting to database, etc.
+> await onedrive.InitAsync();
+> ```
 
-#### Create your AppModels
+#### Merge them together
 This is the easy part. To turn one or more CoreModel into an AppModel, simply pass it to a new MergedCore along with some config:
 ```csharp
 var prefs = new MergedCollectionConfig();
@@ -45,7 +54,7 @@ var tracks = await mergedLayer.Library.GetTracksAsync(limit: 100, offset: 0).ToL
 ```
 
 
-#### Add Model Plugins (optional)
+#### Add Plugins (optional)
 [Model plugins](../plugins/index.md) are an _extremely_ modular and flexible way to customize the SDK. 
 
 In short, a model plugin modifies data or behavior by wrapping around any [AppModel](../docs/reference/api/StrixMusic.Sdk.AppModels.html) in the SDK and selectively overriding members, then taking the place of the original model.
@@ -78,7 +87,7 @@ await pluginLayer.InitAsync();
 var tracks = await pluginLayer.Library.GetTracksAsync(limit: 100, offset: 0).ToListAsync();
 ```
 
-#### Create View Models (optional)
+#### Create ViewModels (optional)
 If you intend to create an application with the MVVM pattern, the SDK provides another AppModel layer that does creates ViewModels around the entire data structure.
 
 In code-behind:
@@ -94,7 +103,8 @@ DataRoot = vmLayer;
 
 In XAML:
 ```xml
-<Button Command="{Binding DataRoot.Library.PopulateMoreTracksCommand}" CommandParameter="100"
+<Button Command="{Binding DataRoot.Library.PopulateMoreTracksCommand}"
+        CommandParameter="100"
         Content="Load 100 more tracks" />
 
 <ItemsControl ItemsSource="{Binding DataRoot.Library.Tracks}">
