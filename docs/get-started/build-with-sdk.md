@@ -17,6 +17,14 @@ var sideloaded = new RemoteCore(id, config);
 
 The actual method signature is decided by each core, dependending on what it needs to function.
 
+Cores have an [AbstractUI panel](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_AbstractConfigPanel) that can be presented to the user for login, configuration, etc., when the core is first loaded. This API is a part of OwlCore, and is data abstraction of standardized, simple UI elements. It includes buttons, boolean toggles, multichoice, text box, item lists/grids, and more. Anything that can interact with these models can render a fully interactive UI optimized for simple interactions.
+
+Some noteworthy events here:
+- [`ICore.CoreStateChanged`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_CoreStateChanged) - When the state is changed to `NeedsConfiguration`, the config panel should be displayed.
+- [`ICore.AbstractConfigPanelChanged`](reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_AbstractConfigPanelChanged) - When raised, the config panel has been updated and should be re-rendered. 
+
+Cores should also provide a constructor overload that exposes all the neccesary information to use the core headless, without user interaction.
+
 > [!WARNING]
 > When possible, avoid building your application on top of CoreModels directly. These are intended as data sources only, and are not interchangable with AppModels or the tools/plugins built with them.
 
