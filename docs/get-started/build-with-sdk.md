@@ -94,7 +94,8 @@ DataRoot = vmLayer;
 
 In XAML:
 ```xml
-<Button Command="{Binding DataRoot.Library.PopulateMoreTracksCommand}" Content="Load 100 more tracks" />
+<Button Command="{Binding DataRoot.Library.PopulateMoreTracksCommand}" CommandParameter="100"
+        Content="Load 100 more tracks" />
 
 <ItemsControl ItemsSource="{Binding DataRoot.Library.Tracks}">
   ...
