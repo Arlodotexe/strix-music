@@ -74,14 +74,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             if (PART_ArtistColumn == null)
                 return;
 
-            if (Collection is ArtistViewModel artCollection)
+            if (Collection is AlbumViewModel albumCollection)
             {
-                foreach (var track in artCollection.Tracks)
+                if (albumCollection.Artists.Count > 1)
+                    PART_ArtistColumn.Visibility = Visibility.Visible;
+
+                foreach (var track in albumCollection.Artists)
                 {
-                    // Artists list is empty here, so they need to be fetched.
-                    var artists = await track.GetArtistItemsAsync(track.TotalArtistItemsCount, 0).ToListAsync();
-                    if (artists.Count > 1)
-                        PART_ArtistColumn.Visibility = Visibility.Visible;
+                    // TO BE CONTINUED.
                 }
             }
             else
