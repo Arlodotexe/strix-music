@@ -19,13 +19,9 @@ namespace StrixMusic.Sdk.CoreModels
     /// </summary>
     /// <remarks> In a core's constructor, only do basic object initialization. For the rest, use <see cref="IAsyncInit.InitAsync"/>.
     /// 
-    /// <para/> During <see cref="IAsyncInit.InitAsync"/>, if the core state is changed to <see cref="CoreState.Loading"/>, this task will be canceled
-    ///         and the app will display your current <see cref="AbstractConfigPanel"/> to the user for configuration and setup.
-    ///         After the user has completed setup, change the core state back to <see cref="CoreState.Configured"/> using the AbstractUI elements.
-    ///         <see cref="IAsyncInit.InitAsync"/> will fire again, at which point you can make sure you have the data you need to finish initialization.
-    /// 
-    /// <para/> There is a 10 minute time limit for the user to complete setup.
-    ///         If it takes longer, the SDK will assume something has gone wrong and unload the core until the user manually initiates setup or restarts the app.
+    /// <para/> During <see cref="IAsyncInit.InitAsync"/>, if the core state is changed to <see cref="CoreState.NeedsConfiguration"/>,
+    ///         the consuming application should display the current <see cref="AbstractConfigPanel"/> to the user for configuration and setup.
+    ///         After the user has completed setup, execution of InitAsync should proceed as usual with the new data.
     /// </remarks>
     /// <seealso cref="IStrixDataRoot"/>
     public interface ICore : IAsyncInit, ICoreMember, IAsyncDisposable
