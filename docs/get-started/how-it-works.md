@@ -1,39 +1,39 @@
 # How it works
 
----
+### Background
 
-## Background
+The Strix Music SDK was carefully planned for 3 things:
 
-The architecture in the Strix Music SDK had to be very carefully planned for 3 things:
-- Easy of use
-- Flexibility / extensibility
-- Long term maintainability
+- **Easy of use**
+- **Flexibility / extensibility**
+- **Long term maintainability**
 
-Data from databases, APIs (like [Spotify](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-album) or [Deezer](https://developers.deezer.com/api/album)), file systems, and most backend in general, are always:
-- Modular / Reuseable
-- Relational (models can reference other models)
-- Scope-able (login credentials, API keys, etc)
+You can't build an application with no data to power it, so we treated data as a first-class citizen when designing the architecture.
 
-These properties are intrinsic of _every_ object-oriented data structure (JSON, SQL, XML, C# objects, and many more).
+We designed something that _fully_ utilized both the object-oriented language we were working in, and the object-oriented data we were working with.
+
+### The Basics
+
+No matter where it comes from (databases, APIs like [Spotify](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-album) or [Deezer](https://developers.deezer.com/api/album), a file system, etc.), relational data has a few intrinsic properties.
+- It's modular and reuseable
+- It's relational (models can reference other models)
+- It can be scoped to a context (login credentials, API keys, root folder, etc)
+
+These properties are also intrinsic of nearly every object-oriented data structure (JSON, SQL, XML, C# objects, and many more).
 
 In order to maintain these things throughout the entire SDK and all apps built on it, we had to conceptualize a new architectural pattern.
 
----
+### Application Models
+These are also known as "AppModels". These transform your backend's data structure into normal C# objects.
 
-## Application Models
-In any normal application, these are also known as "AppModels".
-  - These transform your backend's data structure into normal C# objects.
-  - Each model has properties for data, methods that returns other C# objects, or events that notify of changes, if needed. 
-  - Since objects always return objects, it maintains the same scope, structure and reusability of your data.
-  - As normal C# objects, this has the bonus of making your application data completely portable. 
-    - Models are always constructed by other models, so you only need to configure dependencies at the root object. 
-    - Dependencies are transparently trickled down to other new objects before being returned or emitted by an event.
-    - The result is an object tree of your app's data, where objects are easy to get and ready to use 🚀
+- Each model has properties for data, methods that returns other objects, and events that notify of changes, if needed.
+- Models are always constructed by other models, so you only need to configure dependencies at the root object. Dependencies are transparently trickled down to other new objects as they're constructed.
+- As normal C# objects, this has the bonus of making your application data completely portable. If you have an instance, that's all you need to read the data, update the data, and listen for changes to the data.
 
----
+The result is an object graph of your app's data which keeps all the intrinsic properties of an object-oriented data structure. Plus, objects are easy to get and ready to use 🚀
 
-## Application Models _in Strix_
-Strix isn't simply pulling in data from one source - we're combining data from _multiple_ sources into one data structure.
+### Application Models _in Strix_
+In Strix, we don't simply pull in data from one source - we're turning data from _multiple_ sources into a single data structure.
 
 This resulting combined data structure is what we call our [`AppModels`](../reference/api/StrixMusic.Sdk.AppModels.html), as this is what you should be building your application with.
 

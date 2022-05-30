@@ -6,11 +6,9 @@ Strix Music provides a cohesive, flexible and standardized API that allows you t
 
 In the past, listening to music was limited to a subset of mediums - radio, CDs, vinyl, etc. It was easy to create a music collection that you could call your own.
 
-Now, you can listen to any song, anywhere, anytime, and the songs don't even need to be published with a record label. 
+Now, you can listen to any song, anywhere, anytime, and the songs don't even need to be published with a record label. YouTube, Spotify, SoundCloud, audio files, Bandcamp, and _countless_ others.
 
-Music is scattered across the digital landscape - YouTube, Spotify, SoundCloud, audio files, Bandcamp, and _countless_ others.
-
-Strix Music brings _all_ your music together again.
+Music is scattered across the digital landscape. Strix Music brings it all together again.
 
 
 <div style="text-align:center;">

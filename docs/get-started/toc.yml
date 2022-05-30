@@ -4,7 +4,7 @@
   href: installation.md
 - name: How it works
   href: how-it-works.md
-- name: Build with the SDK
-  href: build-with-sdk.md
+- name: Basic usage
+  href: basic-usage.md
 - name: Contributing
   href: contributing.md
