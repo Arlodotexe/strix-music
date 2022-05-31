@@ -6,13 +6,13 @@
   topicHref: get-started/introduction.md
 - name: Cores
   href: cores/
-  topicHref: cores/
+  topicHref: cores/index.md
 - name: Plugins
   href: plugins/
-  topicHref: plugins/
+  topicHref: plugins/index.md
 - name: Reference
   href: reference/
-  topicHref: reference/
+  topicHref: reference/index.md
   items:
   - name: API Reference
     href: reference/api

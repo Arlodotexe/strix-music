@@ -15,7 +15,7 @@ var youtube = new YouTubeCore(id, config);
 var sideloaded = new RemoteCore(id, config);
 ```
 
-The actual method signature is decided by each core, dependending on what it needs to function.
+The actual method signature is decided by each core, dependingon what it needs to function.
 
 Cores have an [AbstractUI panel](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_AbstractConfigPanel) that can be presented to the user for login, configuration, etc., when the core is first loaded. This API is a part of OwlCore, and is data abstraction of standardized, simple UI elements. It includes buttons, boolean toggles, multichoice, text box, item lists/grids, and more. 
 
@@ -40,7 +40,7 @@ Cores should also provide a constructor overload that exposes all the necessary 
 > ```
 
 #### Merge them together
-This is the easy part. To turn one or more CoreModel into an AppModel, simply pass it to a new MergedCore along with some config:
+This is the easy part. To turn one or more CoreModel into an AppModel, simply pass it to an AdapterModel along with some config:
 ```csharp
 var prefs = new MergedCollectionConfig();
 var mergedLayer = new MergedCore(prefs, onedrive, youtube, localFiles);

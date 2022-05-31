@@ -208,7 +208,7 @@ article h4 {
 }
 
 .sidenav, .fixed_header, .toc {
-  background-color: var( --header-bg-color);
+  background-color: var(--header-bg-color);
 }
 
 .navbar-inverse .navbar-toggle .icon-bar {
@@ -216,7 +216,6 @@ article h4 {
 }
 
 /* SIDEBAR */
-
 .toc .level1>li {
   font-weight: 400;
 }
@@ -267,6 +266,10 @@ article h4 {
 .sidetoc {
   background-color: #0e0e0e;
   border: none;
+}
+
+.nav ol, .nav ul {
+  margin-left: 5px;
 }
 
 /* FOOTER */

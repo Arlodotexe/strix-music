@@ -1,2 +1,4 @@
-- name: Cores
+- name: Introduction
   href: index.md
+- name: Create a core
+  href: create.md
