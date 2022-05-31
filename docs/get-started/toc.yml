@@ -1,5 +1,6 @@
 - name: Introduction
-  href: introduction.md
+  href: index.md
+  topicHref: index.md
 - name: Installation
   href: installation.md
 - name: How it works
