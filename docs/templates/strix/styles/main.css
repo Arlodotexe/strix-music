@@ -89,7 +89,7 @@ h3 {
 
 h5 {
   font-size: 14px;
-  padding: 6px 0px 0px 0px;
+  padding: 6px 0 0;
 }
 
 article h1,
@@ -286,7 +286,7 @@ article h4 {
 /* ALERTS */
 
 .alert {
-  padding: 0px 0px 5px 0px;
+  padding: 0 0 5px;
   color: inherit;
   background-color: #1f1f22;
   border: none;
@@ -295,7 +295,7 @@ article h4 {
 
 .alert>p {
   margin-bottom: 5px;
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 .alert>p+p {
@@ -339,8 +339,8 @@ article h4 {
 }
 
 .alert h4 {
-  margin: 10px 8px 8px 8px;
-  padding: 0px;
+  margin: 10px 8px 8px;
+  padding: 0;
   padding-bottom: 4px;
   border-bottom: 2px solid #4e4e4e;
   font-size: 16px;
