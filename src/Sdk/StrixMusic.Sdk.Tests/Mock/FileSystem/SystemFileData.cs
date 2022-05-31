@@ -8,11 +8,11 @@ using OwlCore.AbstractStorage;
 
 namespace StrixMusic.Sdk.Tests.Mock.FileSystem
 {
-    internal class MockFileData : IFileData
+    internal class SystemFileData : IFileData
     {
         private string _path;
 
-        public MockFileData(string path)
+        public SystemFileData(string path)
         {
             _path = path;
         }

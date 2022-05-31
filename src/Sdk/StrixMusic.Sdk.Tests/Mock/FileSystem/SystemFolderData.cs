@@ -8,15 +8,15 @@ using OwlCore.AbstractStorage;
 
 namespace StrixMusic.Sdk.Tests.Mock.FileSystem
 {
-    public class MockFolderData : IFolderData
+    public class SystemFolderData : IFolderData
     {
         private readonly string _directoryPath;
 
         /// <summary>
-        /// Creates new instance of <see cref="MockFolderData"/>.
+        /// Creates new instance of <see cref="SystemFolderData"/>.
         /// </summary>
         /// <param name="path"></param>
-        public MockFolderData(string directory)
+        public SystemFolderData(string directory)
         {
             _directoryPath = directory;
         }
@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
             fileStream.Dispose();
             fileStream.Close();
 
-            return Task.FromResult<IFileData>(new MockFileData($"{_directoryPath}\\{desiredName}"));
+            return Task.FromResult<IFileData>(new SystemFileData($"{_directoryPath}\\{desiredName}"));
         }
         public Task<IFileData> CreateFileAsync(string desiredName, CreationCollisionOption options)
         {
@@ -41,14 +41,14 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
             fileStream.Dispose();
             fileStream.Close();
 
-            return Task.FromResult<IFileData>(new MockFileData($"{_directoryPath}\\{desiredName}"));
+            return Task.FromResult<IFileData>(new SystemFileData($"{_directoryPath}\\{desiredName}"));
         }
         public Task<IFolderData> CreateFolderAsync(string desiredName) => throw new NotImplementedException();
         public Task<IFolderData> CreateFolderAsync(string desiredName, CreationCollisionOption options)
         {
             Directory.CreateDirectory($"{_directoryPath}\\{desiredName}");
 
-            return Task.FromResult<IFolderData>(new MockFolderData($"{_directoryPath}\\{desiredName}"));
+            return Task.FromResult<IFolderData>(new SystemFolderData($"{_directoryPath}\\{desiredName}"));
         }
         public Task DeleteAsync() => throw new NotImplementedException();
         public Task EnsureExists() => throw new NotImplementedException();
@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
             {
                 if (item == name)
                 {
-                    var fileData = new MockFileData($"{_directoryPath}\\{System.IO.Path.GetFileName(item)}");
+                    var fileData = new SystemFileData($"{_directoryPath}\\{System.IO.Path.GetFileName(item)}");
                     return Task.FromResult<IFileData?>(fileData);
                 }
             }
@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
 
             foreach (var item in files)
             {
-                var fileData = new MockFileData($"{_directoryPath}\\{System.IO.Path.GetFileName(item)}");
+                var fileData = new SystemFileData($"{_directoryPath}\\{System.IO.Path.GetFileName(item)}");
 
                 list.Add(fileData);
             }
@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
             {
                 if (item == name)
                 {
-                    var folderData = new MockFolderData($"{_directoryPath}\\{name}");
+                    var folderData = new SystemFolderData($"{_directoryPath}\\{name}");
                     return Task.FromResult<IFolderData?>(folderData);
                 }
             }
@@ -103,7 +103,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
 
             foreach (var item in directories)
             {
-                var fileData = new MockFolderData($"{_directoryPath}\\{item}");
+                var fileData = new SystemFolderData($"{_directoryPath}\\{item}");
 
                 list.Add(fileData);
             }
@@ -117,7 +117,7 @@ namespace StrixMusic.Sdk.Tests.Mock.FileSystem
             if (parent == null)
                 throw new DirectoryNotFoundException();
 
-            return Task.FromResult<IFolderData?>(new MockFolderData(parent));
+            return Task.FromResult<IFolderData?>(new SystemFolderData(parent));
         }
     }
 }

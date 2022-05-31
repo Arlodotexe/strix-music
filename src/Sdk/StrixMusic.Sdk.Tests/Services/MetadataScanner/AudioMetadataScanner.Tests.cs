@@ -15,40 +15,41 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
     [TestClass]
     public class AudioMetadataScannerTests
     {
-
-        private bool eventExecutionCompleted = false;
-
         [TestInitialize]
         public void Setup()
         {
         }
 
         [TestMethod]
-        [Timeout(30000)]
-        public async Task MultipleArtistsFromTrackTest()
+        [DataRow(true)]
+        [Timeout(10000)]
+        public async Task MultipleArtistsFromTrackTest(bool isId3 = false)
         {
             var audioFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Samples");
             var cacheFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Cache");
 
             // Clean cache.
 
-            if (Directory.Exists(cacheFolder))
-                Directory.Delete(cacheFolder, true);
+            var fm = new FileMetadataManager(new SystemFolderData(audioFilePath), new SystemFolderData(Path.GetTempPath()));
 
-            var directory = new DirectoryInfo(cacheFolder);
-            directory.Create();
+            if (isId3)
+                fm.ScanTypes = MetadataScanTypes.TagLib;
 
-            var _fileMetadataScanner = new FileMetadataManager(new MockFolderData(audioFilePath), new MockFolderData(cacheFolder));
-            _fileMetadataScanner.ScanningCompleted += FileMetadataScanner_ScanningCompleted;
+            var scanner = new AudioMetadataScanner(fm);
+            scanner.CacheFolder = new SystemFolderData(cacheFolder);
 
+            var folder = new SystemFolderData(audioFilePath);
+            var files = await folder.GetFilesAsync();
 
-            _fileMetadataScanner.ScanTypes = MetadataScanTypes.TagLib;
+            var metadata = await scanner.ScanMusicFiles(files);
 
-            await _fileMetadataScanner.ScanAsync();
-
-            // Waits for the Scanning even completion.
-            while (!eventExecutionCompleted)
-                await Task.Delay(100);
+            Assert.IsTrue(metadata.Count() > 0);
+            foreach (var item in metadata)
+            {
+                Assert.IsNotNull(item.ArtistMetadataCollection);
+                Assert.IsTrue(item.ArtistMetadataCollection.Count() > 1);
+            }
+            
         }
 
         private async void FileMetadataScanner_ScanningCompleted(object? sender, EventArgs e)
@@ -76,8 +77,6 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
 
                 // There should be no tracks with less than 2 artists.
                 Assert.IsFalse(faultyTrackMetadata);
-
-                eventExecutionCompleted = true;
             }
         }
     }
