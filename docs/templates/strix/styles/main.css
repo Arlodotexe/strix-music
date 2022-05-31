@@ -147,7 +147,7 @@ article h4 {
   background-color: var(--header-bg-color);
   border-bottom: 3px solid transparent;
   padding-bottom: 12px;
-  transition: 350ms;
+  transition: 150ms;
 }
 
 .navbar-inverse .navbar-nav li>a:focus,
@@ -183,8 +183,12 @@ article h4 {
 }
 
 .navbar-nav.nav.level1>li:hover * {
-  background-color: #313135;
-  color: var(--header-ft-color);
+  background-color: #1E1E23;
+  color: rgb(255 255 255 / 73%);
+}
+
+.nav ul {
+  border: 1px solid #1a1a1b;
 }
 
 .navbar-nav .nav.level2 {
