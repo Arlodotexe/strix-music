@@ -16,7 +16,6 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 {
     /// <summary>
     /// A remoting-enabled wrapper for <see cref="INotificationService"/>.
-    /// TODO Implement INotificationService and figure out async compatability
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public sealed class RemoteNotificationService : IDisposable

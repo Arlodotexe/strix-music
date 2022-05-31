@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.FileMetadata.Models
         /// <summary>
         /// Artist information for this file.
         /// </summary>
-        public ArtistMetadata? ArtistMetadata { get; set; }
+        public List<ArtistMetadata>? ArtistMetadataCollection { get; set; }
 
         /// <summary>
         /// The metadata for the playlist.

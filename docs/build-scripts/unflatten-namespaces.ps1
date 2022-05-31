@@ -30,11 +30,10 @@ $yamlModuleName = "powershell-yaml";
 #####################################
 
 # LoadYml function that will read YML file and deserialize it
-function LoadYml
-{
+function LoadYml {
     param ($FileName)
 
-	# Load file content to a string array containing all YML file lines
+    # Load file content to a string array containing all YML file lines
     [string[]]$fileContent = Get-Content $FileName
     $content = ''
     # Convert a string array to a string
@@ -46,22 +45,21 @@ function LoadYml
 }
 
 # WriteYml function that writes the YML content to a file
-function WriteYml
-{
+function WriteYml {
     param ($FileName, $Content)
 
-	#Serialize a PowerShell object to string
-    Write-Host "Serializing content to YAML."
+    #Serialize a PowerShell object to string
+    Write-Verbose "Serializing content to YAML."
     $result = ConvertTo-YAML $Content
 
     # Some YAML libraries improperly produce a MappingStart
     # instead of a SequenceStart by excluding the leading "-"
     # This fixes it with regex.
-    Write-Host "Fixing missing SequenceStart identifiers."
+    Write-Verbose "Fixing missing SequenceStart identifiers."
     $result = $result -replace '(items:\s+)  ([^-]+?:)', '$1- $2';
 
     #write to a file
-    Write-Host "Saving content to $FileName.";
+    Write-Verbose "Saving content to $FileName.";
     Set-Content -Path $FileName -Value $result
 }
 
@@ -71,9 +69,8 @@ function WriteYml
 
 $isModuleInstalled = Get-InstalledModule $yamlModuleName -ErrorAction silentlycontinue;
 
-if (-not $isModuleInstalled)
-{
-    Write-Host "Module $yamlModuleName is not installed, installing."
+if (-not $isModuleInstalled) {
+    Write-Verbose "Module $yamlModuleName is not installed, installing."
 
     # Install and import the yaml reading module
     # Install module has a -Force -Verbose -Scope CurrentUser arguments
@@ -82,20 +79,18 @@ if (-not $isModuleInstalled)
     Install-Module -Name $yamlModuleName -Confirm:$False -Force -Verbose -Scope CurrentUser
     Import-Module $yamlModuleName -Force -Scope Local
 }
-else
-{
-    Write-Host "Module $yamlModuleName is installed."
+else {
+    Write-Verbose "Module $yamlModuleName is installed."
 }
 
 $tocExists = Test-Path -Path $tocLocation -PathType Leaf
 
-if (-not $tocExists)
-{
-    Write-Host "toc.yml not found at $tocLocation."
+if (-not $tocExists) {
+    Write-Output "toc.yml not found at $tocLocation."
+    Exit;
 }
-else
-{
-    Write-Host "Found toc.yml."
+else {
+    Write-Verbose "Found toc.yml."
 }
 
 $toc = LoadYml $tocLocation;
@@ -106,69 +101,63 @@ $toc = LoadYml $tocLocation;
 
 $namespaces = @{};
 
-for ($i = 0; $i -lt $toc.Length; $i++)
-{
+for ($i = 0; $i -lt $toc.Length; $i++) {
     $fullnamespace = $toc[$i].uid;
     $splitnamespace = $fullnamespace.split('.');
 
     $parent = $namespaces;
 
-    for ($j = 0; $j -lt $splitnamespace.Length; $j++)
-    {
+    for ($j = 0; $j -lt $splitnamespace.Length; $j++) {
         $partialNamespace = $splitnamespace[$j];
 
-        if($parent[$partialnamespace] -eq $null)
-        {
+        if ($null -eq $parent[$partialnamespace]) {
             $parent[$partialnamespace] = @{};
         }
 
         $parent = $parent[$partialnamespace];
     }
 
-    if ($parent.items -eq $null)
-    {
+    if ($null -eq $parent.items) {
         $parent.items = $toc[$i].items; 
     }
-    else
-    {
+    else {
         $parent.items.push($toc[$i])
     }
 }
 
-function recurse
-{
+function recurse {
     param ($obj, $path)
 
     $items = @(); # Empty array
 
-    foreach ($key in $obj.Keys)
-    {
+    foreach ($key in $obj.Keys) {
         $value = $obj[$key];
 
-        if (!($key -eq "items"))
-        {
+        if (!($key -eq "items")) {
 
             $newPath = "";
 
-            if ($path -eq $null)
-            {
+            if ($null -eq $path) {
                 $newPath = $key;
             }
-            else
-            {
+            else {
                 $newPath = $path + '.' + $key;
             }
 
-            Write-Host "Processing $newPath";
-            $newObj = [PSCustomObject]@{
-                name = $newPath
-                uid = $newPath
-                items = $value.items
+            # null coalescing only available in powershell 7+
+            if ($null -eq $value.items) {
+                $value.items = @();
             }
 
-            foreach($recursedItem in recurse $value $newPath)
-            {
-                $newObj.items = $newObj.items + $recursedItem;
+            Write-Verbose "Processing $newPath";
+            $newObj = [PSCustomObject]@{
+                name  = $newPath
+                uid   = $newPath
+                items = $value.items 
+            }
+
+            foreach ($recursedItem in recurse $value $newPath) {
+                    $newObj.items = $newObj.items + $recursedItem;
             }
 
             $items = $items + $newObj;
@@ -180,8 +169,8 @@ function recurse
 
 $result = recurse $namespaces;
 
-Write-Host "Finished building nested namespace data."
+Write-Verbose "Finished building nested namespace data."
 
 WriteYml $tocLocation $result;
 
-Write-Host "Done."
+Write-Output "Done."

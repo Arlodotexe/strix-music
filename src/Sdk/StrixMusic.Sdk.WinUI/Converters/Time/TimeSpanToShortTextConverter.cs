@@ -26,7 +26,6 @@ namespace StrixMusic.Sdk.WinUI.Converters.Time
 
             var returnValue = string.Empty;
 
-            // TODO: Make more rigorous cases
             if (value.Hours > 0)
                 returnValue += string.Format(localizationService.Time?.GetString("HrCount") ?? string.Empty, value.Hours) + " ";
 

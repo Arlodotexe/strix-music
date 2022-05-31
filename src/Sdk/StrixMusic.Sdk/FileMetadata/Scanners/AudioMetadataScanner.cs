@@ -169,7 +169,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
             Guard.IsNotNull(metadata.TrackMetadata, nameof(metadata.TrackMetadata));
             Guard.IsNotNull(metadata.AlbumMetadata, nameof(metadata.AlbumMetadata));
-            Guard.IsNotNull(metadata.ArtistMetadata, nameof(metadata.ArtistMetadata));
+            Guard.IsNotNull(metadata.ArtistMetadataCollection, nameof(metadata.ArtistMetadataCollection));
 
             // Track
             if (string.IsNullOrWhiteSpace(metadata.TrackMetadata.Title))
@@ -192,19 +192,22 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             metadata.AlbumMetadata.TrackIds ??= new HashSet<string>();
 
             // Artist
-            if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
-                metadata.ArtistMetadata.Name = string.Empty;
+            foreach (var artistMetadata in metadata.ArtistMetadataCollection)
+            {
+                if (string.IsNullOrWhiteSpace(artistMetadata.Name))
+                    artistMetadata.Name = string.Empty;
 
-            var artistId = (metadata.ArtistMetadata.Name + "_artist").HashMD5Fast();
-            metadata.ArtistMetadata.Id = artistId;
+                var artistId = (artistMetadata.Name + "_artist").HashMD5Fast();
+                artistMetadata.Id = artistId;
 
-            metadata.ArtistMetadata.AlbumIds ??= new HashSet<string>();
-            metadata.ArtistMetadata.TrackIds ??= new HashSet<string>();
-            metadata.ArtistMetadata.ImageIds ??= new HashSet<string>();
+                artistMetadata.AlbumIds ??= new HashSet<string>();
+                artistMetadata.TrackIds ??= new HashSet<string>();
+                artistMetadata.ImageIds ??= new HashSet<string>();
 
-            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(artistMetadata.Id, nameof(artistMetadata.Id));
+            }
         }
 
         private static Models.FileMetadata MergeMetadataFields(Models.FileMetadata[] metadata)
@@ -242,10 +245,16 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     primaryData.AlbumMetadata.Title ??= item.AlbumMetadata.Title;
                 }
 
-                if (primaryData.ArtistMetadata != null && item.ArtistMetadata != null)
+                if (primaryData.ArtistMetadataCollection != null && item.ArtistMetadataCollection != null)
                 {
-                    primaryData.ArtistMetadata.Name ??= item.ArtistMetadata.Name;
-                    primaryData.ArtistMetadata.Url ??= item.ArtistMetadata.Url;
+                    foreach (var artistMetadata in primaryData.ArtistMetadataCollection)
+                    {
+                        foreach (var artItem in item.ArtistMetadataCollection)
+                        {
+                            artistMetadata.Name ??= artItem.Name;
+                            artistMetadata.Url ??= artItem.Url;
+                        }
+                    }
                 }
             }
 
@@ -260,7 +269,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
             // The list of IDs for, e.g., the tracks in an AlbumMetadata, are merged by the repositories.
             Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
-            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
             Guard.IsNotNull(metadata.TrackMetadata?.Url, nameof(metadata.TrackMetadata.Url));
 
@@ -269,28 +277,44 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             // Albums
             Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
             Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds, nameof(metadata.AlbumMetadata.TrackIds));
+            Guard.IsNotNull(metadata.ArtistMetadataCollection, nameof(metadata.ArtistMetadataCollection));
 
             if (!metadata.AlbumMetadata.ArtistIds.Contains(metadata.AlbumMetadata.Id))
-                metadata.AlbumMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+            {
+                foreach (var artistMetadata in metadata.ArtistMetadataCollection)
+                {
+                    Guard.IsNotNull(artistMetadata.Id, nameof(artistMetadata.Id));
+
+                    metadata.AlbumMetadata.ArtistIds.Add(artistMetadata.Id);
+                }
+            }
 
             if (!metadata.AlbumMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
                 metadata.AlbumMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
 
             // Artists
-            Guard.IsNotNull(metadata.ArtistMetadata?.TrackIds, nameof(metadata.ArtistMetadata.TrackIds));
-            Guard.IsNotNull(metadata.ArtistMetadata?.AlbumIds, nameof(metadata.ArtistMetadata.AlbumIds));
+            foreach (var artistMetadata in metadata.ArtistMetadataCollection)
+            {
+                Guard.IsNotNull(artistMetadata?.TrackIds, nameof(artistMetadata.TrackIds));
+                Guard.IsNotNull(artistMetadata?.AlbumIds, nameof(artistMetadata.AlbumIds));
 
-            if (!metadata.ArtistMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
-                metadata.ArtistMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                if (!artistMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                    artistMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
 
-            if (!metadata.ArtistMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
-                metadata.ArtistMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+                if (!artistMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
+                    artistMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+            }
 
             // Tracks
             Guard.IsNotNull(metadata.TrackMetadata?.ArtistIds, nameof(metadata.TrackMetadata.ArtistIds));
 
-            if (!metadata.TrackMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
-                metadata.TrackMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+            foreach (var artistMetadata in metadata.ArtistMetadataCollection)
+            {
+                Guard.IsNotNull(artistMetadata.Id, nameof(artistMetadata.Id));
+
+                if (!metadata.TrackMetadata.ArtistIds.Contains(artistMetadata.Id))
+                    metadata.TrackMetadata.ArtistIds.Add(artistMetadata.Id);
+            }
 
             metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
         }
@@ -325,10 +349,13 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     Url = fileData.Path,
                     Year = details.Year,
                 },
-                ArtistMetadata = new ArtistMetadata
+                ArtistMetadataCollection = new List<ArtistMetadata>()
                 {
-                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
-                    Name = details.Artist,
+                        new ArtistMetadata
+                            {
+                                Genres = new HashSet<string>(details.Genres?.PruneNull()),
+                                Name = details.Artist,
+                            }
                 },
             };
 
@@ -437,15 +464,22 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                             ArtistIds = new HashSet<string>(),
                             ImageIds = new HashSet<string>(),
                         },
-                        ArtistMetadata = new ArtistMetadata
+                    };
+
+                    var artistList = new List<ArtistMetadata>();
+                    foreach (var artist in tag.Performers)
+                    {
+                        artistList.Add(new ArtistMetadata
                         {
-                            Name = tag.FirstAlbumArtist,
+                            Name = artist,
                             Genres = new HashSet<string>(tag.Genres),
                             AlbumIds = new HashSet<string>(),
                             TrackIds = new HashSet<string>(),
                             ImageIds = new HashSet<string>(),
-                        },
-                    };
+                        });
+                    }
+
+                    fileMetadata.ArtistMetadataCollection = artistList;
 
                     if (tag.Pictures != null)
                     {

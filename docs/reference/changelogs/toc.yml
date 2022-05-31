@@ -1,0 +1,6 @@
+- name: Strix Music SDK (Alpha)
+  href: sdk/alpha/
+  homepage: sdk/alpha/
+- name: Strix Music App (Alpha)
+  href: app/alpha/
+  homepage: app/alpha/

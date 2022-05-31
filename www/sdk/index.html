@@ -1,0 +1,174 @@
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Arlo Godfrey" />
+    <meta name="description"
+        content="An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.">
+    <title>Strix Music • Sdk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/highlight/styles/vs2015.min.css" />
+    <script src="../assets/highlight/highlight.min.js"></script>
+    <style>
+        * {
+            color: white;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #1E1E23;
+            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        pre {
+            font-size: 1.15em;
+            padding: 20px;
+            background-color: #16161a !important;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo {
+            min-width: 80vw;
+            height: 200px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        nav a {
+            margin: 0px 15px
+        }
+
+        nav button {
+            appearance: none;
+            background-color: transparent;
+            border: 2px solid #e8e8e8;
+            border-radius: 6px;
+            box-sizing: border-box;
+            color: #ebebeb;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-size: 16px;
+            font-weight: 600;
+            line-height: normal;
+            margin: 5px;
+            min-height: 30px;
+            min-width: 0;
+            outline: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: 100%;
+            will-change: transform;
+        }
+
+        nav button:disabled {
+            pointer-events: none;
+        }
+
+        nav button:hover {
+            color: rgb(0, 0, 0);
+            background-color: #eeeeff;
+        }
+
+        nav button:active {
+            box-shadow: none;
+            transform: translateY(-2);
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .description {
+            margin: 0px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        code {
+            width: min-content;
+            word-wrap: break-word;
+        }
+
+        #content * {
+            max-width: 1200px;
+            width: 80vw;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .services {
+            object-fit: scale-down;
+            object-position: 50% 50%;
+            max-width: 800px;
+            width: 80%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="image-container" style="margin: 35px 0px;">
+        <img class="logo" src="Sdk.svg" />
+    </div>
+
+    <div class="center">
+        <h1>The universal music development kit</h1>
+    </div>
+
+    <div class="center">
+        <p class="description">A highly flexible and standardized development kit for music apps.
+            Rapidly interface with any music service to build new apps and tools.</p>
+    </div>
+
+    <div class="image-container">
+        <img class="services" src="../services.webp" />
+    </div>
+
+    <nav>
+        <a href="../docs"><button>Documentation</button></a>
+        <a href="nupkg"><button>Download direct</button></a>
+        <a href="https://www.nuget.org/packages/StrixMusic.Sdk/"><button>Install from Nuget</button></a>
+    </nav>
+
+    <!--     <div class="center">
+        <div id="content">
+            <h3>Loading...</h3>
+        </div>
+    </div>
+
+    <script src="../assets/marked.min.js"></script>
+    <script>
+        (async () => {
+            var response = await fetch("README.md");
+            var text = await response.text();
+
+            document.getElementById('content').innerHTML =
+                marked.parse(text);
+
+            document.querySelectorAll('pre').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        })()
+    </script> -->
+</body>
+
+</html>

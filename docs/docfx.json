@@ -45,8 +45,8 @@
       },
       {
         "files": [
-          "shells/**.md",
-          "shells/**.yml"
+          "plugins/**.md",
+          "plugins/**.yml"
         ]
       },
       {
