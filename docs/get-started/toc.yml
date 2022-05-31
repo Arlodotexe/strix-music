@@ -1,6 +1,11 @@
-- name: Quickstart
-  href: /quickstart.md
-  homepage: quickstart.md
+- name: Introduction
+  href: index.md
+  topicHref: index.md
 - name: Installation
-  href: /installation.md
-  homepage: installation.md
+  href: installation.md
+- name: How it works
+  href: how-it-works.md
+- name: Basic usage
+  href: basic-usage.md
+- name: Contributing
+  href: contributing.md

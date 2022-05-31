@@ -1,5 +1,5 @@
 # <a href="https://strixmusic.com/" target="_blank"><img align="left" src="www/favicon.ico" height="100" /></a> Strix Music
-An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.
+Music is scattered across the digital landscape. Strix Music brings it all together again, by defining a common and flexible standard for all music sources.
 
 # Welcome to the open source alpha
 

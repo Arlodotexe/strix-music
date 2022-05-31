@@ -1,23 +1,7 @@
-# Strix Music: Cores
-
-A core is an interchangeable music source that implements the [`CoreModel`](../reference/api/StrixMusic.Sdk.CoreModels.html) interfaces.
-
-Anything that can implement these interfaces can be used as a music source, regardless of what APIs, protocols or technologies are used behind the scenes.
+# Basic usage
 
 > [!TIP]
-> For a better understanding of terms like "CoreModels" and "AppModels", see [How it works](../get-started/how-it-works.md).
-
-
-> [!WARNING] 
->
-> Until we reach our golden release `1.0.0-sdk-stable`:
-> - We are in a rapid release cycle. Builds are automatically published every other weekday.
-> - Breaking changes may be introduced as we address feedback from the community.
-> - Comprehensive [changelogs](../reference/changelogs/) are included with every release.
-> - We advise keeping development (e.g. creating cores) for the SDK in the [main repo](https://github.com/Arlodotexe/strix-music) so we can automatically migrate breaking changes for you.
-
-## Basic usage
-
+> For a better understanding of terms like "CoreModels" and "AppModels", see [How it works](./how-it-works.md).
 
 #### Set up your cores
 
@@ -71,3 +55,61 @@ await mergedLayer.InitAsync();
 var tracks = await mergedLayer.Library.GetTracksAsync(limit: 100, offset: 0).ToListAsync();
 ```
 
+
+#### Add Plugins (optional)
+[Model plugins](../plugins/index.md) are an _extremely_ modular and flexible way to customize the SDK. 
+
+In short, a model plugin modifies data or behavior by wrapping around any [AppModel](../docs/reference/api/StrixMusic.Sdk.AppModels.html) in the SDK and selectively overriding members, then taking the place of the original model.
+
+That means applying plugins is this easy:
+
+```csharp
+// Add plugins
+var pluginLayer = new StrixDataRootPluginWrapper(mergedLayer,
+    new FallbackImagePlugin(fallbackImage),
+
+    // Handle playback locally, add start/stop flair, bring your own shuffle logic, whatever you want.
+    new PlaybackHandlerPlugin(_playbackHandler),
+
+    // Other ideas that are possible
+    new LastFmPlugin(),
+    new MissingMetadataFromMusicBrainzPlugin(),
+    new MusixmatchSyncedLyricsPlugin(),
+    new CacheEverythingOfflinePlugin(),
+);
+```
+
+Then, simply use `pluginLayer` instead of `mergedLayer`.
+
+```csharp
+// Perform any async initialization needed. Authenticating, connecting to database, etc.
+await pluginLayer.InitAsync(); 
+
+// Get the first 100 tracks from all sources.
+var tracks = await pluginLayer.Library.GetTracksAsync(limit: 100, offset: 0).ToListAsync();
+```
+
+#### Create ViewModels (optional)
+If you intend to create an application with the MVVM pattern, the SDK provides another AppModel layer that does creates ViewModels around the entire data structure.
+
+In code-behind:
+```csharp
+var vmLayer = new StrixDataRootViewModel(mergedLayer); // without plugins
+var vmLayer = new StrixDataRootViewModel(pluginLayer); // with plugins
+
+// Perform any async initialization needed. Authenticating, connecting to database, etc.
+await vmLayer.InitAsync();
+
+DataRoot = vmLayer;
+```
+
+In XAML:
+```xml
+<Button Command="{Binding DataRoot.Library.PopulateMoreTracksCommand}"
+        CommandParameter="100"
+        Content="Load 100 more tracks" />
+
+<ItemsControl ItemsSource="{Binding DataRoot.Library.Tracks}">
+  ...
+</ItemsControl>
+```

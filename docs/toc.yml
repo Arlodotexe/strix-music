@@ -2,21 +2,35 @@
   href: index.html
   homepage: index.html
 - name: Get started
-  href: get-started/
-  homepage: get-started/
+  href: get-started/index.md
+  topicHref: get-started/index.md
+  items: 
+  - name: Introduction
+    href: get-started/index.md
+  - name: Installation
+    href: get-started/installation.md
+  - name: How it works
+    href: get-started/how-it-works.md
+  - name: Basic usage
+    href: get-started/basic-usage.md
+  - name: Contributing
+    href: get-started/contributing.md
 - name: Cores
   href: cores/
-  homepage: cores/
-- name: Shells
-  href: shells/
-  homepage: shells/
+  topicHref: cores/index.md
+  items: 
+  - name: Introduction
+    href: cores/index.md
+  - name: Create a core
+    href: cores/create.md
+- name: Plugins
+  href: plugins/
+  topicHref: plugins/index.md
 - name: Reference
   href: reference/
-  homepage: reference/
+  topicHref: reference/index.md
   items:
   - name: API Reference
     href: reference/api
-    homepage: reference/api
   - name: Changelogs
     href: reference/changelogs
-    homepage: reference/changelogs
