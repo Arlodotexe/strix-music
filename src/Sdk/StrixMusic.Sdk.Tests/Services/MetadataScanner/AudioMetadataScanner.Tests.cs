@@ -21,9 +21,9 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
         }
 
         [TestMethod]
-        [DataRow(true)]
+        [DataRow(MetadataScanTypes.TagLib)]
         [Timeout(10000)]
-        public async Task MultipleArtistsFromTrackTest(bool isId3 = false)
+        public async Task MultipleArtistsFromTrackTest(MetadataScanTypes scanType)
         {
             var audioFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Samples");
             var cacheFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Cache");
@@ -31,9 +31,7 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
             // Clean cache.
 
             var fm = new FileMetadataManager(new SystemFolderData(audioFilePath), new SystemFolderData(Path.GetTempPath()));
-
-            if (isId3)
-                fm.ScanTypes = MetadataScanTypes.TagLib;
+            fm.ScanTypes = scanType;
 
             var scanner = new AudioMetadataScanner(fm);
             scanner.CacheFolder = new SystemFolderData(cacheFolder);
@@ -49,35 +47,7 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
                 Assert.IsNotNull(item.ArtistMetadataCollection);
                 Assert.IsTrue(item.ArtistMetadataCollection.Count() > 1);
             }
-            
-        }
 
-        private async void FileMetadataScanner_ScanningCompleted(object? sender, EventArgs e)
-        {
-            // Waits for the track to appear in the repository.
-            await Task.Delay(2000);
-
-            if (sender is FileMetadataManager fm)
-            {
-                var tracks = await fm.Tracks.GetItemsAsync(0, 99);
-
-                bool faultyTrackMetadata = false;
-                foreach (var item in tracks)
-                {
-                    Assert.IsNotNull(item.Id);
-
-                    var results = await fm.Artists.GetArtistsByTrackId(item.Id, 0, 99);
-
-                    if (results.Count < 2)
-                    {
-                        faultyTrackMetadata = true;
-                        break;
-                    }
-                }
-
-                // There should be no tracks with less than 2 artists.
-                Assert.IsFalse(faultyTrackMetadata);
-            }
         }
     }
 }
