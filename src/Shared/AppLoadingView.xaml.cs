@@ -259,7 +259,18 @@ namespace StrixMusic.Shared
 
                 core.CoreStateChanged += Core_CoreStateChanged;
 
-                await core.InitAsync();
+                try
+                {
+                    await core.InitAsync();
+                }
+                catch (OperationCanceledException)
+                {
+                    // TODO: Does the core need to be disposed?
+                    // TODO: Navigate back to OOBE proper. As is, it just stays
+                    // on the core configuration page
+
+                    //await core.DisposeAsync();
+                }
 
                 core.CoreStateChanged -= Core_CoreStateChanged;
 
