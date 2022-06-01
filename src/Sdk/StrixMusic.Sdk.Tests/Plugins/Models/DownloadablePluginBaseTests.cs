@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
     [TestClass]
     public class DownloadablePluginBaseTests
     {
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(5000)]
         public void NoPlugins()
         {
             var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Downloadable;
@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(emptyChain);
         }
 
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(5000)]
         public void PluginNoOverride()
         {
             var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Downloadable;
@@ -43,7 +43,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(noOverride, customFilter: x => !x.Name.Contains("Inner"));
         }
 
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(5000)]
         public void PluginFullyCustom()
         {
             var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Downloadable;

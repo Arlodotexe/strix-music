@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             UrlCollection = 32,
         }
 
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(5000)]
         public void NoPlugins()
         {
             var builder = new SdkModelPlugin(SdkTestPluginMetadata.Metadata).Track;
@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<Unimplemented>>(emptyChain);
         }
 
-        [TestMethod, Timeout(1000)]
+        [TestMethod, Timeout(5000)]
         public void PluginNoOverride()
         {
             // No plugins.
