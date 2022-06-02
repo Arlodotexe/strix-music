@@ -60,7 +60,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public CoreMetadata Registration { get; } = new CoreMetadata(id: nameof(MockCore),
                                                                      displayName: "Mock core",
                                                                      logoUri: new Uri("https://strixmusic.com/"),
-                                                                     sdkVer: typeof(ICore).Assembly.GetName().Version!);
+                                                                     sdkVer: typeof(ICore).Assembly.GetName().Version ?? throw new ArgumentNullException());
 
         public string InstanceId { get; set; }
 
