@@ -18,7 +18,7 @@ Param (
 
 $commitLogSuffix = ""
 if ($target -eq "sdk") {
-    $commitLogSuffix = ' -- ":/src/Sdk/StrixMusic.Sdk/" -- ":/src/Sdk/StrixMusic.Sdk.Tests/"';
+    $commitLogSuffix = ' -- ":/src/Sdk/StrixMusic.Sdk/"';
 }
 else {
     $commitLogSuffix = ' -- ":/src/Cores/**" -- ":/src/Platforms/**" -- ":/src/Shells/**" -- ":src/Libs/**" -- ":/Sdk/StrixMusic.Sdk.WinUI/**"'
@@ -39,7 +39,7 @@ if ($tags -isnot [array]) {
 }
 
 if ($forceTag.Length -gt 0) {
-    $tags = $forceTag, $tags;
+    $tags = @($forceTag) + $tags;
 }
 
 function IsTagCurrentHead ([string]$tag) {
@@ -81,7 +81,7 @@ function TransformCommitToMarkdown($commit) {
 $previousTag = GetPreviousTag
 
 if (IsTagCurrentHead -tag $tags[0]) {
-    Write-Output "Current commit is tagged";
+    Write-Output "Current commit is tagged $($tags[0])";
 }
 else {
     Write-Output "Current commit is not tagged. This changelog will be labeled as Unreleased.";
