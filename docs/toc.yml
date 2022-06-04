@@ -26,6 +26,9 @@
 - name: Plugins
   href: plugins/
   topicHref: plugins/index.md
+  items:
+  - name: Playback handler
+    href: plugins/playback-handler.md
 - name: Reference
   href: reference/
   topicHref: reference/index.md

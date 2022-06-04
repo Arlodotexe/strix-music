@@ -1,2 +1,5 @@
-- name: Plugins
+- name: Introduction
   href: index.md
+- name: Playback handler
+  href: playback-handler.md
+  topicHref: playback-handler.md

@@ -1,3 +1,3 @@
 # Strix Music: Plugins
 
-Documentation coming soon.
+Select a topic from the table of contents.
