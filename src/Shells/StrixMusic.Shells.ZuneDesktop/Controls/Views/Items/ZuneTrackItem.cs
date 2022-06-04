@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
@@ -51,24 +52,25 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         }
 
         /// <inheritdoc />
-        public override void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
+        public override async void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
         {
             base.OnTrackChanged(oldValue, newValue);
 
-            if (ParentCollection is ArtistViewModel && Track?.Artists != null)
+            if (Track == null)
+                return;
+
+            var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
+
+            if (ParentCollection is AlbumViewModel)
             {
-                foreach (var artist in Track.Artists)
+                foreach (var artist in artists)
                 {
                     if (artist.Name != Track.Name)
                         ArtistString += $"{artist.Name},";
                 }
 
                 if (ArtistString != null)
-                    ArtistString = ArtistString.TrimEnd(',');
-            }
-            else
-            {
-                ArtistString = string.Empty;
+                    ArtistString = ArtistString.TrimEnd(',').TrimStart();
             }
         }
 
