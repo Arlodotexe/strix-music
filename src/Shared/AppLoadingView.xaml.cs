@@ -265,11 +265,9 @@ namespace StrixMusic.Shared
                 }
                 catch (OperationCanceledException)
                 {
-                    // TODO: Does the core need to be disposed?
-                    // TODO: Navigate back to OOBE proper. As is, it just stays
-                    // on the core configuration page
-
-                    //await core.DisposeAsync();
+                    // The core initialization was cancelled.
+                    // Unregister from the core service, everything should update from there.
+                    await coreManagementService.UnregisterCoreInstanceAsync(args.InstanceId);
                 }
 
                 core.CoreStateChanged -= Core_CoreStateChanged;
