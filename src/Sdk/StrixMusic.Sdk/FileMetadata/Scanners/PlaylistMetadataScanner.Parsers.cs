@@ -150,6 +150,10 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             {
                 var line = await content.ReadLineAsync();
 
+                // Ignore empty lines
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
                 // Handle M3U directives
                 if (line[0] == '#')
                 {

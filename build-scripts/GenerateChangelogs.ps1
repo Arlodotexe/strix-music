@@ -18,7 +18,7 @@ Param (
 
 $commitLogSuffix = ""
 if ($target -eq "sdk") {
-    $commitLogSuffix = ' -- ":/src/Sdk/StrixMusic.Sdk/" -- ":/src/Sdk/StrixMusic.Sdk.Tests/"';
+    $commitLogSuffix = ' -- ":/src/Sdk/StrixMusic.Sdk/"';
 }
 else {
     $commitLogSuffix = ' -- ":/src/Cores/**" -- ":/src/Platforms/**" -- ":/src/Shells/**" -- ":src/Libs/**" -- ":/Sdk/StrixMusic.Sdk.WinUI/**"'
