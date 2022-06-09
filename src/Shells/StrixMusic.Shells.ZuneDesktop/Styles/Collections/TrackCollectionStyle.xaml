@@ -28,6 +28,8 @@
                             </Grid.RowDefinitions>
 
                             <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+                            <ContentControl x:Name="ContextHolderAlbumArtist" Content="{Binding AlbumArtistCollection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -50,7 +52,7 @@
                                 </ListView.Header>
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:TrackViewModel">
-                                        <items:ZuneTrackItem Track="{Binding}" ParentCollection="{Binding ElementName=ContextHolder,Path=Content}">
+                                        <items:ZuneTrackItem Track="{Binding}" ParentAlbumArtistCollection="{Binding ElementName=ContextHolderAlbumArtist,Path=Content}"  ParentCollection="{Binding ElementName=ContextHolder,Path=Content}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />

@@ -69,6 +69,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 }
             }));
 
+        /// <summary>
+        /// Backing dependency property for <see cref="AlbumArtistCollection"/>.
+        /// </summary>
+        public IAlbumCollectionViewModel? AlbumArtistCollection
+        {
+            get { return (IAlbumCollectionViewModel)GetValue(AlbumArtistCollectionProperty); }
+            set { SetValue(AlbumArtistCollectionProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
+        /// </summary>
+        public static readonly DependencyProperty AlbumArtistCollectionProperty =
+            DependencyProperty.Register(nameof(AlbumArtistCollection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, null));
+
         private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (PART_ArtistColumn == null)
