@@ -50,7 +50,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <summary>
-        /// Dependency property for <ses cref="ITrackCollectionViewModel" />.
+        /// Dependency property for <see cref="ITrackCollectionViewModel" />.
         /// </summary>
         public static readonly new DependencyProperty CollectionProperty =
             DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, (s, e) =>
