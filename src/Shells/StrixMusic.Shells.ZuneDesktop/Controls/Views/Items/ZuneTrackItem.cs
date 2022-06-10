@@ -96,7 +96,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             if (Track == null)
                 return;
 
-            if (ParentCollection is AlbumViewModel album)
+            if (ParentCollection is AlbumViewModel album && ParentAlbumArtistCollection is ArtistViewModel)
             {
                 Track.ArtistItemsCountChanged += Track_ArtistItemsCountChanged;
 
@@ -111,6 +111,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         private async void Track_ArtistItemsCountChanged(object sender, int e)
         {
             // Unsubsribing the event here because GetArtistsItemsAsync again triggers ArtistItemsCountChanged putting the app in an infinite stack causing StackOverflow Exception.
+            if (Track == null)
+                return;
+
             Track.ArtistItemsCountChanged -= Track_ArtistItemsCountChanged;
 
             var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
