@@ -94,7 +94,7 @@ namespace StrixMusic.Cores.LocalFiles
         public static CoreMetadata Metadata { get; } = new CoreMetadata(id: nameof(LocalFilesCore),
                                                                         displayName: "Local Files",
                                                                         logoUri: new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
-                                                                        sdkVer: Version.Parse("0.0.0.0"));
+                                                                        sdkVer: typeof(ICore).Assembly.GetName().Version);
 
         /// <summary>
         /// The settings for this core instance.

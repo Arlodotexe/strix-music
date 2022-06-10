@@ -523,6 +523,11 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 Logger.LogError($"{nameof(ArgumentException)} for {nameof(IFileData)} at {fileData.Path}", ex);
                 return null;
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                Logger.LogError($"{nameof(UnauthorizedAccessException)} for {nameof(IFileData)} at {fileData.Path}", ex);
+                return null;
+            }
         }
 
         private async Task<Models.FileMetadata?> ProcessFile(IFileData file)

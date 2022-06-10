@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Plugins.PlaybackHandler;
 /// <summary>
 /// Adds a playback device using the provided <see cref="IPlaybackHandlerService"/>
 /// </summary>
-public class StrixDataRootPlaybackHandlerPlugin : StrixDataRootPluginBase
+internal class StrixDataRootPlaybackHandlerPlugin : StrixDataRootPluginBase
 {
     private readonly IPlaybackHandlerService _playbackHandler;
     private readonly List<IDevice> _devices = new();
