@@ -298,6 +298,7 @@ namespace StrixMusic.Shared
                     // The core initialization was cancelled.
                     // Unregister from the core service, everything should update from there.
                     await coreManagementService.UnregisterCoreInstanceAsync(args.InstanceId);
+                    return;
                 }
 
                 if (core.PlaybackType == MediaPlayerType.Standard)
