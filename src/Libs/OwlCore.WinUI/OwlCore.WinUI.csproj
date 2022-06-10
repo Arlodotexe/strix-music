@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.69" />
+    <PackageReference Include="OwlCore" Version="0.0.70" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
     <PackageReference Include="Uno.UI" Version="4.0.13" />
   </ItemGroup>
