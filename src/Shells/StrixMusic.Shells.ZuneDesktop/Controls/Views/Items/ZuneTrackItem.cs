@@ -64,6 +64,28 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// </summary>
         public ZuneTrackItem()
         {
+            Loaded += ZuneTrackItem_Loaded;
+        }
+
+
+        /// <inheritdoc />
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
+
+        private void ZuneTrackItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= ZuneTrackItem_Loaded;
+            Unloaded += ZuneTrackItem_Unloaded;
+        }
+
+        private void ZuneTrackItem_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= ZuneTrackItem_Unloaded;
+
+            if (Track != null)
+                Track.ArtistItemsCountChanged -= Track_ArtistItemsCountChanged;
         }
 
         /// <inheritdoc />
@@ -74,31 +96,45 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             if (Track == null)
                 return;
 
-            var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
-
             if (ParentCollection is AlbumViewModel album)
             {
-                foreach (var artist in artists)
-                {
-                    if (ParentAlbumArtistCollection != null && ParentAlbumArtistCollection is ArtistViewModel aVm)
-                    {
-                        // Ignore the artist name from which the track originated.
-                        if (aVm.Name == artist.Name)
-                            continue;
-                    }
+                Track.ArtistItemsCountChanged += Track_ArtistItemsCountChanged;
 
-                    ArtistString += $"{artist.Name},";
-                }
+                if (Track.TotalArtistItemsCount == 0)
+                    return;
 
-                if (ArtistString != null)
-                    ArtistString = ArtistString.TrimEnd(',').TrimStart();
+                var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
+                PopulateArtists(artists);
             }
         }
 
-        /// <inheritdoc />
-        protected override void OnApplyTemplate()
+        private async void Track_ArtistItemsCountChanged(object sender, int e)
         {
-            base.OnApplyTemplate();
+            // Unsubsribing the event here because GetArtistsItemsAsync again triggers ArtistItemsCountChanged putting the app in an infinite stack causing StackOverflow Exception.
+            Track.ArtistItemsCountChanged -= Track_ArtistItemsCountChanged;
+
+            var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
+            PopulateArtists(artists.ToList());
+
+            Track.ArtistItemsCountChanged += Track_ArtistItemsCountChanged;
+        }
+
+        private void PopulateArtists(List<Sdk.AppModels.IArtistCollectionItem> artists)
+        {
+            foreach (var artist in artists)
+            {
+                if (ParentAlbumArtistCollection != null && ParentAlbumArtistCollection is ArtistViewModel aVm)
+                {
+                    // Ignore the artist name from which the track originated.
+                    if (aVm.Name == artist.Name)
+                        continue;
+                }
+
+                ArtistString += $"{artist.Name},";
+            }
+
+            if (ArtistString != null)
+                ArtistString = ArtistString.TrimEnd(',').TrimStart();
         }
     }
 }
