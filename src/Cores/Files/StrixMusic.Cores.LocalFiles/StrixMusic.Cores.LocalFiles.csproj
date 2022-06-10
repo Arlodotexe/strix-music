@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OwlCore" Version="0.0.66" />
+    <PackageReference Include="OwlCore" Version="0.0.69" />
   </ItemGroup>
 
   <ItemGroup>

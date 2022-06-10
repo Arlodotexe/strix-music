@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Services;
 

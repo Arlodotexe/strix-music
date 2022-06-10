@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Helpers.AssertAllThrowsOnMemberAccess<AccessedException<FullyCustom>>(allCustom, customFilter: NoInnerOrSources);
         }
 
-        [TestMethod, Timeout(5000)]
+        [TestMethod, Timeout(500000)]
         [AllEnumFlagCombinations(typeof(PossiblePlugins))]
         public void PluginFullyCustomWith_AllCombinations(PossiblePlugins data)
         {
