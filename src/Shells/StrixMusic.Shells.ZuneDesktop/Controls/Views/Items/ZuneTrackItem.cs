@@ -110,10 +110,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 
         private async void Track_ArtistItemsCountChanged(object sender, int e)
         {
-            // Unsubsribing the event here because GetArtistsItemsAsync again triggers ArtistItemsCountChanged putting the app in an infinite stack causing StackOverflow Exception.
             if (Track == null)
                 return;
 
+            // Unsubsribing the event here because GetArtistsItemsAsync again triggers ArtistItemsCountChanged putting the app in an infinite stack causing StackOverflow Exception.
             Track.ArtistItemsCountChanged -= Track_ArtistItemsCountChanged;
 
             var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
