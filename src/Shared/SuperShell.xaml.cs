@@ -94,7 +94,7 @@ namespace StrixMusic.Shared
             _coreManagementService.CoreInstanceRegistered -= CoreManagementService_CoreInstanceUnregistered;
         }
 
-        private void CoreManagementService_CoreInstanceUnregistered(object sender, CoreInstanceEventArgs e)
+        private void CoreManagementService_CoreInstanceUnregistered(object? sender, CoreInstanceEventArgs e)
         {
             var relevantCore = LoadedCores.First(x => x.InstanceId == e.InstanceId);
             DetachEvents(relevantCore);
