@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Tests
 {
@@ -27,7 +28,7 @@ namespace StrixMusic.Sdk.Tests
             AssertAllThrowsOnMemberAccess(typeof(TInterfaceFilter), value, mustContainMembers, customFilter, typesToExclude, expectedExceptions);
         }
 
-        public static void AssertAllThrowsOnMemberAccess(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null, Type[]? expectedExceptions = null)
+        public static async void AssertAllThrowsOnMemberAccess(Type type, object value, bool mustContainMembers = true, Func<MemberInfo, bool>? customFilter = null, Type[]? typesToExclude = null, Type[]? expectedExceptions = null)
         {
             Assert.IsNotNull(expectedExceptions);
             var thrownExceptions = new List<Type>();
@@ -62,6 +63,12 @@ namespace StrixMusic.Sdk.Tests
                 {
                     var returnVal = method!.Invoke(value, method.GetParameters().Select(TransformMethodParam).ToArray());
 
+                    if (returnVal is ValueTask vt)
+                        await vt;
+
+                    if (returnVal is Task tsk)
+                        await tsk;
+
                     object? TransformMethodParam(ParameterInfo param)
                     {
                         if (param.DefaultValue is DBNull)
@@ -77,7 +84,7 @@ namespace StrixMusic.Sdk.Tests
                 {
                     if (ex.InnerException is AggregateException aggregateException)
                     {
-                        foreach (var innerEx in aggregateException.InnerExceptions)
+                        foreach (var innerEx in aggregateException.Flatten().InnerExceptions)
                         {
                             thrownExceptions.Add(innerEx.GetType());
                             Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} threw an unexpected exception: {innerEx}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
@@ -89,10 +96,30 @@ namespace StrixMusic.Sdk.Tests
                         Assert.IsTrue(expectedExceptions.Contains(ex.InnerException!.GetType()), $"{method.Name} threw an unexpected exception: {ex.InnerException}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
                     }
                 }
+                catch (AggregateException ex)
+                {
+                    foreach (var innerEx in ex.Flatten().InnerExceptions)
+                    {
+                        thrownExceptions.Add(innerEx.GetType());
+                        Assert.IsTrue(expectedExceptions.Contains(innerEx!.GetType()), $"{method.Name} threw an unexpected exception: {innerEx}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var exc = ex;
+
+                    thrownExceptions.Add(exc.GetType());
+                    Assert.IsTrue(expectedExceptions.Contains(exc.GetType()), $"{method.Name} threw an unexpected exception: {ex.InnerException}. Expected types were: {string.Join(',', expectedExceptions.Select(x => x.ToString()))}");
+                }
             }
 
             foreach (var item in expectedExceptions)
-                Assert.IsTrue(thrownExceptions.Contains(item), $"An expected exception {item} was not thrown.");
+            {
+                if (!thrownExceptions.Contains(item))
+                {
+                    Assert.IsTrue(false, $"An expected exception {item} was not thrown.");
+                }
+            }
         }
 
         public static bool SmartEquals(object? originalValue, object? deserValue, bool recursive = true)

@@ -18,7 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Graph" Version="4.14.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
-    <PackageReference Include="OwlCore" Version="0.0.66" />
+    <PackageReference Include="OwlCore" Version="0.0.70" />
   </ItemGroup>
 
   <ItemGroup>

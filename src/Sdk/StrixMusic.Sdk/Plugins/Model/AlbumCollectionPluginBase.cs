@@ -4,11 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -341,9 +341,7 @@ namespace StrixMusic.Sdk.Plugins.Model
                 InnerUrlCollection,
             };
 
-            return new ValueTask(uniqueInstances.AsParallel()
-                                                .Select(x => x.DisposeAsync().AsTask())
-                                                .Aggregate((x, y) => Task.WhenAll(x, y)));
+            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
         }
     }
 }

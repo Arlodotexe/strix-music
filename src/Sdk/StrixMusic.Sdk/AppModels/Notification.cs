@@ -4,7 +4,6 @@
 
 using System;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Remoting;
 
 namespace StrixMusic.Sdk.AppModels
 {
