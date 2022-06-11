@@ -54,6 +54,11 @@ namespace StrixMusic.Cores.Files
         /// </summary>
         public IFileMetadataManager? FileMetadataManager { get; set; }
 
+        /// <summary>
+        /// The wait behavior of the metadata scanner when InitAsync is called in a file-based <see cref="ICore"/>.
+        /// </summary>
+        public ScannerWaitBehavior ScannerWaitBehavior { get; set; }
+
         /// <inheritdoc/>
         public virtual CoreState CoreState { get; protected set; }
 

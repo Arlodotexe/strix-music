@@ -334,7 +334,10 @@ namespace StrixMusic.Shared
                 var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
                 var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
-                return new LocalFilesCore(instanceId, new FileSystemService(coreInstanceFolder), new FolderData(coreInstanceFolder), notificationService);
+                return new LocalFilesCore(instanceId, new FileSystemService(coreInstanceFolder), new FolderData(coreInstanceFolder), notificationService)
+                {
+                    ScannerWaitBehavior = StrixMusic.Cores.Files.ScannerWaitBehavior.NeverWait,
+                };
             });
 
             CoreRegistry.Register(OneDriveCore.Metadata, async instanceId =>
@@ -368,6 +371,7 @@ namespace StrixMusic.Shared
                 {
                     LoginMethod = loginMethod,
                     HttpMessageHandler = messageHandler,
+                    ScannerWaitBehavior = StrixMusic.Cores.Files.ScannerWaitBehavior.NeverWait,
                 };
 
                 // TODO: Detach event when unregistered
