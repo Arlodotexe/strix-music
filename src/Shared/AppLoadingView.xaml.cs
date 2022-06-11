@@ -259,7 +259,16 @@ namespace StrixMusic.Shared
 
                 core.CoreStateChanged += Core_CoreStateChanged;
 
-                await core.InitAsync();
+                try
+                {
+                    await core.InitAsync();
+                }
+                catch (OperationCanceledException)
+                {
+                    // The core initialization was cancelled.
+                    // Unregister from the core service, everything should update from there.
+                    await coreManagementService.UnregisterCoreInstanceAsync(args.InstanceId);
+                }
 
                 core.CoreStateChanged -= Core_CoreStateChanged;
 
@@ -280,7 +289,17 @@ namespace StrixMusic.Shared
                 cores.Add(core);
                 Cores.Add(new CoreViewModel(core));
 
-                await core.InitAsync();
+                try
+                {
+                    await core.InitAsync();
+                }
+                catch (OperationCanceledException)
+                {
+                    // The core initialization was cancelled.
+                    // Unregister from the core service, everything should update from there.
+                    await coreManagementService.UnregisterCoreInstanceAsync(args.InstanceId);
+                    return;
+                }
 
                 if (core.PlaybackType == MediaPlayerType.Standard)
                 {

@@ -78,6 +78,8 @@ namespace StrixMusic.Shared
 
             appFrame.ContentOverlay.Closed += ContentOverlay_Closed;
             _addNewItem.NewItemRequested += AddNewItem_NewItemRequested;
+
+            _coreManagementService.CoreInstanceUnregistered += CoreManagementService_CoreInstanceUnregistered;
         }
 
         private void DetachEvents()
@@ -88,6 +90,19 @@ namespace StrixMusic.Shared
 
             appFrame.ContentOverlay.Closed -= ContentOverlay_Closed;
             _addNewItem.NewItemRequested -= AddNewItem_NewItemRequested;
+
+            _coreManagementService.CoreInstanceRegistered -= CoreManagementService_CoreInstanceUnregistered;
+        }
+
+        private void CoreManagementService_CoreInstanceUnregistered(object? sender, CoreInstanceEventArgs e)
+        {
+            var relevantCore = LoadedCores.First(x => x.InstanceId == e.InstanceId);
+            DetachEvents(relevantCore);
+
+            var serviceToRemove = Services.First(x => x.Core?.InstanceId == relevantCore.InstanceId);
+            serviceToRemove.ConfigRequested -= LoadedService_ConfigRequested;
+
+            Services.Remove(serviceToRemove);
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -255,7 +270,15 @@ namespace StrixMusic.Shared
 
             if (viewModel.Core.CoreState == CoreState.Unloaded)
             {
-                await viewModel.Core.InitAsync();
+                try
+                {
+                    await viewModel.Core.InitAsync();
+                }
+                catch (OperationCanceledException)
+                {
+                    // ignored
+                }
+
                 return;
             }
 
