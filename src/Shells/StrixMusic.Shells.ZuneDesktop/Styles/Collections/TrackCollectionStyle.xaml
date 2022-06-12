@@ -33,7 +33,7 @@
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                             <StackPanel Margin="24,0,0,12">
@@ -42,7 +42,7 @@
 
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
-                                <TextBlock x:Name="PART_ArtistColumn" Text="Artists"  Grid.Column="1"  FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+                                <TextBlock x:Name="PART_ArtistColumn" HorizontalAlignment="Left" Text="ARTIST"  Grid.Column="1"  FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
                             </Grid>
 
                             <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
