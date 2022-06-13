@@ -28,7 +28,7 @@
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0,0" >
                                         <GradientStop x:Name="PART_GradientStopTrack" Offset="0" Color="White" />
-                                        <GradientStop Offset="0.1" Color="Transparent" />
+                                        <GradientStop Offset="0.8" Color="Transparent" />
                                     </LinearGradientBrush>
                                 </Rectangle.Fill>
                             </Rectangle>
@@ -39,7 +39,7 @@
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0,0" >
                                         <GradientStop x:Name="PART_GradientStopArtist" Offset="0" Color="White" />
-                                        <GradientStop Offset="0.1" Color="Transparent" />
+                                        <GradientStop Offset="0.8" Color="Transparent" />
                                     </LinearGradientBrush>
                                 </Rectangle.Fill>
                             </Rectangle>
