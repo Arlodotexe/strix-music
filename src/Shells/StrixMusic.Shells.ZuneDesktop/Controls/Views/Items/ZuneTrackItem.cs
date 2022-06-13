@@ -6,6 +6,9 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 {
@@ -14,6 +17,23 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
     /// </summary>
     public class ZuneTrackItem : TrackItem
     {
+        private bool _isSelected = false;
+
+        /// <summary>
+        /// The top most grid around the track item.
+        /// </summary>
+        public Grid? PART_MainGrid { get; private set; }
+
+        /// <summary>
+        /// GradientStop for the artist column.
+        /// </summary>
+        public GradientStop? PART_GradientStopArtist { get; private set; }
+
+        /// <summary>
+        /// GradientStop for the track column.
+        /// </summary>
+        public GradientStop? PART_GradientStopTrack { get; private set; }
+
         /// <summary>
         /// Holds the list of artists.
         /// </summary>
@@ -44,6 +64,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         public static readonly DependencyProperty ParentCollectionProperty =
             DependencyProperty.Register(nameof(ParentCollection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackItem), new PropertyMetadata(null));
 
+
         /// <summary>
         /// Holds the current state of the zune <see cref="ParentAlbumArtistCollection"/>.
         /// </summary>
@@ -59,6 +80,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         public static readonly DependencyProperty ParentAlbumArtistCollectionProperty =
             DependencyProperty.Register(nameof(ParentAlbumArtistCollection), typeof(IAlbumCollectionViewModel), typeof(ZuneTrackItem), new PropertyMetadata(null));
 
+
         /// <summary>
         /// Creates a new instance of <see cref="ZuneTrackItem"/>.
         /// </summary>
@@ -71,6 +93,58 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            PART_MainGrid = GetTemplateChild(nameof(PART_MainGrid)) as Grid;
+
+            if (PART_MainGrid != null)
+            {
+                PART_MainGrid.PointerEntered += PART_MainGrid_PointerEntered;
+                PART_MainGrid.PointerExited += PART_MainGrid_PointerExited;
+            }
+
+            PART_GradientStopArtist = GetTemplateChild(nameof(PART_GradientStopArtist)) as GradientStop;
+            PART_GradientStopTrack = GetTemplateChild(nameof(PART_GradientStopTrack)) as GradientStop;
+        }
+
+        /// <summary>
+        /// Triggers whenever the item is unselected.
+        /// </summary>
+        internal void ZuneTrackItemUnselected()
+        {
+            _isSelected = false;
+            SetGradientColor("#FFFFFF");
+        }
+
+        /// <summary>
+        /// Triggers whenever the item is selected.
+        /// </summary>
+        internal void ZuneTrackItemSelected()
+        {
+            _isSelected = true;
+            SetGradientColor("#ECECED");
+        }
+
+        private void PART_MainGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (!_isSelected)
+                SetGradientColor("#FFFFFF");
+        }
+
+        private void PART_MainGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (!_isSelected)
+                SetGradientColor("#F3F4F4");
+        }
+
+        private void SetGradientColor(string color)
+        {
+            var winUIColor = (Windows.UI.Color)XamlBindingHelper.ConvertValue(typeof(Windows.UI.Color), color);
+
+            if (PART_GradientStopArtist != null)
+                PART_GradientStopArtist.Color = winUIColor;
+
+            if (PART_GradientStopTrack != null)
+                PART_GradientStopTrack.Color = winUIColor;
         }
 
         private void ZuneTrackItem_Loaded(object sender, RoutedEventArgs e)
@@ -85,6 +159,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 
             if (Track != null)
                 Track.ArtistItemsCountChanged -= Track_ArtistItemsCountChanged;
+
+            if (PART_MainGrid != null)
+            {
+                PART_MainGrid.PointerEntered -= PART_MainGrid_PointerEntered;
+                PART_MainGrid.PointerExited -= PART_MainGrid_PointerExited;
+            }
         }
 
         /// <inheritdoc />
