@@ -242,9 +242,6 @@ namespace StrixMusic.Cores.OneDrive
             var driveItem = await graphClient.Drive.Items[Settings.SelectedFolderId].Request().GetAsync(cancellationToken);
             Guard.IsNotNull(driveItem, nameof(driveItem));
 
-            var folderToScan = new OneDriveFolderData(graphClient, driveItem);
-            FileMetadataManager = new FileMetadataManager(folderToScan, _metadataStorage, NotificationService);
-
             // Scanning file contents are possible but extremely slow over the network.
             // The Graph API supplies music metadata from file properties, which is much faster.
             // Use the user's preferences.
@@ -256,8 +253,10 @@ namespace StrixMusic.Cores.OneDrive
             if (Settings.ScanWithFileProperties)
                 scanTypes |= MetadataScanTypes.FileProperties;
 
+            var folderToScan = new OneDriveFolderData(graphClient, driveItem);
+            FileMetadataManager = new FileMetadataManager(folderToScan, _metadataStorage, NotificationService, degreesOfParallelism: 8);
+
             FileMetadataManager.ScanTypes = scanTypes;
-            FileMetadataManager.DegreesOfParallelism = 8;
 
             await FileMetadataManager.InitAsync(cancellationToken);
             _ = FileMetadataManager.ScanAsync(cancellationToken);

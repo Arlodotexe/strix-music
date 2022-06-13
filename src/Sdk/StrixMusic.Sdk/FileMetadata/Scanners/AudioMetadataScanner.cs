@@ -25,9 +25,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
     public sealed partial class AudioMetadataScanner : IDisposable
     {
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma", ".ogg" };
-        private readonly int _scanBatchSize;
 
-        private readonly FileMetadataManager _metadataManager;
         private readonly SemaphoreSlim _batchLock;
 
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
@@ -41,16 +39,12 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
         /// </summary>
-        /// <param name="metadataManager">The metadata manager that handles this scanner.</param>
-        public AudioMetadataScanner(FileMetadataManager metadataManager)
+        public AudioMetadataScanner(int degreesOfParallelism)
         {
-#warning TODO: Remove dependency on FileMetadataManager.
-            _metadataManager = metadataManager;
-            _scanBatchSize = metadataManager.DegreesOfParallelism;
-
+            DegreesOfParallelism = degreesOfParallelism;
             _batchLock = new SemaphoreSlim(1, 1);
             _ongoingImageProcessingTasksSemaphore = new SemaphoreSlim(1, 1);
-            _ongoingImageProcessingSemaphore = new SemaphoreSlim(_scanBatchSize, _scanBatchSize);
+            _ongoingImageProcessingSemaphore = new SemaphoreSlim(degreesOfParallelism, degreesOfParallelism);
             _ongoingImageProcessingTasks = new ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>>();
 
             AttachEvents();
@@ -85,9 +79,25 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         public event EventHandler<IEnumerable<Models.FileMetadata>>? FileScanCompleted;
 
         /// <summary>
+        /// Raised when the number of files processed has changed.
+        /// </summary>
+        public event EventHandler<int>? FilesProcessedChanged;
+
+        /// <summary>
+        /// Raised when the number of files found has changed.
+        /// </summary>
+        public event EventHandler<int>? FilesFoundChanged;
+
+        /// <summary>
         /// The folder to use for storing file metadata.
         /// </summary>
         public IFolderData? CacheFolder { get; internal set; }
+
+        /// <inheritdoc />
+        public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
+
+        /// <inheritdoc />
+        public int DegreesOfParallelism { get; }
 
         /// <summary>
         /// Scans the given files for music metadata.
@@ -121,7 +131,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
             _filesToScanCount = remainingFilesToScan.Count;
 
-            _metadataManager.FilesFound = _filesToScanCount;
+            FilesFoundChanged?.Invoke(this, _filesToScanCount);
 
             try
             {
@@ -134,7 +144,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
 
-                    var batchSize = _scanBatchSize;
+                    var batchSize = DegreesOfParallelism;
 
                     // Prevent going out of range
                     if (batchSize > remainingFilesToScan.Count)
@@ -374,7 +384,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         {
             var foundMetadata = new List<Models.FileMetadata>();
 
-            if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.TagLib))
+            if (ScanTypes.HasFlag(MetadataScanTypes.TagLib))
             {
                 var id3Metadata = await GetId3Metadata(fileData);
 
@@ -382,7 +392,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     foundMetadata.Add(id3Metadata);
             }
 
-            if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.FileProperties))
+            if (ScanTypes.HasFlag(MetadataScanTypes.FileProperties))
             {
                 var propertyMetadata = await GetMusicFilesProperties(fileData);
 
@@ -537,7 +547,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
-            _metadataManager.FilesProcessed = ++_filesProcessed;
+            FilesProcessedChanged?.Invoke(this, ++_filesProcessed);
 
             await _batchLock.WaitAsync();
 

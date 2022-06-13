@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.AbstractStorage.Scanners;
 using StrixMusic.Sdk.FileMetadata.Models;
 
 namespace StrixMusic.Sdk.FileMetadata.Scanners
@@ -21,12 +20,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
     public sealed partial class PlaylistMetadataScanner : IDisposable
     {
         private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
-
-        private readonly AudioMetadataScanner _audioFileMetadataScanner;
-        private readonly IFileScanner _fileScanner;
         private readonly SemaphoreSlim _batchLock;
-        private readonly IFolderData _rootFolder;
-        private readonly FileMetadataManager _metadataManager;
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
         private readonly List<PlaylistMetadata> _batchMetadataToEmit = new List<PlaylistMetadata>();
 
@@ -37,16 +31,8 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// Creates a new instance <see cref="PlaylistMetadataScanner"/>.
         /// </summary>
-        /// <param name="metadataManager"></param>
-        /// <param name="fileMetadataScanner"></param>
-        /// <param name="fileScanner"></param>
-        public PlaylistMetadataScanner(FileMetadataManager metadataManager, AudioMetadataScanner fileMetadataScanner, IFileScanner fileScanner)
+        public PlaylistMetadataScanner()
         {
-            _audioFileMetadataScanner = fileMetadataScanner;
-            _fileScanner = fileScanner;
-            _metadataManager = metadataManager;
-            _rootFolder = fileScanner.RootFolder;
-
             _batchLock = new SemaphoreSlim(1, 1);
 
             AttachEvents();
@@ -83,6 +69,16 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         public event EventHandler<IEnumerable<PlaylistMetadata>>? PlaylistMetadataRemoved;
 
         /// <summary>
+        /// Raised when the number of files processed has changed.
+        /// </summary>
+        public event EventHandler<int>? FilesProcessedChanged;
+
+        /// <summary>
+        /// Raised when the number of files found has changed.
+        /// </summary>
+        public event EventHandler<int>? FilesFoundChanged;
+
+        /// <summary>
         /// Scans the given <paramref name="files"/> for playlist metadata, linking it to the given <paramref name="fileMetadata"/>.
         /// </summary>
         /// <param name="files">The files to scan for playlists.</param>
@@ -111,7 +107,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
             var playlists = files.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension)).ToList();
             _totalFiles = playlists.Count;
-            _metadataManager.FilesFound = playlists.Count;
+            FilesFoundChanged?.Invoke(this, playlists.Count);
 
             var scannedMetadata = new List<PlaylistMetadata>();
 
@@ -137,14 +133,14 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
         private async Task<PlaylistMetadata?> ProcessFile(IFileData file, IEnumerable<Models.FileMetadata> files)
         {
-            var playlistMetadata = await ScanPlaylistMetadata(_rootFolder, file, files);
+            var playlistMetadata = await ScanPlaylistMetadata(file, files);
 
             await _batchLock.WaitAsync();
 
             if (playlistMetadata != null)
             {
                 _batchMetadataToEmit.Add(playlistMetadata);
-                _metadataManager.FilesProcessed = ++_filesProcessed;
+                FilesProcessedChanged?.Invoke(this, ++_filesProcessed);
             }
 
             _batchLock.Release();

@@ -25,11 +25,10 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// Scans playlist file for metadata.
         /// </summary>
-        /// <param name="rootFolder">The most folder that we have permission to access files.</param>
         /// <param name="playlistFile">The path to the file.</param>
         /// <param name="files">The relevant files to link data to.</param>
         /// <returns>Fully scanned <see cref="PlaylistMetadata"/>.</returns>
-        public static async Task<PlaylistMetadata?> ScanPlaylistMetadata(IFolderData rootFolder, IFileData playlistFile, IEnumerable<Models.FileMetadata> files)
+        public static async Task<PlaylistMetadata?> ScanPlaylistMetadata(IFileData playlistFile, IEnumerable<Models.FileMetadata> files)
         {
             PlaylistMetadata? playlistMetadata;
             switch (playlistFile.FileExtension)
