@@ -259,7 +259,20 @@ namespace StrixMusic.Cores.OneDrive
             FileMetadataManager.ScanTypes = scanTypes;
 
             await FileMetadataManager.InitAsync(cancellationToken);
-            _ = FileMetadataManager.ScanAsync(cancellationToken);
+
+            var scannerTask = FileMetadataManager.ScanAsync(cancellationToken);
+
+            if (ScannerWaitBehavior == ScannerWaitBehavior.AlwaysWait)
+                await scannerTask;
+
+            if (ScannerWaitBehavior == ScannerWaitBehavior.WaitIfNoData)
+            {
+                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.Artists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
+
+                if (itemCounts.Sum() == 0)
+                    await scannerTask;
+            }
+
             ChangeCoreState(CoreState.Loaded);
 
             Logger.LogInformation("Post config task: setting up generic config UI.");

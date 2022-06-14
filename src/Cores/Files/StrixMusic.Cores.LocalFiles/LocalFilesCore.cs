@@ -154,7 +154,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            GetConfiguredFolder:
+        GetConfiguredFolder:
             var configuredFolder = string.IsNullOrWhiteSpace(Settings.FolderPath) ? null : await FileSystem.GetFolderFromPathAsync(Settings.FolderPath);
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -199,7 +199,19 @@ namespace StrixMusic.Cores.LocalFiles
             };
 
             await FileMetadataManager.InitAsync(cancellationToken);
-            _ = FileMetadataManager.ScanAsync(cancellationToken);
+
+            var scannerTask = FileMetadataManager.ScanAsync(cancellationToken);
+
+            if (ScannerWaitBehavior == ScannerWaitBehavior.AlwaysWait)
+                await scannerTask;
+
+            if (ScannerWaitBehavior == ScannerWaitBehavior.WaitIfNoData)
+            {
+                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.Artists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
+
+                if (itemCounts.Sum() == 0)
+                    await scannerTask;
+            }
 
             await Library.Cast<FilesCoreLibrary>().InitAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
