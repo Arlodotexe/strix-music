@@ -53,7 +53,7 @@ namespace StrixMusic.Sdk.FileMetadata
         /// <summary>
         /// The number of files that are scanned concurrently.
         /// </summary>
-        int DegreesOfParallelism { get; set; }
+        int DegreesOfParallelism { get; }
 
         /// <summary>
         /// Starts scanning the given folder.

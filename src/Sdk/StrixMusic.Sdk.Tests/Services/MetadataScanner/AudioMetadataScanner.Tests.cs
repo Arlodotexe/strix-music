@@ -15,25 +15,16 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
     [TestClass]
     public class AudioMetadataScannerTests
     {
-        [TestInitialize]
-        public void Setup()
-        {
-        }
-
         [TestMethod]
         [DataRow(MetadataScanTypes.TagLib)]
         [Timeout(10000)]
-        public async Task MultipleArtistsFromTrackTest(MetadataScanTypes scanType)
+        public async Task MultipleArtistsFromTrackTest(MetadataScanTypes scanTypes)
         {
             var audioFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Samples");
-            var cacheFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, @"Services\MetadataScanner\Cache");
 
-
-            var fm = new FileMetadataManager(new SystemFolderData(audioFilePath), new SystemFolderData(Path.GetTempPath()));
-            fm.ScanTypes = scanType;
-
-            var scanner = new AudioMetadataScanner(fm);
-            scanner.CacheFolder = new SystemFolderData(cacheFolder);
+            var scanner = new AudioMetadataScanner(degreesOfParallelism: 2);
+            scanner.ScanTypes = scanTypes;
+            scanner.CacheFolder = new SystemFolderData(Path.GetTempPath());
 
             var folder = new SystemFolderData(audioFilePath);
             var files = await folder.GetFilesAsync();
@@ -46,7 +37,6 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
                 Assert.IsNotNull(item.ArtistMetadataCollection);
                 Assert.IsTrue(item.ArtistMetadataCollection.Count() > 1);
             }
-
         }
     }
 }

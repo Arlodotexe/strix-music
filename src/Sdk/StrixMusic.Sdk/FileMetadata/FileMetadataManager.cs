@@ -48,13 +48,14 @@ namespace StrixMusic.Sdk.FileMetadata
         /// </summary>
         /// <param name="rootFolderToScan">The folder where data is scanned.</param>
         /// <param name="metadataStorage">The folder the metadata manager can persist metadata.</param>
+        /// <param name="degreesOfParallelism">The number of files that are scanned concurrently.</param>
         /// <param name="notificationService">An optional notification service for notifying the user with dynamic data.</param>
-        public FileMetadataManager(IFolderData rootFolderToScan, IFolderData metadataStorage, INotificationService? notificationService = null)
+        public FileMetadataManager(IFolderData rootFolderToScan, IFolderData metadataStorage, INotificationService? notificationService = null, int degreesOfParallelism = 2)
         {
             _notificationService = notificationService;
             _fileScanner = new DepthFirstFileScanner(rootFolderToScan);
-            _audioMetadataScanner = new AudioMetadataScanner(this);
-            _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
+            _audioMetadataScanner = new AudioMetadataScanner(degreesOfParallelism);
+            _playlistMetadataScanner = new PlaylistMetadataScanner();
 
             Images = new ImageRepository();
             Tracks = new TrackRepository();
@@ -104,16 +105,32 @@ namespace StrixMusic.Sdk.FileMetadata
         private void AttachEvents()
         {
             _fileScanner.FilesDiscovered += OnFilesDiscovered;
-            _audioMetadataScanner.FileMetadataAdded += AudioMetadataScanner_FileMetadataAdded;
             _fileScanner.FileDiscoveryCompleted += FileScanner_FileScanCompleted;
+
+            _audioMetadataScanner.FileMetadataAdded += AudioMetadataScanner_FileMetadataAdded;
+
+            _audioMetadataScanner.FilesFoundChanged += FilesFoundChanged;
+            _audioMetadataScanner.FilesProcessedChanged += FilesProcessedChanged;
+            _playlistMetadataScanner.FilesFoundChanged += FilesFoundChanged;
+            _playlistMetadataScanner.FilesProcessedChanged += FilesProcessedChanged;
         }
 
         private void DetachEvents()
         {
             _fileScanner.FilesDiscovered -= OnFilesDiscovered;
-            _audioMetadataScanner.FileMetadataAdded -= AudioMetadataScanner_FileMetadataAdded;
             _fileScanner.FileDiscoveryCompleted -= FileScanner_FileScanCompleted;
+
+            _audioMetadataScanner.FileMetadataAdded -= AudioMetadataScanner_FileMetadataAdded;
+
+            _audioMetadataScanner.FilesFoundChanged -= FilesFoundChanged;
+            _audioMetadataScanner.FilesProcessedChanged -= FilesProcessedChanged;
+            _playlistMetadataScanner.FilesFoundChanged -= FilesFoundChanged;
+            _playlistMetadataScanner.FilesProcessedChanged -= FilesProcessedChanged;
         }
+
+        private void FilesFoundChanged(object sender, int e) => FilesFound = e;
+
+        private void FilesProcessedChanged(object sender, int e) => FilesProcessed = e;
 
         private async void FileScanner_FileScanCompleted(object sender, IEnumerable<IFileData> e)
         {
@@ -179,7 +196,6 @@ namespace StrixMusic.Sdk.FileMetadata
             // Artists and albums reference each other, so update repos in parallel
             // and cross your fingers that they internally add all data before emitting changed events 
             // and that one doesn't finish first.
-
             foreach (var artist in artistMetadatas)
             {
                 Guard.IsNotNull(artist, nameof(artist));
@@ -245,10 +261,14 @@ namespace StrixMusic.Sdk.FileMetadata
         public bool SkipRepoInit { get; set; }
 
         /// <inheritdoc />
-        public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
+        public MetadataScanTypes ScanTypes
+        {
+            get => _audioMetadataScanner.ScanTypes;
+            set => _audioMetadataScanner.ScanTypes = value;
+        }
 
         /// <inheritdoc />
-        public int DegreesOfParallelism { get; set; } = 2;
+        public int DegreesOfParallelism { get; } = 2;
 
         /// <inheritdoc />
         public async Task ScanAsync(CancellationToken cancellationToken = default)
