@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+    xmlns:items="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+       xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -16,11 +16,11 @@
 
     <unitconvert:CountToSongsConverter x:Key="CountToSongsConverter"/>
 
-    <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="collections:TrackCollection">
+    <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="collections:ZuneTrackCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="collections:TrackCollection">
+                    <ControlTemplate TargetType="collections:ZuneTrackCollection">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -28,13 +28,22 @@
                             </Grid.RowDefinitions>
 
                             <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
+                            <ContentControl x:Name="ContextHolderAlbumArtist" Content="{Binding AlbumArtistCollection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
 
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
                             <StackPanel Margin="24,0,0,12">
                                 <TextBlock Text="{Binding Collection.TotalTrackCount, RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource CountToSongsConverter}, Mode=OneWay}"
                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
+                                <TextBlock x:Name="PART_ArtistColumn" HorizontalAlignment="Left" Text="ARTIST"  Grid.Column="1"  FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+                            </Grid>
 
                             <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                                         SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -43,13 +52,13 @@
                                 </ListView.Header>
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:TrackViewModel">
-                                        <items:TrackItem Track="{Binding}">
+                                        <items:ZuneTrackItem Track="{Binding}" ParentAlbumArtistCollection="{Binding ElementName=ContextHolderAlbumArtist,Path=Content}"  ParentCollection="{Binding ElementName=ContextHolder,Path=Content}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
-                                        </items:TrackItem>
+                                        </items:ZuneTrackItem>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -60,6 +69,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneDesktopTrackListControlStyle}" TargetType="collections:TrackCollection"/>
+    <Style BasedOn="{StaticResource ZuneDesktopTrackListControlStyle}" TargetType="collections:ZuneTrackCollection"/>
 
 </ResourceDictionary>
