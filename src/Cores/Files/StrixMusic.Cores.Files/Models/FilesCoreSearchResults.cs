@@ -97,7 +97,7 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            _artistMetadata = await _fileMetadataManager.Artists.GetItemsAsync(0, int.MaxValue);
+            _artistMetadata = await _fileMetadataManager.AlbumArtists.GetItemsAsync(0, int.MaxValue);
 
             _artistMetadata = _artistMetadata.Where(c => c.Name?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 

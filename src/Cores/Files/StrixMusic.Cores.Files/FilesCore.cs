@@ -114,7 +114,7 @@ namespace StrixMusic.Cores.Files
         {
             Guard.IsNotNull(FileMetadataManager, nameof(FileMetadataManager));
             
-            var artist = await FileMetadataManager.Artists.GetByIdAsync(id);
+            var artist = await FileMetadataManager.AlbumArtists.GetByIdAsync(id);
             if (artist != null)
                 return InstanceCache.Artists.GetOrCreate(id, SourceCore, artist);
 

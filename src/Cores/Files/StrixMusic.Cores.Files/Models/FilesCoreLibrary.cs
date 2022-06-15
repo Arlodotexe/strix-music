@@ -43,7 +43,7 @@ namespace StrixMusic.Cores.Files.Models
             AttachEvents(_fileMetadataManager);
 
             TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
-            TotalArtistItemsCount = await _fileMetadataManager.Artists.GetItemCount();
+            TotalArtistItemsCount = await _fileMetadataManager.AlbumArtists.GetItemCount();
             TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
             TotalTrackCount = await _fileMetadataManager.Tracks.GetItemCount();
 
@@ -76,12 +76,12 @@ namespace StrixMusic.Cores.Files.Models
         {
             fileMetadataManager.Tracks.MetadataAdded += Tracks_MetadataAdded;
             fileMetadataManager.Albums.MetadataAdded += Albums_MetadataAdded;
-            fileMetadataManager.Artists.MetadataAdded += Artists_MetadataAdded;
+            fileMetadataManager.AlbumArtists.MetadataAdded += Artists_MetadataAdded;
             fileMetadataManager.Playlists.MetadataAdded += Playlists_MetadataAdded;
 
             fileMetadataManager.Tracks.MetadataRemoved += Tracks_MetadataRemoved;
             fileMetadataManager.Albums.MetadataRemoved += Albums_MetadataRemoved;
-            fileMetadataManager.Artists.MetadataRemoved += Artists_MetadataRemoved;
+            fileMetadataManager.AlbumArtists.MetadataRemoved += Artists_MetadataRemoved;
             fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
         }
 
@@ -89,12 +89,12 @@ namespace StrixMusic.Cores.Files.Models
         {
             fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
             fileMetadataManager.Albums.MetadataAdded -= Albums_MetadataAdded;
-            fileMetadataManager.Artists.MetadataAdded -= Artists_MetadataAdded;
+            fileMetadataManager.AlbumArtists.MetadataAdded -= Artists_MetadataAdded;
             fileMetadataManager.Playlists.MetadataAdded -= Playlists_MetadataAdded;
 
             fileMetadataManager.Tracks.MetadataRemoved -= Tracks_MetadataRemoved;
             fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
-            fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
+            fileMetadataManager.AlbumArtists.MetadataRemoved -= Artists_MetadataRemoved;
             fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataRemoved;
         }
 
@@ -348,7 +348,7 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var artistMetadata = await _fileMetadataManager.Artists.GetItemsAsync(offset, limit);
+            var artistMetadata = await _fileMetadataManager.AlbumArtists.GetItemsAsync(offset, limit);
 
             foreach (var artist in artistMetadata)
             {

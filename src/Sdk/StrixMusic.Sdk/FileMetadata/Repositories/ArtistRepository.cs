@@ -22,23 +22,27 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
     /// </summary>
     public sealed class ArtistRepository : IArtistRepository
     {
-        private const string ARTIST_DATA_FILENAME = "ArtistMeta.bin";
+        private readonly string _artistDataFileName;
 
         private readonly ConcurrentDictionary<string, ArtistMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
         private readonly string _debouncerId;
+        private readonly string _id;
         private IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistRepository"/>.
         /// </summary>
-        internal ArtistRepository()
+        internal ArtistRepository(string id)
         {
             _inMemoryMetadata = new ConcurrentDictionary<string, ArtistMetadata>();
             _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
+            _id = id;
+
+            _artistDataFileName = $"Artists.{id}.bin";
         }
 
         /// <inheritdoc />
@@ -239,7 +243,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
             Guard.IsEmpty((ICollection<KeyValuePair<string, ArtistMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
-            var fileData = await _folderData.CreateFileAsync(ARTIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+            var fileData = await _folderData.CreateFileAsync(_artistDataFileName, CreationCollisionOption.OpenIfExists);
 
             Guard.IsNotNull(fileData, nameof(fileData));
 
@@ -281,7 +285,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
             Guard.IsNotNull(_folderData, nameof(_folderData));
             var json = JsonConvert.SerializeObject(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList());
 
-            var fileData = await _folderData.CreateFileAsync(ARTIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+            var fileData = await _folderData.CreateFileAsync(_artistDataFileName, CreationCollisionOption.OpenIfExists);
             await fileData.WriteAllBytesAsync(System.Text.Encoding.UTF8.GetBytes(json));
 
             _storageMutex.Release();

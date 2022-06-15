@@ -165,7 +165,7 @@ namespace StrixMusic.Cores.Files.Models
 
                 foreach (var id in idArray)
                 {
-                    var artist = await _fileMetadataManager.Artists.GetByIdAsync(id);
+                    var artist = await _fileMetadataManager.AlbumArtists.GetByIdAsync(id);
 
                     Guard.IsNotNullOrWhiteSpace(artist?.Id, nameof(artist.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist), collectionChangedItems.Count));
@@ -553,7 +553,7 @@ namespace StrixMusic.Cores.Files.Models
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var artists = await _fileMetadataManager.Artists.GetArtistsByAlbumId(Id, offset, limit);
+            var artists = await _fileMetadataManager.AlbumArtists.GetArtistsByAlbumId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
