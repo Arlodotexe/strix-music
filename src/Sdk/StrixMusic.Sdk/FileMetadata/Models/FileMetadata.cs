@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace StrixMusic.Sdk.FileMetadata.Models
 {
     /// <summary>
-    /// Holds multiple sets of metadata scanned from a single file.
+    /// Holds metadata scanned from a single file.
     /// </summary>
     public sealed class FileMetadata
     {
@@ -27,9 +27,14 @@ namespace StrixMusic.Sdk.FileMetadata.Models
         public AlbumMetadata? AlbumMetadata { get; set; }
 
         /// <summary>
-        /// Artist information for this file.
+        /// The artists who created the <see cref="AlbumMetadata"/>.
         /// </summary>
-        public List<ArtistMetadata>? ArtistMetadataCollection { get; set; }
+        public List<ArtistMetadata>? AlbumArtistMetadata { get; set; }
+
+        /// <summary>
+        /// The artists who created the <see cref="TrackMetadata"/>.
+        /// </summary>
+        public List<ArtistMetadata>? TrackArtistMetadata { get; set; }
 
         /// <summary>
         /// The metadata for the playlist.

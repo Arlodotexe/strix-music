@@ -60,7 +60,8 @@ namespace StrixMusic.Sdk.FileMetadata
             Images = new ImageRepository();
             Tracks = new TrackRepository();
             Albums = new AlbumRepository();
-            Artists = new ArtistRepository();
+            AlbumArtists = new ArtistRepository(id: "Album");
+            TrackArtists = new ArtistRepository(id: "Track");
             Playlists = new PlaylistRepository(_playlistMetadataScanner);
 
             _rootFolderToScan = rootFolderToScan;
@@ -77,7 +78,8 @@ namespace StrixMusic.Sdk.FileMetadata
             _audioMetadataScanner.CacheFolder = _metadataStorage;
 
             Albums.SetDataFolder(_metadataStorage);
-            Artists.SetDataFolder(_metadataStorage);
+            AlbumArtists.SetDataFolder(_metadataStorage);
+            TrackArtists.SetDataFolder(_metadataStorage);
             Tracks.SetDataFolder(_metadataStorage);
             Playlists.SetDataFolder(_metadataStorage);
             Images.SetDataFolder(_metadataStorage);
@@ -86,7 +88,7 @@ namespace StrixMusic.Sdk.FileMetadata
             {
                 Logger.LogInformation($"Initializing repositories.");
                 await Albums.InitAsync(cancellationToken);
-                await Artists.InitAsync(cancellationToken);
+                await AlbumArtists.InitAsync(cancellationToken);
                 await Tracks.InitAsync(cancellationToken);
                 await Playlists.InitAsync(cancellationToken);
                 await Images.InitAsync(cancellationToken);
@@ -152,14 +154,14 @@ namespace StrixMusic.Sdk.FileMetadata
                 {
                     foreach (var artistId in removedTrack.ArtistIds)
                     {
-                        var relatedArtist = await Artists.GetByIdAsync(artistId);
+                        var relatedArtist = await AlbumArtists.GetByIdAsync(artistId);
 
                         if (relatedArtist == null)
                             continue;
 
                         // Do not remove artists if it has more than 1 tracks.
                         if (relatedArtist.TrackIds?.Count == 1)
-                            await Artists.RemoveAsync(relatedArtist);
+                            await AlbumArtists.RemoveAsync(relatedArtist);
                     }
                 }
 
@@ -190,17 +192,14 @@ namespace StrixMusic.Sdk.FileMetadata
 
             var imageMetadata = fileMetadata.Where(x => x.ImageMetadata != null).SelectMany(x => x.ImageMetadata).ToArray();
             var trackMetadata = fileMetadata.Select(x => x.TrackMetadata).PruneNull().ToArray();
-            var artistMetadatas = fileMetadata.Select(x => x.ArtistMetadataCollection).PruneNull().ToArray();
+            var albumArtists = fileMetadata.Select(x => x.AlbumArtistMetadata).SelectMany(x => x).PruneNull().ToArray();
+            var trackArtists = fileMetadata.Select(x => x.TrackArtistMetadata).SelectMany(x => x).PruneNull().ToArray();
             var albumMetadata = fileMetadata.Select(x => x.AlbumMetadata).PruneNull().ToArray();
 
-            // Artists and albums reference each other, so update repos in parallel
+            // Artists and Albums reference each other, so update repos in parallel
             // and cross your fingers that they internally add all data before emitting changed events 
             // and that one doesn't finish first.
-            foreach (var artist in artistMetadatas)
-            {
-                Guard.IsNotNull(artist, nameof(artist));
-                await Task.WhenAll(Artists.AddOrUpdateAsync(artist.PruneNull().ToArray()), Albums.AddOrUpdateAsync(albumMetadata));
-            }
+            await Task.WhenAll(AlbumArtists.AddOrUpdateAsync(albumArtists), TrackArtists.AddOrUpdateAsync(trackArtists), Albums.AddOrUpdateAsync(albumMetadata));
 
             await Images.AddOrUpdateAsync(imageMetadata);
             await Tracks.AddOrUpdateAsync(trackMetadata);
@@ -246,13 +245,16 @@ namespace StrixMusic.Sdk.FileMetadata
         public IAlbumRepository Albums { get; }
 
         /// <inheritdoc />
-        public IArtistRepository Artists { get; }
+        public IArtistRepository AlbumArtists { get; }
 
         /// <inheritdoc />
-        public IPlaylistRepository Playlists { get; }
+        public IArtistRepository TrackArtists { get; }
 
         /// <inheritdoc />
         public ITrackRepository Tracks { get; }
+
+        /// <inheritdoc />
+        public IPlaylistRepository Playlists { get; }
 
         /// <inheritdoc/>
         public IImageRepository Images { get; }
@@ -295,7 +297,8 @@ namespace StrixMusic.Sdk.FileMetadata
             {
                 Logger.LogInformation($"Initializing repositories");
                 await Albums.InitAsync(currentToken);
-                await Artists.InitAsync(currentToken);
+                await AlbumArtists.InitAsync(currentToken);
+                await TrackArtists.InitAsync(currentToken);
                 await Tracks.InitAsync(currentToken);
                 await Playlists.InitAsync(currentToken);
                 await Images.InitAsync(currentToken);
@@ -414,7 +417,8 @@ namespace StrixMusic.Sdk.FileMetadata
         public ValueTask DisposeAsync()
         {
             Albums.Dispose();
-            Artists.Dispose();
+            AlbumArtists.Dispose();
+            TrackArtists.Dispose();
             Playlists.Dispose();
             Tracks.Dispose();
             Images.Dispose();

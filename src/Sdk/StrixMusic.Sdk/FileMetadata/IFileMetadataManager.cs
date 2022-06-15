@@ -21,19 +21,24 @@ namespace StrixMusic.Sdk.FileMetadata
         IAlbumRepository Albums { get; }
 
         /// <summary>
-        /// Stores artist metadata.
+        /// Stores metadata about artists who contributed towards an album.
         /// </summary>
-        IArtistRepository Artists { get; }
+        IArtistRepository AlbumArtists { get; }
 
         /// <summary>
-        /// Stores playlist metadata.
+        /// Stores artist metadata that contributed towards one or more tracks.
         /// </summary>
-        IPlaylistRepository Playlists { get; }
+        IArtistRepository TrackArtists { get; }
 
         /// <summary>
         /// Stores track metadata.
         /// </summary>
         ITrackRepository Tracks { get; }
+
+        /// <summary>
+        /// Stores playlist metadata.
+        /// </summary>
+        IPlaylistRepository Playlists { get; }
 
         /// <summary>
         /// Stores image metadata.

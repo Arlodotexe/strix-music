@@ -267,7 +267,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.WaitIfNoData)
             {
-                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.Artists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
+                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.AlbumArtists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
 
                 if (itemCounts.Sum() == 0)
                     await scannerTask;

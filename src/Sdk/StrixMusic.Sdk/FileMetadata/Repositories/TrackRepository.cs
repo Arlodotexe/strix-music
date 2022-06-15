@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
     /// </summary>
     public sealed class TrackRepository : ITrackRepository
     {
-        private const string TRACK_DATA_FILENAME = "TrackData.bin";
+        private const string TRACK_DATA_FILENAME = "Tracks.bin";
 
         private readonly ConcurrentDictionary<string, TrackMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;

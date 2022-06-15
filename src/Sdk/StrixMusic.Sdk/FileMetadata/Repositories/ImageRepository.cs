@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
     /// </summary>
     public class ImageRepository : IImageRepository
     {
-        private const string IMAGE_DATA_FILENAME = "ImageData.bin";
+        private const string IMAGE_DATA_FILENAME = "Images.bin";
 
         private readonly ConcurrentDictionary<string, ImageMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;

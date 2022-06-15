@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.FileMetadata.Models
         public string? Name { get; set; }
 
         /// <summary>
-        /// Probably bio of the artist.
+        /// Artist biography or description.
         /// </summary>
         public string? Description { get; set; }
 

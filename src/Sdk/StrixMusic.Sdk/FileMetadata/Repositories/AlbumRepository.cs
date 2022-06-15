@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
     /// </summary>
     public sealed class AlbumRepository : IAlbumRepository
     {
-        private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
+        private const string ALBUM_DATA_FILENAME = "Albums.bin";
 
         private readonly ConcurrentDictionary<string, AlbumMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;

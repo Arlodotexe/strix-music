@@ -40,13 +40,13 @@ namespace StrixMusic.Cores.Files.Models
         private void AttachEvents()
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            _fileMetadataManager.Artists.MetadataUpdated += Artists_MetadataUpdated;
+            _fileMetadataManager.AlbumArtists.MetadataUpdated += Artists_MetadataUpdated;
         }
 
         private void DetachEvents()
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            _fileMetadataManager.Artists.MetadataUpdated -= Artists_MetadataUpdated;
+            _fileMetadataManager.AlbumArtists.MetadataUpdated -= Artists_MetadataUpdated;
         }
 
         private void Artists_MetadataUpdated(object sender, IEnumerable<ArtistMetadata> e)
