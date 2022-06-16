@@ -39,6 +39,15 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
         /// </summary>
+        public AudioMetadataScanner(int degreesOfParallelism, IFolderData imageOutputFolder)
+            : this(degreesOfParallelism)
+        {
+            ImageOutputFolder = imageOutputFolder;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
+        /// </summary>
         public AudioMetadataScanner(int degreesOfParallelism)
         {
             DegreesOfParallelism = degreesOfParallelism;
@@ -91,7 +100,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// The folder to use for storing file metadata.
         /// </summary>
-        public IFolderData? CacheFolder { get; internal set; }
+        public IFolderData? ImageOutputFolder { get; internal set; }
 
         /// <inheritdoc />
         public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
@@ -451,7 +460,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
         private async Task<Models.FileMetadata?> GetId3Metadata(IFileData fileData)
         {
-            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
             Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
 
             Logger.LogInformation($"{nameof(GetId3Metadata)} entered for {nameof(IFileData)} at {fileData.Path}");
@@ -535,7 +543,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     Guard.IsNotEqualTo(fileMetadata.AlbumArtistMetadata.Count, 0);
                     Guard.IsNotEqualTo(fileMetadata.TrackArtistMetadata.Count, 0);
 
-                    if (tag.Pictures != null)
+                    if (ImageOutputFolder is not null && tag.Pictures is not null)
                     {
                         Logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: Images found");
                         var imageStreams = tag.Pictures.Select(x => new MemoryStream(x.Data.Data));

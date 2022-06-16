@@ -22,7 +22,6 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
         {
             var scanner = new AudioMetadataScanner(degreesOfParallelism: 2);
             scanner.ScanTypes = scanTypes;
-            scanner.CacheFolder = new SystemFolderData(Path.GetTempPath()); // TODO: https://github.com/Arlodotexe/strix-music/issues/160
 
             var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, @"MetadataScanner\Samples", fileName);
             var file = new SystemFileData(filePath);
@@ -46,7 +45,6 @@ namespace StrixMusic.Sdk.Tests.Services.MetadataScanner
         {
             var scanner = new AudioMetadataScanner(degreesOfParallelism: 2);
             scanner.ScanTypes = scanTypes;
-            scanner.CacheFolder = new SystemFolderData(Path.GetTempPath()); // TODO: https://github.com/Arlodotexe/strix-music/issues/160
 
             var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, @"MetadataScanner\Samples", fileName);
             var file = new SystemFileData(filePath);
