@@ -9,6 +9,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 {
@@ -33,6 +34,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// GradientStop for the track column.
         /// </summary>
         public GradientStop? PART_GradientStopTrack { get; private set; }
+
+        /// <summary>
+        /// Artist column textblock.
+        /// </summary>
+        public TextBlock? PART_Tb { get; private set; }
+
+        /// <summary>
+        /// Gradient that holds tracks column gradient. 
+        /// </summary>
+        public Rectangle? PART_GradientRect { get; private set; }
 
         /// <summary>
         /// Holds the list of artists.
@@ -80,7 +91,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         public static readonly DependencyProperty ParentAlbumArtistCollectionProperty =
             DependencyProperty.Register(nameof(ParentAlbumArtistCollection), typeof(IAlbumCollectionViewModel), typeof(ZuneTrackItem), new PropertyMetadata(null));
 
-
         /// <summary>
         /// Creates a new instance of <see cref="ZuneTrackItem"/>.
         /// </summary>
@@ -95,6 +105,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             base.OnApplyTemplate();
 
             PART_MainGrid = GetTemplateChild(nameof(PART_MainGrid)) as Grid;
+            PART_GradientRect = GetTemplateChild(nameof(PART_GradientRect)) as Rectangle;
+            PART_Tb = GetTemplateChild(nameof(PART_Tb)) as TextBlock;
+
+            if (PART_Tb != null && PART_GradientRect != null)
+            {
+                Grid.SetColumnSpan(PART_Tb, 3);
+                Grid.SetColumnSpan(PART_GradientRect, 3);
+            }
 
             if (PART_MainGrid != null)
             {
@@ -192,6 +210,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
                     var artists = await Track.GetArtistItemsAsync(Track.TotalArtistItemsCount, 0).ToListAsync();
                     PopulateArtists(artists);
                 }
+                else
+                {
+                    if (PART_Tb != null && PART_GradientRect != null)
+                    {
+                        Grid.SetColumnSpan(PART_Tb, 3);
+                        Grid.SetColumnSpan(PART_GradientRect, 3);
+                    }
+                }
+            }
+            else
+            {
+                if (PART_Tb != null && PART_GradientRect != null)
+                {
+                    Grid.SetColumnSpan(PART_Tb, 3);
+                    Grid.SetColumnSpan(PART_GradientRect, 3);
+                }
             }
         }
 
@@ -239,6 +273,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 
             if (ArtistString != null)
                 ArtistString = ArtistString.TrimEnd(',').TrimStart();
+
+
+            if (PART_Tb != null && PART_GradientRect != null)
+            {
+                if (ArtistString == null)
+                {
+                    Grid.SetColumnSpan(PART_Tb, 3);
+                    Grid.SetColumnSpan(PART_GradientRect, 3);
+                }
+                else
+                {
+                    Grid.SetColumnSpan(PART_Tb, 1);
+                    Grid.SetColumnSpan(PART_GradientRect, 1);
+                }
+            }
         }
     }
 }

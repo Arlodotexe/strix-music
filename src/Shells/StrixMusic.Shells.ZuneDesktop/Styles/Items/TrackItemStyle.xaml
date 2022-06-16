@@ -24,7 +24,7 @@
                             <TextBlock x:Name="PART_Tb" Grid.Column="0" Text="{Binding Track.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
                                         VerticalAlignment="Center"/>
 
-                            <Rectangle Width="50" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Column="0">
+                            <Rectangle x:Name="PART_GradientRect" Width="50" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Column="0">
                                 <Rectangle.Fill>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0,0" >
                                         <GradientStop x:Name="PART_GradientStopTrack" Offset="0" Color="White" />
