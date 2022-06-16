@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A device that controls playback of an audio player.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreDevice : IDeviceBase, ICoreMember
+    public interface ICoreDevice : IDeviceBase, ICoreModel
     {
         /// <summary>
         /// A collection of all tracks that have been queued to play, including <see cref="NowPlaying"/>.

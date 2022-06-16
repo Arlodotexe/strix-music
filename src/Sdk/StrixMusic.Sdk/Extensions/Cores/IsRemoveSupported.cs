@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
         public static Task<bool> IsRemoveAvailable<TCollection>(this TCollection source, int index, CancellationToken cancellationToken = default)
-            where TCollection : class, ICollectionBase, ICoreMember
+            where TCollection : class, ICollectionBase, ICoreModel
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

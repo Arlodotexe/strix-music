@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Contains the lyrics to a track.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreLyrics : ILyricsBase, ICoreMember
+    public interface ICoreLyrics : ILyricsBase, ICoreModel
     {
         /// <summary>
         /// The track that these lyrics belong to.

@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// </summary>
     /// <typeparam name="T">The type that makes up this merged item.</typeparam>
     internal interface IMergedMutable<T>
-        where T : ICoreMember
+        where T : ICoreModel
     {
         /// <summary>
         /// Adds a new source to this merged item.

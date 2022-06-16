@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// An item that belongs in an <see cref="ICoreArtistCollection"/>.
     /// </summary>
     /// <remarks>This interface should be used in a core.</remarks>
-    public interface ICoreArtistCollectionItem : IArtistCollectionItemBase, ICoreMember
+    public interface ICoreArtistCollectionItem : IArtistCollectionItemBase, ICoreModel
     {
     }
 }

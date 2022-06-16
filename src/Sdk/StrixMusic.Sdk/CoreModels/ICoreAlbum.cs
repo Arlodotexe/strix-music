@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.CoreModels
 {
     /// <inheritdoc cref="IAlbumBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreAlbum : IAlbumBase, ICoreAlbumCollectionItem, ICoreArtistCollection, ICoreTrackCollection, ICoreGenreCollection, ICoreMember
+    public interface ICoreAlbum : IAlbumBase, ICoreAlbumCollectionItem, ICoreArtistCollection, ICoreTrackCollection, ICoreGenreCollection, ICoreModel
     {
         /// <summary>
         /// A <see cref="IPlayableCollectionGroupBase"/> of items related to this item.

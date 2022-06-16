@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// <summary>
     /// Properties required by all core-based interfaces that live in an <see cref="ICore"/>.
     /// </summary>
-    public interface ICoreMember
+    public interface ICoreModel
     {
         /// <summary>
         /// The <see cref="ICore"/> instance which created this object.

@@ -12,11 +12,11 @@ namespace StrixMusic.Sdk.Extensions
     public static partial class Cores
     {
         /// <summary>
-        /// Gets the total items count from an <see cref="ICoreMember"/> by casting it to the specified collection type.
+        /// Gets the total items count from an <see cref="ICoreModel"/> by casting it to the specified collection type.
         /// </summary>
         /// <typeparam name="TCollection">The collection type to check the item count.</typeparam>
         /// <returns>The number of items for the given collection.</returns>
-        public static int GetItemsCount<TCollection>(this ICoreMember source)
+        public static int GetItemsCount<TCollection>(this ICoreModel source)
             where TCollection : ICollectionBase
         {
             if (source == null)

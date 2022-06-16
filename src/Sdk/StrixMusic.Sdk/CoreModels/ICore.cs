@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.CoreModels
     ///         After the user has completed setup, execution of InitAsync should proceed as usual with the new data.
     /// </remarks>
     /// <seealso cref="IStrixDataRoot"/>
-    public interface ICore : IAsyncInit, ICoreMember, IAsyncDisposable
+    public interface ICore : IAsyncInit, ICoreModel, IAsyncDisposable
     {
         /// <summary>
         /// The registered metadata for this core. Contains information to identify the core before creating an instance.
@@ -104,8 +104,8 @@ namespace StrixMusic.Sdk.CoreModels
         /// <summary>
         /// Given the ID of an instance created by this core, return the fully constructed instance.
         /// </summary>
-        /// <returns>The requested instance, cast down to <see cref="ICoreMember"/>.</returns>
-        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default);
+        /// <returns>The requested instance, cast down to <see cref="ICoreModel"/>.</returns>
+        public Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Converts a <see cref="ICoreTrack"/> into a <see cref="IMediaSourceConfig"/> that can be used to play the track.

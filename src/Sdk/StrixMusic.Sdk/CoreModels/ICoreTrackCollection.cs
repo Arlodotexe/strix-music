@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of tracks and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreTrackCollection : ICorePlayableCollection, ITrackCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreMember
+    public interface ICoreTrackCollection : ICorePlayableCollection, ITrackCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreModel
     {
         /// <summary>
         /// Attempts to play a specific item in the track collection. Restarts playback if already playing.

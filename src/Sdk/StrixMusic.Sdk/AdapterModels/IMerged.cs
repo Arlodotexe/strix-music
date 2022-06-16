@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// </summary>
     /// <typeparam name="T">The type that makes up this merged item.</typeparam>
     public interface IMerged<T> : IEquatable<T>, IMerged
-        where T : ICoreMember
+        where T : ICoreModel
     {
         /// <summary>
         /// The sources that make up this merged item.

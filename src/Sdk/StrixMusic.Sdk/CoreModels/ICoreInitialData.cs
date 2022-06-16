@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// <summary>
     /// A common interface for any data that is created by the user.
     /// </summary>
-    public interface ICoreInitialData : IInitialDataBase, ICoreMember
+    public interface ICoreInitialData : IInitialDataBase, ICoreModel
     {
     }
 }

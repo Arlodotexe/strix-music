@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Contains recently played albums, artists, tracks, playlists, etc.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreRecentlyPlayed : IRecentlyPlayedBase, ICorePlayableCollectionGroup, ICoreMember
+    public interface ICoreRecentlyPlayed : IRecentlyPlayedBase, ICorePlayableCollectionGroup, ICoreModel
     {
     }
 }

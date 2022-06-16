@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Represents an audio stream with metadata that belongs to an <see cref="ICoreTrackCollection"/>.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreTrack : ITrackBase, ICoreArtistCollection, ICoreGenreCollection, ICoreMember
+    public interface ICoreTrack : ITrackBase, ICoreArtistCollection, ICoreGenreCollection, ICoreModel
     {
         /// <summary>
         /// An <see cref="ICoreAlbum"/> object that this track belongs to.

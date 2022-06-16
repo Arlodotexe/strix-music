@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of URLs.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreUrlCollection : ICoreCollection, IUrlCollectionBase, ICoreMember
+    public interface ICoreUrlCollection : ICoreCollection, IUrlCollectionBase, ICoreModel
     {
         /// <summary>
         /// Gets a requested number of <see cref="ICoreUrl"/>s starting at the given offset in the backend.

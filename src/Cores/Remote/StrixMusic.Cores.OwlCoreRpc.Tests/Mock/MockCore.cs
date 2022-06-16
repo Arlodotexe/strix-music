@@ -106,9 +106,9 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 
         public ICore SourceCore { get; set; }
 
-        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
+        public Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<ICoreMember?>(id switch
+            return Task.FromResult<ICoreModel?>(id switch
             {
                 MockContextIds.Album => new MockCoreAlbum(this, id, "Album"),
                 MockContextIds.Artist => new MockCoreArtist(this, id, "Artist"),

@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// The results of a search.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreSearchResults : ISearchResultsBase, ICorePlayableCollectionGroup, ICoreMember
+    public interface ICoreSearchResults : ISearchResultsBase, ICorePlayableCollectionGroup, ICoreModel
     {
     }
 }
