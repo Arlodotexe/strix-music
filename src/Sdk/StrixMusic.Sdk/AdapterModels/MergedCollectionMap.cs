@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.AdapterModels
         where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
         where TCoreCollection : class, ICoreCollection
         where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
-        where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
+        where TCoreCollectionItem : class, ICollectionItemBase, ICoreModel
     {
         // ReSharper disable StaticMemberInGenericType
         private static bool _isInitialized;
@@ -70,7 +70,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         private static async Task InsertItemIntoCollectionAsync<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex, CancellationToken cancellationToken)
-            where T : class, ICollectionItemBase, ICoreMember // https://twitter.com/Arlodottxt/status/1351317100959326213?s=20
+            where T : class, ICollectionItemBase, ICoreModel // https://twitter.com/Arlodottxt/status/1351317100959326213?s=20
         {
             switch (sourceCollection)
             {
@@ -365,7 +365,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
-            where T : class, ICollectionItemBase, ICoreMember
+            where T : class, ICollectionItemBase, ICoreModel
         {
             Guard.IsGreaterThan(addedItems.Count + removedItems.Count, 0, "Total changed items count");
 
@@ -380,7 +380,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object sender)
-            where T : class, ICollectionItemBase, ICoreMember
+            where T : class, ICollectionItemBase, ICoreModel
         {
             var added = new List<CollectionChangedItem<TCollectionItem>>();
             var newItems = new List<IMergedMutable<TCoreCollectionItem>>();
@@ -412,7 +412,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         private List<CollectionChangedItem<TCollectionItem>> ItemsChanged_CheckRemovedItems<T>(IReadOnlyList<CollectionChangedItem<T>> removedItems)
-            where T : class, ICollectionItemBase, ICoreMember
+            where T : class, ICollectionItemBase, ICoreModel
         {
             var removed = new List<CollectionChangedItem<TCollectionItem>>();
 

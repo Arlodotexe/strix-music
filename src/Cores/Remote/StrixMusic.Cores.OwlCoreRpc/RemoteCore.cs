@@ -296,7 +296,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
         /// <inheritdoc/>
         [RemoteMethod, RemoteOptions(RemotingDirection.ClientToHost)]
-        public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default) => Task.Run(async () =>
+        public Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default) => Task.Run(async () =>
         {
             var methodCallToken = $"{nameof(GetContextByIdAsync)}.{id}";
 
@@ -306,7 +306,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
 
                 var result = await _core.GetContextByIdAsync(id, cancellationToken);
 
-                ICoreMember? remoteEnabledResult = result switch
+                ICoreModel? remoteEnabledResult = result switch
                 {
                     ICore core => GetInstance(core.InstanceId, _memberRemote.Mode),
                     ICoreAlbum album => new RemoteCoreAlbum(album),
@@ -327,7 +327,7 @@ namespace StrixMusic.Sdk.Plugins.CoreRemote
             }
             else if (_memberRemote.Mode == RemotingMode.Client)
             {
-                return await _memberRemote.ReceiveDataAsync<ICoreMember?>(methodCallToken);
+                return await _memberRemote.ReceiveDataAsync<ICoreModel?>(methodCallToken);
             }
             else
             {

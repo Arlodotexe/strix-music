@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of <see cref="ICorePlayableCollectionGroup"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICorePlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ICoreMember
+    public interface ICorePlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ICoreModel
     {
         /// <summary>
         /// Attempts to play a specific item in the playable collection group. Restarts playback if already playing.

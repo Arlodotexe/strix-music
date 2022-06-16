@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of images.
     /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreImageCollection : IImageCollectionBase, ICoreCollection, ICoreMember
+    public interface ICoreImageCollection : IImageCollectionBase, ICoreCollection, ICoreModel
     {
         /// <summary>
         /// Gets a requested number of <see cref="IImageBase"/>s starting at the given offset in the backend.

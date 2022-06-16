@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// <summary>
     /// A base class for collections in a core.
     /// </summary>
-    public interface ICoreCollection : ICollectionBase, ICoreMember
+    public interface ICoreCollection : ICollectionBase, ICoreModel
     {
     }
 }

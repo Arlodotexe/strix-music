@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of <see cref="ICoreArtistCollectionItem"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreArtistCollection : ICorePlayableCollection, IArtistCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreArtistCollectionItem, ICoreMember
+    public interface ICoreArtistCollection : ICorePlayableCollection, IArtistCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreArtistCollectionItem, ICoreModel
     {
         /// <summary>
         /// Attempts to play a specific item in the artist collection. Restarts playback if already playing.

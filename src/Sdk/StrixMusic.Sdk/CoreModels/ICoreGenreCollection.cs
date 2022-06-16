@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A collection of <see cref="ICoreGenre"/>s.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreGenreCollection : ICoreCollection, IGenreCollectionBase, ICoreMember
+    public interface ICoreGenreCollection : ICoreCollection, IGenreCollectionBase, ICoreModel
     {
         /// <summary>
         /// Gets a requested number of <see cref="ICoreGenre"/>s starting at the given offset in the backend.

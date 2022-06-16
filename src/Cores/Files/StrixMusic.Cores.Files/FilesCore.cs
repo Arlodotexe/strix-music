@@ -110,7 +110,7 @@ namespace StrixMusic.Cores.Files
         }
 
         /// <inheritdoc/>
-        public async Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(FileMetadataManager, nameof(FileMetadataManager));
             

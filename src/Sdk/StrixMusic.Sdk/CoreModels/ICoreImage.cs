@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Contains details about an image.
     /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreImage : IImageBase, ICoreMember
+    public interface ICoreImage : IImageBase, ICoreModel
     {
     }
 }

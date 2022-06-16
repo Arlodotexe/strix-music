@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// A musician or creator that has published one or more <see cref="ICoreTrack"/>s and <see cref="ICoreAlbum"/>s.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreArtist : IArtistBase, ICoreArtistCollectionItem, ICoreAlbumCollection, ICoreTrackCollection, ICoreGenreCollection, ICoreMember
+    public interface ICoreArtist : IArtistBase, ICoreArtistCollectionItem, ICoreAlbumCollection, ICoreTrackCollection, ICoreGenreCollection, ICoreModel
     {
         /// <summary>
         /// A <see cref="IPlayableCollectionGroupBase"/> of items related to this item.

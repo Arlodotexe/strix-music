@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Holds details about a url.
     /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreUrl : IUrlBase, ICoreMember
+    public interface ICoreUrl : IUrlBase, ICoreModel
     {
     }
 }

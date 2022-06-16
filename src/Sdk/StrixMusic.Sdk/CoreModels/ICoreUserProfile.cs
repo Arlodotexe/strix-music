@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Describes a generic user profile.
     /// </summary>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreUserProfile : IUserProfileBase, ICoreUrlCollection, ICoreImageCollection, ICoreMember
+    public interface ICoreUserProfile : IUserProfileBase, ICoreUrlCollection, ICoreImageCollection, ICoreModel
     {
     }
 }

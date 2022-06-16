@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// Holds details about a genre.
     /// </summary>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreGenre : IGenreBase, ICoreMember
+    public interface ICoreGenre : IGenreBase, ICoreModel
     {
     }
 }

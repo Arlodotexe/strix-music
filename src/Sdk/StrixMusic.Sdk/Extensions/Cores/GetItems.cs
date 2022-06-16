@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns>An <see cref="IAsyncEnumerable{T}"/> of the requested items.</returns>
         public static IAsyncEnumerable<TResult> GetItems<TCollection, TResult>(this ICoreCollection source, int limit, int offset)
-            where TCollection : ICoreMember, ICollectionBase
+            where TCollection : ICoreModel, ICollectionBase
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

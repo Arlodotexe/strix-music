@@ -17,6 +17,6 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="merged">The <see cref="IMerged{T}"/> to operate on.</param>
         /// <returns>The sources of the given <see cref="IMerged{T}"/></returns>
         internal static IReadOnlyList<TSource> GetSources<TSource>(this IMerged<TSource> merged)
-            where TSource : ICoreMember => merged.Sources;
+            where TSource : ICoreModel => merged.Sources;
     }
 }

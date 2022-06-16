@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.CoreModels
     /// The query and related data about something the user searched for. 
     /// </summary>
     /// <remarks>This interface should be used in a core.</remarks>
-    public interface ICoreSearchQuery : ISearchQueryBase, ICoreMember
+    public interface ICoreSearchQuery : ISearchQueryBase, ICoreModel
     {
     }
 }
