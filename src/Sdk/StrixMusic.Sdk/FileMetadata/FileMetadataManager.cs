@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.FileMetadata
             IsInitialized = true;
 
             Logger.LogInformation($"Setting up repository data location to {_metadataStorage.Path}");
-            _audioMetadataScanner.CacheFolder = _metadataStorage;
+            _audioMetadataScanner.ImageOutputFolder = _metadataStorage;
 
             Albums.SetDataFolder(_metadataStorage);
             AlbumArtists.SetDataFolder(_metadataStorage);

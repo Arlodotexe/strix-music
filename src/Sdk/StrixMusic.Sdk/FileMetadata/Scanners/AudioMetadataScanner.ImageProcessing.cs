@@ -51,7 +51,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
         private async Task ProcessImagesAsync(IFileData fileData, Models.FileMetadata fileMetadata, IEnumerable<Stream> imageStreams)
         {
-            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+            Guard.IsNotNull(ImageOutputFolder, nameof(ImageOutputFolder));
 
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
@@ -190,12 +190,12 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         {
             await _ongoingImageProcessingSemaphore.WaitAsync();
 
-            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+            Guard.IsNotNull(ImageOutputFolder, nameof(ImageOutputFolder));
 
             // We store images for a file in the following structure:
             // CacheFolder/Images/{image ID}-{size}.png
             // image ID is calculated based on content. Using a shared folder means no duplicate images.
-            var fileImagesFolder = await CacheFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists);
+            var fileImagesFolder = await ImageOutputFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists);
 
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
