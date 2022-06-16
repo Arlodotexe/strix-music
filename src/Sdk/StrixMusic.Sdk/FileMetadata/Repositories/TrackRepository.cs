@@ -167,7 +167,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
         /// <inheritdoc />
         public Task<IReadOnlyList<TrackMetadata>> GetItemsAsync(int offset, int limit)
         {
-            var allTracks = _inMemoryMetadata.Values.OrderBy(c => c.TrackNumber).ToList();
+            var allTracks = _inMemoryMetadata.Values.OrderBy(c => c.TrackNumber).GroupBy(x => x.DiscNumber).SelectMany(x => x).ToList();
 
             if (limit == -1)
                 return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks);
