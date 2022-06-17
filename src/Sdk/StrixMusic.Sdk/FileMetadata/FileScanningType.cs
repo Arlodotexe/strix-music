@@ -7,21 +7,31 @@ namespace StrixMusic.Sdk.FileMetadata
     /// <summary>
     /// Indicates a type of file scan.
     /// </summary>
-    public enum FileScanningType
+    public enum FileScanStage
     {
         /// <summary>
-        /// No file scan.
+        /// Not scanning.
         /// </summary>
         None,
 
         /// <summary>
-        /// Indicating a scan of files containing raw audio.
+        /// Scanning the provided folder for files.
+        /// </summary>
+        FileDiscovery,
+
+        /// <summary>
+        /// Scanning files containing raw audio.
         /// </summary>
         AudioFiles,
 
         /// <summary>
-        /// Indicates a playlist metadata scan.
+        /// Scanning playlist files
         /// </summary>
         Playlists,
+
+        /// <summary>
+        /// The scan has completed.
+        /// </summary>
+        Complete,
     }
 }

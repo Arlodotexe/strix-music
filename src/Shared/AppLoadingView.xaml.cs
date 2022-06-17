@@ -23,6 +23,7 @@ using StrixMusic.Helpers;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.FileMetadata;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.PluginModels;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
@@ -56,6 +57,7 @@ namespace StrixMusic.Shared
     public sealed partial class AppLoadingView : UserControl
     {
         private MergedCollectionConfig _mergedCollectionConfig = new();
+        private readonly Dictionary<string, Notification> _fileCoreProgressNotifications = new();
         private bool _showingQuip;
 
         /// <summary>
@@ -344,7 +346,7 @@ namespace StrixMusic.Shared
             void OnShellRegistered(object? sender, ShellMetadata metadata) => Logger.LogInformation($"Shell registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
         }
 
-        private static void InitializeCoreRegistry(NotificationService notificationService)
+        private void InitializeCoreRegistry(NotificationService notificationService)
         {
             CoreRegistry.CoreRegistered += OnCoreRegistered;
 
@@ -353,7 +355,7 @@ namespace StrixMusic.Shared
                 var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
                 var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
-                return new LocalFilesCore(instanceId, new FileSystemService(coreInstanceFolder), new FolderData(coreInstanceFolder), notificationService)
+                return new LocalFilesCore(instanceId, new FileSystemService(coreInstanceFolder), new FolderData(coreInstanceFolder), notificationService, new(x => FilesCoreProgressChanged(instanceId, x)))
                 {
                     ScannerWaitBehavior = StrixMusic.Cores.Files.ScannerWaitBehavior.NeverWait,
                 };
@@ -386,7 +388,7 @@ namespace StrixMusic.Shared
                 messageHandler = new Uno.UI.Wasm.WasmHttpHandler();
 #endif
 
-                var core = new OneDriveCore(instanceId, settings, coreInstanceAbstractFolder, notificationService)
+                var core = new OneDriveCore(instanceId, settings, coreInstanceAbstractFolder, notificationService, new(x => FilesCoreProgressChanged(instanceId, x)))
                 {
                     LoginMethod = loginMethod,
                     HttpMessageHandler = messageHandler,
@@ -409,6 +411,71 @@ namespace StrixMusic.Shared
 
             CoreRegistry.CoreRegistered -= OnCoreRegistered;
             void OnCoreRegistered(object? sender, CoreMetadata metadata) => Logger.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
+        }
+
+        private void FilesCoreProgressChanged(string instanceId, FileScanState state)
+        {
+            var id = $"{nameof(FilesCoreProgressChanged)}.{instanceId}";
+            var appFrame = Window.Current.GetAppFrame();
+            var notificationService = appFrame.NotificationService;
+
+            var title = string.Empty;
+            var subtitle = string.Empty;
+
+            if (state.Stage == FileScanStage.FileDiscovery)
+            {
+                title = $"Discovering files";
+                subtitle = $"Found {state.FilesFound}";
+            }
+
+            if (state.Stage == FileScanStage.AudioFiles)
+            {
+                title = $"Scanning music files";
+                subtitle = $"Scanned {state.FilesProcessed}/{state.FilesFound}";
+            }
+
+            if (state.Stage == FileScanStage.Playlists)
+            {
+                title = $"Scanning playlists";
+                subtitle = $"Scanned {state.FilesProcessed}/{state.FilesFound}";
+            }
+
+            if (_fileCoreProgressNotifications.TryGetValue(instanceId, out var notification))
+            {
+                if (state.Stage == FileScanStage.Complete)
+                {
+                    // Remove
+                    notification.Dismiss();
+                    return;
+                }
+
+                // Update
+                notification.AbstractUICollection.Title = title;
+                notification.AbstractUICollection.Subtitle = subtitle;
+
+                var progressUI = (AbstractProgressIndicator)notification.AbstractUICollection.First(x => x is AbstractProgressIndicator);
+                progressUI.Maximum = state.FilesFound;
+                progressUI.Value = state.FilesProcessed;
+            }
+            else if (state.Stage != FileScanStage.Complete)
+            {
+                // Add
+                var abstractUICol = new AbstractUICollection(id)
+                {
+                    Title = title,
+                    Subtitle = subtitle,
+                };
+
+                var progressUI = new AbstractProgressIndicator(id, state.Stage == FileScanStage.FileDiscovery)
+                {
+                    Maximum = state.FilesFound,
+                    Value = state.FilesProcessed,
+                };
+
+                abstractUICol.Add(progressUI);
+
+                Guard.IsTrue(_fileCoreProgressNotifications.TryAdd(instanceId, notificationService.RaiseNotification(abstractUICol)));
+            }
         }
 
         private static void OnUriNavigationRequested(object? sender, Uri e) => Windows.System.Launcher.LaunchUriAsync(e);

@@ -32,14 +32,9 @@ namespace StrixMusic.Cores.LocalFiles
         /// <param name="fileSystem">An abstraction of the local file system.</param>
         /// <param name="settingsStorage">A folder abstraction where this core can persist settings data beyond the lifetime of the application.</param>
         /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
-        public LocalFilesCore(string instanceId, IFileSystemService fileSystem, IFolderData settingsStorage, INotificationService notificationService)
-            : base(instanceId)
+        public LocalFilesCore(string instanceId, IFileSystemService fileSystem, IFolderData settingsStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
+            : this(instanceId, new LocalFilesCoreSettings(settingsStorage), fileSystem, notificationService, fileScanProgress)
         {
-            FileSystem = fileSystem;
-            NotificationService = notificationService;
-            Settings = new LocalFilesCoreSettings(settingsStorage);
-
-            AttachEvents();
         }
 
         /// <summary>
@@ -53,8 +48,8 @@ namespace StrixMusic.Cores.LocalFiles
         /// <param name="settings">A preconfigured instance of <see cref="LocalFilesCoreSettings"/> that will be used instead of a new instance with default values.</param>
         /// <param name="fileSystem">An abstraction of the local file system.</param>
         /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
-        public LocalFilesCore(string instanceId, LocalFilesCoreSettings settings, IFileSystemService fileSystem, INotificationService notificationService)
-            : base(instanceId)
+        public LocalFilesCore(string instanceId, LocalFilesCoreSettings settings, IFileSystemService fileSystem, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
+            : base(instanceId, fileScanProgress)
         {
             FileSystem = fileSystem;
             NotificationService = notificationService;
@@ -192,7 +187,7 @@ namespace StrixMusic.Cores.LocalFiles
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
-            FileMetadataManager = new FileMetadataManager(configuredFolder, FileSystem.RootFolder, NotificationService)
+            FileMetadataManager = new FileMetadataManager(configuredFolder, FileSystem.RootFolder, FileScanProgress)
             {
                 SkipRepoInit = Settings.InitWithEmptyMetadataRepos,
                 ScanTypes = GetScanTypesFromSettings(),
