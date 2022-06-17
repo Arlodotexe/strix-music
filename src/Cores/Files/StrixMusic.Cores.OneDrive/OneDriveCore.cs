@@ -37,16 +37,9 @@ namespace StrixMusic.Cores.OneDrive
         /// <param name="settingsStorage">A folder abstraction where this core can persist settings data beyond the lifetime of the application.</param>
         /// <param name="metadataStorage">A folder abstraction where this core can persist metadata for scanned files.</param>
         /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
-        public OneDriveCore(string instanceId, IFolderData settingsStorage, IFolderData metadataStorage, INotificationService notificationService)
-            : base(instanceId)
+        public OneDriveCore(string instanceId, IFolderData settingsStorage, IFolderData metadataStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
+            : this(instanceId, new OneDriveCoreSettings(settingsStorage), metadataStorage, notificationService, fileScanProgress)
         {
-            _metadataStorage = metadataStorage;
-            NotificationService = notificationService;
-            Settings = new OneDriveCoreSettings(settingsStorage);
-            _configPanel = new AbstractUICollection(string.Empty);
-
-            _completeGenericSetupButton = new AbstractButton(Guid.NewGuid().ToString(), "OK");
-            _completeGenericSetupButton.Clicked += CompleteGenericSetupButton_Clicked;
         }
 
         /// <summary>
@@ -60,11 +53,11 @@ namespace StrixMusic.Cores.OneDrive
         /// <param name="settings">A preconfigured instance of <see cref="OneDriveCoreSettings"/> that will be used instead of a new instance with default values.</param>
         /// <param name="metadataStorage">A folder abstraction where this core can persist metadata for scanned files.</param>
         /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
-        public OneDriveCore(string instanceId, OneDriveCoreSettings settings, IFolderData metadataStorage, INotificationService notificationService)
-            : base(instanceId)
+        public OneDriveCore(string instanceId, OneDriveCoreSettings settings, IFolderData metadataStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress = null)
+            : base(instanceId, fileScanProgress)
         {
-            _metadataStorage = metadataStorage;
             NotificationService = notificationService;
+            _metadataStorage = metadataStorage;
             Settings = settings;
             _configPanel = new AbstractUICollection(string.Empty);
 
@@ -104,9 +97,9 @@ namespace StrixMusic.Cores.OneDrive
         public LoginMethod LoginMethod { get; set; }
 
         /// <summary>
-        /// Gets a service that can notify the user with interactive UI or generic messages.
+        /// A service that can notify the user with interactive UI or messages.
         /// </summary>
-        internal INotificationService NotificationService { get; }
+        public INotificationService NotificationService { get; }
 
         /// <summary>
         /// Raised when the user requests to visit an external web page for OneDrive login.
@@ -254,7 +247,7 @@ namespace StrixMusic.Cores.OneDrive
                 scanTypes |= MetadataScanTypes.FileProperties;
 
             var folderToScan = new OneDriveFolderData(graphClient, driveItem);
-            FileMetadataManager = new FileMetadataManager(folderToScan, _metadataStorage, NotificationService, degreesOfParallelism: 8);
+            FileMetadataManager = new FileMetadataManager(folderToScan, _metadataStorage, FileScanProgress, degreesOfParallelism: 8);
 
             FileMetadataManager.ScanTypes = scanTypes;
 

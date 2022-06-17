@@ -23,10 +23,10 @@ namespace StrixMusic.Cores.Files
         /// Initializes a new instance of the <see cref="FilesCore"/> class.
         /// </summary>
         /// <param name="instanceId">A unique identifier for this core instance.</param>
-        protected FilesCore(string instanceId)
+        protected FilesCore(string instanceId, Progress<FileScanState>? fileScanProgress)
         {
+            FileScanProgress = fileScanProgress;
             InstanceId = instanceId;
-
             Devices = new List<ICoreDevice>();
             Library = new FilesCoreLibrary(this);
         }
@@ -53,6 +53,11 @@ namespace StrixMusic.Cores.Files
         /// Manages scanning and caching of all music metadata from files in a folder.
         /// </summary>
         public IFileMetadataManager? FileMetadataManager { get; set; }
+
+        /// <summary>
+        /// Reports progress for any file scans that take place.
+        /// </summary>
+        public Progress<FileScanState>? FileScanProgress { get; set; }
 
         /// <summary>
         /// The wait behavior of the metadata scanner when InitAsync is called in a file-based <see cref="ICore"/>.
