@@ -654,7 +654,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateAlbumsMutex.Release());
 
-                _syncContext.Post(async _ =>
+                await _syncContext.PostAsync(async () =>
                 {
                     await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count, cancellationToken))
                     {
@@ -672,7 +672,7 @@ namespace StrixMusic.Sdk.ViewModels
                                 break;
                         }
                     }
-                }, null);
+                });
             }
         }
 
@@ -683,7 +683,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
 
-                _syncContext.Post(async _ =>
+                await _syncContext.PostAsync(async () =>
                 {
                     await foreach (var item in GetTracksAsync(limit, Tracks.Count, cancellationToken))
                     {
@@ -691,7 +691,7 @@ namespace StrixMusic.Sdk.ViewModels
                         Tracks.Add(tvm);
                         UnsortedTracks.Add(tvm);
                     }
-                }, null);
+                });
             }
         }
 
@@ -702,11 +702,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
 
-                _syncContext.Post(async _ =>
+                await _syncContext.PostAsync(async () =>
                 {
                     await foreach (var item in _artist.GetImagesAsync(limit, Images.Count, cancellationToken))
                         Images.Add(item);
-                }, null);
+                });
             }
         }
 
@@ -717,11 +717,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateGenresMutex.Release());
 
-                _syncContext.Post(async _ =>
+                await _syncContext.PostAsync(async () =>
                 {
                     await foreach (var item in _artist.GetGenresAsync(limit, Genres.Count, cancellationToken))
                         Genres.Add(item);
-                }, null);
+                });
             }
         }
 
@@ -732,13 +732,13 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
 
-                _syncContext.Post(async _ =>
+                await _syncContext.PostAsync(async () =>
                 {
                     await foreach (var item in _artist.GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     {
                         Urls.Add(item);
                     }
-                }, null);
+                });
             }
         }
 
