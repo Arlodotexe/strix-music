@@ -3,10 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:items="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-       xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
+    xmlns:appModels="using:StrixMusic.Sdk.AppModels"
+    xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:tkcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:a="using:OwlCore.WinUI.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackCollectionStyle">
 
@@ -27,38 +29,114 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-                            <ContentControl x:Name="ContextHolderAlbumArtist" Content="{Binding AlbumArtistCollection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-
-
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                            <StackPanel Margin="24,0,0,12">
-                                <TextBlock Text="{Binding Collection.TotalTrackCount, RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource CountToSongsConverter}, Mode=OneWay}"
-                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
-                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"/>
-                            </StackPanel>
-                                <TextBlock x:Name="PART_ArtistColumn" HorizontalAlignment="Left" Text="ARTIST"  Grid.Column="1"  FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+                                <StackPanel Margin="24,0,0,12">
+                                    <TextBlock Text="{Binding Collection.TotalTrackCount, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CountToSongsConverter}}"
+                                               FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+
+                                    <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </StackPanel>
+
+                                <TextBlock x:Name="PART_ArtistColumn" Visibility="{Binding AllTrackArtistsAreTheSame, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                           HorizontalAlignment="Left" Text="ARTIST" Grid.Column="1"
+                                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
+                                           a:TextHelpers.CharacterCasing="Upper"/>
                             </Grid>
 
-                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
-                                        SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                            <ListView x:Name="PART_Selector"
+                                      ItemsSource="{Binding TrackItems, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneTime}"
+                                      ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionMode="Extended"
+                                      Grid.Row="1"
+                                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                <ListView.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Light">
+                                                <SolidColorBrush x:Key="ListViewItemBackground" Color="#FFFFFF" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#F3F4F4" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#ECECED"  />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#ECECED" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="#ECECED" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Dark">
+                                                <SolidColorBrush x:Key="ListViewItemBackground" Color="#FFFFFF" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#F3F4F4" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#ECECED"  />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#ECECED" />
+                                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="#ECECED" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </ListView.Resources>
                                 <ListView.Header>
                                     <Grid Height="6"/>
                                 </ListView.Header>
                                 <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="viewModels:TrackViewModel">
-                                        <items:ZuneTrackItem Track="{Binding}" ParentAlbumArtistCollection="{Binding ElementName=ContextHolderAlbumArtist,Path=Content}"  ParentCollection="{Binding ElementName=ContextHolder,Path=Content}">
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
-                                                </core:EventTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
-                                        </items:ZuneTrackItem>
+                                    <DataTemplate x:DataType="collections:ZuneTrackCollectionItem">
+                                        <UserControl>
+                                            <Grid x:Name="ItemRootGrid" ColumnSpacing="7">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*">
+                                                        <interactivity:Interaction.Behaviors>
+                                                            <core:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                                                <core:ChangePropertyAction PropertyName="Width" Value="*" />
+                                                            </core:DataTriggerBehavior>
+
+                                                            <core:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                                                <core:ChangePropertyAction PropertyName="Width" Value="0" />
+                                                            </core:DataTriggerBehavior>
+                                                        </interactivity:Interaction.Behaviors>
+                                                    </ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.Resources>
+                                                    <ResourceDictionary>
+                                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" x:Key="ItemTextFadeBrush">
+                                                            <GradientStop Offset="0.7" Color="#000000" />
+                                                            <GradientStop Offset="1.1" Color="Transparent" />
+                                                        </LinearGradientBrush>
+                                                    </ResourceDictionary>
+                                                </Grid.Resources>
+
+                                                <interactivity:Interaction.Behaviors>
+                                                    <core:EventTriggerBehavior EventName="DoubleTapped">
+                                                        <core:InvokeCommandAction Command="{x:Bind ParentCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                                    </core:EventTriggerBehavior>
+                                                </interactivity:Interaction.Behaviors>
+
+                                                <items:ZuneTrackItem Track="{x:Bind Track}" x:Phase="1" Foreground="{StaticResource ItemTextFadeBrush}"/>
+
+                                                <tkcontrol:MetadataControl x:Name="ArtistMetadata" x:Phase="2"
+                                                                           x:Load="{x:Bind ShouldShowArtistList, Mode=OneWay}"
+                                                                           Items="{x:Bind ArtistNamesMetadata}"
+                                                                           Separator=", "
+                                                                           VerticalAlignment="Center" Grid.Column="1"
+                                                                           Foreground="{StaticResource ItemTextFadeBrush}">
+                                                    <tkcontrol:MetadataControl.Style>
+                                                        <Style TargetType="tkcontrol:MetadataControl">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="tkcontrol:MetadataControl">
+                                                                        <TextBlock x:Name="TextContainer"
+                                                                                   AutomationProperties.AccessibilityView="{TemplateBinding AutomationProperties.AccessibilityView}"
+                                                                                   Style="{TemplateBinding TextBlockStyle}"
+                                                                                   TextTrimming="Clip"/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </tkcontrol:MetadataControl.Style>
+                                                </tkcontrol:MetadataControl>
+                                            </Grid>
+                                        </UserControl>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>

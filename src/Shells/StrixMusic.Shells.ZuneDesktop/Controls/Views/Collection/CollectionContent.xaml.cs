@@ -114,9 +114,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
             TrackCollection.Collection = e.SelectedItem;
-
-            if (sender is Collection.ZuneAlbumCollection ac)
-                TrackCollection.AlbumArtistCollection = ac.Collection;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)

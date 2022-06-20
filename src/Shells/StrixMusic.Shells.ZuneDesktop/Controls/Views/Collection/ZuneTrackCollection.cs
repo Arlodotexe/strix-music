@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,154 +20,182 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// <summary>
     /// Zune implmenation for the <see cref="ZuneTrackCollection"/>.
     /// </summary>
-    public class ZuneTrackCollection : TrackCollection
+    [INotifyPropertyChanged]
+    public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
-        /// <summary>
-        /// Holds the instance of a artist column textblock.
-        /// </summary>
-        public TextBlock? PART_ArtistColumn { get; private set; }
+        private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
-        /// <summary>
-        /// Holds the <see cref="ZuneTrackCollection"/> listview.
-        /// </summary>
-        public ListView? PART_Selector { get; private set; }
-
-        /// <summary>
-        /// Creates a new instace for <see cref="ZuneTrackCollection"/>.
-        /// </summary>
         public ZuneTrackCollection()
         {
+            TrackItems = new ReadOnlyObservableCollection<ZuneTrackCollectionItem>(_trackItems);
+
+            Loaded += ZuneTrackCollection_Loaded;
+            Unloaded += ZuneTrackCollection_Unloaded;
         }
 
-        /// <inheritdoc/>
-        protected override void OnApplyTemplate()
+        private void AttachEvents(ZuneTrackCollectionItem item)
         {
-            base.OnApplyTemplate();
-
-            PART_ArtistColumn = GetTemplateChild(nameof(PART_ArtistColumn)) as TextBlock;
-            PART_Selector = GetTemplateChild(nameof(PART_Selector)) as ListView;
-
-            Guard.IsNotNull(PART_ArtistColumn, nameof(PART_ArtistColumn));
-
-            if (PART_Selector != null)
-                PART_Selector.SelectionChanged += PART_Selector_SelectionChanged;
-
-            PART_ArtistColumn.Visibility = Visibility.Collapsed;
+            item.PropertyChanged += Item_PropertyChanged;
         }
 
-        private void PART_Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DetachEvents(ZuneTrackCollectionItem item)
         {
-            if (PART_Selector != null)
-            {
-                foreach (var removed in e.RemovedItems)
-                {
-                    var index = Collection.Tracks.IndexOf((TrackViewModel)removed);
-                    var listViewItem = PART_Selector.ContainerFromIndex(index) as ListViewItem;
-
-                    if (listViewItem == null)
-                        return;
-
-                    var uiElement = listViewItem.ContentTemplateRoot;
-                    if (uiElement is ZuneTrackItem zuneTrackItem)
-                    {
-                        zuneTrackItem.ZuneTrackItemUnselected();
-                    }
-                }
-
-                foreach (var added in e.AddedItems)
-                {
-                    var index = Collection.Tracks.IndexOf((TrackViewModel)added);
-                    var listViewItem = PART_Selector.ContainerFromIndex(index) as ListViewItem;
-
-                    if (listViewItem == null)
-                        return;
-
-                    var uiElement = listViewItem.ContentTemplateRoot;
-                    if (uiElement is ZuneTrackItem zuneTrackItem)
-                    {
-                        zuneTrackItem.ZuneTrackItemSelected();
-                    }
-                }
-            }
+            item.PropertyChanged -= Item_PropertyChanged;
         }
 
         /// <summary>
-        /// Backing dependency property for <see cref="Collection"/>.
+        /// The backing dependency property for <see cref="Collection" />.
         /// </summary>
-        public new ITrackCollectionViewModel Collection
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, (d, e) => ((ZuneTrackCollection)d).OnCollectionChanged((ITrackCollectionViewModel?)e.OldValue, (ITrackCollectionViewModel?)e.NewValue)));
+
+        /// <summary>
+        /// The collection to display.
+        /// </summary>
+        public ITrackCollectionViewModel? Collection
         {
-            get { return (ITrackCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (ITrackCollectionViewModel?)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>
-        /// Dependency property for <see cref="ITrackCollectionViewModel" />.
+        /// The track items being displayed in the UI. Contains additional functionality specific to this view.
         /// </summary>
-        public static readonly new DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, (s, e) =>
-            {
-                if (s is ZuneTrackCollection trackCollection)
-                {
-                    if (e.NewValue is ITrackCollectionViewModel zt)
-                    {
-                        zt.Tracks.CollectionChanged += trackCollection.Tracks_CollectionChanged;
-                    }
-
-                    if (e.OldValue is ITrackCollectionViewModel zte)
-                    {
-                        zte.Tracks.CollectionChanged -= trackCollection.Tracks_CollectionChanged;
-                    }
-                }
-            }));
+        public ReadOnlyObservableCollection<ZuneTrackCollectionItem> TrackItems { get; }
 
         /// <summary>
-        /// Backing dependency property for <see cref="AlbumArtistCollection"/>.
+        /// If true, there is only 1 distinct track artist for all tracks in the provided <see cref="Collection"/>.
         /// </summary>
-        public IAlbumCollectionViewModel? AlbumArtistCollection
-        {
-            get { return (IAlbumCollectionViewModel)GetValue(AlbumArtistCollectionProperty); }
-            set { SetValue(AlbumArtistCollectionProperty, value); }
-        }
-
-        /// <summary>
-        /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
-        /// </summary>
-        public static readonly DependencyProperty AlbumArtistCollectionProperty =
-            DependencyProperty.Register(nameof(AlbumArtistCollection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, null));
-
-        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (PART_ArtistColumn == null)
-                return;
-
-            if (Collection is AlbumViewModel)
-            {
-                foreach (var track in Collection.Tracks)
-                {
-                    var artists = await track.GetArtistItemsAsync(track.TotalArtistItemsCount, 0).ToListAsync();
-
-                    if (artists.Count > 1)
-                    {
-                        PART_ArtistColumn.Visibility = Visibility.Visible;
-                        return;
-                    }
-                }
-                PART_ArtistColumn.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                PART_ArtistColumn.Visibility = Visibility.Collapsed;
-            }
-        }
+        public bool AllTrackArtistsAreTheSame => TrackItems.Any(x => x.ShouldShowArtistList);
 
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (Collection == null)
+            if (Collection is null)
                 return;
 
             if (!Collection.PopulateMoreTracksCommand.IsRunning)
                 await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
+        }
+
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (Collection is null)
+                return;
+
+            if (!Collection.PopulateMoreTracksCommand.IsRunning && Collection.TotalTrackCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
+        }
+
+        private void OnCollectionChanged(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
+        {
+            foreach (var item in TrackItems)
+                DetachEvents(item);
+
+            _trackItems.Clear();
+            OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+
+            _ = Execute();
+
+            async Task Execute()
+            {
+                if (newValue is not null)
+                {
+                    if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
+                        await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
+
+                    else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
+                        await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
+
+                    foreach (var item in newValue.Tracks)
+                    {
+                        var newItems = new ZuneTrackCollectionItem
+                        {
+                            ParentCollection = newValue,
+                            Track = item,
+                        };
+
+                        _trackItems.Add(newItems);
+                        AttachEvents(newItems);
+                    }
+
+                    newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
+                    OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+                }
+
+                if (oldValue is not null)
+                {
+                    oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
+                }
+            }
+        }
+
+        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                _trackItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
+                {
+                    var newItem = new ZuneTrackCollectionItem
+                    {
+                        Track = (TrackViewModel)x,
+                        ParentCollection = Collection
+                    };
+
+                    AttachEvents(newItem);
+                    return newItem;
+                }));
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    var target = TrackItems.FirstOrDefault(x => x.Track == item);
+                    if (target is not null)
+                    {
+                        _trackItems.Remove(target);
+                        DetachEvents(target);
+                    }
+                }
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
+            {
+                for (var i = 0; i < e.OldItems.Count; i++)
+                    _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            {
+                foreach (var item in TrackItems)
+                    DetachEvents(item);
+
+                _trackItems.Clear();
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
+                throw new NotImplementedException();
+        }
+
+        private void ZuneTrackCollection_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= ZuneTrackCollection_Loaded;
+        }
+
+        private void ZuneTrackCollection_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= ZuneTrackCollection_Unloaded;
+
+            foreach (var item in TrackItems)
+                DetachEvents(item);
+        }
+
+        private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ZuneTrackCollectionItem.ShouldShowArtistList))
+                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
         }
     }
 }
