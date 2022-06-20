@@ -29,7 +29,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             TrackItems = new ReadOnlyObservableCollection<ZuneTrackCollectionItem>(_trackItems);
 
-            Loaded += ZuneTrackCollection_Loaded;
+            // Some events are always attached (even if the control is never loaded in XAML)
+            // Using the unloaded event gives us a chance to detach events manually in case the GC doesn't
             Unloaded += ZuneTrackCollection_Unloaded;
         }
 
@@ -177,11 +178,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
                 throw new NotImplementedException();
-        }
-
-        private void ZuneTrackCollection_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= ZuneTrackCollection_Loaded;
         }
 
         private void ZuneTrackCollection_Unloaded(object sender, RoutedEventArgs e)
