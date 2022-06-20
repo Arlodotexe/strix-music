@@ -139,6 +139,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             // ALL track items should display their artist list, including this instance.
             var track = (ITrack)sender;
 
+            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
+            Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+
+            if (track.Id == Track?.Id)
+                ArtistNamesMetadata.ChangeCollection(addedItems, removedItems, x => new MetadataItem { Label = x.Data.Name });
+
             // Fast path
             if (track.TotalArtistItemsCount >= 2)
             {
@@ -146,17 +152,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
             }
 
-            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
-
             lock (_lastKnownTrackArtistsCount)
             {
                 // Keeping a minimum cache that updates with events allows us to
                 // avoid checking all items asynchronously when a single item updates.
                 ShouldShowArtistList = _lastKnownTrackArtistsCount.Any(x => x.Value > 1) && _parentCollection is IAlbum or IArtist;
             }
-
-            if (track.Id == Track?.Id)
-                ArtistNamesMetadata.ChangeCollection(addedItems, removedItems, x => new MetadataItem { Label = x.Data.Name });
         }
     }
 }
