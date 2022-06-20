@@ -1,4 +1,7 @@
 
+- name: 0.0.8-app-alpha
+  href: ./0.0.8-app-alpha.md
+  homepage: ./0.0.8-app-alpha.md
 - name: 0.0.7-app-alpha
   href: ./0.0.7-app-alpha.md
   homepage: ./0.0.7-app-alpha.md
