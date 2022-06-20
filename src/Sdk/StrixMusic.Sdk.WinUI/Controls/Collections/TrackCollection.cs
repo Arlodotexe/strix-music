@@ -23,17 +23,24 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// <summary>
         /// Backing dependency property for <see cref="Collection"/>.
         /// </summary>
-        public ITrackCollectionViewModel Collection
+        public ITrackCollectionViewModel? Collection
         {
-            get { return (ITrackCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (ITrackCollectionViewModel?)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>
-        /// Dependency property for <ses cref="ITrackCollectionViewModel" />.
+        /// The backing dependency property for <see cref="Collection" />.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(TrackCollection), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(TrackCollection), new PropertyMetadata(null, (d, e) => ((TrackCollection)d).OnCollectionChanged((ITrackCollectionViewModel?)e.OldValue, (ITrackCollectionViewModel?)e.NewValue)));
+
+        /// <summary>
+        /// Fires when the <see cref="Collection"/> property changes.
+        /// </summary>
+        protected virtual void OnCollectionChanged(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
+        {
+        }
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
