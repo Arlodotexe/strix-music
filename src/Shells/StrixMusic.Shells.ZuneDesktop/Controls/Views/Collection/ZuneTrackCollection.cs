@@ -25,6 +25,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     {
         private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
+        /// <summary>
+        /// Creates a new instance for <see cref="ZuneTrackCollection"/>.
+        /// </summary>
         public ZuneTrackCollection()
         {
             TrackItems = new ReadOnlyObservableCollection<ZuneTrackCollectionItem>(_trackItems);
@@ -101,7 +104,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
                     await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
-
                 else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
                     await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
 
