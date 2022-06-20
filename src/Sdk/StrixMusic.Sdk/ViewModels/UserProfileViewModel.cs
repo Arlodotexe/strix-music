@@ -234,21 +234,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
-            _syncContext.Post(async _ =>
+            await _syncContext.PostAsync(async () =>
             {
                 await foreach (var item in GetImagesAsync(limit, Images.Count, cancellationToken))
                     Images.Add(item);
-            }, null);
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            _syncContext.Post(async _ =>
+            await _syncContext.PostAsync(async () =>
             {
                 await foreach (var item in GetUrlsAsync(limit, Urls.Count, cancellationToken))
                     Urls.Add(item);
-            }, null);
+            });
         }
 
         /// <inheritdoc />
