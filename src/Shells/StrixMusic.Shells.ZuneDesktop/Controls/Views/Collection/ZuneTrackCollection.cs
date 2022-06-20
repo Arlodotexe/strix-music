@@ -48,7 +48,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// The backing dependency property for <see cref="Collection" />.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, (d, e) => ((ZuneTrackCollection)d).OnCollectionChanged((ITrackCollectionViewModel?)e.OldValue, (ITrackCollectionViewModel?)e.NewValue)));
+            DependencyProperty.Register(nameof(Collection), typeof(ITrackCollectionViewModel), typeof(ZuneTrackCollection), new PropertyMetadata(null, (d, e) => _ = ((ZuneTrackCollection)d).OnCollectionChangedAsync((ITrackCollectionViewModel?)e.OldValue, (ITrackCollectionViewModel?)e.NewValue)));
 
         /// <summary>
         /// The collection to display.
@@ -89,7 +89,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 SetEmptyVisibility(Visibility.Visible);
         }
 
-        private void OnCollectionChanged(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
+        private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
         {
             foreach (var item in TrackItems)
                 DetachEvents(item);
@@ -97,38 +97,33 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             _trackItems.Clear();
             OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
 
-            _ = Execute();
-
-            async Task Execute()
+            if (newValue is not null)
             {
-                if (newValue is not null)
+                if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
+                    await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
+
+                else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
+                    await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
+
+                foreach (var item in newValue.Tracks)
                 {
-                    if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
-                        await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
-
-                    else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
-                        await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
-
-                    foreach (var item in newValue.Tracks)
+                    var newItems = new ZuneTrackCollectionItem
                     {
-                        var newItems = new ZuneTrackCollectionItem
-                        {
-                            ParentCollection = newValue,
-                            Track = item,
-                        };
+                        ParentCollection = newValue,
+                        Track = item,
+                    };
 
-                        _trackItems.Add(newItems);
-                        AttachEvents(newItems);
-                    }
-
-                    newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
-                    OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+                    _trackItems.Add(newItems);
+                    AttachEvents(newItems);
                 }
 
-                if (oldValue is not null)
-                {
-                    oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
-                }
+                newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
+                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+            }
+
+            if (oldValue is not null)
+            {
+                oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
         }
 
