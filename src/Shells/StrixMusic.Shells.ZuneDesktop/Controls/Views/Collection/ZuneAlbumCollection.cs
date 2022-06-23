@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
@@ -21,10 +24,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// <summary>
     /// The collection to perform zune specific behaviors.
     /// </summary>
-    public class ZuneAlbumCollection : AlbumCollection
+    [INotifyPropertyChanged]
+    public partial class ZuneAlbumCollection : AlbumCollection
     {
         private object _lockObj = new object();
         private ResourceLoader _loacalizationService;
+
+        private ObservableCollection<ZuneAlbumCollectionItem> _albumItems = new();
 
         /// <summary>
         /// Creates a new instance of <see cref="ZuneAlbumCollection"/>.
@@ -32,6 +38,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         public ZuneAlbumCollection()
         {
             AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>();
+
+            AlbumItems = new ReadOnlyObservableCollection<ZuneAlbumCollectionItem>(_albumItems);
 
             _loacalizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
         }
@@ -75,6 +83,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// Flag to determine if albums are already loaded.
         /// </summary>
         public bool AlbumsLoaded { get; private set; }
+
+        /// <summary>
+        /// The album items being displayed in the UI.
+        /// </summary>
+        public ReadOnlyObservableCollection<ZuneAlbumCollectionItem> AlbumItems { get; }
 
         /// <summary>
         /// The AlbumCollection GridView control.
@@ -174,7 +187,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 // - Listen to the event on each item in this new ViewModel and invoke playback when it's called
                 // - Clean up all the code from the existing approach.
                 await Task.Delay(1000);
-                
+
                 Guard.IsNotNull(PART_Selector);
                 Guard.IsNotNull(Collection);
 
@@ -215,19 +228,83 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <inheritdoc/>
-        protected override void OnCollectionChanged(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
+        protected override async void OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
-            if (oldValue is IAlbumCollectionViewModel oldCollection)
+            if (newValue is not null)
             {
-                oldCollection.Albums.CollectionChanged -= Albums_CollectionChanged;
+                if (newValue.InitAlbumCollectionAsyncCommand.IsRunning && newValue.InitAlbumCollectionAsyncCommand.ExecutionTask is not null)
+                    await newValue.InitAlbumCollectionAsyncCommand.ExecutionTask;
+                else if (newValue.InitAlbumCollectionAsyncCommand.CanExecute(null))
+                    await newValue.InitAlbumCollectionAsyncCommand.ExecuteAsync(null);
+
+                if (oldValue is IAlbumCollectionViewModel oldCollection)
+                {
+                    oldCollection.Albums.CollectionChanged -= Albums_CollectionChanged;
+                }
+
+                foreach (var item in newValue.Albums)
+                {
+                    var newItems = new ZuneAlbumCollectionItem
+                    {
+                        ParentCollection = newValue,
+                        Album = (AlbumViewModel)item,
+                    };
+
+                    _albumItems.Add(newItems);
+                }
+
+                newValue.Albums.CollectionChanged += Album_CollectionChanged;
+
+                base.OnCollectionChangedAsync(oldValue, newValue);
             }
 
-            if (newValue is IAlbumCollectionViewModel newCollection)
+            if (oldValue is not null)
             {
-                newCollection.Albums.CollectionChanged += Albums_CollectionChanged;
+                oldValue.Albums.CollectionChanged -= Albums_CollectionChanged;
+            }
+        }
+
+        private void Album_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                _albumItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
+                {
+                    var newItem = new ZuneAlbumCollectionItem
+                    {
+                        Album = (AlbumViewModel)x,
+                        ParentCollection = Collection
+                    };
+
+                    return newItem;
+                }));
             }
 
-            base.OnCollectionChanged(oldValue, newValue);
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    var target = AlbumItems.FirstOrDefault(x => x.Album == item);
+                    if (target is not null)
+                    {
+                        _albumItems.Remove(target);
+                    }
+                }
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
+            {
+                for (var i = 0; i < e.OldItems.Count; i++)
+                    _albumItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            {
+                _albumItems.Clear();
+            }
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
+                throw new NotImplementedException();
         }
 
         private void ZuneAlbumItem_Unloaded(object sender, RoutedEventArgs e)

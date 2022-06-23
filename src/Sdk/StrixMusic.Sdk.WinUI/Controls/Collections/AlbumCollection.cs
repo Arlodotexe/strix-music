@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
             // and the visual tree might be incomplete as of Loaded.
             base.OnApplyTemplate();
 
-            OnCollectionChanged(null, Collection);
+            OnCollectionChangedAsync(null, Collection);
 
             AttachHandlers();
         }
@@ -82,12 +82,12 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => s.Cast<AlbumCollection>().OnCollectionChanged((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => s.Cast<AlbumCollection>().OnCollectionChangedAsync((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
 
         /// <summary>
         /// Fires when the <see cref="Collection"/> property changes.
         /// </summary>
-        protected virtual void OnCollectionChanged(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
+        protected virtual void OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
             if (newValue is not null && !newValue.PopulateMoreAlbumsCommand.IsRunning && newValue.Albums.Count == 0)
                 newValue.PopulateMoreAlbumsCommand.Execute(20);

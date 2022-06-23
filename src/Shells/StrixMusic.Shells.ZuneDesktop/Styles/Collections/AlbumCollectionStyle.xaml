@@ -61,7 +61,7 @@
                                 </GridView.GroupStyle>
 
                                 <GridView.ItemTemplate>
-                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
+                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="collections:ZuneAlbumCollectionItem">
                                         <zuneItems:ZuneAlbumItem Album="{Binding}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
