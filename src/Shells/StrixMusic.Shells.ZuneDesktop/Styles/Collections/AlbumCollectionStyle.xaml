@@ -65,7 +65,7 @@
                                         <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding }" />
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </zuneItems:ZuneAlbumItem>
