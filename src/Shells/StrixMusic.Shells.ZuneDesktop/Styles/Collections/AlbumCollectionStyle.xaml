@@ -47,7 +47,7 @@
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding AlbumItems, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                                         Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                                 <GridView.GroupStyle>
@@ -62,10 +62,10 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="collections:ZuneAlbumCollectionItem">
-                                        <zuneItems:ZuneAlbumItem Album="{Binding}" Opacity="1">
+                                        <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding }" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </zuneItems:ZuneAlbumItem>

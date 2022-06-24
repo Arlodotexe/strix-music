@@ -3,6 +3,7 @@ using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
+using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -107,13 +108,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackCollection.Collection = e.SelectedItem;
         }
 
-        private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
+        private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)
         {
             if (e.SelectedItem == null)
                 return;
 
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackCollection.Collection = e.SelectedItem;
+            if (e.SelectedItem.Album == null)
+                return;
+
+            e.SelectedItem.Album.PopulateMoreTracksCommand.Execute(e.SelectedItem.Album.TotalTrackCount);
+            TrackCollection.Collection = e.SelectedItem.Album;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)

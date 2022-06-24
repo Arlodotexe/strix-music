@@ -12,6 +12,7 @@ using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.ApplicationModel.Resources;
@@ -25,7 +26,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// The collection to perform zune specific behaviors.
     /// </summary>
     [INotifyPropertyChanged]
-    public partial class ZuneAlbumCollection : AlbumCollection
+    public partial class ZuneAlbumCollection : CollectionControl<ZuneAlbumCollectionItem, ZuneAlbumItem>
     {
         private object _lockObj = new object();
         private ResourceLoader _loacalizationService;
@@ -73,6 +74,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// </summary>
         public static readonly DependencyProperty ZuneCollectionTypeProperty =
             DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumCollection), new PropertyMetadata(CollectionContentType.Albums, null));
+
+
+        /// <summary>
+        /// The backing dependency property for <see cref="Collection" />.
+        /// </summary>
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(ZuneAlbumCollection), new PropertyMetadata(null, (d, e) => _ = ((ZuneAlbumCollection)d).OnCollectionChangedAsync((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
+
+        /// <summary>
+        /// The collection to display.
+        /// </summary>
+        public IAlbumCollectionViewModel? Collection
+        {
+            get => (IAlbumCollectionViewModel?)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
+        }
 
         /// <summary>
         /// Holds the instance of the sort textblock.
@@ -124,6 +141,26 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             Unloaded += ZuneAlbumCollection_Unloaded;
 
             PART_SortLbl.Tapped += PART_SortLbl_Tapped;
+        }
+
+        /// <inheritdoc />
+        protected override void CheckAndToggleEmpty()
+        {
+            if (Collection is null)
+                return;
+
+            if (!Collection.PopulateMoreAlbumsCommand.IsRunning && Collection.TotalAlbumItemsCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
+        }
+
+        /// <inheritdoc/>
+        protected override async Task LoadMore()
+        {
+            if (Collection is null)
+                return;
+
+            if (!Collection.PopulateMoreAlbumsCommand.IsRunning)
+                await Collection.PopulateMoreAlbumsCommand.ExecuteAsync(25);
         }
 
         private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -228,7 +265,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         }
 
         /// <inheritdoc/>
-        protected override async void OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
+        protected async Task OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
             if (newValue is not null)
             {
@@ -254,8 +291,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 }
 
                 newValue.Albums.CollectionChanged += Album_CollectionChanged;
-
-                base.OnCollectionChangedAsync(oldValue, newValue);
             }
 
             if (oldValue is not null)

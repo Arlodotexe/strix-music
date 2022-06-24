@@ -109,7 +109,7 @@
                                                                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                         <Grid Background="#F4F4F4">
                                             <Grid>
-                                                <strix:SafeImage ImageCollection="{Binding }" />
+                                                <strix:SafeImage ImageCollection="{Binding Album, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                                 <Rectangle x:Name="ImageHover" Opacity="0">
                                                     <Rectangle.Fill>
                                                         <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Hover.png"/>
@@ -161,7 +161,7 @@
                             <StackPanel x:Name="PART_LabelPnl" Grid.Row="1" Width="86">
                                 <interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Loaded">
-                                        <core:InvokeCommandAction Command="{Binding PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
+                                        <core:InvokeCommandAction Command="{Binding Album.PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
 
