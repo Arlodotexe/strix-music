@@ -267,6 +267,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <inheritdoc/>
         protected async Task OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
+            _albumItems.Clear();
             if (newValue is not null)
             {
                 if (newValue.InitAlbumCollectionAsyncCommand.IsRunning && newValue.InitAlbumCollectionAsyncCommand.ExecutionTask is not null)
