@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
@@ -11,6 +12,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// </summary>
     public partial class ZuneAlbumCollectionItem : ObservableObject
     {
+        /// <summary>
+        /// Creates a new instance for <see cref="ZuneAlbumCollectionItem"/>.
+        /// </summary>
+        public ZuneAlbumCollectionItem()
+        {
+            PlayAlbumCollectionCommand = new RelayCommand(PlayAlbumCollection);
+        }
+
         [ObservableProperty]
         private IAlbumCollectionViewModel? _parentCollection;
 
@@ -18,8 +27,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private AlbumViewModel? _album;
 
         /// <summary>
+        /// Command to play album collection using play icon.
+        /// </summary>
+        public RelayCommand PlayAlbumCollectionCommand { get; set; }
+
+        /// <summary>
         /// Emits the <see cref="ZuneAlbumCollectionItem"/> whose collection needs to be played.
         /// </summary>
         public event EventHandler<AlbumViewModel>? AlbumPlaybackTriggered;
+
+        private void PlayAlbumCollection()
+        {
+            if (_album == null)
+                return;
+
+            AlbumPlaybackTriggered?.Invoke(this, _album);
+        }
     }
 }
