@@ -17,7 +17,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// </summary>
         public ZuneAlbumCollectionItem()
         {
-            PlayAlbumCollectionCommand = new RelayCommand(PlayAlbumCollection);
         }
 
         [ObservableProperty]
@@ -27,15 +26,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private AlbumViewModel? _album;
 
         /// <summary>
-        /// Command to play album collection using play icon.
-        /// </summary>
-        public RelayCommand PlayAlbumCollectionCommand { get; set; }
-
-        /// <summary>
         /// Emits the <see cref="ZuneAlbumCollectionItem"/> whose collection needs to be played.
         /// </summary>
         public event EventHandler<AlbumViewModel>? AlbumPlaybackTriggered;
 
+        [RelayCommand]
         private void PlayAlbumCollection()
         {
             if (_album == null)
