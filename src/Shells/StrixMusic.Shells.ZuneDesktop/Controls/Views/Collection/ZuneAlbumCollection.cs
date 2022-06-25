@@ -38,7 +38,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// </summary>
         public ZuneAlbumCollection()
         {
-            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>();
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, ZuneAlbumCollectionItem>();
 
             AlbumItems = new ReadOnlyObservableCollection<ZuneAlbumCollectionItem>(_albumItems);
 
@@ -48,9 +48,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <summary>
         /// Holds the current state of the zune <see cref="CollectionContent"/>.
         /// </summary>
-        public ObservableGroupedCollection<string, IAlbumCollectionItem> AlbumGroupedByCollection
+        public ObservableGroupedCollection<string, ZuneAlbumCollectionItem> AlbumGroupedByCollection
         {
-            get { return (ObservableGroupedCollection<string, IAlbumCollectionItem>)GetValue(AlbumGroupedByCollectionProperty); }
+            get { return (ObservableGroupedCollection<string, ZuneAlbumCollectionItem>)GetValue(AlbumGroupedByCollectionProperty); }
             set { SetValue(AlbumGroupedByCollectionProperty, value); }
         }
 
@@ -172,11 +172,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             switch (SortState)
             {
                 // State defines the next sort state in queue which differs from the current state.
+                // Sort operation performed on the original Collection also updates the _albumItems using AlbumCollectionChanged event with NotifyCollectionChangedAction.Move.
                 case ZuneSortState.AZ:
                     Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Descending);
-                    PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.ZA;
                     PART_SortLbl.Text = _loacalizationService.GetString("Z-A");
+                    PART_Selector.ItemsSource = _albumItems;
                     break;
                 case ZuneSortState.ZA:
                     PopulateAlbumGroupedByArtists();
@@ -190,77 +191,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     break;
                 case ZuneSortState.ReleaseYear:
                     Collection.SortAlbumCollection(AlbumSortingType.DateAdded, SortDirection.Ascending);
-                    PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.DateAdded;
                     PART_SortLbl.Text = _loacalizationService.GetString("By Date Added");
+                    PART_Selector.ItemsSource = _albumItems;
                     break;
                 case ZuneSortState.DateAdded:
                     Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Ascending);
-                    PART_Selector.ItemsSource = Collection.Albums;
                     SortState = ZuneSortState.AZ;
                     PART_SortLbl.Text = _loacalizationService.GetString("A-Z");
+                    PART_Selector.ItemsSource = _albumItems;
                     break;
                 default:
                     throw new InvalidOperationException();
-            }
-        }
-
-        private async void Albums_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                // Intentional delay (for safe side), this doesn't freeze anything as event attachment can be done silently, it waits for the emitted album to load in Visual Tree.
-                // There is no event on GridView that tells when a UI Element is added to Items list.
-                // ------------
-                // TODO: We shouldn't be using a delay to do this.
-                // ------------
-                // TODO: this method of getting a loaded item does not work with virtualization.
-                // Instead
-                // - Create a custom ViewModel that wraps around AlbumViewModel
-                // - Give it a "RequestPlaybackCommand" we can invoke from XAML, and a "PlaybackRequested" event that's raised by the command.
-                // - Put it in a new ObservableCollection<TheNewViewModel> property. Bind to that in the UI instead of what we use now.
-                // - Use behaviors in XAML to invoke this new command when the "ZuneAlbumItem.AlbumPlaybackTriggered" event fires.
-                // - Sync the new ObservableCollection with the source, wrapping the data with our new ViewModel.
-                // - Listen to the event on each item in this new ViewModel and invoke playback when it's called
-                // - Clean up all the code from the existing approach.
-                await Task.Delay(1000);
-
-                Guard.IsNotNull(PART_Selector);
-                Guard.IsNotNull(Collection);
-
-                foreach (var item in e.NewItems)
-                {
-                    Guard.IsNotNull(item, nameof(item));
-
-                    var index = Collection.Albums.IndexOf((IAlbumCollectionItem)item);
-                    var gridViewItem = (GridViewItem)PART_Selector.ContainerFromIndex(index);
-
-                    // PATCH! HACK! See above TODO.
-                    if (gridViewItem is null)
-                    {
-                        continue;
-                    }
-
-                    var uiElement = gridViewItem.ContentTemplateRoot;
-                    if (uiElement is ZuneAlbumItem zuneAlbumItem)
-                    {
-                        zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
-                        zuneAlbumItem.Unloaded += ZuneAlbumItem_Unloaded;
-                        zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
-                    }
-                }
-
-                try
-                {
-                    // Gives breathing space to the processor and reduces the odds the where observable collection changed during CollectionChanged event to minimum. 
-                    lock (_lockObj)
-                        Collection.SortAlbumCollection(AlbumSortingType.Alphanumerical, SortDirection.Ascending);
-                }
-                catch (InvalidOperationException)
-                {
-                    // It handles a rare case where observable collection changed during CollectionChanged event. 
-                    // More precisely "Cannot change ObservableCollection during a CollectionChanged event."
-                }
             }
         }
 
@@ -277,7 +219,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (oldValue is IAlbumCollectionViewModel oldCollection)
                 {
-                    oldCollection.Albums.CollectionChanged -= Albums_CollectionChanged;
+                    oldCollection.Albums.CollectionChanged -= Album_CollectionChanged;
                 }
 
                 foreach (var item in newValue.Albums)
@@ -296,7 +238,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             if (oldValue is not null)
             {
-                oldValue.Albums.CollectionChanged -= Albums_CollectionChanged;
+                oldValue.Albums.CollectionChanged -= Album_CollectionChanged;
             }
         }
 
@@ -408,10 +350,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             AlbumGroupedByCollection.Clear();
 
-            var typecastedAlbums = Collection.Albums.Where(c => c is AlbumViewModel).Cast<AlbumViewModel>();
-
-            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
-            typecastedAlbums.GroupBy(c => c.DatePublished?.Year.ToString() ?? "Unknown")
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, ZuneAlbumCollectionItem>(
+            _albumItems.GroupBy(c => c?.Album?.DatePublished?.Year.ToString() ?? "Unknown")
             .OrderBy(g => g.Key));
 
             // Set up the CollectionViewSource.
@@ -431,10 +371,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             AlbumGroupedByCollection.Clear();
 
-            var typecastedAlbums = Collection.Albums.Where(c => c is AlbumViewModel).Cast<AlbumViewModel>();
-
-            AlbumGroupedByCollection = new ObservableGroupedCollection<string, IAlbumCollectionItem>(
-           typecastedAlbums.GroupBy(c => c.Artists.FirstOrDefault()?.Name ?? "Untitled")
+            AlbumGroupedByCollection = new ObservableGroupedCollection<string, ZuneAlbumCollectionItem>(
+           _albumItems.GroupBy(c => c?.Album?.Artists.FirstOrDefault()?.Name ?? "Untitled")
            .OrderBy(g => g.Key));
 
             // Set up the CollectionViewSource.
