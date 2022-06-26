@@ -75,7 +75,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         public static readonly DependencyProperty ZuneCollectionTypeProperty =
             DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumCollection), new PropertyMetadata(CollectionContentType.Albums, null));
 
-
         /// <summary>
         /// The backing dependency property for <see cref="Collection" />.
         /// </summary>

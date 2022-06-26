@@ -34,8 +34,6 @@
 
                             <!--  SemanticZoom grouped source  -->
 
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-
                             <StackPanel Margin="24,0,0,0" Spacing="5" Orientation="Horizontal">
                                 <TextBlock Text="{Binding Collection.TotalAlbumItemsCount, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
                                             FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
@@ -65,10 +63,10 @@
                                         <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
+                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
                                                 </core:EventTriggerBehavior>
                                                 <core:EventTriggerBehavior EventName="AlbumPlaybackTriggered">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
+                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </zuneItems:ZuneAlbumItem>
