@@ -28,7 +28,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     [INotifyPropertyChanged]
     public partial class ZuneAlbumCollection : CollectionControl<ZuneAlbumCollectionItem, ZuneAlbumItem>
     {
-        private object _lockObj = new object();
         private ResourceLoader _loacalizationService;
 
         private ObservableCollection<ZuneAlbumCollectionItem> _albumItems = new();
