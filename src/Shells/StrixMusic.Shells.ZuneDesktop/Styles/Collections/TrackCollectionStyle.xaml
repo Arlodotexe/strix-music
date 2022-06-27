@@ -108,7 +108,7 @@
 
                                                 <interactivity:Interaction.Behaviors>
                                                     <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                        <core:InvokeCommandAction Command="{x:Bind ParentCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                                                        <core:InvokeCommandAction Command="{x:Bind ParentCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind Track}" />
                                                     </core:EventTriggerBehavior>
                                                 </interactivity:Interaction.Behaviors>
 
