@@ -24,19 +24,5 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         [ObservableProperty]
         private AlbumViewModel? _album;
-
-        /// <summary>
-        /// Emits the <see cref="ZuneAlbumCollectionItem"/> whose collection needs to be played.
-        /// </summary>
-        public event EventHandler<AlbumViewModel>? AlbumPlaybackTriggered;
-
-        [RelayCommand]
-        private void PlayAlbumCollection()
-        {
-            if (_album == null)
-                return;
-
-            AlbumPlaybackTriggered?.Invoke(this, _album);
-        }
     }
 }

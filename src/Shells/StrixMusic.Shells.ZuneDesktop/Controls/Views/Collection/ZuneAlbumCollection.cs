@@ -283,12 +283,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 throw new NotImplementedException();
         }
 
-        private void ZuneAlbumItem_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (sender is ZuneAlbumItem zuneAlbum)
-                zuneAlbum.AlbumPlaybackTriggered -= ZuneAlbumItem_AlbumPlaybackTriggered;
-        }
-
         private void ZuneAlbumCollection_Unloaded(object sender, RoutedEventArgs e)
         {
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
@@ -329,7 +323,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (uiElement is ZuneAlbumItem zuneAlbumItem)
                 {
-                    zuneAlbumItem.AlbumPlaybackTriggered += ZuneAlbumItem_AlbumPlaybackTriggered;
                     zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
                 }
 
@@ -381,12 +374,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             };
 
             PART_Selector.ItemsSource = cvs.View;
-        }
-
-        private async void ZuneAlbumItem_AlbumPlaybackTriggered(object sender, AlbumViewModel e)
-        {
-            Guard.IsNotNull(Collection);
-            await Collection.PlayAlbumCollectionAsync(e);
         }
 
         private void FadeInAlbumCollectionItems(List<UIElement> uiElements)
