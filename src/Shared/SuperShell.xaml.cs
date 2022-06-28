@@ -258,7 +258,7 @@ namespace StrixMusic.Shared
             }
 
             foreach (var activeServices in Services)
-                activeServices.CanDeleteCore = Services.Count <= 2;
+                activeServices.CanDeleteCore = Services.Count >= 2;
         }
 
         private async void LoadedService_ConfigRequested(object? sender, EventArgs e)
