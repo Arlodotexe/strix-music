@@ -3,7 +3,7 @@
 namespace StrixMusic.Shells.Groove.Controls.Items
 {
     /// <inheritdoc/>
-    public class GroovePlaylistItem : PlaylistItem
+    public partial class GroovePlaylistItem : PlaylistItem
     {
         /// <inheritdoc/>
         public GroovePlaylistItem()

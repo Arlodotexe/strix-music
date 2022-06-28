@@ -4,7 +4,7 @@
 	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
 	-->
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;monoandroid11.0;uap10.0.19041</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<AssemblyName>StrixMusic.Shells.Groove</AssemblyName>
@@ -103,7 +103,7 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.1.10" />
-		<PackageReference Include="Uno.UI" Version="4.0.13" />
+		<PackageReference Include="Uno.UI" Version="4.4.5" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Styles\NowPlaying\" />

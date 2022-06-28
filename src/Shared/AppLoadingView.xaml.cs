@@ -109,6 +109,7 @@ namespace StrixMusic.Shared
             ShowQuip(localizationService); // TODO: Add debug boot mode
 
             Logger.LogInformation("Setting up playback and SMTP handlers");
+
             var playbackHandlerService = new PlaybackHandlerService();
             var smtpHandler = new SystemMediaTransportControlsHandler(playbackHandlerService);
 
@@ -210,6 +211,9 @@ namespace StrixMusic.Shared
             {
                 if (core.PlaybackType == MediaPlayerType.Standard)
                 {
+#if __WASM__
+continue;
+#endif
                     var audioPlayer = new AudioPlayerService(mainPage.CreateMediaPlayerElement());
                     playbackHandlerService.RegisterAudioPlayer(audioPlayer, core.InstanceId);
                 }
