@@ -34,8 +34,6 @@
 
                             <!--  SemanticZoom grouped source  -->
 
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-
                             <StackPanel Margin="24,0,0,0" Spacing="5" Orientation="Horizontal">
                                 <TextBlock Text="{Binding Collection.TotalAlbumItemsCount, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
                                             FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
@@ -47,7 +45,7 @@
                                 <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Albums, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                            <GridView x:Name="PART_Selector" ItemsSource="{Binding AlbumItems, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                         ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                                         Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                                 <GridView.GroupStyle>
@@ -61,11 +59,14 @@
                                 </GridView.GroupStyle>
 
                                 <GridView.ItemTemplate>
-                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
-                                        <zuneItems:ZuneAlbumItem Album="{Binding}" Opacity="1">
+                                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="collections:ZuneAlbumCollectionItem">
+                                        <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
+                                                </core:EventTriggerBehavior>
+                                                <core:EventTriggerBehavior EventName="AlbumPlaybackTriggered">
+                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </zuneItems:ZuneAlbumItem>
