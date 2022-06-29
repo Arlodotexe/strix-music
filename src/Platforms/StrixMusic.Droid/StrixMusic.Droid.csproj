@@ -84,7 +84,7 @@
       <Version>8.0.0-preview3</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.0.0-preview3</Version>
+      <Version>[8.0.0-preview4]</Version>
     </PackageReference>
     <PackageReference Include="GitInfo">
       <Version>2.2.0</Version>
