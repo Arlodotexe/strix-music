@@ -8,7 +8,7 @@ using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 namespace StrixMusic.Shells.Groove.Controls.Items
 {
     /// <inheritdoc/>
-    public class GrooveArtistItem : ArtistItem
+    public partial class GrooveArtistItem : ArtistItem
     {
         /// <inheritdoc/>
         public GrooveArtistItem()

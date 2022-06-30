@@ -15,7 +15,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     /// <summary>
     /// Zune implementation of the <see cref="ArtistCollection"/>.
     /// </summary>
-    public class ZuneArtistCollection : ArtistCollection
+    public partial class ZuneArtistCollection : ArtistCollection
     {
         private object _lockObj = new object();
 

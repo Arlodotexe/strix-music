@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />
-		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+		<PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
 		  <PrivateAssets>all</PrivateAssets>
