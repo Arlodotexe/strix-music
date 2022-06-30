@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
@@ -12,10 +13,14 @@ namespace StrixMusic.Services
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(string))]
-    [JsonSerializable(typeof(List<string>))]
+    [JsonSerializable(typeof(Uri))]
+    [JsonSerializable(typeof(Version))]
     [JsonSerializable(typeof(SiblingCollectionPlaybackPreferences))]
-    [JsonSerializable(typeof(Dictionary<string, CoreMetadata>))]
+    [JsonSerializable(typeof(CoreMetadata))]
     [JsonSerializable(typeof(MergedCollectionSorting))]
+    [JsonSerializable(typeof(SiblingCollectionPlaybackBehavior))]
+    [JsonSerializable(typeof(List<string>))]
+    [JsonSerializable(typeof(Dictionary<string, CoreMetadata>))]
     internal partial class AppSettingsSerializerContext : JsonSerializerContext
     {
     }
