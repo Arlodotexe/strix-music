@@ -13,7 +13,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// Creates a new instance of <see cref="OneDriveCoreSettings"/>.
         /// </summary>
         public OneDriveCoreSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
+            : base(folder, FilesCoreSettingsSerializer.Singleton)
         {
         }
 

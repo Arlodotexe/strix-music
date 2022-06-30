@@ -25,7 +25,7 @@ namespace StrixMusic.Services
         /// </summary>
         /// <param name="folder">The folder where app settings are stored.</param>
         public AppSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
+            : base(folder, AppSettingsSerializer.Singleton)
         {
         }
 

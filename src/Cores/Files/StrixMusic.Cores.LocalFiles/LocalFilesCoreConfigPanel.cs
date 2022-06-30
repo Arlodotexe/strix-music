@@ -1,5 +1,5 @@
 ﻿using OwlCore.AbstractUI.Models;
-using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Cores.LocalFiles.Settings;
 
 namespace StrixMusic.Cores.LocalFiles
 {

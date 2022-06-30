@@ -10,7 +10,7 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
-using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Cores.LocalFiles.Settings;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.FileMetadata;
