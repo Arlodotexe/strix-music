@@ -6,10 +6,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using Newtonsoft.Json;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
     /// </summary>
     public sealed class ArtistRepository : IArtistRepository
     {
-        private readonly string _artistDataFileName;
+        private readonly string _dataFileName;
 
         private readonly ConcurrentDictionary<string, ArtistMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
             _debouncerId = Guid.NewGuid().ToString();
             _id = id;
 
-            _artistDataFileName = $"Artists.{id}.bin";
+            _dataFileName = $"Artists.{id}.bin";
         }
 
         /// <inheritdoc />
@@ -56,7 +56,14 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
                 return;
             }
 
-            await LoadDataFromDisk(cancellationToken);
+            try
+            {
+                await LoadDataFromDiskAsync(cancellationToken);
+            }
+            catch (JsonException)
+            {
+                // ignored
+            }
 
             IsInitialized = true;
             _initMutex.Release();
@@ -238,26 +245,19 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
         /// Gets the existing repo data stored on disk.
         /// </summary>
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
-        private async Task LoadDataFromDisk(CancellationToken cancellationToken)
+        private async Task LoadDataFromDiskAsync(CancellationToken cancellationToken)
         {
             Guard.IsEmpty((ICollection<KeyValuePair<string, ArtistMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
-            var fileData = await _folderData.CreateFileAsync(_artistDataFileName, CreationCollisionOption.OpenIfExists);
+            var fileData = await _folderData.CreateFileAsync(_dataFileName, CreationCollisionOption.OpenIfExists);
 
             Guard.IsNotNull(fileData, nameof(fileData));
 
             using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
             cancellationToken.ThrowIfCancellationRequested();
 
-            var bytes = await stream.ToBytesAsync();
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (bytes.Length == 0)
-                return;
-
-            var str = System.Text.Encoding.UTF8.GetString(bytes);
-            var data = JsonConvert.DeserializeObject<List<ArtistMetadata>>(str);
+            var data = await FileMetadataRepoSerializer.Singleton.DeserializeAsync<List<ArtistMetadata>>(stream);
             cancellationToken.ThrowIfCancellationRequested();
 
             using var mutexReleaseOnCancelRegistration = cancellationToken.Register(() => _storageMutex.Release());
@@ -277,16 +277,20 @@ namespace StrixMusic.Sdk.FileMetadata.Repositories
 
         private async Task CommitChangesAsync()
         {
-            if (!await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(4)) || _inMemoryMetadata.IsEmpty)
+            if (!await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(5)) || _inMemoryMetadata.IsEmpty)
                 return;
 
             await _storageMutex.WaitAsync();
 
             Guard.IsNotNull(_folderData, nameof(_folderData));
-            var json = JsonConvert.SerializeObject(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList());
+            using var serializedStream = await FileMetadataRepoSerializer.Singleton.SerializeAsync(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList());
 
-            var fileData = await _folderData.CreateFileAsync(_artistDataFileName, CreationCollisionOption.OpenIfExists);
-            await fileData.WriteAllBytesAsync(System.Text.Encoding.UTF8.GetBytes(json));
+            var fileData = await _folderData.CreateFileAsync(_dataFileName, CreationCollisionOption.OpenIfExists);
+            using var fileStream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
+            fileStream.Position = 0;
+            serializedStream.Position = 0;
+
+            await serializedStream.CopyToAsync(fileStream);
 
             _storageMutex.Release();
         }

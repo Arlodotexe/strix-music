@@ -1,6 +1,9 @@
-﻿using OwlCore.AbstractStorage;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Sdk.Services;
+using System.Text.Json;
 
 namespace StrixMusic.Cores.LocalFiles.Settings
 {
@@ -51,6 +54,20 @@ namespace StrixMusic.Cores.LocalFiles.Settings
         {
             get => GetSetting(() => false);
             set => SetSetting(value);
+        }
+
+        /// <inheritdoc/>
+        public override Task LoadAsync(CancellationToken? cancellationToken = null)
+        {
+            try
+            {
+                return base.LoadAsync(cancellationToken);
+            }
+            catch (JsonException)
+            {
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
