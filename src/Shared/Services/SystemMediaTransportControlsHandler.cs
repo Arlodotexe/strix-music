@@ -23,8 +23,13 @@ namespace StrixMusic.Services
         /// <param name="playbackHandlerService">The playback handler to use for display with the system transport controls.</param>
         public SystemMediaTransportControlsHandler(IPlaybackHandlerService playbackHandlerService)
         {
-            _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
             _playbackHandlerService = playbackHandlerService;
+#if __WASM__
+_systemMediaTransportControls = null!;
+return;
+#else
+            _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
+#endif
 
             _systemMediaTransportControls.IsPlayEnabled = true;
             _systemMediaTransportControls.IsPauseEnabled = true;

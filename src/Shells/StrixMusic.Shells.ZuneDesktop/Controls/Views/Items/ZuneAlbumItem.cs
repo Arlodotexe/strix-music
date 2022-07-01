@@ -14,7 +14,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
     /// <summary>
     /// Zune custom implemation for <see cref="AlbumItem"/>.
     /// </summary>
-    public class ZuneAlbumItem : AlbumItem
+    public partial class ZuneAlbumItem : AlbumItem
     {
         private const int DEFAULT_ALBUM_WIDTH = 98;
         private const int DEFAULT_ALBUM_HEIGHT = 88;
@@ -126,7 +126,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         private void ZuneAlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             Guard.IsNotNull(PART_PlayIcon, nameof(PART_PlayIcon));
-            PART_PlayIcon.Tapped -= PART_PlayIcon_Tapped;
             PART_PlayIcon.Tapped -= PART_PlayIcon_Tapped;
         }
 

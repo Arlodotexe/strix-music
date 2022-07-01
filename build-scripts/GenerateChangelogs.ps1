@@ -95,7 +95,7 @@ if ($releaseLabel -eq $previousTag) {
 }
 else {
     # Get release message if commit is tagged
-    $releaseMessage = (Invoke-Expression "git tag $tags[0] -n 999") -Replace $tags[0], "";
+    $releaseMessage = (Invoke-Expression "git tag $($tags[0]) -n 999") -Replace $tags[0], "";
 }
 
 Write-Output "Generating $target changelog as $releaseLabel for commits since tag $previousTag"

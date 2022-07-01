@@ -64,12 +64,12 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// </summary>
         /// <param name="oldValue">The old track instance.</param>
         /// <param name="newValue">The new track instance.</param>
-        public virtual void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel newValue)
+        public virtual void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel? newValue)
         {
-            if (oldValue != null)
+            if (oldValue is not null)
                 oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;
 
-            if (!(newValue is null))
+            if (newValue is not null)
             {
                 newValue.PlaybackStateChanged += OnPlaybackStateChanged;
                 PlaybackState = newValue.PlaybackState;

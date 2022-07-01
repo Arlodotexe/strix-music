@@ -122,7 +122,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
                 dataGrid.SelectionChanged -= SelectedItemChanged;
             else return;
 
-            PART_Scroller!.ViewChanged -= CollectionControl_ViewChanged;
+            PART_Scroller.ViewChanged -= CollectionControl_ViewChanged;
         }
 
         private void CollectionControl_Loaded(object sender, RoutedEventArgs e)
@@ -207,6 +207,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
         {
             if (PART_Selector is Selector selector)
                 return VisualTreeHelpers.FindVisualChildren<TItem>(selector.ContainerFromItem(data)).FirstOrDefault();
+
             return null;
         }
 

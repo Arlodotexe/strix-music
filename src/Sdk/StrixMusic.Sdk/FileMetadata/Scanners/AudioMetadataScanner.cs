@@ -199,6 +199,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
             metadata.TrackMetadata.ArtistIds ??= new HashSet<string>();
             metadata.TrackMetadata.ImageIds ??= new HashSet<string>();
+            metadata.TrackMetadata.Genres ??= new HashSet<string>();
 
             // Album
             if (string.IsNullOrWhiteSpace(metadata.AlbumMetadata.Title))
@@ -210,6 +211,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             metadata.AlbumMetadata.ArtistIds ??= new HashSet<string>();
             metadata.AlbumMetadata.ImageIds ??= new HashSet<string>();
             metadata.AlbumMetadata.TrackIds ??= new HashSet<string>();
+            metadata.AlbumMetadata.Genres ??= new HashSet<string>();
 
             // Artist
             foreach (var artistMetadata in metadata.AlbumArtistMetadata)
@@ -229,6 +231,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 artistMetadata.AlbumIds ??= new HashSet<string>();
                 artistMetadata.TrackIds ??= new HashSet<string>();
                 artistMetadata.ImageIds ??= new HashSet<string>();
+                artistMetadata.Genres ??= new HashSet<string>();
 
                 Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
                 Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
