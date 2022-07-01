@@ -109,6 +109,9 @@ foreach ($variant in $variants) {
     foreach ($dependency in $dependencies) {
         if ($dependency.name -eq "dotnet-sdk-$variant") {
             $dependency.cid = $cid;
+            $dependency.originalUrl = $url;
+            $dependency.outputPath = "dotnet/$fileName";
+
             $found = $true;
         }
     }
