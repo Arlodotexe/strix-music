@@ -24,7 +24,7 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="sdkShellControls:NowPlayingBar">
+    <DataTemplate x:Key="MediaInfoDataTemplate" x:DataType="nowplaying:MediaInfo">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64"/>
@@ -39,19 +39,19 @@
                             <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
                         </controls:DropShadowPanel>
 
-                        <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding ActiveDevice.NowPlaying.Track}"/>
+                    <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
 
-                        <TextBlock Text="{Binding ActiveDevice.NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
+                <TextBlock Text="{Binding Device.NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
 
                         <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
                         <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds,Mode=OneWay}"
-                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
+                                    Value="{x:Bind Device.Position.TotalMilliseconds,Mode=OneWay}"
+                                    Maximum="{x:Bind Device.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                     FlowDirection="LeftToRight">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                        <core:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </nowplaying:MediaSlider>
@@ -64,7 +64,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="nowplaying:MediaInfo">
-                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" Content="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
+                        <ContentControl ContentTemplate="{StaticResource MediaInfoDataTemplate}" 
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
