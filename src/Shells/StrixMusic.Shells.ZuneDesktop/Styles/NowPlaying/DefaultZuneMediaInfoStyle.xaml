@@ -51,7 +51,7 @@
                                     FlowDirection="LeftToRight">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                        <core:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                        <core:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </nowplaying:MediaSlider>
