@@ -15,6 +15,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
         public MediaInfo()
         {
             this.DefaultStyleKey = typeof(MediaInfo);
+
+            this.DataContext = this;
         }
 
         /// <summary>
