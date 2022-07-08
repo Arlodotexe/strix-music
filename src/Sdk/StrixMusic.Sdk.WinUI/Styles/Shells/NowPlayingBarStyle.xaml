@@ -21,7 +21,7 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="vm:DeviceViewModel">
+    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="shell:NowPlayingBar">
         <UserControl>
             <Grid VerticalAlignment="Center">
                 <VisualStateManager.VisualStateGroups>
@@ -64,16 +64,16 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Media info-->
-                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding}"/>
+                <nowplaying:MediaInfo MaxWidth="300" Device="{Binding ActiveDevice}"/>
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    Value="{x:Bind Position.TotalMilliseconds, Mode=OneWay}"
-                                                                    Maximum="{x:Bind NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
+                                                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{Binding SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                            <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                 </nowplaying:MediaSlider>
@@ -89,7 +89,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="shell:NowPlayingBar">
-                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" Content="{Binding ActiveDevice, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}"
+                        <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" 
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
