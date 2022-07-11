@@ -53,6 +53,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
+		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 		<PackageReference Include="TagLibSharp" Version="2.2.0" />
 	</ItemGroup>
 

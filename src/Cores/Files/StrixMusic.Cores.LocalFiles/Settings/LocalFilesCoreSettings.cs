@@ -55,19 +55,5 @@ namespace StrixMusic.Cores.LocalFiles.Settings
             get => GetSetting(() => false);
             set => SetSetting(value);
         }
-
-        /// <inheritdoc/>
-        public override Task LoadAsync(CancellationToken? cancellationToken = null)
-        {
-            try
-            {
-                return base.LoadAsync(cancellationToken);
-            }
-            catch (JsonException)
-            {
-            }
-
-            return Task.CompletedTask;
-        }
     }
 }

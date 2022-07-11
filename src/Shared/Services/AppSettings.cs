@@ -30,6 +30,18 @@ namespace StrixMusic.Services
         public AppSettings(IFolderData folder)
             : base(folder, AppSettingsSerializer.Singleton)
         {
+            LoadFailed += AppSettings_LoadFailed;
+            SaveFailed += AppSettings_SaveFailed;
+        }
+
+        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
+        }
+
+        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
         }
 
         /// <summary>
@@ -91,20 +103,6 @@ namespace StrixMusic.Services
         {
             get => GetSetting(() => MergedCollectionSorting.Ranked);
             set => SetSetting(value);
-        }
-
-        /// <inheritdoc/>
-        public override Task LoadAsync(CancellationToken? cancellationToken = null)
-        {
-            try
-            {
-                return base.LoadAsync(cancellationToken);
-            }
-            catch (JsonException)
-            {
-            }
-
-            return Task.CompletedTask;
         }
     }
 }

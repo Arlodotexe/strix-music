@@ -2,7 +2,6 @@
 using System.Threading;
 using OwlCore.AbstractStorage;
 using OwlCore.Services;
-using StrixMusic.Sdk.Services;
 using System.Text.Json;
 
 namespace StrixMusic.Cores.OneDrive.Services
@@ -99,20 +98,6 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             get => GetSetting(() => string.Empty);
             set => SetSetting(value);
-        }
-
-        /// <inheritdoc/>
-        public override Task LoadAsync(CancellationToken? cancellationToken = null)
-        {
-            try
-            {
-                return base.LoadAsync(cancellationToken);
-            }
-            catch (JsonException)
-            {
-            }
-
-            return Task.CompletedTask;
         }
     }
 }

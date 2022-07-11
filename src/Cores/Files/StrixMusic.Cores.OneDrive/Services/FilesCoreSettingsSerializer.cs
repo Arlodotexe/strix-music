@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Services;
 
 namespace StrixMusic.Cores.OneDrive.Services
@@ -34,11 +35,19 @@ namespace StrixMusic.Cores.OneDrive.Services
         }
 
         /// <inheritdoc />
-        public Task<TResult> DeserializeAsync<TResult>(Stream serialized, CancellationToken? cancellationToken = null)
-            => JsonSerializer.DeserializeAsync<TResult>(serialized).AsTask()!;
+        public async Task<TResult> DeserializeAsync<TResult>(Stream serialized, CancellationToken? cancellationToken = null)
+        {
+            var result = await JsonSerializer.DeserializeAsync(serialized, typeof(TResult), FilesCoreSettingsSerializerContext.Default);
+            Guard.IsNotNull(result);
+            return (TResult)result;
+        }
 
         /// <inheritdoc />
-        public Task<object> DeserializeAsync(Type returnType, Stream serialized, CancellationToken? cancellationToken = null)
-            => JsonSerializer.DeserializeAsync(serialized, returnType).AsTask()!;
+        public async Task<object> DeserializeAsync(Type returnType, Stream serialized, CancellationToken? cancellationToken = null)
+        {
+            var result = await JsonSerializer.DeserializeAsync(serialized, returnType, FilesCoreSettingsSerializerContext.Default);
+            Guard.IsNotNull(result);
+            return result;
+        }
     }
 }
