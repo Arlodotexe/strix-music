@@ -152,7 +152,6 @@
     <ErrorReport>prompt</ErrorReport>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
-	<SingleThreadNUTC>true</SingleThreadNUTC>
     <Use64BitCompiler>true</Use64BitCompiler>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
@@ -200,6 +199,9 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
     <Use64BitCompiler>true</Use64BitCompiler>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+     <SingleThreadNUTC>true</SingleThreadNUTC>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
