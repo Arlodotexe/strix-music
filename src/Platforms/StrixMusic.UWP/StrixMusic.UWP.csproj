@@ -152,6 +152,7 @@
     <ErrorReport>prompt</ErrorReport>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
+	<SingleThreadNUTC>true</SingleThreadNUTC>
     <Use64BitCompiler>true</Use64BitCompiler>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
