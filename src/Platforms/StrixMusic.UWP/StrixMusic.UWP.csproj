@@ -70,6 +70,7 @@
     <SingleThreadNUTC>true</SingleThreadNUTC>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
+    <ShortcutGenericAnalysis>true</ShortcutGenericAnalysis> <!-- Can help stop runaway analysis of generic types and reduce overall generation requirements. -->
   </PropertyGroup>
 
   <!-- Debug mode config -->
