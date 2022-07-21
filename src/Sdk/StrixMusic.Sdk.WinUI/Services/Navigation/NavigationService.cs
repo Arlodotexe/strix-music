@@ -34,7 +34,9 @@ namespace StrixMusic.Sdk.Services.Navigation
         /// <inheritdoc/>
         public void RegisterCommonPage(Type type)
         {
-            _ = Threading.OnPrimaryThread(() => _registeredPages.Add(type, (T)Activator.CreateInstance(type)));
+            // TryAdd isn't working in Uno.
+            if (!_registeredPages.ContainsKey(type))
+                _ = Threading.OnPrimaryThread(() => _registeredPages.Add(type, (T)Activator.CreateInstance(type)));
         }
 
         /// <inheritdoc />
@@ -42,7 +44,8 @@ namespace StrixMusic.Sdk.Services.Navigation
         {
             if (type != null)
             {
-                _registeredPages.Add(type.GetType(), type);
+                if (!_registeredPages.ContainsKey(type.GetType()))
+                    _registeredPages.Add(type.GetType(), type);
             }
         }
 
