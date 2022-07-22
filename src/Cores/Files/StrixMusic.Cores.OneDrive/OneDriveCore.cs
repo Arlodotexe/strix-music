@@ -71,10 +71,10 @@ namespace StrixMusic.Cores.OneDrive
         /// <summary>
         /// The metadata that identifies this core before instantiation.
         /// </summary>
-        public static CoreMetadata Metadata { get; } = new CoreMetadata(id: nameof(OneDriveCore),
-                                                                        displayName: "OneDrive",
-                                                                        logoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
-                                                                        sdkVer: typeof(ICore).Assembly.GetName().Version);
+        public static CoreMetadata Metadata { get; } = new CoreMetadata(Id: nameof(OneDriveCore),
+                                                                        DisplayName: "OneDrive",
+                                                                        LogoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
+                                                                        SdkVer: typeof(ICore).Assembly.GetName().Version);
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
 

@@ -155,6 +155,7 @@ namespace StrixMusic.Shared
             {
                 if (cores.FirstOrDefault(x => x.InstanceId == entry.Key) is not ICore core)
                 {
+                    Logger.LogInformation($"Creating core with instanceId {entry.Key}, display name {entry.Value.DisplayName}, id {entry.Value.Id}");
                     core = await CoreRegistry.CreateCoreAsync(entry.Value.Id, entry.Key);
                     cores.Add(core);
                 }

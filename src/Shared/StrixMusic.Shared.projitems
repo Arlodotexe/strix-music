@@ -46,6 +46,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreInstanceEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\ICoreManagementService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
