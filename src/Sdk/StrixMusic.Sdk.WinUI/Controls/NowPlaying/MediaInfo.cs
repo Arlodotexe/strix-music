@@ -22,9 +22,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
         /// <summary>
         /// The ViewModel that holds the active device.
         /// </summary>
-        public DeviceViewModel Device
+        public DeviceViewModel? Device
         {
-            get { return (DeviceViewModel)GetValue(DeviceProperty); }
+            get { return (DeviceViewModel?)GetValue(DeviceProperty); }
             set { SetValue(DeviceProperty, value); }
         }
 
