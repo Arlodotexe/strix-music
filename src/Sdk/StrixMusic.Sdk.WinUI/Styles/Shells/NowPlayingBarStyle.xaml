@@ -64,7 +64,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Media info-->
-                <nowplaying:MediaInfo MaxWidth="300" Device="{x:Bind ActiveDevice,Mode=OneWay}"/>
+                <nowplaying:MediaInfo MaxWidth="300" Device="{x:Bind ActiveDevice, Mode=OneWay}"/>
 
                 <!--Media slider control-->
                 <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
