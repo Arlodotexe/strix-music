@@ -17,6 +17,14 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
     /// </summary>
     public class ZuneMultiTrackCollection : ITrackCollection
     {
+        /// <summary>
+        /// Creates a new instance for <see cref="ITrackCollection"/>.
+        /// </summary>
+        /// <param name="collection"></param>
+        public ZuneMultiTrackCollection()
+        {
+        }
+
         /// <inheritdoc />
         public int TotalTrackCount => throw new NotImplementedException();
 
