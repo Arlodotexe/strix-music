@@ -64,8 +64,7 @@ namespace StrixMusic.Shared.ViewModels
             var foundFiles = new List<StorageFile>();
 
             // Brute find each image. We can't enumerate bundled content. A little hacky but it does the job.
-            var index = 0;
-            while (true)
+            for (int index = 0; index < 100; index++)
             {
                 try
                 {

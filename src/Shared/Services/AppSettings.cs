@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Sdk.AdapterModels;
@@ -25,8 +28,20 @@ namespace StrixMusic.Services
         /// </summary>
         /// <param name="folder">The folder where app settings are stored.</param>
         public AppSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
+            : base(folder, AppSettingsSerializer.Singleton)
         {
+            LoadFailed += AppSettings_LoadFailed;
+            SaveFailed += AppSettings_SaveFailed;
+        }
+
+        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
+        }
+
+        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
         }
 
         /// <summary>

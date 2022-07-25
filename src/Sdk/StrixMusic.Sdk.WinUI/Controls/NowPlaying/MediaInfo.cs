@@ -15,14 +15,16 @@ namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
         public MediaInfo()
         {
             this.DefaultStyleKey = typeof(MediaInfo);
+
+            this.DataContext = this;
         }
 
         /// <summary>
         /// The ViewModel that holds the active device.
         /// </summary>
-        public DeviceViewModel Device
+        public DeviceViewModel? Device
         {
-            get { return (DeviceViewModel)GetValue(DeviceProperty); }
+            get { return (DeviceViewModel?)GetValue(DeviceProperty); }
             set { SetValue(DeviceProperty, value); }
         }
 

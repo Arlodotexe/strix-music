@@ -1,6 +1,8 @@
-﻿using OwlCore.AbstractStorage;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using OwlCore.AbstractStorage;
 using OwlCore.Services;
-using StrixMusic.Sdk.Services;
+using System.Text.Json;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -13,7 +15,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// Creates a new instance of <see cref="OneDriveCoreSettings"/>.
         /// </summary>
         public OneDriveCoreSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
+            : base(folder, FilesCoreSettingsSerializer.Singleton)
         {
         }
 

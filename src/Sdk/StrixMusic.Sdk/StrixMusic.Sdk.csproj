@@ -4,11 +4,11 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
-		<AssemblyVersion>0.0.9</AssemblyVersion>
+		<AssemblyVersion>0.0.10</AssemblyVersion>
 
 		<Product>Strix Music SDK</Product>
 		<Description>An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.</Description>
-		<Version>0.0.9-alpha</Version>
+		<Version>0.0.10-alpha</Version>
 		<Authors>Arlo Godfrey</Authors>
 		<PackageIcon>logo.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -39,7 +39,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
 		<PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0-preview1.22274.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -53,6 +53,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Linq.Async" Version="5.1.0" />
+		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 		<PackageReference Include="TagLibSharp" Version="2.2.0" />
 	</ItemGroup>
 

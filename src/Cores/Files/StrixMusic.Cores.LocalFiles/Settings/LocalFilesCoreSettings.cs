@@ -1,8 +1,11 @@
-﻿using OwlCore.AbstractStorage;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Sdk.Services;
+using System.Text.Json;
 
-namespace StrixMusic.Cores.LocalFiles.Services
+namespace StrixMusic.Cores.LocalFiles.Settings
 {
     /// <summary>
     /// A container for <see cref="LocalFilesCore"/> settings.
@@ -13,7 +16,7 @@ namespace StrixMusic.Cores.LocalFiles.Services
         /// Creates a new instance of <see cref="LocalFilesCoreSettings"/>.
         /// </summary>
         public LocalFilesCoreSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
+            : base(folder, FilesCoreSettingsSerializer.Singleton)
         {
         }
 

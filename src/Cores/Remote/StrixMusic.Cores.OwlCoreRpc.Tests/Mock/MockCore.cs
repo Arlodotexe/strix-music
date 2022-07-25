@@ -57,10 +57,10 @@ namespace StrixMusic.Cores.OwlCoreRpc.Tests.Mock
 
         public event EventHandler<string>? InstanceDescriptorChanged;
 
-        public CoreMetadata Registration { get; } = new CoreMetadata(id: nameof(MockCore),
-                                                                     displayName: "Mock core",
-                                                                     logoUri: new Uri("https://strixmusic.com/"),
-                                                                     sdkVer: typeof(ICore).Assembly.GetName().Version ?? throw new ArgumentNullException());
+        public CoreMetadata Registration { get; } = new CoreMetadata(Id: nameof(MockCore),
+                                                                     DisplayName: "Mock core",
+                                                                     LogoUri: new Uri("https://strixmusic.com/"),
+                                                                     SdkVer: typeof(ICore).Assembly.GetName().Version ?? throw new ArgumentNullException());
 
         public string InstanceId { get; set; }
 

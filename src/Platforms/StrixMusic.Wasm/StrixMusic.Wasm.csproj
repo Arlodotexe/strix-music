@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
 		<WasmShellEnableThreads>true</WasmShellEnableThreads>
+		<WasmShellIndexHtmlPath>wwwroot/index.html</WasmShellIndexHtmlPath>
 		<LangVersion>10.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -35,7 +36,7 @@
 		<EmbeddedResource Include="WasmScripts\AppManifest.js" />
 	</ItemGroup>
 	<ItemGroup>
-		<LinkerDescriptor Include="LinkerConfig.xml" />
+	<LinkerDescriptor Include="LinkerConfig.xml" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--
@@ -55,6 +56,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 		<PackageReference Include="OwlCore" Version="0.0.71" />
+		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.1.0" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.0" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.0" />
@@ -79,13 +81,13 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
-	  <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
-	  <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
-	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
-	  <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
-	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
-	  <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
+		<ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
+		<ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
+		<ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
+		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
 	</ItemGroup>
 	<Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>
