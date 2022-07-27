@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.ViewModels;
@@ -98,36 +99,62 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            if (e.SelectedItem == null)
-                return;
+            if (e.AddedItems.Count == 1)
+            {
+                var selectedItem = e.AddedItems.FirstOrDefault();
+                if (selectedItem == null)
+                    return;
 
-            e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
-            ZuneAlbumCollection.Collection = e.SelectedItem;
+                selectedItem.PopulateMoreAlbumsCommand.Execute(selectedItem.TotalAlbumItemsCount);
+                ZuneAlbumCollection.Collection = selectedItem;
 
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackCollection.Collection = e.SelectedItem;
+                selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
+                TrackCollection.Collection = selectedItem;
+            }
+            else
+            {
+                // TODO
+            }
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)
         {
-            if (e.SelectedItem == null)
-                return;
+            if (e.AddedItems.Count == 1)
+            {
+                var selectedItem = e.AddedItems.FirstOrDefault();
 
-            if (e.SelectedItem.Album == null)
-                return;
+                if (selectedItem == null)
+                    return;
 
-            e.SelectedItem.Album.PopulateMoreTracksCommand.Execute(e.SelectedItem.Album.TotalTrackCount);
-            TrackCollection.Collection = e.SelectedItem.Album;
+                if (selectedItem.Album == null)
+                    return;
+
+                selectedItem.Album.PopulateMoreTracksCommand.Execute(selectedItem.Album.TotalTrackCount);
+                TrackCollection.Collection = selectedItem.Album;
+            }
+            else
+            {
+                // TODO
+            }
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
-            if (e.SelectedItem == null)
-                return;
+            if (e.AddedItems.Count == 1)
+            {
+                var selectedItem = e.AddedItems.FirstOrDefault();
 
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackTable.Collection = e.SelectedItem;
-            DetailsPane.DataContext = e.SelectedItem;
+                if (selectedItem == null)
+                    return;
+
+                selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
+                TrackTable.Collection = selectedItem;
+                DetailsPane.DataContext = selectedItem;
+            }
+            else
+            {
+                // TODO
+            }
         }
 
         private void ClearSelections()

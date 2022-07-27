@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -189,17 +190,10 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
             if (PART_Selector == null)
                 return;
 
-            // Get selected item
-            // Invoke event
-            TData data;
-            if (PART_Selector is Selector selector)
-                data = (TData)selector.SelectedItem;
-            else if (PART_Selector is DataGrid dataGrid)
-                data = (TData)dataGrid.SelectedItem;
-            else
-                return;
+            var addedItems = e.AddedItems.OfType<TData>().ToList();
+            var removedItems = e.RemovedItems.OfType<TData>().ToList();
 
-            Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>(data);
+            var selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>(addedItems, removedItems);
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);
         }
 
