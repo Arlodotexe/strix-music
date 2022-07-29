@@ -17,6 +17,9 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
     /// </summary>
     public class ZuneMultiTrackCollection : ITrackCollection
     {
+        private readonly List<ITrack> _tracks = new();
+        private int _totalTrackCount = 0;
+
         /// <summary>
         /// Creates a new instance for <see cref="ITrackCollection"/>.
         /// </summary>
@@ -26,7 +29,15 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         }
 
         /// <inheritdoc />
-        public int TotalTrackCount => throw new NotImplementedException();
+        public int TotalTrackCount
+        {
+            get => _totalTrackCount;
+            set
+            {
+                _totalTrackCount = value;
+                TracksCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public bool IsPlayTrackCollectionAsyncAvailable => throw new NotImplementedException();
@@ -140,7 +151,15 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default)
+        {
+            _tracks.Insert(index, track);
+
+            TotalTrackCount = _tracks.Count;
+            TracksChanged?.Invoke(this, new List<CollectionChangedItem<ITrack>> { new(track, index) }, new List<CollectionChangedItem<ITrack>>());
+
+            return Task.CompletedTask;
+        }
 
         /// <inheritdoc />
         public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();

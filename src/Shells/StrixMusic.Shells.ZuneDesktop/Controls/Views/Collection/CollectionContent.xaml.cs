@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
+using StrixMusic.Shells.ZuneDesktop.CustomCollections;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,6 +20,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     /// </summary>
     public sealed partial class CollectionContent : UserControl
     {
+        private ZuneMultiTrackCollection _zuneMultiTrackCollection;
+        private int _currentIndex = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionContent"/> class.
         /// </summary>
@@ -26,6 +31,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             this.InitializeComponent();
 
             Loaded += CollectionContent_Loaded;
+
+            _zuneMultiTrackCollection = new ZuneMultiTrackCollection();
         }
 
         private void CollectionContent_Loaded(object sender, RoutedEventArgs e)
@@ -97,24 +104,34 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             SwapPage("Playlists");
         }
 
-        private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
+        private async void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            if (e.AddedItems.Count == 1)
-            {
-                var selectedItem = e.AddedItems.FirstOrDefault();
-                if (selectedItem == null)
-                    return;
+            //var selectedItem = e.AddedItems.FirstOrDefault();
+            //if (selectedItem == null)
+            //    return;
 
-                selectedItem.PopulateMoreAlbumsCommand.Execute(selectedItem.TotalAlbumItemsCount);
-                ZuneAlbumCollection.Collection = selectedItem;
+            //selectedItem.PopulateMoreAlbumsCommand.Execute(selectedItem.TotalAlbumItemsCount);
+            //ZuneAlbumCollection.Collection = selectedItem;
 
-                selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
-                TrackCollection.Collection = selectedItem;
-            }
-            else
+            //selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
+            //TrackCollection.Collection = selectedItem;
+
+            foreach (var artist in e.AddedItems)
             {
-                // TODO
+                artist.Tracks.CollectionChanged += Tracks_CollectionChanged;
+
+                await CollectionInit.TrackCollection(artist,System.Threading.CancellationToken.None);
+
+                foreach (var item in artist.Tracks)
+                {
+                    await _zuneMultiTrackCollection.AddTrackAsync(item, _currentIndex);
+                }
             }
+        }
+
+        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            // Handle changed event of tracks.
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)
