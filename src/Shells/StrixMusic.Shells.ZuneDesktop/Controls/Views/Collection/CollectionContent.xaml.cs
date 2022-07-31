@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk;
@@ -22,6 +23,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     {
         private ZuneMultiTrackCollection _zuneMultiTrackCollection;
         private int _currentIndex = 0;
+        private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionContent"/> class.
@@ -106,27 +108,32 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private async void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            //var selectedItem = e.AddedItems.FirstOrDefault();
-            //if (selectedItem == null)
-            //    return;
-
-            //selectedItem.PopulateMoreAlbumsCommand.Execute(selectedItem.TotalAlbumItemsCount);
-            //ZuneAlbumCollection.Collection = selectedItem;
-
-            //selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
-            //TrackCollection.Collection = selectedItem;
+            await _semaphoreSlim.WaitAsync();
 
             foreach (var artist in e.AddedItems)
             {
                 artist.Tracks.CollectionChanged += Tracks_CollectionChanged;
 
-                await CollectionInit.TrackCollection(artist,System.Threading.CancellationToken.None);
+                await CollectionInit.TrackCollection(artist, System.Threading.CancellationToken.None);
 
                 foreach (var item in artist.Tracks)
                 {
                     await _zuneMultiTrackCollection.AddTrackAsync(item, _currentIndex);
                 }
             }
+
+            foreach (var removedArtist in e.RemovedItems)
+            {
+                foreach (var item in removedArtist.Tracks)
+                {
+                    await _zuneMultiTrackCollection.RemoveTrackAsync(item);
+                }
+            }
+
+            var trackCollection = new TrackCollectionViewModel(_zuneMultiTrackCollection);
+            TrackCollection.Collection = trackCollection;
+
+            _semaphoreSlim.Release();
         }
 
         private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

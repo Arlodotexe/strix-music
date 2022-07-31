@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -189,7 +190,7 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => _tracks.ToAsyncEnumerable();
 
         /// <inheritdoc />
         public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw new NotImplementedException();
@@ -226,6 +227,9 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public Task<bool> RemoveTrackAsync(ITrack track) => Task.FromResult(_tracks.Remove(track));
 
         /// <inheritdoc />
         public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
