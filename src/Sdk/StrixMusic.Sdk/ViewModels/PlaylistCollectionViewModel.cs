@@ -518,10 +518,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitPlaylistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.PlaylistCollection(this, cancellationToken);
+        public Task InitPlaylistCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.PlaylistCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollectionAsync(this, cancellationToken);
 
         ///<inheritdoc />
         public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection)
