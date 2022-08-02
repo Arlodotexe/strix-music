@@ -845,16 +845,16 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollection(this, cancellationToken);
+        public Task InitImageCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.ImageCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitAlbumCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.AlbumCollection(this, cancellationToken);
+        public Task InitAlbumCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.AlbumCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollection(this, cancellationToken);
+        public Task InitTrackCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.TrackCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
-        public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollection(this, cancellationToken);
+        public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _artist.Equals(other);
