@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -22,8 +24,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     public sealed partial class CollectionContent : UserControl
     {
         private ZuneMultiTrackCollection _zuneMultiTrackCollection;
-        private int _currentIndex = 0;
-        private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _collectionInitSemaphore = new SemaphoreSlim(1, 1);
+        private SemaphoreSlim _trackUpdateSemaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionContent"/> class.
@@ -108,37 +110,64 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private async void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            await _semaphoreSlim.WaitAsync();
-
-            foreach (var artist in e.AddedItems)
-            {
-                artist.Tracks.CollectionChanged += Tracks_CollectionChanged;
-
-                await CollectionInit.TrackCollection(artist, System.Threading.CancellationToken.None);
-
-                foreach (var item in artist.Tracks)
-                {
-                    await _zuneMultiTrackCollection.AddTrackAsync(item, _currentIndex);
-                }
-            }
+            TrackCollection.Collection = null;
+            await _collectionInitSemaphore.WaitAsync();
 
             foreach (var removedArtist in e.RemovedItems)
             {
+                removedArtist.Tracks.CollectionChanged -= Tracks_CollectionChanged;
+
                 foreach (var item in removedArtist.Tracks)
                 {
                     await _zuneMultiTrackCollection.RemoveTrackAsync(item);
                 }
             }
 
+            foreach (var artist in e.AddedItems)
+            {
+                artist.Tracks.CollectionChanged -= Tracks_CollectionChanged;
+
+                await CollectionInit.TrackCollection(artist, System.Threading.CancellationToken.None);
+
+                foreach (var item in artist.Tracks)
+                {
+                    var index = _zuneMultiTrackCollection.TotalTrackCount;
+                    await _zuneMultiTrackCollection.AddTrackAsync(item, index);
+                }
+
+                artist.Tracks.CollectionChanged += Tracks_CollectionChanged;
+            }
+
             var trackCollection = new TrackCollectionViewModel(_zuneMultiTrackCollection);
             TrackCollection.Collection = trackCollection;
 
-            _semaphoreSlim.Release();
+             _collectionInitSemaphore.Release();
         }
 
-        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Handle changed event of tracks.
+            await _trackUpdateSemaphore.WaitAsync();
+
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var added in e.NewItems.Cast<TrackViewModel>())
+                {
+                    var index = _zuneMultiTrackCollection.TotalTrackCount;
+                    await _zuneMultiTrackCollection.AddTrackAsync(added, index);
+                }
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var removed in e.NewItems.Cast<TrackViewModel>())
+                {
+                    var index = _zuneMultiTrackCollection.TotalTrackCount;
+                    await _zuneMultiTrackCollection.RemoveTrackAsync(removed);
+                }
+            }
+
+            _trackUpdateSemaphore.Release();
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)

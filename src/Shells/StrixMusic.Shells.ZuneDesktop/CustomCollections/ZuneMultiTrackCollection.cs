@@ -229,7 +229,13 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<bool> RemoveTrackAsync(ITrack track) => Task.FromResult(_tracks.Remove(track));
+        public Task<bool> RemoveTrackAsync(ITrack track)
+        {
+            TotalTrackCount = TotalTrackCount - 1;
+            TracksCountChanged?.Invoke(this, TotalTrackCount);
+
+            return Task.FromResult(_tracks.Remove(track));
+        }
 
         /// <inheritdoc />
         public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
