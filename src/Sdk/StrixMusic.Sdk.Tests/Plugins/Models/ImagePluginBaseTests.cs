@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
@@ -86,11 +87,13 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             internal static AccessedException<FullyCustom> AccessedException { get; } = new();
 
-            public override Uri Uri => throw AccessedException;
+            public override Task<Stream> OpenStreamAsync() => throw AccessedException;
 
-            public override double Height => throw AccessedException;
+            public override string? MimeType => throw AccessedException;
 
-            public override double Width => throw AccessedException;
+            public override double? Height => throw AccessedException;
+
+            public override double? Width => throw AccessedException;
 
             public override ValueTask DisposeAsync() => throw AccessedException;
 
@@ -121,11 +124,14 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
             public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public Uri Uri => throw AccessedException;
 
-            public double Height => throw AccessedException;
+            public Task<Stream> OpenStreamAsync() => throw AccessedException;
 
-            public double Width => throw AccessedException;
+            public string? MimeType => throw AccessedException;
+            
+            public double? Height => throw AccessedException;
+
+            public double? Width => throw AccessedException;
 
             public IReadOnlyList<ICoreImage> Sources => throw AccessedException;
 

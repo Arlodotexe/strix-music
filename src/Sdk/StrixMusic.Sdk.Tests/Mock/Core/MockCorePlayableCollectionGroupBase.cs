@@ -93,7 +93,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 _playlists.Add(new MockCorePlaylist(SourceCore, $"{i}", $"Playlist {i}"));
 
             for (int i = _images.Count; i < TotalImageCount; i++)
-                _images.Add(new MockCoreImage(SourceCore, new Uri($"https://picsum.photos/seed/picsum{i}/200/300")));
+                _images.Add(new MockCoreImage(SourceCore));
 
             for (int i = _urls.Count; i < TotalUrlCount; i++)
                 _urls.Add(new MockCoreUrl(SourceCore, new Uri($"https://picsum.photos/seed/picsum{i}/200/300"), $"Url {i}"));

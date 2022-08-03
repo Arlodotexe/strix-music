@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -55,13 +56,16 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
     public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
-    public Uri Uri => _image.Uri;
+    public Task<Stream> OpenStreamAsync() => _image.OpenStreamAsync();
 
     /// <inheritdoc/>
-    public double Height => _image.Height;
+    public string? MimeType => _image.MimeType;
 
     /// <inheritdoc/>
-    public double Width => _image.Width;
+    public double? Height => _image.Height;
+
+    /// <inheritdoc/>
+    public double? Width => _image.Width;
 
     /// <inheritdoc/>
     public bool Equals(ICoreImage other) => _image.Equals(other);

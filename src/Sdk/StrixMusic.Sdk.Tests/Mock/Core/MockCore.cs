@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 MockContextIds.Artist => new MockCoreArtist(this, id, "Artist"),
                 MockContextIds.Device => new MockCoreDevice(this),
                 MockContextIds.Discoverables => new MockCoreDiscoverables(this),
-                MockContextIds.Image => new MockCoreImage(this, new Uri("https://strixmusic.com/favicon.ico")),
+                MockContextIds.Image => new MockCoreImage(this),
                 MockContextIds.Library => Library,
                 MockContextIds.Pins => Pins,
                 MockContextIds.PlayableCollectionGroup => new MockCorePlayableCollectionGroup(this, id, "Collection group"),

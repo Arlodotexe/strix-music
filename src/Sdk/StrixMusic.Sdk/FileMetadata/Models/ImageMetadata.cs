@@ -17,9 +17,9 @@ namespace StrixMusic.Sdk.FileMetadata.Models
         public string? Id { get; set; }
 
         /// <summary>
-        /// The link to the file for this image.
+        /// The mime type of the image, if known. A hint to help optimize image rendering.
         /// </summary>
-        public Uri? Uri { get; set; }
+        public string? MimeType { get; set; }
 
         /// <summary>
         /// The width of this image.

@@ -39,22 +39,10 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
         /// </summary>
-        public AudioMetadataScanner(int degreesOfParallelism, IFolderData imageOutputFolder)
-            : this(degreesOfParallelism)
-        {
-            ImageOutputFolder = imageOutputFolder;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
-        /// </summary>
         public AudioMetadataScanner(int degreesOfParallelism)
         {
             DegreesOfParallelism = degreesOfParallelism;
             _batchLock = new SemaphoreSlim(1, 1);
-            _ongoingImageProcessingTasksSemaphore = new SemaphoreSlim(1, 1);
-            _ongoingImageProcessingSemaphore = new SemaphoreSlim(degreesOfParallelism, degreesOfParallelism);
-            _ongoingImageProcessingTasks = new ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>>();
 
             AttachEvents();
         }
@@ -98,14 +86,13 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         public event EventHandler<int>? FilesFoundChanged;
 
         /// <summary>
-        /// The folder to use for storing file metadata.
+        /// The method used to scan metadata from audio files.
         /// </summary>
-        public IFolderData? ImageOutputFolder { get; internal set; }
-
-        /// <inheritdoc />
         public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The maximum number of files that are processed in parallel.
+        /// </summary>
         public int DegreesOfParallelism { get; }
 
         /// <summary>
@@ -357,15 +344,103 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
         }
 
+        /// <summary>
+        /// Given an image identifier, extract the <see cref="IFolderData.Id"/>.
+        /// </summary>
+        /// <returns>The extracted file ID.</returns>
+        /// <exception cref="ArgumentException">Couldn't extract scanned image type from image ID.</exception>
+        public string GetFileIdFromImageId(string imageId)
+        {
+            if (imageId.EndsWith("FileThumbnail"))
+                return imageId.Replace("FileThumbnail", string.Empty);
+
+            if (imageId.Contains("Id3.Image."))
+            {
+                // Remove all text including and after the start of the image type identifier.
+                return imageId.Split(new[] { "Id3.Image." }, 2, StringSplitOptions.None)[0];
+            }
+
+            throw new ArgumentException($"Couldn't extract scanned image type from image ID {imageId}.");
+        }
+
+        /// <summary>
+        /// Gets the stream of the provided image 
+        /// </summary>
+        /// <param name="file">The file to extract a stream from.</param>
+        /// <param name="imageId">The ID of the image to return.</param>
+        /// <returns>A Task containing the image stream, if found.</returns>
+        /// <exception cref="ArgumentException">Couldn't extract scanned image type from image ID.</exception>
+        public async Task<Stream?> GetImageStream(IFileData file, string imageId)
+        {
+            // Open image thumbnail stream from AbstractStorage.
+            if (imageId.EndsWith("FileThumbnail"))
+            {
+                // Flow.Catch doesn't accommodate async. Awaiting the task will cause exceptions to propagate.
+                Stream? imageStream = null;
+
+                try
+                {
+                    imageStream = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
+                }
+                catch
+                {
+                    // Ignored
+                }
+
+                return imageStream;
+            }
+
+            // Open image stream from TagLib (at correct index)
+            if (imageId.Contains("Id3.Image."))
+            {
+                try
+                {
+                    using var fileStream = await file.GetStreamAsync();
+
+                    using var tagFile = TagLib.File.Create(new FileAbstraction(file.Name, fileStream), ReadStyle.Average | ReadStyle.PictureLazy);
+                    var tag = tagFile.Tag;
+
+                    // If there's no metadata to read, return null
+                    if (tag == null)
+                    {
+                        Logger.LogInformation($"{nameof(IFileData)} at {file.Path}: no metadata found.");
+                        return null;
+                    }
+
+                    var index = int.Parse(imageId.Split(new[] { "Id3.Image." }, 2, StringSplitOptions.None)[1]);
+                    var targetPicture = tag.Pictures[index];
+
+                    if (targetPicture is ILazy lazy)
+                        lazy.Load();
+
+                    return new MemoryStream(targetPicture.Data.Data);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            throw new ArgumentException($"Couldn't extract scanned image type from image ID {imageId}.");
+        }
+
         private async Task<Models.FileMetadata?> GetMusicFilesProperties(IFileData fileData)
         {
             Logger.LogInformation($"{nameof(GetMusicFilesProperties)} entered for {nameof(IFileData)} at {fileData.Path}");
 
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
+            // Flow.Catch doesn't accommodate async. Awaiting the task will cause exceptions to propagate.
             Stream? imageStream = null;
 
-            imageStream = await fileData.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
+            try
+            {
+                imageStream = await fileData.GetThumbnailAsync(ThumbnailMode.MusicView, 256);
+            }
+            catch
+            {
+                // Ignored
+            }
 
             if (details is null)
                 return null;
@@ -396,7 +471,21 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     }
                 },
                 TrackArtistMetadata = new List<ArtistMetadata>(),
+                ImageMetadata = new List<ImageMetadata>(),
             };
+
+            if (imageStream is not null)
+            {
+                OwlCore.Validation.Mime.MimeTypeMap.TryGetMimeType(fileData.FileExtension, out var mimeType);
+
+                relatedMetadata.ImageMetadata.Add(new ImageMetadata
+                {
+                    Id = $"{fileData.Id}.FileThumbnail",
+                    MimeType = mimeType,
+                });
+
+                imageStream.Dispose();
+            }
 
             relatedMetadata.TrackArtistMetadata.AddRange(details.Composers.Select(x => new ArtistMetadata { Name = x }));
             relatedMetadata.TrackArtistMetadata.AddRange(details.Conductors.Select(x => new ArtistMetadata { Name = x }));
@@ -412,14 +501,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             {
                 if (relatedMetadata.TrackArtistMetadata.All(x => x.Name != item.Name))
                     relatedMetadata.TrackArtistMetadata.Add(item);
-            }
-
-            if (imageStream != null && imageStream.Length > 0)
-            {
-                Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
-
-                var stream = new List<Stream>() { imageStream };
-                Task.Run(() => ProcessImagesAsync(fileData, relatedMetadata, stream), _scanningCancellationTokenSource.Token).Forget();
             }
 
             Guard.IsNotEqualTo(relatedMetadata.AlbumArtistMetadata.Count, 0);
@@ -471,7 +552,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             {
                 using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 // Some underlying libs without nullable checks may return null by mistake.
                 if (stream is null)
                     return null;
@@ -484,7 +565,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 try
                 {
-                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average | ReadStyle.PictureLazy);
                     var tag = tagFile.Tag;
 
                     // If there's no metadata to read, return null
@@ -530,6 +611,11 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                             Name = x,
                             Genres = new HashSet<string>(tag.Genres)
                         })),
+                        ImageMetadata = tag.Pictures.Select((x, i) => new ImageMetadata
+                        {
+                            Id = $"{fileData.Id}.Id3.Image.{i}",
+                            MimeType = x.MimeType,
+                        }).ToList(),
                     };
 
                     // If no artist data, create "unknown" placeholder.
@@ -545,14 +631,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                     Guard.IsNotEqualTo(fileMetadata.AlbumArtistMetadata.Count, 0);
                     Guard.IsNotEqualTo(fileMetadata.TrackArtistMetadata.Count, 0);
-
-                    if (ImageOutputFolder is not null && tag.Pictures is not null)
-                    {
-                        Logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: Images found");
-                        var imageStreams = tag.Pictures.Select(x => new MemoryStream(x.Data.Data));
-
-                        Task.Run(() => ProcessImagesAsync(fileData, fileMetadata, imageStreams), _scanningCancellationTokenSource.Token).Forget();
-                    }
 
                     Logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: Metadata scan completed.");
                     return fileMetadata;

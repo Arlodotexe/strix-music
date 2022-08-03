@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -33,13 +34,16 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public Uri Uri => _preferredSource.Uri;
+        public Task<Stream> OpenStreamAsync() => _preferredSource.OpenStreamAsync();
 
         /// <inheritdoc/>
-        public double Height => _preferredSource.Height;
+        public string? MimeType => _preferredSource.MimeType;
 
         /// <inheritdoc/>
-        public double Width => _preferredSource.Width;
+        public double? Height => _preferredSource.Height;
+
+        /// <inheritdoc/>
+        public double? Width => _preferredSource.Width;
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreImage> Sources => _sources;
@@ -70,7 +74,10 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc/>
         public bool Equals(ICoreImage other)
         {
-            return other?.Uri == Uri;
+            // We can't know for sure if 2 images are the same until we open the streams and compare them,
+            // which is an asynchronous operation and can't be done here.
+            // For merging, this check can be done as we retrieve the images from the collection.
+            return false;
         }
 
         /// <inheritdoc />

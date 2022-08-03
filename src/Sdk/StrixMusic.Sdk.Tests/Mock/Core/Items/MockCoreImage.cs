@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.CoreModels;
 
@@ -6,17 +7,17 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
 {
     public class MockCoreImage : ICoreImage
     {
-        public MockCoreImage(ICore sourceCore, Uri uri)
+        public MockCoreImage(ICore sourceCore)
         {
-            Uri = uri;
             SourceCore = sourceCore;
         }
 
-        public Uri Uri { get; set; }
+        public Task<Stream> OpenStreamAsync() => throw new NotImplementedException();
 
-        public double Height { get; set; }
+        public string? MimeType { get; }
+        public double? Height { get; set; }
 
-        public double Width { get; set; }
+        public double? Width { get; set; }
 
         public ICore SourceCore { get; set; }
 

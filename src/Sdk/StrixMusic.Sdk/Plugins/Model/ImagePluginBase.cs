@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
@@ -42,13 +43,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual Uri Uri => Inner.Uri;
+        public virtual Task<Stream> OpenStreamAsync() => Inner.OpenStreamAsync();
+        
+        /// <inheritdoc/>
+        public virtual string? MimeType => Inner.MimeType;
 
         /// <inheritdoc/>
-        public virtual double Height => Inner.Height;
+        public virtual double? Height => Inner.Height;
 
         /// <inheritdoc/>
-        public virtual double Width => Inner.Width;
+        public virtual double? Width => Inner.Width;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
