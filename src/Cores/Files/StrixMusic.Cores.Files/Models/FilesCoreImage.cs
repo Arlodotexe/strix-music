@@ -21,9 +21,8 @@ namespace StrixMusic.Cores.Files.Models
         {
             _imageMetadata = imageMetadata;
 
-            // Guard.IsNotNull() wasn't working here. Fallback to ThrowHelper.
-            Height = (double?)imageMetadata.Height ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Height));
-            Width = (double?)imageMetadata.Width ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Width));
+            Height = imageMetadata.Height;
+            Width = imageMetadata.Width;
 
             SourceCore = sourceCore;
         }
@@ -54,9 +53,6 @@ namespace StrixMusic.Cores.Files.Models
         public double? Width { get; }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
+        public ValueTask DisposeAsync() => default;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
@@ -25,8 +26,8 @@ namespace StrixMusic.Services
         {
             _playbackHandlerService = playbackHandlerService;
 #if __WASM__
-_systemMediaTransportControls = null!;
-return;
+            _systemMediaTransportControls = null!;
+            return;
 #else
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
 #endif
@@ -179,8 +180,6 @@ return;
 
             Guard.IsNotNull(e.Track, nameof(e.Track));
 
-            var sourceConfig = e;
-
             PlaybackHandlerService_PlaybackStateChanged(sender, _playbackHandlerService.PlaybackState);
             _systemMediaTransportControls.IsNextEnabled = _playbackHandlerService.NextItems.Count > 0;
             _systemMediaTransportControls.IsPreviousEnabled = _playbackHandlerService.PreviousItems.Count > 0;
@@ -195,18 +194,9 @@ return;
                 // Just the first, we don't care about the size.
                 var images = await e.Track.GetImagesAsync(1, 0).ToListAsync();
 
-                foreach (var image in images)
-                {
-                    if (image.Uri.IsFile)
-                    {
-                        var file = await StorageFile.GetFileFromPathAsync(image.Uri.LocalPath);
-                        updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
-                    }
-                    else
-                        updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(image.Uri);
+                using var stream = await images[0].OpenStreamAsync();
 
-                    break;
-                }
+                updater.Thumbnail = RandomAccessStreamReference.CreateFromStream(stream.AsRandomAccessStream());
             }
 
             // Genres

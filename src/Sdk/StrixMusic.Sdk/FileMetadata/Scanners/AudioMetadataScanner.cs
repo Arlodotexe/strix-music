@@ -235,6 +235,16 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     primaryData.TrackMetadata.Title ??= item.TrackMetadata.Title;
                     primaryData.TrackMetadata.Url ??= item.TrackMetadata.Url;
                     primaryData.TrackMetadata.Year ??= item.TrackMetadata.Year;
+
+                    foreach (var imageItem in item.ImageMetadata ?? Enumerable.Empty<ImageMetadata>())
+                    {
+                        if (imageItem is null)
+                            continue;
+
+                        Guard.IsNotNull(primaryData.TrackMetadata.ImageIds);
+                        Guard.IsNotNull(imageItem.Id);
+                        primaryData.TrackMetadata.ImageIds.Add(imageItem.Id);
+                    }
                 }
 
                 if (primaryData.AlbumMetadata != null && item.AlbumMetadata != null)
@@ -244,6 +254,16 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     primaryData.AlbumMetadata.Duration ??= item.AlbumMetadata.Duration;
                     primaryData.AlbumMetadata.Description ??= item.AlbumMetadata.Description;
                     primaryData.AlbumMetadata.Title ??= item.AlbumMetadata.Title;
+
+                    foreach (var imageItem in item.ImageMetadata ?? Enumerable.Empty<ImageMetadata>())
+                    {
+                        if (imageItem is null)
+                            continue;
+
+                        Guard.IsNotNull(primaryData.AlbumMetadata.ImageIds);
+                        Guard.IsNotNull(imageItem.Id);
+                        primaryData.AlbumMetadata.ImageIds.Add(imageItem.Id);
+                    }
                 }
 
                 if (primaryData.AlbumArtistMetadata != null && item.AlbumArtistMetadata != null)
@@ -276,8 +296,9 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             Logger.LogInformation($"Cross-linking IDs for metadata ID {metadata.Id} located at {metadata.TrackMetadata.Url}");
 
             // Albums
-            Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
-            Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds, nameof(metadata.AlbumMetadata.TrackIds));
+            Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds);
+            Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds);
+            Guard.IsNotNull(metadata.AlbumMetadata?.ImageIds);
             Guard.IsNotNull(metadata.AlbumArtistMetadata, nameof(metadata.AlbumArtistMetadata));
             Guard.IsNotNull(metadata.TrackArtistMetadata, nameof(metadata.TrackArtistMetadata));
             Guard.IsNotEqualTo(metadata.AlbumArtistMetadata.Count, 0);
@@ -287,6 +308,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             {
                 Guard.IsNotNull(artistMetadata.Id, nameof(artistMetadata.Id));
                 metadata.AlbumMetadata.ArtistIds.Add(artistMetadata.Id);
+                metadata.AlbumMetadata.ImageIds = new HashSet<string>(metadata.ImageMetadata?.Select(x => x.Id).PruneNull() ?? Array.Empty<string>());
             }
 
             metadata.AlbumMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
@@ -300,8 +322,8 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
             static void LinkArtistMetadataIds(Models.FileMetadata metadata, ArtistMetadata artistMetadata)
             {
-                Guard.IsNotNull(artistMetadata?.TrackIds);
-                Guard.IsNotNull(artistMetadata?.AlbumIds);
+                Guard.IsNotNull(artistMetadata.TrackIds);
+                Guard.IsNotNull(artistMetadata.AlbumIds);
                 Guard.IsNotNull(metadata.TrackMetadata?.Id);
                 Guard.IsNotNull(metadata.AlbumMetadata?.Id);
 
@@ -324,6 +346,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 Guard.IsNotNull(metadata.TrackMetadata?.ArtistIds);
 
                 metadata.TrackMetadata.ArtistIds.Add(artistMetadata.Id);
+                metadata.TrackMetadata.ImageIds = new HashSet<string>(metadata.ImageMetadata?.Select(x => x.Id).PruneNull() ?? Array.Empty<string>());
             }
 
             metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
@@ -336,13 +359,13 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <exception cref="ArgumentException">Couldn't extract scanned image type from image ID.</exception>
         public string GetFileIdFromImageId(string imageId)
         {
-            if (imageId.EndsWith("FileThumbnail"))
-                return imageId.Replace("FileThumbnail", string.Empty);
+            if (imageId.EndsWith(".FileThumbnail"))
+                return imageId.Replace(".FileThumbnail", string.Empty);
 
-            if (imageId.Contains("Id3.Image."))
+            if (imageId.Contains(".Id3.Image."))
             {
                 // Remove all text including and after the start of the image type identifier.
-                return imageId.Split(new[] { "Id3.Image." }, 2, StringSplitOptions.None)[0];
+                return imageId.Split(new[] { ".Id3.Image." }, 2, StringSplitOptions.None)[0];
             }
 
             throw new ArgumentException($"Couldn't extract scanned image type from image ID {imageId}.");
@@ -382,7 +405,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 {
                     using var fileStream = await file.GetStreamAsync();
 
-                    using var tagFile = TagLib.File.Create(new FileAbstraction(file.Name, fileStream), ReadStyle.Average | ReadStyle.PictureLazy);
+                    using var tagFile = TagLib.File.Create(new FileAbstraction(file.Name, fileStream), ReadStyle.Average);
                     var tag = tagFile.Tag;
 
                     // If there's no metadata to read, return null
@@ -400,8 +423,9 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                     return new MemoryStream(targetPicture.Data.Data);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.LogError(ex.Message, ex);
                     return null;
                 }
             }
@@ -560,7 +584,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 try
                 {
-                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average | ReadStyle.PictureLazy);
+                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
                     var tag = tagFile.Tag;
 
                     cancellationToken.ThrowIfCancellationRequested();
@@ -578,7 +602,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                         {
                             Description = tag.Description,
                             Title = tag.Album,
-                            Duration = tagFile.Properties.Duration,
+                            Duration = tagFile.Properties?.Duration,
                             Genres = new HashSet<string>(tag.Genres),
                             DatePublished = tag.DateTagged,
                             ArtistIds = new HashSet<string>(),
@@ -591,7 +615,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                             Description = tag.Description,
                             Title = tag.Title,
                             DiscNumber = tag.Disc,
-                            Duration = tagFile.Properties.Duration,
+                            Duration = tagFile.Properties?.Duration,
                             Genres = new HashSet<string>(tag.Genres),
                             TrackNumber = tag.Track,
                             Year = tag.Year,
@@ -608,11 +632,11 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                             Name = x,
                             Genres = new HashSet<string>(tag.Genres)
                         })),
-                        ImageMetadata = tag.Pictures.Select((x, i) => new ImageMetadata
+                        ImageMetadata = new List<ImageMetadata>(tag.Pictures.Select((x, i) => new ImageMetadata
                         {
                             Id = $"{fileData.Id}.Id3.Image.{i}",
                             MimeType = x.MimeType,
-                        }).ToList(),
+                        })),
                     };
 
                     // If no artist data, create "unknown" placeholder.
@@ -637,39 +661,34 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 catch (Exception ex)
                 {
                     Logger.LogError($"{ex}");
-                    return null;
                 }
             }
             catch (CorruptFileException ex)
             {
                 Logger.LogError($"{nameof(CorruptFileException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
             catch (UnsupportedFormatException ex)
             {
                 Logger.LogError($"{nameof(UnsupportedFormatException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
             catch (FileLoadException ex)
             {
                 Logger.LogError($"{nameof(FileLoadException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
             catch (FileNotFoundException ex)
             {
                 Logger.LogError($"{nameof(FileNotFoundException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
             catch (ArgumentException ex)
             {
                 Logger.LogError($"{nameof(ArgumentException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
             catch (UnauthorizedAccessException ex)
             {
                 Logger.LogError($"{nameof(UnauthorizedAccessException)} for {nameof(IFileData)} at {fileData.Path}", ex);
-                return null;
             }
+
+            return null;
         }
 
         private async Task<(IFileData File, Models.FileMetadata? Metadata)> ProcessFile(IFileData file, CancellationToken cancellationToken)

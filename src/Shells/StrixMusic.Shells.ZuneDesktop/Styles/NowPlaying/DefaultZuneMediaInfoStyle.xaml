@@ -25,37 +25,37 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="MediaInfoDataTemplate" x:DataType="nowplaying:MediaInfo">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="64"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-                        <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
-                            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
-                        </controls:DropShadowPanel>
+            <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+                <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
+            </controls:DropShadowPanel>
 
-                    <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
+            <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
 
-                <TextBlock Text="{Binding Device.NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
+            <TextBlock Text="{Binding Device.NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
 
-                        <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+            <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
 
-                        <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+            <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
                                     Value="{x:Bind Device.Position.TotalMilliseconds,Mode=OneWay}"
                                     Maximum="{x:Bind Device.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                     FlowDirection="LeftToRight">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
                         <core:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-                        </nowplaying:MediaSlider>
-                    </Grid>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </nowplaying:MediaSlider>
+        </Grid>
     </DataTemplate>
 
 
