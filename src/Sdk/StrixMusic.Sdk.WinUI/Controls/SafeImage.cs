@@ -88,6 +88,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
 
             var imageSource = new BitmapImage();
 
+            if (image.Height is not null)
+                imageSource.DecodePixelHeight = (int)image.Height;
+
+            if (image.Width is not null)
+                imageSource.DecodePixelWidth = (int)image.Width;
+
             await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
 
             PART_ImageBrush.ImageSource = imageSource;
