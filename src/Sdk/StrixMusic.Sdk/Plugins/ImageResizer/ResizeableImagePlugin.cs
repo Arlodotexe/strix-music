@@ -63,7 +63,7 @@ public class ResizeableImagePlugin : ImagePluginBase
         image.Mutate(x => x.Resize((int)newSize.Width, (int)newSize.Height));
 
         var memoryStream = new MemoryStream();
-        await image.SaveAsPngAsync(memoryStream);
+        await image.SaveAsJpegAsync(memoryStream);
 
         return memoryStream;
     }
