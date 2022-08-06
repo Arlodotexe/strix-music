@@ -34,6 +34,19 @@ namespace StrixMusic.Sdk.Plugins.Model
             Metadata = metadata;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SdkModelPlugin"/> class.
+        /// </summary>
+        /// <param name="metadata">Metadata that identifies this plugin.</param>
+        /// <param name="pluginsToImport">The plugins that are imported into this new instance.</param>
+        public SdkModelPlugin(ModelPluginMetadata metadata, params SdkModelPlugin[] pluginsToImport)
+        {
+            Metadata = metadata;
+
+            foreach(var plugin in pluginsToImport)
+                Import(plugin);
+        }
+
         /// <inheritdoc/>
         public ModelPluginMetadata Metadata { get; }
 

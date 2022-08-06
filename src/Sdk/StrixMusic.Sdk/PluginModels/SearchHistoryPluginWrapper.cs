@@ -24,11 +24,7 @@ public class SearchHistoryPluginWrapper : PlayableCollectionGroupPluginWrapperBa
     /// <param name="searchHistory">An existing instance to wrap around and provide plugins on top of.</param>
     /// <param name="plugins">The plugins to import and apply to everything returned from this wrapper.</param>
     internal SearchHistoryPluginWrapper(ISearchHistory searchHistory, params SdkModelPlugin[] plugins)
-        : base(GlobalModelPluginConnector.Create(plugins.Aggregate((x, y) =>
-        {
-            x.Import(y);
-            return x;
-        })).SearchHistory.Execute(searchHistory), plugins)
+        : base(GlobalModelPluginConnector.Create(new SdkModelPlugin(PluginModelWrapperInfo.Metadata, plugins)).SearchHistory.Execute(searchHistory), plugins)
     {
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
