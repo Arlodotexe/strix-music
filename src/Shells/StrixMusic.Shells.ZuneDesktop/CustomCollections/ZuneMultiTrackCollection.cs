@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -24,10 +25,24 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         /// <summary>
         /// Creates a new instance for <see cref="ITrackCollection"/>.
         /// </summary>
-        /// <param name="collection"></param>
-        public ZuneMultiTrackCollection()
+        /// <param name="sources"></param>
+        public ZuneMultiTrackCollection(IEnumerable<ICoreLibrary> sources)
         {
+            StoredSources = sources.ToList();
+            Guard.HasSizeGreaterThan(StoredSources, 0, nameof(StoredSources));
+
+            PreferredSource = StoredSources[0];
         }
+
+        /// <summary>
+        /// The source items that were merged to create this <see cref="ZuneMultiTrackCollection"/>
+        /// </summary>
+        public List<ICoreLibrary> StoredSources { get; }
+
+        /// <summary>
+        /// The top preferred source for this item, used for property getters.
+        /// </summary>
+        protected ICorePlayableCollectionGroup PreferredSource { get; }
 
         /// <inheritdoc />
         public int TotalTrackCount
@@ -41,58 +56,58 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         }
 
         /// <inheritdoc />
-        public bool IsPlayTrackCollectionAsyncAvailable => throw new NotImplementedException();
+        public bool IsPlayTrackCollectionAsyncAvailable => PreferredSource.IsPlayTrackCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseTrackCollectionAsyncAvailable => throw new NotImplementedException();
+        public bool IsPauseTrackCollectionAsyncAvailable => PreferredSource.IsPauseTrackCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public DateTime? AddedAt => throw new NotImplementedException();
+        public DateTime? AddedAt => PreferredSource.AddedAt;
 
         /// <inheritdoc />
-        public string Id => throw new NotImplementedException();
+        public string Id => PreferredSource.Id;
 
         /// <inheritdoc />
-        public string Name => throw new NotImplementedException();
+        public string Name => PreferredSource.Name;
 
         /// <inheritdoc />
-        public string? Description => throw new NotImplementedException();
+        public string? Description => PreferredSource.Description;
 
         /// <inheritdoc />
-        public DateTime? LastPlayed => throw new NotImplementedException();
+        public DateTime? LastPlayed => PreferredSource.LastPlayed;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => PreferredSource.PlaybackState;
 
         /// <inheritdoc />
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => PreferredSource.Duration;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeNameAsyncAvailable => PreferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeDescriptionAsyncAvailable => PreferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncAvailable => throw new NotImplementedException();
+        public bool IsChangeDurationAsyncAvailable => PreferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public DownloadInfo DownloadInfo => throw new NotImplementedException();
+        public DownloadInfo DownloadInfo => throw new NotSupportedException();
 
         /// <inheritdoc />
-        public int TotalImageCount => throw new NotImplementedException();
+        public int TotalImageCount => PreferredSource.TotalImageCount;
 
         /// <inheritdoc />
-        public IReadOnlyList<ICoreImageCollection> Sources => throw new NotImplementedException();
+        public IReadOnlyList<ICoreImageCollection> Sources => StoredSources;
 
         /// <inheritdoc />
-        public int TotalUrlCount => throw new NotImplementedException();
+        public int TotalUrlCount => PreferredSource.TotalUrlCount;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => throw new NotImplementedException();
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => throw new NotImplementedException();
+        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ITrack>? TracksChanged;
@@ -196,37 +211,37 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsAddTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsRemoveTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsRemoveTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default) => PreferredSource.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => PreferredSource.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default) => PreferredSource.PlayTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.RemoveImageAsync(index);
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc />
         public Task<bool> RemoveTrackAsync(ITrack track)
@@ -238,7 +253,7 @@ namespace StrixMusic.Shells.ZuneDesktop.CustomCollections
         }
 
         /// <inheritdoc />
-        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => PreferredSource.RemoveUrlAsync(index);
 
         /// <inheritdoc />
         public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw new NotImplementedException();

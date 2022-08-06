@@ -23,7 +23,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     /// </summary>
     public sealed partial class CollectionContent : UserControl
     {
-        private ZuneMultiTrackCollection _zuneMultiTrackCollection;
+        private ZuneMultiTrackCollection? _zuneMultiTrackCollection;
         private SemaphoreSlim _collectionInitSemaphore = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _trackUpdateSemaphore = new SemaphoreSlim(1, 1);
 
@@ -35,8 +35,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             this.InitializeComponent();
 
             Loaded += CollectionContent_Loaded;
-
-            _zuneMultiTrackCollection = new ZuneMultiTrackCollection();
         }
 
         private void CollectionContent_Loaded(object sender, RoutedEventArgs e)
@@ -60,7 +58,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(CollectionContent), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(CollectionContent), new PropertyMetadata(null, (s, e) =>
+            {
+                if (e.NewValue is StrixDataRootViewModel c)
+                {
+                    var collectionContent = s as CollectionContent;
+                    collectionContent?.InitZuneMultiTrackCollection(c);
+                }
+            }));
 
         /// <summary>
         /// Trigger animation on the <see cref="ZuneAlbumCollection"/> if its visible.
@@ -71,6 +76,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             {
                 ZuneAlbumCollection.AnimateCollection();
             }
+        }
+
+        private void InitZuneMultiTrackCollection(StrixDataRootViewModel newValue)
+        {
+            var sources = newValue.Sources.Select(x => x.Library);
+            _zuneMultiTrackCollection = new ZuneMultiTrackCollection(sources);
         }
 
         private void SwapPage(string pageVisualStateName)
@@ -110,6 +121,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private async void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
+            Guard.IsNotNull(_zuneMultiTrackCollection, nameof(_zuneMultiTrackCollection));
+
             TrackCollection.Collection = null;
             await _collectionInitSemaphore.WaitAsync();
 
@@ -141,11 +154,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             var trackCollection = new TrackCollectionViewModel(_zuneMultiTrackCollection);
             TrackCollection.Collection = trackCollection;
 
-             _collectionInitSemaphore.Release();
+            _collectionInitSemaphore.Release();
         }
 
         private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            Guard.IsNotNull(_zuneMultiTrackCollection, nameof(_zuneMultiTrackCollection));
+
             // Handle changed event of tracks.
             await _trackUpdateSemaphore.WaitAsync();
 
