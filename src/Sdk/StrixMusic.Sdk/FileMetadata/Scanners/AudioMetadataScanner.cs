@@ -17,6 +17,7 @@ using OwlCore.Extensions;
 using OwlCore.Services;
 using StrixMusic.Sdk.FileMetadata.Models;
 using TagLib;
+using File = TagLib.File;
 
 namespace StrixMusic.Sdk.FileMetadata.Scanners
 {
@@ -580,11 +581,11 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 TagLibHelper.TryAddManualFileTypeResolver();
 
-                Logger.LogInformation($"Creating {nameof(TagLib.File)} instance.");
+                Logger.LogInformation($"Loading {fileData.Name} with TagLib");
 
                 try
                 {
-                    using var tagFile = TagLib.File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+                    using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
                     var tag = tagFile.Tag;
 
                     cancellationToken.ThrowIfCancellationRequested();
@@ -594,6 +595,25 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                     {
                         Logger.LogInformation($"{nameof(IFileData)} at {fileData.Path}: no metadata found.");
                         return null;
+                    }
+
+                    var imageMetadata = new List<ImageMetadata>();
+
+                    for (var index = 0; index < tag.Pictures.Length; index++)
+                    {
+                        var picture = tag.Pictures[index];
+
+                        using var imageFile = File.Create(new FileAbstraction($"image{OwlCore.Validation.Mime.MimeTypeMap.GetExtension(picture.MimeType)}", new MemoryStream(picture.Data.Data)), ReadStyle.Average) as TagLib.Image.File;
+                        if (imageFile is null)
+                            continue;
+
+                        imageMetadata.Add(new ImageMetadata
+                        {
+                            Id = $"{fileData.Id}.Id3.Image.{index}",
+                            MimeType = picture.MimeType,
+                            Height = imageFile.Properties.PhotoHeight,
+                            Width = imageFile.Properties.PhotoWidth,
+                        });
                     }
 
                     var fileMetadata = new Models.FileMetadata
@@ -632,11 +652,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                             Name = x,
                             Genres = new HashSet<string>(tag.Genres)
                         })),
-                        ImageMetadata = new List<ImageMetadata>(tag.Pictures.Select((x, i) => new ImageMetadata
-                        {
-                            Id = $"{fileData.Id}.Id3.Image.{i}",
-                            MimeType = x.MimeType,
-                        })),
+                        ImageMetadata = imageMetadata,
                     };
 
                     // If no artist data, create "unknown" placeholder.

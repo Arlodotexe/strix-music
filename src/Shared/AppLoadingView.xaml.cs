@@ -48,6 +48,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Plugins.ImageResizer;
 
 namespace StrixMusic.Shared
 {
@@ -166,6 +167,29 @@ namespace StrixMusic.Shared
 
             Logger.LogInformation("Constructing inbox plugins");
             var playbackHandlerPlugin = new PlaybackHandlerPlugin(playbackHandlerService);
+            var imageResizerPlugin = new ImageResizerPlugin(originalSize =>
+            {
+                const double maxSize = 250;
+
+                // If the actual size isn't known, square it off to a reasonable size.
+                if (originalSize.Height is null || originalSize.Width is null)
+                    return (Width: maxSize, Height: maxSize);
+
+                // If the image is too tall
+                if (originalSize.Height > maxSize && originalSize.Width <= maxSize)
+                    return (Width: maxSize * (double)(maxSize / originalSize.Width), Height: maxSize);
+
+                // If the image is too wide
+                if (originalSize.Height <= maxSize && originalSize.Width > maxSize)
+                    return (Width: maxSize, Height: maxSize * (double)(maxSize / originalSize.Height));
+
+                // If the image is too wide AND too tall.
+                if (originalSize.Height > maxSize && originalSize.Width > maxSize)
+                    return (Width: maxSize, Height: maxSize * (double)(maxSize / originalSize.Height));
+
+                return originalSize;
+            });
+
             var emptyNameFallbackPlugin = new PopulateEmptyNamesPlugin
             {
                 EmptyAlbumName = localizationService.Music?.GetString("UnknownAlbum") ?? "?",
@@ -175,7 +199,7 @@ namespace StrixMusic.Shared
 
             Logger.LogInformation("Constructing data layers");
             var mergedLayer = new MergedCore(cores, _mergedCollectionConfig);
-            var pluginLayer = new StrixDataRootPluginWrapper(mergedLayer, emptyNameFallbackPlugin, playbackHandlerPlugin);
+            var pluginLayer = new StrixDataRootPluginWrapper(mergedLayer, emptyNameFallbackPlugin, playbackHandlerPlugin, imageResizerPlugin);
             var rootViewModel = new StrixDataRootViewModel(pluginLayer);
 
             Logger.LogInformation("Setting up primary app view");
@@ -213,7 +237,7 @@ namespace StrixMusic.Shared
                 if (core.PlaybackType == MediaPlayerType.Standard)
                 {
 #if __WASM__
-continue;
+                    continue;
 #endif
                     var audioPlayer = new AudioPlayerService(mainPage.CreateMediaPlayerElement());
                     playbackHandlerService.RegisterAudioPlayer(audioPlayer, core.InstanceId);
