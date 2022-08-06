@@ -169,23 +169,15 @@ namespace StrixMusic.Shared
             var playbackHandlerPlugin = new PlaybackHandlerPlugin(playbackHandlerService);
             var imageResizerPlugin = new ImageResizerPlugin(originalSize =>
             {
-                const double maxSize = 250;
+                const int maxSize = 1800;
 
-                // If the actual size isn't known, square it off to a reasonable size.
+                // If the actual size isn't known
                 if (originalSize.Height is null || originalSize.Width is null)
                     return (Width: maxSize, Height: maxSize);
 
-                // If the image is too tall
-                if (originalSize.Height > maxSize && originalSize.Width <= maxSize)
-                    return (Width: maxSize * (double)(maxSize / originalSize.Width), Height: maxSize);
-
-                // If the image is too wide
-                if (originalSize.Height <= maxSize && originalSize.Width > maxSize)
-                    return (Width: maxSize, Height: maxSize * (double)(maxSize / originalSize.Height));
-
-                // If the image is too wide AND too tall.
-                if (originalSize.Height > maxSize && originalSize.Width > maxSize)
-                    return (Width: maxSize, Height: maxSize * (double)(maxSize / originalSize.Height));
+                // If the image is too wide OR too tall.
+                if (originalSize.Height > maxSize || originalSize.Width > maxSize)
+                    return (Width: maxSize, Height: maxSize);
 
                 return originalSize;
             });

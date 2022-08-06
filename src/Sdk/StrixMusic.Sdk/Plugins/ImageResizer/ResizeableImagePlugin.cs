@@ -65,6 +65,7 @@ public class ResizeableImagePlugin : ImagePluginBase
         var memoryStream = new MemoryStream();
         await image.SaveAsJpegAsync(memoryStream);
 
+        memoryStream.Position = 0;
         return memoryStream;
     }
 }
