@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.AdapterModels;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
-using StrixMusic.Shells.ZuneDesktop.CustomCollections;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,9 +27,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     /// </summary>
     public sealed partial class CollectionContent : UserControl
     {
-        private ZuneMultiTrackCollection? _zuneMultiTrackCollection;
         private SemaphoreSlim _collectionInitSemaphore = new SemaphoreSlim(1, 1);
         private SemaphoreSlim _trackUpdateSemaphore = new SemaphoreSlim(1, 1);
+        private IEnumerable<ICoreTrackCollection> allCoreSources;
+        private ArtistViewModel? mergedArtist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionContent"/> class.
@@ -35,6 +40,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             this.InitializeComponent();
 
             Loaded += CollectionContent_Loaded;
+            allCoreSources = new List<ICoreTrackCollection>();
         }
 
         private void CollectionContent_Loaded(object sender, RoutedEventArgs e)
@@ -81,7 +87,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         private void InitZuneMultiTrackCollection(StrixDataRootViewModel newValue)
         {
             var sources = newValue.Sources.Select(x => x.Library);
-            _zuneMultiTrackCollection = new ZuneMultiTrackCollection(sources);
         }
 
         private void SwapPage(string pageVisualStateName)
@@ -121,108 +126,77 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private async void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            Guard.IsNotNull(_zuneMultiTrackCollection, nameof(_zuneMultiTrackCollection));
 
             TrackCollection.Collection = null;
             await _collectionInitSemaphore.WaitAsync();
 
-            foreach (var removedArtist in e.RemovedItems)
-            {
-                removedArtist.Tracks.CollectionChanged -= Tracks_CollectionChanged;
-
-                foreach (var item in removedArtist.Tracks)
-                {
-                    await _zuneMultiTrackCollection.RemoveTrackAsync(item);
-                }
-            }
-
             foreach (var artist in e.AddedItems)
             {
-                artist.Tracks.CollectionChanged -= Tracks_CollectionChanged;
-
                 await CollectionInit.TrackCollection(artist, System.Threading.CancellationToken.None);
 
-                foreach (var item in artist.Tracks)
+                if (mergedArtist == null)
                 {
-                    var index = _zuneMultiTrackCollection.TotalTrackCount;
-                    await _zuneMultiTrackCollection.AddTrackAsync(item, index);
+                    mergedArtist = artist;
+                    allCoreSources = artist.Sources;
                 }
-
-                artist.Tracks.CollectionChanged += Tracks_CollectionChanged;
+                else
+                {
+                    allCoreSources = artist.Sources.Union(artist.Sources);
+                }
+                AttachEvents(artist);
             }
 
-            var trackCollection = new TrackCollectionViewModel(_zuneMultiTrackCollection);
-            TrackCollection.Collection = trackCollection;
+            var mergedConfig = new MergedCollectionConfig();
+
+            var multiTrackCollection = new MergedTrackCollection(allCoreSources, new MergedCollectionConfig());
+
+            void AttachEvents(ITrackCollection trackCollection)
+            {
+                trackCollection.SourcesChanged += OnSourcesChanged;
+
+                void OnSourcesChanged(object sender, EventArgs e)
+                {  
+                    // TODO: Find a way to build the MergedCollectionConfig, for this CoreRanking is needed which is not currently accessible because AppSettings is an App Model.
+                    // TODO: Playback needs refactor and ability to play MergedTrackCollection created in the shells.
+
+                    //var addedSources = // todo, find the diff
+                    //var removedSources = // todo, find the diff
+
+                    //foreach (var source in addedSources)
+                    //    multiTrackCollection.AddSource(source);
+
+                    //foreach (var source in removedSources)
+                    //    multiTrackCollection.RemoveSource(source);
+                }
+            }
 
             _collectionInitSemaphore.Release();
         }
 
-        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Guard.IsNotNull(_zuneMultiTrackCollection, nameof(_zuneMultiTrackCollection));
-
-            // Handle changed event of tracks.
-            await _trackUpdateSemaphore.WaitAsync();
-
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (var added in e.NewItems.Cast<TrackViewModel>())
-                {
-                    var index = _zuneMultiTrackCollection.TotalTrackCount;
-                    await _zuneMultiTrackCollection.AddTrackAsync(added, index);
-                }
-            }
-
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var removed in e.NewItems.Cast<TrackViewModel>())
-                {
-                    var index = _zuneMultiTrackCollection.TotalTrackCount;
-                    await _zuneMultiTrackCollection.RemoveTrackAsync(removed);
-                }
-            }
-
-            _trackUpdateSemaphore.Release();
-        }
-
         private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)
         {
-            if (e.AddedItems.Count == 1)
-            {
-                var selectedItem = e.AddedItems.FirstOrDefault();
+            var selectedItem = e.AddedItems.FirstOrDefault();
 
-                if (selectedItem == null)
-                    return;
+            if (selectedItem == null)
+                return;
 
-                if (selectedItem.Album == null)
-                    return;
+            if (selectedItem.Album == null)
+                return;
 
-                selectedItem.Album.PopulateMoreTracksCommand.Execute(selectedItem.Album.TotalTrackCount);
-                TrackCollection.Collection = selectedItem.Album;
-            }
-            else
-            {
-                // TODO
-            }
+            selectedItem.Album.PopulateMoreTracksCommand.Execute(selectedItem.Album.TotalTrackCount);
+            TrackCollection.Collection = selectedItem.Album;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
-            if (e.AddedItems.Count == 1)
-            {
-                var selectedItem = e.AddedItems.FirstOrDefault();
+            var selectedItem = e.AddedItems.FirstOrDefault();
 
-                if (selectedItem == null)
-                    return;
+            if (selectedItem == null)
+                return;
 
-                selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
-                TrackTable.Collection = selectedItem;
-                DetailsPane.DataContext = selectedItem;
-            }
-            else
-            {
-                // TODO
-            }
+            selectedItem.PopulateMoreTracksCommand.Execute(selectedItem.TotalTrackCount);
+            TrackTable.Collection = selectedItem;
+            DetailsPane.DataContext = selectedItem;
         }
 
         private void ClearSelections()
