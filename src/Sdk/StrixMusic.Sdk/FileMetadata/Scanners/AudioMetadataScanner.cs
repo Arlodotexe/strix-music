@@ -398,10 +398,17 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 TrackArtistMetadata = new List<ArtistMetadata>(),
             };
 
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Composers.Select(x => new ArtistMetadata { Name = x }));
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Conductors.Select(x => new ArtistMetadata { Name = x }));
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Producers.Select(x => new ArtistMetadata { Name = x }));
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Writers.Select(x => new ArtistMetadata { Name = x }));
+            if (details.Composers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Composers.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Conductors is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Conductors.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Producers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Producers.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Writers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Writers.Select(x => new ArtistMetadata { Name = x }));
 
             // If no artist data, create "unknown" placeholder.
             if (relatedMetadata.AlbumArtistMetadata.Count == 0)
