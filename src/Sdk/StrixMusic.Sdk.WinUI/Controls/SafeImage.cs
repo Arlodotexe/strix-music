@@ -94,6 +94,9 @@ namespace StrixMusic.Sdk.WinUI.Controls
             if (image.Width is not null)
                 imageSource.DecodePixelWidth = (int)image.Width;
 
+            if (!stream.CanSeek)
+                return;
+
             await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
 
             PART_ImageBrush.ImageSource = imageSource;

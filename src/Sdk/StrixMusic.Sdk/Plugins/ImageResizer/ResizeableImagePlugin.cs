@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using OwlCore.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Plugins.Model;
@@ -59,13 +60,26 @@ public class ResizeableImagePlugin : ImagePluginBase
         using var actualStream = await base.OpenStreamAsync();
         actualStream.Position = 0;
 
-        using var image = await Image.LoadAsync(actualStream);
-        image.Mutate(x => x.Resize((int)newSize.Width, (int)newSize.Height));
+        // If the image is empty, it can't be resized.
+        if (actualStream.Length == 0)
+            return actualStream;
 
-        var memoryStream = new MemoryStream();
-        await image.SaveAsJpegAsync(memoryStream);
+        try
+        {
+            using var image = await Image.LoadAsync(actualStream);
+            image.Mutate(x => x.Resize((int)newSize.Width, (int)newSize.Height));
 
-        memoryStream.Position = 0;
-        return memoryStream;
+            var memoryStream = new MemoryStream();
+            await image.SaveAsJpegAsync(memoryStream);
+
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
+        catch (Exception ex)
+        {
+            // If any unforseen issues are hit, return the original stream.
+            Logger.LogError($"Error while resizing image", ex);
+            return actualStream;
+        }
     }
 }
