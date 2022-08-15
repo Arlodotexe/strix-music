@@ -488,6 +488,17 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 ImageMetadata = new List<ImageMetadata>(),
             };
 
+            if (details.Composers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Composers.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Conductors is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Conductors.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Producers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Producers.Select(x => new ArtistMetadata { Name = x }));
+
+            if (details.Writers is not null)
+                relatedMetadata.TrackArtistMetadata.AddRange(details.Writers.Select(x => new ArtistMetadata { Name = x }));
             if (imageStream is not null)
             {
                 OwlCore.Validation.Mime.MimeTypeMap.TryGetMimeType(fileData.FileExtension, out var mimeType);
@@ -500,11 +511,6 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
 
                 imageStream.Dispose();
             }
-
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Composers?.Select(x => new ArtistMetadata { Name = x }) ?? Enumerable.Empty<ArtistMetadata>());
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Conductors?.Select(x => new ArtistMetadata { Name = x }) ?? Enumerable.Empty<ArtistMetadata>());
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Producers?.Select(x => new ArtistMetadata { Name = x }) ?? Enumerable.Empty<ArtistMetadata>());
-            relatedMetadata.TrackArtistMetadata.AddRange(details.Writers?.Select(x => new ArtistMetadata { Name = x }) ?? Enumerable.Empty<ArtistMetadata>());
 
             // If no artist data, create "unknown" placeholder.
             if (relatedMetadata.AlbumArtistMetadata.Count == 0)
