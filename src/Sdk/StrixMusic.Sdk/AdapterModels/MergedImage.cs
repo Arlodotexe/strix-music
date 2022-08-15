@@ -77,7 +77,7 @@ namespace StrixMusic.Sdk.AdapterModels
             // We can't know for sure if 2 images are the same until we open the streams and compare them,
             // which is an asynchronous operation and can't be done here.
             // For merging, this check can be done as we retrieve the images from the collection.
-            return false;
+            return ReferenceEquals(this, other);
         }
 
         /// <inheritdoc />
