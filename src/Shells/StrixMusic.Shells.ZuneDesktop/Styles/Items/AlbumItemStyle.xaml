@@ -117,7 +117,7 @@
                                                 </Rectangle>
 
                                                 <Button x:Name="PART_PlayIcon"
-                                                        HorizontalAlignment="Center"   VerticalAlignment="Bottom" Background="Transparent" Opacity="0">
+                                                        HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="Transparent" Opacity="0">
                                                     <Button.Resources>
                                                         <ResourceDictionary>
                                                             <ResourceDictionary.ThemeDictionaries>

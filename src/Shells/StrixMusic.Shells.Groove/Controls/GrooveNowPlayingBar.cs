@@ -32,7 +32,7 @@ namespace StrixMusic.Shells.Groove.Controls
         {
             DefaultStyleKey = typeof(GrooveNowPlayingBar);
         }
-        
+
         /// <summary>
         /// Gets or sets the color of the <see cref="Controls.GrooveNowPlayingBar"/> background.
         /// </summary>
@@ -47,7 +47,7 @@ namespace StrixMusic.Shells.Groove.Controls
         {
             device.NowPlayingChanged += ActiveDevice_NowPlayingChanged;
         }
-        
+
         /// <inheritdoc/>
         private void DetachEvents_ActiveDevice(IDevice device)
         {
@@ -66,8 +66,12 @@ namespace StrixMusic.Shells.Groove.Controls
                 // If there are images, grab the color from the first image.
                 var images = await e.Track.GetImagesAsync(1, 0).ToListAsync();
 
-                foreach (var image in images)
-                    BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(image.Uri));
+                if (images.Count == 0)
+                    return;
+
+                using var stream = await images[0].OpenStreamAsync();
+
+                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(stream));
             }
         }
 

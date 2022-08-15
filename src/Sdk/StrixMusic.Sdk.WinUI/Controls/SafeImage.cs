@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
@@ -82,12 +84,22 @@ namespace StrixMusic.Sdk.WinUI.Controls
             }
 
             var image = images[0];
+            using var stream = await image.OpenStreamAsync();
 
-            PART_ImageBrush.ImageSource = new BitmapImage(image.Uri)
-            {
-                DecodePixelHeight = (int)image.Height,
-                DecodePixelWidth = (int)image.Width,
-            };
+            var imageSource = new BitmapImage();
+
+            if (image.Height is not null)
+                imageSource.DecodePixelHeight = (int)image.Height;
+
+            if (image.Width is not null)
+                imageSource.DecodePixelWidth = (int)image.Width;
+
+            if (!stream.CanSeek)
+                return;
+
+            await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
+
+            PART_ImageBrush.ImageSource = imageSource;
         }
     }
 }

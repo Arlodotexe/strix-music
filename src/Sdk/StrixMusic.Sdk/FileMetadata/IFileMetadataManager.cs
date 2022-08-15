@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Provisos;
@@ -44,6 +45,14 @@ namespace StrixMusic.Sdk.FileMetadata
         /// Stores image metadata.
         /// </summary>
         IImageRepository Images { get; }
+
+        /// <summary>
+        /// Gets the stream for the provided image Id.
+        /// </summary>
+        /// <param name="imageId">The unique identifier for this image, created as part of a scan.</param>
+        /// <returns>A Task containing the image stream, if found.</returns>
+        /// <exception cref="ArgumentException">Couldn't extract scanned image type from image ID.</exception>
+        public Task<Stream?> GetImageStreamById(string imageId);
 
         /// <summary>
         /// If true, the repositories will not be initialized when InitAsync is called for this <see cref="IFileMetadataManager"/>.

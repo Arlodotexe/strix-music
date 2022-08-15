@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.CoreModels;
@@ -20,10 +21,8 @@ namespace StrixMusic.Cores.Files.Models
         {
             _imageMetadata = imageMetadata;
 
-            // Guard.IsNotNull() wasn't working here. Fallback to ThrowHelper.
-            Uri = imageMetadata.Uri ?? ThrowHelper.ThrowArgumentNullException<Uri>(nameof(imageMetadata.Uri));
-            Height = (double?)imageMetadata.Height ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Height));
-            Width = (double?)imageMetadata.Width ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Width));
+            Height = imageMetadata.Height;
+            Width = imageMetadata.Width;
 
             SourceCore = sourceCore;
         }
@@ -32,18 +31,28 @@ namespace StrixMusic.Cores.Files.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public Uri Uri { get; }
-
-        /// <inheritdoc />
-        public double Height { get; }
-
-        /// <inheritdoc />
-        public double Width { get; }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
+        public async Task<Stream> OpenStreamAsync()
         {
-            return default;
+            var fileMetadataManager = ((FilesCore)SourceCore).FileMetadataManager;
+            Guard.IsNotNull(fileMetadataManager);
+            Guard.IsNotNull(_imageMetadata.Id);
+
+            var stream = await fileMetadataManager.GetImageStreamById(_imageMetadata.Id);
+            Guard.IsNotNull(stream);
+
+            return stream;
         }
+
+        /// <inheritdoc />
+        public string? MimeType => _imageMetadata.MimeType;
+
+        /// <inheritdoc />
+        public double? Height { get; }
+
+        /// <inheritdoc />
+        public double? Width { get; }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync() => default;
     }
 }

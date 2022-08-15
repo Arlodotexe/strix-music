@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ClusterNet.Kernels;
@@ -13,22 +14,22 @@ using Color = Windows.UI.Color;
 namespace StrixMusic.Shells.Groove.Helper
 {
     /// <summary>
-    /// A class containing methods for handling dyanmic coloring.
+    /// A class containing methods for handling dynamic coloring.
     /// </summary>
     public static class DynamicColorHelper
     {
-        private static SemaphoreSlim _mutex = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim _mutex = new(1, 1);
 
         /// <summary>
         /// Gets an accent color from an <see cref="Sdk.AppModels.IImage"/>.
         /// </summary>
-        /// <param name="sdkImage">The image to get a color from.</param>
+        /// <param name="stream"></param>
         /// <returns>The accent color for the image.</returns>
-        public static async Task<Color> GetImageAccentColorAsync(Uri imageUri)
+        public static async Task<Color> GetImageAccentColorAsync(Stream stream)
         {
             using (await Flow.EasySemaphore(_mutex))
             {
-                var image = await ImageParser.GetImage(imageUri.OriginalString);
+                var image = await ImageParser.GetImage(stream);
 
                 if (image is null)
                     return Color.FromArgb(255, 0, 0, 0);

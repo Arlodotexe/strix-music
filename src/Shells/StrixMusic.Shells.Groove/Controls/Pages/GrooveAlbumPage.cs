@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
@@ -64,7 +65,15 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
             await album.InitImageCollectionAsync();
 
             if (album.Images.Count > 0)
-                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(album.Images[0].Uri));
+            {
+                var images = await album.GetImagesAsync(1, 0).ToListAsync();
+                if (images.Count < 1)
+                    return;
+
+                using var stream = await images[0].OpenStreamAsync();
+
+                BackgroundColor = await Task.Run(() => DynamicColorHelper.GetImageAccentColorAsync(stream));
+            }
         }
     }
 }

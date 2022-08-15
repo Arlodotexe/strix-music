@@ -557,7 +557,7 @@ namespace StrixMusic.Cores.Files.Models
 
             foreach (var artist in artists)
             {
-                Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
+                Guard.IsNotNullOrWhiteSpace(artist.Id);
                 yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
             }
         }
@@ -572,7 +572,7 @@ namespace StrixMusic.Cores.Files.Models
             foreach (var imageId in _albumMetadata.ImageIds.Skip(offset).Take(limit))
             {
                 var image = await _fileMetadataManager.Images.GetByIdAsync(imageId);
-                Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
+                Guard.IsNotNullOrWhiteSpace(image?.Id);
 
                 yield return InstanceCache.Images.GetOrCreate(imageId, SourceCore, image);
             }

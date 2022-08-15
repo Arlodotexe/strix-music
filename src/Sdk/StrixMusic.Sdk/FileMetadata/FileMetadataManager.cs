@@ -4,19 +4,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractStorage.Scanners;
-using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.FileMetadata.Repositories;
 using StrixMusic.Sdk.FileMetadata.Scanners;
-using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.FileMetadata
 {
@@ -25,8 +23,7 @@ namespace StrixMusic.Sdk.FileMetadata
     /// </summary>
     public sealed class FileMetadataManager : IFileMetadataManager
     {
-        private static string NewGuid() => Guid.NewGuid().ToString();
-
+        private readonly List<IFileData> _knownFiles = new();
         private readonly IFileScanner _fileScanner;
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
@@ -67,9 +64,6 @@ namespace StrixMusic.Sdk.FileMetadata
         {
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
-
-            Logger.LogInformation($"Setting up repository data location to {_metadataStorage.Path}");
-            _audioMetadataScanner.ImageOutputFolder = _metadataStorage;
 
             Albums.SetDataFolder(_metadataStorage);
             AlbumArtists.SetDataFolder(_metadataStorage);
@@ -180,6 +174,7 @@ namespace StrixMusic.Sdk.FileMetadata
 
         private void OnFilesDiscovered(object sender, IEnumerable<IFileData> e)
         {
+            _knownFiles.AddRange(e);
             var count = e.Count();
             Logger.LogInformation($"{count} files discovered");
 
@@ -239,6 +234,55 @@ namespace StrixMusic.Sdk.FileMetadata
         /// <inheritdoc/>
         public IImageRepository Images { get; }
 
+        /// <inheritdoc/>
+        public async Task<Stream?> GetImageStreamById(string imageId)
+        {
+            var fileId = _audioMetadataScanner.GetFileIdFromImageId(imageId);
+
+            // Check if we've seen the file already
+            var targetFile = _knownFiles.FirstOrDefault(x => x.Id == fileId);
+            if (targetFile is null)
+            {
+                // This method can't be used before a scan is kicked off in the core.
+                // If we haven't seen the file yet, check if there's an active scan.
+                if (_inProgressScanCancellationTokenSource is null)
+                {
+                    // If there's no active scan and we haven't seen the file, the file may not exist. Return nothing.
+                    return null;
+                }
+
+                var taskCompletionSource = new TaskCompletionSource<IFileData?>();
+
+                // Wait for active scan to find the file
+                _fileScanner.FilesDiscovered += OnFileDiscovered;
+                _fileScanner.FileDiscoveryCompleted += OnFileScanComplete;
+
+                targetFile = await taskCompletionSource.Task;
+
+                _fileScanner.FilesDiscovered -= OnFileDiscovered;
+                _fileScanner.FileDiscoveryCompleted -= OnFileScanComplete;
+
+                void OnFileDiscovered(object sender, IEnumerable<IFileData> e)
+                {
+                    Guard.IsNotNull(taskCompletionSource);
+                    if (e.FirstOrDefault(x => x.Id == fileId) is { } file)
+                        taskCompletionSource.SetResult(file);
+                }
+
+                void OnFileScanComplete(object sender, IEnumerable<IFileData> e)
+                {
+                    // If the scan ends and the file still hasn't been seen, return nothing.
+                    Guard.IsNotNull(taskCompletionSource);
+                    taskCompletionSource.SetResult(e.FirstOrDefault(x => x.Id == fileId));
+                }
+            }
+
+            if (targetFile is null)
+                return null;
+
+            return await _audioMetadataScanner.GetImageStream(targetFile, imageId);
+        }
+
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }
 
@@ -250,7 +294,7 @@ namespace StrixMusic.Sdk.FileMetadata
         }
 
         /// <inheritdoc />
-        public int DegreesOfParallelism { get; } = 2;
+        public int DegreesOfParallelism => 2;
 
         /// <inheritdoc />
         public async Task ScanAsync(CancellationToken cancellationToken = default)
@@ -284,32 +328,30 @@ namespace StrixMusic.Sdk.FileMetadata
                 await Images.InitAsync(currentToken);
             }
 
-            currentToken.ThrowIfCancellationRequested();
-
             Logger.LogInformation($"Starting recursive file discovery in {_rootFolderToScan.Path}");
             ScanState = new FileScanState(FileScanStage.FileDiscovery, ScanState.FilesProcessed, ScanState.FilesFound);
-            var discoveredFiles = await _fileScanner.ScanFolderAsync(currentToken);
-            var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
+            await _fileScanner.ScanFolderAsync(cancellationToken);
 
-            currentToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            if (filesToScan.Length == 0)
+            if (_knownFiles.Count == 0)
                 return;
 
             Logger.LogInformation($"Starting metadata scan of audio files");
             ScanState = new FileScanState(FileScanStage.AudioFiles, ScanState.FilesProcessed, ScanState.FilesFound);
-            var fileMetadata = await _audioMetadataScanner.ScanMusicFilesAsync(filesToScan, currentToken);
+            var fileMetadata = await _audioMetadataScanner.ScanMusicFilesAsync(_knownFiles, currentToken).Select(item => item.Metadata).ToListAsync(cancellationToken: currentToken);
 
             currentToken.ThrowIfCancellationRequested();
 
             Logger.LogInformation($"Starting metadata scan of playlist files");
             ScanState = new FileScanState(FileScanStage.Playlists, ScanState.FilesProcessed, ScanState.FilesFound);
-            await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata, currentToken);
+            await _playlistMetadataScanner.ScanPlaylists(_knownFiles, fileMetadata, currentToken);
 
             currentToken.ThrowIfCancellationRequested();
 
             ScanState = new FileScanState(FileScanStage.Complete, ScanState.FilesProcessed, ScanState.FilesFound);
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
+            _inProgressScanCancellationTokenSource = null;
         }
 
         /// <inheritdoc />

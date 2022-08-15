@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public static ICorePlayableCollectionGroup CreatePlayableCollectionGroup(ICore sourceCore) => new MockCorePlayableCollectionGroup(sourceCore, "factoryPcg", "Test collection group");
 
-        public static ICoreImage CreateImage(ICore sourceCore) => new MockCoreImage(sourceCore, new Uri("https://strixmusic.com/favicon.ico"));
+        public static ICoreImage CreateImage(ICore sourceCore) => new MockCoreImage(sourceCore);
 
         public static ICoreUrl CreateUrl(ICore sourceCore) => new MockCoreUrl(sourceCore, new Uri("https://strixmusic.com/favicon.ico"), "test url");
     }

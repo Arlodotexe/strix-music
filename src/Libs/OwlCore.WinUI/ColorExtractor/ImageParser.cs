@@ -16,15 +16,11 @@ namespace OwlCore.WinUI.ColorExtractor
         /// <summary>
         /// Gets an <see cref="Image{TPixel}"/> with <see cref="Argb32"/> format from a url.
         /// </summary>
-        /// <param name="url">The url of the image to load.</param>
+        /// <param name="stream"></param>
         /// <returns>An Argb32 image.</returns>
-        public static async Task<Image<Argb32>?> GetImage(string url)
+        public static async Task<Image<Argb32>?> GetImage(Stream stream)
         {
-            if (string.IsNullOrEmpty(url))
-                return null;
-
-            using var imageStreamAsync = await GetImageStreamAsync(url);
-            var image = await Image.LoadAsync(imageStreamAsync);
+            var image = await Image.LoadAsync(stream);
             var clonedImage = image.CloneAs<Argb32>();
 
             return clonedImage;

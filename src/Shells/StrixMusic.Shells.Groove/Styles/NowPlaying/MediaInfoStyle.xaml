@@ -15,7 +15,6 @@
 
     <owlnumconv:DoubleToIntConverter x:Key="DoubleToIntConverter"/>
 
-
     <Style x:Key="GrooveMediaInfoStyle" TargetType="nowplaying:MediaInfo">
         <Setter Property="Template">
             <Setter.Value>
@@ -41,23 +40,7 @@
                             <TextBlock Text="{Binding Device.NowPlaying.Track.Artists[0].Name, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="15" FontWeight="Bold"/>
                         </StackPanel>
 
-                        <Image x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center">
-                            <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                    <core:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                                </core:EventTriggerBehavior>
-
-                                <core:EventTriggerBehavior EventName="Loaded">
-                                    <core:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                                </core:EventTriggerBehavior>
-                            </interactivity:Interaction.Behaviors>
-
-                            <Image.Source>
-                                <BitmapImage UriSource="{Binding Device.NowPlaying.Track.Images[0].Uri, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                 DecodePixelHeight="{Binding Device.NowPlaying.Track.Images[0].Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                 DecodePixelWidth="{Binding Device.NowPlaying.Track.Images[0].Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
-                            </Image.Source>
-                        </Image>
+                        <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

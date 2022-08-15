@@ -11,6 +11,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:colorconvert="using:OwlCore.WinUI.Converters.Color"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     x:Class="StrixMusic.Shells.Groove.Styles.Pages.GrooveAlbumPageStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -69,24 +70,11 @@
                                             <RowDefinition/>
                                             <RowDefinition Height="auto"/>
                                         </Grid.RowDefinitions>
-                                        
-                                        <Image Grid.RowSpan="2" Margin="32">
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="Loaded">
-                                                    <core:InvokeCommandAction Command="{Binding Album.InitImageCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                                                </core:EventTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
 
-                                            <Image.Source>
-                                                <BitmapImage UriSource="{Binding Album.Images[0].Uri, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                                             DecodePixelHeight="{Binding Album.Images[0].Height, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                                             DecodePixelWidth="{Binding Album.Images[0].Width, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
-                                            </Image.Source>
-                                        </Image>
+                                        <controls:SafeImage  Grid.RowSpan="2" Margin="32" ImageCollection="{Binding Album, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
 
                                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                                            <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
-                                       LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+                                            <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords" LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
 
                                             <ItemsControl ItemsSource="{Binding Album.Artists, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
                                                 <ItemsControl.ItemsPanel>

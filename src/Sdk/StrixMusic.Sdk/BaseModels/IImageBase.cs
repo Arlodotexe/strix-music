@@ -3,6 +3,8 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.BaseModels
 {
@@ -12,18 +14,24 @@ namespace StrixMusic.Sdk.BaseModels
     public interface IImageBase : ICollectionItemBase
     {
         /// <summary>
-        /// Local or remote resource pointing to the image.
+        /// Opens a stream to the image resource.
         /// </summary>
-        Uri Uri { get; }
+        /// <returns>A Task containing a Stream of the raw image resource.</returns>
+        Task<Stream> OpenStreamAsync();
 
         /// <summary>
-        /// Height of the image.
+        /// The mime type of the image, if known. A hint to help optimize image rendering.
         /// </summary>
-        double Height { get; }
+        string? MimeType { get; }
 
         /// <summary>
-        /// Width of the image.
+        /// The height of the image, if known. A hint to help render the image at the correct size.
         /// </summary>
-        double Width { get; }
+        double? Height { get; }
+
+        /// <summary>
+        /// The width of the image, if known. A hint to help render the image at the correct size.
+        /// </summary>
+        double? Width { get; }
     }
 }
