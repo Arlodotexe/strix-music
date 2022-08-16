@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
@@ -23,6 +24,8 @@ namespace StrixMusic.Sdk.WinUI.Controls
     [TemplatePart(Name = nameof(PART_ImageRectangle), Type = typeof(Rectangle))]
     public sealed partial class SafeImage : Control
     {
+        private CancellationTokenSource? _cancellationTokenSource = null;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SafeImage"/> class.
         /// </summary>
@@ -35,7 +38,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// Dependency property for <see cref="ImageCollection"/>.
         /// </summary>
         public static readonly DependencyProperty ImageCollectionProperty =
-            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().RequestImages().Forget()));
+            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().ResetAndLoadImage()));
 
         /// <summary>
         /// The image collection to load and display.
@@ -57,7 +60,9 @@ namespace StrixMusic.Sdk.WinUI.Controls
             else
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
-            _ = RequestImages();
+            if (ImageCollection is not null)
+                ResetAndLoadImage();
+
             base.OnApplyTemplate();
         }
 
@@ -65,7 +70,14 @@ namespace StrixMusic.Sdk.WinUI.Controls
 
         private ImageBrush? PART_ImageBrush { get; set; }
 
-        private async Task RequestImages()
+        private void ResetAndLoadImage()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+            RequestImages(_cancellationTokenSource.Token).Forget();
+        }
+
+        private async Task RequestImages(CancellationToken cancellationToken)
         {
             if (PART_ImageBrush is null)
                 return;
@@ -76,6 +88,8 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 return;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var images = await ImageCollection.GetImagesAsync(1, 0).ToListAsync();
             if (images.Count == 0)
             {
@@ -83,8 +97,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 return;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var image = images[0];
             using var stream = await image.OpenStreamAsync();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var imageSource = new BitmapImage();
 
@@ -98,6 +116,8 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 return;
 
             await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             PART_ImageBrush.ImageSource = imageSource;
         }
