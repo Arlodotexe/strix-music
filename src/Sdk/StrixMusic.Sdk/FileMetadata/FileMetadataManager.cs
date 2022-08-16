@@ -345,7 +345,7 @@ namespace StrixMusic.Sdk.FileMetadata
 
             Logger.LogInformation($"Starting metadata scan of playlist files");
             ScanState = new FileScanState(FileScanStage.Playlists, ScanState.FilesProcessed, ScanState.FilesFound);
-            await _playlistMetadataScanner.ScanPlaylists(_knownFiles, fileMetadata, currentToken);
+            await _playlistMetadataScanner.ScanPlaylistsAsync(_knownFiles, fileMetadata, currentToken).ToListAsync(cancellationToken: currentToken);
 
             currentToken.ThrowIfCancellationRequested();
 
