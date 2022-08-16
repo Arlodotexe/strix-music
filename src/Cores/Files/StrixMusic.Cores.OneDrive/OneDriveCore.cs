@@ -56,6 +56,7 @@ namespace StrixMusic.Cores.OneDrive
         public OneDriveCore(string instanceId, OneDriveCoreSettings settings, IFolderData metadataStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress = null)
             : base(instanceId, fileScanProgress)
         {
+            Logo = new LogoImage(this);
             NotificationService = notificationService;
             _metadataStorage = metadataStorage;
             Settings = settings;
@@ -65,16 +66,6 @@ namespace StrixMusic.Cores.OneDrive
             _completeGenericSetupButton.Clicked += CompleteGenericSetupButton_Clicked;
         }
 
-        /// <inheritdoc/>
-        public override CoreMetadata Registration { get; } = Metadata;
-
-        /// <summary>
-        /// The metadata that identifies this core before instantiation.
-        /// </summary>
-        public static CoreMetadata Metadata { get; } = new CoreMetadata(Id: nameof(OneDriveCore),
-                                                                        DisplayName: "OneDrive",
-                                                                        LogoUri: new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
-                                                                        SdkVer: typeof(ICore).Assembly.GetName().Version);
         /// <inheritdoc/>
         public override string InstanceDescriptor { get; set; } = string.Empty;
 
@@ -100,6 +91,15 @@ namespace StrixMusic.Cores.OneDrive
         /// A service that can notify the user with interactive UI or messages.
         /// </summary>
         public INotificationService NotificationService { get; }
+
+        /// <inheritdoc/>
+        public override string Id => nameof(OneDriveCore);
+
+        /// <inheritdoc/>
+        public override string DisplayName => "OneDrive";
+
+        /// <inheritdoc/>
+        public override ICoreImage? Logo { get; }
 
         /// <summary>
         /// Raised when the user requests to visit an external web page for OneDrive login.
@@ -260,7 +260,7 @@ namespace StrixMusic.Cores.OneDrive
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.WaitIfNoData)
             {
-                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.AlbumArtists.GetItemCount(),FileMetadataManager.TrackArtists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
+                var itemCounts = await Task.WhenAll(FileMetadataManager.Tracks.GetItemCount(), FileMetadataManager.Albums.GetItemCount(), FileMetadataManager.AlbumArtists.GetItemCount(), FileMetadataManager.TrackArtists.GetItemCount(), FileMetadataManager.Playlists.GetItemCount());
 
                 if (itemCounts.Sum() == 0)
                     await scannerTask;

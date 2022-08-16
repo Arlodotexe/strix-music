@@ -32,8 +32,14 @@ namespace StrixMusic.Cores.Files
             Library = new FilesCoreLibrary(this);
         }
 
-        /// <inheritdoc/>
-        public abstract CoreMetadata Registration { get; }
+        /// <inheritdoc />
+        public abstract string Id { get; }
+
+        /// <inheritdoc />
+        public abstract string DisplayName { get; }
+
+        /// <inheritdoc />
+        public abstract ICoreImage? Logo { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }
@@ -49,7 +55,7 @@ namespace StrixMusic.Cores.Files
 
         /// <inheritdoc />
         public ICore SourceCore => this;
-        
+
         /// <summary>
         /// Manages scanning and caching of all music metadata from files in a folder.
         /// </summary>
@@ -101,9 +107,15 @@ namespace StrixMusic.Cores.Files
         /// <inheritdoc />
         public abstract event EventHandler<string>? InstanceDescriptorChanged;
 
+        /// <inheritdoc />
+        public event EventHandler<ICoreImage?>? LogoChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? DisplayNameChanged;
+
         /// <inheritdoc/>
         public abstract Task InitAsync(CancellationToken cancellationToken = default);
-        
+
         /// <inheritdoc/>
         public bool IsInitialized { get; protected set; }
 
@@ -119,7 +131,7 @@ namespace StrixMusic.Cores.Files
         public async Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
             Guard.IsNotNull(FileMetadataManager, nameof(FileMetadataManager));
-            
+
             var artist = await FileMetadataManager.AlbumArtists.GetByIdAsync(id);
             if (artist != null)
                 return InstanceCache.Artists.GetOrCreate(id, SourceCore, artist);

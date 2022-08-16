@@ -156,7 +156,7 @@ namespace StrixMusic.Shared
             {
                 if (cores.FirstOrDefault(x => x.InstanceId == entry.Key) is not ICore core)
                 {
-                    Logger.LogInformation($"Creating core with instanceId {entry.Key}, display name {entry.Value.DisplayName}, id {entry.Value.Id}");
+                    Logger.LogInformation($"Creating core with instanceId {entry.Key} id {entry.Value.Id}");
                     core = await CoreRegistry.CreateCoreAsync(entry.Value.Id, entry.Key);
                     cores.Add(core);
                 }
@@ -371,7 +371,7 @@ namespace StrixMusic.Shared
         {
             CoreRegistry.CoreRegistered += OnCoreRegistered;
 
-            CoreRegistry.Register(LocalFilesCore.Metadata, async instanceId =>
+            CoreRegistry.Register(new CoreMetadata(nameof(LocalFilesCore), "Local Files") { Logo = new Cores.LocalFiles.LogoImage(null!) }, async instanceId =>
             {
                 var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
                 var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
@@ -382,7 +382,7 @@ namespace StrixMusic.Shared
                 };
             });
 
-            CoreRegistry.Register(OneDriveCore.Metadata, async instanceId =>
+            CoreRegistry.Register(new CoreMetadata(nameof(OneDriveCore), "OneDrive") { Logo = new Cores.OneDrive.LogoImage(null!) }, async instanceId =>
             {
                 var coreFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cores", Windows.Storage.CreationCollisionOption.OpenIfExists);
                 var coreInstanceFolder = await coreFolder.CreateFolderAsync(instanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
@@ -431,7 +431,7 @@ namespace StrixMusic.Shared
                 ThrowHelper.ThrowInvalidOperationException($"{nameof(CoreRegistry.MetadataRegistry)} contains no elements after registry initialization. App cannot function without at least 1 core.");
 
             CoreRegistry.CoreRegistered -= OnCoreRegistered;
-            void OnCoreRegistered(object? sender, CoreMetadata metadata) => Logger.LogInformation($"Core registered. Id {metadata.Id}, Display name {metadata.DisplayName}");
+            void OnCoreRegistered(object? sender, CoreMetadata metadata) => Logger.LogInformation($"Core registered. Id {metadata.Id}");
         }
 
         private void FilesCoreProgressChanged(string instanceId, FileScanState state)

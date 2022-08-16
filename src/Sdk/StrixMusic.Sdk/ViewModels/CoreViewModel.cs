@@ -29,23 +29,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         public CoreViewModel(ICore core)
-            : this(core, core.Registration)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
-        /// </summary>
-        /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
-        /// <param name="coreMetadata">The metadata that was used to construct this core instance.</param>
-        public CoreViewModel(ICore core, CoreMetadata coreMetadata)
         {
             _syncContext = SynchronizationContext.Current;
 
             _core = core;
-
-            DisplayName = coreMetadata.DisplayName;
-            LogoUri = coreMetadata.LogoUri;
 
             CoreState = _core.CoreState;
 
@@ -59,7 +46,29 @@ namespace StrixMusic.Sdk.ViewModels
             _core.CoreStateChanged += Core_CoreStateChanged;
             _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
             _core.AbstractConfigPanelChanged += OnAbstractConfigPanelChanged;
+            _core.LogoChanged += OnLogoChanged;
+            _core.DisplayNameChanged += OnDisplayNameChanged;
         }
+
+        private void DetachEvents()
+        {
+            _core.CoreStateChanged -= Core_CoreStateChanged;
+            _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
+            _core.AbstractConfigPanelChanged -= OnAbstractConfigPanelChanged;
+            _core.LogoChanged -= OnLogoChanged;
+            _core.DisplayNameChanged -= OnDisplayNameChanged;
+        }
+
+        private void OnDisplayNameChanged(object sender, string e) => _syncContext.Post(_ =>
+        {
+            OnPropertyChanged(nameof(DisplayName));
+        }, null);
+
+        private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
+        {
+            OnPropertyChanged(nameof(InstanceDescriptor));
+            InstanceDescriptorChanged?.Invoke(sender, e);
+        }, null);
 
         private void OnAbstractConfigPanelChanged(object sender, EventArgs e) => _syncContext.Post(_ =>
         {
@@ -67,17 +76,9 @@ namespace StrixMusic.Sdk.ViewModels
             OnPropertyChanged(nameof(AbstractConfigPanel));
         }, null);
 
-        private void DetachEvents()
+        private void OnLogoChanged(object sender, ICoreImage? e) => _syncContext.Post(_ =>
         {
-            _core.CoreStateChanged -= Core_CoreStateChanged;
-            _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
-            _core.AbstractConfigPanelChanged -= OnAbstractConfigPanelChanged;
-        }
-
-        private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
-        {
-            OnPropertyChanged(nameof(InstanceDescriptor));
-            InstanceDescriptorChanged?.Invoke(sender, e);
+            OnPropertyChanged(nameof(Logo));
         }, null);
 
         /// <inheritdoc cref="ICore.CoreState" />
@@ -88,7 +89,7 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext.Post(_ =>
             {
                 OnPropertyChanged(nameof(CoreState));
-
+                
                 OnPropertyChanged(nameof(IsCoreStateUnloaded));
                 OnPropertyChanged(nameof(IsCoreStateConfiguring));
                 OnPropertyChanged(nameof(IsCoreStateConfigured));
@@ -96,6 +97,12 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateLoaded));
             }, null);
         }
+
+        /// <inheritdoc />
+        public string Id => _core.Id;
+
+        /// <inheritdoc />
+        public ICoreImage? Logo => _core.Logo;
 
         /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
@@ -113,14 +120,9 @@ namespace StrixMusic.Sdk.ViewModels
         public MediaPlayerType PlaybackType => _core.PlaybackType;
 
         /// <summary>
-        /// A local path or url pointing to a SVG file containing the logo for this core.
-        /// </summary>
-        public Uri LogoUri { get; }
-
-        /// <summary>
         /// The user-friendly name of the core.
         /// </summary>
-        public string DisplayName { get; }
+        public string DisplayName => _core.DisplayName;
 
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
@@ -156,11 +158,25 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
+        /// <inheritdoc />
+        public event EventHandler<string>? DisplayNameChanged
+        {
+            add => _core.DisplayNameChanged += value;
+            remove => _core.DisplayNameChanged -= value;
+        }
+
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged
         {
             add => _core.CoreStateChanged += value;
             remove => _core.CoreStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<ICoreImage?>? LogoChanged
+        {
+            add => _core.LogoChanged += value;
+            remove => _core.LogoChanged -= value;
         }
 
         /// <inheritdoc />
@@ -189,9 +205,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.Pins" />
         ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;
-
-        /// <inheritdoc cref="CoreMetadata"/>
-        public CoreMetadata Registration => _core.Registration;
 
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()

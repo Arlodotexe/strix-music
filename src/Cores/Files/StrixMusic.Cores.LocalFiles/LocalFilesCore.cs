@@ -51,6 +51,7 @@ namespace StrixMusic.Cores.LocalFiles
         public LocalFilesCore(string instanceId, LocalFilesCoreSettings settings, IFileSystemService fileSystem, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
             : base(instanceId, fileScanProgress)
         {
+            Logo = new LogoImage(this);
             FileSystem = fileSystem;
             NotificationService = notificationService;
             Settings = settings;
@@ -75,21 +76,19 @@ namespace StrixMusic.Cores.LocalFiles
         }
 
         /// <inheritdoc/>
-        public override CoreMetadata Registration { get; } = Metadata;
+        public override string Id => nameof(LocalFilesCore);
+
+        /// <inheritdoc/>
+        public override string DisplayName => "Local Files";
+
+        /// <inheritdoc/>
+        public override ICoreImage? Logo { get; }
 
         /// <inheritdoc />
         public override AbstractUICollection AbstractConfigPanel => _configPanel;
 
         /// <inheritdoc />
         public override MediaPlayerType PlaybackType { get; } = MediaPlayerType.Standard;
-
-        /// <summary>
-        /// The metadata that identifies this core before instantiation.
-        /// </summary>
-        public static CoreMetadata Metadata { get; } = new CoreMetadata(Id: nameof(LocalFilesCore),
-                                                                        DisplayName: "Local Files",
-                                                                        LogoUri: new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
-                                                                        SdkVer: typeof(ICore).Assembly.GetName().Version);
 
         /// <summary>
         /// The settings for this core instance.
