@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// <param name="fileMetadata">The file metadata to use when linking playlist data.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels the ongoing task.</param>
         /// <returns>An <see cref="IEnumerable{PlaylistMetadata}"/> with playlist data linked to the given <paramref name="fileMetadata"/>.</returns>
-        public async IAsyncEnumerable<PlaylistMetadata> ScanPlaylists(IEnumerable<IFileData> files, IEnumerable<Models.FileMetadata> fileMetadata, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<PlaylistMetadata> ScanPlaylistsAsync(IEnumerable<IFileData> files, IEnumerable<Models.FileMetadata> fileMetadata, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             _filesProcessed = 0;
 
