@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -83,20 +84,9 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
         /// </summary>
         /// <param name="files">The files to scan for playlists.</param>
         /// <param name="fileMetadata">The file metadata to use when linking playlist data.</param>
-        /// <returns>An <see cref="IEnumerable{PlaylistMetadata}"/> with playlist data linked to the given <paramref name="fileMetadata"/>.</returns>
-        public Task<IEnumerable<PlaylistMetadata>> ScanPlaylists(IEnumerable<IFileData> files, IEnumerable<Models.FileMetadata> fileMetadata)
-        {
-            return ScanPlaylists(files, fileMetadata, new CancellationToken());
-        }
-
-        /// <summary>
-        /// Scans the given <paramref name="files"/> for playlist metadata, linking it to the given <paramref name="fileMetadata"/>.
-        /// </summary>
-        /// <param name="files">The files to scan for playlists.</param>
-        /// <param name="fileMetadata">The file metadata to use when linking playlist data.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels the ongoing task.</param>
         /// <returns>An <see cref="IEnumerable{PlaylistMetadata}"/> with playlist data linked to the given <paramref name="fileMetadata"/>.</returns>
-        public async Task<IEnumerable<PlaylistMetadata>> ScanPlaylists(IEnumerable<IFileData> files, IEnumerable<Models.FileMetadata> fileMetadata, CancellationToken cancellationToken)
+        public async IAsyncEnumerable<PlaylistMetadata> ScanPlaylists(IEnumerable<IFileData> files, IEnumerable<Models.FileMetadata> fileMetadata, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             _filesProcessed = 0;
 
@@ -109,12 +99,10 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
             _totalFiles = playlists.Count;
             FilesFoundChanged?.Invoke(this, playlists.Count);
 
-            var scannedMetadata = new List<PlaylistMetadata>();
-
             if (_totalFiles == 0)
             {
                 PlaylistMetadataScanCompleted?.Invoke(this, EventArgs.Empty);
-                return scannedMetadata;
+                yield break;
             }
 
             foreach (var item in playlists)
@@ -125,10 +113,8 @@ namespace StrixMusic.Sdk.FileMetadata.Scanners
                 var playlistMetadata = await ProcessFile(item, fileMetadata);
 
                 if (playlistMetadata != null)
-                    scannedMetadata.Add(playlistMetadata);
+                    yield return playlistMetadata;
             }
-
-            return scannedMetadata;
         }
 
         private async Task<PlaylistMetadata?> ProcessFile(IFileData file, IEnumerable<Models.FileMetadata> files)
