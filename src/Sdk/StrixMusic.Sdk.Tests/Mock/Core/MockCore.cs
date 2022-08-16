@@ -56,11 +56,8 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public event EventHandler? AbstractConfigPanelChanged;
 
         public event EventHandler<string>? InstanceDescriptorChanged;
-
-        public CoreMetadata Registration { get; } = new CoreMetadata(Id: nameof(MockCore),
-                                                                     DisplayName: "Mock core",
-                                                                     LogoUri: new Uri("https://strixmusic.com/"),
-                                                                     SdkVer: typeof(ICore).Assembly.GetName().Version ?? throw new ArgumentNullException());
+        public event EventHandler<ICoreImage?>? LogoChanged;
+        public event EventHandler<string>? DisplayNameChanged;
 
         public string InstanceId { get; set; }
 
@@ -105,6 +102,12 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         }
 
         public ICore SourceCore { get; set; }
+
+        public string Id => throw new NotImplementedException();
+
+        public string DisplayName => throw new NotImplementedException();
+
+        public ICoreImage? Logo => throw new NotImplementedException();
 
         public Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
         {
