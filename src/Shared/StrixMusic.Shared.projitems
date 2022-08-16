@@ -22,6 +22,9 @@
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\AdvancedAppSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml.cs">
+      <DependentUpon>CoreImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\LoggingSettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RecoverySettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml.cs">
@@ -48,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\ICoreManagementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializerContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
@@ -72,6 +76,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

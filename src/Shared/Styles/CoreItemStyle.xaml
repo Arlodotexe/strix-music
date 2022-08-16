@@ -5,6 +5,7 @@
     xmlns:viewModels1="using:StrixMusic.Shared.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:StrixMusic.Controls"
     x:Class="StrixMusic.Shared.Styles.CoreItemStyle">
 
     <ResourceDictionary.ThemeDictionaries>
@@ -47,12 +48,8 @@
                             <core:InvokeCommandAction Command="{x:Bind CreateCoreInstanceCommand}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
-                    
-                    <Image Height="50" Width="50" Margin="0,0,0,40">
-                        <Image.Source>
-                            <SvgImageSource UriSource="{x:Bind Metadata.LogoUri}" />
-                        </Image.Source>
-                    </Image>
+
+                    <controls:CoreImage Image="{x:Bind Metadata.Logo, Mode=OneWay}" Height="50" Width="50" Margin="0,0,0,40"/>
 
                     <TextBlock Text="{x:Bind Metadata.DisplayName}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                                Margin="0,0,0,40" />
@@ -70,11 +67,7 @@
 
             <Border BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2,2,2,1" CornerRadius="3,3,0,0">
                 <Grid>
-                    <Image Height="50" Width="50" Margin="0,0,0,40">
-                        <Image.Source>
-                            <SvgImageSource UriSource="{x:Bind Core.LogoUri, Mode=OneWay}" />
-                        </Image.Source>
-                    </Image>
+                    <controls:CoreImage Image="{x:Bind Core.Logo, Mode=OneWay}" Height="50" Width="50" Margin="0,0,0,40" />
 
                     <StackPanel VerticalAlignment="Bottom" Margin="10,13" Spacing="2">
                         <TextBlock Text="{x:Bind Core.DisplayName}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" />

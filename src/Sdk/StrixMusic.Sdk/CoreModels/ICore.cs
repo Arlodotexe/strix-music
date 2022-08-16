@@ -27,19 +27,29 @@ namespace StrixMusic.Sdk.CoreModels
     public interface ICore : IAsyncInit, ICoreModel, IAsyncDisposable
     {
         /// <summary>
-        /// The registered metadata for this core. Contains information to identify the core before creating an instance.
+        /// A unique identifier for this core, identical across all instances.
         /// </summary>
-        public CoreMetadata Registration { get; }
+        public string Id { get; }
 
         /// <summary>
-        /// Identifies this instance of the core. This is given to each core via the constructor.
+        /// Uniquely identifies this instance.
         /// </summary>
         public string InstanceId { get; }
 
         /// <summary>
-        /// A string of text to display to the user to help identify which core instance this is, such as a username or the path to a file location. Longer strings will be truncated as needed.
+        /// A supplementary description that helps identify which core instance this is, such as a username or the path to a file location.
         /// </summary>
         public string InstanceDescriptor { get; }
+
+        /// <summary>
+        /// The user-friendly name of the core.
+        /// </summary>
+        public string DisplayName { get; }
+
+        /// <summary>
+        /// A logo for this core, if any.
+        /// </summary>
+        public ICoreImage? Logo { get; }
 
         /// <summary>
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
@@ -116,6 +126,11 @@ namespace StrixMusic.Sdk.CoreModels
         public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Raised when the <see cref="Logo"/> is changed.
+        /// </summary>
+        public event EventHandler<ICoreImage?>? LogoChanged;
+
+        /// <summary>
         /// Raised when the <see cref="AppModels.CoreState"/> has changed.
         /// </summary>
         public event EventHandler<CoreState>? CoreStateChanged;
@@ -129,6 +144,11 @@ namespace StrixMusic.Sdk.CoreModels
         /// Raised when <see cref="AbstractUIElement"/> is changed.
         /// </summary>
         public event EventHandler? AbstractConfigPanelChanged;
+
+        /// <summary>
+        /// Raised when <see cref="DisplayName"/> is changed.
+        /// </summary>
+        public event EventHandler<string>? DisplayNameChanged;
 
         /// <summary>
         /// Raised when <see cref="InstanceDescriptor"/> is changed.

@@ -39,9 +39,6 @@ namespace StrixMusic.Sdk.AdapterModels
             _sources = cores.ToList();
             Guard.HasSizeGreaterThan(_sources, 0, nameof(_sources));
 
-            foreach (var core in _sources)
-                CheckSdkVersion(core.Registration);
-
             MergeConfig = config;
 
             _library = new MergedLibrary(_sources.Select(x => x.Library), config);
@@ -193,8 +190,6 @@ namespace StrixMusic.Sdk.AdapterModels
             if (_sources.Contains(itemToMerge))
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Cannot add the same source twice.");
 
-            CheckSdkVersion(itemToMerge.Registration);
-
             _devices.AddRange(itemToMerge.Devices.Select(x => new DeviceAdapter(x)));
             _library.AddSource(itemToMerge.Library);
 
@@ -307,13 +302,6 @@ namespace StrixMusic.Sdk.AdapterModels
             }
 
             IsInitialized = false;
-        }
-
-        private void CheckSdkVersion(CoreMetadata coreMetadata)
-        {
-            var currentSdkVersion = typeof(ICore).Assembly.GetName().Version;
-            if (coreMetadata.SdkVer != currentSdkVersion)
-                throw new IncompatibleSdkVersionException(coreMetadata.SdkVer, coreMetadata.DisplayName);
         }
     }
 }

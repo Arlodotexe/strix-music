@@ -54,11 +54,7 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:CoreViewModel">
                         <StackPanel Spacing="8" Width="75">
-                            <Image Height="50" Width="50" HorizontalAlignment="Center">
-                                <Image.Source>
-                                    <SvgImageSource UriSource="{x:Bind LogoUri, Mode=OneWay}"/>
-                                </Image.Source>
-                            </Image>
+                            <controls:CoreImage Image="{x:Bind Logo, Mode=OneWay}" Height="50" Width="50" HorizontalAlignment="Center" />
 
                             <TextBlock Text="{x:Bind CoreState, Mode=OneWay}" HorizontalAlignment="Center" Foreground="White" />
                         </StackPanel>
