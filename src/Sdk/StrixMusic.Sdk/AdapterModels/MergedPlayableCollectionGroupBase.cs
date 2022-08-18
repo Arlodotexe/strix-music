@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
     public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup, IMergedMutable<TCoreBase>
-        where TCoreBase : class, ICorePlayableCollectionGroup, IAsyncDisposable
+        where TCoreBase : class, ICorePlayableCollectionGroup
     {
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionMap;
         private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistCollectionMap;
@@ -831,34 +831,6 @@ namespace StrixMusic.Sdk.AdapterModels
         public virtual bool Equals(TCoreBase? other)
         {
             return other != null && other.Name.Equals(Name, StringComparison.InvariantCulture);
-        }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            if (_isDisposed)
-                return;
-
-            using (await OwlCore.Flow.EasySemaphore(_disposeSemaphore))
-            {
-                if (_isDisposed)
-                    return;
-
-                DetachCollectionChangedEvents();
-                DetachPropertyChangedEvents(PreferredSource);
-
-                await _albumCollectionMap.DisposeAsync();
-                await _artistCollectionMap.DisposeAsync();
-                await _playableCollectionGroupMap.DisposeAsync();
-                await _playlistCollectionMap.DisposeAsync();
-                await _trackCollectionMap.DisposeAsync();
-                await _imageCollectionMap.DisposeAsync();
-                await _urlCollectionMap.DisposeAsync();
-
-                await Sources.InParallel(x => x.DisposeAsync().AsTask());
-
-                _isDisposed = true;
-            }
         }
     }
 }

@@ -247,12 +247,5 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <returns>false. User profiles are never merged.</returns>
         public bool Equals(ICoreUrlCollection other) =>
             false;
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return _user.DisposeAsync();
-        }
     }
 }

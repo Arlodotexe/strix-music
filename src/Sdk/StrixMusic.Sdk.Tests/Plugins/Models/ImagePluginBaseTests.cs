@@ -95,8 +95,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override double? Width => throw AccessedException;
 
-            public override ValueTask DisposeAsync() => throw AccessedException;
-
             public override bool Equals(ICoreImage? other) => throw AccessedException;
         }
 
@@ -106,17 +104,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
-        }
-
-        internal class NotBlockingDisposeAsync : ImagePluginBase
-        {
-            public NotBlockingDisposeAsync()
-                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
-            {
-            }
-
-            /// <inheritdoc />
-            public override ValueTask DisposeAsync() => default;
         }
 
         public class Unimplemented : IImage
@@ -134,8 +121,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public double? Width => throw AccessedException;
 
             public IReadOnlyList<ICoreImage> Sources => throw AccessedException;
-
-            public ValueTask DisposeAsync() => throw AccessedException;
 
             public bool Equals(ICoreImage? other) => throw AccessedException;
         }

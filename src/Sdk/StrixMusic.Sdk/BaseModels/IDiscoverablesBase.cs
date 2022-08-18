@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Used to browse and discover new music.
     /// </summary>
-    public interface IDiscoverablesBase : IPlayableCollectionGroupBase, IAsyncDisposable
+    public interface IDiscoverablesBase : IPlayableCollectionGroupBase
     {
     }
 }

@@ -66,11 +66,5 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return other?.Name == Name;
         }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
-        }
     }
 }

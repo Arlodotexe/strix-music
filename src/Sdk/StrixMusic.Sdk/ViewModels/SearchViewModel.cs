@@ -60,8 +60,5 @@ namespace StrixMusic.Sdk.ViewModels
         /// The view model for search history.
         /// </summary>
         public SearchHistoryViewModel? SearchHistory { get; }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync() => _search.DisposeAsync();
     }
 }

@@ -822,13 +822,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return _model.DisposeAsync();
-        }
-
-        /// <inheritdoc />
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (!IsInitialized)

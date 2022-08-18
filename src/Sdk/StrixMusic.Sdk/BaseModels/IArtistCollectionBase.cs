@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A collection of <see cref="IArtistCollectionItemBase"/>s and the properties and methods for using and manipulating them.
     /// </summary>
-    public interface IArtistCollectionBase : IPlayableCollectionBase, IArtistCollectionItemBase, IAsyncDisposable
+    public interface IArtistCollectionBase : IPlayableCollectionBase, IArtistCollectionItemBase
     {
         /// <summary>
         /// The total number of available Artists.

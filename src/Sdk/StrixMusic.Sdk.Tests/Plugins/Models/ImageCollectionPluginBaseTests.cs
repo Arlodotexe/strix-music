@@ -95,8 +95,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             public override Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
-            public override ValueTask DisposeAsync() => throw AccessedException;
-
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
 
             public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -116,17 +114,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
-        internal class NotBlockingDisposeAsync : ImageCollectionPluginBase
-        {
-            public NotBlockingDisposeAsync()
-                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
-            {
-            }
-
-            /// <inheritdoc />
-            public override ValueTask DisposeAsync() => default;
-        }
-
         public class Unimplemented : IImageCollection
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
@@ -140,8 +127,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public event EventHandler<int>? ImagesCountChanged { add => throw AccessedException; remove => throw AccessedException; }
 
             public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => throw AccessedException;
-
-            public ValueTask DisposeAsync() => throw AccessedException;
 
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
 

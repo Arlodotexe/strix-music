@@ -622,13 +622,6 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     /// <inheritdoc/>
     public bool Equals(ICorePlayableCollectionGroup other) => _playableCollectionGroup.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_playableCollectionGroup);
-        return _playableCollectionGroup.DisposeAsync();
-    }
-
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {
         IArtist artist => new ArtistPluginWrapper(artist, _plugins),

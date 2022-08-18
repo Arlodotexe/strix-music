@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A common interface for all collections that return urls.
     /// </summary>
-    public interface IUrlCollectionBase : ICollectionBase, IAsyncDisposable
+    public interface IUrlCollectionBase : ICollectionBase
     {
         /// <summary>
         /// The total number of urls in this collection.

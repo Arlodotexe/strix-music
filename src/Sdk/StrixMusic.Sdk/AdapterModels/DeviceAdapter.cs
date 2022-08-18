@@ -236,8 +236,5 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public PlaybackItem? NowPlaying { get; private set; }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync() => _source.DisposeAsync();
     }
 }

@@ -86,7 +86,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             internal static AccessedException<FullyCustom> AccessedException { get; } = new();
 
-            public override ValueTask DisposeAsync() => throw AccessedException;
             public override string Label => throw AccessedException;
             public override Uri Url => throw AccessedException;
             public override UrlType Type => throw AccessedException;
@@ -106,7 +105,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
             
             public event EventHandler? SourcesChanged { add => throw AccessedException; remove => throw AccessedException; }
-            public ValueTask DisposeAsync() => throw AccessedException;
             public string Label => throw AccessedException;
             public Uri Url => throw AccessedException;
             public UrlType Type => throw AccessedException;

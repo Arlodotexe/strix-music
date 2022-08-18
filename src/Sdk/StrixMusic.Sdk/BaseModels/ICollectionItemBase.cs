@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// An item that is returned from any collection.
     /// </summary>
-    public interface ICollectionItemBase : IAsyncDisposable
+    public interface ICollectionItemBase
     {
     }
 }

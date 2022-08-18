@@ -329,12 +329,5 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICoreTrackCollection other) => _trackCollection.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_trackCollection);
-        return _trackCollection.DisposeAsync();
-    }
-
     private ITrack Transform(ITrack track) => new TrackPluginWrapper(track, _plugins);
 }
