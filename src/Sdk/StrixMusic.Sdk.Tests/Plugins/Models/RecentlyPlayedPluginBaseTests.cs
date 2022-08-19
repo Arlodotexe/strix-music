@@ -130,8 +130,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>,
                     DownloadablePluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
 
@@ -143,7 +142,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented)
@@ -159,7 +157,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented),
@@ -177,7 +174,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented),
@@ -195,7 +191,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented),
@@ -212,7 +207,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented),
@@ -227,8 +221,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>,
                     ImageCollectionPluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
 
@@ -236,8 +229,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             {
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
         }

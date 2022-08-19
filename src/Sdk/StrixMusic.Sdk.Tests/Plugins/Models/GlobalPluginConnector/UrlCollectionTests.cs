@@ -375,20 +375,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
         }
 
         [TestMethod]
-        public void DisposingSearchHistory()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.UrlCollection.Add(x => new UrlCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<UrlCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
-            });
-        }
-
-        [TestMethod]
         public void AccessedThroughSearchResults()
         {
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);

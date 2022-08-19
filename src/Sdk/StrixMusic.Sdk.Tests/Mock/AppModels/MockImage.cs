@@ -9,8 +9,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockImage : IImage
 {
-    public ValueTask DisposeAsync()  => default;
-
     public Task<Stream> OpenStreamAsync() => Task.FromResult<Stream>(new MemoryStream());
 
     public string? MimeType => null;

@@ -684,10 +684,5 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
             return Task.CompletedTask;
         }
-
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
