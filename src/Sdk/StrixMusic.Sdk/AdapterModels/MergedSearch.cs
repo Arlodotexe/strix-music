@@ -129,11 +129,5 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>true. We always merge together search sources.</returns>
         public bool Equals(ICoreSearch other) => true;
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
-        }
     }
 }

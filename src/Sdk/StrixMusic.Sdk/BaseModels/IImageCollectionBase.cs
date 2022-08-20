@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// </summary>
     /// <seealso cref="IImageCollection"/>
     /// <seealso cref="ICoreImageCollection"/>
-    public interface IImageCollectionBase : ICollectionBase, IAsyncDisposable
+    public interface IImageCollectionBase : ICollectionBase
     {
         /// <summary>
         /// Checks if adding a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.

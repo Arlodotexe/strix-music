@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.AdapterModels
     /// <typeparam name="TCollectionItem">The type of the item returned from the merged collection.</typeparam>
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
     internal sealed class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem>
-        : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit, IAsyncDisposable
+        : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit
         where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
         where TCoreCollection : class, ICoreCollection
         where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
@@ -37,8 +37,6 @@ namespace StrixMusic.Sdk.AdapterModels
         private static bool _isInitialized;
         private static TaskCompletionSource<bool>? _initCompletionSource;
 
-        private readonly SemaphoreSlim _disposeSemaphore = new(1, 1);
-
         private readonly TCollection _collection;
         private readonly MergedCollectionConfig _config;
 
@@ -47,8 +45,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// </summary>
         private readonly List<MappedData> _sortedMap = new();
         private readonly List<MergedMappedData> _mergedMappedData = new();
-
-        private bool _isDisposed;
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
@@ -977,27 +973,6 @@ namespace StrixMusic.Sdk.AdapterModels
             public IMergedMutable<TCoreCollectionItem> CollectionItem { get; }
 
             public List<MappedData> MergedMapData { get; }
-        }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            if (_isDisposed)
-                return;
-
-            using (await OwlCore.Flow.EasySemaphore(_disposeSemaphore))
-            {
-                if (_isDisposed)
-                    return;
-
-                DetachEvents();
-                _mergedMappedData.Clear();
-                _sortedMap.Clear();
-
-                _isDisposed = true;
-
-                return;
-            }
         }
     }
 }

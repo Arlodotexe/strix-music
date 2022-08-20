@@ -476,22 +476,5 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc />
         public virtual Task ChangeAlbumAsync(IAlbum? album, CancellationToken cancellationToken = default) => Inner.ChangeAlbumAsync(album, cancellationToken);
-
-        /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
-        {
-            var uniqueInstances = new HashSet<IAsyncDisposable>()
-            {
-                Inner,
-                InnerArtistCollection,
-                InnerDownloadable,
-                InnerPlayable,
-                InnerImageCollection,
-                InnerUrlCollection,
-                InnerGenreCollection,
-            };
-
-            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
-        }
     }
 }

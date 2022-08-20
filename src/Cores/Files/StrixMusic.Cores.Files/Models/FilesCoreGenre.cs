@@ -22,11 +22,5 @@ namespace StrixMusic.Cores.Files.Models
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
-
-        /// <inheritdoc/>
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
     }
 }

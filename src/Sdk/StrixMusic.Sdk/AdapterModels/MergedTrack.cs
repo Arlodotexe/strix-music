@@ -579,18 +579,5 @@ namespace StrixMusic.Sdk.AdapterModels
                    !(other.Album is null) &&
                    album.Equals(other.Album);
         }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            DetachEvents(_preferredSource);
-
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
-
-            await _imageCollectionMap.DisposeAsync();
-            await _artistMap.DisposeAsync();
-            await _genreCollectionMap.DisposeAsync();
-            await _urlCollectionMap.DisposeAsync();
-        }
     }
 }

@@ -35,9 +35,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IUrl Inner { get; }
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
         public virtual string Label => Inner.Label;
 
         /// <inheritdoc/>

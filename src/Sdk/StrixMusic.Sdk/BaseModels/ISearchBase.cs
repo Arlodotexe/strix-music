@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Delegates search operations
     /// </summary>
-    public interface ISearchBase : IAsyncDisposable
+    public interface ISearchBase
     {
         /// <summary>
         /// Given a query, return suggested completed queries.

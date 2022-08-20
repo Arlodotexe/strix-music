@@ -546,12 +546,5 @@ namespace StrixMusic.Cores.Files.Models
         {
             return AsyncEnumerable.Empty<ICoreUrl>();
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return default;
-        }
     }
 }

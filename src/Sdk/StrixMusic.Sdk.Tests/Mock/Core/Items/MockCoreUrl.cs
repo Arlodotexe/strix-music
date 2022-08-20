@@ -21,10 +21,5 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
         public UrlType Type { get; set; }
 
         public ICore SourceCore { get; set; }
-
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
     }
 }

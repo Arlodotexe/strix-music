@@ -474,13 +474,6 @@ public class AlbumPluginWrapper : IAlbum, IPluginWrapper
     /// <inheritdoc/>
     public Task AddGenreAsync(IGenre genre, int index, CancellationToken cancellationToken = default) => _album.AddGenreAsync(genre, index, cancellationToken);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_album);
-        return _album.DisposeAsync();
-    }
-
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {
         IArtist artist => new ArtistPluginWrapper(artist, _plugins),

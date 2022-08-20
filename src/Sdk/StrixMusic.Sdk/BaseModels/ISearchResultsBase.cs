@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Relevant items requested with a query from a core.
     /// </summary>
-    public interface ISearchResultsBase : IPlayableCollectionGroupBase, IAsyncDisposable
+    public interface ISearchResultsBase : IPlayableCollectionGroupBase
     {
     }
 }

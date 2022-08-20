@@ -51,8 +51,5 @@ namespace StrixMusic.Cores.Files.Models
 
         /// <inheritdoc />
         public double? Width { get; }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync() => default;
     }
 }

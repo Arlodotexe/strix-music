@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// An <see cref="IPlayableBase"/> that belongs to a playable collection.
     /// </summary>
-    public interface IPlayableCollectionItem : IPlayableBase, ICollectionItemBase, IAsyncDisposable
+    public interface IPlayableCollectionItem : IPlayableBase, ICollectionItemBase
     {
         /// <summary>
         /// The date this item was added to a collection. If unknown, value is null.

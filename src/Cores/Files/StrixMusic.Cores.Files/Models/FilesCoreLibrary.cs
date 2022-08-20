@@ -376,26 +376,5 @@ namespace StrixMusic.Cores.Files.Models
         {
             return AsyncEnumerable.Empty<ICoreUrl>();
         }
-
-        /// <inheritdoc/>
-        public override async ValueTask DisposeAsync()
-        {
-            if (!IsInitialized)
-                return;
-
-            using (await OwlCore.Flow.EasySemaphore(_initSemaphore))
-            {
-                if (!IsInitialized)
-                    return;
-
-                if (_fileMetadataManager is not null)
-                    DetachEvents(_fileMetadataManager);
-
-                DetachEvents();
-                await base.DisposeAsync();
-
-                IsInitialized = false;
-            }
-        }
     }
 }

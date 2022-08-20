@@ -155,9 +155,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 new CollectionChangedItem<ICoreDevice>(device, 0).IntoList());
         }
 
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
+        public ValueTask DisposeAsync() => default;
     }
 }

@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A base class for playable collections.
     /// </summary>
-    public interface IPlayableCollectionBase : ICollectionBase, IPlayableCollectionItem, IAsyncDisposable
+    public interface IPlayableCollectionBase : ICollectionBase, IPlayableCollectionItem
     {
     }
 }

@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A collection of arbitrary songs that the user can edit, rearrange and play back.
     /// </summary>
-    public interface IPlaylistBase : IPlayableCollectionItem, ITrackCollectionBase, IPlaylistCollectionItemBase, IAsyncDisposable
+    public interface IPlaylistBase : IPlayableCollectionItem, ITrackCollectionBase, IPlaylistCollectionItemBase
     {
     }
 }

@@ -347,21 +347,5 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual IPlayableCollectionGroup? RelatedItems => Inner.RelatedItems;
-
-        /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
-        {
-            var uniqueInstances = new HashSet<IAsyncDisposable>()
-            {
-                Inner,
-                InnerTrackCollection,
-                InnerDownloadable,
-                InnerPlayable,
-                InnerImageCollection,
-                InnerUrlCollection,
-            };
-
-            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
-        }
     }
 }

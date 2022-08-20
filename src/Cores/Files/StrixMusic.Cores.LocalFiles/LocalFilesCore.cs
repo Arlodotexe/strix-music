@@ -118,15 +118,10 @@ namespace StrixMusic.Cores.LocalFiles
         /// <inheritdoc/>
         public override ValueTask DisposeAsync()
         {
-            // Dispose any resources not known to the SDK.
-            // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
-            FileMetadataManager?.DisposeAsync();
-
             _configPanel.ConfigDoneButton.Clicked -= ConfigDoneButtonOnClicked;
 
             DetachEvents();
-
-            return default;
+            return base.DisposeAsync();
         }
 
         /// <inheritdoc />

@@ -100,11 +100,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
             throw new NotImplementedException();
         }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

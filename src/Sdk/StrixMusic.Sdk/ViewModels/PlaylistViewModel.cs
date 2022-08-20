@@ -615,12 +615,5 @@ namespace StrixMusic.Sdk.ViewModels
             Guard.IsNotNull(name, nameof(name));
             return _playlist.ChangeNameAsync(name, cancellationToken);
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return _playlist.DisposeAsync();
-        }
     }
 }

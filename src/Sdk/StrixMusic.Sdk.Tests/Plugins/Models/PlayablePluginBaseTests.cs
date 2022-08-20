@@ -114,34 +114,23 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             Assert.AreNotSame(finalImpl, defaultImplementation);
             Assert.IsInstanceOfType(finalImpl, typeof(NoOverride));
 
-            var expectedExceptionsWhenDisposing = new List<Type>
-            {
-                typeof(AccessedException<Unimplemented>),
-            };
-
             if (data.HasFlag(PossiblePlugins.Downloadable))
             {
-                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<DownloadablePluginBaseTests.Unimplemented>));
-
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<DownloadablePluginBaseTests.Unimplemented>,
                     DownloadablePluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
 
             if (data.HasFlag(PossiblePlugins.Playable))
             {
-                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>));
-
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.Unimplemented>,
                     PlayablePluginBaseTests.Unimplemented>(
                     finalImpl,
                     customFilter: NoInnerOrSources,
                     typesToExclude: new[]
                     {
-                        typeof(IAsyncDisposable),
                         typeof(DownloadablePluginBaseTests.Unimplemented),
                         typeof(ImageCollectionPluginBaseTests.Unimplemented),
                         typeof(UrlCollectionPluginBaseTests.Unimplemented)
@@ -151,32 +140,20 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
 
             if (data.HasFlag(PossiblePlugins.ImageCollection))
             {
-                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<ImageCollectionPluginBaseTests.Unimplemented>));
-
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.Unimplemented>,
                     ImageCollectionPluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
 
             if (data.HasFlag(PossiblePlugins.UrlCollection))
             {
-                expectedExceptionsWhenDisposing.Add(typeof(AccessedException<UrlCollectionPluginBaseTests.Unimplemented>));
-
                 Helpers.AssertAllMembersThrowOnAccess<AccessedException<UrlCollectionPluginBaseTests.Unimplemented>, UrlCollectionPluginBaseTests.Unimplemented>(
                     finalImpl,
-                    customFilter: NoInnerOrSources,
-                    typesToExclude: typeof(IAsyncDisposable)
+                    customFilter: NoInnerOrSources
                 );
             }
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(
-                finalImpl,
-                customFilter: NoInnerOrSources,
-                expectedExceptions: expectedExceptionsWhenDisposing.ToArray()
-            );
         }
 
         internal class FullyCustom : PlayablePluginBase
@@ -220,7 +197,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
             public override Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override ValueTask DisposeAsync() => throw AccessedException;
             public override bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public override bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public override IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;
@@ -240,17 +216,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
                 : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
-        }
-
-        internal class NotBlockingDisposeAsync : PlayablePluginBase
-        {
-            public NotBlockingDisposeAsync()
-                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
-            {
-            }
-
-            /// <inheritdoc />
-            public override ValueTask DisposeAsync() => default;
         }
 
         internal class Unimplemented : IPlayable
@@ -292,7 +257,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => throw AccessedException;
-            public ValueTask DisposeAsync() => throw AccessedException;
             public bool Equals(ICoreImageCollection? other) => throw AccessedException;
             public bool Equals(ICoreUrlCollection? other) => throw AccessedException;
             public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => throw AccessedException;

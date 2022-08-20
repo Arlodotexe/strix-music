@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A common interface for all collections that return genres.
     /// </summary>
-    public interface IGenreCollectionBase : ICollectionBase, IAsyncDisposable
+    public interface IGenreCollectionBase : ICollectionBase
     {
         /// <summary>
         /// The total number of genres in this collection.

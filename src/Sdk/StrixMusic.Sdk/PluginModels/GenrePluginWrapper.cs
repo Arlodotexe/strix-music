@@ -61,11 +61,4 @@ public class GenrePluginWrapper : IGenre, IPluginWrapper
 
     /// <inheritdoc/>
     public string Name => _genre.Name;
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_genre);
-        return _genre.DisposeAsync();
-    }
 }

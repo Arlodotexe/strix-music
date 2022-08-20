@@ -72,11 +72,4 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreImage> Sources => _image.Sources;
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_image);
-        return _image.DisposeAsync();
-    }
 }

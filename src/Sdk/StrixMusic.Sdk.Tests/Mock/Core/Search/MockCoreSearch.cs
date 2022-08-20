@@ -18,11 +18,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Search
 
         public ICore SourceCore { get; set; }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IAsyncEnumerable<ICoreSearchQuery> GetRecentSearchQueries(CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();

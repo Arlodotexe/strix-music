@@ -613,12 +613,5 @@ namespace StrixMusic.Sdk.ViewModels
 
             return Task.WhenAll(InitAlbumCollectionAsync(cancellationToken), InitImageCollectionAsync(cancellationToken));
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return _collection.DisposeAsync();
-        }
     }
 }

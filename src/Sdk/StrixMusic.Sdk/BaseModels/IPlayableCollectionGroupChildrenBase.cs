@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A collection of <see cref="IPlayableCollectionGroupBase"/>s and the properties and methods for using and manipulating them.
     /// </summary>
-    public interface IPlayableCollectionGroupChildrenBase : IPlayableCollectionBase, IAsyncDisposable
+    public interface IPlayableCollectionGroupChildrenBase : IPlayableCollectionBase
     {
         /// <summary>
         /// Attempts to play the playable collection. Resumes if paused.

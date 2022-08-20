@@ -21,8 +21,6 @@ namespace StrixMusic.Cores.OneDrive
 
         public ICore SourceCore { get; }
 
-        public ValueTask DisposeAsync() => throw new NotImplementedException();
-
         public Task<Stream> OpenStreamAsync()
         {
             var assembly = Assembly.GetExecutingAssembly();

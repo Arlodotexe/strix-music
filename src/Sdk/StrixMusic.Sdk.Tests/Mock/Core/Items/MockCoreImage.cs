@@ -20,10 +20,5 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
         public double? Width { get; set; }
 
         public ICore SourceCore { get; set; }
-
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
     }
 }

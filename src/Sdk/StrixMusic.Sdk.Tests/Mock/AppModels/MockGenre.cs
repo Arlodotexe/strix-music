@@ -8,8 +8,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockGenre : IGenre
 {
-    public ValueTask DisposeAsync() => default;
-
     public string Name { get; } = Guid.NewGuid().ToString();
 
     public bool Equals(ICoreGenre? other) => false;
