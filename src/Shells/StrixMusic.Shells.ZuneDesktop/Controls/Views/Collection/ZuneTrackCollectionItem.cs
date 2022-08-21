@@ -49,7 +49,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (newValue is not null)
                 {
-                    await newValue.InitArtistCollectionAsync();
+                    if (newValue.Artists.Count == 0)
+                        await newValue.InitArtistCollectionAsync();
 
                     foreach (var artist in newValue.Artists)
                         ArtistNamesMetadata.Add(new MetadataItem { Label = artist.Name });
