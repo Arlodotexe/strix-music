@@ -14,6 +14,7 @@ using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -129,21 +130,29 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                _trackItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
+                var tracks = e.NewItems.Cast<TrackViewModel>();
+                foreach (var item in tracks)
+                {
+                    await item.InitArtistCollectionAsync();
+                }
+
+                var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
                 {
                     var newItem = new ZuneTrackCollectionItem
                     {
-                        Track = (TrackViewModel)x,
-                        ParentCollection = Collection
+                        Track = x,
+                        ParentCollection = Collection,
+                        ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
                     };
 
                     AttachEvents(newItem);
                     return newItem;
-                }));
+                });
+                _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
             }
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)

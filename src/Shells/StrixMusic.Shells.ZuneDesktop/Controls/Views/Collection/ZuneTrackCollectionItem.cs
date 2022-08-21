@@ -44,14 +44,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 if (Track is not null)
                 {
-                    DetachEvents(Track);
                     ArtistNamesMetadata.Clear();
                 }
 
                 if (newValue is not null)
                 {
-                    AttachEvents(newValue);
-
                     await newValue.InitArtistCollectionAsync();
 
                     foreach (var artist in newValue.Artists)
@@ -69,9 +66,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 if (ParentCollection is not null)
                 {
                     DetachEvents(ParentCollection);
-
-                    foreach (var item in ParentCollection.Tracks)
-                        DetachEvents(item);
                 }
 
                 if (newValue is null)
@@ -90,7 +84,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     foreach (var item in newValue.Tracks)
                     {
                         _lastKnownTrackArtistsCount[item.Id] = item.TotalArtistItemsCount;
-                        AttachEvents(item);
                     }
 
                     AttachEvents(newValue);
@@ -108,16 +101,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             trackCollection.TracksChanged -= TrackCollection_TracksChanged;
         }
 
-        private void AttachEvents(ITrack track)
-        {
-            track.ArtistItemsChanged += Track_ArtistItemsChanged;
-        }
-
-        private void DetachEvents(ITrack track)
-        {
-            track.ArtistItemsChanged -= Track_ArtistItemsChanged;
-        }
-
         private void TrackCollection_TracksChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<OwlCore.Events.CollectionChangedItem<ITrack>> removedItems)
         {
             // Handle newly added/removed tracks
@@ -129,33 +112,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 foreach (var item in addedItems)
                     Guard.IsTrue(_lastKnownTrackArtistsCount.TryAdd(item.Data.Id, item.Data.TotalArtistItemsCount));
 
-                ShouldShowArtistList = _lastKnownTrackArtistsCount.Any(x => x.Value > 1) && _parentCollection is IAlbum or IArtist;
-            }
-        }
-
-        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> removedItems)
-        {
-            // If any track in the parent collection has more than 2 artists,
-            // ALL track items should display their artist list, including this instance.
-            var track = (ITrack)sender;
-
-            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
-            Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
-
-            if (track.Id == Track?.Id)
-                ArtistNamesMetadata.ChangeCollection(addedItems, removedItems, x => new MetadataItem { Label = x.Data.Name });
-
-            // Fast path
-            if (track.TotalArtistItemsCount >= 2)
-            {
-                ShouldShowArtistList = _parentCollection is IAlbum or IArtist;
-                return;
-            }
-
-            lock (_lastKnownTrackArtistsCount)
-            {
-                // Keeping a minimum cache that updates with events allows us to
-                // avoid checking all items asynchronously when a single item updates.
                 ShouldShowArtistList = _lastKnownTrackArtistsCount.Any(x => x.Value > 1) && _parentCollection is IAlbum or IArtist;
             }
         }
