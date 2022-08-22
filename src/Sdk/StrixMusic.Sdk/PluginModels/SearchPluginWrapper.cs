@@ -75,11 +75,4 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
 
     /// <inheritdoc/>
     public ISearchHistory? SearchHistory { get; }
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_search);
-        return _search.DisposeAsync();
-    }
 }

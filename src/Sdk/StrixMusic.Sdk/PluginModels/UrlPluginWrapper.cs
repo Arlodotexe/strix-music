@@ -51,13 +51,6 @@ public class UrlPluginWrapper : IUrl, IPluginWrapper
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
 
     /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_url);
-        return _url.DisposeAsync();
-    }
-
-    /// <inheritdoc/>
     public bool Equals(ICoreUrl other) => _url.Equals(other);
 
     /// <inheritdoc/>

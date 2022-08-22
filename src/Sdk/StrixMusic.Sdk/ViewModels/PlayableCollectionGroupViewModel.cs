@@ -1291,12 +1291,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; protected set; }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachPropertyEvents();
-            return _collectionGroup.DisposeAsync();
-        }
     }
 }

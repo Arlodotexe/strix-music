@@ -8,8 +8,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockUrl : IUrl
 {
-    public ValueTask DisposeAsync() => default;
-
     public string Label => string.Empty;
 
     public Uri Url => new("/");

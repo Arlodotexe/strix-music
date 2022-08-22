@@ -245,19 +245,5 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
-
-        /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
-        {
-            var uniqueInstances = new HashSet<IAsyncDisposable>()
-            {
-                Inner,
-                InnerDownloadable,
-                InnerImageCollection,
-                InnerUrlCollection,
-            };
-
-            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
-        }
     }
 }

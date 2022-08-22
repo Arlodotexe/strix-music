@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Contains information about a user.
     /// </summary>
-    public interface IUserBase : IUserProfileBase, IAsyncDisposable
+    public interface IUserBase : IUserProfileBase
     {
     }
 }

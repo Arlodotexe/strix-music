@@ -336,13 +336,6 @@ public class PlaylistCollectionPluginWrapper : IPlaylistCollection, IPluginWrapp
     /// <inheritdoc/>
     public bool Equals(ICorePlaylistCollection other) => _playlistCollection.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_playlistCollection);
-        return _playlistCollection.DisposeAsync();
-    }
-
     private IPlaylistCollectionItem Transform(IPlaylistCollectionItem item) => item switch
     {
         IPlaylist playlist => new PlaylistPluginWrapper(playlist, _plugins),

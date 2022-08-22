@@ -67,9 +67,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => Inner.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
         public virtual bool Equals(ICoreUrlCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>

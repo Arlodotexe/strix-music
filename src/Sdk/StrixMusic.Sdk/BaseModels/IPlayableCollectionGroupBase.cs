@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Multiple playable collections that are grouped together under a single context.
     /// </summary>
-    public interface IPlayableCollectionGroupBase : IPlaylistCollectionBase, ITrackCollectionBase, IAlbumCollectionBase, IArtistCollectionBase, ICollectionItemBase, IPlayableCollectionGroupChildrenBase, IAsyncDisposable
+    public interface IPlayableCollectionGroupBase : IPlaylistCollectionBase, ITrackCollectionBase, IAlbumCollectionBase, IArtistCollectionBase, ICollectionItemBase, IPlayableCollectionGroupChildrenBase
     {
     }
 }

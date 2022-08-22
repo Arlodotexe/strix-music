@@ -67,9 +67,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddGenreAsync(IGenre gene, int index, CancellationToken cancellationToken = default) => Inner.AddGenreAsync(gene, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
         public virtual bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
 
         /// <inheritdoc/>

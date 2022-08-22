@@ -10,8 +10,6 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels;
 
 public class MockSearch : ISearch
 {
-    public ValueTask DisposeAsync() => default;
-
     public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default) => AsyncEnumerable.Empty<string>();
 
     public bool Equals(ICoreSearch? other) => false;

@@ -313,8 +313,5 @@ namespace StrixMusic.Sdk.AppModels
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylist other) => false;
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync() => default;
     }
 }

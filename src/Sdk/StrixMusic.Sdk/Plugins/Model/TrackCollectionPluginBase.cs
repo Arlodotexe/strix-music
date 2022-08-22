@@ -320,20 +320,5 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => InnerDownloadable.StartDownloadOperationAsync(operation, cancellationToken);
-
-        /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
-        {
-            var uniqueInstances = new HashSet<IAsyncDisposable>()
-            {
-                Inner,
-                InnerDownloadable,
-                InnerPlayable,
-                InnerImageCollection,
-                InnerUrlCollection,
-            };
-
-            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
-        }
     }
 }

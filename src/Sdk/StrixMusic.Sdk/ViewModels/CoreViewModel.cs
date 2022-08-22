@@ -210,7 +210,6 @@ namespace StrixMusic.Sdk.ViewModels
         public async ValueTask DisposeAsync()
         {
             DetachEvents();
-
             await _core.DisposeAsync();
         }
 

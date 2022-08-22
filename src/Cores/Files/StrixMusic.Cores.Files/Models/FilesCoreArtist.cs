@@ -562,12 +562,5 @@ namespace StrixMusic.Cores.Files.Models
 
             await Task.CompletedTask;
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return default;
-        }
     }
 }

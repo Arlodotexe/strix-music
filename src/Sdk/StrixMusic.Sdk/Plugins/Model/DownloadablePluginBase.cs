@@ -44,9 +44,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
         public virtual Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => Inner.StartDownloadOperationAsync(operation, cancellationToken);
     }
 }

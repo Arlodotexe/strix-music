@@ -319,12 +319,5 @@ namespace StrixMusic.Cores.Files.Models
                     TracksCountChanged?.Invoke(this, metadata.TrackIds?.Count ?? 0);
             }
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return default;
-        }
     }
 }
