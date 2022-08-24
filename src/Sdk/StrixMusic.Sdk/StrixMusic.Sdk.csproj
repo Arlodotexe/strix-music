@@ -4,11 +4,11 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
-		<AssemblyVersion>0.0.11</AssemblyVersion>
+		<AssemblyVersion>0.0.12</AssemblyVersion>
 
 		<Product>Strix Music SDK</Product>
 		<Description>An open music standard that breaks down the walls between services by defining a standardized and highly flexible API surface.</Description>
-		<Version>0.0.11-alpha</Version>
+		<Version>0.0.12-alpha</Version>
 		<Authors>Arlo Godfrey</Authors>
 		<PackageIcon>logo.png</PackageIcon>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
