@@ -97,6 +97,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             foreach (var item in TrackItems)
                 DetachEvents(item);
 
+            if (newValue == null)
+            {
+                foreach (var item in _trackItems)
+                {
+                    if (item.ParentCollection is not LibraryViewModel)
+                        item.ParentCollection = null;
+                }
+            }
+
             _trackItems.Clear();
             OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
 

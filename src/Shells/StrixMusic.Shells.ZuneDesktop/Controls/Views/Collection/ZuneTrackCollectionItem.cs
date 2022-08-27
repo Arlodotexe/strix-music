@@ -62,6 +62,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         partial void OnParentCollectionChanging(ITrackCollectionViewModel? newValue)
         {
+            _lastKnownTrackArtistsCount.Clear();
+
             _ = ExecuteAsync(newValue);
 
             async Task ExecuteAsync(ITrackCollectionViewModel? newValue)
@@ -85,8 +87,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 lock (_lastKnownTrackArtistsCount)
                 {
-                    _lastKnownTrackArtistsCount.Clear();
-
                     foreach (var item in newValue.Tracks)
                     {
                         _lastKnownTrackArtistsCount[item.Id] = item.TotalArtistItemsCount;
@@ -125,9 +125,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 foreach (var item in removedItems)
                     Guard.IsTrue(_lastKnownTrackArtistsCount.TryRemove(item.Data.Id, out _));
-
-                foreach (var item in addedItems)
-                    Guard.IsTrue(_lastKnownTrackArtistsCount.TryAdd(item.Data.Id, item.Data.TotalArtistItemsCount));
 
                 ShouldShowArtistList = _lastKnownTrackArtistsCount.Any(x => x.Value > 1) && _parentCollection is IAlbum or IArtist;
             }
