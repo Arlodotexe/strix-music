@@ -222,12 +222,5 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public Task ToggleRepeatAsync(CancellationToken cancellationToken = default) => _playbackHandler.ToggleRepeatAsync(cancellationToken);
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            DetachEvents();
-            return default;
-        }
     }
 }

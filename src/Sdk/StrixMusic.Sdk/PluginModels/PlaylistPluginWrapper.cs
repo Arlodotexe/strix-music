@@ -344,13 +344,6 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICorePlaylist other) => _playlist.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_playlist);
-        return _playlist.DisposeAsync();
-    }
-
     private ITrack Transform(ITrack item) => new TrackPluginWrapper(item, _plugins);
     
     /// <inheritdoc/>

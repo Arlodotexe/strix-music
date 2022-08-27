@@ -21,8 +21,6 @@ namespace StrixMusic.Cores.LocalFiles
 
         public ICore SourceCore { get; }
 
-        public ValueTask DisposeAsync() => throw new NotImplementedException();
-
         public Task<Stream> OpenStreamAsync()
         {
             var assembly = Assembly.GetExecutingAssembly();

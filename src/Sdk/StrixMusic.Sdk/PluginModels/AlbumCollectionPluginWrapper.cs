@@ -339,13 +339,6 @@ public class AlbumCollectionPluginWrapper : IAlbumCollection, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICoreAlbumCollection other) => _albumCollection.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_albumCollection);
-        return _albumCollection.DisposeAsync();
-    }
-
     private IAlbumCollectionItem Transform(IAlbumCollectionItem item) => item switch
     {
         IAlbum album => new AlbumPluginWrapper(album, _plugins),

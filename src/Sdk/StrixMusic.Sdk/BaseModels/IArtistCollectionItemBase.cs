@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// An item that belongs in an <see cref="IArtistCollectionBase"/>.
     /// </summary>
-    public interface IArtistCollectionItemBase : IPlayableCollectionItem, IAsyncDisposable
+    public interface IArtistCollectionItemBase : IPlayableCollectionItem
     {
     }
 }

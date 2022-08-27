@@ -362,11 +362,5 @@ namespace StrixMusic.Sdk.CoreModels
         {
             throw new NotSupportedException();
         }
-
-        /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            return default;
-        }
     }
 }

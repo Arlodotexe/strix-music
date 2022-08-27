@@ -568,19 +568,5 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return _preferredSource.GetHashCode();
         }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            DetachEvents(_preferredSource);
-
-            await _albumCollectionItemMap.DisposeAsync();
-            await _trackCollectionMap.DisposeAsync();
-            await _imageCollectionMap.DisposeAsync();
-            await _genreCollectionMap.DisposeAsync();
-            await _urlCollectionMap.DisposeAsync();
-
-            await Sources.InParallel(x => x.DisposeAsync().AsTask());
-        }
     }
 }

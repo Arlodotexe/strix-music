@@ -24,7 +24,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 customFilter: NoInnerOrSources,
                 typesToExclude: new[]
                 {
-                    typeof(IAsyncDisposable),
                     typeof(IPlayableCollectionItem)
                 });
         }
@@ -41,23 +40,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an PlayableCollectionGroup plugin can still be accessed through PlaylistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayableCollectionGroupPluginBaseTests.FullyCustom>, PlaylistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingPlayableCollectionGroup()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.PlaylistCollection.Add(x => new PlaylistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
-            {
-                typeof(AccessedException<PlaylistCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<PlayableCollectionGroupPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -73,7 +56,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 customFilter: NoInnerOrSources,
                 typesToExclude: new[]
                 {
-                    typeof(IAsyncDisposable),
                     typeof(IPlayableCollectionItem)
                 });
         }
@@ -90,23 +72,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Library plugin can still be accessed through PlaylistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, PlaylistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingLibrary()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.PlaylistCollection.Add(x => new PlaylistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
-            {
-                typeof(AccessedException<PlaylistCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<LibraryPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -122,7 +88,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 customFilter: NoInnerOrSources,
                 typesToExclude: new[]
                 {
-                    typeof(IAsyncDisposable),
                     typeof(IPlayableCollectionItem)
                 });
         }
@@ -139,23 +104,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Discoverables plugin can still be accessed through PlaylistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, PlaylistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingDiscoverables()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.PlaylistCollection.Add(x => new PlaylistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
-            {
-                typeof(AccessedException<PlaylistCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -171,7 +120,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 customFilter: NoInnerOrSources,
                 typesToExclude: new[]
                 {
-                    typeof(IAsyncDisposable),
                     typeof(IPlayableCollectionItem)
                 });
         }
@@ -188,23 +136,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an SearchHistory plugin can still be accessed through PlaylistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, PlaylistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingSearchHistory()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.PlaylistCollection.Add(x => new PlaylistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
-            {
-                typeof(AccessedException<PlaylistCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -220,7 +152,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
                 customFilter: NoInnerOrSources,
                 typesToExclude: new[]
                 {
-                    typeof(IAsyncDisposable),
                     typeof(IPlayableCollectionItem)
                 });
         }
@@ -237,23 +168,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an SearchResults plugin can still be accessed through PlaylistCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchResultsPluginBaseTests.FullyCustom>, PlaylistCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingSearchResults()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.PlaylistCollection.Add(x => new PlaylistCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[]
-            {
-                typeof(AccessedException<PlaylistCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<SearchResultsPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
     }
 }

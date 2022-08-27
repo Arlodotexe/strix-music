@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// Represents an audio stream with metadata that belongs to an <see cref="ITrackCollectionBase"/>.
     /// </summary>
-    public interface ITrackBase : IPlayableCollectionItem, IArtistCollectionBase, IGenreCollectionBase, IAsyncDisposable
+    public interface ITrackBase : IPlayableCollectionItem, IArtistCollectionBase, IGenreCollectionBase
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }

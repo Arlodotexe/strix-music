@@ -124,11 +124,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
             throw new NotImplementedException();
         }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;

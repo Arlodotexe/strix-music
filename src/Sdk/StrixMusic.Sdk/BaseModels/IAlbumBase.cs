@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.BaseModels
     /// <summary>
     /// A published album containing one or more tracks, discs, artist, etc.
     /// </summary>
-    public interface IAlbumBase : IPlayableCollectionItem, IAlbumCollectionItemBase, IArtistCollectionBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase, IAsyncDisposable
+    public interface IAlbumBase : IPlayableCollectionItem, IAlbumCollectionItemBase, IArtistCollectionBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase
     {
         /// <summary>
         /// The date the album was released.

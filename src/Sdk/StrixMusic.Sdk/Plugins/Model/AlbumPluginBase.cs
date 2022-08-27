@@ -366,24 +366,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => InnerPlayable.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync()
-        {
-            var uniqueInstances = new HashSet<IAsyncDisposable>()
-            {
-                Inner,
-                InnerTrackCollection,
-                InnerArtistCollection,
-                InnerDownloadable,
-                InnerPlayable,
-                InnerImageCollection,
-                InnerUrlCollection,
-                InnerGenreCollection,
-            };
-
-            return new ValueTask(uniqueInstances.InParallel(async x => await x.DisposeAsync()));
-        }
-
-        /// <inheritdoc/>
         public virtual bool Equals(ICoreGenreCollection other) => InnerGenreCollection.Equals(other);
 
         /// <inheritdoc/>

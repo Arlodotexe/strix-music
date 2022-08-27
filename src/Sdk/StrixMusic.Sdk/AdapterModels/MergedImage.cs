@@ -79,11 +79,5 @@ namespace StrixMusic.Sdk.AdapterModels
             // For merging, this check can be done as we retrieve the images from the collection.
             return ReferenceEquals(this, other);
         }
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
-        }
     }
 }

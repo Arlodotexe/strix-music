@@ -336,13 +336,6 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICoreArtistCollection other) => _artistCollection.Equals(other);
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_artistCollection);
-        return _artistCollection.DisposeAsync();
-    }
-
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {
         IArtist artist => new ArtistPluginWrapper(artist, _plugins),

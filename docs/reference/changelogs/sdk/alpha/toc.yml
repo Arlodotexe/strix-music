@@ -1,4 +1,7 @@
 
+- name: 0.0.12-sdk-alpha
+  href: ./0.0.12-sdk-alpha.md
+  homepage: ./0.0.12-sdk-alpha.md
 - name: 0.0.11-sdk-alpha
   href: ./0.0.11-sdk-alpha.md
   homepage: ./0.0.11-sdk-alpha.md

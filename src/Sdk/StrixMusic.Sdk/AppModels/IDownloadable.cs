@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.AppModels
     /// <summary>
     /// Indicates an item that can be downloaded for offline usage.
     /// </summary>
-    public interface IDownloadable : IAsyncDisposable
+    public interface IDownloadable
     {
         /// <summary>
         /// Information about downloading this item.

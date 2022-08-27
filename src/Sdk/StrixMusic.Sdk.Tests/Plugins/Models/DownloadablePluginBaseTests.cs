@@ -84,7 +84,6 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public override DownloadInfo DownloadInfo => throw AccessedException;
             public override event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
             public override Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
-            public override ValueTask DisposeAsync() => throw AccessedException;
         }
 
         public class NoOverride : DownloadablePluginBase
@@ -95,25 +94,12 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             }
         }
 
-        internal class NotBlockingDisposeAsync : DownloadablePluginBase
-        {
-            public NotBlockingDisposeAsync()
-                : base(new ModelPluginMetadata("", nameof(NotBlockingDisposeAsync), "", new Version()), new Unimplemented())
-            {
-            }
-
-            /// <inheritdoc />
-            public override ValueTask DisposeAsync() => default;
-        }
-
         public class Unimplemented : IDownloadable
         {
             internal static AccessedException<Unimplemented> AccessedException { get; } = new();
 
             public DownloadInfo DownloadInfo => throw AccessedException;
             public event EventHandler<DownloadInfo>? DownloadInfoChanged { add => throw AccessedException; remove => throw AccessedException; }
-
-            public ValueTask DisposeAsync() => throw AccessedException;
 
             public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
         }

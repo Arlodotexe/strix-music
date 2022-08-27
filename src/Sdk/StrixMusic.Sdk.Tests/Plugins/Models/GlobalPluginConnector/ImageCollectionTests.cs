@@ -20,8 +20,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -36,22 +35,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure a Playable plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayablePluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingPlayable()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playable.Execute(new PlayablePluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<PlayablePluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -64,8 +48,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -80,21 +63,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure a TrackCollection plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingTrackCollection()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).TrackCollection.Execute(new TrackCollectionPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, customFilter: NoInnerOrSources, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<TrackCollectionPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -107,8 +76,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -123,22 +91,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an ArtistCollection plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingArtistCollection()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).ArtistCollection.Execute(new ArtistCollectionPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(plugin, customFilter: NoInnerOrSources, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<ArtistCollectionPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -151,8 +104,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -167,22 +119,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an AlbumCollection plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingAlbumCollection()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).AlbumCollection.Execute(new AlbumCollectionPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<AlbumCollectionPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -195,8 +132,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -211,22 +147,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Album plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingAlbum()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<AlbumPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -239,8 +160,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -255,22 +175,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Artist plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingArtist()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<ArtistPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -283,8 +188,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -299,22 +203,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Playlist plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlaylistPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingPlaylist()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Playlist.Execute(new PlaylistPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<PlaylistPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -327,8 +216,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -343,22 +231,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Track plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingTrack()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<TrackPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -371,8 +244,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -387,22 +259,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an PlayableCollectionGroup plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayableCollectionGroupPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingPlayableCollectionGroup()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<PlayableCollectionGroupPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -415,8 +272,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -431,22 +287,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Library plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingLibrary()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<LibraryPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -459,8 +300,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -475,22 +315,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an Discoverables plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingDiscoverables()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<DiscoverablesPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -503,8 +328,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -519,22 +343,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an RecentlyPlayed plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<RecentlyPlayedPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingRecentlyPlayed()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).RecentlyPlayed.Execute(new RecentlyPlayedPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<RecentlyPlayedPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -547,8 +356,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -563,22 +371,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an SearchHistory plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingSearchHistory()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<SearchHistoryPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -591,8 +384,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ImageCollectionPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
+                customFilter: NoInnerOrSources);
         }
 
         [TestMethod]
@@ -607,22 +399,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             // Ensure an SearchResults plugin can still be accessed through ImageCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchResultsPluginBaseTests.FullyCustom>, ImageCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
-                customFilter: NoInnerOrSources,
-                typesToExclude: typeof(IAsyncDisposable));
-        }
-
-        [TestMethod]
-        public void DisposingSearchResults()
-        {
-            var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
-            plugins.ImageCollection.Add(x => new ImageCollectionPluginBaseTests.FullyCustom(x));
-
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
-
-            Helpers.AssertAllThrowsOnMemberAccess<IAsyncDisposable>(value: plugin, expectedExceptions: new[] {
-                typeof(AccessedException<ImageCollectionPluginBaseTests.FullyCustom>),
-                typeof(AccessedException<SearchResultsPluginBaseTests.Unimplemented>),
-            });
+                customFilter: NoInnerOrSources);
         }
     }
 }

@@ -837,8 +837,5 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     /// <inheritdoc/>
     public bool Equals(ICorePlayableCollectionGroup? other) => false;
 
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync() => default;
-
     public event EventHandler? SourcesChanged;
 }

@@ -364,17 +364,5 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreTrackCollection);
-
-        /// <inheritdoc />
-        public async ValueTask DisposeAsync()
-        {
-            DetachEvents(_preferredSource);
-
-            await _sources.InParallel(x => x.DisposeAsync().AsTask());
-
-            await _trackMap.DisposeAsync();
-            await _urlMap.DisposeAsync();
-            await _imageMap.DisposeAsync();
-        }
     }
 }

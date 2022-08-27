@@ -122,8 +122,9 @@ namespace StrixMusic.Cores.Files
         /// <inheritdoc/>
         public virtual ValueTask DisposeAsync()
         {
-            // Dispose any resources not known to the SDK.
-            // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
+            if (FileMetadataManager is not null)
+                return FileMetadataManager.DisposeAsync();
+
             return default;
         }
 

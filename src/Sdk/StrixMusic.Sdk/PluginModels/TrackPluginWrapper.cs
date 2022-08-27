@@ -142,12 +142,7 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
         if (e is not null)
             Album = new AlbumPluginWrapper(e, _plugins);
         else
-        {
-            if (Album is not null)
-                (Album as AlbumPluginWrapper)?.DisposeAsync();
-            
             Album = null;
-        }
     }
 
     private void OnDownloadInfoChanged(object sender, DownloadInfo e) => DownloadInfoChanged?.Invoke(sender, e);
@@ -492,13 +487,6 @@ public class TrackPluginWrapper : ITrack, IPluginWrapper
 
     /// <inheritdoc/>
     public Task ChangeAlbumAsync(IAlbum? album, CancellationToken cancellationToken = default) => _track.ChangeAlbumAsync(album, cancellationToken);
-
-    /// <inheritdoc/>
-    public ValueTask DisposeAsync()
-    {
-        DetachEvents(_track);
-        return _track.DisposeAsync();
-    }
 
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {

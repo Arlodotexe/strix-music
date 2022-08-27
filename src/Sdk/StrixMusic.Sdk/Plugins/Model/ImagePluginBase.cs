@@ -58,9 +58,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICoreImage> Sources => Inner.Sources;
 
         /// <inheritdoc/>
-        public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
-
-        /// <inheritdoc/>
         public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
     }
 }

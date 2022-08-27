@@ -83,11 +83,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             throw new NotImplementedException();
         }
 
-        public ValueTask DisposeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task NextAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
