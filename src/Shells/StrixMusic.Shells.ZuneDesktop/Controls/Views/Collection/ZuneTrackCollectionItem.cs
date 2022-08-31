@@ -25,24 +25,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         [ObservableProperty]
         private TrackViewModel? _track;
 
+        [ObservableProperty]
         private bool _shouldShowArtistList;
 
         [ObservableProperty]
         private ObservableCollection<MetadataItem> _artistNamesMetadata = new ObservableCollection<MetadataItem>();
-
-        /// <summary>
-        /// Flag to determine whether to show artist column or not.
-        /// </summary>
-        public bool ShouldShowArtistList
-        {
-            get => _shouldShowArtistList;
-
-            set
-            {
-                _shouldShowArtistList = value;
-                OnPropertyChanged(nameof(ShouldShowArtistList));
-            }
-        }
 
         partial void OnTrackChanging(TrackViewModel? newValue)
         {
