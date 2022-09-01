@@ -14,6 +14,9 @@ using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.ViewModels.Helpers;
+using System.Collections.Concurrent;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -24,6 +27,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
         private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
+
+        // Cache artist item values
+        // Keeping a minimum cache that updates with events allows us to
+        // avoid checking all items when a single item updates.
+        private ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
 
         /// <summary>
         /// Creates a new instance for <see cref="ZuneTrackCollection"/>.
@@ -40,11 +48,20 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private void AttachEvents(ZuneTrackCollectionItem item)
         {
             item.PropertyChanged += Item_PropertyChanged;
+            if (item.Track is not null)
+            {
+                item.Track.ArtistItemsChanged += Track_ArtistItemsChanged;
+            }
         }
 
         private void DetachEvents(ZuneTrackCollectionItem item)
         {
             item.PropertyChanged -= Item_PropertyChanged;
+
+            if (item.Track is not null)
+            {
+                item.Track.ArtistItemsChanged -= Track_ArtistItemsChanged;
+            }
         }
 
         /// <summary>
@@ -129,21 +146,29 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                _trackItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
+                var tracks = e.NewItems.Cast<TrackViewModel>();
+                foreach (var item in tracks)
+                {
+                    await item.InitArtistCollectionAsync();
+                }
+
+                var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
                 {
                     var newItem = new ZuneTrackCollectionItem
                     {
-                        Track = (TrackViewModel)x,
-                        ParentCollection = Collection
+                        Track = x,
+                        ParentCollection = Collection,
+                        ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
                     };
 
                     AttachEvents(newItem);
                     return newItem;
-                }));
+                });
+                _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
             }
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
@@ -175,6 +200,46 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
                 throw new NotImplementedException();
+        }
+
+        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> addedItems,
+                                             IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        {
+            // If any track in the parent collection has more than 2 artists,
+            // ALL track items should display their artist list, including this instance.
+            var track = (ITrack)sender;
+
+            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
+            Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+
+            foreach (var item in _trackItems)
+            {
+                if (track.Id == item.Track?.Id)
+                {
+                    item.ArtistNamesMetadata.ChangeCollection(addedItems, removedItems, x => new MetadataItem { Label = x.Data.Name });
+                }
+            }
+
+            bool showArtists = false;
+
+            // Fast path
+            if (track.TotalArtistItemsCount > 2)
+            {
+                showArtists = Collection is IAlbum or IArtist;
+
+                goto MAKE_ARTIST_DECISION;
+            }
+
+            lock (_lastKnownTrackArtistsCount)
+            {
+                // Keeping a minimum cache that updates with events allows us to
+                // avoid checking all items asynchronously when a single item updates.
+                showArtists = _lastKnownTrackArtistsCount.Any(x => x.Value > 1) && Collection is IAlbum or IArtist;
+            }
+
+        MAKE_ARTIST_DECISION:
+            if (showArtists)
+                _trackItems.All(x => x.ShouldShowArtistList = true);
         }
 
         private void ZuneTrackCollection_Unloaded(object sender, RoutedEventArgs e)
