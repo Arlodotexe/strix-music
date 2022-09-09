@@ -58,7 +58,17 @@ namespace StrixMusic.Shells.Default
             navigationService.RegisterCommonPage(typeof(HomeView));
             navigationService.RegisterCommonPage(typeof(NowPlayingView));
 
+            Unloaded += DefaultShell_Unloaded;
+
             return navigationService;
+        }
+
+        private void DefaultShell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= DefaultShell_Unloaded;
+
+            _navigationService.NavigationRequested -= NavigationService_NavigationRequested;
+            _navigationService.BackRequested -= Shell_BackRequested;
         }
 
         /// <inheritdoc/>
@@ -76,7 +86,11 @@ namespace StrixMusic.Shells.Default
         {
             if (!e.IsOverlay)
             {
-                _history.Push((Control)MainContent.Content);
+                if ((Control)MainContent.Content != null)
+                {
+                    _history.Push((Control)MainContent.Content);
+                }
+
                 MainContent.Content = e.Page;
             }
             else
