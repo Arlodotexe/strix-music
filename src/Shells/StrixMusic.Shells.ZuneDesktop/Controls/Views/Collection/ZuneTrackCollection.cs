@@ -204,7 +204,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             await Task.Delay(10);
             SortTrackAccordingToCurrentState();
 
-            // Giving breathing spaceto cpu.
+            // Giving breathing space to cpu.
             await Task.Delay(10);
             PART_Selector?.ScrollIntoView(Collection?.Tracks[0]);
         }
