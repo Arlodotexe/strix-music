@@ -76,7 +76,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-           
+
             PART_SortLbl = GetTemplateChild(nameof(PART_SortLbl)) as TextBlock;
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
@@ -200,12 +200,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
 
-            // Giving breathing space to cpu.
-            await Task.Delay(10);
             SortTrackAccordingToCurrentState();
 
-            // Giving breathing space to cpu.
-            await Task.Delay(10);
             PART_Selector?.ScrollIntoView(Collection?.Tracks[0]);
         }
 
