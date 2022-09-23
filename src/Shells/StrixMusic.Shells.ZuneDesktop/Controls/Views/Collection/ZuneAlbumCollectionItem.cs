@@ -24,5 +24,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         [ObservableProperty]
         private AlbumViewModel? _album;
+
+        [ObservableProperty]
+        private bool _defaultSelectionState;
     }
 }

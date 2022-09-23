@@ -37,6 +37,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumItem), new PropertyMetadata(CollectionContentType.Tracks, (s, e) => OnZuneCollectionTypeChanged(s, e)));
 
         /// <summary>
+        /// Flag to determine if the collection item should be selected by default or not.
+        /// </summary>
+        public bool DefaultSelectionState
+        {
+            get => (bool)GetValue(ZuneCollectionTypeProperty);
+            set => SetValue(DefaultSelectionStateProperty, value);
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="CollectionContent" />.
+        /// </summary>
+        public static readonly DependencyProperty DefaultSelectionStateProperty =
+            DependencyProperty.Register(nameof(DefaultSelectionState), typeof(bool), typeof(ZuneAlbumItem), new PropertyMetadata(false, (s, e) => OnDefaultSelectionStateChanged(s, e)));
+
+        /// <summary>
         /// The AlbumCollection GridView control.
         /// </summary>
         public Button? PART_PlayIcon { get; private set; }
@@ -88,8 +103,21 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             }
 
             Guard.IsNotNull(PART_PlayIcon, nameof(PART_PlayIcon));
+            Guard.IsNotNull(PART_RootGrid, nameof(PART_RootGrid));
             PART_PlayIcon.Tapped += PART_PlayIcon_Tapped;
             Unloaded += ZuneAlbumItem_Unloaded;
+        }
+
+        private static void OnDefaultSelectionStateChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is bool b)
+            {
+                if (b)
+                {
+                    var zuneAlbumItem = s as ZuneAlbumItem;
+                    VisualStateManager.GoToState(zuneAlbumItem, "Selected", true);
+                }
+            }
         }
 
         private static void OnZuneCollectionTypeChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)

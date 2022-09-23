@@ -60,7 +60,7 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="collections:ZuneAlbumCollectionItem">
-                                        <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
+                                        <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1" DefaultSelectionState="{Binding DefaultSelectionState, Mode=OneWay}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
