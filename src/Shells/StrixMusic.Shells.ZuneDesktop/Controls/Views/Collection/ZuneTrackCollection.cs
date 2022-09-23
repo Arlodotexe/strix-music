@@ -26,12 +26,39 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     [INotifyPropertyChanged]
     public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
+        private bool _sortInitiated = false;
+
         private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
         // Cache artist item values
         // Keeping a minimum cache that updates with events allows us to
         // avoid checking all items when a single item updates.
         private ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
+
+        /// <summary>
+        /// Holds the instance of the sort textblock.
+        /// </summary>
+        public TextBlock? PART_SortLbl { get; private set; }
+
+        /// <summary>
+        /// Holds the instance of the listview.
+        /// </summary>
+        public ListView? PART_Selector { get; private set; }
+
+        /// <summary>
+        /// Holds the current sort state of the zune <see cref="TrackCollection"/>.
+        /// </summary>
+        public ZuneSortState SortState
+        {
+            get { return (ZuneSortState)GetValue(SortStateProperty); }
+            set { SetValue(SortStateProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="SortState" />.
+        /// </summary>
+        public static readonly DependencyProperty SortStateProperty =
+            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ, null));
 
         /// <summary>
         /// Creates a new instance for <see cref="ZuneTrackCollection"/>.
@@ -43,6 +70,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             // Some events are always attached (even if the control is never loaded in XAML)
             // Using the unloaded event gives us a chance to detach events manually in case the GC doesn't
             Unloaded += ZuneTrackCollection_Unloaded;
+        }
+
+        /// <inheritdoc />
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            PART_SortLbl = GetTemplateChild(nameof(PART_SortLbl)) as TextBlock;
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+
+            PART_SortLbl.Tapped += PART_SortLbl_Tapped;
+
+            PART_Selector = GetTemplateChild(nameof(PART_Selector)) as ListView;
+
+            SortState = ZuneSortState.ZA;
+            PART_SortLbl.Text = "A-Z";
         }
 
         private void AttachEvents(ZuneTrackCollectionItem item)
@@ -62,6 +105,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 item.Track.ArtistItemsChanged -= Track_ArtistItemsChanged;
             }
+        }
+
+        private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Guard.IsNotNull(Collection);
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+
+            SortTrackAccordingToCurrentState();
+
+            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            if (PART_Selector.Items.Count > 0)
+                PART_Selector.ScrollIntoView(PART_Selector.Items[0]);
         }
 
         /// <summary>
@@ -144,6 +199,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
+
+            SortTrackAccordingToCurrentState();
+
+            PART_Selector?.ScrollIntoView(Collection?.Tracks[0]);
         }
 
         private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -169,6 +228,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     return newItem;
                 });
                 _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
+
+                SortTrackAccordingToCurrentState();
             }
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
@@ -181,6 +242,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         _trackItems.Remove(target);
                         DetachEvents(target);
                     }
+
+                    SortTrackAccordingToCurrentState();
                 }
             }
 
@@ -200,6 +263,30 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
                 throw new NotImplementedException();
+        }
+
+        private void SortTrackAccordingToCurrentState()
+        {
+            if (Collection is null || PART_SortLbl is null)
+            {
+                return;
+            }
+
+            switch (SortState)
+            {
+                case ZuneSortState.AZ:
+                    Collection.SortTrackCollection(Sdk.ViewModels.TrackSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
+                    SortState = ZuneSortState.ZA;
+                    PART_SortLbl.Text = "Z-A";
+                    break;
+                case ZuneSortState.ZA:
+                    Collection.SortTrackCollection(Sdk.ViewModels.TrackSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
+                    SortState = ZuneSortState.AZ;
+                    PART_SortLbl.Text = "A-Z";
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         private void Track_ArtistItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> addedItems,
