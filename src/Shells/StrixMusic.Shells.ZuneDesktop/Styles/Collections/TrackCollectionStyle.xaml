@@ -9,6 +9,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:tkcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
     xmlns:a="using:OwlCore.WinUI.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackCollectionStyle">
 
@@ -17,6 +18,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <unitconvert:CountToSongsConverter x:Key="CountToSongsConverter"/>
+    <zuneConverters:ZuneSortStateToStringConverter x:Key="ZuneSortStateToStringConverter"/>
 
     <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="collections:ZuneTrackCollection">
         <Style.Setters>
@@ -35,9 +37,12 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <StackPanel Margin="24,0,0,12">
+                                <StackPanel Margin="24,0,0,12"  Orientation="Horizontal" Spacing="5" >
                                     <TextBlock Text="{Binding Collection.TotalTrackCount, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource CountToSongsConverter}}"
                                                FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+
+                                    <TextBlock x:Name="PART_SortLbl"  Width="50"  Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}"
+                                           Foreground="#C8CACB" FontSize="12" FontWeight="Bold" a:TextHelpers.CharacterCasing="Upper" />
 
                                     <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
                                 </StackPanel>
