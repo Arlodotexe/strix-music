@@ -163,7 +163,7 @@ namespace StrixMusic
             PreferredShell = ShellRegistry.MetadataRegistry.FirstOrDefault(x => x.Id == preferredShellId);
             if (PreferredShell == default)
             {
-                CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
+                AppContext.NavigationService.NavigateTo(typeof(SuperShell), true);
                 return;
             }
 

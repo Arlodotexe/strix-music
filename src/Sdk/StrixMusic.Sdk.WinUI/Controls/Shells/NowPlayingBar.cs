@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
                 if (device is not DeviceViewModel dvm)
                     dvm = new DeviceViewModel(device);
 
-                ActiveDevice = dvm;
+                SetValue(ActiveDeviceProperty, dvm);
             }
         }
 
@@ -78,7 +78,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         public DeviceViewModel? ActiveDevice
         {
             get => (DeviceViewModel?)GetValue(ActiveDeviceProperty);
-            set => SetValue(ActiveDeviceProperty, value);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -6,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Sdk.WinUI.Controls.Items
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying an <see cref="AlbumViewModel"/> in a list.
+    /// A Templated <see cref="Control"/> for displaying an <see cref="IAlbum"/> in a list.
     /// </summary>
     public partial class AlbumItem : ItemControl
     {
@@ -31,29 +32,48 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         }
 
         /// <summary>
+        /// Dependency property for <see cref="Album"/>.
+        /// </summary>
+        public static readonly DependencyProperty AlbumProperty =
+            DependencyProperty.Register(nameof(Album), typeof(IAlbum), typeof(AlbumItem), new PropertyMetadata(null, (d, e) => ((AlbumItem)d).OnAlbumChanged(e.OldValue as IAlbum, e.NewValue as IAlbum)));
+
+        /// <summary>
+        /// Dependency property for <see cref="AlbumVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty AlbumViewModelProperty =
+            DependencyProperty.Register(nameof(AlbumVm), typeof(AlbumViewModel), typeof(AlbumItem), new PropertyMetadata(null));
+
+        /// <summary>
         /// ViewModel holding the data for <see cref="AlbumItem" />
         /// </summary>
-        public AlbumViewModel Album
+        public IAlbum? Album
         {
-            get { return (AlbumViewModel)GetValue(AlbumProperty); }
-            set { SetValue(AlbumProperty, value); }
+            get => (IAlbum)GetValue(AlbumProperty);
+            set => SetValue(AlbumProperty, value);
         }
 
         /// <summary>
-        /// Dependency property for <ses cref="AlbumViewModel" />.
+        /// A view model version of <see cref="Album"/>.
         /// </summary>
-        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(AlbumItem), new PropertyMetadata(0));
+        public AlbumViewModel? AlbumVm => (AlbumViewModel)GetValue(AlbumViewModelProperty);
 
-        private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void AlbumItem_Unloaded(object sender, RoutedEventArgs e)
         {
             DetachEvents();
         }
 
-        private void AlbumItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void AlbumItem_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= AlbumItem_Loaded;
+        }
+
+        /// <summary>
+        /// Fires when the <see cref="Album"/> is changed.
+        /// </summary>
+        protected virtual void OnAlbumChanged(IAlbum? oldValue, IAlbum? newValue)
+        {
+            if (newValue is not null)
+                SetValue(AlbumViewModelProperty, Album is AlbumViewModel albumVm ? albumVm : new AlbumViewModel(newValue));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,9 +40,18 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// <summary>
         /// ViewModel holding the data for <see cref="ArtistItem" />
         /// </summary>
-        public ArtistViewModel Artist
+        internal ArtistViewModel ArtistVm
         {
             get { return (ArtistViewModel)GetValue(ArtistProperty); }
+            set { SetValue(ArtistProperty, value); }
+        }
+
+        /// <summary>
+        /// ViewModel holding the data for <see cref="ArtistItem" />
+        /// </summary>
+        public IArtist Artist
+        {
+            get { return (IArtist)GetValue(ArtistProperty); }
             set { SetValue(ArtistProperty, value); }
         }
 
@@ -50,7 +60,12 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// </summary>
         // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ArtistProperty =
-            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(0, (d, e) => ((ArtistItem)d).OnArtistChanged()));
+
+        private void OnArtistChanged()
+        {
+            ArtistVm = Artist is ArtistViewModel artistVm ? artistVm : new ArtistViewModel(Artist);
+        }
 
         private void RootGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {

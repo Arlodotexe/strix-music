@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -20,45 +17,31 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// <summary>
         /// Initializes a new instance of the <see cref="Shell"/> class.
         /// </summary>
-        protected Shell(StrixDataRootViewModel dataRootViewModel)
+        protected Shell()
         {
-            DataRoot = dataRootViewModel;
             Loaded += ShellControl_Loaded;
-
-            // Creating a new instance here so the old Ioc is wiped even if they don't call base.InitServices();
-            Ioc = new Ioc();
-        }
-
-        /// <summary>
-        /// A unique Ioc container for shell-specific services. Wiped and recreated when the user switches shells.
-        /// </summary>
-        public static Ioc Ioc { get; private set; } = new Ioc();
-
-        /// <summary>
-        /// Initializes the services for this shell's IoC.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public virtual Task InitServices(IServiceCollection serviceCollection)
-        {
-            Ioc.ConfigureServices(serviceCollection.BuildServiceProvider());
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// A ViewModel wrapper for all merged core data.
-        /// </summary>
-        public StrixDataRootViewModel DataRoot
-        {
-            get => (StrixDataRootViewModel)GetValue(DataRootProperty);
-            set => SetValue(DataRootProperty, value);
         }
 
         /// <summary>
         /// The backing dependency property for <see cref="DataRoot"/>.
         /// </summary>
         public static readonly DependencyProperty DataRootProperty =
-            DependencyProperty.Register(nameof(DataRoot), typeof(StrixDataRootViewModel), typeof(Shell), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(DataRoot), typeof(IStrixDataRoot), typeof(Shell), new PropertyMetadata(null));
+
+        /// <summary>
+        /// The backing dependency property for <see cref="Notifications"/>.
+        /// </summary>
+        public static readonly DependencyProperty NotificationsProperty =
+            DependencyProperty.Register(nameof(Notifications), typeof(NotificationsViewModel), typeof(Shell), new PropertyMetadata(null));
+
+        /// <summary>
+        /// A ViewModel wrapper for all merged core data.
+        /// </summary>
+        public IStrixDataRoot DataRoot
+        {
+            get => (IStrixDataRoot)GetValue(DataRootProperty);
+            set => SetValue(DataRootProperty, value);
+        }
 
         /// <summary>
         /// A ViewModel for notifications displayed to the user.
@@ -68,12 +51,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
             get => (NotificationsViewModel)GetValue(NotificationsProperty);
             set => SetValue(NotificationsProperty, value);
         }
-
-        /// <summary>
-        /// The backing dependency property for <see cref="Notifications"/>.
-        /// </summary>
-        public static readonly DependencyProperty NotificationsProperty =
-            DependencyProperty.Register(nameof(Notifications), typeof(NotificationsViewModel), typeof(Shell), new PropertyMetadata(null));
 
         private void ShellControl_Loaded(object sender, RoutedEventArgs e)
         {

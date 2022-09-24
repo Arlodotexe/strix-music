@@ -4,7 +4,6 @@ using OwlCore.Diagnostics;
 using OwlCore.Storage;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Shells.Default;
 
 namespace StrixMusic.Services
@@ -66,13 +65,6 @@ namespace StrixMusic.Services
         public bool IsLoggingEnabled
         {
             get => GetSetting(() => _isDebug);
-            set => SetSetting(value);
-        }
-
-        /// <inheritdoc cref="SiblingCollectionPlaybackPreferences"/>
-        public SiblingCollectionPlaybackPreferences PlayCollectionBehavior
-        {
-            get => GetSetting(() => new SiblingCollectionPlaybackPreferences());
             set => SetSetting(value);
         }
 

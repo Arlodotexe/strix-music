@@ -11,7 +11,6 @@ using StrixMusic.Sdk.ViewModels.Notifications;
 using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Services;
-using StrixMusic.Services.CoreManagement;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

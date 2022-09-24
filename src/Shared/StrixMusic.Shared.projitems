@@ -31,7 +31,6 @@
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CoreModels\FileImage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
     </Compile>
@@ -46,10 +45,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
     <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreManagementService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreInstanceEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreRegistry.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\ICoreManagementService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreMetadata.cs" />

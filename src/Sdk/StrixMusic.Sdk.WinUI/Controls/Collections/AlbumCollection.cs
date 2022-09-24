@@ -73,8 +73,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// </summary>
         public IAlbumCollectionViewModel? Collection
         {
-            get { return (IAlbumCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (IAlbumCollectionViewModel)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>

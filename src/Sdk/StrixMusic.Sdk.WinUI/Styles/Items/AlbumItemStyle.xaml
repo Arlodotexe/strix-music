@@ -18,7 +18,7 @@
                         <Grid MaxWidth="128">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Loaded">
-                                    <core:InvokeCommandAction Command="{Binding Album.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <core:InvokeCommandAction Command="{Binding AlbumVm.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
 
@@ -27,12 +27,12 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <strix:SafeImage Height="128" Width="128"  ImageCollection="{Binding Album, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <strix:SafeImage Height="128" Width="128" ImageCollection="{Binding AlbumVm, RelativeSource={RelativeSource TemplatedParent}}"/>
 
                             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                                 <TextBlock Text="{Binding Album.Name, RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
 
-                                <ItemsControl ItemsSource="{Binding Album.Artists, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ItemsControl ItemsSource="{Binding AlbumVm.Artists, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" />

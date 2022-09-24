@@ -4,6 +4,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
@@ -30,22 +31,16 @@ namespace StrixMusic.Shells.ZuneDesktop
     {
         private readonly IModifiableFolder _settingStorage;
         private readonly ZuneDesktopSettings _settings;
-        private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell(StrixDataRootViewModel strixDataRootViewModel, IModifiableFolder settingStorage, NotificationService notificationService)
-            : base(strixDataRootViewModel)
+        public ZuneShell()
         {
             Loaded += ZuneShell_Loaded;
             Unloaded += OnUnloaded;
-            _settingStorage = settingStorage;
 
             _settings = new ZuneDesktopSettings(_settingStorage);
-
-            notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
-            notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
 
             this.InitializeComponent();
         }
@@ -59,26 +54,6 @@ namespace StrixMusic.Shells.ZuneDesktop
                 description: "A faithful recreation of the iconic Zune client for Windows",
                 inputMethods: InputMethods.Mouse,
                 minWindowSize: new Size(width: 700, height: 600));
-
-        /// <inheritdoc/>
-        public override Task InitServices(IServiceCollection services)
-        {
-            _navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-            SetupNavigationService(_navigationService);
-            
-            services.AddSingleton(_settings);
-            services.AddSingleton(_navigationService);
-
-            return base.InitServices(services);
-        }
-
-        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
-        {
-            navigationService.NavigationRequested += ZuneShell_NavigationRequested;
-            navigationService.BackRequested += ZuneShell_BackRequested;
-
-            return navigationService;
-        }
 
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {
