@@ -40,15 +40,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// <summary>
         /// ViewModel holding the data for <see cref="ArtistItem" />
         /// </summary>
-        internal ArtistViewModel ArtistVm
-        {
-            get { return (ArtistViewModel)GetValue(ArtistProperty); }
-            set { SetValue(ArtistProperty, value); }
-        }
-
-        /// <summary>
-        /// ViewModel holding the data for <see cref="ArtistItem" />
-        /// </summary>
         public IArtist Artist
         {
             get { return (IArtist)GetValue(ArtistProperty); }
@@ -56,15 +47,29 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         }
 
         /// <summary>
-        /// Dependency property for <ses cref="ArtistViewModel" />.
+        /// The artist to display.
         /// </summary>
-        // Using a DependencyProperty as the backing store for ViewModel.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ArtistProperty =
-            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(0, (d, e) => ((ArtistItem)d).OnArtistChanged()));
+        public ArtistViewModel ArtistVm => (ArtistViewModel)GetValue(ArtistViewModelProperty);
 
-        private void OnArtistChanged()
+        /// <summary>
+        /// Dependency property for <see cref="Artist"/>.
+        /// </summary>
+        public static readonly DependencyProperty ArtistProperty =
+            DependencyProperty.Register(nameof(Artist), typeof(IArtist), typeof(ArtistItem), new PropertyMetadata(null, (d, e) => ((ArtistItem)d).OnArtistChanged(e.OldValue as IArtist, e.NewValue as IArtist)));
+
+        /// <summary>
+        /// Dependency property for <see cref="ArtistVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty ArtistViewModelProperty =
+            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Fires when the <see cref="Artist"/> is changed.
+        /// </summary>
+        protected virtual void OnArtistChanged(IArtist? oldValue, IArtist? newValue)
         {
-            ArtistVm = Artist is ArtistViewModel artistVm ? artistVm : new ArtistViewModel(Artist);
+            if (newValue is not null)
+                SetValue(ArtistViewModelProperty, Artist is ArtistViewModel artistVm ? artistVm : new ArtistViewModel(newValue));
         }
 
         private void RootGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

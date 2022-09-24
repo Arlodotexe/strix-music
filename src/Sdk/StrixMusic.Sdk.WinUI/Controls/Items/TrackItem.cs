@@ -1,4 +1,6 @@
-﻿using StrixMusic.Sdk.MediaPlayback;
+﻿using System;
+using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
@@ -20,20 +22,30 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         }
 
         /// <summary>
-        /// Backing dependency property for <see cref="Track"/>.
+        /// Dependency property for <see cref="Track"/>.
         /// </summary>
         public static readonly DependencyProperty TrackProperty =
-            DependencyProperty.Register(nameof(Track), typeof(TrackViewModel), typeof(TrackItem),
-                new PropertyMetadata(null, (d, e) => ((TrackItem)d).OnTrackChanged((TrackViewModel?)e.OldValue, (TrackViewModel)e.NewValue)));
+            DependencyProperty.Register(nameof(Track), typeof(ITrack), typeof(TrackItem), new PropertyMetadata(null, (d, e) => ((TrackItem)d).OnTrackChanged(e.OldValue as ITrack, e.NewValue as ITrack)));
+
+        /// <summary>
+        /// Dependency property for <see cref="TrackVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty TrackViewModelProperty =
+            DependencyProperty.Register(nameof(Track), typeof(TrackViewModel), typeof(TrackItem), new PropertyMetadata(null));
+
+        /// <summary>
+        /// ViewModel holding the data for <see cref="TrackItem" />
+        /// </summary>
+        public ITrack? Track
+        {
+            get => (ITrack)GetValue(TrackProperty);
+            set => SetValue(TrackProperty, value);
+        }
 
         /// <summary>
         /// The track to display.
         /// </summary>
-        public TrackViewModel Track
-        {
-            get { return (TrackViewModel)GetValue(TrackProperty); }
-            set { SetValue(TrackProperty, value); }
-        }
+        public TrackViewModel TrackVm => (TrackViewModel)GetValue(TrackViewModelProperty);
 
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
@@ -59,12 +71,13 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         private void TrackItem_Unloaded(object sender, RoutedEventArgs e) => DetachHandlers();
 
         /// <summary>
-        /// Subscribes to the PlaybackState on track change.
+        /// Fires when the <see cref="Track"/> is changed.
         /// </summary>
-        /// <param name="oldValue">The old track instance.</param>
-        /// <param name="newValue">The new track instance.</param>
-        public virtual void OnTrackChanged(TrackViewModel? oldValue, TrackViewModel? newValue)
+        protected virtual void OnTrackChanged(ITrack? oldValue, ITrack? newValue)
         {
+            if (newValue is not null)
+                SetValue(TrackViewModelProperty, Track is TrackViewModel albumVm ? albumVm : new TrackViewModel(newValue));
+
             if (oldValue is not null)
                 oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;
 
