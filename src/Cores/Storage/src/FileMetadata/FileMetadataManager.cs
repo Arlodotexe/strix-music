@@ -236,16 +236,14 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                                    await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.TagLib, cancellationToken);
 
                     // File has no audio metadata
-                    if (fileMetadata is not null)
-                    {
-                        fileMetadata.Id = file.Id;
+                    if (fileMetadata is null)
+                        return;
 
-                        GarbageCollectMetadataReferences(digestedMetadata);
+                    fileMetadata.Id = file.Id;
 
-                        Logger.LogInformation($"Digesting file metadata {fileMetadata.Id}");
-                        await DigestFileMetadataAsync(fileMetadata);
-                        await SaveFileMetadataCache(fileMetadataCache, cancellationToken);
-                    }
+                    Logger.LogInformation($"Digesting file metadata {fileMetadata.Id}");
+                    await DigestFileMetadataAsync(fileMetadata);
+                    await SaveFileMetadataCache(fileMetadataCache, cancellationToken);
                 }
 
                 ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed + 1, ScanState.FilesFound);
@@ -386,7 +384,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
     private async Task SaveFileMetadataCache(Dictionary<string, Models.FileMetadata> fileMetadataCache, CancellationToken cancellationToken)
     {
-        var cacheFile = await GetFileCacheFile(cancellationToken);
+        var cacheFile = await GetMetadataCacheFile(cancellationToken);
 
         using var storageStream = await cacheFile.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
         using var serializedStream = await FileMetadataRepoSerializer.Singleton.SerializeAsync(fileMetadataCache, cancellationToken);
@@ -400,11 +398,15 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         await serializedStream.CopyToAsync(storageStream);
     }
 
-    internal async Task<IFile> GetFileCacheFile(CancellationToken cancellationToken)
+    /// <summary>
+    /// Gets (or creates) the file used for storing and retrieving cached metadata.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A Task that represents the asynchronous operation. Value is the file where metadata should be cached.</returns>
+    internal async Task<IFile> GetMetadataCacheFile(CancellationToken cancellationToken)
     {
-        var fileMetadataFilename = "Files.bin";
-        var cachedFileStorable = await _metadataStorage.GetItemsAsync(cancellationToken: cancellationToken)
-            .FirstOrDefaultAsync(x => x.Name == fileMetadataFilename, cancellationToken: cancellationToken);
+        var fileMetadataFilename = "FileMetadata.cache";
+        var cachedFileStorable = await _metadataStorage.GetItemsAsync(cancellationToken: cancellationToken).FirstOrDefaultAsync(x => x.Name == fileMetadataFilename, cancellationToken: cancellationToken);
 
         if (cachedFileStorable is not IFile cachedFile)
             cachedFile = await _metadataStorage.CreateFileAsync(fileMetadataFilename, overwrite: false, cancellationToken);
@@ -412,16 +414,20 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         return cachedFile;
     }
 
+    /// <summary>
+    /// Retrieves the metadata cache from disk.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A Task that represents the asynchronous operation. Value is the cached file metadata.</returns>
     internal async Task<Dictionary<string, Models.FileMetadata>?> TryGetFileMetadataCacheAsync(CancellationToken cancellationToken)
     {
-        var cachedFile = await GetFileCacheFile(cancellationToken);
+        var cachedFile = await GetMetadataCacheFile(cancellationToken);
         using var fileCacheStream = await cachedFile.OpenStreamAsync(cancellationToken: cancellationToken);
 
         try
         {
             var cache = await FileMetadataRepoSerializer.Singleton.DeserializeAsync<Dictionary<string, Models.FileMetadata>>(fileCacheStream, cancellationToken);
 
-            GarbageCollectMetadataReferences(cache.Values.ToList());
             return cache;
         }
         catch
