@@ -1,5 +1,4 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.AppModels;
+﻿using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;

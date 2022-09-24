@@ -12,7 +12,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -498,7 +498,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateTracksMutex))
+            using (await _populateTracksMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateTracksMutex.Release());
 
@@ -517,7 +517,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateImagesMutex))
+            using (await _populateImagesMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
 
@@ -532,7 +532,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateUrlsMutex))
+            using (await _populateUrlsMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
 

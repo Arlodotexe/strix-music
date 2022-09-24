@@ -2,14 +2,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:viewModels1="using:StrixMusic.Shared.ViewModels"
+    xmlns:viewModels1="using:StrixMusic.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:models="using:StrixMusic.Sdk.WinUI.Models"
     xmlns:s="using:System"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:shellMgmt="using:StrixMusic.Sdk.WinUI.Services.ShellManagement"
     xmlns:visibilityConverters="using:OwlCore.WinUI.Converters.Bools.Visible"
-    x:Class="StrixMusic.Shared.Styles.ShellSelector">
+    x:Class="StrixMusic.Styles.ShellSelector">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">

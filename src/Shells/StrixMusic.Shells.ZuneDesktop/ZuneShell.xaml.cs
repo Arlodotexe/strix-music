@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using OwlCore.AbstractStorage;
+using OwlCore.Storage;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Shells;
@@ -28,14 +28,14 @@ namespace StrixMusic.Shells.ZuneDesktop
     /// </summary>
     public sealed partial class ZuneShell : Shell
     {
-        private readonly IFolderData _settingStorage;
+        private readonly IModifiableFolder _settingStorage;
         private readonly ZuneDesktopSettings _settings;
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
-        public ZuneShell(StrixDataRootViewModel strixDataRootViewModel, IFolderData settingStorage, NotificationService notificationService)
+        public ZuneShell(StrixDataRootViewModel strixDataRootViewModel, IModifiableFolder settingStorage, NotificationService notificationService)
             : base(strixDataRootViewModel)
         {
             Loaded += ZuneShell_Loaded;

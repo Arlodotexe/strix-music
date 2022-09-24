@@ -15,7 +15,7 @@ namespace StrixMusic.Cores.LocalFiles.Settings
         /// <summary>
         /// Creates a new instance of <see cref="LocalFilesCoreSettings"/>.
         /// </summary>
-        public LocalFilesCoreSettings(IFolderData folder)
+        public LocalFilesCoreSettings(IFolder folder)
             : base(folder, FilesCoreSettingsSerializer.Singleton)
         {
         }

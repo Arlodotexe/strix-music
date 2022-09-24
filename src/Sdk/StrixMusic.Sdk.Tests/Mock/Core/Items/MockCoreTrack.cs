@@ -1,10 +1,10 @@
-﻿using OwlCore.Events;
-using StrixMusic.Sdk.MediaPlayback;
+﻿using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 

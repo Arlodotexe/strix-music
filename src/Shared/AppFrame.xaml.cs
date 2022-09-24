@@ -16,7 +16,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shared
+namespace StrixMusic
 {
     /// <summary>
     /// A top-level frame that holds all other app content.

@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Helper;
 using Windows.UI;
@@ -42,7 +40,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// Backing property for <see cref="Album"/>.
         /// </summary>
         public static readonly DependencyProperty AlbumProperty =
-            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(GrooveAlbumPage), new PropertyMetadata(null, (d, e) => d.Cast<GrooveAlbumPage>().OnAlbumChanged()));
+            DependencyProperty.Register(nameof(Album), typeof(AlbumViewModel), typeof(GrooveAlbumPage), new PropertyMetadata(null, (d, e) => ((GrooveAlbumPage)d).OnAlbumChanged()));
 
         /// <summary>
         /// The album being displayed.

@@ -6,8 +6,6 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore;
-using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
@@ -18,7 +16,7 @@ using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shared
+namespace StrixMusic
 {
     /// <summary>
     /// Displays the main content of the app (the user's preferred shell).

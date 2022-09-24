@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
@@ -96,13 +94,13 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
         /// The backing dependency property for <see cref="Devices"/>.
         /// </summary>
         public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(new List<IDevice>(), (s, e) => s.Cast<NowPlayingBar>().OnDevicesChanged(e.OldValue.Cast<IReadOnlyList<IDevice>>(), e.NewValue.Cast<IReadOnlyList<IDevice>>())));
+            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(new List<IDevice>(), (s, e) => ((NowPlayingBar)s).OnDevicesChanged( (IReadOnlyList<IDevice>)e.OldValue, (IReadOnlyList<IDevice>)e.NewValue)));
 
         /// <summary>
         /// Backing dependency property for <see cref="ActiveDevice"/>.
         /// </summary>
         public static readonly DependencyProperty ActiveDeviceProperty =
-            DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => s.Cast<NowPlayingBar>().OnActiveDeviceChanged(e.OldValue.Cast<DeviceViewModel>(), e.NewValue.Cast<DeviceViewModel>())));
+            DependencyProperty.Register(nameof(ActiveDevice), typeof(DeviceViewModel), typeof(NowPlayingBar), new PropertyMetadata(null, (s, e) => ((NowPlayingBar)s).OnActiveDeviceChanged((DeviceViewModel)e.OldValue, (DeviceViewModel)e.NewValue)));
 
         /// <summary>
         /// Callback for when the <see cref="ActiveDevice"/> property is changed.

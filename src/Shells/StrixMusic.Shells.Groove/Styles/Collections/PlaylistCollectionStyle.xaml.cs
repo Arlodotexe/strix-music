@@ -1,7 +1,4 @@
-﻿using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.Controls.Items;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.Groove.Styles.Collections
 {

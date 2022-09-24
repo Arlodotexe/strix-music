@@ -1,5 +1,5 @@
-﻿using OwlCore.AbstractStorage;
-using OwlCore.Services;
+﻿using OwlCore.ComponentModel;
+using OwlCore.Storage;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
@@ -13,7 +13,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneDesktopSettings"/> class.
         /// </summary>
-        public ZuneDesktopSettings(IFolderData settingsStorage)
+        public ZuneDesktopSettings(IModifiableFolder settingsStorage)
             : base(settingsStorage, SystemJsonStreamSerializer.Singleton)
         {
         }

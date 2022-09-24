@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore.Provisos;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using Windows.Storage;
+using OwlCore.ComponentModel;
 
-namespace StrixMusic.Shared.ViewModels
+namespace StrixMusic.ViewModels
 {
     /// <summary>
     /// A view model containing metadata about a shell that the user can switch to.

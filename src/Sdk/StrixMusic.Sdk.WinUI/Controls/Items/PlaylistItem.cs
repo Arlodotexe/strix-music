@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using StrixMusic.Sdk.AppModels;
+﻿using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;

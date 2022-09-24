@@ -163,9 +163,9 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
             void ContinueButtonOnClicked(object sender, EventArgs e) => taskCompletionSource.SetResult(null);
         }
 
-        public async Task<IFolderData?> ExecuteFolderPickerStageAsync(IFolderData rootFolder, string? displayName, string? emailAddress)
+        public async Task<IFolder?> ExecuteFolderPickerStageAsync(IFolder rootFolder, string? displayName, string? emailAddress)
         {
-            var taskCompletionSource = new TaskCompletionSource<IFolderData?>();
+            var taskCompletionSource = new TaskCompletionSource<IFolder?>();
             _oobeCancellationSource.Token.Register(() => taskCompletionSource.TrySetCanceled());
 
             Clear();
@@ -215,7 +215,7 @@ namespace StrixMusic.Cores.OneDrive.ConfigPanels
                     _notificationService?.RaiseNotification("Couldn't open folder", $"An error occurred while opening the folder{(e.Exception is not null ? $" ({e.Exception.GetType()})" : "")}");
             }
 
-            void OnFolderSelected(object sender, IFolderData e) => taskCompletionSource.SetResult(e);
+            void OnFolderSelected(object sender, IFolder e) => taskCompletionSource.SetResult(e);
             void OnFileExplorerCanceled(object sender, EventArgs e) => _cancelButton.Click();
         }
 

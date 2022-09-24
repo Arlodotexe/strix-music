@@ -1,5 +1,4 @@
 ﻿using OwlCore.WinUI.ColorExtractor.ColorSpaces;
-using Windows.UI;
 
 namespace OwlCore.WinUI.ColorExtractor.Filters
 {

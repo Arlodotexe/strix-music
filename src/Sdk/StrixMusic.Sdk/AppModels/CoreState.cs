@@ -17,16 +17,6 @@ namespace StrixMusic.Sdk.AppModels
         Unloaded,
 
         /// <summary>
-        /// The core requires input from the user.
-        /// </summary>
-        NeedsConfiguration,
-
-        /// <summary>
-        /// The core has all data it needs to be used without further user interaction.
-        /// </summary>
-        Configured,
-
-        /// <summary>
         /// The core is performing additional setup required before use.
         /// </summary>
         Loading,

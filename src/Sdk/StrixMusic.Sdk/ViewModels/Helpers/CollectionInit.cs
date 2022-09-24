@@ -4,7 +4,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using OwlCore.Services;
+using OwlCore.Diagnostics;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {

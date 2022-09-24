@@ -5,21 +5,19 @@ using System.Linq;
 using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore;
 using OwlCore.AbstractUI.ViewModels;
-using OwlCore.Extensions;
 using StrixMusic.Controls;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services;
 using StrixMusic.Services.CoreManagement;
-using StrixMusic.Shared.ViewModels;
+using StrixMusic.ViewModels;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shared
+namespace StrixMusic
 {
     /// <summary>
     /// The SuperShell is a top-level overlay that will always show on top of all other shells. It provides various essential app functions, such as changing settings, setting your shell, viewing debug info, and managing cores.

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Items;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
+﻿using StrixMusic.Sdk.WinUI.Controls.Items;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 {

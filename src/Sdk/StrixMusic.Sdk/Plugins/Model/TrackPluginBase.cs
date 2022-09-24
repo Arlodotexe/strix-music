@@ -8,8 +8,6 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
-using OwlCore.Events;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;

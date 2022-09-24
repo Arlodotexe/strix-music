@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Services;
+using OwlCore.ComponentModel;
 
 namespace StrixMusic.Services
 {

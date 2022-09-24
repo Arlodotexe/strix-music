@@ -9,9 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
-using OwlCore.Provisos;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
@@ -423,7 +422,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 foreach (var mergedData in _mergedMappedData)
                 {
-                    foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
+                    foreach (var mergedSource in ((IMerged<TCoreCollectionItem>)mergedData.CollectionItem).Sources)
                     {
                         if (mappedData.CollectionItem != mergedSource)
                             continue;
@@ -434,7 +433,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                         mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
 
-                        if (mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources.Count == 0)
+                        if (((IMerged<TCoreCollectionItem>)mergedData.CollectionItem).Sources.Count == 0)
                         {
                             var index = _mergedMappedData.IndexOf(mergedData);
                             _mergedMappedData.Remove(mergedData);
@@ -733,7 +732,7 @@ namespace StrixMusic.Sdk.AdapterModels
                     itemLimitForSource = itemsCountForSource - currentSource.OriginalIndex;
                 }
 
-                var remainingItemsForSource = await OwlCore.APIs.GetAllItemsAsync<TCoreCollectionItem>(
+                var remainingItemsForSource = await OwlCore.Flow.GetPaginatedItemsAsync<TCoreCollectionItem>(
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
                     async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync(cancellationToken).AsTask());

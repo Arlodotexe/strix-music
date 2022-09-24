@@ -1,4 +1,4 @@
-﻿using StrixMusic.Shared;
+﻿using StrixMusic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;

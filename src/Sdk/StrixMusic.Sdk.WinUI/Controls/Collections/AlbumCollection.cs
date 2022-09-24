@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -82,7 +81,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => s.Cast<AlbumCollection>().OnCollectionChanged((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => ((AlbumCollection)s).OnCollectionChanged((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
 
         /// <summary>
         /// Fires when the <see cref="Collection"/> property changes.

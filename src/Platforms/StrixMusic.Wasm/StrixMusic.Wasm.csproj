@@ -55,7 +55,8 @@
 		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
-		<PackageReference Include="OwlCore" Version="0.0.71" />
+		<PackageReference Include="OwlCore" Version="0.1.0" />
+		<PackageReference Include="OwlCore.Storage.Uwp" Version="0.0.0" />
 		<PackageReference Include="System.Text.Json" Version="6.0.5" />
 		<PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
 		<PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.1-uno.2" />
@@ -81,13 +82,11 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj" />
-		<ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
 		<ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
 		<ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
 	</ItemGroup>
-	<Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
+	<Import Project="..\..\Shared\StrixMusic.projitems" Label="Shared" />
 </Project>

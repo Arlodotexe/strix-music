@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Data;

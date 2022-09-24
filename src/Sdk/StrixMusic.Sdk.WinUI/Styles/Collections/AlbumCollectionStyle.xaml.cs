@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

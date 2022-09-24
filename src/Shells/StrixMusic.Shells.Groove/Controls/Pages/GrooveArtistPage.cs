@@ -1,6 +1,4 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Pages;
+﻿using StrixMusic.Sdk.ViewModels;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -48,7 +46,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// Backing dependency property for <see cref="Artist"/>.
         /// </summary>
         public static readonly DependencyProperty ArtistProperty = 
-            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(GrooveArtistPage), new PropertyMetadata(null, (d, e) => d.Cast<GrooveArtistPage>().OnArtistChanged()));
+            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(GrooveArtistPage), new PropertyMetadata(null, (d, e) => ((GrooveArtistPage)d).OnArtistChanged()));
 
         private void OnArtistChanged()
         {

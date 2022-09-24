@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 

@@ -14,7 +14,7 @@ namespace OwlCore.WinUI.Extensions
         /// </summary>
         /// <param name="dispatcher">The CoreDispatcher to use for dispatching.</param>
         /// <returns></returns>
-        public static SwitchToUIAwaitable SwitchToUI(this CoreDispatcher dispatcher)
+        public static SwitchToUIAwaitable SwitchToAsync(this CoreDispatcher dispatcher)
         {
             return new SwitchToUIAwaitable(dispatcher);
         }

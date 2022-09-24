@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            var userProfileImpl = userProfile.Cast<UserProfileAdapter>();
+            var userProfileImpl = (UserProfileAdapter)userProfile;
 
             _sources = userProfileImpl.Sources;
 

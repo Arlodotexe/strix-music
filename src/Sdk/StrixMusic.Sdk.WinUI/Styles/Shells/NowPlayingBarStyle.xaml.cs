@@ -1,5 +1,4 @@
-﻿using StrixMusic.Sdk.WinUI.Controls;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Shells
 {

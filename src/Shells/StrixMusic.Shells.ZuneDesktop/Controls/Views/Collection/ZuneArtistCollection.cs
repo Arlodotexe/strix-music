@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
-using StrixMusic.Shells.ZuneDesktop.Converters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
-using OwlCore.Services;
 
 namespace StrixMusic.Sdk.Services
 {

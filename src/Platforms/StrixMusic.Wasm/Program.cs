@@ -1,6 +1,3 @@
-using System;
-using Windows.UI.Xaml;
-
 namespace StrixMusic.Wasm
 {
 	public class Program

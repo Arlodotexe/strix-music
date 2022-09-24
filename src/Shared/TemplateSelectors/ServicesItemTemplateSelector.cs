@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Diagnostics;
-using StrixMusic.Shared.ViewModels;
+using StrixMusic.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shared.TemplateSelectors
+namespace StrixMusic.TemplateSelectors
 {
     /// <summary>
     /// Selects the template for a service item.

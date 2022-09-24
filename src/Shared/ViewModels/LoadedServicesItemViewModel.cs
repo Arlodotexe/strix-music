@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services.CoreManagement;
 
-namespace StrixMusic.Shared.ViewModels
+namespace StrixMusic.ViewModels
 {
     /// <summary>
     /// Used to display an item in the service section of <see cref="SuperShell"/>.

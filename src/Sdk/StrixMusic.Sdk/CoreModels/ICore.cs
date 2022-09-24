@@ -7,8 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Events;
-using OwlCore.Provisos;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -17,11 +16,8 @@ namespace StrixMusic.Sdk.CoreModels
     /// <summary>
     /// An <see cref="ICore"/> is a common API surface that can be implemented to allow interfacing with any arbitrary music provider.
     /// </summary>
-    /// <remarks> In a core's constructor, only do basic object initialization. For the rest, use <see cref="IAsyncInit.InitAsync"/>.
-    /// 
-    /// <para/> During <see cref="IAsyncInit.InitAsync"/>, if the core state is changed to <see cref="CoreState.NeedsConfiguration"/>,
-    ///         the consuming application should display the current <see cref="AbstractConfigPanel"/> to the user for configuration and setup.
-    ///         After the user has completed setup, execution of InitAsync should proceed as usual with the new data.
+    /// <remarks>
+    /// In a core's constructor, only do basic object initialization. For the rest, use <see cref="IAsyncInit.InitAsync"/>.
     /// </remarks>
     /// <seealso cref="IStrixDataRoot"/>
     public interface ICore : IAsyncInit, ICoreModel, IAsyncDisposable
@@ -50,11 +46,6 @@ namespace StrixMusic.Sdk.CoreModels
         /// A logo for this core, if any.
         /// </summary>
         public ICoreImage? Logo { get; }
-
-        /// <summary>
-        /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
-        /// </summary>
-        public AbstractUICollection AbstractConfigPanel { get; }
 
         /// <summary>
         /// The player type supported by this core.
@@ -139,11 +130,6 @@ namespace StrixMusic.Sdk.CoreModels
         /// Raised when the contents of <see cref="Devices"/> is changed.
         /// </summary>
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
-
-        /// <summary>
-        /// Raised when <see cref="AbstractUIElement"/> is changed.
-        /// </summary>
-        public event EventHandler? AbstractConfigPanelChanged;
 
         /// <summary>
         /// Raised when <see cref="DisplayName"/> is changed.

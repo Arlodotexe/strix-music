@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using OwlCore.AbstractStorage;
-using OwlCore.Services;
+using OwlCore.ComponentModel;
+using OwlCore.Diagnostics;
+using OwlCore.Storage;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.Services;
@@ -27,7 +25,7 @@ namespace StrixMusic.Services
         /// Initializes a new instance of the <see cref="AppSettings"/> class.
         /// </summary>
         /// <param name="folder">The folder where app settings are stored.</param>
-        public AppSettings(IFolderData folder)
+        public AppSettings(IModifiableFolder folder)
             : base(folder, AppSettingsSerializer.Singleton)
         {
             LoadFailed += AppSettings_LoadFailed;

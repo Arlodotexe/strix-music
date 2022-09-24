@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

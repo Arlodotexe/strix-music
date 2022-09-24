@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         {
             await Task.Delay(500);
 
-            Library.Cast<MockCoreLibrary>().PopulateMockItems();
+            ((MockCoreLibrary)Library).PopulateMockItems();
 
             CoreState = CoreState.Loaded;
         }

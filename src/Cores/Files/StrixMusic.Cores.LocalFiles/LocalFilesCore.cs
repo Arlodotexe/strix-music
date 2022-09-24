@@ -3,11 +3,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
 using OwlCore;
-using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
+using OwlCore.Storage;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.LocalFiles.Settings;
@@ -32,7 +30,7 @@ namespace StrixMusic.Cores.LocalFiles
         /// <param name="fileSystem">An abstraction of the local file system.</param>
         /// <param name="settingsStorage">A folder abstraction where this core can persist settings data beyond the lifetime of the application.</param>
         /// <param name="notificationService">A service that can notify the user with interactive UI or messages.</param>
-        public LocalFilesCore(string instanceId, IFileSystemService fileSystem, IFolderData settingsStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
+        public LocalFilesCore(string instanceId, IFileSystemService fileSystem, IFolder settingsStorage, INotificationService notificationService, Progress<FileScanState>? fileScanProgress)
             : this(instanceId, new LocalFilesCoreSettings(settingsStorage), fileSystem, notificationService, fileScanProgress)
         {
         }
@@ -94,11 +92,6 @@ namespace StrixMusic.Cores.LocalFiles
         /// The settings for this core instance.
         /// </summary>
         internal LocalFilesCoreSettings Settings { get; }
-
-        /// <summary>
-        /// An abstraction of the local file system.
-        /// </summary>
-        internal IFileSystemService FileSystem { get; }
 
         /// <summary>
         /// Gets a service that can notify the user with interactive UI or generic messages.
@@ -202,7 +195,7 @@ namespace StrixMusic.Cores.LocalFiles
                     await scannerTask;
             }
 
-            await Library.Cast<FilesCoreLibrary>().InitAsync(cancellationToken);
+            await ((FilesCoreLibrary)Library).InitAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             ChangeCoreState(CoreState.Loaded);

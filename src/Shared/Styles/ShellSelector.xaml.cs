@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace StrixMusic.Shared.Styles
+namespace StrixMusic.Styles
 {
     /// <summary>
     /// The backing resource dictionary for <see cref="ShellSelector"/>.

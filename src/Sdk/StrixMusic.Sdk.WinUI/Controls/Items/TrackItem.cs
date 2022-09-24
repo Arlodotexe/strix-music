@@ -1,5 +1,4 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.MediaPlayback;
+﻿using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
@@ -25,7 +24,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// </summary>
         public static readonly DependencyProperty TrackProperty =
             DependencyProperty.Register(nameof(Track), typeof(TrackViewModel), typeof(TrackItem),
-                new PropertyMetadata(null, (d, e) => d.Cast<TrackItem>().OnTrackChanged((TrackViewModel?)e.OldValue, (TrackViewModel)e.NewValue)));
+                new PropertyMetadata(null, (d, e) => ((TrackItem)d).OnTrackChanged((TrackViewModel?)e.OldValue, (TrackViewModel)e.NewValue)));
 
         /// <summary>
         /// The track to display.

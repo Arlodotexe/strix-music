@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml.cs">
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CoreModels\FileImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
@@ -52,7 +53,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreMetadata.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml.cs">

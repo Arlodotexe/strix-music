@@ -3,7 +3,7 @@ using StrixMusic.Sdk.Services.Navigation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shared
+namespace StrixMusic
 {
     /// <summary>
     /// Helpers related to Window.Current.

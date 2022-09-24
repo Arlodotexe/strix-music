@@ -2,10 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 using Windows.ApplicationModel.Resources;
 

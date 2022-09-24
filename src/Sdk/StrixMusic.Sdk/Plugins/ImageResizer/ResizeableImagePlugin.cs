@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using OwlCore.Services;
+using OwlCore.Diagnostics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Plugins.Model;

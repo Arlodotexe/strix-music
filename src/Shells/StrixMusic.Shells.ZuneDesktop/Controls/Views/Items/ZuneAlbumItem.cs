@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 {

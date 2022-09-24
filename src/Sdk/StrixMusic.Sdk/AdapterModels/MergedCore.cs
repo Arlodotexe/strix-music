@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -136,46 +136,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var core in _sources)
-                await InitCore(core, cancellationToken);
+            if (IsInitialized)
+                return;
+            
+            await _sources.InParallel(x => x.InitAsync(cancellationToken));
 
             IsInitialized = true;
-        }
-
-        private async Task InitCore(ICore core, CancellationToken cancellationToken)
-        {
-        Begin:
-            var setupCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-
-            if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsConfiguration)
-            {
-                try
-                {
-                    await core.InitAsync(setupCancellationTokenSource.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    if (!setupCancellationTokenSource.IsCancellationRequested)
-                        setupCancellationTokenSource.Cancel();
-                }
-            }
-
-            if (setupCancellationTokenSource.IsCancellationRequested || core.CoreState == CoreState.Unloaded)
-            {
-                setupCancellationTokenSource.Dispose();
-                RemoveSource(core);
-                return;
-            }
-
-            if (core.CoreState == CoreState.NeedsConfiguration)
-            {
-                // If the user needs to provide information for setup to continue, wait for another state change.
-                // Display of the core's AbstractConfigPanel handled by the host application.
-                await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, TimeSpan.FromMinutes(10));
-                goto Begin;
-            }
-
-            setupCancellationTokenSource.Dispose();
         }
 
         /// <inheritdoc />

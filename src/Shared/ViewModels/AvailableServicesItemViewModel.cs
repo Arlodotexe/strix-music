@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Services.CoreManagement;
 
-namespace StrixMusic.Shared.ViewModels
+namespace StrixMusic.ViewModels
 {
     /// <summary>
     /// A view model containing metadata about a service (core) that the user can create an instance of.

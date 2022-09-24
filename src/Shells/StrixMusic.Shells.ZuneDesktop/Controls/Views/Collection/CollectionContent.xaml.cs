@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
-using StrixMusic.Sdk;
+﻿using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;

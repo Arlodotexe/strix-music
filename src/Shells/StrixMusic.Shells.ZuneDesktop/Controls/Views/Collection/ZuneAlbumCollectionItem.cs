@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection

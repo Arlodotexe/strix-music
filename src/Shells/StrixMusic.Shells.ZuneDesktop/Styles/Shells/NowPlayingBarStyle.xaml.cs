@@ -1,8 +1,5 @@
-﻿using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
-using StrixMusic.Sdk.WinUI.Controls.Views;
+﻿using StrixMusic.Sdk.WinUI.Controls.Shells;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles.Shells
 {

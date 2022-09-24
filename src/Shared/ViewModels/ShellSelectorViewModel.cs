@@ -2,14 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore.Provisos;
-using OwlCore.Services;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Services;
 
-namespace StrixMusic.Shared.ViewModels
+namespace StrixMusic.ViewModels
 {
     /// <summary>
     /// View model used to select shells.

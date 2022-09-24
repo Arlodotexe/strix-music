@@ -5,7 +5,6 @@ using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.MediaPlayback;
 using Windows.Media;
-using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace StrixMusic.Services
