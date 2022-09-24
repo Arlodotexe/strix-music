@@ -42,18 +42,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         }
 
         /// <summary>
-        /// Backing dependency property for <see cref="Playlist"/>.
-        /// </summary>
-        public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(nameof(Playlist), typeof(IPlaylist), typeof(PlaylistItem),
-                                                                   new PropertyMetadata(null, (s, e) => ((PlaylistItem)s).OnPlaylistChanged()));
-
-        /// <summary>
-        /// Backing dependency property for <see cref="PlaylistVm"/>.
-        /// </summary>
-        public static readonly DependencyProperty PlaylistVmProperty = DependencyProperty.Register(nameof(PlaylistVm), typeof(PlaylistViewModel), typeof(PlaylistItem),
-                                                                   new PropertyMetadata(null));
-
-        /// <summary>
         /// The playlist to display.
         /// </summary>
         public IPlaylist? Playlist
@@ -63,26 +51,30 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         }
 
         /// <summary>
-        /// The Playlist view model to display.
+        /// The playlist to display.
         /// </summary>
-        public PlaylistViewModel? PlaylistVm
+        public PlaylistViewModel PlaylistVm => (PlaylistViewModel)GetValue(PlaylistViewModelProperty);
+
+        /// <summary>
+        /// Dependency property for <see cref="Playlist"/>.
+        /// </summary>
+        public static readonly DependencyProperty PlaylistProperty =
+            DependencyProperty.Register(nameof(Playlist), typeof(IPlaylist), typeof(PlaylistItem), new PropertyMetadata(null, (d, e) => ((PlaylistItem)d).OnPlaylistChanged(e.OldValue as IPlaylist, e.NewValue as IPlaylist)));
+
+        /// <summary>
+        /// Dependency property for <see cref="PlaylistVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty PlaylistViewModelProperty =
+            DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistItem), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Fires when the <see cref="Playlist"/> is changed.
+        /// </summary>
+        protected virtual void OnPlaylistChanged(IPlaylist? oldValue, IPlaylist? newValue)
         {
-            get => (PlaylistViewModel?)GetValue(PlaylistVmProperty);
-            set => SetValue(PlaylistVmProperty, value);
-        }
+            if (newValue is not null)
+                SetValue(PlaylistViewModelProperty, Playlist is PlaylistViewModel playlistVm ? playlistVm : new PlaylistViewModel(newValue));
 
-        private void OnPlaylistChanged()
-        {
-            if (Playlist is null)
-            {
-                PlaylistVm = null;
-                return;
-            }
-
-            if (Playlist is not PlaylistViewModel pvm)
-                pvm = new PlaylistViewModel(Playlist);
-
-            PlaylistVm = pvm;
             _ = PlaylistVm.InitAsync();
         }
     }
