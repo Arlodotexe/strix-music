@@ -23,7 +23,7 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <strix:SafeImage Height="128" Width="128" ImageCollection="{Binding Artist, RelativeSource={RelativeSource Mode=TemplatedParent}}"  Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+                            <strix:SafeImage Height="128" Width="128" ImageCollection="{Binding ArtistVm, RelativeSource={RelativeSource Mode=TemplatedParent}}"  Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 
                             <TextBlock  Grid.Row="1" Text="{Binding Artist.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontWeight="SemiBold" Margin="0,20,0,0" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </Grid>
