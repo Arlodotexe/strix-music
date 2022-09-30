@@ -82,6 +82,9 @@ namespace StrixMusic.Sdk.Plugins.Model
         public IReadOnlyList<ICore> Sources => Inner.Sources;
 
         /// <inheritdoc/>
+        public string Id => Inner.Id;
+
+        /// <inheritdoc/>
         public virtual MergedCollectionConfig MergeConfig => Inner.MergeConfig;
 
         /// <inheritdoc/>
@@ -109,12 +112,12 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
-
-        /// <inheritdoc/>
         public bool Equals(ICore other) => Inner.Equals(other);
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default) => Inner.InitAsync(cancellationToken);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root => this;
     }
 }

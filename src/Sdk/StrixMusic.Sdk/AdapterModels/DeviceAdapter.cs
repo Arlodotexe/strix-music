@@ -24,9 +24,11 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="DeviceAdapter"/>.
         /// </summary>
-        /// <param name="source"></param>
-        public DeviceAdapter(ICoreDevice source)
+        /// <param name="root">The <see cref="IStrixDataRoot"/> which is responsible for creating this instance.</param>
+        /// <param name="source">The </param>
+        public DeviceAdapter(ICoreDevice source, IStrixDataRoot root)
         {
+            Root = root;
             _source = source;
 
             Name = _source.Name;
@@ -41,15 +43,15 @@ namespace StrixMusic.Sdk.AdapterModels
             
             Guard.IsNotNull(_source.NowPlaying,nameof(_source.NowPlaying));
 
-            var nowPlaying = new MergedTrack(_source.NowPlaying.IntoList(), new MergedCollectionConfig());
+            var nowPlaying = new MergedTrack(_source.NowPlaying.IntoList(), root);
 
-            NowPlaying = new PlaybackItem()
+            NowPlaying = new PlaybackItem
             {
                 Track = nowPlaying,
             };
 
             if (!(_source.PlaybackQueue is null))
-                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), new MergedCollectionConfig());
+                PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList(), root);
 
             AttachEvents();
         }
@@ -66,7 +68,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
         private void Source_NowPlayingChanged(object sender, ICoreTrack e)
         {
-            var nowPlaying = new MergedTrack(e.IntoList(), new MergedCollectionConfig());
+            var nowPlaying = new MergedTrack(e.IntoList(), Root);
 
             NowPlaying = new PlaybackItem
             {
@@ -134,6 +136,9 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public event EventHandler<PlaybackItem>? NowPlayingChanged;
+        
+        /// <inheritdoc/>
+        public IStrixDataRoot Root { get; }
 
         /// <inheritdoc />
         public string Id => _source.Id;

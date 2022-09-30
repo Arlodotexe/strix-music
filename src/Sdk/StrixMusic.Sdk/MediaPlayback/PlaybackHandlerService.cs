@@ -34,10 +34,10 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
         /// </summary>
-        public PlaybackHandlerService()
+        public PlaybackHandlerService(IStrixDataRoot strixDataRoot)
         {
             _shuffleMap = Array.Empty<int>();
-            _localDevice = new StrixDevice(this);
+            _localDevice = new StrixDevice(this, strixDataRoot);
         }
 
         private void AttachEvents(IAudioPlayerService audioPlayerService)

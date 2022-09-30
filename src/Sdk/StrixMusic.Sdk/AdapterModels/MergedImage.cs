@@ -24,8 +24,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedImage"/> class.
         /// </summary>
-        public MergedImage(IReadOnlyList<ICoreImage> sources)
+        public MergedImage(IReadOnlyList<ICoreImage> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
 
@@ -78,5 +79,8 @@ namespace StrixMusic.Sdk.AdapterModels
             // For merging, this check can be done as we retrieve the images from the collection.
             return ReferenceEquals(this, other);
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

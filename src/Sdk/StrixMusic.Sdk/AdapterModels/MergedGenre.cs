@@ -22,8 +22,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedGenre"/> class.
         /// </summary>
-        public MergedGenre(IReadOnlyList<ICoreGenre> sources)
+        public MergedGenre(IReadOnlyList<ICoreGenre> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
 
@@ -64,5 +65,8 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return other?.Name == Name;
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

@@ -43,7 +43,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         {
             Metadata = metadata;
 
-            foreach(var plugin in pluginsToImport)
+            foreach (var plugin in pluginsToImport)
                 Import(plugin);
         }
 

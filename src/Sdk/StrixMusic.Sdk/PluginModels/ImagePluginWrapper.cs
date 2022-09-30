@@ -24,13 +24,15 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
     /// Initializes a new instance of the <see cref="PlayableCollectionGroupPluginWrapperBase"/> class.
     /// </summary>
     /// <param name="image">The instance to wrap around and apply plugins to.</param>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal ImagePluginWrapper(IImage image, params SdkModelPlugin[] plugins)
+    internal ImagePluginWrapper(IImage image, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
     {
+        Root = pluginRoot;
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
         
         _image = ActivePlugins.Image.Execute(image);
         
@@ -72,4 +74,7 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreImage> Sources => _image.Sources;
+
+    /// <inheritdoc />
+    public IStrixDataRoot Root { get; }
 }

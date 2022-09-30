@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore;
 using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
@@ -44,12 +43,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
-        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
+        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup, IStrixDataRoot viewModelRoot)
         {
+            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _syncContext = SynchronizationContext.Current;
 
             _collectionGroup = collectionGroup;
-            
+            Root = viewModelRoot;
+
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
@@ -457,8 +459,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IAlbum album => new AlbumViewModel(album),
-                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    IAlbum album => new AlbumViewModel(album, Root),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -468,8 +470,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Make sure both ordered and unordered album are updated. 
                 UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IAlbum album => new AlbumViewModel(album),
-                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    IAlbum album => new AlbumViewModel(album, Root),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -494,15 +496,15 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
             {
-                IArtist artist => new ArtistViewModel(artist),
-                IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                IArtist artist => new ArtistViewModel(artist, Root),
+                IArtistCollection collection => new ArtistCollectionViewModel(collection, Root),
                 _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
             });
         }, null);
 
         private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems) => _syncContext.Post(_ =>
         {
-            Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(item.Data));
+            Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(item.Data, Root));
         }, null);
 
         private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems) => _syncContext.Post(_ =>
@@ -511,8 +513,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IPlaylist playlist => new PlaylistViewModel(playlist),
-                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    IPlaylist playlist => new PlaylistViewModel(playlist, Root),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -522,8 +524,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Make sure both ordered and unordered playlists are updated. 
                 UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IPlaylist playlist => new PlaylistViewModel(playlist),
-                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    IPlaylist playlist => new PlaylistViewModel(playlist, Root),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -548,12 +550,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             if (this.CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
-                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data, Root));
             }
             else
             {
                 // Make sure both ordered and unordered track are updated. 
-                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data, Root));
 
                 foreach (var item in UnsortedTracks)
                 {
@@ -889,12 +891,12 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                var pvm = new PlaylistViewModel(playlist);
+                                var pvm = new PlaylistViewModel(playlist, Root);
                                 Playlists.Add(pvm);
                                 UnsortedPlaylists.Add(pvm);
                                 break;
                             case IPlaylistCollection collection:
-                                var pcvm = new PlaylistCollectionViewModel(collection);
+                                var pcvm = new PlaylistCollectionViewModel(collection, Root);
                                 Playlists.Add(pcvm);
                                 UnsortedPlaylists.Add(pcvm);
                                 break;
@@ -915,7 +917,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     await foreach (var item in _collectionGroup.GetTracksAsync(limit, Tracks.Count, cancellationToken))
                     {
-                        var tvm = new TrackViewModel(item);
+                        var tvm = new TrackViewModel(item, Root);
                         Tracks.Add(tvm);
                         UnsortedTracks.Add(tvm);
                     }
@@ -937,12 +939,12 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IAlbum album:
-                                var avm = new AlbumViewModel(album);
+                                var avm = new AlbumViewModel(album, Root);
                                 Albums.Add(avm);
                                 UnsortedAlbums.Add(avm);
                                 break;
                             case IAlbumCollection collection:
-                                var acvm = new AlbumCollectionViewModel(collection);
+                                var acvm = new AlbumCollectionViewModel(collection, Root);
                                 Albums.Add(acvm);
                                 UnsortedAlbums.Add(acvm);
                                 break;
@@ -966,12 +968,12 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IArtist artist:
-                                var avm = new ArtistViewModel(artist);
+                                var avm = new ArtistViewModel(artist, Root);
                                 Artists.Add(avm);
                                 UnsortedArtists.Add(avm);
                                 break;
                             case IArtistCollection collection:
-                                var acvm = new ArtistCollectionViewModel(collection);
+                                var acvm = new ArtistCollectionViewModel(collection, Root);
                                 Artists.Add(acvm);
                                 UnsortedArtists.Add(acvm);
                                 break;
@@ -992,7 +994,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     await foreach (var item in _collectionGroup.GetChildrenAsync(limit, Albums.Count, cancellationToken))
                     {
-                        Children.Add(new PlayableCollectionGroupViewModel(item));
+                        Children.Add(new PlayableCollectionGroupViewModel(item, Root));
                     }
                 });
             }
@@ -1291,5 +1293,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; protected set; }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

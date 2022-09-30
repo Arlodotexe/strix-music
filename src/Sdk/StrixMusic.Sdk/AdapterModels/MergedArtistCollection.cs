@@ -31,15 +31,16 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedArtistCollection"/>.
         /// </summary>
-        public MergedArtistCollection(IEnumerable<ICoreArtistCollection> collections, MergedCollectionConfig config)
+        public MergedArtistCollection(IEnumerable<ICoreArtistCollection> collections, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = collections?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreArtistCollection>>(nameof(collections));
 
             _preferredSource = _sources[0];
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
-            _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, config);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
+            _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, rootContext);
 
             Name = _preferredSource.Name;
             Description = _preferredSource.Description;
@@ -394,5 +395,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreArtistCollection);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

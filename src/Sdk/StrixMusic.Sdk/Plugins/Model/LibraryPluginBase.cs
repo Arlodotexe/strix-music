@@ -21,8 +21,9 @@ public class LibraryPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin
     /// </summary>
     /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
     /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-    internal protected LibraryPluginBase(ModelPluginMetadata registration, ILibrary inner)
-        : base(registration, inner)
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+    internal protected LibraryPluginBase(ModelPluginMetadata registration, ILibrary inner, IStrixDataRoot pluginRoot)
+        : base(registration, inner, pluginRoot)
     {
         Inner = inner;
     }

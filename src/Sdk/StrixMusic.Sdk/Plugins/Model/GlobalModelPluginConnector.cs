@@ -45,29 +45,30 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <para/> The resulting chain is constructed as a single plugin and neatly placed at the end of a new plugin
         ///         chain with all provided user-added plugins preceding it.
         /// </remarks>
+        /// <param name="root">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
         /// <param name="plugins">A plugin container which contains existing plugins to weave with the global plugin connector.</param>
         /// <returns>A new instance of <see cref="SdkModelPlugin"/> with the provided plugins applied to all common types.</returns>
-        public static SdkModelPlugin Create(SdkModelPlugin plugins)
+        public static SdkModelPlugin Create(IStrixDataRoot root, SdkModelPlugin plugins)
         {
             // Create plugin connectors inside of a buildable plugin.
             // Note that only plugins which derived other plugin-enabled interfaces need setup here.
             // The derived interface plugins are applied inside each method.
-            var playableBuilder = GenerateGlobalPlayablePluginBuilder(plugins);
-            var playableCollectionGroupBuilder = GenerateGlobalPlayableCollectionGroupPluginBuilder(plugins);
-            var libraryBuilder = GenerateGlobalLibraryPluginBuilder(plugins);
-            var discoverablesBuilder = GenerateGlobalDiscoverablesPluginBuilder(plugins);
-            var recentlyPlayedBuilder = GenerateGlobalRecentlyPlayedPluginBuilder(plugins);
-            var searchHistoryBuilder = GenerateGlobalSearchHistoryPluginBuilder(plugins);
-            var searchResultsBuilder = GenerateGlobalSearchResultsPluginBuilder(plugins);
+            var playableBuilder = GenerateGlobalPlayablePluginBuilder(plugins, root);
+            var playableCollectionGroupBuilder = GenerateGlobalPlayableCollectionGroupPluginBuilder(plugins, root);
+            var libraryBuilder = GenerateGlobalLibraryPluginBuilder(plugins, root);
+            var discoverablesBuilder = GenerateGlobalDiscoverablesPluginBuilder(plugins, root);
+            var recentlyPlayedBuilder = GenerateGlobalRecentlyPlayedPluginBuilder(plugins, root);
+            var searchHistoryBuilder = GenerateGlobalSearchHistoryPluginBuilder(plugins, root);
+            var searchResultsBuilder = GenerateGlobalSearchResultsPluginBuilder(plugins, root);
             
-            var albumCollectionBuilder = GenerateGlobalAlbumCollectionPluginBuilder(plugins);
-            var artistCollectionBuilder = GenerateGlobalArtistCollectionPluginBuilder(plugins);
-            var trackCollectionBuilder = GenerateGlobalTrackCollectionPluginBuilder(plugins);
+            var albumCollectionBuilder = GenerateGlobalAlbumCollectionPluginBuilder(plugins, root);
+            var artistCollectionBuilder = GenerateGlobalArtistCollectionPluginBuilder(plugins, root);
+            var trackCollectionBuilder = GenerateGlobalTrackCollectionPluginBuilder(plugins, root);
             
-            var albumBuilder = GenerateGlobalAlbumPluginBuilder(plugins);
-            var artistBuilder = GenerateGlobalArtistPluginBuilder(plugins);
-            var playlistBuilder = GenerateGlobalPlaylistPluginBuilder(plugins);
-            var trackBuilder = GenerateGlobalTrackPluginBuilder(plugins);
+            var albumBuilder = GenerateGlobalAlbumPluginBuilder(plugins, root);
+            var artistBuilder = GenerateGlobalArtistPluginBuilder(plugins, root);
+            var playlistBuilder = GenerateGlobalPlaylistPluginBuilder(plugins, root);
+            var trackBuilder = GenerateGlobalTrackPluginBuilder(plugins, root);
 
             // Clone plugin container & add global connectors.
             // Global connectors must be added to a new instance, otherwise some global connectors could
@@ -76,30 +77,30 @@ namespace StrixMusic.Sdk.Plugins.Model
             var pluginsWithGlobalConnectors = new SdkModelPlugin(PluginMetadata);
             pluginsWithGlobalConnectors.Import(plugins);
             
-            pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, playableBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Playable.Add(x => new PlayablePluginBase(PluginMetadata, playableBuilder.Execute(x), root));
             
-            pluginsWithGlobalConnectors.PlayableCollectionGroup.Add(x => new PlayableCollectionGroupPluginBase(PluginMetadata, playableCollectionGroupBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Library.Add(x => new LibraryPluginBase(PluginMetadata, libraryBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Discoverables.Add(x => new DiscoverablesPluginBase(PluginMetadata, discoverablesBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBase(PluginMetadata, recentlyPlayedBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.SearchHistory.Add(x => new SearchHistoryPluginBase(PluginMetadata, searchHistoryBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.SearchResults.Add(x => new SearchResultsPluginBase(PluginMetadata, searchResultsBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.PlayableCollectionGroup.Add(x => new PlayableCollectionGroupPluginBase(PluginMetadata, playableCollectionGroupBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.Library.Add(x => new LibraryPluginBase(PluginMetadata, libraryBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.Discoverables.Add(x => new DiscoverablesPluginBase(PluginMetadata, discoverablesBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.RecentlyPlayed.Add(x => new RecentlyPlayedPluginBase(PluginMetadata, recentlyPlayedBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.SearchHistory.Add(x => new SearchHistoryPluginBase(PluginMetadata, searchHistoryBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.SearchResults.Add(x => new SearchResultsPluginBase(PluginMetadata, searchResultsBuilder.Execute(x), root));
             
-            pluginsWithGlobalConnectors.AlbumCollection.Add(x => new AlbumCollectionPluginBase(PluginMetadata, albumCollectionBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.ArtistCollection.Add(x => new ArtistCollectionPluginBase(PluginMetadata, artistCollectionBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.TrackCollection.Add(x => new TrackCollectionPluginBase(PluginMetadata, trackCollectionBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.AlbumCollection.Add(x => new AlbumCollectionPluginBase(PluginMetadata, albumCollectionBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.ArtistCollection.Add(x => new ArtistCollectionPluginBase(PluginMetadata, artistCollectionBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.TrackCollection.Add(x => new TrackCollectionPluginBase(PluginMetadata, trackCollectionBuilder.Execute(x), root));
             
-            pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, albumBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Artist.Add(x => new ArtistPluginBase(PluginMetadata, artistBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Playlist.Add(x => new PlaylistPluginBase(PluginMetadata, playlistBuilder.Execute(x)));
-            pluginsWithGlobalConnectors.Track.Add(x => new TrackPluginBase(PluginMetadata, trackBuilder.Execute(x)));
+            pluginsWithGlobalConnectors.Album.Add(x => new AlbumPluginBase(PluginMetadata, albumBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.Artist.Add(x => new ArtistPluginBase(PluginMetadata, artistBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.Playlist.Add(x => new PlaylistPluginBase(PluginMetadata, playlistBuilder.Execute(x), root));
+            pluginsWithGlobalConnectors.Track.Add(x => new TrackPluginBase(PluginMetadata, trackBuilder.Execute(x), root));
 
             return pluginsWithGlobalConnectors;
         }
 
-        private static ChainedProxyBuilder<PlayablePluginBase, IPlayable> GenerateGlobalPlayablePluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<PlayablePluginBase, IPlayable> GenerateGlobalPlayablePluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
-            x => new PlayablePluginBase(PluginMetadata, x)
+            x => new PlayablePluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -107,12 +108,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<PlayableCollectionGroupPluginBase, IPlayableCollectionGroup> GenerateGlobalPlayableCollectionGroupPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<PlayableCollectionGroupPluginBase, IPlayableCollectionGroup> GenerateGlobalPlayableCollectionGroupPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -120,7 +121,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -129,7 +130,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -139,7 +140,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -149,7 +150,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -159,7 +160,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x)
+            x => new PlayableCollectionGroupPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -169,12 +170,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<LibraryPluginBase, ILibrary> GenerateGlobalLibraryPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<LibraryPluginBase, ILibrary> GenerateGlobalLibraryPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -182,7 +183,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -191,7 +192,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -201,7 +202,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -211,7 +212,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -221,7 +222,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new LibraryPluginBase(PluginMetadata, x)
+            x => new LibraryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -231,12 +232,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<DiscoverablesPluginBase, IDiscoverables> GenerateGlobalDiscoverablesPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<DiscoverablesPluginBase, IDiscoverables> GenerateGlobalDiscoverablesPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -244,7 +245,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -253,7 +254,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -263,7 +264,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -273,7 +274,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -283,7 +284,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new DiscoverablesPluginBase(PluginMetadata, x)
+            x => new DiscoverablesPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -293,12 +294,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<RecentlyPlayedPluginBase, IRecentlyPlayed> GenerateGlobalRecentlyPlayedPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<RecentlyPlayedPluginBase, IRecentlyPlayed> GenerateGlobalRecentlyPlayedPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -306,7 +307,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -315,7 +316,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -325,7 +326,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -335,7 +336,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -345,7 +346,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new RecentlyPlayedPluginBase(PluginMetadata, x)
+            x => new RecentlyPlayedPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -355,12 +356,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<SearchHistoryPluginBase, ISearchHistory> GenerateGlobalSearchHistoryPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<SearchHistoryPluginBase, ISearchHistory> GenerateGlobalSearchHistoryPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -368,7 +369,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -377,7 +378,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -387,7 +388,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -397,7 +398,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -407,7 +408,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new SearchHistoryPluginBase(PluginMetadata, x)
+            x => new SearchHistoryPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -417,12 +418,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<SearchResultsPluginBase, ISearchResults> GenerateGlobalSearchResultsPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<SearchResultsPluginBase, ISearchResults> GenerateGlobalSearchResultsPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -430,7 +431,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -439,7 +440,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -449,7 +450,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -459,7 +460,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // PlaylistCollection members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.PlaylistCollection.Execute(x),
                 InnerPlayable = plugins.PlaylistCollection.Execute(x),
@@ -469,7 +470,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new SearchResultsPluginBase(PluginMetadata, x)
+            x => new SearchResultsPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -479,9 +480,9 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<ArtistCollectionPluginBase, IArtistCollection> GenerateGlobalArtistCollectionPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<ArtistCollectionPluginBase, IArtistCollection> GenerateGlobalArtistCollectionPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
-            x => new ArtistCollectionPluginBase(PluginMetadata, x)
+            x => new ArtistCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -490,7 +491,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new ArtistCollectionPluginBase(PluginMetadata, x)
+            x => new ArtistCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -499,9 +500,9 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<AlbumCollectionPluginBase, IAlbumCollection> GenerateGlobalAlbumCollectionPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<AlbumCollectionPluginBase, IAlbumCollection> GenerateGlobalAlbumCollectionPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
-            x => new AlbumCollectionPluginBase(PluginMetadata, x)
+            x => new AlbumCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -510,7 +511,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new AlbumCollectionPluginBase(PluginMetadata, x)
+            x => new AlbumCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -519,9 +520,9 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<TrackCollectionPluginBase, ITrackCollection> GenerateGlobalTrackCollectionPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<TrackCollectionPluginBase, ITrackCollection> GenerateGlobalTrackCollectionPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
-            x => new TrackCollectionPluginBase(PluginMetadata, x)
+            x => new TrackCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -529,7 +530,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new TrackCollectionPluginBase(PluginMetadata, x)
+            x => new TrackCollectionPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -538,13 +539,13 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
         };
 
-        private static ChainedProxyBuilder<AlbumPluginBase, IAlbum> GenerateGlobalAlbumPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<AlbumPluginBase, IAlbum> GenerateGlobalAlbumPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // GenreCollection members
             // ImageCollection members
-            x => new AlbumPluginBase(PluginMetadata, x)
+            x => new AlbumPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -553,7 +554,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new AlbumPluginBase(PluginMetadata, x)
+            x => new AlbumPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -562,7 +563,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new AlbumPluginBase(PluginMetadata, x)
+            x => new AlbumPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),
@@ -572,7 +573,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new AlbumPluginBase(PluginMetadata, x)
+            x => new AlbumPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -582,13 +583,13 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<ArtistPluginBase, IArtist> GenerateGlobalArtistPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<ArtistPluginBase, IArtist> GenerateGlobalArtistPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // GenreCollection members
             // ImageCollection members
-            x => new ArtistPluginBase(PluginMetadata, x)
+            x => new ArtistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -597,7 +598,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new ArtistPluginBase(PluginMetadata, x)
+            x => new ArtistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -606,7 +607,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // AlbumCollection members
-            x => new ArtistPluginBase(PluginMetadata, x)
+            x => new ArtistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.AlbumCollection.Execute(x),
                 InnerPlayable = plugins.AlbumCollection.Execute(x),
@@ -616,7 +617,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new ArtistPluginBase(PluginMetadata, x)
+            x => new ArtistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -626,12 +627,12 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> GenerateGlobalPlaylistPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<PlaylistPluginBase, IPlaylist> GenerateGlobalPlaylistPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // ImageCollection members
-            x => new PlaylistPluginBase(PluginMetadata, x)
+            x => new PlaylistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -639,7 +640,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new PlaylistPluginBase(PluginMetadata, x)
+            x => new PlaylistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -648,7 +649,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // TrackCollection members
-            x => new PlaylistPluginBase(PluginMetadata, x)
+            x => new PlaylistPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.TrackCollection.Execute(x),
                 InnerPlayable = plugins.TrackCollection.Execute(x),
@@ -658,13 +659,13 @@ namespace StrixMusic.Sdk.Plugins.Model
             }
         };
 
-        private static ChainedProxyBuilder<TrackPluginBase, ITrack> GenerateGlobalTrackPluginBuilder(SdkModelPlugin plugins) => new()
+        private static ChainedProxyBuilder<TrackPluginBase, ITrack> GenerateGlobalTrackPluginBuilder(SdkModelPlugin plugins, IStrixDataRoot root) => new()
         {
             // Downloadable members
             // UrlCollection members
             // GenreCollection members
             // ImageCollection members
-            x => new TrackPluginBase(PluginMetadata, x)
+            x => new TrackPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Downloadable.Execute(x),
                 InnerImageCollection = plugins.ImageCollection.Execute(x),
@@ -673,7 +674,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // Playable members
-            x => new TrackPluginBase(PluginMetadata, x)
+            x => new TrackPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.Playable.Execute(x),
                 InnerPlayable = plugins.Playable.Execute(x),
@@ -682,7 +683,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             },
 
             // ArtistCollection members
-            x => new TrackPluginBase(PluginMetadata, x)
+            x => new TrackPluginBase(PluginMetadata, x, root)
             {
                 InnerDownloadable = plugins.ArtistCollection.Execute(x),
                 InnerPlayable = plugins.ArtistCollection.Execute(x),

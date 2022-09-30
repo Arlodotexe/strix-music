@@ -32,24 +32,25 @@ namespace StrixMusic.Sdk.PluginModels
             foreach (var plugin in plugins)
                 ActivePlugins.Import(plugin);
 
-            ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+            ActivePlugins = GlobalModelPluginConnector.Create(strixDataRoot, ActivePlugins);
 
             _strixDataRoot = ActivePlugins.StrixDataRoot.Execute(strixDataRoot);
 
-            Library = new LibraryPluginWrapper(_strixDataRoot.Library, plugins);
+            Library = new LibraryPluginWrapper(_strixDataRoot.Library, strixDataRoot, plugins);
 
             if (_strixDataRoot.Search is not null)
-                Search = new SearchPluginWrapper(_strixDataRoot.Search, plugins);
+                Search = new SearchPluginWrapper(_strixDataRoot.Search, strixDataRoot, plugins);
 
             if (_strixDataRoot.Pins is not null)
-                Pins = new PlayableCollectionGroupPluginWrapper(_strixDataRoot.Pins, plugins);
+                Pins = new PlayableCollectionGroupPluginWrapper(_strixDataRoot.Pins, strixDataRoot, plugins);
 
             if (_strixDataRoot.Discoverables is not null)
-                Discoverables = new DiscoverablesPluginWrapper(_strixDataRoot.Discoverables, plugins);
+                Discoverables = new DiscoverablesPluginWrapper(_strixDataRoot.Discoverables,strixDataRoot, plugins);
 
             if (_strixDataRoot.RecentlyPlayed is not null)
-                RecentlyPlayed = new RecentlyPlayedPluginWrapper(_strixDataRoot.RecentlyPlayed, plugins);
+                RecentlyPlayed = new RecentlyPlayedPluginWrapper(_strixDataRoot.RecentlyPlayed,strixDataRoot, plugins);
 
+            Root = this;
             _plugins = plugins;
             AttachEvents(_strixDataRoot);
         }
@@ -78,25 +79,25 @@ namespace StrixMusic.Sdk.PluginModels
 
         private void OnDiscoverablesChanged(object sender, IDiscoverables e)
         {
-            Discoverables = new DiscoverablesPluginWrapper(e, AppliedPlugins);
+            Discoverables = new DiscoverablesPluginWrapper(e, Root, AppliedPlugins);
             DiscoverablesChanged?.Invoke(this, Discoverables);
         }
 
         private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
         {
-            RecentlyPlayed = new RecentlyPlayedPluginWrapper(e, AppliedPlugins);
+            RecentlyPlayed = new RecentlyPlayedPluginWrapper(e, Root, AppliedPlugins);
             RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
         }
 
         private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
         {
-            Pins = new PlayableCollectionGroupPluginWrapper(e, AppliedPlugins);
+            Pins = new PlayableCollectionGroupPluginWrapper(e, Root, AppliedPlugins);
             PinsChanged?.Invoke(this, Pins);
         }
 
         private void OnSearchChanged(object sender, ISearch e)
         {
-            Search = new SearchPluginWrapper(e, AppliedPlugins);
+            Search = new SearchPluginWrapper(e, Root, AppliedPlugins);
             SearchChanged?.Invoke(this, Search);
         }
         
@@ -124,6 +125,9 @@ namespace StrixMusic.Sdk.PluginModels
 
         /// <inheritdoc/>
         public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
+
+        /// <inheritdoc />
+        public string Id => Root.Id;
 
         /// <inheritdoc/>
         public MergedCollectionConfig MergeConfig => _strixDataRoot.MergeConfig;
@@ -169,5 +173,8 @@ namespace StrixMusic.Sdk.PluginModels
             DetachEvents(_strixDataRoot);
             return _strixDataRoot.DisposeAsync();
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

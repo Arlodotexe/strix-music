@@ -28,15 +28,17 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
     /// Initializes a new instance of the <see cref="TrackCollectionPluginWrapper"/> class.
     /// </summary>
     /// <param name="trackCollection">The instance to wrap around and apply plugins to.</param>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal TrackCollectionPluginWrapper(ITrackCollection trackCollection, params SdkModelPlugin[] plugins)
+    internal TrackCollectionPluginWrapper(ITrackCollection trackCollection, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
 
         _trackCollection = ActivePlugins.TrackCollection.Execute(trackCollection);
+        Root = pluginRoot;
         _plugins = plugins;
 
         AttachEvents(_trackCollection);
@@ -88,7 +90,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
         trackCollection.DownloadInfoChanged -= OnDownloadInfoChanged;
         trackCollection.TracksChanged -= OnTracksChanged;
     }
-    
+
     private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnTracksChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
@@ -101,16 +103,16 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -193,7 +195,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
 
     /// <inheritdoc/>
     public event CollectionChangedEventHandler<ITrack>? TracksChanged;
-    
+
     /// <inheritdoc cref="IMerged.SourcesChanged"/>
     public event EventHandler? SourcesChanged;
 
@@ -297,7 +299,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
     IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => ((IMerged<ICoreTrackCollection>)_trackCollection).Sources;
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, Root, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _trackCollection.AddImageAsync(image, index, cancellationToken);
@@ -306,7 +308,7 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _trackCollection.Equals(other);
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _trackCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, Root, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _trackCollection.AddUrlAsync(url, index, cancellationToken);
@@ -329,5 +331,8 @@ public class TrackCollectionPluginWrapper : ITrackCollection, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICoreTrackCollection other) => _trackCollection.Equals(other);
 
-    private ITrack Transform(ITrack track) => new TrackPluginWrapper(track, _plugins);
+    private ITrack Transform(ITrack track) => new TrackPluginWrapper(track, Root, _plugins);
+
+    /// <inheritdoc />
+    public IStrixDataRoot Root { get; }
 }

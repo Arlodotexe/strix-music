@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore;
 using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
@@ -34,30 +33,31 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
         /// </summary>
-        public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
+        public MergedCore(string id, IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
             Guard.HasSizeGreaterThan(_sources, 0, nameof(_sources));
 
+            Id = id;
             MergeConfig = config;
 
-            _library = new MergedLibrary(_sources.Select(x => x.Library), config);
+            _library = new MergedLibrary(_sources.Select(x => x.Library), this);
 
             // These items have no notification support for changing after construction,
             // so they need to be initialized every time in case a new source is added with a non-null value.
             if (_sources.Any(x => x.Discoverables != null))
-                _discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), config);
+                _discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull(), this);
 
             if (_sources.Any(x => x.Pins != null))
-                _pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), config);
+                _pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull(), this);
 
             if (_sources.Any(x => x.RecentlyPlayed != null))
-                _recentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), config);
+                _recentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull(), this);
 
             if (_sources.Any(x => x.Search != null))
-                _search = new MergedSearch(_sources.Select(x => x.Search).PruneNull(), config);
+                _search = new MergedSearch(_sources.Select(x => x.Search).PruneNull(), this);
 
-            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new DeviceAdapter(device)));
+            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (_, device) => new DeviceAdapter(device, this)));
 
             foreach (var source in _sources)
                 AttachEvents(source);
@@ -93,8 +93,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
-            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
+            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data, Root), x.Index)).ToList();
+            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data, Root), x.Index)).ToList();
 
 #warning TODO: Compute actual indices for merged device list.
             foreach (var item in itemsToRemove)
@@ -108,6 +108,9 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
+
+        /// <inheritdoc />
+        public string Id { get; }
 
         /// <inheritdoc />
         public MergedCollectionConfig MergeConfig { get; }
@@ -156,7 +159,7 @@ namespace StrixMusic.Sdk.AdapterModels
             if (_sources.Contains(itemToMerge))
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Cannot add the same source twice.");
 
-            _devices.AddRange(itemToMerge.Devices.Select(x => new DeviceAdapter(x)));
+            _devices.AddRange(itemToMerge.Devices.Select(x => new DeviceAdapter(x, this)));
             _library.AddSource(itemToMerge.Library);
 
             if (itemToMerge.Discoverables is not null)
@@ -167,7 +170,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 }
                 else
                 {
-                    _discoverables = new MergedDiscoverables(itemToMerge.Discoverables.IntoList(), MergeConfig);
+                    _discoverables = new MergedDiscoverables(itemToMerge.Discoverables.IntoList(), this);
                     DiscoverablesChanged?.Invoke(this, _discoverables);
                 }
             }
@@ -180,7 +183,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 }
                 else
                 {
-                    _recentlyPlayed = new MergedRecentlyPlayed(itemToMerge.RecentlyPlayed.IntoList(), MergeConfig);
+                    _recentlyPlayed = new MergedRecentlyPlayed(itemToMerge.RecentlyPlayed.IntoList(), this);
                     RecentlyPlayedChanged?.Invoke(this, _recentlyPlayed);
                 }
             }
@@ -193,7 +196,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 }
                 else
                 {
-                    _pins = new MergedPlayableCollectionGroup(itemToMerge.Pins.IntoList(), MergeConfig);
+                    _pins = new MergedPlayableCollectionGroup(itemToMerge.Pins.IntoList(), this);
                     PinsChanged?.Invoke(this, _pins);
                 }
             }
@@ -206,7 +209,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 }
                 else
                 {
-                    _search = new MergedSearch(itemToMerge.Search.IntoList(), MergeConfig);
+                    _search = new MergedSearch(itemToMerge.Search.IntoList(), this);
                     SearchChanged?.Invoke(this, _search);
                 }
             }
@@ -269,5 +272,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
             IsInitialized = false;
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root => this;
     }
 }

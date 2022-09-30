@@ -21,9 +21,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearchQuery"/>.
         /// </summary>
-        /// <param name="sources">The initial source items merged to form this instance.</param>
-        public MergedSearchQuery(IReadOnlyList<ICoreSearchQuery> sources)
+        public MergedSearchQuery(IReadOnlyList<ICoreSearchQuery> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = sources.ToList();
 
             // Make sure all items in the given collection match.
@@ -76,5 +76,8 @@ namespace StrixMusic.Sdk.AdapterModels
             _sources.Remove(itemToRemove);
             SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

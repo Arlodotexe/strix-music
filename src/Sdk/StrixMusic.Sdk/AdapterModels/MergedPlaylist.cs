@@ -33,13 +33,14 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylist"/>.
         /// </summary>
-        public MergedPlaylist(IEnumerable<ICorePlaylist> sources, MergedCollectionConfig config)
+        public MergedPlaylist(IEnumerable<ICorePlaylist> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = sources.ToList();
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, rootContext);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
@@ -59,12 +60,12 @@ namespace StrixMusic.Sdk.AdapterModels
 
             if (_preferredSource.RelatedItems != null)
             {
-                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList(), config);
+                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList(), rootContext);
             }
 
             if (_preferredSource.Owner != null)
             {
-                Owner = new UserProfileAdapter(_preferredSource.Owner);
+                Owner = new UserProfileAdapter(_preferredSource.Owner, rootContext);
             }
 
             AttachEvents(_preferredSource);
@@ -427,5 +428,8 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return _preferredSource.GetHashCode();
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

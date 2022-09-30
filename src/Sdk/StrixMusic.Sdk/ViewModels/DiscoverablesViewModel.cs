@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -21,9 +22,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of the <see cref="DiscoverablesViewModel"/> class.
         /// </summary>
         /// <param name="discoverables">The <see cref="IDiscoverables"/> to wrap.</param>
-        public DiscoverablesViewModel(IDiscoverables discoverables)
-            : base(discoverables)
+        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+        public DiscoverablesViewModel(IDiscoverables discoverables, IStrixDataRoot viewModelRoot)
+            : base(discoverables, viewModelRoot)
         {
+            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _discoverables = discoverables;
         }
 

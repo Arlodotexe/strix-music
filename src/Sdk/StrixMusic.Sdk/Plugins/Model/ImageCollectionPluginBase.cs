@@ -23,10 +23,12 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// </summary>
         /// <param name="registration">Metadata about the plugin which was provided during registration.</param>
         /// <param name="inner">The implementation which all member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-        internal protected ImageCollectionPluginBase(ModelPluginMetadata registration, IImageCollection inner)
+        /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+        internal protected ImageCollectionPluginBase(ModelPluginMetadata registration, IImageCollection inner, IStrixDataRoot pluginRoot)
         {
             Metadata = registration;
             Inner = inner;
+            Root = pluginRoot;
         }
 
         /// <inheritdoc />
@@ -79,5 +81,8 @@ namespace StrixMusic.Sdk.Plugins.Model
 
         /// <inheritdoc/>
         public virtual Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => Inner.RemoveImageAsync(index, cancellationToken);
+
+        /// <inheritdoc/>
+        public IStrixDataRoot Root { get; }
     }
 }

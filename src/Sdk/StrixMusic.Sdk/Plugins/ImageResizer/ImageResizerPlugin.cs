@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Plugins.ImageResizer;
@@ -21,10 +22,11 @@ public class ImageResizerPlugin : SdkModelPlugin
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageResizerPlugin"/> class.
     /// </summary>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="transformSize">A delegate that is called to determine the new sizes for an image. Return a different size than what you're given to force a resize.</param>
-    public ImageResizerPlugin(Func<(double? Width, double? Height), (double? Width, double? Height)> transformSize)
+    public ImageResizerPlugin(IStrixDataRoot pluginRoot, Func<(double? Width, double? Height), (double? Width, double? Height)> transformSize)
         : base(_metadata)
     {
-        Image.Add(x => new ResizeableImagePlugin(_metadata, x, transformSize));
+        Image.Add(x => new ResizeableImagePlugin(_metadata, pluginRoot, x, transformSize));
     }
 }

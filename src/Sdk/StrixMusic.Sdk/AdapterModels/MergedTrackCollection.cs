@@ -31,15 +31,16 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedTrackCollection"/>.
         /// </summary>
-        public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections, MergedCollectionConfig config)
+        public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = collections.ToList();
 
             _preferredSource = _sources[0];
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _trackMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _trackMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, rootContext);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
 
             foreach (var item in _sources)
             {
@@ -363,5 +364,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreTrackCollection);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

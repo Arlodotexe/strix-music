@@ -31,15 +31,16 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylistCollection"/>.
         /// </summary>
-        public MergedPlaylistCollection(IEnumerable<ICorePlaylistCollection> collections, MergedCollectionConfig config)
+        public MergedPlaylistCollection(IEnumerable<ICorePlaylistCollection> collections, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = collections.ToList();
 
             _preferredSource = _sources[0];
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
-            _playlistMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, config);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
+            _playlistMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, rootContext);
 
             foreach (var item in _sources)
             {
@@ -393,5 +394,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICorePlaylistCollection);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

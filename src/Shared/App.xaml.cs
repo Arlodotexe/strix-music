@@ -1,6 +1,12 @@
-﻿using StrixMusic;
+﻿using System.Threading;
+using System;
+using NLog.Config;
+using NLog.Targets;
+using OwlCore.Diagnostics;
+using StrixMusic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace StrixMusic
@@ -90,6 +96,62 @@ namespace StrixMusic
 #if NETFXCORE
             Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
 #endif
+        }
+
+        private static void SetupLogger()
+        {
+            var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
+
+            NLog.LogManager.Configuration = CreateConfig(shouldArchive: true);
+
+            // Event is connected for the lifetime of the application
+            Logger.MessageReceived += Logger_MessageReceived;
+
+            Logger.LogInformation("Logger initialized");
+
+            LoggingConfiguration CreateConfig(bool shouldArchive)
+            {
+                var config = new LoggingConfiguration();
+
+                var fileTarget = new FileTarget("filelog")
+                {
+                    FileName = logPath,
+                    EnableArchiveFileCompression = shouldArchive,
+                    MaxArchiveDays = 7,
+                    ArchiveNumbering = ArchiveNumberingMode.Sequence,
+                    ArchiveOldFileOnStartup = shouldArchive,
+                    KeepFileOpen = true,
+                    OpenFileCacheTimeout = 10,
+                    AutoFlush = false,
+                    OpenFileFlushTimeout = 10,
+                    ConcurrentWrites = false,
+                    CleanupFileName = false,
+                    OptimizeBufferReuse = true,
+                    Layout = "${message}",
+                };
+
+                config.AddTarget(fileTarget);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
+
+                var debuggerTarget = new DebuggerTarget("debuggerTarget")
+                {
+                    OptimizeBufferReuse = true,
+                    Layout = "${message}",
+                };
+
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
+                config.AddTarget(debuggerTarget);
+
+                return config;
+            }
+        }
+
+        private static void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
+        {
+            var message = $"{DateTime.UtcNow:O} [{e.Level}] [Thread {Thread.CurrentThread.ManagedThreadId}] L{e.CallerLineNumber} {System.IO.Path.GetFileName(e.CallerFilePath)} {e.CallerMemberName} {(e.Exception is not null ? $"Exception: {e.Exception} |" : string.Empty)} {e.Message}";
+
+            NLog.LogManager.GetLogger(string.Empty).Log(NLog.LogLevel.Info, message);
+            Console.WriteLine(message);
         }
     }
 }

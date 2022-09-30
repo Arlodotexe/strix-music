@@ -21,14 +21,15 @@ public class RecentlyPlayedPluginWrapper : PlayableCollectionGroupPluginWrapperB
     /// Initializes a new instance of the <see cref="RecentlyPlayedPluginWrapper"/> class.
     /// </summary>
     /// <param name="recentlyPlayed">An existing instance to wrap around and provide plugins on top of.</param>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins to import and apply to everything returned from this wrapper.</param>
-    internal RecentlyPlayedPluginWrapper(IRecentlyPlayed recentlyPlayed, params SdkModelPlugin[] plugins)
-        : base(GlobalModelPluginConnector.Create(new SdkModelPlugin(PluginModelWrapperInfo.Metadata, plugins)).RecentlyPlayed.Execute(recentlyPlayed), plugins)
+    internal RecentlyPlayedPluginWrapper(IRecentlyPlayed recentlyPlayed, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
+        : base(GlobalModelPluginConnector.Create(pluginRoot, new SdkModelPlugin(PluginModelWrapperInfo.Metadata, plugins)).RecentlyPlayed.Execute(recentlyPlayed), pluginRoot, plugins)
     {
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
 
         _recentlyPlayed = ActivePlugins.RecentlyPlayed.Execute(recentlyPlayed);
     }

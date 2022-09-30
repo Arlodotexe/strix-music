@@ -22,9 +22,10 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         /// <summary>
         /// Creates a new instance of <see cref="StrixDevice"/>.
         /// </summary>
-        public StrixDevice(IPlaybackHandlerService playbackHandler)
+        public StrixDevice(IPlaybackHandlerService playbackHandler, IStrixDataRoot root)
         {
             _playbackHandler = playbackHandler;
+            Root = root;
             PlaybackContext = null;
 
             // TODO: Implement StrixPlaybackQueueCollection
@@ -222,5 +223,8 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public Task ToggleRepeatAsync(CancellationToken cancellationToken = default) => _playbackHandler.ToggleRepeatAsync(cancellationToken);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

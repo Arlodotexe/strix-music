@@ -11,8 +11,8 @@ namespace StrixMusic.Sdk.AppModels
     public interface IAppModel
     {
         /// <summary>
-        /// The root object which spawned.
+        /// The <see cref="IStrixDataRoot"/> which is responsible for creating this instance.
         /// </summary>
-        public IStrixDataRoot RootContext { get; set; }
+        public IStrixDataRoot Root { get; }
     }
 }

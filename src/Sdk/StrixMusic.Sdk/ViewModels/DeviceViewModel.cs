@@ -28,11 +28,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
         /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
-        public DeviceViewModel(IDevice device)
+        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+        public DeviceViewModel(IDevice device, IStrixDataRoot viewModelRoot)
         {
+            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _syncContext = SynchronizationContext.Current;
 
             _model = device;
+            Root = viewModelRoot;
 
             if (_model.NowPlaying != null)
                 _nowPlaying = _model.NowPlaying;
@@ -41,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
                 SourceCore = new CoreViewModel(device.SourceCore);
 
             if (_model.PlaybackQueue != null)
-                PlaybackQueue = new TrackCollectionViewModel(_model.PlaybackQueue);
+                PlaybackQueue = new TrackCollectionViewModel(_model.PlaybackQueue, viewModelRoot);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -114,7 +117,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             NowPlaying = e with
             {
-                Track = new TrackViewModel(e.Track)
+                Track = new TrackViewModel(e.Track, Root)
             };
 
             NowPlayingChanged?.Invoke(sender, e);
@@ -342,5 +345,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// Attempts to change volume.
         /// </summary>
         public IAsyncRelayCommand<double> ChangeVolumeAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

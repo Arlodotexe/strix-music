@@ -34,8 +34,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedArtist"/>.
         /// </summary>
-        public MergedArtist(IEnumerable<ICoreArtist> sources, MergedCollectionConfig config)
+        public MergedArtist(IEnumerable<ICoreArtist> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = sources.ToList();
 
             // TODO: Get the actual preferred source.
@@ -57,16 +58,16 @@ namespace StrixMusic.Sdk.AdapterModels
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _albumCollectionItemMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
-            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, config);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, rootContext);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _albumCollectionItemMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, rootContext);
+            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, rootContext);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
 
             var relatedItems = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
 
             if (relatedItems.Count > 0)
-                RelatedItems = new MergedPlayableCollectionGroup(relatedItems, config);
+                RelatedItems = new MergedPlayableCollectionGroup(relatedItems, rootContext);
 
             AttachEvents(_preferredSource);
         }
@@ -505,7 +506,7 @@ namespace StrixMusic.Sdk.AdapterModels
             _imageCollectionMap.AddSource(itemToMerge);
             _genreCollectionMap.AddSource(itemToMerge);
             _urlCollectionMap.AddSource(itemToMerge);
-            
+
             SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -520,7 +521,7 @@ namespace StrixMusic.Sdk.AdapterModels
             _imageCollectionMap.RemoveSource(itemToRemove);
             _genreCollectionMap.RemoveSource(itemToRemove);
             _urlCollectionMap.RemoveSource(itemToRemove);
-            
+
             SourcesChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -568,5 +569,8 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return _preferredSource.GetHashCode();
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

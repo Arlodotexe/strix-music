@@ -23,17 +23,18 @@ public class PlayableCollectionGroupPluginWrapper : PlayableCollectionGroupPlugi
     /// </summary>
     /// <param name="playableCollectionGroup">An existing instance to wrap around and provide plugins on top of.</param>
     /// <param name="plugins">The plugins to import and apply to everything returned from this wrapper.</param>
-    internal PlayableCollectionGroupPluginWrapper(IPlayableCollectionGroup playableCollectionGroup, params SdkModelPlugin[] plugins)
-        : base(GlobalModelPluginConnector.Create(plugins.Aggregate((x, y) =>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+    internal PlayableCollectionGroupPluginWrapper(IPlayableCollectionGroup playableCollectionGroup, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
+        : base(GlobalModelPluginConnector.Create(pluginRoot, plugins.Aggregate((x, y) =>
         {
             x.Import(y);
             return x;
-        })).PlayableCollectionGroup.Execute(playableCollectionGroup), plugins)
+        })).PlayableCollectionGroup.Execute(playableCollectionGroup), pluginRoot, plugins)
     {
         foreach(var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
 
         _playableCollectionGroup = ActivePlugins.PlayableCollectionGroup.Execute(playableCollectionGroup);
     }

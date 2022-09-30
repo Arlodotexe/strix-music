@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedRecentlyPlayed"/> class.
         /// </summary>
-        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources, MergedCollectionConfig config)
-            : base(sources, config)
+        public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> sources, IStrixDataRoot rootContext)
+            : base(sources, rootContext)
         {
         }
 

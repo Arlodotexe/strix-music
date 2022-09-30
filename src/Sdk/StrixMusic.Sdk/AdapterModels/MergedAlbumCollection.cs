@@ -31,8 +31,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedAlbumCollection"/>.
         /// </summary>
-        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources, MergedCollectionConfig config)
+        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = sources.ToList();
             _preferredSource = _sources[0];
 
@@ -50,9 +51,9 @@ namespace StrixMusic.Sdk.AdapterModels
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
-            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
+            _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, rootContext);
 
             AttachEvents(_preferredSource);
         }
@@ -389,5 +390,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreAlbumCollection);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

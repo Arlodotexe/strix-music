@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchHistory"/> class.
         /// </summary>
-        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories, MergedCollectionConfig config)
-            : base(searchHistories, config)
+        public MergedSearchHistory(IEnumerable<ICoreSearchHistory> searchHistories, IStrixDataRoot dataRoot)
+            : base(searchHistories, dataRoot)
         {
         }
 

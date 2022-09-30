@@ -35,14 +35,15 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedAlbum"/> class.
         /// </summary>
-        public MergedAlbum(IEnumerable<ICoreAlbum> sources, MergedCollectionConfig config)
+        public MergedAlbum(IEnumerable<ICoreAlbum> sources, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _sources = sources.ToList();
 
             var relatedItemsSources = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
             if (relatedItemsSources.Count > 0)
             {
-                RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources, config);
+                RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources, rootContext);
             }
 
             // TODO: Get the actual preferred source.
@@ -63,11 +64,11 @@ namespace StrixMusic.Sdk.AdapterModels
                 TotalUrlCount += item.TotalUrlCount;
             }
 
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
-            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, config);
-            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, config);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, rootContext);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, rootContext);
+            _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this, rootContext);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
 
             AttachEvents(_preferredSource);
         }
@@ -581,5 +582,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreAlbum);
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

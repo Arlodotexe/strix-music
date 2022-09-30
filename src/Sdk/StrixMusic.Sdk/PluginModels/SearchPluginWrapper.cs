@@ -24,18 +24,20 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
     /// Initializes a new instance of the <see cref="SearchPluginWrapper"/> class.
     /// </summary>
     /// <param name="search">The instance to wrap around and apply plugins to.</param>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    public SearchPluginWrapper(ISearch search, params SdkModelPlugin[] plugins)
+    public SearchPluginWrapper(ISearch search, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
 
         _search = search;
-        
+        Root = pluginRoot;
+
         if (search.SearchHistory is not null)
-            SearchHistory = new SearchHistoryPluginWrapper(search.SearchHistory, plugins);
+            SearchHistory = new SearchHistoryPluginWrapper(search.SearchHistory, pluginRoot, plugins);
         
         AttachEvents(_search);
     }
@@ -75,4 +77,7 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
 
     /// <inheritdoc/>
     public ISearchHistory? SearchHistory { get; }
+
+    /// <inheritdoc />
+    public IStrixDataRoot Root { get; }
 }

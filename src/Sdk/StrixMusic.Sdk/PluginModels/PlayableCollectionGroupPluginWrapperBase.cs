@@ -30,10 +30,12 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     /// Initializes a new instance of the <see cref="PlayableCollectionGroupPluginWrapperBase"/> class.
     /// </summary>
     /// <param name="playableCollectionGroup">The instance to wrap around and apply plugins to.</param>
+    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal PlayableCollectionGroupPluginWrapperBase(IPlayableCollectionGroup playableCollectionGroup, params SdkModelPlugin[] plugins)
+    internal PlayableCollectionGroupPluginWrapperBase(IPlayableCollectionGroup playableCollectionGroup, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
     {
         _playableCollectionGroup = playableCollectionGroup;
+        Root = pluginRoot;
         _plugins = plugins;
 
         foreach (var item in plugins)
@@ -118,8 +120,8 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     private void OnChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IPlayableCollectionGroup>(new PlayableCollectionGroupPluginWrapper(x.Data, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IPlayableCollectionGroup>(new PlayableCollectionGroupPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IPlayableCollectionGroup>(new PlayableCollectionGroupPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IPlayableCollectionGroup>(new PlayableCollectionGroupPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
 
         ChildItemsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -158,16 +160,16 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -530,7 +532,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     IReadOnlyList<ICorePlayableCollectionGroup> IMerged<ICorePlayableCollectionGroup>.Sources => ((IMerged<ICorePlayableCollectionGroup>)_playableCollectionGroup).Sources;
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, Root, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddImageAsync(image, index, cancellationToken);
@@ -539,7 +541,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public bool Equals(ICoreUrlCollection other) => _playableCollectionGroup.Equals(other);
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, Root, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddUrlAsync(url, index, cancellationToken);
@@ -614,7 +616,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup, cancellationToken);
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetChildrenAsync(limit, offset, cancellationToken).Select(x => new PlayableCollectionGroupPluginWrapper(x, _plugins));
+    public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetChildrenAsync(limit, offset, cancellationToken).Select(x => new PlayableCollectionGroupPluginWrapper(x, Root, _plugins));
 
     /// <inheritdoc/>
     public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddChildAsync(child, index, cancellationToken);
@@ -624,24 +626,27 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
 
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {
-        IArtist artist => new ArtistPluginWrapper(artist, _plugins),
-        IArtistCollection artistCollection => new ArtistCollectionPluginWrapper(artistCollection, _plugins),
+        IArtist artist => new ArtistPluginWrapper(artist, Root, _plugins),
+        IArtistCollection artistCollection => new ArtistCollectionPluginWrapper(artistCollection, Root, _plugins),
         _ => ThrowHelper.ThrowArgumentOutOfRangeException<IArtistCollectionItem>()
     };
 
     private IAlbumCollectionItem Transform(IAlbumCollectionItem item) => item switch
     {
-        IAlbum album => new AlbumPluginWrapper(album, _plugins),
-        IAlbumCollection albumCollection => new AlbumCollectionPluginWrapper(albumCollection, _plugins),
+        IAlbum album => new AlbumPluginWrapper(album, Root, _plugins),
+        IAlbumCollection albumCollection => new AlbumCollectionPluginWrapper(albumCollection, Root, _plugins),
         _ => ThrowHelper.ThrowArgumentOutOfRangeException<IAlbumCollectionItem>()
     };
 
     private IPlaylistCollectionItem Transform(IPlaylistCollectionItem item) => item switch
     {
-        IPlaylist playlist => new PlaylistPluginWrapper(playlist, _plugins),
-        IPlaylistCollection playlistCollection => new PlaylistCollectionPluginWrapper(playlistCollection, _plugins),
+        IPlaylist playlist => new PlaylistPluginWrapper(playlist, Root, _plugins),
+        IPlaylistCollection playlistCollection => new PlaylistCollectionPluginWrapper(playlistCollection, Root, _plugins),
         _ => ThrowHelper.ThrowArgumentOutOfRangeException<IPlaylistCollectionItem>()
     };
 
-    private ITrack Transform(ITrack item) => new TrackPluginWrapper(item, _plugins);
+    private ITrack Transform(ITrack item) => new TrackPluginWrapper(item, Root, _plugins);
+
+    /// <inheritdoc />
+    public IStrixDataRoot Root { get; }
 }

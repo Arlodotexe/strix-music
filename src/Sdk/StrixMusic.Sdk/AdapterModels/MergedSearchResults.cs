@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
         /// </summary>
-        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults, MergedCollectionConfig config)
-            : base(searchResults, config)
+        public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults, IStrixDataRoot dataRoot)
+            : base(searchResults, dataRoot)
         {
         }
 

@@ -39,12 +39,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
         /// </summary>
         /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
-        public PlaylistCollectionViewModel(IPlaylistCollection collection)
+        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
+        public PlaylistCollectionViewModel(IPlaylistCollection collection, IStrixDataRoot viewModelRoot)
         {
+            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _syncContext = SynchronizationContext.Current;
 
             _collection = collection;
-            
+            Root = viewModelRoot;
+
             Playlists = new ObservableCollection<IPlaylistCollectionItem>();
             Images = new ObservableCollection<IImage>();
             Urls = new ObservableCollection<IUrl>();
@@ -150,8 +153,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IPlaylist playlist => new PlaylistViewModel(playlist),
-                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    IPlaylist playlist => new PlaylistViewModel(playlist, Root),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -161,8 +164,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Make sure both ordered and unordered playlists are updated.
                 UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IPlaylist playlist => new PlaylistViewModel(playlist),
-                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    IPlaylist playlist => new PlaylistViewModel(playlist, Root),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection, Root),
                     _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -472,12 +475,12 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IPlaylist playlist:
-                                var pvm = new PlaylistViewModel(playlist);
+                                var pvm = new PlaylistViewModel(playlist, Root);
                                 Playlists.Add(pvm);
                                 UnsortedPlaylists.Add(pvm);
                                 break;
                             case IPlaylistCollection collection:
-                                var pcvm = new PlaylistCollectionViewModel(collection);
+                                var pcvm = new PlaylistCollectionViewModel(collection, Root);
                                 Playlists.Add(pcvm);
                                 UnsortedPlaylists.Add(pcvm);
                                 break;
@@ -608,5 +611,8 @@ namespace StrixMusic.Sdk.ViewModels
             Guard.IsNotNull(name, nameof(name));
             return _collection.ChangeNameAsync(name, cancellationToken);
         }
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }

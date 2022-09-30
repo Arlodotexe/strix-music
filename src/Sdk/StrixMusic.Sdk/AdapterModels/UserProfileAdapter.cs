@@ -31,8 +31,9 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="UserProfileAdapter"/>.
         /// </summary>
-        public UserProfileAdapter(ICoreUserProfile userProfile)
+        public UserProfileAdapter(ICoreUserProfile userProfile, IStrixDataRoot rootContext)
         {
+            Root = rootContext;
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
             _sources = _userProfile.IntoList();
@@ -40,8 +41,8 @@ namespace StrixMusic.Sdk.AdapterModels
             TotalImageCount = _userProfile.TotalImageCount;
             TotalUrlCount = _userProfile.TotalUrlCount;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, new MergedCollectionConfig());
-            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, new MergedCollectionConfig());
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
 
             AttachEvents();
         }
@@ -288,5 +289,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>false. User profiles are never merged.</returns>
         public bool Equals(ICoreUrlCollection other) => false;
+
+        /// <inheritdoc />
+        public IStrixDataRoot Root { get; }
     }
 }
