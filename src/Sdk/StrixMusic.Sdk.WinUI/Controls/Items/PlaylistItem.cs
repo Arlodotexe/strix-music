@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         protected virtual void OnPlaylistChanged(IPlaylist? oldValue, IPlaylist? newValue)
         {
             if (newValue is not null)
-                SetValue(PlaylistViewModelProperty, Playlist is PlaylistViewModel playlistVm ? playlistVm : new PlaylistViewModel(newValue));
+                SetValue(PlaylistViewModelProperty, Playlist is PlaylistViewModel playlistVm ? playlistVm : new PlaylistViewModel(newValue, newValue.Root));
 
             _ = PlaylistVm.InitAsync();
         }

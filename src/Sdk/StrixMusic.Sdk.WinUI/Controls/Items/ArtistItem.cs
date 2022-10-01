@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         protected virtual void OnArtistChanged(IArtist? oldValue, IArtist? newValue)
         {
             if (newValue is not null)
-                SetValue(ArtistViewModelProperty, Artist is ArtistViewModel artistVm ? artistVm : new ArtistViewModel(newValue));
+                SetValue(ArtistViewModelProperty, Artist is ArtistViewModel artistVm ? artistVm : new ArtistViewModel(newValue, newValue.Root));
         }
 
         private void RootGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
