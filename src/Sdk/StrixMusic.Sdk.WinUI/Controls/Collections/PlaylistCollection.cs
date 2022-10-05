@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -22,9 +21,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public PlaylistCollection()
         {
             this.DefaultStyleKey = typeof(PlaylistCollection);
-
-            // Allows directly using this control as the x:DataType in the template.
-            this.DataContext = this;
         }
 
         /// <summary>
@@ -32,8 +28,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// </summary>
         public IPlaylistCollectionViewModel Collection
         {
-            get => (IPlaylistCollectionViewModel)GetValue(CollectionProperty);
-            set => SetValue(CollectionProperty, value);
+            get { return (IPlaylistCollectionViewModel)GetValue(CollectionProperty); }
+            set { SetValue(CollectionProperty, value); }
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         {
             if (!Collection.PopulateMorePlaylistsCommand.IsRunning &&
                 Collection.TotalPlaylistItemsCount == 0)
-                SetIsEmpty(Visibility.Visible);
+                SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()
