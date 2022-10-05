@@ -21,7 +21,7 @@ namespace StrixMusic.Controls
         /// The backing <see cref="DependencyProperty"/> for the <see cref="IsAnimated"/> property.
         /// </summary>
         public static readonly DependencyProperty IsAnimatedProperty =
-            DependencyProperty.Register(nameof(IsAnimated), typeof(bool), typeof(StrixIcon), new PropertyMetadata(false, (d, e) => d.Cast<StrixIcon>().OnAnimatedChanged()));
+            DependencyProperty.Register(nameof(IsAnimated), typeof(bool), typeof(StrixIcon), new PropertyMetadata(false, (d, e) => ((StrixIcon)d).OnAnimatedChanged()));
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="IsAnimated"/> property.

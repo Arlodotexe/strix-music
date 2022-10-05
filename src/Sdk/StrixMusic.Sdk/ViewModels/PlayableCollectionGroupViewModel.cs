@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
         public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup, IStrixDataRoot viewModelRoot)
         {
-            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
+            viewModelRoot = viewModelRoot as StrixDataRootViewModel ?? new StrixDataRootViewModel(viewModelRoot);
             _syncContext = SynchronizationContext.Current;
 
             _collectionGroup = collectionGroup;

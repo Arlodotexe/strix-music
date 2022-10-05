@@ -102,7 +102,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
 
             if (!Collection.PopulateMoreTracksCommand.IsRunning && Collection.TotalTrackCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                SetIsEmpty(Visibility.Visible);
         }
 
         private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Collections
 {
@@ -17,13 +17,6 @@ namespace StrixMusic.Sdk.WinUI.Styles.Collections
         public PlaylistCollectionStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void OpenPlaylist(object sender, ItemClickEventArgs e)
-        {
-            var navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-
-            navigationService.NavigateTo(typeof(PlaylistView), false, e.ClickedItem);
         }
     }
 }

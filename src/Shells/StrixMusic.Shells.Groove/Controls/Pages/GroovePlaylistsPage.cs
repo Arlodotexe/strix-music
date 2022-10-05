@@ -37,7 +37,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// Backing dependency property for <see cref="PlaylistCollection"/>.
         /// </summary>
         public static readonly DependencyProperty PlaylistCollectionProperty =
-            DependencyProperty.Register(nameof(PlaylistCollection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistsPage), new PropertyMetadata(null, (d,e) => d.Cast<GroovePlaylistsPage>().OnPlaylistCollectionChanged()));
+            DependencyProperty.Register(nameof(PlaylistCollection), typeof(IPlaylistCollectionViewModel), typeof(GroovePlaylistsPage), new PropertyMetadata(null, (d,e) => ((GroovePlaylistsPage)d).OnPlaylistCollectionChanged()));
 
         private void OnPlaylistCollectionChanged()
         {

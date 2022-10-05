@@ -6,7 +6,6 @@
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
     xmlns:zunenowplaying="using:StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
@@ -17,7 +16,7 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:DataType="shells:NowPlayingBar" x:Key="ZuneNowPlayingBarTemplate">
+    <DataTemplate x:DataType="strix:NowPlayingBar" x:Key="ZuneNowPlayingBarTemplate">
         <UserControl>
             <Grid Margin="28,0,28,28" VerticalAlignment="Bottom">
                 <VisualStateManager.VisualStateGroups>
@@ -60,11 +59,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="ZuneNowPlayingBarStyle" TargetType="shells:NowPlayingBar">
+    <Style x:Key="ZuneNowPlayingBarStyle" TargetType="strix:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shells:NowPlayingBar">
+                    <ControlTemplate TargetType="strix:NowPlayingBar">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                         ContentTemplate="{StaticResource ZuneNowPlayingBarTemplate}" />
                     </ControlTemplate>
@@ -73,6 +72,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneNowPlayingBarStyle}" TargetType="shells:NowPlayingBar"/>
+    <Style BasedOn="{StaticResource ZuneNowPlayingBarStyle}" TargetType="strix:NowPlayingBar"/>
 
 </ResourceDictionary>

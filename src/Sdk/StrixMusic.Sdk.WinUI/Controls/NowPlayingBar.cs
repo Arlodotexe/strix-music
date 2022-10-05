@@ -5,7 +5,7 @@ using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Sdk.WinUI.Controls.Shells
+namespace StrixMusic.Sdk.WinUI.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for the NowPlaying bar in a Shell.
@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
                 var device = (IDevice)sender;
 
                 if (device is not DeviceViewModel dvm)
-                    dvm = new DeviceViewModel(device);
+                    dvm = new DeviceViewModel(device, device.Root);
 
                 SetValue(ActiveDeviceProperty, dvm);
             }
@@ -124,9 +124,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.Shells
                 return;
 
             if (targetDevice is not DeviceViewModel dvm)
-                dvm = new DeviceViewModel(targetDevice);
+                dvm = new DeviceViewModel(targetDevice, targetDevice.Root);
 
-            ActiveDevice = dvm;
+            SetValue(ActiveDeviceProperty, dvm);
         }
     }
 }

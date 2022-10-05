@@ -26,6 +26,15 @@
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Controls\Shell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\NowPlayingBar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\PlayableCollectionGroupPivot.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

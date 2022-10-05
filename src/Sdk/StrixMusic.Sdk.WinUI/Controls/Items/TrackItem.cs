@@ -76,7 +76,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         protected virtual void OnTrackChanged(ITrack? oldValue, ITrack? newValue)
         {
             if (newValue is not null)
-                SetValue(TrackViewModelProperty, Track is TrackViewModel albumVm ? albumVm : new TrackViewModel(newValue, newValue.Root));
+                SetValue(TrackViewModelProperty, Track as TrackViewModel ?? new TrackViewModel(newValue, newValue.Root));
 
             if (oldValue is not null)
                 oldValue.PlaybackStateChanged -= OnPlaybackStateChanged;

@@ -1,8 +1,7 @@
-﻿<shells:Shell
+﻿<controls1:Shell
     x:Class="StrixMusic.Shells.Groove.GrooveShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,11 +13,12 @@
     xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:owlconv="using:OwlCore.WinUI.Converters"
+    xmlns:controls1="using:StrixMusic.Sdk.WinUI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <shells:Shell.Resources>
+    <controls1:Shell.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources.xaml" />
@@ -52,7 +52,7 @@
                 </selectors:MainContentTemplateSelector.PlaylistPageTemplate>
             </selectors:MainContentTemplateSelector>
         </ResourceDictionary>
-    </shells:Shell.Resources>
+    </controls1:Shell.Resources>
 
     <Grid>
         <VisualStateManager.VisualStateGroups>
@@ -264,12 +264,12 @@
                         </Button>
                     </StackPanel>
 
-                    <collections:GroovePlaylistCollection x:Name="PlaylistList" Collection="{x:Bind DataRoot.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                    <collections:GroovePlaylistCollection x:Name="PlaylistList" Collection="{x:Bind Root.Library, Mode=OneWay}" Grid.Row="2" Style="{StaticResource PanePlaylistCollectionStyle}"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>
 
-        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" Devices="{x:Bind DataRoot.Devices, Mode=OneWay}"/>
+        <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" Devices="{x:Bind Root.Devices, Mode=OneWay}"/>
 
         <ItemsControl ItemsSource="{x:Bind Notifications.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
@@ -294,4 +294,4 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
-</shells:Shell>
+</controls1:Shell>

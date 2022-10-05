@@ -1,10 +1,10 @@
-﻿<shells:Shell
+﻿<controls:Shell
     x:Class="StrixMusic.Shells.Default.DefaultShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:StrixMusic.Sdk.WinUI.Controls"
     mc:Ignorable="d">
 
     <Grid>
@@ -47,14 +47,14 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataRoot}"
+            <ContentControl x:Name="MainContent" DataContext="{x:Bind Root}"
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-		<shells:NowPlayingBar Grid.Row="1" Devices="{x:Bind DataRoot.Devices, Mode=OneWay}"/>
+		<controls:NowPlayingBar Grid.Row="1" Devices="{x:Bind Root.Devices, Mode=OneWay}"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
-</shells:Shell>
+</controls:Shell>

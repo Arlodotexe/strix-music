@@ -1,9 +1,5 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
-using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
+﻿using StrixMusic.Sdk.WinUI.Controls.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Collections
 {
@@ -18,13 +14,6 @@ namespace StrixMusic.Sdk.WinUI.Styles.Collections
         public AlbumCollectionStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void OpenAlbum(object sender, ItemClickEventArgs e)
-        {
-            var navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-
-            navigationService.NavigateTo(typeof(AlbumView), false, e.ClickedItem);
         }
     }
 }

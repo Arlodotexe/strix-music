@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -189,7 +190,7 @@ namespace StrixMusic
 
                 var shell = ShellRegistry.CreateShell(shellMetadata, DataRoot);
 
-                shell.DataRoot = DataRoot;
+                shell.Root = DataRoot;
                 shell.Notifications = Window.Current.GetAppFrame().Notifications;
                 shell.Notifications.IsHandled = false;
                 shell.InitServices(new ServiceCollection());

@@ -5,7 +5,7 @@ using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Sdk.WinUI.Controls.Shells
+namespace StrixMusic.Sdk.WinUI.Controls
 {
     /// <summary>
     /// Displays the content of a PlayableCollectionGroupViewModel in a Pivot.

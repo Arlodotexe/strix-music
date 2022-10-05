@@ -26,7 +26,6 @@ namespace StrixMusic.Sdk.ViewModels
         public DiscoverablesViewModel(IDiscoverables discoverables, IStrixDataRoot viewModelRoot)
             : base(discoverables, viewModelRoot)
         {
-            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _discoverables = discoverables;
         }
 

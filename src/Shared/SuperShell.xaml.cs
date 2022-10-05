@@ -119,7 +119,7 @@ namespace StrixMusic
         /// The backing dependency property for <see cref="LoadedCores"/>.
         /// </summary>
         public static readonly DependencyProperty LoadedCoresProperty =
-            DependencyProperty.Register(nameof(LoadedCores), typeof(IReadOnlyList<ICore>), typeof(SuperShell), new PropertyMetadata(new ICore[] { }, (d, e) => d.Cast<SuperShell>().OnLoadedCoresChanged((IReadOnlyList<ICore>)e.OldValue, (IReadOnlyList<ICore>)e.NewValue)));
+            DependencyProperty.Register(nameof(LoadedCores), typeof(IReadOnlyList<ICore>), typeof(SuperShell), new PropertyMetadata(new ICore[] { }, (d, e) => ((SuperShell)d).OnLoadedCoresChanged((IReadOnlyList<ICore>)e.OldValue, (IReadOnlyList<ICore>)e.NewValue)));
 
         /// <summary>
         /// The backing dependency property for <see cref="LoadedCores"/>.

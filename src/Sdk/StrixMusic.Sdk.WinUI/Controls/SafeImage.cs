@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// Dependency property for <see cref="ImageCollection"/>.
         /// </summary>
         public static readonly DependencyProperty ImageCollectionProperty =
-            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().ResetAndLoadImage()));
+            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => ((SafeImage)inst).ResetAndLoadImage()));
 
         /// <summary>
         /// The image collection to load and display.

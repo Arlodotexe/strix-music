@@ -27,7 +27,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency propery for <see cref="TrackCollection"/>.
         /// </summary>
         public static readonly DependencyProperty TrackCollectionProperty =
-            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => _ = d.Cast<GrooveTrackCollection>().OnTrackCollectionChangedAsync()));
+            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => _ = ((GrooveTrackCollection)d).OnTrackCollectionChangedAsync()));
 
         /// <summary>
         /// The track collection to display.

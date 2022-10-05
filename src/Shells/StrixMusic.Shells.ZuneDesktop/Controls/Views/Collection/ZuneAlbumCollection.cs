@@ -146,7 +146,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
 
             if (!Collection.PopulateMoreAlbumsCommand.IsRunning && Collection.TotalAlbumItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                SetIsEmpty(Visibility.Visible);
         }
 
         /// <inheritdoc/>

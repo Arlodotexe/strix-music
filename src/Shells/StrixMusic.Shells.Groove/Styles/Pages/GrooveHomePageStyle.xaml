@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
     xmlns:vmpages="using:StrixMusic.Shells.Groove.ViewModels.Pages"
     xmlns:owlconv="using:OwlCore.WinUI.Converters"

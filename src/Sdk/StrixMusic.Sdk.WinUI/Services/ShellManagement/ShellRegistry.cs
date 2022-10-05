@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Sdk.WinUI.Services.ShellManagement
 {

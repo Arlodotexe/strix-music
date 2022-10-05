@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -21,6 +23,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public ArtistCollection()
         {
             this.DefaultStyleKey = typeof(ArtistCollection);
+
+            // Allows directly using this control as the x:DataType in the template.
+            this.DataContext = this;
         }
 
         /// <summary>
@@ -71,7 +76,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         protected override void CheckAndToggleEmpty()
         {
             if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning && Collection.TotalArtistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                SetIsEmpty(true);
         }
 
         private void ArtistCollection_Unloaded(object sender, RoutedEventArgs e)

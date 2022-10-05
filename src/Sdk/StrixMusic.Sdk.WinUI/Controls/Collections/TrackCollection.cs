@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -18,6 +19,9 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public TrackCollection()
         {
             DefaultStyleKey = typeof(TrackCollection);
+
+            // Allows directly using this control as the x:DataType in the template.
+            this.DataContext = this;
         }
 
         /// <summary>
@@ -70,10 +74,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
             if (Collection == null)
                 return;
 
-            if (!Collection.PopulateMoreTracksCommand.IsRunning &&
-                Collection.TotalTrackCount == 0)
-                
-            SetEmptyVisibility(Visibility.Visible);
+            if (!Collection.PopulateMoreTracksCommand.IsRunning && Collection.TotalTrackCount == 0)
+                SetIsEmpty(Visibility.Visible);
         }
 
         private void AttachHandlers()

@@ -4,7 +4,6 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"

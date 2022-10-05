@@ -1,4 +1,5 @@
 ﻿using Windows.UI.Xaml;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Collections
 {

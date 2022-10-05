@@ -7,7 +7,6 @@ using OwlCore.Storage;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
 using StrixMusic.Sdk.WinUI.Services.ShellManagement;
@@ -21,6 +20,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
@@ -120,7 +120,7 @@ namespace StrixMusic.Shells.ZuneDesktop
                 NowPlayingOverlay.Visibility = Visibility.Collapsed;
                 MainContent.Visibility = Visibility.Collapsed;
                 MainContent.Visibility = Visibility.Collapsed;
-                NowPlayingBar.Visibility = Visibility.Collapsed;
+                Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Light);
             }
             else if (e.Page is NowPlayingView)
@@ -128,7 +128,7 @@ namespace StrixMusic.Shells.ZuneDesktop
                 SettingsOverlay.Visibility = Visibility.Collapsed;
                 NowPlayingOverlay.Visibility = Visibility.Visible;
                 MainContent.Visibility = Visibility.Collapsed;
-                NowPlayingBar.Visibility = Visibility.Collapsed;
+                Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Dark);
             }
         }
@@ -140,21 +140,21 @@ namespace StrixMusic.Shells.ZuneDesktop
             SettingsOverlay.Visibility = Visibility.Collapsed;
             NowPlayingOverlay.Visibility = Visibility.Collapsed;
             MainContent.Visibility = Visibility.Visible;
-            NowPlayingBar.Visibility = Visibility.Visible;
+            Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Visible;
             RequestTheme();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
+            RequestTheme(Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
 
-            if (Pivot.SelectedIndex == 0)
+            if (Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0)
             {
                 QuickplayPage.RunEnterViewAnimation();
             }
 
             // Collection index.
-            if (Pivot.SelectedIndex == 1)
+            if (Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 1)
             {
                 PART_CollectionContent.AnimateAlbumCollection();
             }
@@ -164,7 +164,7 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             if (theme == ElementTheme.Default)
             {
-                theme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
+                theme = Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
             }
 
             RootControl.RequestedTheme = theme;

@@ -26,7 +26,6 @@ namespace StrixMusic.Sdk.ViewModels
         public LibraryViewModel(ILibrary library, IStrixDataRoot viewModelRoot)
             : base(library, viewModelRoot)
         {
-            Guard.IsOfType<StrixDataRootViewModel>(viewModelRoot);
             _library = library;
         }
 

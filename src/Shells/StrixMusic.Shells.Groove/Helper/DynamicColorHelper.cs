@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClusterNet.Kernels;
 using ClusterNet.Methods;
 using OwlCore;
+using OwlCore.Extensions;
 using OwlCore.WinUI.ColorExtractor;
 using OwlCore.WinUI.ColorExtractor.ColorSpaces;
 using OwlCore.WinUI.ColorExtractor.Filters;
@@ -27,7 +28,7 @@ namespace StrixMusic.Shells.Groove.Helper
         /// <returns>The accent color for the image.</returns>
         public static async Task<Color> GetImageAccentColorAsync(Stream stream)
         {
-            using (await Flow.EasySemaphore(_mutex))
+            using (await _mutex.DisposableWaitAsync())
             {
                 var image = await ImageParser.GetImage(stream);
 

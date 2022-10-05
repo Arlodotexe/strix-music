@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
-    xmlns:shell="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:conveternum="using:OwlCore.WinUI.Converters.Numerical"
     xmlns:sdk="using:StrixMusic.Sdk"
@@ -21,7 +20,7 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="shell:NowPlayingBar">
+    <DataTemplate x:Key="NowPlayingBarDataTemplate" x:DataType="strix:NowPlayingBar">
         <UserControl>
             <Grid VerticalAlignment="Center">
                 <VisualStateManager.VisualStateGroups>
@@ -84,11 +83,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultNowPlayingBarStyle" TargetType="shell:NowPlayingBar">
+    <Style x:Key="DefaultNowPlayingBarStyle" TargetType="strix:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shell:NowPlayingBar">
+                    <ControlTemplate TargetType="strix:NowPlayingBar">
                         <ContentControl ContentTemplate="{StaticResource NowPlayingBarDataTemplate}" 
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -97,6 +96,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultNowPlayingBarStyle}" TargetType="shell:NowPlayingBar"/>
+    <Style BasedOn="{StaticResource DefaultNowPlayingBarStyle}" TargetType="strix:NowPlayingBar"/>
 
 </ResourceDictionary>

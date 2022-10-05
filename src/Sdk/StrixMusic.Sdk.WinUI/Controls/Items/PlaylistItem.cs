@@ -1,22 +1,22 @@
-﻿using StrixMusic.Sdk.AppModels;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Items
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying an <see cref="PlaylistViewModel"/> in a list.
     /// </summary>
-    public partial class PlaylistItem : ItemControl
+    public class PlaylistItem : ItemControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistItem"/> class.
         /// </summary>
         public PlaylistItem()
         {
-            this.DefaultStyleKey = typeof(PlaylistItem);
+            DefaultStyleKey = typeof(PlaylistItem);
             AttachEvents();
         }
 
@@ -31,12 +31,12 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
             Unloaded -= PlaylistItem_Unloaded;
         }
 
-        private void PlaylistItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PlaylistItem_Unloaded(object sender, RoutedEventArgs e)
         {
             DetachEvents();
         }
 
-        private void PlaylistItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PlaylistItem_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= PlaylistItem_Loaded;
         }
@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         protected virtual void OnPlaylistChanged(IPlaylist? oldValue, IPlaylist? newValue)
         {
             if (newValue is not null)
-                SetValue(PlaylistViewModelProperty, Playlist is PlaylistViewModel playlistVm ? playlistVm : new PlaylistViewModel(newValue, newValue.Root));
+                SetValue(PlaylistViewModelProperty, Playlist as PlaylistViewModel ?? new PlaylistViewModel(newValue, newValue.Root));
 
             _ = PlaylistVm.InitAsync();
         }

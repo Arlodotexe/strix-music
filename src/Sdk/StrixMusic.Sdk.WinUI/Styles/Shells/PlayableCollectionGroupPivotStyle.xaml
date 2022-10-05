@@ -2,15 +2,15 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
+    xmlns:controls="clr-namespace:StrixMusic.Sdk.WinUI.Controls"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Shells.PlayableCollectionGroupPivotStyle">
 
-    <Style x:Key="DefaultPlayableCollectionGroupPivotStyle" TargetType="shells:PlayableCollectionGroupPivot">
+    <Style x:Key="DefaultPlayableCollectionGroupPivotStyle" TargetType="controls:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shells:PlayableCollectionGroupPivot">
+                    <ControlTemplate TargetType="controls:PlayableCollectionGroupPivot">
                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}">
@@ -40,6 +40,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="shells:PlayableCollectionGroupPivot"/>
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="controls:PlayableCollectionGroupPivot"/>
 
 </ResourceDictionary>

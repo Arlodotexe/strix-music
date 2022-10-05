@@ -39,7 +39,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency property for <see cref="AlbumCollection"/>.
         /// </summary>
         public static readonly DependencyProperty AlbumCollectionProperty =
-            DependencyProperty.Register(nameof(AlbumCollection), typeof(IAlbumCollectionViewModel), typeof(GrooveAlbumCollection), new PropertyMetadata(null, (d, e) => d.Cast<GrooveAlbumCollection>().OnAlbumCollectionChanged()));
+            DependencyProperty.Register(nameof(AlbumCollection), typeof(IAlbumCollectionViewModel), typeof(GrooveAlbumCollection), new PropertyMetadata(null, (d, e) => ((GrooveAlbumCollection)d).OnAlbumCollectionChanged()));
 
         private void OnAlbumCollectionChanged()
         {
