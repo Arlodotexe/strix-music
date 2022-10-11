@@ -42,13 +42,14 @@ namespace StrixMusic.Services
         }
 
         /// <summary>
-        /// Stored information about all core instances that the user has configured.
+        /// Gets the list of all registered storage cores that interact with files on disk.
         /// </summary>
-        public Dictionary<string, CoreMetadata> CoreInstanceRegistry
-        {
-            get => GetSetting(() => new Dictionary<string, CoreMetadata>());
-            set => SetSetting(value);
-        }
+        public List<LocalFilesCoreSettings> RegisteredLocalFileCores => GetSetting(() => new List<LocalFilesCoreSettings>());
+
+        /// <summary>
+        /// Gets the list of all registered storage cores that interact with files on disk.
+        /// </summary>
+        public List<OneDriveCoreSettings> RegisteredOneDriveCores => GetSetting(() => new List<OneDriveCoreSettings>());
 
         /// <summary>
         /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
@@ -73,7 +74,7 @@ namespace StrixMusic.Services
         /// </summary>
         public string PreferredShell
         {
-            get => GetSetting(() => DefaultShell.Metadata.Id);
+            get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
 
@@ -82,16 +83,7 @@ namespace StrixMusic.Services
         /// </summary>
         public string FallbackShell
         {
-            get => GetSetting(() => DefaultShell.Metadata.Id);
-            set => SetSetting(value);
-        }
-
-        /// <summary>
-        /// The user's preference for how items in a collection from multiple sources are sorted. 
-        /// </summary>
-        public MergedCollectionSorting MergedCollectionSorting
-        {
-            get => GetSetting(() => MergedCollectionSorting.Ranked);
+            get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
     }

@@ -5,7 +5,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.ViewModels.Notifications;
 
 namespace StrixMusic.Sdk.WinUI.Controls
 {
@@ -29,27 +28,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
             DependencyProperty.Register(nameof(Root), typeof(StrixDataRootViewModel), typeof(Shell), new PropertyMetadata(null));
 
         /// <summary>
-        /// The backing dependency property for <see cref="Notifications"/>.
-        /// </summary>
-        public static readonly DependencyProperty NotificationsProperty =
-            DependencyProperty.Register(nameof(Notifications), typeof(NotificationsViewModel), typeof(Shell), new PropertyMetadata(null));
-
-        /// <summary>
         /// A ViewModel wrapper for all merged core data.
         /// </summary>
         public StrixDataRootViewModel? Root
         {
             get => (StrixDataRootViewModel?)GetValue(RootProperty);
             set => SetValue(RootProperty, value);
-        }
-
-        /// <summary>
-        /// A ViewModel for notifications displayed to the user.
-        /// </summary>
-        public NotificationsViewModel? Notifications
-        {
-            get => (NotificationsViewModel)GetValue(NotificationsProperty);
-            set => SetValue(NotificationsProperty, value);
         }
 
         private void ShellControl_Loaded(object sender, RoutedEventArgs e)

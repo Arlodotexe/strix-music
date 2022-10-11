@@ -49,7 +49,7 @@ namespace StrixMusic
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (!(Window.Current.Content is FrameworkElement rootElement))
+            if (Window.Current.Content is not FrameworkElement)
             {
                 // Place the frame in the current Window
                 Window.Current.Content = new AppFrame();

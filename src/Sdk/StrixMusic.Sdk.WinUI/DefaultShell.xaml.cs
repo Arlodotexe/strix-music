@@ -1,5 +1,4 @@
 ﻿using System;
-using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.WinUI.Controls;
@@ -17,14 +16,6 @@ namespace StrixMusic.Shells.Default
         public DefaultShell()
         {
         }
-
-        /// <summary>
-        /// Metadata used to identify this shell before instantiation.
-        /// </summary>
-        public static ShellMetadata Metadata { get; } =
-            new(id: "default.sandbox",
-                displayName: "Sandbox",
-                description: "Used by devs to test and create default controls for other shells.");
 
         private void DefaultShell_Unloaded(object sender, RoutedEventArgs e)
         {

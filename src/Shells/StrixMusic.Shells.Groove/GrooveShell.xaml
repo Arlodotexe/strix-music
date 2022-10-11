@@ -270,28 +270,5 @@
         </SplitView>
 
         <controls:GrooveNowPlayingBar Height="96" VerticalAlignment="Bottom" Devices="{x:Bind Root.Devices, Mode=OneWay}"/>
-
-        <ItemsControl ItemsSource="{x:Bind Notifications.Notifications, Mode=OneWay}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">
-                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
-                          Background="{ThemeResource SystemAccentColorDark1}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <abstractUIControls:AbstractUICollectionPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource DefaultNotificationAbstractUICollectionStyle}" />
-
-                        <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"
-                                Grid.Column="1" Width="40" Height="40" Background="Transparent" Padding="0"
-                                BorderThickness="0"
-                                Command="{x:Bind DismissCommand}">
-                            <FontIcon FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10A;"/>
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
     </Grid>
 </controls1:Shell>

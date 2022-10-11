@@ -7,7 +7,7 @@ using StrixMusic.Sdk.MediaPlayback;
 using Windows.Media;
 using Windows.Storage.Streams;
 
-namespace StrixMusic.Services
+namespace StrixMusic
 {
     /// <summary>
     /// Integrates an <see cref="IPlaybackHandlerService"/> with the system media transport controls.

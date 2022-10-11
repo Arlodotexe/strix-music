@@ -1,18 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
-using StrixMusic.Sdk.AppModels;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Views;
-using StrixMusic.Sdk.WinUI.Services.NotificationService;
-using StrixMusic.Sdk.WinUI.Services.ShellManagement;
+using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -20,8 +11,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
-using OwlCore.Storage.SystemIO;
-using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
@@ -58,16 +47,6 @@ namespace StrixMusic.Shells.ZuneDesktop
             get => (IModifiableFolder?)GetValue(SettingsStorageProperty);
             set => SetValue(SettingsStorageProperty, value);
         }
-
-        /// <summary>
-        /// Metadata used to identify this shell before instantiation.
-        /// </summary>
-        public static ShellMetadata Metadata { get; } =
-            new ShellMetadata(id: "Zune.Desktop.4.8",
-                displayName: "Zune Desktop",
-                description: "A faithful recreation of the iconic Zune client for Windows",
-                inputMethods: InputMethods.Mouse,
-                minWindowSize: new Size(width: 700, height: 600));
 
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {

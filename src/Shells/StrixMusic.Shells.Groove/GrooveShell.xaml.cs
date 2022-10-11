@@ -2,10 +2,9 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Sdk.WinUI.Services.Localization;
-using StrixMusic.Sdk.WinUI.Services.ShellManagement;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
@@ -17,7 +16,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.Groove
 {
@@ -49,7 +47,7 @@ namespace StrixMusic.Shells.Groove
         public GrooveShell()
         {
             this.InitializeComponent();
-            
+
             // Register home page navigation
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
@@ -71,21 +69,12 @@ namespace StrixMusic.Shells.Groove
             Loaded += GrooveShell_Loaded;
         }
 
-        /// <summary>
-        /// Metadata used to identify this shell before instantiation.
-        /// </summary>
-        public static ShellMetadata Metadata { get; }
-            = new ShellMetadata(id: "GrooveMusic.10.21061.10121.0",
-                displayName: "Groove Music",
-                description: "A faithful recreation of the Groove Music app from Windows 10");
-
         private void GrooveShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= GrooveShell_Loaded;
 
             Guard.IsNotNull(Root, nameof(Root));
 
-            Notifications.IsHandled = true;
             NavigationTracker.Instance.Initialize();
             OnDataRootChanged();
         }
@@ -209,8 +198,6 @@ namespace StrixMusic.Shells.Groove
             {
                 if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
                     MainContent.ContentTemplate = (DataTemplate)dataTemplate;
-                else
-                    Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Error", "Unable to show page.");
             }
 
             Guard.IsNotNull(_localizationService, nameof(_localizationService));

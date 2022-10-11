@@ -196,6 +196,12 @@
     <SingleThreadNUTC>true</SingleThreadNUTC>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\ShellMetadata.cs">
+      <Link>strix-music\src\Shared\ShellMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Shells.cs">
+      <Link>strix-music\src\Shared\Shells.cs</Link>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -265,6 +271,10 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\netstandard\OwlCore.Storage.OneDrive\src\OwlCore.Storage.OneDrive.csproj">
+      <Project>{33D9DC11-810B-4B2E-93BC-AFB4E217A410}</Project>
+      <Name>OwlCore.Storage.OneDrive</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.Files\StrixMusic.Cores.Storage.csproj">
       <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
       <Name>StrixMusic.Cores.Storage</Name>

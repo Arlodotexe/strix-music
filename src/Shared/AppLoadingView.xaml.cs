@@ -114,9 +114,6 @@ namespace StrixMusic
             UpdateStatus("InitCoreReg", localizationService);
             InitializeCoreRegistry(appFrame.NotificationService);
 
-            Logger.LogInformation("Initializing shell registry");
-            await InitializeShellRegistryAsync(appFrame.NotificationService);
-
             Logger.LogInformation($"Initializing {nameof(CoreManagementService)}");
             var cores = new List<ICore>();
             var coreManagementService = new CoreManagementService(settings);
@@ -545,15 +542,5 @@ namespace StrixMusic
         {
             PART_Status.Text = text;
         }
-
-        private static async Task<AppSettings> InitAppSettings()
-        {
-            var settingsDirectory = await ApplicationData.Current.LocalFolder.CreateFolderAsync(nameof(AppSettings), Windows.Storage.CreationCollisionOption.OpenIfExists);
-            var settings = new AppSettings(new FolderData(settingsDirectory));
-
-            await settings.LoadAsync();
-            return settings;
-        }
-
     }
 }

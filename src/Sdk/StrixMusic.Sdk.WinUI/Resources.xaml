@@ -2,8 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:abstractui="using:OwlCore.WinUI.AbstractUI.Themes"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.WinUI.Controls"
-    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:styles="using:StrixMusic.Sdk.WinUI.Styles"
     xmlns:collectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
@@ -32,7 +30,6 @@
         <nowplayingstyles:MediaTransportStyle/>
 
         <!--Styles for shell related controls-->
-        <shellstyles:NotificationAbstractUICollectionStyle/>
         <shellstyles:NowPlayingBarStyle/>
         <shellstyles:PlayableCollectionGroupPivotStyle />
 
