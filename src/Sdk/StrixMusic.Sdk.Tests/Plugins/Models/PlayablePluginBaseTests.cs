@@ -10,6 +10,7 @@ using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -159,7 +160,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : PlayablePluginBase
         {
             public FullyCustom(IPlayable inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -213,7 +214,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : PlayablePluginBase
         {
             public NoOverride(IPlayable inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -268,6 +269,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

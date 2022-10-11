@@ -263,7 +263,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             Assert.AreEqual(0, plugin.Track.Count);
             Assert.AreEqual(1, plugin.Playable.Count, IncorrectPluginCountMsg);
 
-            var connectedPlugin = GlobalModelPluginConnector.Create(plugin);
+            var connectedPlugin = GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugin);
             
             switch (target)
             {
@@ -285,7 +285,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
             }
         }
 
-        private static PopulateEmptyNamesPlugin CreatePlugin() => new()
+        private static PopulateEmptyNamesPlugin CreatePlugin() => new(new MockStrixDataRoot())
         {
             EmptyAlbumName = "EmptyAlbumName",
             EmptyArtistName = "EmptyArtistName",

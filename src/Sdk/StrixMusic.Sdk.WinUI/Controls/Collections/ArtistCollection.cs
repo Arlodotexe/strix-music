@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         protected override void CheckAndToggleEmpty()
         {
             if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning && Collection.TotalArtistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private void ArtistCollection_Unloaded(object sender, RoutedEventArgs e)

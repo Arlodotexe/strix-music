@@ -15,7 +15,7 @@
     xmlns:nowplayingstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying"
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
-    xmlns:controls="clr-namespace:StrixMusic.Sdk.WinUI.Controls;assembly=StrixMusic.Sdk.WinUI"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     x:Name="RootControl" RequestedTheme="Dark">
 
     <controls:Shell.Resources>

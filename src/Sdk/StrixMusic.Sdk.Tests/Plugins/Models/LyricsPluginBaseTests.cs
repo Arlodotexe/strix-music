@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -79,7 +80,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : LyricsPluginBase
         {
             public FullyCustom(ILyrics inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -100,7 +101,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : LyricsPluginBase
         {
             public NoOverride(ILyrics inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -122,6 +123,8 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             {
                 throw AccessedException;
             }
+            
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

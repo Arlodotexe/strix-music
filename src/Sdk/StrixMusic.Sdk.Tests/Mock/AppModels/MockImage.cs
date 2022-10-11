@@ -20,4 +20,5 @@ public class MockImage : IImage
 
     public IReadOnlyList<ICoreImage> Sources => new List<ICoreImage>();
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

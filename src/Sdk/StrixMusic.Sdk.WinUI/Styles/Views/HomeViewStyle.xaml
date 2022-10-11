@@ -4,7 +4,7 @@
     xmlns:view="using:StrixMusic.Sdk.WinUI.Controls.Views"
     xmlns:appModels="using:StrixMusic.Sdk.AppModels"
     xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
-    xmlns:controls="clr-namespace:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Views.HomeViewStyle">
 
     <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="appModels:IStrixDataRoot">

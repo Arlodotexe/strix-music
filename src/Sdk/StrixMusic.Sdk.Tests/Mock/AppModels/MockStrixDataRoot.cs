@@ -36,6 +36,7 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
             return default;
         }
 
+        public string Id => nameof(MockStrixDataRoot);
         public MergedCollectionConfig MergeConfig { get; } = new();
 
         public IReadOnlyList<IDevice> Devices => _devices;
@@ -56,6 +57,7 @@ namespace StrixMusic.Sdk.Tests.Mock.AppModels
 
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
         public event EventHandler? SourcesChanged;
+        public IStrixDataRoot Root => this;
     }
 
 }

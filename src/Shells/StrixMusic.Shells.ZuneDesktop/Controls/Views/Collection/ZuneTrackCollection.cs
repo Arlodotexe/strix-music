@@ -13,6 +13,7 @@ using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using System.Collections.Concurrent;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using OwlCore.ComponentModel;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -102,7 +103,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
 
             if (!Collection.PopulateMoreTracksCommand.IsRunning && Collection.TotalTrackCount == 0)
-                SetIsEmpty(Visibility.Visible);
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
@@ -198,8 +199,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 throw new NotImplementedException();
         }
 
-        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> addedItems,
-                                             IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             // If any track in the parent collection has more than 2 artists,
             // ALL track items should display their artist list, including this instance.

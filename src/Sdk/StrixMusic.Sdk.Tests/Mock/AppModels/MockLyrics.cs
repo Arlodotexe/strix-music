@@ -13,4 +13,5 @@ public class MockLyrics : ILyrics
     public IReadOnlyList<ICoreLyrics> Sources { get; } = new List<ICoreLyrics>();
     public ITrack Track { get; } = new MockTrack();
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

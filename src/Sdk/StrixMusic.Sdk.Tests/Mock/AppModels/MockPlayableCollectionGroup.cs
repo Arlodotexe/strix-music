@@ -838,4 +838,5 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public bool Equals(ICorePlayableCollectionGroup? other) => false;
 
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

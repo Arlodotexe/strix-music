@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -81,7 +82,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : ImagePluginBase
         {
             public FullyCustom(IImage inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -101,7 +102,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : ImagePluginBase
         {
             public NoOverride(IImage inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -123,6 +124,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public IReadOnlyList<ICoreImage> Sources => throw AccessedException;
 
             public bool Equals(ICoreImage? other) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

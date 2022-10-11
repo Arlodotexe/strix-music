@@ -3,8 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:converters="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.PlaylistCollectionStyle">
+    
+    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
     <DataTemplate x:Key="DefaultPlaylistCollectionItemStyle">
         <items:PlaylistItem Playlist="{Binding}"/>
@@ -15,17 +20,24 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:PlaylistCollection">
-                                <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists, RelativeSource={RelativeSource TemplatedParent}}" ItemTemplate="{StaticResource DefaultPlaylistCollectionItemStyle}"
-                                           Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
-                                           ItemClick="OpenPlaylist">
-                                <GridView.Header>
-                                    <Grid>
-                                        <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
-                                        <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
-                                    </Grid>
-                                </GridView.Header>
-                                </GridView>
-                            </ControlTemplate>
+                        <GridView x:Name="PART_Selector" ItemsSource="{Binding Collection.Playlists, RelativeSource={RelativeSource TemplatedParent}}" ItemTemplate="{StaticResource DefaultPlaylistCollectionItemStyle}"
+                                  IsItemClickEnabled="{Binding IsItemClickEnabled, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="ItemClick">
+                                    <core:InvokeCommandAction Command="{Binding ItemClickCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+
+                            <GridView.Header>
+                                <Grid>
+                                    <ProgressRing IsActive="{Binding Collection.PopulateMorePlaylistsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+
+                                    <ContentPresenter Content="{Binding EmptyContent, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{Binding EmptyContentVisibility, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Grid>
+                            </GridView.Header>
+                        </GridView>
+                    </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>

@@ -46,8 +46,7 @@ namespace StrixMusic.Shells.Groove
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
         /// </summary>
-        public GrooveShell(StrixDataRootViewModel dataRootViewModel)
-            : base(dataRootViewModel)
+        public GrooveShell()
         {
             this.InitializeComponent();
             
@@ -66,7 +65,7 @@ namespace StrixMusic.Shells.Groove
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
-            RegisterPropertyChangedCallback(RootProperty, new DependencyPropertyChangedCallback((x, y) => x.Cast<GrooveShell>().OnDataRootChanged()));
+            RegisterPropertyChangedCallback(RootProperty, (x, _) => ((GrooveShell)x).OnDataRootChanged());
 
             Unloaded += GrooveShell_Unloaded;
             Loaded += GrooveShell_Loaded;

@@ -91,7 +91,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="viewModels:ArtistViewModel">
-                                        <HyperlinkButton Content="{x:Bind Name}" Click="GoToArtist" Margin="0,4,0,0"/>
+                                        <HyperlinkButton Content="{x:Bind Name}" Margin="0,4,0,0"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>-->

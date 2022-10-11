@@ -7,7 +7,10 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.TrackCollectionStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:converters="using:OwlCore.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
+    
+    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
     <Style x:Key="DefaultTrackListControlStyle" TargetType="collections:TrackCollection">
         <Style.Setters>
@@ -19,11 +22,18 @@
                             <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                                    ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
                                    Padding="16" HorizontalAlignment="Stretch"
-                                   SelectionMode="None" IsItemClickEnabled="True">
+                                   SelectionMode="None" 
+                                   IsItemClickEnabled="{Binding IsItemClickEnabled, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="ItemClick">
+                                        <core:InvokeCommandAction Command="{Binding ItemClickCommand, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
                                 <ListView.Header>
                                     <Grid>
                                         <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
-                                        <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+
+                                        <ContentPresenter Content="{Binding EmptyContent, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{Binding EmptyContentVisibility, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </Grid>
                                 </ListView.Header>
                                 <ListView.ItemTemplate>

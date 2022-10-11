@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
     xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
-    xmlns:controls="clr-namespace:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Shells.PlayableCollectionGroupPivotStyle">
 
     <Style x:Key="DefaultPlayableCollectionGroupPivotStyle" TargetType="controls:PlayableCollectionGroupPivot">

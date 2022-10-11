@@ -22,8 +22,7 @@
 
                             <!--Back Button-->
                             <Button Style="{StaticResource ZuneButton}" Width="32" Margin="20,-16,0,0"
-                                VerticalAlignment="Top" HorizontalAlignment="Left"
-                                Click="GoBack">
+                                VerticalAlignment="Top" HorizontalAlignment="Left">
                                 <Button.RenderTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </Button.RenderTransform>

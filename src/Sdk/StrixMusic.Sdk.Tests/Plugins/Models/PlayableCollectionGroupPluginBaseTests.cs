@@ -11,6 +11,7 @@ using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -236,7 +237,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : PlayableCollectionGroupPluginBase
         {
             public FullyCustom(IPlayableCollectionGroup inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -369,7 +370,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : PlayableCollectionGroupPluginBase
         {
             public NoOverride(IPlayableCollectionGroup inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -512,6 +513,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public event CollectionChangedEventHandler<IPlayableCollectionGroup>? ChildItemsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public bool Equals(ICorePlayableCollectionGroup? other) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

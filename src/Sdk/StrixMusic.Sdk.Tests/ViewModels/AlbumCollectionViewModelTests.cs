@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Tests.ViewModels
@@ -20,7 +21,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddImageAsync(new Mock.AppModels.MockImage(), i);
 
-            var vm = new AlbumCollectionViewModel(data);
+            var vm = new AlbumCollectionViewModel(data, new MockStrixDataRoot());
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Images.Count);
@@ -41,7 +42,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddUrlAsync(new Mock.AppModels.MockUrl(), i);
 
-            var vm = new AlbumCollectionViewModel(data);
+            var vm = new AlbumCollectionViewModel(data, new MockStrixDataRoot());
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Urls.Count);
@@ -62,7 +63,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddAlbumItemAsync(new Mock.AppModels.MockAlbum(), i);
 
-            var vm = new AlbumCollectionViewModel(data);
+            var vm = new AlbumCollectionViewModel(data, new MockStrixDataRoot());
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Albums.Count);

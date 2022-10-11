@@ -18,4 +18,6 @@ public class MockUrl : IUrl
     public IReadOnlyList<ICoreUrl> Sources => new List<ICoreUrl>();
 
     public event EventHandler? SourcesChanged;
+    
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

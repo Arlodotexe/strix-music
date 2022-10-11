@@ -6,7 +6,10 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:OwlCore.WinUI.Converters"
     x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.ArtistCollectionStyle">
+    
+    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
     <Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:ArtistCollection">
         <Style.Setters>
@@ -38,7 +41,7 @@
                                                     <ProgressRing
                                                         IsActive="{x:Bind Collection.PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}" />
 
-                                                    <ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind }" />
+                                                    <ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
                                                 </Grid>
                                             </GridView.Header>
 

@@ -1,11 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
 using StrixMusic.Sdk.AppModels;
-using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 using StrixMusic.Sdk.WinUI.Services.NotificationService;
@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using OwlCore.Storage.SystemIO;
 using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop
@@ -29,8 +30,8 @@ namespace StrixMusic.Shells.ZuneDesktop
     /// </summary>
     public sealed partial class ZuneShell : Shell
     {
-        private readonly IModifiableFolder _settingStorage;
-        private readonly ZuneDesktopSettings _settings;
+        private IModifiableFolder? _settingStorage;
+        private ZuneDesktopSettings? _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
@@ -40,9 +41,22 @@ namespace StrixMusic.Shells.ZuneDesktop
             Loaded += ZuneShell_Loaded;
             Unloaded += OnUnloaded;
 
-            _settings = new ZuneDesktopSettings(_settingStorage);
-
             this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="SettingsStorage"/>.
+        /// </summary>
+        public static readonly DependencyProperty SettingsStorageProperty =
+            DependencyProperty.Register(nameof(SettingsStorage), typeof(IModifiableFolder), typeof(ZuneShell), new PropertyMetadata(null, (d, e) => ((ZuneShell)d).OnSettingsStorageChanged(e.OldValue as IModifiableFolder, e.NewValue as IModifiableFolder)));
+
+        /// <summary>
+        /// The folder where settings should be stored.
+        /// </summary>
+        public IModifiableFolder? SettingsStorage
+        {
+            get => (IModifiableFolder?)GetValue(SettingsStorageProperty);
+            set => SetValue(SettingsStorageProperty, value);
         }
 
         /// <summary>
@@ -58,23 +72,29 @@ namespace StrixMusic.Shells.ZuneDesktop
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= ZuneShell_Loaded;
-            _settings.PropertyChanged += SettingsService_SettingChanged;
 
-            SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
+            if (_settings is not null)
+            {
+                SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel(_settings);
+            }
+
             SetupBackgroundImage();
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
             Unloaded -= OnUnloaded;
-            _settings.PropertyChanged -= SettingsService_SettingChanged;
+
+            if (_settings is not null)
+                _settings.PropertyChanged -= SettingsService_SettingChanged;
         }
 
         private void SetupBackgroundImage()
         {
-            var settings = Ioc.GetRequiredService<ZuneDesktopSettings>();
+            if (_settings is null)
+                return;
 
-            var backgroundImage = settings.BackgroundImage;
+            var backgroundImage = _settings.BackgroundImage;
             if (backgroundImage.IsNone)
             {
                 BackgroundImage.Visibility = Visibility.Collapsed;
@@ -112,23 +132,24 @@ namespace StrixMusic.Shells.ZuneDesktop
 #endif
         }
 
-        private void ZuneShell_NavigationRequested(object sender, NavigateEventArgs<Control> e)
+        private void ZuneShell_NavigationRequested(object sender, EventArgs e)
         {
-            if (e.Page is SettingsView)
+            // TODO navigate
+            // if (e.Page is SettingsView)
             {
                 SettingsOverlay.Visibility = Visibility.Visible;
                 NowPlayingOverlay.Visibility = Visibility.Collapsed;
                 MainContent.Visibility = Visibility.Collapsed;
                 MainContent.Visibility = Visibility.Collapsed;
-                Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Collapsed;
+                NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Light);
             }
-            else if (e.Page is NowPlayingView)
+            //   else if (e.Page is NowPlayingView)
             {
                 SettingsOverlay.Visibility = Visibility.Collapsed;
                 NowPlayingOverlay.Visibility = Visibility.Visible;
                 MainContent.Visibility = Visibility.Collapsed;
-                Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Collapsed;
+                NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Dark);
             }
         }
@@ -140,21 +161,21 @@ namespace StrixMusic.Shells.ZuneDesktop
             SettingsOverlay.Visibility = Visibility.Collapsed;
             NowPlayingOverlay.Visibility = Visibility.Collapsed;
             MainContent.Visibility = Visibility.Visible;
-            Sdk.WinUI.Controls.NowPlayingBar.Visibility = Visibility.Visible;
+            NowPlayingBar.Visibility = Visibility.Visible;
             RequestTheme();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RequestTheme(Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
+            RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
 
-            if (Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0)
+            if (Pivot.SelectedIndex == 0)
             {
                 QuickplayPage.RunEnterViewAnimation();
             }
 
             // Collection index.
-            if (Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 1)
+            if (Pivot.SelectedIndex == 1)
             {
                 PART_CollectionContent.AnimateAlbumCollection();
             }
@@ -164,7 +185,7 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             if (theme == ElementTheme.Default)
             {
-                theme = Windows.UI.Xaml.Controls.Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
+                theme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
             }
 
             RootControl.RequestedTheme = theme;
@@ -193,20 +214,37 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
         {
-            Guard.IsNotNull(_navigationService, nameof(_navigationService));
-
-            _navigationService.NavigateTo(typeof(SettingsView));
+            // TODO navigate
         }
 
         private void RequestBack(object sender, RoutedEventArgs e)
         {
-            _navigationService!.GoBack();
+            // TODO navigate
         }
 
         private void BackgroundHideCompleted(object sender, object e)
         {
             SetupBackgroundImage();
             ShowBackground.Begin();
+        }
+
+        private void OnSettingsStorageChanged(IModifiableFolder? oldValue, IModifiableFolder? newValue)
+        {
+            if (oldValue is not null)
+            {
+                // Settings folder is always paired with a dedicated settings object.
+                Guard.IsNotNull(_settings);
+                _settings.PropertyChanged -= SettingsService_SettingChanged;
+            }
+
+            if (newValue is not null)
+            {
+                _settingStorage = newValue;
+                _settings = new ZuneDesktopSettings(newValue);
+                _settings.PropertyChanged += SettingsService_SettingChanged;
+                
+                SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel(_settings);
+            }
         }
     }
 }

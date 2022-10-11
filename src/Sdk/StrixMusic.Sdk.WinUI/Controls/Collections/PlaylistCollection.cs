@@ -60,9 +60,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
-            if (!Collection.PopulateMorePlaylistsCommand.IsRunning &&
-                Collection.TotalPlaylistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+            if (!Collection.PopulateMorePlaylistsCommand.IsRunning && Collection.TotalPlaylistItemsCount == 0)
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private void AttachHandlers()

@@ -128,7 +128,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 
         private void PART_PlayIcon_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            AlbumPlaybackTriggered?.Invoke(this, Album);
+            if (Album is not null)
+            {
+                AlbumPlaybackTriggered?.Invoke(this, Album as AlbumViewModel ?? new AlbumViewModel(Album, Album.Root));
+            }
         }
     }
 }

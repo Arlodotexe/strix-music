@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -82,7 +83,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : GenreCollectionPluginBase
         {
             public FullyCustom(IGenreCollection inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -109,7 +110,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : GenreCollectionPluginBase
         {
             public NoOverride(IGenreCollection inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -138,6 +139,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
 
             public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

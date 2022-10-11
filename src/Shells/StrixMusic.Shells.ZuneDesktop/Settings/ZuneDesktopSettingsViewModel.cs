@@ -40,9 +40,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneDesktopSettingsViewModel"/> class.
         /// </summary>
-        public ZuneDesktopSettingsViewModel()
+        public ZuneDesktopSettingsViewModel(ZuneDesktopSettings settings)
         {
-            _settings = ZuneShell.Ioc.GetRequiredService<ZuneDesktopSettings>();
+            _settings = settings;
             _localizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
 
             _displayNameMap = _zuneBackgroundImages.Keys

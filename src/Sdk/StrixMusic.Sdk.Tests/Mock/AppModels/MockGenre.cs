@@ -13,4 +13,5 @@ public class MockGenre : IGenre
 
     public IReadOnlyList<ICoreGenre> Sources { get; } = new List<ICoreGenre>();
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

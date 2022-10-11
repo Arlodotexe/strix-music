@@ -22,4 +22,5 @@ public class MockSearch : ISearch
 
     public ISearchHistory? SearchHistory { get; } = new MockSearchHistory();
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

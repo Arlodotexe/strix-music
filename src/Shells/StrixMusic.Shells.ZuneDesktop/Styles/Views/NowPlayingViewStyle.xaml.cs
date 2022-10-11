@@ -1,5 +1,4 @@
-﻿using StrixMusic.Sdk.Services.Navigation;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Sdk.WinUI.Controls.Views;
@@ -17,11 +16,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Views
         public NowPlayingViewStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void GoBack(object sender, RoutedEventArgs e)
-        {
-            Shell.Ioc.GetService<INavigationService<Control>>()!.GoBack();
         }
     }
 }

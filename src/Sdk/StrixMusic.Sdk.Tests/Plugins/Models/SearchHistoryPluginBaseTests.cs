@@ -11,6 +11,7 @@ using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -237,7 +238,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : SearchHistoryPluginBase
         {
             public FullyCustom(ISearchHistory inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
 
@@ -371,7 +372,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : SearchHistoryPluginBase
         {
             public NoOverride(ISearchHistory inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
             {
             }
         }
@@ -516,6 +517,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public bool Equals(ICorePlayableCollectionGroup? other) => throw AccessedException;
             public IReadOnlyList<ICoreSearchHistory> Sources => throw AccessedException;
             public bool Equals(ICoreSearchHistory? other) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

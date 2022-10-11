@@ -35,6 +35,7 @@
                                                     <core:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
                                                 </core:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
+
                                             <GridView.ItemTemplate>
                                                 <DataTemplate x:Key="DefaultAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
                                                     <items:AlbumItem Album="{x:Bind}">
@@ -52,7 +53,7 @@
                                                 <Grid>
                                                     <ProgressRing
                                                         IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}" />
-                                                    <ContentPresenter x:Name="PART_EmptyContentPresenter" />
+                                                    <ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
                                                 </Grid>
                                             </GridView.Header>
                                         </GridView>
