@@ -11,6 +11,8 @@
 
             <Color x:Key="ShadowColor">#FF000000</Color>
             <x:Double x:Key="ShadowOpacity">0.1</x:Double>
+
+            <SolidColorBrush x:Key="OobePageBackgroundColor" Color="#1E1E23"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

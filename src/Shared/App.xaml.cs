@@ -1,13 +1,14 @@
-﻿using System.Threading;
-using System;
+﻿using System;
+using System.Threading;
 using NLog.Config;
 using NLog.Targets;
 using OwlCore.Diagnostics;
-using StrixMusic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using StrixMusic.Pages.Oobe;
 
 namespace StrixMusic
 {
@@ -49,25 +50,21 @@ namespace StrixMusic
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (Window.Current.Content is not FrameworkElement)
+            if (Window.Current.Content is not Frame frame)
             {
                 // Place the frame in the current Window
-                Window.Current.Content = new AppFrame();
+                Window.Current.Content = frame = new Frame();
             }
 
             // Bi-directional language support
 #if NETFX_CORE
             // https://github.com/unoplatform/uno/issues/21
             var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
-            if (flowDirectionSetting == "LTR")
-            {
-                Window.Current.GetAppFrame().FlowDirection = FlowDirection.LeftToRight;
-            }
-            else
-            {
-                Window.Current.GetAppFrame().FlowDirection = FlowDirection.RightToLeft;
-            }
+
+            frame.FlowDirection = flowDirectionSetting == "LTR" ? FlowDirection.LeftToRight : FlowDirection.RightToLeft;
 #endif
+
+            frame.Navigate(typeof(Welcome));
         }
 
         /// <summary>

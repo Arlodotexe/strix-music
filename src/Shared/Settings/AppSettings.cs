@@ -2,9 +2,6 @@
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
-using StrixMusic.Sdk.AdapterModels;
-using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Shells.Default;
 
 namespace StrixMusic.Services
 {
@@ -31,25 +28,15 @@ namespace StrixMusic.Services
             SaveFailed += AppSettings_SaveFailed;
         }
 
-        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
-        {
-            Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
-        }
-
-        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e)
-        {
-            Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
-        }
-
         /// <summary>
         /// Gets the list of all registered storage cores that interact with files on disk.
         /// </summary>
-        public List<LocalFilesCoreSettings> RegisteredLocalFileCores => GetSetting(() => new List<LocalFilesCoreSettings>());
+        public List<LocalFilesCoreSettings> ConfiguredLocalFileCores => GetSetting(() => new List<LocalFilesCoreSettings>());
 
         /// <summary>
-        /// Gets the list of all registered storage cores that interact with files on disk.
+        /// Gets the list of all registered storage cores that interact with OneDrive.
         /// </summary>
-        public List<OneDriveCoreSettings> RegisteredOneDriveCores => GetSetting(() => new List<OneDriveCoreSettings>());
+        public List<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(() => new List<OneDriveCoreSettings>());
 
         /// <summary>
         /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
@@ -85,6 +72,16 @@ namespace StrixMusic.Services
         {
             get => GetSetting(() => string.Empty);
             set => SetSetting(value);
+        }
+
+        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
+        }
+
+        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e)
+        {
+            Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
         }
     }
 }

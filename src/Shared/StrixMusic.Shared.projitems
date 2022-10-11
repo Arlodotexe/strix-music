@@ -25,14 +25,14 @@
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CoreModels\FileImage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
-      <DependentUpon>AppLoadingView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\QuipLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\AnnualRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Oobe\Welcome.xaml.cs">
+      <DependentUpon>Welcome.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
     <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AudioPlayerService.cs" />
@@ -45,15 +45,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)SystemMediaTransportControlsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\Oobe\Welcome.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
