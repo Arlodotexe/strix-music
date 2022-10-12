@@ -24,12 +24,7 @@ namespace StrixMusic
         public SystemMediaTransportControlsHandler(IPlaybackHandlerService playbackHandlerService)
         {
             _playbackHandlerService = playbackHandlerService;
-#if __WASM__
-            _systemMediaTransportControls = null!;
-            return;
-#else
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
-#endif
 
             _systemMediaTransportControls.IsPlayEnabled = true;
             _systemMediaTransportControls.IsPauseEnabled = true;

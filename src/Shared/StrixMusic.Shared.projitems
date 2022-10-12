@@ -15,6 +15,8 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AdaptiveShells.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AllShells.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -42,6 +44,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StrixAppView.xaml.cs">
+      <DependentUpon>StrixAppView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)SystemMediaTransportControlsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Pages\Oobe\Welcome.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)StrixAppView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

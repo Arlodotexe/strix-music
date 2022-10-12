@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
@@ -31,12 +32,12 @@ namespace StrixMusic.Services
         /// <summary>
         /// Gets the list of all registered storage cores that interact with files on disk.
         /// </summary>
-        public List<LocalFilesCoreSettings> ConfiguredLocalFileCores => GetSetting(() => new List<LocalFilesCoreSettings>());
+        public ObservableCollection<LocalFilesCoreSettings> ConfiguredLocalFileCores => GetSetting(defaultValue: () => new ObservableCollection<LocalFilesCoreSettings>());
 
         /// <summary>
         /// Gets the list of all registered storage cores that interact with OneDrive.
         /// </summary>
-        public List<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(() => new List<OneDriveCoreSettings>());
+        public ObservableCollection<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(defaultValue: () => new ObservableCollection<OneDriveCoreSettings>());
 
         /// <summary>
         /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
@@ -59,18 +60,18 @@ namespace StrixMusic.Services
         /// <summary>
         /// Stores the registry id of the user's preferred shell.
         /// </summary>
-        public string PreferredShell
+        public AllShells PreferredShell
         {
-            get => GetSetting(() => string.Empty);
+            get => GetSetting(() => AllShells.ZuneDesktop);
             set => SetSetting(value);
         }
 
         /// <summary>
         /// The registry id of the user's current fallback shell. Used to cover display sizes that the <see cref="PreferredShell"/> doesn't support. 
         /// </summary>
-        public string FallbackShell
+        public AdaptiveShells FallbackShell
         {
-            get => GetSetting(() => string.Empty);
+            get => GetSetting(() => AdaptiveShells.Sandbox);
             set => SetSetting(value);
         }
 

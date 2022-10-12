@@ -1,10 +1,7 @@
-﻿using Windows.ApplicationModel.Core;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
+﻿using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.WinUI.Controls
 {
@@ -25,16 +22,35 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// The backing dependency property for <see cref="Root"/>.
         /// </summary>
         public static readonly DependencyProperty RootProperty =
-            DependencyProperty.Register(nameof(Root), typeof(StrixDataRootViewModel), typeof(Shell), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Root), typeof(IStrixDataRoot), typeof(Shell), new PropertyMetadata(null, (d, e) => ((Shell)d).OnRootChanged(e.OldValue as IStrixDataRoot e.NewValue as IStrixDataRoot)));
+
+        /// <summary>
+        /// Fires when the <see cref="Root"/> is changed.
+        /// </summary>
+        protected virtual void OnRootChanged(IStrixDataRoot? oldValue, IStrixDataRoot? newValue)
+        {
+            SetValue(RootVmProperty, newValue is null ? null : new StrixDataRootViewModel(newValue));
+        }
+
+        /// <summary>
+        /// The <see cref="IStrixDataRoot"/> to use for getting data.
+        /// </summary>
+        public IStrixDataRoot? Root
+        {
+            get => (IStrixDataRoot?)GetValue(RootProperty);
+            set => SetValue(RootProperty, value);
+        }
+
+        /// <summary>
+        /// The backing dependency property for <see cref="RootVm"/>.
+        /// </summary>
+        public static readonly DependencyProperty RootVmProperty =
+            DependencyProperty.Register(nameof(RootVm), typeof(StrixDataRootViewModel), typeof(Shell), new PropertyMetadata(null));
 
         /// <summary>
         /// A ViewModel wrapper for all merged core data.
         /// </summary>
-        public StrixDataRootViewModel? Root
-        {
-            get => (StrixDataRootViewModel?)GetValue(RootProperty);
-            set => SetValue(RootProperty, value);
-        }
+        public StrixDataRootViewModel? RootVm => (StrixDataRootViewModel?)GetValue(RootVmProperty);
 
         private void ShellControl_Loaded(object sender, RoutedEventArgs e)
         {
