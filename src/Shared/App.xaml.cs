@@ -54,7 +54,7 @@ namespace StrixMusic
             if (Window.Current.Content is null)
             {
                 // Place the frame in the current Window
-                Window.Current.Content = new ShellPresenter();
+                Window.Current.Content = new AppFrame();
             }
 
             // Bi-directional language support
