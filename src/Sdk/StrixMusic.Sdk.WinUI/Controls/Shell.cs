@@ -1,4 +1,8 @@
-﻿using StrixMusic.Sdk.AppModels;
+﻿using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,7 +26,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// The backing dependency property for <see cref="Root"/>.
         /// </summary>
         public static readonly DependencyProperty RootProperty =
-            DependencyProperty.Register(nameof(Root), typeof(IStrixDataRoot), typeof(Shell), new PropertyMetadata(null, (d, e) => ((Shell)d).OnRootChanged(e.OldValue as IStrixDataRoot e.NewValue as IStrixDataRoot)));
+            DependencyProperty.Register(nameof(Root), typeof(IStrixDataRoot), typeof(Shell), new PropertyMetadata(null, (d, e) => ((Shell)d).OnRootChanged(e.OldValue as IStrixDataRoot, e.NewValue as IStrixDataRoot)));
 
         /// <summary>
         /// Fires when the <see cref="Root"/> is changed.

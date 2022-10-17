@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shells.Groove.TemplateSelectors
 {
     /// <summary>
-    /// A <see cref="DataTemplateSelector"/> for the <see cref="GrooveShell"/> based on the ViewModel.
+    /// A <see cref="DataTemplateSelector"/> for the <see cref="GrooveMusic"/> based on the ViewModel.
     /// </summary>
     public class MainContentTemplateSelector : DataTemplateSelector
     {

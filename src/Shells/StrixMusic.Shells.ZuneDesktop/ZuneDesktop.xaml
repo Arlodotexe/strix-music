@@ -1,5 +1,5 @@
 ﻿<controls:Shell
-    x:Class="StrixMusic.Shells.ZuneDesktop.ZuneShell"
+    x:Class="StrixMusic.Shells.ZuneDesktop.ZuneDesktop"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -143,11 +143,11 @@
                 </Pivot.LeftHeader>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI" Header="quickplay"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind Root, Mode=OneWay}" />
+                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI" Header="collection"
                            a:TextHelpers.CharacterCasing="Lower" >
-                    <collection:CollectionContent DataRoot="{x:Bind Root, Mode=OneWay}" x:Name="PART_CollectionContent"/>
+                    <collection:CollectionContent DataRoot="{x:Bind RootVm, Mode=OneWay}" x:Name="PART_CollectionContent"/>
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI" Header="browse"
                            a:TextHelpers.CharacterCasing="Lower">

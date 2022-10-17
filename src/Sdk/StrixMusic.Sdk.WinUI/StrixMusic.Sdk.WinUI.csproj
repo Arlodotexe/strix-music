@@ -108,7 +108,7 @@
     <Compile Update="Styles\NowPlaying\MediaInfoStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="DefaultShell.xaml.cs">
+    <Compile Update="SandboxShell.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\Shells\NotificationAbstractUICollectionStyle.xaml.cs">

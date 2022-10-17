@@ -3,17 +3,17 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.WinUI.Controls;
 
-namespace StrixMusic.Shells.Default
+namespace StrixMusic.Sdk.WinUI
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// An extremely basic shell that serves to exercise the components included in the Strix WinUI SDK.
     /// </summary>
-    public sealed partial class DefaultShell : Shell
+    public sealed partial class SandboxShell : Shell
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultShell"/> class.
+        /// Initializes a new instance of the <see cref="SandboxShell"/> class.
         /// </summary>
-        public DefaultShell()
+        public SandboxShell()
         {
         }
 

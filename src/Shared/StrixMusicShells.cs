@@ -3,7 +3,7 @@
 /// <summary>
 /// All available shells.
 /// </summary>
-public enum AllShells
+public enum StrixMusicShells
 {
     Sandbox,
     GrooveMusic,

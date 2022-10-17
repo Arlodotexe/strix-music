@@ -196,12 +196,6 @@
     <SingleThreadNUTC>true</SingleThreadNUTC>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\Shared\ShellMetadata.cs">
-      <Link>strix-music\src\Shared\ShellMetadata.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Shared\Shells.cs">
-      <Link>strix-music\src\Shared\Shells.cs</Link>
-    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -213,7 +207,6 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="StrixMusic.UWP_TemporaryKey.pfx" />
-    <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />

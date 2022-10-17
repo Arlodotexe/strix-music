@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using NLog.Config;
 using NLog.Targets;
@@ -50,10 +51,10 @@ namespace StrixMusic
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (Window.Current.Content is not Frame frame)
+            if (Window.Current.Content is null)
             {
                 // Place the frame in the current Window
-                Window.Current.Content = frame = new Frame();
+                Window.Current.Content = new ShellPresenter();
             }
 
             // Bi-directional language support
@@ -61,10 +62,8 @@ namespace StrixMusic
             // https://github.com/unoplatform/uno/issues/21
             var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
 
-            frame.FlowDirection = flowDirectionSetting == "LTR" ? FlowDirection.LeftToRight : FlowDirection.RightToLeft;
+            ((FrameworkElement)Window.Current.Content).FlowDirection = flowDirectionSetting == "LTR" ? FlowDirection.LeftToRight : FlowDirection.RightToLeft;
 #endif
-
-            frame.Navigate(typeof(Welcome));
         }
 
         /// <summary>

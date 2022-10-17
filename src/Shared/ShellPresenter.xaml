@@ -1,0 +1,20 @@
+﻿<UserControl
+	x:Class="StrixMusic.ShellPresenter"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:groove="using:StrixMusic.Shells.Groove"
+	xmlns:local="using:StrixMusic"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:winUi="using:StrixMusic.Sdk.WinUI"
+	xmlns:zuneDesktop="using:StrixMusic.Shells.ZuneDesktop"
+	d:DesignHeight="300"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+
+	<ContentControl
+		x:Name="PART_ShellDisplay"
+		HorizontalContentAlignment="Stretch"
+		VerticalContentAlignment="Stretch" />
+
+</UserControl>

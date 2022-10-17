@@ -60,9 +60,9 @@ namespace StrixMusic.Services
         /// <summary>
         /// Stores the registry id of the user's preferred shell.
         /// </summary>
-        public AllShells PreferredShell
+        public StrixMusicShells PreferredShell
         {
-            get => GetSetting(() => AllShells.ZuneDesktop);
+            get => GetSetting(() => StrixMusicShells.ZuneDesktop);
             set => SetSetting(value);
         }
 

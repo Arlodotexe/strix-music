@@ -15,17 +15,17 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace StrixMusic.Shells.ZuneDesktop
 {
     /// <summary>
-    /// The <see cref="Shell"/> implementation for ZuneDesktop.
+    /// A faithful recreation of Zune Desktop 4.8.
     /// </summary>
-    public sealed partial class ZuneShell : Shell
+    public sealed partial class ZuneDesktop : Shell
     {
         private IModifiableFolder? _settingStorage;
         private ZuneDesktopSettings? _settings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZuneShell"/> class.
+        /// Initializes a new instance of the <see cref="ZuneDesktop"/> class.
         /// </summary>
-        public ZuneShell()
+        public ZuneDesktop()
         {
             Loaded += ZuneShell_Loaded;
             Unloaded += OnUnloaded;
@@ -37,7 +37,7 @@ namespace StrixMusic.Shells.ZuneDesktop
         /// The backing dependency property for <see cref="SettingsStorage"/>.
         /// </summary>
         public static readonly DependencyProperty SettingsStorageProperty =
-            DependencyProperty.Register(nameof(SettingsStorage), typeof(IModifiableFolder), typeof(ZuneShell), new PropertyMetadata(null, (d, e) => ((ZuneShell)d).OnSettingsStorageChanged(e.OldValue as IModifiableFolder, e.NewValue as IModifiableFolder)));
+            DependencyProperty.Register(nameof(SettingsStorage), typeof(IModifiableFolder), typeof(ZuneDesktop), new PropertyMetadata(null, (d, e) => ((ZuneDesktop)d).OnSettingsStorageChanged(e.OldValue as IModifiableFolder, e.NewValue as IModifiableFolder)));
 
         /// <summary>
         /// The folder where settings should be stored.

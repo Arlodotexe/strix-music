@@ -19,32 +19,32 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace StrixMusic.Shells.Groove
 {
-    public sealed partial class GrooveShell : Shell
+    public sealed partial class GrooveMusic : Shell
     {
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
         /// </summary>
         public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register(nameof(Title), typeof(string), typeof(GrooveShell), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Title), typeof(string), typeof(GrooveMusic), new PropertyMetadata(string.Empty));
 
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="ShowLargeHeader"/> property.
         /// </summary>
         public static readonly DependencyProperty ShowLargeHeaderProperty =
-            DependencyProperty.Register(nameof(ShowLargeHeader), typeof(bool), typeof(GrooveShell), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(ShowLargeHeader), typeof(bool), typeof(GrooveMusic), new PropertyMetadata(true));
 
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="PlaylistCollectionViewModel"/> property.
         /// </summary>
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
-            DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveShell), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveMusic), new PropertyMetadata(null));
 
         private LocalizationResourceLoader _localizationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GrooveShell"/> class.
+        /// Initializes a new instance of the <see cref="GrooveMusic"/> class.
         /// </summary>
-        public GrooveShell()
+        public GrooveMusic()
         {
             this.InitializeComponent();
 
@@ -63,7 +63,7 @@ namespace StrixMusic.Shells.Groove
 
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
-            RegisterPropertyChangedCallback(RootProperty, (x, _) => ((GrooveShell)x).OnDataRootChanged());
+            RegisterPropertyChangedCallback(RootProperty, (x, _) => ((GrooveMusic)x).OnDataRootChanged());
 
             Unloaded += GrooveShell_Unloaded;
             Loaded += GrooveShell_Loaded;

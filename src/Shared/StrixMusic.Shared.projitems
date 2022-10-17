@@ -16,7 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AdaptiveShells.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AllShells.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
+      <DependentUpon>AppFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)StrixMusicShells.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -44,12 +47,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InputMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StrixAppView.xaml.cs">
-      <DependentUpon>StrixAppView.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)ShellMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShellInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShellPresenter.xaml.cs">
+      <DependentUpon>ShellPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)SystemMediaTransportControlsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -62,7 +71,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)StrixAppView.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)ShellPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

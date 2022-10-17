@@ -1,5 +1,5 @@
 ﻿<controls:Shell
-	x:Class="StrixMusic.Shells.Default.DefaultShell"
+	x:Class="StrixMusic.Sdk.WinUI.SandboxShell"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
