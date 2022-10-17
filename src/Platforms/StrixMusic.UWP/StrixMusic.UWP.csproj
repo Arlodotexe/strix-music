@@ -71,12 +71,6 @@
     <PackageReference Include="System.Text.Json">
       <Version>6.0.5</Version>
     </PackageReference>
-    <PackageReference Include="Uno.Diagnostics.Eventing">
-      <Version>2.1.0-dev.1</Version>
-    </PackageReference>
-    <PackageReference Include="Uno.UI.MSAL">
-      <Version>4.5.0-dev.509</Version>
-    </PackageReference>
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>

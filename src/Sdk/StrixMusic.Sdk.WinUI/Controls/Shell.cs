@@ -1,9 +1,9 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.ViewModels;
+using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using StrixMusic.Sdk.AppModels;
-using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

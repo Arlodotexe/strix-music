@@ -1,24 +1,21 @@
-﻿<controls1:Shell
+﻿<sdkctrls:Shell
 	x:Class="StrixMusic.Shells.Groove.GrooveShell"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:abstractUIControls="using:OwlCore.WinUI.AbstractUI.Controls"
 	xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
 	xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
-	xmlns:controls1="using:StrixMusic.Sdk.WinUI.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:groovepvms="using:StrixMusic.Shells.Groove.ViewModels.Pages"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
 	xmlns:owlconv="using:OwlCore.WinUI.Converters"
 	xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
+	xmlns:sdkctrls="using:StrixMusic.Sdk.WinUI.Controls"
 	xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
 	xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
-	d:DesignHeight="300"
-	d:DesignWidth="400"
 	mc:Ignorable="d">
 
-	<controls1:Shell.Resources>
+	<sdkctrls:Shell.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Groove/Resources.xaml" />
@@ -51,7 +48,7 @@
 				</selectors:MainContentTemplateSelector.PlaylistPageTemplate>
 			</selectors:MainContentTemplateSelector>
 		</ResourceDictionary>
-	</controls1:Shell.Resources>
+	</sdkctrls:Shell.Resources>
 
 	<Grid>
 		<SplitView
@@ -301,6 +298,7 @@
 			Height="96"
 			VerticalAlignment="Bottom"
 			Devices="{x:Bind Root.Devices, Mode=OneWay}" />
+
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="Sizes">
 				<VisualState x:Name="Large">
@@ -362,4 +360,4 @@
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 	</Grid>
-</controls1:Shell>
+</sdkctrls:Shell>

@@ -38,6 +38,12 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveMusic), new PropertyMetadata(null));
+        
+        /// <summary>
+        /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
+        /// </summary>
+        public static readonly DependencyProperty HamburgerPressedCommandProperty =
+            DependencyProperty.Register(nameof(HamburgerPressedCommand), typeof(RelayCommand), typeof(GrooveMusic), new PropertyMetadata(null));
 
         private LocalizationResourceLoader _localizationService;
 
@@ -46,8 +52,6 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public GrooveMusic()
         {
-            this.InitializeComponent();
-
             // Register home page navigation
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
@@ -133,7 +137,11 @@ namespace StrixMusic.Shells.Groove
         /// <summary>
         /// Gets a Command that handles a Hamburger button press.
         /// </summary>
-        public RelayCommand HamburgerPressedCommand { get; }
+        public RelayCommand HamburgerPressedCommand
+        {
+            get => (RelayCommand)GetValue(HamburgerPressedCommandProperty);
+            set => SetValue(HamburgerPressedCommandProperty, value);
+        }
 
         /// <inheritdoc/>
         protected override void SetupTitleBar()
