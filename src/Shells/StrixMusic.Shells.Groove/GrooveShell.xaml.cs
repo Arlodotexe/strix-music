@@ -102,7 +102,6 @@ namespace StrixMusic.Shells.Groove
 
             if (Root?.Library != null)
             {
-                Bindings.Update();
                 _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)Root.Library));
             }
         }
