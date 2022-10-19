@@ -32,7 +32,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="GrooveShell.xaml" />
+		<None Remove="GrooveMusic.xaml" />
 		<None Remove="LICENSE.txt" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
@@ -48,7 +48,7 @@
 		<None Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<UpToDateCheckInput Remove="GrooveShell.xaml" />
+		<UpToDateCheckInput Remove="GrooveMusic.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\GrooveNowPlayingBarStyle.xaml" />
@@ -69,6 +69,9 @@
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="GrooveMusic.xaml.cs">
+		  <DependentUpon>GrooveMusic.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>

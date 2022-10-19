@@ -133,6 +133,9 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
+        if (Root is null)
+            return;
+
         PART_ShellDisplay.Content = _currentShell = CreatePreferredShell(PreferredShell, Root);
         _currentIsPreferred = true;
 
@@ -155,6 +158,9 @@ public sealed partial class ShellPresenter : UserControl
     private void ApplyFallbackShell()
     {
         PART_ShellDisplay.Content = null;
+
+        if (Root is null)
+            return;
 
         PART_ShellDisplay.Content = _currentShell = CreateFallbackShell(FallbackShell, Root);
         _currentIsPreferred = false;
