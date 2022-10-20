@@ -1,13 +1,11 @@
 ﻿using System;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.WinUI;
 using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -30,15 +28,15 @@ public sealed partial class ShellPresenter : UserControl
 
     private async void ShellPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        // Only check when user has stopped resizing window for x amount of time
-        // 41.666ms = 24fps
-        if (await Flow.Debounce($"{sender.GetHashCode()}", TimeSpan.FromMilliseconds(41.666)))
+        // Only check when the user stops resizing the control for a few frames at 24 FPS (41.666ms) instead of the default 1 frame at 60FPS
+        // Also disables concurrency
+        if (await Flow.Debounce($"{sender.GetHashCode()}", TimeSpan.FromMilliseconds(41.666 * 2)))
         {
             if (_currentIsPreferred && ShouldUseFallbackShell())
                 ApplyFallbackShell();
 
             if (!_currentIsPreferred && !ShouldUseFallbackShell())
-                OnPreferredShellChanged();
+                ApplyPreferredShell();
         }
     }
 
@@ -46,13 +44,13 @@ public sealed partial class ShellPresenter : UserControl
     /// Identifies the <see cref="PreferredShell"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PreferredShellProperty =
-        DependencyProperty.Register(nameof(PreferredShell), typeof(StrixMusicShells), typeof(ShellPresenter), new PropertyMetadata(StrixMusicShells.ZuneDesktop, (d, e) => ((ShellPresenter)d).OnPreferredShellChanged()));
+        DependencyProperty.Register(nameof(PreferredShell), typeof(StrixMusicShells), typeof(ShellPresenter), new PropertyMetadata(StrixMusicShells.ZuneDesktop, (d, e) => ((ShellPresenter)d).OnPreferredShellChanged((StrixMusicShells)e.OldValue, (StrixMusicShells)e.NewValue)));
 
     /// <summary>
     /// Identifies the <see cref="FallbackShell"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty FallbackShellProperty =
-        DependencyProperty.Register(nameof(FallbackShell), typeof(AdaptiveShells), typeof(ShellPresenter), new PropertyMetadata(StrixMusicShells.Sandbox, (d, e) => ((ShellPresenter)d).OnFallbackShellChanged()));
+        DependencyProperty.Register(nameof(FallbackShell), typeof(AdaptiveShells), typeof(ShellPresenter), new PropertyMetadata(StrixMusicShells.Sandbox, (d, e) => ((ShellPresenter)d).OnFallbackShellChanged((AdaptiveShells)e.OldValue, (AdaptiveShells)e.NewValue)));
 
     /// <summary>
     /// Identifies the <see cref="Root"/> dependency property.
@@ -99,32 +97,56 @@ public sealed partial class ShellPresenter : UserControl
 
     private bool ShouldUseFallbackShell()
     {
-        var currentShellData = ShellInfo.All[PreferredShell];
-        var windowSize = CoreWindow.GetForCurrentThread().Bounds;
+        Guard.IsFalse(!IsLoaded);
 
-        var isWindowTooSmall = windowSize.Width < currentShellData.MinWindowSize.Width || currentShellData.MinWindowSize.Height < windowSize.Height;
-        var isWindowTooBig = windowSize.Width > currentShellData.MaxWindowSize.Width || currentShellData.MaxWindowSize.Height > windowSize.Height;
+        var currentShellData = ShellInfo.All[PreferredShell];
+
+        var isWindowTooSmall = ActualWidth < currentShellData.MinWindowSize.Width || currentShellData.MinWindowSize.Height > ActualHeight;
+        var isWindowTooBig = ActualWidth > currentShellData.MaxWindowSize.Width || currentShellData.MaxWindowSize.Height < ActualHeight;
 
         return isWindowTooBig || isWindowTooSmall;
     }
 
     private void OnRootChanged(IStrixDataRoot? oldValue, IStrixDataRoot? newValue)
     {
+        if (!IsLoaded)
+            return;
+
         if (oldValue == newValue)
             return;
 
         if (_currentShell is not null)
             _currentShell.Root = newValue;
+
+        if (_currentShell is null)
+        {
+            if (!ShouldUseFallbackShell())
+                ApplyFallbackShell();
+            else
+                ApplyPreferredShell();
+        }
     }
 
-    private void OnPreferredShellChanged()
+    private void OnPreferredShellChanged(StrixMusicShells oldValue, StrixMusicShells newValue)
     {
+        if (!IsLoaded)
+            return;
+
+        if (oldValue == newValue)
+            return;
+
         if (!ShouldUseFallbackShell())
             ApplyPreferredShell();
     }
 
-    private void OnFallbackShellChanged()
+    private void OnFallbackShellChanged(AdaptiveShells oldValue, AdaptiveShells newValue)
     {
+        if (!IsLoaded)
+            return;
+
+        if (oldValue == newValue)
+            return;
+
         if (ShouldUseFallbackShell())
             ApplyFallbackShell();
     }
@@ -133,13 +155,10 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        if (Root is null)
-            return;
-
         PART_ShellDisplay.Content = _currentShell = CreatePreferredShell(PreferredShell, Root);
         _currentIsPreferred = true;
 
-        Shell CreatePreferredShell(StrixMusicShells preferredShell, IStrixDataRoot root)
+        Shell CreatePreferredShell(StrixMusicShells preferredShell, IStrixDataRoot? root)
         {
             Shell shell = preferredShell switch
             {
@@ -159,13 +178,10 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        if (Root is null)
-            return;
-
         PART_ShellDisplay.Content = _currentShell = CreateFallbackShell(FallbackShell, Root);
         _currentIsPreferred = false;
 
-        Shell CreateFallbackShell(AdaptiveShells adaptiveShells, IStrixDataRoot root)
+        Shell CreateFallbackShell(AdaptiveShells adaptiveShells, IStrixDataRoot? root)
         {
             var shell = adaptiveShells switch
             {

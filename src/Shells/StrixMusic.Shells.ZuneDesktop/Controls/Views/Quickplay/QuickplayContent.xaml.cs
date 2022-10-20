@@ -39,10 +39,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 
         private void QuickplayContent_Loaded(object sender, RoutedEventArgs e)
         {
-            Guard.IsNotNull(DataRoot);
+            if (DataRoot is null)
+                return;
 
             var library = (LibraryViewModel)DataRoot.Library;
-            
+
             if (library.InitAlbumCollectionAsyncCommand.CanExecute(null))
                 library.InitAlbumCollectionAsyncCommand.Execute(null);
         }

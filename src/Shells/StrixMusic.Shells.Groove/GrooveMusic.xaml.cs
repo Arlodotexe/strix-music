@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls;
-using StrixMusic.Sdk.WinUI.Services.Localization;
+using StrixMusic.Sdk.WinUI.Globalization;
 using StrixMusic.Shells.Groove.Helper;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
@@ -21,6 +20,8 @@ namespace StrixMusic.Shells.Groove
 {
     public sealed partial class GrooveMusic : Shell
     {
+        private readonly NavigationTracker _navigationTracker = new();
+
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
         /// </summary>
@@ -45,13 +46,13 @@ namespace StrixMusic.Shells.Groove
         public static readonly DependencyProperty HamburgerPressedCommandProperty =
             DependencyProperty.Register(nameof(HamburgerPressedCommand), typeof(RelayCommand), typeof(GrooveMusic), new PropertyMetadata(null));
 
-        private LocalizationResourceLoader _localizationService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveMusic"/> class.
         /// </summary>
         public GrooveMusic()
         {
+            this.InitializeComponent();
+
             // Register home page navigation
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
@@ -63,11 +64,9 @@ namespace StrixMusic.Shells.Groove
             // Register playlists page navigation
             WeakReferenceMessenger.Default.Register<PlaylistsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
-            _localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
             HamburgerPressedCommand = new RelayCommand(HamburgerToggled);
 
-            RegisterPropertyChangedCallback(RootProperty, (x, _) => ((GrooveMusic)x).OnDataRootChanged());
+            RegisterPropertyChangedCallback(RootProperty, (x, _) => ((GrooveMusic)x).OnRootChanged());
 
             Unloaded += GrooveShell_Unloaded;
             Loaded += GrooveShell_Loaded;
@@ -77,10 +76,8 @@ namespace StrixMusic.Shells.Groove
         {
             Loaded -= GrooveShell_Loaded;
 
-            Guard.IsNotNull(Root, nameof(Root));
-
-            NavigationTracker.Instance.Initialize();
-            OnDataRootChanged();
+            _navigationTracker.Initialize();
+            OnRootChanged();
         }
 
         private void GrooveShell_Unloaded(object sender, RoutedEventArgs e)
@@ -90,19 +87,21 @@ namespace StrixMusic.Shells.Groove
             WeakReferenceMessenger.Default.Reset();
         }
 
-        private void OnDataRootChanged()
+        private void OnRootChanged()
         {
             if (Root is null)
                 return;
 
+            var libVm = Root.Library as LibraryViewModel ?? new LibraryViewModel(Root.Library, Root);
+
             PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel
             {
-                PlaylistCollection = (LibraryViewModel)Root.Library
+                PlaylistCollection = libVm,
             };
 
             if (Root?.Library != null)
             {
-                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)Root.Library));
+                _ = WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage(libVm));
             }
         }
 
@@ -161,7 +160,7 @@ namespace StrixMusic.Shells.Groove
 
         private void CurrentView_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            NavigationTracker.Instance.NavigateBackwards();
+            _navigationTracker.NavigateBackwards();
         }
 
         private void NavigationButtonClicked(object sender, RoutedEventArgs e)
@@ -206,9 +205,8 @@ namespace StrixMusic.Shells.Groove
                 if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
                     MainContent.ContentTemplate = (DataTemplate)dataTemplate;
             }
-
-            Guard.IsNotNull(_localizationService, nameof(_localizationService));
-            Title = _localizationService.Music?.GetString(viewModel.PageTitleResource) ?? viewModel.PageTitleResource;
+            
+            Title = LocalizationResources.Music?.GetString(viewModel.PageTitleResource) ?? viewModel.PageTitleResource;
             ShowLargeHeader = viewModel.ShowLargeHeader;
 
             UpdateSelectedNavigationButton(viewModel);

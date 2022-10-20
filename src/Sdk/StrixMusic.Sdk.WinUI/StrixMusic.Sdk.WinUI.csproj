@@ -40,16 +40,15 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Services\MediaPlayback\**" />
-    <EmbeddedResource Remove="Services\MediaPlayback\**" />
-    <None Remove="Services\MediaPlayback\**" />
-    <Page Remove="Services\MediaPlayback\**" />
-    <UpToDateCheckInput Remove="Services\MediaPlayback\**" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="DefaultShell.xaml" />
     <None Remove="LICENSE.txt" />
     <None Remove="Resources.xaml" />
+    <None Remove="Strings\en\Common.resw" />
+    <None Remove="Strings\en\Music.resw" />
+    <None Remove="Strings\en\Time.resw" />
+    <None Remove="Strings\he\Common.resw" />
+    <None Remove="Strings\he\Music.resw" />
+    <None Remove="Strings\he\Time.resw" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
@@ -99,6 +98,14 @@
     <UpToDateCheckInput Remove="Styles\Shells\NotificationAbstractUICollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en\Common.resw" />
+    <PRIResource Include="Strings\en\Music.resw" />
+    <PRIResource Include="Strings\en\Time.resw" />
+    <PRIResource Include="Strings\he\Common.resw" />
+    <PRIResource Include="Strings\he\Music.resw" />
+    <PRIResource Include="Strings\he\Time.resw" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />

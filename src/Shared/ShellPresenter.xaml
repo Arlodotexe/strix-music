@@ -8,9 +8,12 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <ContentControl
-        x:Name="PART_ShellDisplay"
-        HorizontalContentAlignment="Stretch"
-        VerticalContentAlignment="Stretch" />
+    <Grid>
+        <ContentControl
+            x:Name="PART_ShellDisplay"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch" />
+    </Grid>
 
 </UserControl>

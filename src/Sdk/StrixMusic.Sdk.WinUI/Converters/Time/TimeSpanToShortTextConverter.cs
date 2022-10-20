@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.WinUI.Services.Localization;
 using Windows.UI.Xaml.Data;
+using StrixMusic.Sdk.WinUI.Globalization;
 
 namespace StrixMusic.Sdk.WinUI.Converters.Time
 {
@@ -22,18 +22,16 @@ namespace StrixMusic.Sdk.WinUI.Converters.Time
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Convert(TimeSpan value)
         {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
             var returnValue = string.Empty;
 
             if (value.Hours > 0)
-                returnValue += string.Format(localizationService.Time?.GetString("HrCount") ?? string.Empty, value.Hours) + " ";
+                returnValue += string.Format(LocalizationResources.Time?.GetString("HrCount") ?? string.Empty, value.Hours) + " ";
 
             if (value.Minutes > 0)
-                returnValue += string.Format(localizationService.Time?.GetString("MinCount") ?? string.Empty, value.Minutes) + " ";
+                returnValue += string.Format(LocalizationResources.Time?.GetString("MinCount") ?? string.Empty, value.Minutes) + " ";
 
             if (value.Seconds > 0 || returnValue == string.Empty)
-                returnValue += string.Format(localizationService.Time?.GetString("SecCount") ?? string.Empty, value.Seconds) + " ";
+                returnValue += string.Format(LocalizationResources.Time?.GetString("SecCount") ?? string.Empty, value.Seconds) + " ";
 
             return returnValue;
         }

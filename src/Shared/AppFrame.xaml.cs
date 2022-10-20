@@ -34,7 +34,7 @@ public sealed partial class AppFrame : UserControl
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        await InitAsync();
+        //await InitAsync();
     }
 
     private async Task InitAsync()

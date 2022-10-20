@@ -15,6 +15,7 @@ namespace StrixMusic.Sdk.WinUI
         /// </summary>
         public SandboxShell()
         {
+            this.InitializeComponent();
         }
 
         private void DefaultShell_Unloaded(object sender, RoutedEventArgs e)
