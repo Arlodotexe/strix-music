@@ -34,13 +34,16 @@ public sealed partial class AppFrame : UserControl
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        //await InitAsync();
+        await InitAsync();
     }
 
     private async Task InitAsync()
     {
         // Temporary manual setup
         var pickedFolder = await PickFolderAsync();
+        if (pickedFolder is null)
+            return;
+
         var pickedFolderCore = await CreateStorageCoreAsync(pickedFolder);
 
         var cores = new[] { pickedFolderCore };
@@ -52,7 +55,9 @@ public sealed partial class AppFrame : UserControl
             new MergedCollectionConfig(MergedCollectionSorting.Ranked, cores.Select(x => x.Id))
         );
 
-        async Task<WindowsStorageFolder> PickFolderAsync()
+        await Root.InitAsync();
+
+        async Task<WindowsStorageFolder?> PickFolderAsync()
         {
             var picker = new FolderPicker
             {
@@ -63,8 +68,7 @@ public sealed partial class AppFrame : UserControl
 
             var pickedFolder = await picker.PickSingleFolderAsync();
 
-            Guard.IsNotNull(pickedFolder);
-            return new WindowsStorageFolder(pickedFolder);
+            return pickedFolder is null ? null : new WindowsStorageFolder(pickedFolder);
         }
 
         async Task<StorageCore> CreateStorageCoreAsync(IFolder folderToScan)

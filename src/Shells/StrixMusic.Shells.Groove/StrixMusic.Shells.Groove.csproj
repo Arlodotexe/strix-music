@@ -35,6 +35,7 @@
 		<None Remove="GrooveMusic.xaml" />
 		<None Remove="LICENSE.txt" />
 		<None Remove="Preview.xaml" />
+		<None Remove="Strings\en\GrooveResources.resw" />
 		<None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
 		<None Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
@@ -115,5 +116,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\..\stylecop.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PRIResource Include="Strings\en\GrooveResources.resw" />
 	</ItemGroup>
 </Project>
