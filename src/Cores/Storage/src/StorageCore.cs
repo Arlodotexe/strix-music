@@ -34,7 +34,7 @@ public class StorageCore : ICore
     /// <param name="metadataCacheFolder">A folder where metadata can be stored</param>
     /// <param name="displayName">A user-friendly display name to use for this storage core.</param>
     /// <param name="fileScanProgress">Monitor the progress of a file scan.</param>
-    protected StorageCore(IFolder folder, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
+    public StorageCore(IFolder folder, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
     {
         _metadataCacheFolder = metadataCacheFolder;
         FileScanProgress = fileScanProgress;

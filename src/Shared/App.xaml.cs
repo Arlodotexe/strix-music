@@ -38,9 +38,12 @@ namespace StrixMusic
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                // this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
+
+            SetupLogger();
 #endif
+
             if (e.PrelaunchActivated == false)
             {
                 TryEnablePrelaunch();

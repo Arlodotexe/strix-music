@@ -11,7 +11,7 @@ namespace StrixMusic.Services
     /// </summary>
     public class AppSettings : SettingsBase
     {
-        private static bool _isDebug =
+        private static readonly bool _isDebug =
 #if DEBUG
             true;
 #else
