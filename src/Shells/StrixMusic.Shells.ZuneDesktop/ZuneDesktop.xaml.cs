@@ -1,7 +1,11 @@
 ﻿using System;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.Messaging;
 using OwlCore.Storage;
+using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls;
+using StrixMusic.Shells.ZuneDesktop.Messages;
+using StrixMusic.Shells.ZuneDesktop.Messages.Pages;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -31,6 +35,13 @@ namespace StrixMusic.Shells.ZuneDesktop
             Unloaded += OnUnloaded;
 
             this.InitializeComponent();
+
+            // Register settings view navigation
+            WeakReferenceMessenger.Default.Register<SettingsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
+
+            // Register now playing view navigation.
+            WeakReferenceMessenger.Default.Register<NowPlayingViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
+            WeakReferenceMessenger.Default.Register<BackNavigationRequested>(this, (s, e) => NavigatePage(e));
         }
 
         /// <summary>
@@ -111,39 +122,6 @@ namespace StrixMusic.Shells.ZuneDesktop
 #endif
         }
 
-        private void ZuneShell_NavigationRequested(object sender, EventArgs e)
-        {
-            // TODO navigate
-            // if (e.Page is SettingsView)
-            {
-                SettingsOverlay.Visibility = Visibility.Visible;
-                NowPlayingOverlay.Visibility = Visibility.Collapsed;
-                MainContent.Visibility = Visibility.Collapsed;
-                MainContent.Visibility = Visibility.Collapsed;
-                NowPlayingBar.Visibility = Visibility.Collapsed;
-                RequestTheme(ElementTheme.Light);
-            }
-            //   else if (e.Page is NowPlayingView)
-            {
-                SettingsOverlay.Visibility = Visibility.Collapsed;
-                NowPlayingOverlay.Visibility = Visibility.Visible;
-                MainContent.Visibility = Visibility.Collapsed;
-                NowPlayingBar.Visibility = Visibility.Collapsed;
-                RequestTheme(ElementTheme.Dark);
-            }
-        }
-
-        private void ZuneShell_BackRequested(object sender, EventArgs e)
-        {
-            // TODO: Dynamic back navigation
-            // Instead of just closing settings
-            SettingsOverlay.Visibility = Visibility.Collapsed;
-            NowPlayingOverlay.Visibility = Visibility.Collapsed;
-            MainContent.Visibility = Visibility.Visible;
-            NowPlayingBar.Visibility = Visibility.Visible;
-            RequestTheme();
-        }
-
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
@@ -193,12 +171,40 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
         {
-            // TODO navigate
+            WeakReferenceMessenger.Default.Send<SettingsViewNavigationRequestMessage>();
         }
 
         private void RequestBack(object sender, RoutedEventArgs e)
         {
-            // TODO navigate
+            WeakReferenceMessenger.Default.Send<BackNavigationRequested>();
+        }
+
+        private void NavigatePage(SettingsViewNavigationRequestMessage e)
+        {
+            SettingsOverlay.Visibility = Visibility.Visible;
+            NowPlayingOverlay.Visibility = Visibility.Collapsed;
+            MainContent.Visibility = Visibility.Collapsed;
+            MainContent.Visibility = Visibility.Collapsed;
+            NowPlayingBar.Visibility = Visibility.Collapsed;
+            RequestTheme(ElementTheme.Light);
+        }
+
+        private void NavigatePage(NowPlayingViewNavigationRequestMessage e)
+        {
+            SettingsOverlay.Visibility = Visibility.Collapsed;
+            NowPlayingOverlay.Visibility = Visibility.Visible;
+            MainContent.Visibility = Visibility.Collapsed;
+            NowPlayingBar.Visibility = Visibility.Collapsed;
+            RequestTheme(ElementTheme.Dark);
+        }
+
+        private void NavigatePage(BackNavigationRequested e)
+        {
+            SettingsOverlay.Visibility = Visibility.Collapsed;
+            NowPlayingOverlay.Visibility = Visibility.Collapsed;
+            MainContent.Visibility = Visibility.Visible;
+            NowPlayingBar.Visibility = Visibility.Visible;
+            RequestTheme();
         }
 
         private void BackgroundHideCompleted(object sender, object e)
@@ -221,7 +227,7 @@ namespace StrixMusic.Shells.ZuneDesktop
                 _settingStorage = newValue;
                 _settings = new ZuneDesktopSettings(newValue);
                 _settings.PropertyChanged += SettingsService_SettingChanged;
-                
+
                 SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel(_settings);
             }
         }
