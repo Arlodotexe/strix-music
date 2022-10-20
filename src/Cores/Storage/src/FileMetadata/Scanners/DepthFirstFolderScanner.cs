@@ -16,6 +16,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Scanners;
 internal class DepthFirstFolderScanner : IFolderScanner
 {
     private readonly Dictionary<string, SubFolderData> _knownSubFolders = new();
+    private IFolderWatcher? _rootFolderWatcher;
 
     /// <summary>
     /// Creates a new instance of <see cref="DepthFirstFolderScanner"/>.
@@ -30,14 +31,18 @@ internal class DepthFirstFolderScanner : IFolderScanner
     public IFolder RootFolder { get; }
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IAddressableFile> ScanFolderAsync(CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<IAddressableFile> ScanFolderAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         _knownSubFolders.Clear();
         KnownFiles.Clear();
 
-        return RecursiveScanForFilesAsync(RootFolder, cancellationToken);
+        if (RootFolder is IMutableFolder mutableFolder)
+            await EnableFolderWatcherAsync(mutableFolder, cancellationToken);
+
+        await foreach (var item in RecursiveScanForFilesAsync(RootFolder, cancellationToken))
+            yield return item;
     }
 
     private async IAsyncEnumerable<IAddressableFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -51,7 +56,9 @@ internal class DepthFirstFolderScanner : IFolderScanner
         await foreach (var item in folderToScan.GetItemsAsync(cancellationToken: cancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            _knownSubFolders[folderToScan.Id].Children.Add(item);
+
+            if (RootFolder.Id != folderToScan.Id)
+                _knownSubFolders[folderToScan.Id].Children.Add(item);
 
             if (item is IAddressableFile file)
             {
@@ -79,7 +86,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
         var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
-        _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
+
+        if (folder.Id == RootFolder.Id)
+            _rootFolderWatcher = folderWatcher;
+        else
+            _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
 
         folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
     }
@@ -87,12 +98,17 @@ internal class DepthFirstFolderScanner : IFolderScanner
     private async Task DisableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var folderWatcher = _knownSubFolders[folder.Id].FolderWatcher;
+
+        var folderWatcher = folder.Id == RootFolder.Id ? _rootFolderWatcher : _knownSubFolders[folder.Id].FolderWatcher;
         Guard.IsNotNull(folderWatcher);
 
         folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
 
-        _knownSubFolders[folder.Id].FolderWatcher = null;
+        if (folder.Id == RootFolder.Id)
+            _rootFolderWatcher = null;
+        else
+            _knownSubFolders[folder.Id].FolderWatcher = null;
+
         await folderWatcher.DisposeAsync();
         cancellationToken.ThrowIfCancellationRequested();
     }
@@ -171,6 +187,12 @@ internal class DepthFirstFolderScanner : IFolderScanner
     public void Dispose()
     {
         foreach (var item in _knownSubFolders)
-            item.Value.FolderWatcher?.Dispose();
+        {
+            if (item.Value.folder is IMutableFolder mutableFolder)
+                _ = DisableFolderWatcherAsync(mutableFolder, CancellationToken.None);
+        }
+
+        if (RootFolder is IMutableFolder mutableRoot)
+            _ = DisableFolderWatcherAsync(mutableRoot, CancellationToken.None);
     }
 }
