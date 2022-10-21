@@ -132,7 +132,12 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public IReadOnlyList<IDevice> Devices => _devices;
 
     /// <inheritdoc/>
-    public ILibrary Library { get; }
+    ILibrary IStrixDataRoot.Library => Library;
+
+    /// <summary>
+    /// A ViewModel wrapper for <see cref="IStrixDataRoot.Library"/>.
+    /// </summary>
+    public LibraryViewModel Library { get; }
 
     /// <inheritdoc/>
     public IPlayableCollectionGroup? Pins { get; private set; }

@@ -1,34 +1,34 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
-using System.Collections.Concurrent;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using OwlCore.ComponentModel;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
     /// <summary>
-    /// Zune implmenation for the <see cref="ZuneTrackCollection"/>.
+    /// Zune implementation of a track collection.
     /// </summary>
     [INotifyPropertyChanged]
     public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
-        private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
+        private readonly ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
         // Cache artist item values
         // Keeping a minimum cache that updates with events allows us to
         // avoid checking all items when a single item updates.
-        private ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
+        private readonly ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
 
         /// <summary>
         /// Creates a new instance for <see cref="ZuneTrackCollection"/>.

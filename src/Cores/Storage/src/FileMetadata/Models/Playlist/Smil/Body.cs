@@ -5,7 +5,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Models.Playlist.Smil;
 /// <summary>
 /// Holds information regarding playlist sequences.
 /// </summary>
-internal class Body
+public class Body
 {
     ///<inheritdoc cref="Seq"/>
     [XmlElement("seq")]
