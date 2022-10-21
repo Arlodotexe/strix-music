@@ -52,7 +52,7 @@ public sealed partial class AppFrame : UserControl
         (
             id: ApplicationView.GetForCurrentView().Id.ToString(),
             cores: cores,
-            new MergedCollectionConfig(MergedCollectionSorting.Ranked, cores.Select(x => x.Id))
+            new MergedCollectionConfig(MergedCollectionSorting.Ranked, cores.Select(x => x.InstanceId).ToList())
         );
 
         await Root.InitAsync();
