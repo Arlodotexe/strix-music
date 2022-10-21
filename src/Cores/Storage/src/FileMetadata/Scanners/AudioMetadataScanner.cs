@@ -471,7 +471,7 @@ internal static class AudioMetadataScanner
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // If there's no metadata to read, return null
-                if (tag == null)
+                if (tag == null || tag.IsEmpty)
                 {
                     Logger.LogInformation($"File {file.Id}: no metadata found.");
                     return null;
