@@ -5,7 +5,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Models.Playlist.Smil;
 /// <summary>
 /// Holds all information related to the added track.
 /// </summary>
-internal class Media
+public class Media
 {
     /// <summary>
     /// The location of the track.

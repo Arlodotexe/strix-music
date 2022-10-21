@@ -5,7 +5,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Models.Playlist.Smil;
 /// <summary>
 /// The meta information regarding playlist.
 /// </summary>
-internal class Meta
+public class Meta
 {
     /// <summary>
     /// Name of the playlist.

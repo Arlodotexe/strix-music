@@ -6,7 +6,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Models.Playlist.Smil;
 /// <see cref="Smil"/> playlist model used for deserialization.
 /// </summary>
 [XmlRoot("smil")]
-internal class Smil
+public class Smil
 {
     ///<inheritdoc cref="Head"/>
     [XmlElement("head")]
