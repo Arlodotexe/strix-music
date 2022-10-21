@@ -366,14 +366,14 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         Guard.IsNotNull(fileMetadata.TrackMetadata);
         await DigestTrackAsync(fileMetadata.TrackMetadata);
 
+        if (fileMetadata.AlbumMetadata is not null)
+            await DigestAlbumAsync(fileMetadata.AlbumMetadata);
+
         Guard.IsNotNull(fileMetadata.AlbumArtistMetadata);
         await DigestArtistsAsync(fileMetadata.AlbumArtistMetadata.ToArray(), AlbumArtists);
 
         Guard.IsNotNull(fileMetadata.TrackArtistMetadata);
         await DigestArtistsAsync(fileMetadata.TrackArtistMetadata.ToArray(), TrackArtists);
-
-        if (fileMetadata.AlbumMetadata is not null)
-            await DigestAlbumAsync(fileMetadata.AlbumMetadata);
 
         Task DigestTrackAsync(TrackMetadata track) => Tracks.AddOrUpdateAsync(new[] { track });
         Task DigestImagesAsync(ImageMetadata[] images) => Images.AddOrUpdateAsync(images);
