@@ -81,7 +81,10 @@ public sealed partial class AppFrame : UserControl
                 metadataCacheFolder: new WindowsStorageFolder(settingsFolder),
                 displayName: folderToScan.GetType().Name,
                 fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}"))
-            );
+            )
+            {
+                ScannerWaitBehavior = ScannerWaitBehavior.NeverWait
+            };
         }
     }
 
