@@ -168,6 +168,8 @@ public class StorageCore : ICore
                 if (existingMetadata is null)
                     await scanningTask;
             }
+
+            await ((StorageCoreLibrary)Library).InitAsync(cancellationToken);
         }
 
         CoreState = CoreState.Loaded;
@@ -225,7 +227,7 @@ public class StorageCore : ICore
         }
 
         var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
-            
+
         return new MediaSourceConfig(track, track.Id, stream, mimeType);
     }
 }
