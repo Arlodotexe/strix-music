@@ -72,6 +72,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         {
             ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
 
+            if (DataRoot?.Library.InitArtistCollectionAsyncCommand.CanExecute(null) ?? false)
+                DataRoot.Library.InitArtistCollectionAsyncCommand.Execute(null);
+
             SwapPage("Artists");
         }
 
@@ -79,12 +82,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         {
             ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Albums;
 
+            if (DataRoot?.Library.InitAlbumCollectionAsyncCommand.CanExecute(null) ?? false)
+                DataRoot.Library.InitAlbumCollectionAsyncCommand.Execute(null);
+
             SwapPage("Albums");
         }
 
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
             ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Tracks;
+
+            if (DataRoot?.Library.InitTrackCollectionAsyncCommand.CanExecute(null) ?? false)
+                DataRoot.Library.InitTrackCollectionAsyncCommand.Execute(null);
 
             SwapPage("Songs");
         }
