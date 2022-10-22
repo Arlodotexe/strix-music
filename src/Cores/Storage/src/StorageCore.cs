@@ -155,15 +155,15 @@ public class StorageCore : ICore
             FileMetadataManager = new FileMetadataManager(FolderScanner, _metadataCacheFolder, FileScanProgress);
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.AlwaysWait)
-                await FileMetadataManager.ScanAsync(cancellationToken);
+                await Task.Run(() => FileMetadataManager.ScanAsync(cancellationToken), cancellationToken);
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.NeverWait)
-                _ = FileMetadataManager.ScanAsync(cancellationToken);
+                _ = Task.Run(() => FileMetadataManager.ScanAsync(cancellationToken), cancellationToken);
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.WaitIfNoData)
             {
                 var existingMetadata = await FileMetadataManager.TryGetFileMetadataCacheAsync(cancellationToken);
-                var scanningTask = FileMetadataManager.ScanAsync(cancellationToken);
+                var scanningTask = Task.Run(() => FileMetadataManager.ScanAsync(cancellationToken), cancellationToken);
 
                 if (existingMetadata is null)
                     await scanningTask;
