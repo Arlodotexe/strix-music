@@ -14,6 +14,8 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Diagnostics;
+using Ipfs.Http;
+using OwlCore.Kubo;
 
 namespace StrixMusic;
 
@@ -40,13 +42,16 @@ public sealed partial class AppFrame : UserControl
     private async Task InitAsync()
     {
         // Temporary manual setup
-        var pickedFolder = await PickFolderAsync();
-        if (pickedFolder is null)
+        var folder = await PickFolderAsync();
+        if (folder is null)
             return;
+/*
+        var ipfsClient = new IpfsClient();
+        var folder = new MfsFolder("/Music/", ipfsClient);*/
 
-        var pickedFolderCore = await CreateStorageCoreAsync(pickedFolder);
+        var storageCore = await CreateStorageCoreAsync(folder);
 
-        var cores = new[] { pickedFolderCore };
+        var cores = new[] { storageCore };
 
         Root = new MergedCore
         (
