@@ -424,6 +424,9 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         var cachedFile = await GetMetadataCacheFile(cancellationToken);
         using var fileCacheStream = await cachedFile.OpenStreamAsync(cancellationToken: cancellationToken);
 
+        if (fileCacheStream.Length == 0)
+            return null;
+
         try
         {
             var cache = await FileMetadataRepoSerializer.Singleton.DeserializeAsync<Dictionary<string, Models.FileMetadata>>(fileCacheStream, cancellationToken);
