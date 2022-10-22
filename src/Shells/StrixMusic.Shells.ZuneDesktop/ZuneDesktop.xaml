@@ -13,6 +13,7 @@
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
     xmlns:nowplayingstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying"
+    xmlns:nowplayingview="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.NowPlayingView"
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
     xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
@@ -176,7 +177,7 @@
         </Rectangle>
 
         <!--NowPlayingOverlay-->
-        <views:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <nowplayingview:ZuneNowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         <controls:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" Devices="{x:Bind Root.Devices, Mode=OneWay}" />
     </Grid>
