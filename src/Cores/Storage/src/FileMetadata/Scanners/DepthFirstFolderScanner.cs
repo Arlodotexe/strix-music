@@ -38,17 +38,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
         _knownSubFolders.Clear();
         KnownFiles.Clear();
 
-        if (RootFolder is IMutableFolder mutableFolder)
-            await EnableFolderWatcherAsync(mutableFolder, cancellationToken);
-
         await foreach (var item in RecursiveScanForFilesAsync(RootFolder, cancellationToken))
             yield return item;
     }
 
     private async IAsyncEnumerable<IAddressableFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        if (folderToScan != RootFolder)
-            _knownSubFolders[folderToScan.Id] = new SubFolderData((IAddressableFolder)folderToScan, children: new List<IAddressableStorable>(), folderWatcher: null);
+        _knownSubFolders[folderToScan.Id] = new SubFolderData((IAddressableFolder)folderToScan, children: new List<IAddressableStorable>(), folderWatcher: null);
 
         if (folderToScan is IMutableFolder mutableFolder)
             await EnableFolderWatcherAsync(mutableFolder, cancellationToken);
@@ -57,7 +53,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (RootFolder.Id != folderToScan.Id)
+            if (RootFolder.Id != item.Id)
                 _knownSubFolders[folderToScan.Id].Children.Add(item);
 
             if (item is IAddressableFile file)
@@ -119,7 +115,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
         {
             foreach (var newItem in e.NewItems)
             {
-                Guard.IsOfType<IAddressableStorable>(newItem);
+                Guard.IsTrue(newItem is IAddressableStorable);
                 var parentFolder = ((IFolderWatcher)sender).Folder;
 
                 // Parent folder must be in _knownSubFolders already.
