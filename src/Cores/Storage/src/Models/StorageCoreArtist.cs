@@ -129,10 +129,15 @@ public sealed class StorageCoreArtist : ICoreArtist
         Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
         if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
         {
-            // Lists have identical content, so no images have changed.
+            // Lists have identical content, so no items have changed.
             return;
         }
 
+        // ====
+        // this might be the problem
+        // does oldTrackIds have all known ids? is newTrackIds adding to the oldTrackIds or replacing the entire list?
+        // is it emitting a different list of track IDs scanned from a different audio file?
+        // ====
         var addedImages = newTrackIds.Except(oldTrackIds);
         var removedImages = oldTrackIds.Except(newTrackIds);
 
