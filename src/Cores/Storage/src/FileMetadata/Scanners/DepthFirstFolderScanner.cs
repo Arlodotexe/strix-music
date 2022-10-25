@@ -44,7 +44,10 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
     private async IAsyncEnumerable<IAddressableFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        _knownSubFolders[folderToScan.Id] = new SubFolderData((IAddressableFolder)folderToScan, children: new List<IAddressableStorable>(), folderWatcher: null);
+        lock (_knownSubFolders)
+        {
+            _knownSubFolders[folderToScan.Id] = new SubFolderData((IAddressableFolder)folderToScan, children: new List<IAddressableStorable>(), folderWatcher: null);
+        }
 
         if (folderToScan is IMutableFolder mutableFolder)
             await EnableFolderWatcherAsync(mutableFolder, cancellationToken);
@@ -83,10 +86,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (folder.Id == RootFolder.Id)
-            _rootFolderWatcher = folderWatcher;
-        else
-            _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
+        lock (_knownSubFolders)
+        {
+            if (folder.Id == RootFolder.Id)
+                _rootFolderWatcher = folderWatcher;
+            else
+                _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
+        }
 
         folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
     }
@@ -103,7 +109,12 @@ internal class DepthFirstFolderScanner : IFolderScanner
         if (folder.Id == RootFolder.Id)
             _rootFolderWatcher = null;
         else
-            _knownSubFolders[folder.Id].FolderWatcher = null;
+        {
+            lock (_knownSubFolders)
+            {
+                _knownSubFolders[folder.Id].FolderWatcher = null;
+            }
+        }
 
         await folderWatcher.DisposeAsync();
         cancellationToken.ThrowIfCancellationRequested();
@@ -120,8 +131,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
                 // Parent folder must be in _knownSubFolders already.
                 // Record this new item as a child of the parent folder.
-                if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
-                    subFolderData.Children.Add((IAddressableStorable)newItem);
+                lock (_knownSubFolders)
+                {
+                    if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
+                        subFolderData.Children.Add((IAddressableStorable)newItem);
+                }
 
                 if (newItem is IAddressableFile newFile)
                     KnownFiles.Add(newFile);
@@ -144,16 +158,26 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 if (KnownFiles.FirstOrDefault(x => x.Id == removedStorable.Id) is { } knownFile)
                     KnownFiles.Remove(knownFile);
 
+                SubFolderData? targetSubFolderData;
+
+                lock (_knownSubFolders)
+                {
+                    targetSubFolderData = _knownSubFolders.FirstOrDefault(x => x.Key == removedStorable.Id).Value;
+                }
+
                 // Remove known folder and all children, recursively.
-                if (_knownSubFolders.FirstOrDefault(x => x.Key == removedStorable.Id).Value is { } subFolderData)
-                    await RemoveSubFolderRecursiveAsync(subFolderData);
+                if (targetSubFolderData is not null)
+                    await RemoveSubFolderRecursiveAsync(targetSubFolderData);
             }
         }
     }
 
     private async Task RemoveSubFolderRecursiveAsync(SubFolderData subFolderToRemove)
     {
-        _knownSubFolders.Remove(subFolderToRemove.Folder.Id);
+        lock (_knownSubFolders)
+        {
+            _knownSubFolders.Remove(subFolderToRemove.Folder.Id);
+        }
 
         if (subFolderToRemove.Folder is IMutableFolder mutableFolder)
             await DisableFolderWatcherAsync(mutableFolder, CancellationToken.None);
@@ -163,10 +187,19 @@ internal class DepthFirstFolderScanner : IFolderScanner
             if (childItem is IFile childFile && KnownFiles.FirstOrDefault(x => x.Id == childFile.Id) is { } knownChildFile)
                 KnownFiles.Remove(knownChildFile);
 
-            if (childItem is IFolder childFolder && _knownSubFolders.FirstOrDefault(x => x.Key == childFolder.Id).Value is { } knownChildFolder)
+            SubFolderData? targetSubFolderData;
+
+            lock (_knownSubFolders)
             {
-                await RemoveSubFolderRecursiveAsync(knownChildFolder);
+                if (childItem is not IFolder childFolder)
+                    continue;
+
+                targetSubFolderData = _knownSubFolders.FirstOrDefault(x => x.Key == childFolder.Id).Value;
             }
+
+            if (targetSubFolderData is not null)
+                await RemoveSubFolderRecursiveAsync(targetSubFolderData);
+
         }
     }
 
