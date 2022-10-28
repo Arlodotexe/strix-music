@@ -118,7 +118,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         var fileId = AudioMetadataScanner.GetFileIdFromImageId(imageId);
 
         // Check if we've seen the file already. KnownFiles is expected to be always up to date.
-        var targetFile = _folderScanner.KnownFiles.FirstOrDefault(x => x.Id == fileId);
+        var targetFile = _folderScanner.KnownFiles.ToArray().FirstOrDefault(x => x.Id == fileId);
         if (targetFile is null)
         {
             // This method can't be used before a scan is kicked off in the core.
@@ -138,7 +138,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
             if (targetFile is null)
             {
                 // Scan ran to completion. If the file exists at all, we should have it now.
-                targetFile = _folderScanner.KnownFiles.FirstOrDefault(x => x.Id == fileId);
+                targetFile = _folderScanner.KnownFiles.ToArray().FirstOrDefault(x => x.Id == fileId);
             }
 
             // The file does not exist.
