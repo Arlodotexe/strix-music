@@ -33,7 +33,7 @@ internal static class AudioMetadataScanner
 
         if (scanType.HasFlag(MetadataScanTypes.TagLib))
         {
-            var id3Metadata = await GetId3Metadata(file, cancellationToken);
+            var id3Metadata = await GetTagLibMetadata(file, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (id3Metadata is not null)
@@ -220,7 +220,7 @@ internal static class AudioMetadataScanner
 
         // Albums
         fileMetadata.AlbumMetadata.TrackIds.Add(fileMetadata.TrackMetadata.Id);
-            
+
         foreach (var artistMetadata in fileMetadata.AlbumArtistMetadata)
         {
             Guard.IsNotNull(artistMetadata.Id, nameof(artistMetadata.Id));
@@ -446,20 +446,31 @@ internal static class AudioMetadataScanner
         return relatedMetadata;
     }
 
-    public static async Task<Models.FileMetadata?> GetId3Metadata(IFile file, CancellationToken cancellationToken)
+    /// <summary>
+    /// Extracts audio metadata from a file using TagLib.
+    /// </summary>
+    /// <param name="file">The file to scan.</param>
+    /// <param name="cancellationToken">A token that can be used to cancel the ongoing task.</param>
+    /// <returns>A task representing the asynchronous operation. Value is the found audio metadata, or null if none was found.</returns>
+    public static async Task<Models.FileMetadata?> GetTagLibMetadata(IFile file, CancellationToken cancellationToken)
     {
-        Logger.LogInformation($"{nameof(GetId3Metadata)} entered for file {file.Id}");
+        Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");
+
+        // Only scan files supported by taglib
+        var mimeType = file.Name.GetMimeType();
+        if (!TagLibHelper.TagLibFileFactory.ContainsKey(mimeType))
+            return null;
 
         try
         {
             using var stream = await file.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
-
             cancellationToken.ThrowIfCancellationRequested();
+
+            TagLibHelper.TryAddManualFileTypeResolver();
 
             if (stream.CanSeek)
                 stream.Seek(0, SeekOrigin.Begin);
 
-            TagLibHelper.TryAddManualFileTypeResolver();
 
             Logger.LogInformation($"Loading {file.Name} with TagLib");
 
@@ -494,6 +505,10 @@ internal static class AudioMetadataScanner
                     var height = imageFile.Properties.PhotoHeight;
                     var width = imageFile.Properties.PhotoWidth;
                     */
+
+                    // Using PictureLazy closes the original stream.
+                    // Reopen it to read image properties.
+                    using var imageStream = await file.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
 
                     imageMetadata.Add(new ImageMetadata
                     {
