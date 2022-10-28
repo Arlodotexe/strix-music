@@ -506,10 +506,6 @@ internal static class AudioMetadataScanner
                     var width = imageFile.Properties.PhotoWidth;
                     */
 
-                    // Using PictureLazy closes the original stream.
-                    // Reopen it to read image properties.
-                    using var imageStream = await file.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
-
                     imageMetadata.Add(new ImageMetadata
                     {
                         Id = $"{file.Id}.Id3.Image.{index}",
