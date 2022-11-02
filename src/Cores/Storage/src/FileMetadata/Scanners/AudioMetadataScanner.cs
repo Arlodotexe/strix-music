@@ -454,12 +454,12 @@ internal static class AudioMetadataScanner
     /// <returns>A task representing the asynchronous operation. Value is the found audio metadata, or null if none was found.</returns>
     public static async Task<Models.FileMetadata?> GetTagLibMetadata(IFile file, CancellationToken cancellationToken)
     {
-        Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");
-
         // Only scan files supported by taglib
         var mimeType = file.Name.GetMimeType();
         if (!TagLibHelper.TagLibFileFactory.ContainsKey(mimeType))
             return null;
+
+        Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");
 
         try
         {
@@ -470,7 +470,6 @@ internal static class AudioMetadataScanner
 
             if (stream.CanSeek)
                 stream.Seek(0, SeekOrigin.Begin);
-
 
             Logger.LogInformation($"Loading {file.Name} with TagLib");
 

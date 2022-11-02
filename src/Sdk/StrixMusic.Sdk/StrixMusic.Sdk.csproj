@@ -47,6 +47,7 @@
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.47.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="OwlCore" Version="0.1.0" />
+		<PackageReference Include="OwlCore.Extensions" Version="0.4.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
