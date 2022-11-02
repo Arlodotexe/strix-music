@@ -37,7 +37,7 @@ internal sealed class ArtistRepository : IArtistRepository
     public string Id { get; }
 
     /// <inheritdoc />
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public Task AddOrUpdateAsync(params ArtistMetadata[] metadata)

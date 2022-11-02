@@ -33,8 +33,8 @@ internal class ImageRepository : IImageRepository
     /// <inheritdoc/>
     public event EventHandler<IEnumerable<ImageMetadata>>? MetadataAdded;
 
-    /// <inheritdoc/>
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    /// <inheritdoc />
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public Task AddOrUpdateAsync(params ImageMetadata[] metadata)

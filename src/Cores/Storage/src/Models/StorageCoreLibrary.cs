@@ -39,10 +39,10 @@ public sealed class StorageCoreLibrary : StorageCorePlayableCollectionGroupBase,
 
         AttachEvents(_fileMetadataManager);
 
-        TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
-        TotalArtistItemsCount = await _fileMetadataManager.AlbumArtists.GetItemCount();
-        TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
-        TotalTrackCount = await _fileMetadataManager.Tracks.GetItemCount();
+        TotalAlbumItemsCount = _fileMetadataManager.Albums.GetItemCount();
+        TotalArtistItemsCount = _fileMetadataManager.AlbumArtists.GetItemCount();
+        TotalPlaylistItemsCount = _fileMetadataManager.Playlists.GetItemCount();
+        TotalTrackCount = _fileMetadataManager.Tracks.GetItemCount();
 
         await base.InitAsync(cancellationToken);
 

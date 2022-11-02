@@ -15,7 +15,7 @@ internal interface IMetadataRepository<TFileMetadata>
     /// Returns the number of items currently loaded in the repository.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public Task<int> GetItemCount();
+    public int GetItemCount();
 
     /// <summary>
     /// Adds a metadata to the repo, or updates an existing metadata.
