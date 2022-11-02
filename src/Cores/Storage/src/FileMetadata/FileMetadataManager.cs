@@ -360,26 +360,34 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
     private async Task DigestFileMetadataAsync(Models.FileMetadata fileMetadata)
     {
+        // Metadata repos digest data then emit changes before completing the task
+        // Which leads to scenarios such as an Album being updated with Track IDs, but the TrackIDs haven't been added yet.
+        // Metadata must exist in all repos BEFORE changes are emitted.
+        // Concurrency is one way to solve this.
+        var repoUpdateTasks = new List<Task>();
+
         Guard.IsNotNull(fileMetadata.ImageMetadata);
-        await DigestImagesAsync(fileMetadata.ImageMetadata.ToArray());
-
-        Guard.IsNotNull(fileMetadata.TrackMetadata);
-        await DigestTrackAsync(fileMetadata.TrackMetadata);
-
-        if (fileMetadata.AlbumMetadata is not null)
-            await DigestAlbumAsync(fileMetadata.AlbumMetadata);
-
-        Guard.IsNotNull(fileMetadata.AlbumArtistMetadata);
-        await DigestArtistsAsync(fileMetadata.AlbumArtistMetadata.ToArray(), AlbumArtists);
+        repoUpdateTasks.Add(DigestImagesAsync(fileMetadata.ImageMetadata.ToArray()));
 
         Guard.IsNotNull(fileMetadata.TrackArtistMetadata);
-        await DigestArtistsAsync(fileMetadata.TrackArtistMetadata.ToArray(), TrackArtists);
+        repoUpdateTasks.Add(DigestArtistsAsync(fileMetadata.TrackArtistMetadata.ToArray(), TrackArtists));
 
-        Task DigestTrackAsync(TrackMetadata track) => Tracks.AddOrUpdateAsync(new[] { track });
+        Guard.IsNotNull(fileMetadata.TrackMetadata);
+        repoUpdateTasks.Add(DigestTrackAsync(fileMetadata.TrackMetadata));
+
+        if (fileMetadata.AlbumMetadata is not null)
+            repoUpdateTasks.Add(DigestAlbumAsync(fileMetadata.AlbumMetadata));
+
+        Guard.IsNotNull(fileMetadata.AlbumArtistMetadata);
+        repoUpdateTasks.Add(DigestArtistsAsync(fileMetadata.AlbumArtistMetadata.ToArray(), AlbumArtists));
+
+        await Task.WhenAll(repoUpdateTasks);
+
         Task DigestImagesAsync(ImageMetadata[] images) => Images.AddOrUpdateAsync(images);
+        Task DigestTrackAsync(TrackMetadata track) => Tracks.AddOrUpdateAsync(new[] { track });
         Task DigestAlbumAsync(AlbumMetadata album) => DigestAlbumsAsync(new[] { album });
         Task DigestAlbumsAsync(AlbumMetadata[] albums) => Albums.AddOrUpdateAsync(albums);
-        async Task DigestArtistsAsync(ArtistMetadata[] artists, IArtistRepository artistRepository) => await artistRepository.AddOrUpdateAsync(artists.ToArray());
+        Task DigestArtistsAsync(ArtistMetadata[] artists, IArtistRepository artistRepository) => artistRepository.AddOrUpdateAsync(artists.ToArray());
     }
 
     private async Task SaveFileMetadataCache(Dictionary<string, Models.FileMetadata> fileMetadataCache, CancellationToken cancellationToken)
