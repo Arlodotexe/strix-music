@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -76,6 +77,11 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
             _scanProgress?.Report(value);
         }
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating how many files should be processed before emitting metadata.
+    /// </summary>
+    public int ScanBatchSize { get; set; } = 10;
 
     /// <summary>
     /// Stores album metadata.
@@ -165,7 +171,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
     public async Task ScanAsync(CancellationToken cancellationToken = default)
     {
         var seenFiles = new List<IFile>();
-        var digestedMetadata = new List<Models.FileMetadata>();
+        var allValidItems = new List<Models.FileMetadata>();
 
         Logger.LogInformation($"Scan started. Setting up.");
         {
@@ -190,63 +196,90 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 await InitAsync(cancellationToken);
         }
 
+        Logger.LogInformation($"Loading metadata cache");
         {
-            Logger.LogInformation($"Loading metadata cache");
             var fileMetadataCache = await TryGetFileMetadataCacheAsync(cancellationToken) ?? new();
 
-            // Files must exist before relevant metadata is made available.
-            // Metadata for files that can't be found, shouldn't be available.
+            // A file must be discovered before cached metadata is made available.
             Logger.LogInformation($"Discovering files");
-            ScanState = new FileScanState(FileScanStage.ScanningFiles, ScanState.FilesProcessed, ScanState.FilesFound);
+            ScanState = new FileScanState(FileScanStage.ScanningFiles, allValidItems.Count, seenFiles.Count);
 
-            await foreach (var file in _folderScanner.ScanFolderAsync(cancellationToken))
+            // Discover files and emit any cached metadata.
+            var discoveredUncachedFiles = new List<IFile>();
+            await foreach (var files in _folderScanner.ScanFolderAsync(cancellationToken).Batch(ScanBatchSize, cancellationToken))
             {
-                ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed, ScanState.FilesFound + 1);
-                seenFiles.Add(file);
+                seenFiles.AddRange(files);
+                ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed, ScanState.FilesFound + ScanBatchSize);
 
-                // If cached metadata is found, we have everything we need to emit Album, Artist, Track info safely.
-                if (fileMetadataCache.TryGetValue(file.Id, out var fileMetadata))
+                // Get cached/uncached files
+                var cachedFiles = files.Where(x => fileMetadataCache.ContainsKey(x.Id)).ToArray();
+                var cachedMetadataWithKnownFile = fileMetadataCache.Where(x => cachedFiles.Any(y => y.Id == x.Key)).Select(x => x.Value).ToArray();
+
+                // If no discovered files have cached data, scan the files now.
+                if (cachedFiles.Length == 0)
                 {
-                    digestedMetadata.Add(fileMetadata);
-                    fileMetadata.Id = file.Id;
-
-                    GarbageCollectMetadataReferences(digestedMetadata);
-
-                    Logger.LogInformation($"Digesting file metadata {fileMetadata.Id}");
-                    await DigestFileMetadataAsync(fileMetadata);
-
-                    // Get updated metadata as a low priority fire-and-forget task.
-                    _ = Task.Run(() =>
-                    {
-                        Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                        return UpdateMetadataAsync();
-                    }, cancellationToken);
+                    await ScanUncachedFilesAsync(files.Except(cachedFiles));
+                }
+                else
+                {
+                    // Otherwise, save discovered files to scan later.
+                    discoveredUncachedFiles.AddRange(files.Except(cachedFiles));
                 }
 
-                // If no cache, scan file.
-                if (fileMetadata is null)
+                // Process data
+                allValidItems.AddRange(cachedMetadataWithKnownFile);
+                GarbageCollectMetadataReferences(allValidItems);
+
+                // Emit existing metadata
+                ScanState = new FileScanState(ScanState.Stage, allValidItems.Count, seenFiles.Count);
+                await DigestFileMetadataAsync(cachedMetadataWithKnownFile);
+            }
+
+            // Scan remaining files in manual batches.
+            var filesToScan = new Queue<IFile>(discoveredUncachedFiles);
+            while (filesToScan.Count > 0)
+            {
+                var batch = new List<IFile>();
+                for (var i = 0; i <= ScanBatchSize; i++)
                 {
-                    await UpdateMetadataAsync();
+                    if (filesToScan.Count == 0)
+                        continue;
+
+                    batch.Add(filesToScan.Dequeue());
                 }
 
-                async Task UpdateMetadataAsync()
+                await ScanUncachedFilesAsync(batch);
+            }
+
+            async Task ScanUncachedFilesAsync(IEnumerable<IFile> files)
+            {
+                // Scan uncached audio files
+                var processedMetadata = await files.InParallel(ScanFileAsync);
+
+                // Process uncached metadata
+                allValidItems.AddRange(processedMetadata.PruneNull());
+
+                // Emit and save new metadata
+                await DigestFileMetadataAsync(processedMetadata.PruneNull().ToArray());
+                await SaveFileMetadataCache(fileMetadataCache, cancellationToken);
+
+                async Task<Models.FileMetadata?> ScanFileAsync(IFile file)
                 {
                     // File properties are MUCH faster than taglib. If music properties are present, use them. Otherwise, use taglib.
-                    fileMetadata = await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.FileProperties, cancellationToken) ??
-                                   await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.TagLib, cancellationToken);
+                    var fileMetadata = await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.FileProperties, cancellationToken) ??
+                                       await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.TagLib, cancellationToken);
+
+                    ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed + 1, ScanState.FilesFound);
 
                     // File has no audio metadata
                     if (fileMetadata is null)
-                        return;
+                        return null;
 
-                    fileMetadata.Id = file.Id;
+                    Guard.IsEqualTo(fileMetadata.Id, file.Id);
+                    fileMetadataCache.TryAdd(file.Id, fileMetadata);
 
-                    Logger.LogInformation($"Digesting file metadata {fileMetadata.Id}");
-                    await DigestFileMetadataAsync(fileMetadata);
-                    await SaveFileMetadataCache(fileMetadataCache, cancellationToken);
+                    return fileMetadata;
                 }
-
-                ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed + 1, ScanState.FilesFound);
             }
         }
 
@@ -259,9 +292,11 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var playlistData = await PlaylistMetadataScanner.ScanPlaylistFileAsync(file, _folderScanner.KnownFiles.ToList<IFile>(), cancellationToken);
+
                 if (playlistData is not null)
                 {
-                    await Playlists.AddOrUpdateAsync(new[] { playlistData });
+                    await Playlists.AddOrUpdateAsync(new[] { playlistData
+});
                 }
             }
 
@@ -275,7 +310,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         _inProgressScanTaskCompletionSource = null;
     }
 
-    private void GarbageCollectMetadataReferences(IList<Models.FileMetadata> allKnownItems)
+    private static void GarbageCollectMetadataReferences(IList<Models.FileMetadata> allKnownItems)
     {
         var allKnownTracks = allKnownItems.Select(x => x.TrackMetadata).PruneNull().ToList();
         var allKnownAlbumArtists = allKnownItems.SelectMany(x => x.AlbumArtistMetadata).ToList();
@@ -358,7 +393,9 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         }
     }
 
-    private async Task DigestFileMetadataAsync(Models.FileMetadata fileMetadata)
+    private Task DigestFileMetadataAsync(IEnumerable<Models.FileMetadata> scannedData) => DigestFileMetadataAsync(scannedData.ToArray());
+
+    private async Task DigestFileMetadataAsync(params Models.FileMetadata[] scannedData)
     {
         // Metadata repos digest data then emit changes before completing the task
         // Which leads to scenarios such as an Album being updated with Track IDs, but the TrackIDs haven't been added yet.
@@ -366,31 +403,25 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         // Concurrency is one way to solve this.
         var repoUpdateTasks = new List<Task>();
 
-        Guard.IsNotNull(fileMetadata.ImageMetadata);
-        repoUpdateTasks.Add(DigestImagesAsync(fileMetadata.ImageMetadata.ToArray()));
+        repoUpdateTasks.Add(DigestImagesAsync(scannedData.SelectMany(x => x.ImageMetadata).PruneNull().ToArray()));
 
-        Guard.IsNotNull(fileMetadata.TrackArtistMetadata);
-        repoUpdateTasks.Add(DigestArtistsAsync(fileMetadata.TrackArtistMetadata.ToArray(), TrackArtists));
+        repoUpdateTasks.Add(DigestArtistsAsync(scannedData.SelectMany(x => x.TrackArtistMetadata).PruneNull().ToArray(), TrackArtists));
 
-        Guard.IsNotNull(fileMetadata.TrackMetadata);
-        repoUpdateTasks.Add(DigestTrackAsync(fileMetadata.TrackMetadata));
+        repoUpdateTasks.Add(DigestTracksAsync(scannedData.Select(x => x.TrackMetadata).PruneNull().ToArray()));
 
-        if (fileMetadata.AlbumMetadata is not null)
-            repoUpdateTasks.Add(DigestAlbumAsync(fileMetadata.AlbumMetadata));
+        repoUpdateTasks.Add(DigestAlbumsAsync(scannedData.Select(x => x.AlbumMetadata).PruneNull().ToArray()));
 
-        Guard.IsNotNull(fileMetadata.AlbumArtistMetadata);
-        repoUpdateTasks.Add(DigestArtistsAsync(fileMetadata.AlbumArtistMetadata.ToArray(), AlbumArtists));
+        repoUpdateTasks.Add(DigestArtistsAsync(scannedData.SelectMany(x => x.AlbumArtistMetadata).PruneNull().ToArray(), AlbumArtists));
 
         await Task.WhenAll(repoUpdateTasks);
 
         Task DigestImagesAsync(ImageMetadata[] images) => Images.AddOrUpdateAsync(images);
-        Task DigestTrackAsync(TrackMetadata track) => Tracks.AddOrUpdateAsync(new[] { track });
-        Task DigestAlbumAsync(AlbumMetadata album) => DigestAlbumsAsync(new[] { album });
+        Task DigestTracksAsync(TrackMetadata[] tracks) => Tracks.AddOrUpdateAsync(tracks);
         Task DigestAlbumsAsync(AlbumMetadata[] albums) => Albums.AddOrUpdateAsync(albums);
         Task DigestArtistsAsync(ArtistMetadata[] artists, IArtistRepository artistRepository) => artistRepository.AddOrUpdateAsync(artists.ToArray());
     }
 
-    private async Task SaveFileMetadataCache(Dictionary<string, Models.FileMetadata> fileMetadataCache, CancellationToken cancellationToken)
+    private async Task SaveFileMetadataCache(ConcurrentDictionary<string, Models.FileMetadata> fileMetadataCache, CancellationToken cancellationToken)
     {
         var cacheFile = await GetMetadataCacheFile(cancellationToken);
 
@@ -427,7 +458,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>A Task that represents the asynchronous operation. Value is the cached file metadata.</returns>
-    internal async Task<Dictionary<string, Models.FileMetadata>?> TryGetFileMetadataCacheAsync(CancellationToken cancellationToken)
+    internal async Task<ConcurrentDictionary<string, Models.FileMetadata>?> TryGetFileMetadataCacheAsync(CancellationToken cancellationToken)
     {
         var cachedFile = await GetMetadataCacheFile(cancellationToken);
         using var fileCacheStream = await cachedFile.OpenStreamAsync(cancellationToken: cancellationToken);
@@ -437,7 +468,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
         try
         {
-            var cache = await FileMetadataRepoSerializer.Singleton.DeserializeAsync<Dictionary<string, Models.FileMetadata>>(fileCacheStream, cancellationToken);
+            var cache = await FileMetadataRepoSerializer.Singleton.DeserializeAsync<ConcurrentDictionary<string, Models.FileMetadata>>(fileCacheStream, cancellationToken);
 
             return cache;
         }
