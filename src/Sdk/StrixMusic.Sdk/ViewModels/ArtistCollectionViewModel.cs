@@ -39,14 +39,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
         /// </summary>
         /// <param name="collection">The <see cref="IArtistCollection"/> to wrap around.</param>
-        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
-        public ArtistCollectionViewModel(IArtistCollection collection, IStrixDataRoot viewModelRoot)
+        public ArtistCollectionViewModel(IArtistCollection collection)
         {
             _syncContext = SynchronizationContext.Current;
 
             _collection = collection;
-            Root = viewModelRoot;
-
+            
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
@@ -171,8 +169,8 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IArtist artist => new ArtistViewModel(artist, Root),
-                    IArtistCollection collection => new ArtistCollectionViewModel(collection, Root),
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -182,8 +180,8 @@ namespace StrixMusic.Sdk.ViewModels
                 // Make sure both ordered and unordered artists are updated. 
                 UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    IArtist artist => new ArtistViewModel(artist, Root),
-                    IArtistCollection collection => new ArtistCollectionViewModel(collection, Root),
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
                     _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
                         $"{item.Data.GetType()} not supported for adding to {GetType()}")
                 });
@@ -505,12 +503,12 @@ namespace StrixMusic.Sdk.ViewModels
                         switch (item)
                         {
                             case IArtist artist:
-                                var avm = new ArtistViewModel(artist, Root);
+                                var avm = new ArtistViewModel(artist);
                                 Artists.Add(avm);
                                 UnsortedArtists.Add(avm);
                                 break;
                             case IArtistCollection collection:
-                                var acvm = new ArtistCollectionViewModel(collection, Root);
+                                var acvm = new ArtistCollectionViewModel(collection);
                                 Artists.Add(acvm);
                                 UnsortedArtists.Add(acvm);
                                 break;
@@ -618,8 +616,5 @@ namespace StrixMusic.Sdk.ViewModels
             Guard.IsNotNull(name, nameof(name));
             return _collection.ChangeNameAsync(name, cancellationToken);
         }
-
-        /// <inheritdoc/>
-        public IStrixDataRoot Root { get; }
     }
 }

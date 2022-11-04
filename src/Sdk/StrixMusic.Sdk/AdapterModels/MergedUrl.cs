@@ -22,9 +22,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedUrl"/> class.
         /// </summary>
-        public MergedUrl(IReadOnlyList<ICoreUrl> sources, IStrixDataRoot rootContext)
+        public MergedUrl(IReadOnlyList<ICoreUrl> sources)
         {
-            Root = rootContext;
             Guard.IsNotNull(sources, nameof(sources));
             _sources = sources.ToList();
 
@@ -71,8 +70,5 @@ namespace StrixMusic.Sdk.AdapterModels
                    other?.Type == Type &&
                    other?.Label == Label;
         }
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

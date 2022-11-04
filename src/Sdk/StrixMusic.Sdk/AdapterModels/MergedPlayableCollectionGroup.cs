@@ -3,7 +3,6 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -17,8 +16,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroup"/> class.
         /// </summary>
-        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> sources, IStrixDataRoot rootContext)
-            : base(sources, rootContext)
+        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 

@@ -36,7 +36,6 @@ namespace StrixMusic.Sdk.AdapterModels
         private static bool _isInitialized;
         private static TaskCompletionSource<bool>? _initCompletionSource;
 
-        private readonly IStrixDataRoot _dataRoot;
         private readonly TCollection _collection;
         private readonly MergedCollectionConfig _config;
 
@@ -56,13 +55,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
         /// </summary>
         /// <param name="collection">The collection that contains the items </param>
-        /// <param name="dataRoot">Configurable options for this merged collection map.</param>
-        public MergedCollectionMap(TCollection collection, IStrixDataRoot dataRoot)
+        /// <param name="config">Configurable options for this merged collection map.</param>
+        public MergedCollectionMap(TCollection collection, MergedCollectionConfig config)
         {
-            _dataRoot = dataRoot;
             _collection = collection;
-            _config = dataRoot.MergeConfig;
-            Guard.IsGreaterThan(_config.CoreRanking.Count, 0);
+            _config = config;
+            Guard.IsGreaterThan(config.CoreRanking.Count, 0);
             AttachEvents();
         }
 
@@ -391,7 +389,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 // TODO: Sorting is not handled.
                 var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
-                var mergedImpl = MergeOrAdd(newItems, collectionItemData, _dataRoot);
+                var mergedImpl = MergeOrAdd(newItems, collectionItemData, _config);
 
                 _sortedMap.Add(mappedData);
 
@@ -602,7 +600,7 @@ namespace StrixMusic.Sdk.AdapterModels
             return sourceResults.Any();
         }
 
-        private static IMergedMutable<TCoreCollectionItem> MergeOrAdd(List<IMergedMutable<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge, IStrixDataRoot dataRoot)
+        private static IMergedMutable<TCoreCollectionItem> MergeOrAdd(List<IMergedMutable<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge, MergedCollectionConfig config)
         {
             foreach (var item in collection)
             {
@@ -620,43 +618,43 @@ namespace StrixMusic.Sdk.AdapterModels
             switch (itemToMerge)
             {
                 case ICoreArtist artist:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtist(artist.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtist(artist.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbum(album.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbum(album.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICorePlaylist playlist:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreTrack track:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrack(track.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrack(track.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreDiscoverables discoverables:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreLibrary library:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedLibrary(library.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedLibrary(library.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreRecentlyPlayed recentlyPlayed:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreImage coreImage:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedImage(coreImage.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreGenre coreGenre:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedGenre(coreGenre.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedGenre(coreGenre.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreUrl coreUrl:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedUrl(coreUrl.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedUrl(coreUrl.IntoList());
                     collection.Add(returnData);
                     break;
 
@@ -666,23 +664,23 @@ namespace StrixMusic.Sdk.AdapterModels
                 // Example: an AlbumCollection can return either an Album or another AlbumCollection,
                 // so we need ViewModels and Merged proxy classes for both.
                 case ICorePlayableCollectionGroup playableCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList(), dataRoot);
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList(), config);
                     collection.Add(returnData);
                     break;
                 default:
@@ -788,7 +786,7 @@ namespace StrixMusic.Sdk.AdapterModels
                 if (item.CollectionItem is null)
                     continue;
 
-                var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _dataRoot);
+                var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _config);
 
                 bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
 

@@ -29,17 +29,15 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     /// Initializes a new instance of the <see cref="ArtistCollectionPluginWrapper"/> class.
     /// </summary>
     /// <param name="artistCollection">The instance to wrap around and apply plugins to.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal ArtistCollectionPluginWrapper(IArtistCollection artistCollection, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
+    internal ArtistCollectionPluginWrapper(IArtistCollection artistCollection, params SdkModelPlugin[] plugins)
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
         _artistCollection = ActivePlugins.ArtistCollection.Execute(artistCollection);
-        Root = pluginRoot;
         _plugins = plugins;
 
         AttachEvents(_artistCollection);
@@ -104,16 +102,16 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -303,7 +301,7 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => ((IMerged<ICoreArtistCollection>)_artistCollection).Sources;
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, Root, _plugins));
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _artistCollection.AddImageAsync(image, index, cancellationToken);
@@ -312,7 +310,7 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _artistCollection.Equals(other);
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, Root, _plugins));
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _artistCollection.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _artistCollection.AddUrlAsync(url, index, cancellationToken);
@@ -340,11 +338,8 @@ public class ArtistCollectionPluginWrapper : IArtistCollection, IPluginWrapper
 
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {
-        IArtist artist => new ArtistPluginWrapper(artist, Root, _plugins),
-        IArtistCollection artistCollection => new ArtistCollectionPluginWrapper(artistCollection, Root, _plugins),
+        IArtist artist => new ArtistPluginWrapper(artist, _plugins),
+        IArtistCollection artistCollection => new ArtistCollectionPluginWrapper(artistCollection, _plugins),
         _ => ThrowHelper.ThrowArgumentOutOfRangeException<IArtistCollectionItem>()
     };
-
-    /// <inheritdoc />
-    public IStrixDataRoot Root { get; }
 }

@@ -23,14 +23,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of <see cref="SearchViewModel"/>.
         /// </summary>
         /// <param name="search">The model to wrap around.</param>
-        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
-        public SearchViewModel(ISearch search, IStrixDataRoot viewModelRoot)
+        public SearchViewModel(ISearch search)
         {
             _search = search;
-            Root = viewModelRoot;
 
             if (search.SearchHistory != null)
-                SearchHistory = new SearchHistoryViewModel(search.SearchHistory, viewModelRoot);
+                SearchHistory = new SearchHistoryViewModel(search.SearchHistory);
         }
 
         /// <inheritdoc/>
@@ -62,8 +60,5 @@ namespace StrixMusic.Sdk.ViewModels
         /// The view model for search history.
         /// </summary>
         public SearchHistoryViewModel? SearchHistory { get; }
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

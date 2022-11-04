@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using OwlCore.Diagnostics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Plugins.Model;
 using IImage = StrixMusic.Sdk.AppModels.IImage;
 
@@ -25,11 +24,10 @@ public class ResizeableImagePlugin : ImagePluginBase
     /// Initializes a new instance of <see cref="ResizeableImagePlugin"/>.
     /// </summary>
     /// <param name="metadata">Contains metadata for a plugin. Used to identify a plugin before instantiation.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
     /// <param name="transformSize">A delegate that is called to determine the new sizes for an image. Return a different size than what you're given to force a resize.</param>
-    public ResizeableImagePlugin(ModelPluginMetadata metadata, IStrixDataRoot pluginRoot, IImage inner, Func<(double? Width, double? Height), (double? Width, double? Height)> transformSize)
-        : base(metadata, inner, pluginRoot)
+    public ResizeableImagePlugin(ModelPluginMetadata metadata, IImage inner, Func<(double? Width, double? Height), (double? Width, double? Height)> transformSize)
+        : base(metadata, inner)
     {
         _transformSize = transformSize;
     }

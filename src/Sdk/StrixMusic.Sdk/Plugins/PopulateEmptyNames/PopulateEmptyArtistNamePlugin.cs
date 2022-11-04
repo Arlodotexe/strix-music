@@ -19,10 +19,9 @@ internal class PopulateEmptyArtistNamePlugin : ArtistPluginBase
     /// </summary>
     /// <param name="metadata">Contains metadata for a plugin. Used to identify a plugin before instantiation.</param>
     /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="artistName">The name to use instead when the existing name is empty.</param>
-    public PopulateEmptyArtistNamePlugin(ModelPluginMetadata metadata, IStrixDataRoot pluginRoot, IArtist inner, string artistName)
-        : base(metadata, inner, pluginRoot)
+    public PopulateEmptyArtistNamePlugin(ModelPluginMetadata metadata, IArtist inner, string artistName)
+        : base(metadata, inner)
     {
         _artistName = artistName;
     }

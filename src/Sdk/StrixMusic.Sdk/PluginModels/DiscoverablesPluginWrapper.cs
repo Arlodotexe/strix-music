@@ -21,15 +21,14 @@ public class DiscoverablesPluginWrapper : PlayableCollectionGroupPluginWrapperBa
     /// Initializes a new instance of the <see cref="DiscoverablesPluginWrapper"/> class.
     /// </summary>
     /// <param name="discoverables">An existing instance to wrap around and provide plugins on top of.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins to import and apply to everything returned from this wrapper.</param>
-    internal DiscoverablesPluginWrapper(IDiscoverables discoverables, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
-        : base(GlobalModelPluginConnector.Create(pluginRoot, new SdkModelPlugin(PluginModelWrapperInfo.Metadata, plugins)).Discoverables.Execute(discoverables), pluginRoot, plugins)
+    internal DiscoverablesPluginWrapper(IDiscoverables discoverables, params SdkModelPlugin[] plugins)
+        : base(GlobalModelPluginConnector.Create(new SdkModelPlugin(PluginModelWrapperInfo.Metadata, plugins)).Discoverables.Execute(discoverables), plugins)
     {
         foreach (var plugin in plugins)
             ActivePlugins.Import(plugin);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
         _discoverables = ActivePlugins.Discoverables.Execute(discoverables);
     }

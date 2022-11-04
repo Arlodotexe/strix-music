@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedDiscoverables"/> class.
         /// </summary>
-        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources, IStrixDataRoot rootContext)
-            : base(sources, rootContext)
+        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 

@@ -17,8 +17,8 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedLibrary"/> class.
         /// </summary>
-        public MergedLibrary(IEnumerable<ICoreLibrary> sources, IStrixDataRoot rootContext)
-            : base(sources, rootContext)
+        public MergedLibrary(IEnumerable<ICoreLibrary> sources, MergedCollectionConfig config)
+            : base(sources, config)
         {
         }
 

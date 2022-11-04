@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.ComponentModel;
 using OwlCore.Extensions;
@@ -33,21 +32,21 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     {
         _dataRoot = dataRoot;
 
-        Library = new LibraryViewModel(dataRoot.Library, this);
+        Library = new LibraryViewModel(dataRoot.Library);
 
         if (dataRoot.Pins is not null)
-            Pins = new PlayableCollectionGroupViewModel(dataRoot.Pins, this);
+            Pins = new PlayableCollectionGroupViewModel(dataRoot.Pins);
 
         if (dataRoot.RecentlyPlayed is not null)
-            RecentlyPlayed = new RecentlyPlayedViewModel(dataRoot.RecentlyPlayed, this);
+            RecentlyPlayed = new RecentlyPlayedViewModel(dataRoot.RecentlyPlayed);
 
         if (dataRoot.Discoverables is not null)
-            Discoverables = new DiscoverablesViewModel(dataRoot.Discoverables, this);
+            Discoverables = new DiscoverablesViewModel(dataRoot.Discoverables);
 
         if (dataRoot.Search is not null)
-            Search = new SearchViewModel(dataRoot.Search, this);
+            Search = new SearchViewModel(dataRoot.Search);
 
-        _devices = new ObservableCollection<IDevice>(dataRoot.Devices.Select(x => new DeviceViewModel(x, this)));
+        _devices = new ObservableCollection<IDevice>(dataRoot.Devices.Select(x => new DeviceViewModel(x)));
 
         AttachEvents(dataRoot);
     }
@@ -72,8 +71,8 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
     private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data, this), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data, this), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
         
         _devices.ChangeCollection(wrappedAdded, wrappedRemoved);
         DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
@@ -81,25 +80,25 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
     private void OnDiscoverablesChanged(object sender, IDiscoverables e)
     {
-        Discoverables = new DiscoverablesViewModel(e, this);
+        Discoverables = new DiscoverablesViewModel(e);
         DiscoverablesChanged?.Invoke(this, Discoverables);
     }
 
     private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
     {
-        RecentlyPlayed = new RecentlyPlayedViewModel(e, this);
+        RecentlyPlayed = new RecentlyPlayedViewModel(e);
         RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
     }
 
     private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
     {
-        Pins = new PlayableCollectionGroupViewModel(e, this);
+        Pins = new PlayableCollectionGroupViewModel(e);
         PinsChanged?.Invoke(this, Pins);
     }
 
     private void OnSearchChanged(object sender, ISearch e)
     {
-        Search = new SearchViewModel(e, this);
+        Search = new SearchViewModel(e);
         SearchChanged?.Invoke(this, Search);
     }
 
@@ -121,9 +120,6 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
     /// <inheritdoc/>
     public bool IsInitialized => _dataRoot.IsInitialized;
-
-    /// <inheritdoc />
-    public string Id => _dataRoot.Id;
 
     /// <inheritdoc/>
     public MergedCollectionConfig MergeConfig => _dataRoot.MergeConfig;
@@ -172,7 +168,4 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         DetachEvents(_dataRoot);
         return _dataRoot.DisposeAsync();
     }
-
-    /// <inheritdoc />
-    public IStrixDataRoot Root => this;
 }

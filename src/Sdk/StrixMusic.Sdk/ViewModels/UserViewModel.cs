@@ -17,12 +17,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// A ViewModel for <see cref="IUser"/>.
         /// </summary>
         /// <param name="user">The <see cref="IUser"/> to wrap.</param>
-        public UserViewModel(IUser user, IStrixDataRoot viewModelRoot)
-            : base(user, viewModelRoot)
+        public UserViewModel(IUser user)
+            : base(user)
         {
             Guard.IsNotNull(user, nameof(user));
 
-            Library = new LibraryViewModel(user.Library, Root);
+            Library = new LibraryViewModel(user.Library);
         }
 
         /// <inheritdoc cref="ILibraryBase"/>
