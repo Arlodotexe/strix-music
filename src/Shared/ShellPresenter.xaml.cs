@@ -160,12 +160,12 @@ public sealed partial class ShellPresenter : UserControl
 
         Shell CreatePreferredShell(StrixMusicShells preferredShell, IStrixDataRoot? root)
         {
-            Shell shell = preferredShell switch
+            var shell = preferredShell switch
             {
                 StrixMusicShells.Sandbox => new SandboxShell(),
                 StrixMusicShells.GrooveMusic => new GrooveMusic(),
                 StrixMusicShells.ZuneDesktop => new ZuneDesktop(),
-                _ => throw new NotSupportedException("This shell has not been set up for display."),
+                _ => ThrowHelper.ThrowNotSupportedException<Shell>("This shell has not been set up for display."),
             };
 
             shell.Root = root;
