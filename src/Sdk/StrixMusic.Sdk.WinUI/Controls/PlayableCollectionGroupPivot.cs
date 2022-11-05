@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using OwlCore;
+using System.Threading;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,6 +13,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
     public sealed partial class PlayableCollectionGroupPivot : Control
     {
         private static readonly Dictionary<string, int> _pivotItemPositionMemo = new();
+        private SynchronizationContext _synchronizationContext;
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="RestoreSelectedPivot"/> property.
@@ -123,6 +124,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// </summary>
         public PlayableCollectionGroupPivot()
         {
+            _synchronizationContext = SynchronizationContext.Current ?? new();
         }
 
         /// <inheritdoc />
@@ -164,10 +166,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
             }
         }
 
-        private void AllItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Threading.OnPrimaryThread(ToggleAnyEmptyPivotItems);
-        }
+        private void AllItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => _synchronizationContext.Post(_ => ToggleAnyEmptyPivotItems(), null);
 
         private void DetachEvents()
         {

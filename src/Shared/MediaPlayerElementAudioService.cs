@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -19,6 +19,7 @@ namespace StrixMusic
     {
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, PlaybackItem> _preloadedSources;
+        private readonly SynchronizationContext _synchronizationContext;
         private PlaybackItem? _currentSource;
         private PlaybackState _playbackState;
 
@@ -28,6 +29,7 @@ namespace StrixMusic
         /// <param name="player">The <see cref="MediaPlayerElement"/> to wrap around.</param>
         public MediaPlayerElementAudioService(MediaPlayerElement player)
         {
+            _synchronizationContext = SynchronizationContext.Current ?? new();
             Guard.IsNotNull(player.MediaPlayer, nameof(player.MediaPlayer));
 
             _player = player;
@@ -151,7 +153,7 @@ namespace StrixMusic
 
             Guard.IsNotNull(sourceConfig, nameof(sourceConfig));
 
-            await Threading.OnPrimaryThread(async () =>
+            await _synchronizationContext.PostAsync(async () =>
             {
                 if (sourceConfig.MediaSourceUri != null)
                 {
@@ -195,49 +197,19 @@ namespace StrixMusic
 
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task PauseAsync(CancellationToken cancellationToken = default)
-        {
-            return Threading.OnPrimaryThread(() =>
-            {
-                _player.MediaPlayer.Pause();
-            });
-        }
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Pause());
 
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task ResumeAsync(CancellationToken cancellationToken = default)
-        {
-            return Threading.OnPrimaryThread(() =>
-            {
-                _player.MediaPlayer.Play();
-            });
-        }
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Play());
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default)
-        {
-            return Threading.OnPrimaryThread(() =>
-            {
-                _player.MediaPlayer.Volume = volume;
-            });
-        }
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Volume = volume);
 
         /// <inheritdoc />
-        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default)
-        {
-            return Threading.OnPrimaryThread(() =>
-            {
-                _player.MediaPlayer.PlaybackSession.PlaybackRate = speed;
-            });
-        }
+        public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.PlaybackSession.PlaybackRate = speed);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default)
-        {
-            return Threading.OnPrimaryThread(() =>
-            {
-                _player.MediaPlayer.PlaybackSession.Position = position;
-            });
-        }
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.PlaybackSession.Position = position);
     }
 }
