@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
-using Windows.Storage;
 
 namespace StrixMusic.Services
 {
@@ -43,6 +40,11 @@ namespace StrixMusic.Services
         public ObservableCollection<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(defaultValue: () => new ObservableCollection<OneDriveCoreSettings>());
 
         /// <summary>
+        /// Gets the settings for the shell.
+        /// </summary>
+        public ShellSettings ShellSettings => GetSetting(defaultValue: () => new ShellSettings());
+
+        /// <summary>
         /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
         /// </summary>
         public List<string> CoreRanking
@@ -58,38 +60,6 @@ namespace StrixMusic.Services
         {
             get => GetSetting(() => _isDebug);
             set => SetSetting(value);
-        }
-
-        /// <summary>
-        /// Stores the registry id of the user's preferred shell.
-        /// </summary>
-        public StrixMusicShells PreferredShell
-        {
-            get => GetSettingEx(() => StrixMusicShells.ZuneDesktop);
-            set => SetSettingEx(value);
-        }
-
-        /// <summary>
-        /// The registry id of the user's current fallback shell. Used to cover display sizes that the <see cref="PreferredShell"/> doesn't support. 
-        /// </summary>
-        public AdaptiveShells FallbackShell
-        {
-            get => GetSettingEx(() => AdaptiveShells.Sandbox);
-            set => SetSettingEx(value);
-        }
-
-        private T GetSettingEx<T>(Func<T> getDefaultValue, [CallerMemberName] string key = "")
-        {
-            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(key, out var value) && value is T savedValue)
-                return savedValue;
-
-            return GetSetting(getDefaultValue, key);
-        }
-
-        private void SetSettingEx<T>(T value, [CallerMemberName] string key = "")
-        {
-            ApplicationData.Current.LocalSettings.Values[key] = value;
-            SetSetting(value, key);
         }
 
         private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e) => Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);

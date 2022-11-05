@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IInstanceId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShellPresenter.xaml.cs">
       <DependentUpon>ShellPresenter.xaml</DependentUpon>
     </Compile>

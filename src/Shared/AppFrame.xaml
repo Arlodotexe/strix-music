@@ -21,8 +21,8 @@
         </interactivity:Interaction.Behaviors>
 
         <ShellPresenter xmlns="using:StrixMusic"
-                        FallbackShell="{x:Bind AppRoot.Settings.FallbackShell, Mode=OneWay}"
-                        PreferredShell="{x:Bind AppRoot.Settings.PreferredShell, Mode=OneWay}"
+                        FallbackShell="{x:Bind AppRoot.Settings.ShellSettings.FallbackShell, Mode=OneWay}"
+                        PreferredShell="{x:Bind AppRoot.Settings.ShellSettings.PreferredShell, Mode=OneWay}"
                         Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
 
         <StackPanel Spacing="0" CornerRadius="0,0,5,5" Padding="15"
