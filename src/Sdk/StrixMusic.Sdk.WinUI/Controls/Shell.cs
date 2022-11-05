@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// </summary>
         protected virtual void OnRootChanged(IStrixDataRoot? oldValue, IStrixDataRoot? newValue)
         {
-            SetValue(RootVmProperty, newValue is null ? null : new StrixDataRootViewModel(newValue));
+            SetValue(RootVmProperty, newValue is null ? null : (newValue as StrixDataRootViewModel ?? new StrixDataRootViewModel(newValue)));
         }
 
         /// <summary>

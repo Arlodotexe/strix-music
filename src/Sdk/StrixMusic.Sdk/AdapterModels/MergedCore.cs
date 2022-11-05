@@ -34,10 +34,18 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
         /// </summary>
+        public MergedCore(IEnumerable<ICore> cores)
+            : this(cores, new MergedCollectionConfig())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="MergedCore"/>.
+        /// </summary>
         public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
-            Guard.HasSizeGreaterThan(_sources, 0, nameof(_sources));
+            Guard.IsGreaterThan(_sources.Count, 0);
 
             MergeConfig = config;
 
@@ -138,7 +146,7 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             if (IsInitialized)
                 return;
-            
+
             await _sources.InParallel(x => x.InitAsync(cancellationToken));
 
             IsInitialized = true;

@@ -60,7 +60,12 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             _collection = collection;
             _config = config;
-            Guard.IsGreaterThan(config.CoreRanking.Count, 0);
+
+            if (config.CoreRanking.Count == 0 && config.MergedCollectionSorting == MergedCollectionSorting.Ranked)
+            {
+                config.CoreRanking = collection.Sources.Select(x => x.SourceCore.InstanceId).ToList();
+            }
+            
             AttachEvents();
         }
 
@@ -172,11 +177,6 @@ namespace StrixMusic.Sdk.AdapterModels
             }
 
             _initCompletionSource = new TaskCompletionSource<bool>();
-
-            _config.CoreRankingChanged += ConfigOnCoreRankingChanged;
-            _config.MergedCollectionSortingChanged += ConfigOnMergedCollectionSortingChanged;
-
-            Guard.HasSizeGreaterThan(_config.CoreRanking, 0, nameof(_config.CoreRanking));
 
             _initCompletionSource.SetResult(true);
             IsInitialized = true;
@@ -694,7 +694,6 @@ namespace StrixMusic.Sdk.AdapterModels
 
         private async IAsyncEnumerable<TCollectionItem> GetItemsByRank(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
             var mappedData = BuildSortedMapRanked(_sortedMap.Count);
@@ -813,7 +812,7 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
-            foreach (var instanceId in _config.CoreRanking)
+            foreach (var instanceId in _collection.Sources.Select(x => x.SourceCore.InstanceId))
             {
                 // Find source by instance id.
                 var source = Sources.FirstOrDefault(x => x.SourceCore.InstanceId == instanceId);
@@ -839,22 +838,6 @@ namespace StrixMusic.Sdk.AdapterModels
             }
 
             return itemsMap;
-        }
-
-        private Task<MergedCollectionSorting> GetSortingMethod()
-        {
-            return Task.FromResult(MergedCollectionSorting.Ranked);
-
-            //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
-        }
-
-        private void ConfigOnMergedCollectionSortingChanged(object sender, MergedCollectionSorting e)
-        {
-        }
-
-        private void ConfigOnCoreRankingChanged(object sender, IReadOnlyList<string> e)
-        {
-            Guard.IsGreaterThan(e.Count, 0);
         }
 
         private async Task ResetDataRanked()

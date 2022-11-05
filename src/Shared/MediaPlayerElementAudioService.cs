@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic
 {
     /// <inheritdoc />
-    public sealed class AudioPlayerService : IAudioPlayerService
+    public sealed class MediaPlayerElementAudioService : IAudioPlayerService
     {
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, PlaybackItem> _preloadedSources;
@@ -23,10 +23,10 @@ namespace StrixMusic
         private PlaybackState _playbackState;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AudioPlayerService"/>.
+        /// Creates a new instance of <see cref="MediaPlayerElementAudioService"/>.
         /// </summary>
         /// <param name="player">The <see cref="MediaPlayerElement"/> to wrap around.</param>
-        public AudioPlayerService(MediaPlayerElement player)
+        public MediaPlayerElementAudioService(MediaPlayerElement player)
         {
             Guard.IsNotNull(player.MediaPlayer, nameof(player.MediaPlayer));
 

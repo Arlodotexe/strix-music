@@ -8,7 +8,7 @@ namespace StrixMusic.Services
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(string))]
-    [JsonSerializable(typeof(LocalFilesCoreSettings))]
+    [JsonSerializable(typeof(LocalStorageCoreSettings))]
     [JsonSerializable(typeof(OneDriveCoreSettings))]
     internal partial class AppSettingsSerializerContext : JsonSerializerContext
     {

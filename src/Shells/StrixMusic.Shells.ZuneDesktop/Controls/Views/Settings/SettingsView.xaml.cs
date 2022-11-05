@@ -4,7 +4,6 @@ using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings
 {

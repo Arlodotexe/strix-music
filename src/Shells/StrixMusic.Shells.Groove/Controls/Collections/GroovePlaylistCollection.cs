@@ -56,7 +56,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
                 return;
 
             if (Collection is not IPlaylistCollectionViewModel pvm)
-                pvm = new PlaylistCollectionViewModel(Collection, Collection.Root);
+                pvm = new PlaylistCollectionViewModel(Collection);
 
             _ = pvm.InitPlaylistCollectionAsync();
             ViewModel.PlaylistCollection = pvm;

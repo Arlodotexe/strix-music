@@ -4,11 +4,11 @@ using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove.Helper;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic.Shells.Groove.Controls
 {

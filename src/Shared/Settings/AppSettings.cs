@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
+using Windows.Storage;
 
 namespace StrixMusic.Services
 {
     /// <summary>
-    /// A container for keys of all settings throughout the main app.
+    /// A container for all settings needed throughout the main app.
     /// </summary>
     public class AppSettings : SettingsBase
     {
@@ -32,7 +35,7 @@ namespace StrixMusic.Services
         /// <summary>
         /// Gets the list of all registered storage cores that interact with files on disk.
         /// </summary>
-        public ObservableCollection<LocalFilesCoreSettings> ConfiguredLocalFileCores => GetSetting(defaultValue: () => new ObservableCollection<LocalFilesCoreSettings>());
+        public ObservableCollection<LocalStorageCoreSettings> ConfiguredLocalStorageCores => GetSetting(defaultValue: () => new ObservableCollection<LocalStorageCoreSettings>());
 
         /// <summary>
         /// Gets the list of all registered storage cores that interact with OneDrive.
@@ -62,8 +65,8 @@ namespace StrixMusic.Services
         /// </summary>
         public StrixMusicShells PreferredShell
         {
-            get => GetSetting(() => StrixMusicShells.ZuneDesktop);
-            set => SetSetting(value);
+            get => GetSettingEx(() => StrixMusicShells.ZuneDesktop);
+            set => SetSettingEx(value);
         }
 
         /// <summary>
@@ -71,18 +74,26 @@ namespace StrixMusic.Services
         /// </summary>
         public AdaptiveShells FallbackShell
         {
-            get => GetSetting(() => AdaptiveShells.Sandbox);
-            set => SetSetting(value);
+            get => GetSettingEx(() => AdaptiveShells.Sandbox);
+            set => SetSettingEx(value);
         }
 
-        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
+        private T GetSettingEx<T>(Func<T> getDefaultValue, [CallerMemberName] string key = "")
         {
-            Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(key, out var value) && value is T savedValue)
+                return savedValue;
+
+            return GetSetting(getDefaultValue, key);
         }
 
-        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e)
+        private void SetSettingEx<T>(T value, [CallerMemberName] string key = "")
         {
-            Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
+            ApplicationData.Current.LocalSettings.Values[key] = value;
+            SetSetting(value, key);
         }
+
+        private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e) => Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
+
+        private void AppSettings_LoadFailed(object? sender, SettingPersistFailedEventArgs e) => Logger.LogError($"Failed to load setting {e.SettingName}", e.Exception);
     }
 }

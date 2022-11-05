@@ -3,12 +3,13 @@ using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
+
 namespace StrixMusic.Services;
 
 /// <summary>
 /// A container for the settings needed to instantiate a <see cref="OneDriveFolder"/>.
 /// </summary>
-public class OneDriveCoreSettings : SettingsBase
+public class OneDriveCoreSettings : SettingsBase, IInstanceId
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="OneDriveCoreSettings"/> class.
@@ -27,6 +28,19 @@ public class OneDriveCoreSettings : SettingsBase
     public OneDriveCoreSettings()
         : this(new MemoryFolder(Guid.NewGuid().ToString(), nameof(OneDriveCoreSettings)))
     {
+    }
+
+    /// <summary>
+    /// Copies all settings from once instance into another.
+    /// </summary>
+    public static void CopyFrom(OneDriveCoreSettings from, OneDriveCoreSettings to)
+    {
+        to.InstanceId = from.InstanceId;
+        to.UserId = from.UserId;
+        to.FolderId = from.FolderId;
+        to.ClientId = from.ClientId;
+        to.TenantId = from.TenantId;
+        to.RedirectUri = from.RedirectUri;
     }
 
     private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)

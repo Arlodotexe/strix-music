@@ -22,6 +22,7 @@ namespace StrixMusic.Sdk.ViewModels;
 /// </summary>
 public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 {
+    private IReadOnlyList<ICore> _knownSources;
     private readonly IStrixDataRoot _dataRoot;
     private readonly ObservableCollection<IDevice> _devices;
 
@@ -31,6 +32,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public StrixDataRootViewModel(IStrixDataRoot dataRoot)
     {
         _dataRoot = dataRoot;
+        _knownSources = dataRoot.Sources;
 
         Library = new LibraryViewModel(dataRoot.Library);
 
@@ -48,6 +50,8 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
         _devices = new ObservableCollection<IDevice>(dataRoot.Devices.Select(x => new DeviceViewModel(x)));
 
+        Sources = new ObservableCollection<CoreViewModel>(dataRoot.Sources.Select(x => new CoreViewModel(x)));
+
         AttachEvents(dataRoot);
     }
 
@@ -58,6 +62,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         dataRoot.RecentlyPlayedChanged += OnRecentlyPlayedChanged;
         dataRoot.DiscoverablesChanged += OnDiscoverablesChanged;
         dataRoot.SearchChanged += OnSearchChanged;
+        dataRoot.SourcesChanged += DataRootOnSourcesChanged;
     }
 
     private void DetachEvents(IStrixDataRoot dataRoot)
@@ -67,13 +72,29 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         dataRoot.RecentlyPlayedChanged -= OnRecentlyPlayedChanged;
         dataRoot.DiscoverablesChanged -= OnDiscoverablesChanged;
         dataRoot.SearchChanged -= OnSearchChanged;
+        dataRoot.SourcesChanged -= DataRootOnSourcesChanged;
+    }
+
+    private void DataRootOnSourcesChanged(object sender, EventArgs e)
+    {
+        var knownSources = _knownSources;
+        var newSources = _dataRoot.Sources;
+
+        var addedSources = newSources.Except(knownSources).ToArray();
+        var removedSources = knownSources.Except(addedSources);
+
+        foreach (var item in removedSources)
+            Sources.Remove(Sources.First(x => x.InstanceId == item.InstanceId));
+
+        foreach (var item in addedSources)
+            Sources.Add(new CoreViewModel(item));
     }
 
     private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems)
     {
         var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
         var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
-        
+
         _devices.ChangeCollection(wrappedAdded, wrappedRemoved);
         DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
     }
@@ -113,7 +134,12 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICore> Sources => _dataRoot.Sources;
+    IReadOnlyList<ICore> IMerged<ICore>.Sources => _dataRoot.Sources;
+
+    /// <summary>
+    /// The sources used to create this data root.
+    /// </summary>
+    public ObservableCollection<CoreViewModel> Sources { get; }
 
     /// <inheritdoc/>
     public Task InitAsync(CancellationToken cancellationToken = new CancellationToken()) => _dataRoot.InitAsync(cancellationToken);

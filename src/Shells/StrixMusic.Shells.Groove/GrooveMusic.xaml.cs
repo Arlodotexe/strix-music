@@ -92,7 +92,7 @@ namespace StrixMusic.Shells.Groove
             if (Root is null)
                 return;
 
-            var libVm = Root.Library as LibraryViewModel ?? new LibraryViewModel(Root.Library, Root);
+            var libVm = Root.Library as LibraryViewModel ?? new LibraryViewModel(Root.Library);
 
             PlaylistCollectionViewModel = new GroovePlaylistCollectionViewModel
             {

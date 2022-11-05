@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 var device = (IDevice)sender;
 
                 if (device is not DeviceViewModel dvm)
-                    dvm = new DeviceViewModel(device, device.Root);
+                    dvm = new DeviceViewModel(device);
 
                 SetValue(ActiveDeviceProperty, dvm);
             }
@@ -124,7 +124,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 return;
 
             if (targetDevice is not DeviceViewModel dvm)
-                dvm = new DeviceViewModel(targetDevice, targetDevice.Root);
+                dvm = new DeviceViewModel(targetDevice);
 
             SetValue(ActiveDeviceProperty, dvm);
         }

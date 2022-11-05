@@ -1,8 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.WinUI.Controls.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 {

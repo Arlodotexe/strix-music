@@ -170,6 +170,7 @@ public class StorageCore : ICore
             }
 
             await ((StorageCoreLibrary)Library).InitAsync(cancellationToken);
+            IsInitialized = true;
         }
 
         CoreState = CoreState.Loaded;
