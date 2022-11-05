@@ -80,7 +80,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : UrlPluginBase
         {
             public FullyCustom(IUrl inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : UrlPluginBase
         {
             public NoOverride(IUrl inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

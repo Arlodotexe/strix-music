@@ -217,7 +217,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : AlbumPluginBase
         {
             public FullyCustom(IAlbum inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -455,7 +455,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : AlbumPluginBase
         {
             public NoOverride(IAlbum inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

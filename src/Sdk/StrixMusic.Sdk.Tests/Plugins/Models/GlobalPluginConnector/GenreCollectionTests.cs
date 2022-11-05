@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<GenreCollectionPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
             plugins.Album.Add(x => new AlbumPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Album.Execute(new AlbumPluginBaseTests.Unimplemented());
 
             // Ensure an Album plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<GenreCollectionPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -58,7 +58,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
             plugins.Artist.Add(x => new ArtistPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
             // Ensure an Artist plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<GenreCollectionPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.GenreCollection.Add(x => new GenreCollectionPluginBaseTests.FullyCustom(x));
             plugins.Track.Add(x => new TrackPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Track.Execute(new TrackPluginBaseTests.Unimplemented());
 
             // Ensure an Track plugin can still be accessed through GenreCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<TrackPluginBaseTests.FullyCustom>, GenreCollectionPluginBaseTests.FullyCustom>(

@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.Artist.Add(x => new ArtistPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Artist.Execute(new ArtistPluginBaseTests.Unimplemented());
 
             // Ensure an Artist plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<ArtistPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -67,7 +67,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.PlayableCollectionGroup.Add(x => new PlayableCollectionGroupPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).PlayableCollectionGroup.Execute(new PlayableCollectionGroupPluginBaseTests.Unimplemented());
 
             // Ensure an PlayableCollectionGroup plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<PlayableCollectionGroupPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.Library.Add(x => new LibraryPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Library.Execute(new LibraryPluginBaseTests.Unimplemented());
 
             // Ensure an Library plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<LibraryPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
@@ -113,7 +113,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -131,7 +131,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.Discoverables.Add(x => new DiscoverablesPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).Discoverables.Execute(new DiscoverablesPluginBaseTests.Unimplemented());
 
             // Ensure an Discoverables plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<DiscoverablesPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
@@ -145,7 +145,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -163,7 +163,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.SearchHistory.Add(x => new SearchHistoryPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchHistory.Execute(new SearchHistoryPluginBaseTests.Unimplemented());
 
             // Ensure an SearchHistory plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchHistoryPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
@@ -177,7 +177,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             var plugins = new Sdk.Plugins.Model.SdkModelPlugin(SdkTestPluginMetadata.Metadata);
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
 
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<AlbumCollectionPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(
                 value: plugin,
@@ -195,7 +195,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models.GlobalModelPluginConnector
             plugins.AlbumCollection.Add(x => new AlbumCollectionPluginBaseTests.FullyCustom(x));
             plugins.SearchResults.Add(x => new SearchResultsPluginBaseTests.FullyCustom(x));
 
-            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(new MockStrixDataRoot(), plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
+            var plugin = StrixMusic.Sdk.Plugins.Model.GlobalModelPluginConnector.Create(plugins).SearchResults.Execute(new SearchResultsPluginBaseTests.Unimplemented());
 
             // Ensure an SearchResults plugin can still be accessed through AlbumCollection members.
             Helpers.AssertAllMembersThrowOnAccess<AccessedException<SearchResultsPluginBaseTests.FullyCustom>, AlbumCollectionPluginBaseTests.FullyCustom>(

@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.Tests.MediaPlayback
         public void Setup()
         {
             _audioPlayer = new MockAudioPlayerService();
-            _handlerService = new PlaybackHandlerService(new MockStrixDataRoot());
+            _handlerService = new PlaybackHandlerService();
 
             var mockCore = new MockCore();
 

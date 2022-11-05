@@ -161,7 +161,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class FullyCustom : ArtistCollectionPluginBase
         {
             public FullyCustom(IArtistCollection inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -233,7 +233,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         internal class NoOverride : ArtistCollectionPluginBase
         {
             public NoOverride(IArtistCollection inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }
