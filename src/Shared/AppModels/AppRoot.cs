@@ -53,6 +53,7 @@ public partial class AppRoot : IAsyncInit
     {
         _dataFolder = dataFolder;
         Settings = new AppSettings(dataFolder);
+        ShellSettings = new ShellSettings(dataFolder);
 
         SetupAvailableCore(new AvailableCore("Local Storage", "Listen to music on your local disk.", defaultSettingsFactory: async () => new LocalStorageCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}"))));
         SetupAvailableCore(new AvailableCore("OneDrive", "Stream music directly from OneDrive.", defaultSettingsFactory: async () => new OneDriveCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}"))));
@@ -70,9 +71,14 @@ public partial class AppRoot : IAsyncInit
     }
 
     /// <summary>
-    /// A container for all settings needed throughout the main app.
+    /// A container for the settings used throughout the app.
     /// </summary>
     public AppSettings Settings { get; set; }
+
+    /// <summary>
+    /// A container for the settings used by shells.
+    /// </summary>
+    public ShellSettings ShellSettings { get; set; }
 
     /// <summary>
     /// The cores that are available to be created.

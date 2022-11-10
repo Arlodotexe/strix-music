@@ -22,6 +22,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableCore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\FrameworkElementToTagConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml.cs">
+      <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IInstanceId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
@@ -69,6 +79,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +125,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-gray.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-white.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\ipfs-logo.png" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />
@@ -132,6 +151,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)Assets\Fonts\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Strix\ipfs-logo.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
       <SubType>Designer</SubType>

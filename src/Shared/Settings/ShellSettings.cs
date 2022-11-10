@@ -1,18 +1,27 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
-using Windows.Storage;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
+using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
+using Windows.Storage;
 
 namespace StrixMusic.Services;
 
 /// <summary>
 /// A container for settings related to shells.
 /// </summary>
-public class ShellSettings : SettingsBase, IInstanceId
+public partial class ShellSettings : SettingsBase, IInstanceId
 {
+    [JsonIgnore]
+    private readonly ApplicationDataContainer _localSettings;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellSettings"/> class.
     /// </summary>
@@ -23,6 +32,8 @@ public class ShellSettings : SettingsBase, IInstanceId
         InstanceId = folder.Id;
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
+
+        _localSettings = ApplicationData.Current.LocalSettings.CreateContainer(nameof(ShellSettings), ApplicationDataCreateDisposition.Always);
     }
 
     /// <summary>
@@ -72,7 +83,7 @@ public class ShellSettings : SettingsBase, IInstanceId
     public StrixMusicShells PreferredShell
     {
         get => GetSettingEx(() => StrixMusicShells.ZuneDesktop);
-        set => SetSettingEx(value);
+        set => SetSettingEx(PreferredShell, value);
     }
 
     /// <summary>
@@ -81,20 +92,51 @@ public class ShellSettings : SettingsBase, IInstanceId
     public AdaptiveShells FallbackShell
     {
         get => GetSettingEx(() => AdaptiveShells.GrooveMusic);
-        set => SetSettingEx(value);
+        set => SetSettingEx(FallbackShell, value);
     }
+
+    /// <inheritdoc />
+    [RelayCommand]
+    public override Task LoadAsync(CancellationToken? cancellationToken = null) => base.LoadAsync(cancellationToken);
+
+    /// <inheritdoc />
+    [RelayCommand]
+    public override Task SaveAsync(CancellationToken? cancellationToken = null) => base.SaveAsync(cancellationToken);
+
+    /// <inheritdoc />
+    [RelayCommand]
+    public override void ResetAllSettings() => base.ResetAllSettings();
 
     private T GetSettingEx<T>(Func<T> getDefaultValue, [CallerMemberName] string key = "")
     {
-        if (ApplicationData.Current.LocalSettings.Values.TryGetValue(key, out var value) && value is T savedValue)
-            return savedValue;
+        if (_localSettings.Values.TryGetValue(key, out var value))
+        {
+            try
+            {
+                var savedValue = AppSettingsSerializer.Singleton.Deserialize<T>(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(value.ToString())));
+                return savedValue;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
 
         return GetSetting(getDefaultValue, key);
     }
 
-    private void SetSettingEx<T>(T value, [CallerMemberName] string key = "")
+    private void SetSettingEx<T>(T currentValue, T value, [CallerMemberName] string key = "")
     {
-        ApplicationData.Current.LocalSettings.Values[key] = value;
+        if (Equals(value, currentValue))
+            return;
+
+        var localSettingsValue = System.Text.Encoding.UTF8.GetString(AppSettingsSerializer.Singleton.Serialize(value).ToBytes());
+
+        if (_localSettings.Values.ContainsKey(key))
+            _localSettings.Values[key] = localSettingsValue;
+        else
+            _localSettings.Values.Add(key, localSettingsValue);
+
         SetSetting(value, key);
     }
 }

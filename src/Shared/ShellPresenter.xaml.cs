@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.AppModels;
@@ -24,13 +25,20 @@ public sealed partial class ShellPresenter : UserControl
         this.InitializeComponent();
 
         SizeChanged += ShellPresenter_SizeChanged;
+        
+        RegisterPropertyChangedCallback(WidthProperty, (d, e) => _ = ((ShellPresenter)d).OnSizeChangedAsync());
     }
 
-    private async void ShellPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void ShellPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        _ = OnSizeChangedAsync();
+    }
+
+    private async Task OnSizeChangedAsync()
     {
         // Only check when the user stops resizing the control for a few frames at 24 FPS (41.666ms) instead of the default 1 frame at 60FPS
         // Also disables concurrency
-        if (await Flow.Debounce($"{sender.GetHashCode()}", TimeSpan.FromMilliseconds(41.666 * 2)))
+        if (await Flow.Debounce($"{GetHashCode()}.{nameof(OnSizeChangedAsync)}", TimeSpan.FromMilliseconds(41.666 * 2)))
         {
             if (_currentIsPreferred && ShouldUseFallbackShell())
                 ApplyFallbackShell();
