@@ -51,7 +51,8 @@
 
         <Border x:Name="ShadowTarget" Visibility="Collapsed" />
 
-        <Border x:Name="SettingsBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="6" Visibility="Collapsed">
+        <Border x:Name="SettingsBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                CornerRadius="6" Visibility="Collapsed">
             <Grid>
                 <ui:Effects.Shadow>
                     <ui:AttachedDropShadow IsMasked="True" Opacity="0.25" CornerRadius="6" BlurRadius="25" CastTo="{x:Bind ShadowTarget}"/>
@@ -59,6 +60,10 @@
 
                 <controls:Settings AppRoot="{x:Bind AppRoot}"/>
 
+                <!--
+                For resizing the settings window.
+                Not needed if control takes up full window.
+                
                 <labs:PropertySizer VerticalAlignment="Bottom"
                                     Orientation="Horizontal"
                                     Width="{Binding ElementName=SettingsBorder, Path=Width}"
@@ -70,6 +75,8 @@
                                     Height="{Binding ElementName=SettingsBorder, Path=Height}"
                                     Minimum="250" Maximum="5000" Opacity="0"
                                     Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"/>
+                
+                -->
             </Grid>
         </Border>
     </Grid>

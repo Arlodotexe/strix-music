@@ -20,46 +20,103 @@
         <converters:ShellEnumToDescriptionConverter x:Key="ShellEnumToDescriptionConverter"/>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowStates">
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CurrentSizeText.(Grid.Row)" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <labs:ControlSizeTrigger MaxWidth="700" TargetElement="{Binding ElementName=RootGrid}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CurrentSizeText.(Grid.Row)" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Border 
             Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
-            BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1"
-            Margin="20" Padding="45,45,65,65" MaxWidth="1000">
-            <Viewbox Stretch="Uniform" StretchDirection="Both">
-                <Border x:Name="ShellPresenterContainer" Height="1080" Width="1920">
-                    <Grid>
-                        <strixMusic:ShellPresenter x:Name="ShellPresenter" 
-                                                   PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"
-                                                   FallbackShell="{x:Bind ShellSettings.FallbackShell}"
-                                                   Root="{x:Bind Root, Mode=OneWay}"/>
+            BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1" MaxWidth="1000" 
+            Margin="20">
+            <StackPanel Padding="50,30">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                        <labs:PropertySizer HorizontalAlignment="Right"
-                                            Width="35" Margin="0,0,-35,0" FontSize="25"
+                    <TextBlock Grid.Row="0" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}"
+                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="20"
+                               Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}"
+                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="20"
+                               Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}"
+                           TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="14"
+                           Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}"
+                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="14"
+                               Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"/>
+
+                    <TextBlock x:Name="CurrentSizeText" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
+                        <Run Text="{Binding ElementName=ShellPresenterContainer, Path=Width}"/>
+                        <Run Text="x"/>
+                        <Run Text="{Binding ElementName=ShellPresenterContainer, Path=Height}"/>
+                    </TextBlock>
+                </Grid>
+
+                <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,40">
+                    <Border x:Name="ShellPresenterContainer"
+                            Height="1080"
+                            Width="1920">
+                        <Grid BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                            <strixMusic:ShellPresenter x:Name="ShellPresenter"
+                                                       PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"
+                                                       FallbackShell="{x:Bind ShellSettings.FallbackShell}"
+                                                       Root="{x:Bind Root, Mode=OneWay}"/>
+
+                            <labs:PropertySizer HorizontalAlignment="Right"
+                                            Width="35" Margin="0,0,-45,0" FontSize="25"
                                             Height="{Binding ElementName=ShellPresenterContainer, Path=Height}"
                                             Minimum="500"
                                             Maximum="5000"
                                             Binding="{x:Bind ShellPresenterContainer.Width, Mode=TwoWay}"/>
 
-                        <labs:PropertySizer VerticalAlignment="Bottom"
+                            <labs:PropertySizer VerticalAlignment="Bottom"
                                             Orientation="Horizontal"
-                                            Height="35" Margin="0,0,0,-35" FontSize="25"
+                                            Height="35" Margin="0,0,0,-45" FontSize="25"
                                             Width="{Binding ElementName=ShellPresenterContainer, Path=Width}"
                                             Minimum="250"
-                                            Maximum="1000"
+                                            Maximum="2000"
                                             Binding="{x:Bind ShellPresenterContainer.Height, Mode=TwoWay}"/>
-                    </Grid>
-                </Border>
-            </Viewbox>
+                        </Grid>
+                    </Border>
+                </Viewbox>
+            </StackPanel>
         </Border>
 
         <StackPanel Spacing="8" Grid.Row="1">
             <labs:SettingsCard Header="Preferred Skin"
-                               Description="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"
                                HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
                 <ComboBox SelectedItem="{x:Bind ShellSettings.PreferredShell, Mode=TwoWay}"
                           ItemsSource="{ui:EnumValues Type=strixMusic:StrixMusicShells}">
@@ -96,10 +153,9 @@
                 </ComboBox>
             </labs:SettingsCard>
 
-            <labs:SettingsCard Header="Restore defaults"
-                            Description="Restore appearance settings to their default values"
+            <labs:SettingsCard Header="Restore appearance defaults"
                             HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
-                <Button Content="Set to defaults" Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}" CommandParameter="{x:Null}">
+                <Button Content="Restore defaults" Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}" CommandParameter="{x:Null}">
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
