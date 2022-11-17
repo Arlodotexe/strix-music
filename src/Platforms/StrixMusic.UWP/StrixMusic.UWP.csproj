@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <LangVersion>10.0</LangVersion>
+    <PackageCertificateThumbprint>828E42B157F3BFACA11AE265A50B17A4FC07EDD2</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Common">

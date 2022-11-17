@@ -5,17 +5,19 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.ComponentModel;
+using OwlCore.Diagnostics;
 using OwlCore.Extensions;
+using OwlCore.Kubo;
 using OwlCore.Storage;
+using OwlCore.Storage.Memory;
+using OwlCore.Storage.SystemIO;
+using OwlCore.Storage.Uwp;
+using StrixMusic.Cores.Storage;
 using StrixMusic.Sdk.AdapterModels;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.PluginModels;
@@ -23,11 +25,11 @@ using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Services;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Diagnostics;
-using OwlCore.Storage.Uwp;
-using StrixMusic.Cores.Storage;
-using Windows.Media.Core;
+using StrixMusic.MediaPlayback;
 
 namespace StrixMusic.AppModels;
 
@@ -52,38 +54,19 @@ public partial class AppRoot : IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
-        Settings = new AppSettings(dataFolder);
+        CoreSettings = new CoreSettings(dataFolder);
         ShellSettings = new ShellSettings(dataFolder);
-
-        SetupAvailableCore(new AvailableCore("Local Storage", "Listen to music on your local disk.", defaultSettingsFactory: async () => new LocalStorageCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}"))));
-        SetupAvailableCore(new AvailableCore("OneDrive", "Stream music directly from OneDrive.", defaultSettingsFactory: async () => new OneDriveCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}"))));
-
-        void SetupAvailableCore(AvailableCore availableCore)
-        {
-            AvailableCores.Add(availableCore);
-
-            availableCore.CreateCoreRequested += (_, e) =>
-            {
-                if (e is LocalStorageCoreSettings localStorageSettings)
-                    Settings.ConfiguredLocalStorageCores.Add(localStorageSettings);
-            };
-        }
     }
 
     /// <summary>
     /// A container for the settings used throughout the app.
     /// </summary>
-    public AppSettings Settings { get; set; }
+    public CoreSettings CoreSettings { get; set; }
 
     /// <summary>
     /// A container for the settings used by shells.
     /// </summary>
     public ShellSettings ShellSettings { get; set; }
-
-    /// <summary>
-    /// The cores that are available to be created.
-    /// </summary>
-    public ObservableCollection<AvailableCore> AvailableCores { get; } = new();
 
     /// <summary>
     /// The media players that were created to play audio for cores.
@@ -105,13 +88,13 @@ public partial class AppRoot : IAsyncInit
             cancellationToken.ThrowIfCancellationRequested();
 
             var coreFactory = new CoreFactory(_dataFolder);
-            await Settings.LoadAsync(cancellationToken);
+            await CoreSettings.LoadAsync(cancellationToken);
 
             // Create local storage cores
-            var localStorageCores = await Settings.ConfiguredLocalStorageCores.InParallel(coreFactory.CreateLocalStorageCoreAsync);
+            var localStorageCores = await CoreSettings.ConfiguredLocalStorageCores.InParallel(coreFactory.CreateLocalStorageCoreAsync);
 
             // Create OneDrive cores
-            var oneDriveCores = await Settings.ConfiguredOneDriveCores.InParallel(coreFactory.CreateOneDriveCoreAsync);
+            var oneDriveCores = await CoreSettings.ConfiguredOneDriveCores.InParallel(coreFactory.CreateOneDriveCoreAsync);
 
             // Merge cores together and apply plugins
             var allCores = localStorageCores
@@ -130,7 +113,7 @@ public partial class AppRoot : IAsyncInit
             await StrixDataRoot.InitAsync(cancellationToken);
 
             // Create/Remove cores when settings are added/removed.
-            Settings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+            CoreSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
             IsInitialized = true;
         }
@@ -168,8 +151,19 @@ public partial class AppRoot : IAsyncInit
             (
                 folderToScan,
                 metadataCacheFolder: new WindowsStorageFolder(settingsFolder),
-                displayName: folderToScan.GetType().Name,
-                fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}"))
+                displayName: folderToScan switch
+                {
+                    AddressableIpfsFolder => "IPFS",
+                    IpfsFolder => "IPFS",
+                    AddressableIpnsFolder => "IPNS",
+                    IpnsFolder => "IPNS",
+                    MfsFolder => "Kubo MFS",
+                    MemoryFolder => "In Memory",
+                    SystemFolder => "Local Storage",
+                    WindowsStorageFolder => "Local Storage",
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(name: nameof(folderToScan), message: $"Folder type {folderToScan.GetType()} does not have a configured display name. Core cannot be created."),
+                },
+                fileScanProgress: new(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}"))
             )
             {
                 ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
@@ -241,16 +235,5 @@ public partial class AppRoot : IAsyncInit
         });
 
         return pluginLayer;
-    }
-
-    private async Task<IModifiableFolder> GetDataFolderByName(string name)
-    {
-        var folder = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == name) ??
-                     await _dataFolder.CreateFolderAsync(name);
-
-        if (folder is not IModifiableFolder modifiableData)
-            throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
-
-        return modifiableData;
     }
 }

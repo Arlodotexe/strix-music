@@ -12,7 +12,7 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic
+namespace StrixMusic.MediaPlayback
 {
     /// <inheritdoc />
     public sealed class MediaPlayerElementAudioService : IAudioPlayerService

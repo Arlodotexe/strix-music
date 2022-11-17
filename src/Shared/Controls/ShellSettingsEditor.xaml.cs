@@ -3,6 +3,7 @@ using StrixMusic.Sdk.AppModels;
 using StrixMusic.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Controls;
 
@@ -23,7 +24,7 @@ public sealed partial class ShellSettingsEditor : UserControl
         DependencyProperty.Register(nameof(ShellSettings), typeof(int), typeof(ShellSettingsEditor), new PropertyMetadata(new ShellSettings { InstanceId = $"{Guid.NewGuid()}" }));
 
     /// <summary>
-    /// The Root to provide to displayed shells. Optional.
+    /// The AppRoot to provide to displayed shells. Optional.
     /// </summary>
     public IStrixDataRoot? Root
     {

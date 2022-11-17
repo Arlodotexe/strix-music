@@ -9,6 +9,9 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Repositories;
 /// </summary>
 internal interface IArtistRepository : IMetadataRepository<ArtistMetadata>
 {
+    /// <summary>
+    /// A unique identifier for this repo.
+    /// </summary>
     public string Id { get; }
         
     /// <summary>

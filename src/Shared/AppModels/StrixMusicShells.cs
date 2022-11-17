@@ -1,4 +1,4 @@
-﻿namespace StrixMusic;
+﻿namespace StrixMusic.AppModels;
 
 /// <summary>
 /// All available shells.

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using OwlCore.ComponentModel;
@@ -19,7 +20,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ICore"/>.
     /// </summary>
-    public sealed class CoreViewModel : ObservableObject, ISdkViewModel, ICore
+    public sealed partial class CoreViewModel : ObservableObject, ISdkViewModel, ICore
     {
         private readonly ICore _core;
         private readonly SynchronizationContext _syncContext;
@@ -154,9 +155,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <inheritdoc />
-        public event EventHandler? AbstractConfigPanelChanged;
-
-        /// <inheritdoc />
         public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc />
@@ -166,18 +164,18 @@ namespace StrixMusic.Sdk.ViewModels
         ICoreLibrary ICore.Library => _core.Library;
 
         /// <inheritdoc />
-        ICoreSearch? ICore.Search { get; }
+        ICoreSearch? ICore.Search => _core.Search;
 
-        /// <inheritdoc cref="ICore.RecentlyPlayed" />
+        /// <inheritdoc />
         ICoreRecentlyPlayed? ICore.RecentlyPlayed => _core.RecentlyPlayed;
 
-        /// <inheritdoc cref="ICore.Discoverables" />
+        /// <inheritdoc />
         ICoreDiscoverables? ICore.Discoverables => _core.Discoverables;
 
-        /// <inheritdoc cref="ICore.Pins" />
+        /// <inheritdoc />
         ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;
 
-        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
+        /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
             DetachEvents();
@@ -191,6 +189,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default) => _core.GetMediaSourceAsync(track, cancellationToken);
 
         /// <inheritdoc />
+        [RelayCommand(IncludeCancelCommand = true)]
         public Task InitAsync(CancellationToken cancellationToken = default) => _core.InitAsync(cancellationToken);
 
         /// <inheritdoc />

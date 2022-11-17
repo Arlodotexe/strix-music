@@ -33,7 +33,8 @@ internal sealed class ArtistRepository : IArtistRepository
 
     /// <inheritdoc />
     public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataRemoved;
-        
+
+    /// <inheritdoc />
     public string Id { get; }
 
     /// <inheritdoc />

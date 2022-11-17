@@ -22,7 +22,7 @@ namespace StrixMusic.Controls
         /// <summary>
         /// The data template for core settings.
         /// </summary>
-        public DataTemplate? AppSettingsTemplate { get; set; }
+        public DataTemplate? GeneralSettingsTemplate { get; set; }
 
         /// <summary>
         /// The data template to use when no other valid template are found.
@@ -32,6 +32,7 @@ namespace StrixMusic.Controls
         /// <inheritdoc/>
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => item switch
         {
+            CoreSettings _ => CoreSettingsTemplate ?? base.SelectTemplateCore(item, container),
             ShellSettings _ => ShellSettingsTemplate ?? base.SelectTemplateCore(item, container),
             _ => FallbackTemplate ?? base.SelectTemplateCore(item, container)
         };

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
+using OwlCore.Storage.SystemIO;
 using OwlCore.Storage.Uwp;
+using StrixMusic.CoreModels;
 using StrixMusic.Cores.Storage;
 using StrixMusic.Services;
 using Windows.Storage.AccessCache;
@@ -43,18 +46,25 @@ public class CoreFactory
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
         var storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
-
         var folder = new WindowsStorageFolder(storageFolder);
 
-        return new StorageCore
+        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"));
+        var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
+
+        var core = new StorageCore
         (
             folder,
             modifiableCoreData,
             "Local Storage",
             fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folder.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
         {
-            ScannerWaitBehavior = ScannerWaitBehavior.NeverWait
+            ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
+            Logo = logo,
         };
+
+        logo.SourceCore = core;
+        core.Logo = logo;
+        return core;
     }
 
     /// <summary>

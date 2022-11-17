@@ -10,6 +10,19 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Scanners;
 
 internal partial class PlaylistMetadataScanner
 {
+    /// <summary>
+    /// Traverses a relative path from the provided <see cref="IStorable"/> and returns the item at that path.
+    /// </summary>
+    /// <param name="from">The item to start with when traversing.</param>
+    /// <param name="relativePath">The path of the storable item to return, relative to the provided item.</param>
+    /// <param name="cancellationToken">A token to cancel the ongoing operation.</param>
+    /// <returns>The <see cref="IStorable"/> item found at the relative path.</returns>
+    /// <exception cref="ArgumentException">
+    /// A parent directory was specified, but the provided <see cref="IStorable"/> is not addressable.
+    /// Or, the provided relative path named a folder, but the item was a file. 
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">A parent folder was requested, but the storable item did not return a parent.</exception>
+    /// <exception cref="FileNotFoundException">A named item was specified in a folder, but the item wasn't found.</exception>
     internal static async Task<IStorable> TraverseRelativePathAsync(this IStorable from, string relativePath, CancellationToken cancellationToken = default)
     {
         var directorySeparatorChar = Path.DirectorySeparatorChar;

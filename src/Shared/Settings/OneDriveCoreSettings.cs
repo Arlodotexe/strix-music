@@ -23,7 +23,7 @@ public class OneDriveCoreSettings : SettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AppSettings"/> class.
+    /// Initializes a new instance of the <see cref="CoreSettings"/> class.
     /// </summary>
     public OneDriveCoreSettings()
         : this(new MemoryFolder(Guid.NewGuid().ToString(), nameof(OneDriveCoreSettings)))

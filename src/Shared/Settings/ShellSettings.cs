@@ -11,6 +11,7 @@ using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
 using Windows.Storage;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Services;
 

@@ -10,6 +10,7 @@ using StrixMusic.Shells.ZuneDesktop;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using StrixMusic.AppModels;
 
 namespace StrixMusic;
 

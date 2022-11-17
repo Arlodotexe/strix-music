@@ -1,6 +1,6 @@
 ﻿using Windows.Foundation;
 
-namespace StrixMusic;
+namespace StrixMusic.AppModels;
 
 /// <summary>
 /// Holds metadata for a shell registered with the Strix SDK.

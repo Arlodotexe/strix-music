@@ -1,9 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Services
 {
     /// <summary>
-    /// Supplies type information for settings values in <see cref="AppSettings"/>.
+    /// Supplies type information for settings values in <see cref="CoreSettings"/>.
     /// </summary>
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(bool))]

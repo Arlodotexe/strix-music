@@ -1,6 +1,7 @@
 ﻿using System;
 using CommunityToolkit.Diagnostics;
 using Windows.UI.Xaml.Data;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Converters
 {

@@ -64,6 +64,11 @@ internal static class AudioMetadataScanner
         return aggregatedData;
     }
 
+    /// <summary>
+    /// Assigns values to required fields which have no value. 
+    /// </summary>
+    /// <param name="file">The file that was scanned.</param>
+    /// <param name="metadata">The metadata extracted from the scanned file.</param>
     internal static void AssignMissingRequiredData(IFile file, Models.FileMetadata metadata)
     {
         // If titles are missing, we leave it empty so the UI can localize the "Untitled" name.
@@ -123,6 +128,11 @@ internal static class AudioMetadataScanner
         }
     }
 
+    /// <summary>
+    /// Combines multiple provided metadata instances into a single instance.
+    /// </summary>
+    /// <param name="metadata">The metadata to merge together.</param>
+    /// <returns>A single metadata instance with data from all provided models.</returns>
     internal static Models.FileMetadata MergeMetadataFields(Models.FileMetadata[] metadata)
     {
         Guard.HasSizeGreaterThan(metadata, 0, nameof(metadata));
