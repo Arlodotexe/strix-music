@@ -1,18 +1,83 @@
 ﻿<UserControl
     x:Class="StrixMusic.AppFrame"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:strixmusic="using:StrixMusic"
-    xmlns:grvshell="using:StrixMusic.Shells.Groove"
-    xmlns:zdshell="using:StrixMusic.Shells.ZuneDesktop"
-    xmlns:strxwinuisdk="using:StrixMusic.Sdk.WinUI"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:controls="using:StrixMusic.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid>
-        <ShellPresenter xmlns="using:StrixMusic" FallbackShell="GrooveMusic" PreferredShell="ZuneDesktop" Root="{x:Bind Root, Mode=OneWay}" />
+    <Grid x:Name="RootGrid">
+        <interactivity:Interaction.Behaviors>
+            <core:EventTriggerBehavior EventName="Loaded">
+                <core:InvokeCommandAction Command="{x:Bind AppRoot.InitCommand}" />
+            </core:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+
+        <ShellPresenter xmlns="using:StrixMusic"
+                        FallbackShell="{x:Bind AppRoot.ShellSettings.FallbackShell, Mode=OneWay}"
+                        PreferredShell="{x:Bind AppRoot.ShellSettings.PreferredShell, Mode=OneWay}"
+                        Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
+
+        <StackPanel Spacing="0" CornerRadius="0,0,5,5" Padding="15"
+                    Visibility="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}"
+                    Background="{ThemeResource OobePageBackgroundColor}"
+                    VerticalAlignment="Top" HorizontalAlignment="Center">
+            <ProgressBar IsIndeterminate="True" IsEnabled="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}" />
+
+            <ItemsControl ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:CoreViewModel">
+                        <StackPanel Spacing="5">
+                            <CoreImage xmlns="using:StrixMusic.Controls" Image="{x:Bind Logo, Mode=OneWay}" />
+                            <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
+                            <TextBlock Text="{x:Bind InstanceDescriptor, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind CoreState, Mode=OneWay}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Visibility="Collapsed"/>
+
+        <Border x:Name="ShadowTarget" Visibility="Collapsed" />
+
+        <Border x:Name="SettingsBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                CornerRadius="6" Visibility="Collapsed">
+            <Grid>
+                <ui:Effects.Shadow>
+                    <ui:AttachedDropShadow IsMasked="True" Opacity="0.25" CornerRadius="6" BlurRadius="25" CastTo="{x:Bind ShadowTarget}"/>
+                </ui:Effects.Shadow>
+
+                <controls:Settings AppRoot="{x:Bind AppRoot}"/>
+
+                <!--
+                For resizing the settings window.
+                Not needed if control takes up full window.
+                
+                <labs:PropertySizer VerticalAlignment="Bottom"
+                                    Orientation="Horizontal"
+                                    Width="{Binding ElementName=SettingsBorder, Path=Width}"
+                                    Minimum="250" Opacity="0"
+                                    Maximum="3000"
+                                    Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"/>
+
+                <labs:PropertySizer HorizontalAlignment="Right"
+                                    Height="{Binding ElementName=SettingsBorder, Path=Height}"
+                                    Minimum="250" Maximum="5000" Opacity="0"
+                                    Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"/>
+                
+                -->
+            </Grid>
+        </Border>
     </Grid>
-</UserControl>
+</UserControl> 

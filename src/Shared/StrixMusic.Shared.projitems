@@ -19,11 +19,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\LocalStorageCoreSettingsEditor.xaml.cs">
-      <DependentUpon>LocalStorageCoreSettingsEditor.xaml</DependentUpon>
-    </Compile>
-=======
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableCore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
@@ -39,7 +34,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
->>>>>>> 642cdfc41cbdae2f7384358f5fcff1522eab522a
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IInstanceId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
@@ -87,9 +81,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-<<<<<<< HEAD
-    <Page Include="$(MSBuildThisFileDirectory)Controls\LocalStorageCoreSettingsEditor.xaml">
-=======
     <Page Include="$(MSBuildThisFileDirectory)Controls\CoreSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -103,7 +94,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml">
->>>>>>> 642cdfc41cbdae2f7384358f5fcff1522eab522a
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -121,7 +111,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalFiles\folder-icon.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Bonkers.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
@@ -129,7 +118,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\SegoeMDL2.ttf" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalFiles\browse.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\default.sandbox\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\GrooveMusic.10.21061.10121.0\1.png" />
