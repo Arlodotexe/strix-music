@@ -32,12 +32,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        public UserProfileViewModel(IUserProfile userProfile, IStrixDataRoot root)
+        public UserProfileViewModel(IUserProfile userProfile)
         {
             _syncContext = SynchronizationContext.Current;
 
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
-            Root = root;
 
             var userProfileImpl = (UserProfileAdapter)userProfile;
 
@@ -269,8 +268,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreUrlCollection other) => _userProfile.Equals(other);
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

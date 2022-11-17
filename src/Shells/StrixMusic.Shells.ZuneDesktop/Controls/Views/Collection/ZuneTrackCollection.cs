@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,6 +24,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     [INotifyPropertyChanged]
     public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
+        private readonly SemaphoreSlim _collectionModifyMutex = new(1, 1);
         private readonly ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
         // Cache artist item values
@@ -108,6 +110,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
         {
+            await _collectionModifyMutex.WaitAsync();
+
             foreach (var item in TrackItems)
                 DetachEvents(item);
 
@@ -141,10 +145,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
+
+            _collectionModifyMutex.Release();
         }
 
         private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            await _collectionModifyMutex.WaitAsync();
+
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
                 var tracks = e.NewItems.Cast<TrackViewModel>();
@@ -197,16 +205,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
                 throw new NotImplementedException();
+
+            _collectionModifyMutex.Release();
         }
 
-        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private async void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
+            await _collectionModifyMutex.WaitAsync();
             // If any track in the parent collection has more than 2 artists,
             // ALL track items should display their artist list, including this instance.
             var track = (ITrack)sender;
 
-            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
-            Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+            lock (_lastKnownTrackArtistsCount)
+            {
+                _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
+                Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+            }
 
             foreach (var item in _trackItems)
             {
@@ -216,7 +230,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 }
             }
 
-            bool showArtists = false;
+            bool showArtists;
 
             // Fast path
             if (track.TotalArtistItemsCount > 2)
@@ -236,6 +250,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         MAKE_ARTIST_DECISION:
             if (showArtists)
                 _trackItems.All(x => x.ShouldShowArtistList = true);
+
+            _collectionModifyMutex.Release();
         }
 
         private void ZuneTrackCollection_Unloaded(object sender, RoutedEventArgs e)

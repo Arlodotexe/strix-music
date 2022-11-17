@@ -18,11 +18,10 @@ internal class PopulateEmptyPlayableNamePlugin : PlayablePluginBase
     /// Initializes a new instance of the <see cref="PopulateEmptyPlayableNamePlugin"/> class.
     /// </summary>
     /// <param name="metadata">Contains metadata for a plugin. Used to identify a plugin before instantiation.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
     /// <param name="playableName">The name to use instead when the existing name is empty.</param>
-    public PopulateEmptyPlayableNamePlugin(ModelPluginMetadata metadata, IStrixDataRoot pluginRoot, IPlayable inner, string playableName)
-        : base(metadata, inner, pluginRoot)
+    public PopulateEmptyPlayableNamePlugin(ModelPluginMetadata metadata, IPlayable inner, string playableName)
+        : base(metadata, inner)
     {
         _playableName = playableName;
     }

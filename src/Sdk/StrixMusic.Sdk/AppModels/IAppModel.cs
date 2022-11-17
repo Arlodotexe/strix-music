@@ -10,9 +10,5 @@ namespace StrixMusic.Sdk.AppModels
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "Used as a common interface.")]
     public interface IAppModel
     {
-        /// <summary>
-        /// The <see cref="IStrixDataRoot"/> which is responsible for creating this instance.
-        /// </summary>
-        public IStrixDataRoot Root { get; }
     }
 }

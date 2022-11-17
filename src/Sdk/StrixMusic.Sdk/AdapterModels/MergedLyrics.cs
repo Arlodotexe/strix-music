@@ -21,13 +21,12 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Creates a new instance of <see cref="MergedLyrics"/>.
         /// </summary>
-        public MergedLyrics(ICoreLyrics source, IStrixDataRoot rootContext)
+        public MergedLyrics(ICoreLyrics source, MergedCollectionConfig config)
         {
             _source = source;
-            Root = rootContext;
 
             Sources = source.IntoList();
-            Track = new MergedTrack(source.Track.IntoList(), rootContext);
+            Track = new MergedTrack(source.Track.IntoList(), config);
         }
 
         /// <inheritdoc />
@@ -62,8 +61,5 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return false;
         }
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

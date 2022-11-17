@@ -35,26 +35,24 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
         /// </summary>
-        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources, IStrixDataRoot rootContext)
+        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources, MergedCollectionConfig config)
         {
             // TODO: Use top Preferred core.
             if (sources is null)
                 throw new ArgumentNullException(nameof(sources));
-
-            Root = rootContext;
 
             StoredSources = sources.ToList();
             Guard.HasSizeGreaterThan(StoredSources, 0, nameof(StoredSources));
 
             PreferredSource = StoredSources[0];
 
-            _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, rootContext);
-            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, rootContext);
-            _playlistCollectionMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, rootContext);
-            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, rootContext);
-            _playableCollectionGroupMap = new MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup>(this, rootContext);
-            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, rootContext);
-            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, rootContext);
+            _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this, config);
+            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this, config);
+            _playlistCollectionMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this, config);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this, config);
+            _playableCollectionGroupMap = new MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup>(this, config);
+            _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this, config);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this, config);
 
             AttachPropertyChangedEvents(PreferredSource);
             AttachCollectionChangedEvents();
@@ -831,8 +829,5 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             return other != null && other.Name.Equals(Name, StringComparison.InvariantCulture);
         }
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

@@ -133,17 +133,12 @@ public sealed class StorageCoreArtist : ICoreArtist
             return;
         }
 
-        // ====
-        // this might be the problem
-        // does oldTrackIds have all known ids? is newTrackIds adding to the oldTrackIds or replacing the entire list?
-        // is it emitting a different list of track IDs scanned from a different audio file?
-        // ====
-        var addedImages = newTrackIds.Except(oldTrackIds);
-        var removedImages = oldTrackIds.Except(newTrackIds);
+        var addedTracks = newTrackIds.Except(oldTrackIds);
+        var removedTracks = oldTrackIds.Except(newTrackIds);
 
         if (oldTrackIds.Count != newTrackIds.Count)
         {
-            TracksChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+            TracksChanged?.Invoke(this, await TransformAsync(addedTracks), await TransformAsync(removedTracks));
             TracksCountChanged?.Invoke(this, newTrackIds.Count);
         }
 

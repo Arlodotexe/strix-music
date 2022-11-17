@@ -64,6 +64,11 @@ internal static class AudioMetadataScanner
         return aggregatedData;
     }
 
+    /// <summary>
+    /// Assigns values to required fields which have no value. 
+    /// </summary>
+    /// <param name="file">The file that was scanned.</param>
+    /// <param name="metadata">The metadata extracted from the scanned file.</param>
     internal static void AssignMissingRequiredData(IFile file, Models.FileMetadata metadata)
     {
         // If titles are missing, we leave it empty so the UI can localize the "Untitled" name.
@@ -123,6 +128,11 @@ internal static class AudioMetadataScanner
         }
     }
 
+    /// <summary>
+    /// Combines multiple provided metadata instances into a single instance.
+    /// </summary>
+    /// <param name="metadata">The metadata to merge together.</param>
+    /// <returns>A single metadata instance with data from all provided models.</returns>
     internal static Models.FileMetadata MergeMetadataFields(Models.FileMetadata[] metadata)
     {
         Guard.HasSizeGreaterThan(metadata, 0, nameof(metadata));
@@ -454,12 +464,12 @@ internal static class AudioMetadataScanner
     /// <returns>A task representing the asynchronous operation. Value is the found audio metadata, or null if none was found.</returns>
     public static async Task<Models.FileMetadata?> GetTagLibMetadata(IFile file, CancellationToken cancellationToken)
     {
-        Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");
-
         // Only scan files supported by taglib
         var mimeType = file.Name.GetMimeType();
         if (!TagLibHelper.TagLibFileFactory.ContainsKey(mimeType))
             return null;
+
+        Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");
 
         try
         {
@@ -470,7 +480,6 @@ internal static class AudioMetadataScanner
 
             if (stream.CanSeek)
                 stream.Seek(0, SeekOrigin.Begin);
-
 
             Logger.LogInformation($"Loading {file.Name} with TagLib");
 

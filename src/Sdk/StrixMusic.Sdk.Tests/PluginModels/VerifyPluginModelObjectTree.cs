@@ -25,7 +25,7 @@ public class PluginModelObjectTree
     public async Task VerifyPlayableCollectionGroup()
     {
         var mock = new MockPlayableCollectionGroup();
-        var plugin = new PlayableCollectionGroupPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new PlayableCollectionGroupPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -34,7 +34,7 @@ public class PluginModelObjectTree
     public async Task VerifyLibrary()
     {
         var mock = new MockLibrary();
-        var plugin = new LibraryPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new LibraryPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -43,7 +43,7 @@ public class PluginModelObjectTree
     public async Task VerifyDiscoverables()
     {
         var mock = new MockDiscoverables();
-        var plugin = new DiscoverablesPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new DiscoverablesPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -52,7 +52,7 @@ public class PluginModelObjectTree
     public async Task VerifyRecentlyPlayed()
     {
         var mock = new MockRecentlyPlayed();
-        var plugin = new RecentlyPlayedPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new RecentlyPlayedPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -61,7 +61,7 @@ public class PluginModelObjectTree
     public async Task VerifySearchHistory()
     {
         var mock = new MockSearchHistory();
-        var plugin = new SearchHistoryPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new SearchHistoryPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -70,7 +70,7 @@ public class PluginModelObjectTree
     public async Task VerifyTrack()
     {
         var mock = new MockTrack();
-        var plugin = new TrackPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new TrackPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -79,7 +79,7 @@ public class PluginModelObjectTree
     public async Task VerifyTrackCollection()
     {
         var mock = new MockTrackCollection();
-        var plugin = new TrackCollectionPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new TrackCollectionPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -88,7 +88,7 @@ public class PluginModelObjectTree
     public async Task VerifyArtist()
     {
         var mock = new MockArtist();
-        var plugin = new ArtistPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new ArtistPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -97,7 +97,7 @@ public class PluginModelObjectTree
     public async Task VerifyArtistCollection()
     {
         var mock = new MockArtistCollection();
-        var plugin = new ArtistCollectionPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new ArtistCollectionPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -106,7 +106,7 @@ public class PluginModelObjectTree
     public async Task VerifyAlbum()
     {
         var mock = new MockAlbum();
-        var plugin = new AlbumPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new AlbumPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -115,7 +115,7 @@ public class PluginModelObjectTree
     public async Task VerifyAlbumCollection()
     {
         var mock = new MockAlbumCollection();
-        var plugin = new AlbumCollectionPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new AlbumCollectionPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -128,7 +128,7 @@ public class PluginModelObjectTree
             RelatedItems = new MockPlayableCollectionGroup(),
         };
         
-        var plugin = new PlaylistPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new PlaylistPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }
@@ -137,7 +137,7 @@ public class PluginModelObjectTree
     public async Task VerifyPlaylistCollection()
     {
         var mock = new MockPlaylistCollection();
-        var plugin = new PlaylistCollectionPluginWrapper(mock, new MockStrixDataRoot(), _modelPlugin);
+        var plugin = new PlaylistCollectionPluginWrapper(mock, _modelPlugin);
 
         await VerifyModelObjectTree.VerifyReturnsAsync<IPluginWrapper>(plugin);
     }

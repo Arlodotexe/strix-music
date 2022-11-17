@@ -26,6 +26,7 @@ public class StorageCore : ICore
     private readonly IModifiableFolder _metadataCacheFolder;
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private CoreState _coreState;
+    private ICoreImage? _logo;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageCore"/> class.
@@ -63,7 +64,15 @@ public class StorageCore : ICore
     public virtual string DisplayName { get; }
 
     /// <inheritdoc />
-    public virtual ICoreImage? Logo { get; set; }
+    public virtual ICoreImage? Logo
+    {
+        get => _logo;
+        set
+        {
+            _logo = value;
+            LogoChanged?.Invoke(this, value);
+        }
+    }
 
     /// <inheritdoc/>
     public string InstanceId { get; }
@@ -170,6 +179,7 @@ public class StorageCore : ICore
             }
 
             await ((StorageCoreLibrary)Library).InitAsync(cancellationToken);
+            IsInitialized = true;
         }
 
         CoreState = CoreState.Loaded;

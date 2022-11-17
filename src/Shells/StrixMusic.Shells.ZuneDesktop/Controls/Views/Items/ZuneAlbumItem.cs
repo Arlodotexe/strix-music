@@ -130,7 +130,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         {
             if (Album is not null)
             {
-                AlbumPlaybackTriggered?.Invoke(this, Album as AlbumViewModel ?? new AlbumViewModel(Album, Album.Root));
+                AlbumPlaybackTriggered?.Invoke(this, Album as AlbumViewModel ?? new AlbumViewModel(Album));
             }
         }
     }

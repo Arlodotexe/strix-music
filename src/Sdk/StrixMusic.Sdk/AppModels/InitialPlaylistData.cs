@@ -24,15 +24,6 @@ namespace StrixMusic.Sdk.AppModels
         private readonly IReadOnlyList<ICorePlaylist> _sources = new List<ICorePlaylist>();
 
         /// <summary>
-        /// Creates a new instance of <see cref="InitialPlaylistData"/>.
-        /// </summary>
-        /// <param name="root"></param>
-        public InitialPlaylistData(IStrixDataRoot root)
-        {
-            Root = root;
-        }
-
-        /// <summary>
         /// Holds any tracks that the user wants to add to the playlist on creation.
         /// </summary>
         public List<ITrack> Tracks { get; set; } = new();
@@ -322,8 +313,5 @@ namespace StrixMusic.Sdk.AppModels
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylist other) => false;
-
-        /// <inheritdoc/>
-        public IStrixDataRoot Root { get; }
     }
 }

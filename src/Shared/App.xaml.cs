@@ -8,8 +8,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using StrixMusic.Pages.Oobe;
 
 namespace StrixMusic
 {

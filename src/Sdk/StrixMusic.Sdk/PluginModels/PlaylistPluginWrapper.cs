@@ -28,23 +28,21 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     /// Initializes a new instance of the <see cref="PlaylistPluginWrapper"/> class.
     /// </summary>
     /// <param name="playlist">The instance to wrap around and apply plugins to.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal PlaylistPluginWrapper(IPlaylist playlist, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
+    internal PlaylistPluginWrapper(IPlaylist playlist, params SdkModelPlugin[] plugins)
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
         _playlist = ActivePlugins.Playlist.Execute(playlist);
-        Root = pluginRoot;
         _plugins = plugins;
 
         AttachEvents(_playlist);
 
         if (_playlist.RelatedItems != null)
-            RelatedItems = new PlayableCollectionGroupPluginWrapper(_playlist.RelatedItems, Root, plugins);
+            RelatedItems = new PlayableCollectionGroupPluginWrapper(_playlist.RelatedItems, plugins);
     }
 
     /// <inheritdoc/>
@@ -106,16 +104,16 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
 
     private void OnUrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IUrl>(new UrlPluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         UrlsChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
     private void OnImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
     {
-        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
-        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, Root, _plugins), x.Index)).ToList();
+        var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
+        var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IImage>(new ImagePluginWrapper(x.Data, _plugins), x.Index)).ToList();
 
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
@@ -308,7 +306,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     IReadOnlyList<ICorePlaylist> IMerged<ICorePlaylist>.Sources => ((IMerged<ICorePlaylist>)_playlist).Sources;
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, Root, _plugins));
+    public IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetImagesAsync(limit, offset, cancellationToken).Select(x => new ImagePluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playlist.AddImageAsync(image, index, cancellationToken);
@@ -317,7 +315,7 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     public bool Equals(ICoreUrlCollection other) => _playlist.Equals(other);
 
     /// <inheritdoc/>
-    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, Root, _plugins));
+    public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playlist.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
 
     /// <inheritdoc/>
     public Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => _playlist.AddUrlAsync(url, index, cancellationToken);
@@ -346,14 +344,11 @@ public class PlaylistPluginWrapper : IPlaylist, IPluginWrapper
     /// <inheritdoc/>
     public bool Equals(ICorePlaylist other) => _playlist.Equals(other);
 
-    private ITrack Transform(ITrack item) => new TrackPluginWrapper(item, Root, _plugins);
+    private ITrack Transform(ITrack item) => new TrackPluginWrapper(item, _plugins);
     
     /// <inheritdoc/>
     public IUserProfile? Owner => _playlist.Owner;
 
     /// <inheritdoc/>
     public IPlayableCollectionGroup? RelatedItems { get; }
-
-    /// <inheritdoc />
-    public IStrixDataRoot Root { get; }
 }

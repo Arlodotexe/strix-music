@@ -18,11 +18,10 @@ internal class PopulateEmptyPlaylistNamePlugin : PlaylistPluginBase
     /// Initializes a new instance of the <see cref="PopulateEmptyPlaylistNamePlugin"/> class.
     /// </summary>
     /// <param name="metadata">Contains metadata for a plugin. Used to identify a plugin before instantiation.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="inner">An implementation which member access is delegated to, unless the member is overridden in a derived class which changes the behavior.</param>
     /// <param name="playlistName">The name to use instead when the existing name is empty.</param>
-    public PopulateEmptyPlaylistNamePlugin(ModelPluginMetadata metadata, IStrixDataRoot pluginRoot, IPlaylist inner, string playlistName)
-        : base(metadata, inner, pluginRoot)
+    public PopulateEmptyPlaylistNamePlugin(ModelPluginMetadata metadata, IPlaylist inner, string playlistName)
+        : base(metadata, inner)
     {
         _playlistName = playlistName;
     }

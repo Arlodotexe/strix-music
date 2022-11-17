@@ -20,18 +20,19 @@ namespace StrixMusic.Sdk.AdapterModels
     /// </summary>
     public sealed class MergedSearch : ISearch, IMergedMutable<ICoreSearch>
     {
+        private readonly MergedCollectionConfig _config;
         private readonly List<ICoreSearch> _sources;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedSearch"/>.
         /// </summary>
-        public MergedSearch(IEnumerable<ICoreSearch> sources, IStrixDataRoot rootContext)
+        public MergedSearch(IEnumerable<ICoreSearch> sources, MergedCollectionConfig config)
         {
-            Root = rootContext;
+            _config = config;
             _sources = sources.ToList();
 
             if (Sources.Any(x => x.SearchHistory != null))
-                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), rootContext);
+                SearchHistory = new MergedSearchHistory(Sources.Select(x => x.SearchHistory).PruneNull(), config);
         }
         
         /// <inheritdoc cref="IMerged.SourcesChanged"/>
@@ -56,7 +57,7 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             var results = await Sources.InParallel(x => x.GetSearchResultsAsync(query, cancellationToken));
 
-            var merged = new MergedSearchResults(results, Root);
+            var merged = new MergedSearchResults(results, _config);
 
             return merged;
         }
@@ -79,7 +80,7 @@ namespace StrixMusic.Sdk.AdapterModels
                     // If we're at the start of the list, indiscriminately add to the collection.
                     if (i == 0)
                     {
-                        mergedData.InsertOrAdd(i, new MergedSearchQuery(item.IntoList(), Root));
+                        mergedData.InsertOrAdd(i, new MergedSearchQuery(item.IntoList()));
                         break;
                     }
 
@@ -91,7 +92,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                     if (item.CreatedAt > mergedData[i].CreatedAt)
                     {
-                        mergedData.InsertOrAdd(i, new MergedSearchQuery(item.IntoList(), Root));
+                        mergedData.InsertOrAdd(i, new MergedSearchQuery(item.IntoList()));
                         break;
                     }
                 }
@@ -128,8 +129,5 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>true. We always merge together search sources.</returns>
         public bool Equals(ICoreSearch other) => true;
-
-        /// <inheritdoc />
-        public IStrixDataRoot Root { get; }
     }
 }

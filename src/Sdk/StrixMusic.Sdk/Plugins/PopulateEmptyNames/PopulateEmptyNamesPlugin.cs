@@ -3,7 +3,6 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.Plugins.Model;
 
 namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
@@ -13,8 +12,6 @@ namespace StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 /// </summary>
 public class PopulateEmptyNamesPlugin : SdkModelPlugin
 {
-    private readonly IStrixDataRoot _dataRoot;
-
     private static readonly ModelPluginMetadata _metadata = new(
         id: nameof(PopulateEmptyNamesPlugin),
         displayName: "Populate empty names",
@@ -30,10 +27,9 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
     /// <summary>
     /// Initializes a new instance of the <see cref="PopulateEmptyNamesPlugin"/> class.
     /// </summary>
-    public PopulateEmptyNamesPlugin(IStrixDataRoot dataRoot)
+    public PopulateEmptyNamesPlugin()
         : base(_metadata)
     {
-        _dataRoot = dataRoot;
     }
 
     /// <summary>
@@ -46,7 +42,7 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         {
             Album.Clear();
             if (!string.IsNullOrWhiteSpace(value))
-                Album.Add(x => new PopulateEmptyAlbumNamePlugin(_metadata, _dataRoot, x, value));
+                Album.Add(x => new PopulateEmptyAlbumNamePlugin(_metadata, x, value));
 
             _emptyAlbumName = value;
         }
@@ -62,7 +58,7 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         {
             Artist.Clear();
             if (!string.IsNullOrWhiteSpace(value))
-                Artist.Add(x => new PopulateEmptyArtistNamePlugin(_metadata, _dataRoot, x, value));
+                Artist.Add(x => new PopulateEmptyArtistNamePlugin(_metadata, x, value));
 
             _emptyArtistName = value;
         }
@@ -78,7 +74,7 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         {
             Playlist.Clear();
             if (!string.IsNullOrWhiteSpace(value))
-                Playlist.Add(x => new PopulateEmptyPlaylistNamePlugin(_metadata, _dataRoot, x, value));
+                Playlist.Add(x => new PopulateEmptyPlaylistNamePlugin(_metadata, x, value));
 
             _emptyPlaylistName = value;
         }
@@ -94,7 +90,7 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         {
             Track.Clear();
             if (!string.IsNullOrWhiteSpace(value))
-                Track.Add(x => new PopulateEmptyTrackNamePlugin(_metadata, _dataRoot, x, value));
+                Track.Add(x => new PopulateEmptyTrackNamePlugin(_metadata, x, value));
 
             _emptyTrackName = value;
         }
@@ -110,7 +106,7 @@ public class PopulateEmptyNamesPlugin : SdkModelPlugin
         {
             Playable.Clear();
             if (!string.IsNullOrWhiteSpace(value))
-                Playable.Add(x => new PopulateEmptyPlayableNamePlugin(_metadata, _dataRoot, x, value));
+                Playable.Add(x => new PopulateEmptyPlayableNamePlugin(_metadata, x, value));
 
             _emptyDefaultName = value;
         }

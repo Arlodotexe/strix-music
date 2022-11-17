@@ -83,7 +83,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class FullyCustom : GenreCollectionPluginBase
         {
             public FullyCustom(IGenreCollection inner)
-                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(FullyCustom), "", new Version()), inner)
             {
             }
 
@@ -110,7 +110,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
         public class NoOverride : GenreCollectionPluginBase
         {
             public NoOverride(IGenreCollection inner)
-                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner, new MockStrixDataRoot())
+                : base(new ModelPluginMetadata("", nameof(NoOverride), "", new Version()), inner)
             {
             }
         }

@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
             var library = new MockLibrary();
             var image = new MockImage();
 
-            var libraryPluginWrapper = new LibraryPluginWrapper(library, new MockStrixDataRoot(), new PlayablePluginContainer(), new ImagePluginContainer());
+            var libraryPluginWrapper = new LibraryPluginWrapper(library, new PlayablePluginContainer(), new ImagePluginContainer());
             await libraryPluginWrapper.AddImageAsync(image, 0);
 
             var images = await libraryPluginWrapper.GetImagesAsync(1, 0).ToListAsync();
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
             var discoverables = new MockDiscoverables();
             var image = new MockImage();
 
-            var discoverablesPluginWrapper = new DiscoverablesPluginWrapper(discoverables, new MockStrixDataRoot(), new PlayablePluginContainer(), new ImagePluginContainer());
+            var discoverablesPluginWrapper = new DiscoverablesPluginWrapper(discoverables, new PlayablePluginContainer(), new ImagePluginContainer());
             await discoverablesPluginWrapper.AddImageAsync(image, 0);
 
             var images = await discoverablesPluginWrapper.GetImagesAsync(1, 0).ToListAsync();
@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
             var recentlyPlayed = new MockRecentlyPlayed();
             var image = new MockImage();
 
-            var recentlyPlayedPluginWrapper = new RecentlyPlayedPluginWrapper(recentlyPlayed, new MockStrixDataRoot(), new PlayablePluginContainer(), new ImagePluginContainer());
+            var recentlyPlayedPluginWrapper = new RecentlyPlayedPluginWrapper(recentlyPlayed, new PlayablePluginContainer(), new ImagePluginContainer());
             await recentlyPlayedPluginWrapper.AddImageAsync(image, 0);
 
             var images = await recentlyPlayedPluginWrapper.GetImagesAsync(1, 0).ToListAsync();
@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
             var searchHistory = new MockSearchHistory();
             var image = new MockImage();
 
-            var searchHistoryPluginWrapper = new SearchHistoryPluginWrapper(searchHistory, new MockStrixDataRoot(), new PlayablePluginContainer(), new ImagePluginContainer());
+            var searchHistoryPluginWrapper = new SearchHistoryPluginWrapper(searchHistory, new PlayablePluginContainer(), new ImagePluginContainer());
             await searchHistoryPluginWrapper.AddImageAsync(image, 0);
 
             var images = await searchHistoryPluginWrapper.GetImagesAsync(1, 0).ToListAsync();
@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
         public class ImagePlugin : ImagePluginBase
         {
             public ImagePlugin() 
-                : base(_imagePluginMetadata, new MockImage(), new MockStrixDataRoot())
+                : base(_imagePluginMetadata, new MockImage())
             {
             }
         }
@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Tests.PluginModels
         public class PlayablePlugin : PlayablePluginBase
         {
             public PlayablePlugin() 
-                : base(_metadata, new MockTrack(), new MockStrixDataRoot())
+                : base(_metadata, new MockTrack())
             {
             }
         }

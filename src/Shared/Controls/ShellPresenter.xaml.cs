@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.AppModels;
@@ -8,9 +9,12 @@ using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using StrixMusic.AppModels;
 
 namespace StrixMusic;
 
+[ObservableObject]
 public sealed partial class ShellPresenter : UserControl
 {
     private Shell? _currentShell;
@@ -24,13 +28,20 @@ public sealed partial class ShellPresenter : UserControl
         this.InitializeComponent();
 
         SizeChanged += ShellPresenter_SizeChanged;
+        
+        RegisterPropertyChangedCallback(WidthProperty, (d, e) => _ = ((ShellPresenter)d).OnSizeChangedAsync());
     }
 
-    private async void ShellPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void ShellPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        _ = OnSizeChangedAsync();
+    }
+
+    private async Task OnSizeChangedAsync()
     {
         // Only check when the user stops resizing the control for a few frames at 24 FPS (41.666ms) instead of the default 1 frame at 60FPS
         // Also disables concurrency
-        if (await Flow.Debounce($"{sender.GetHashCode()}", TimeSpan.FromMilliseconds(41.666 * 2)))
+        if (await Flow.Debounce($"{GetHashCode()}.{nameof(OnSizeChangedAsync)}", TimeSpan.FromMilliseconds(41.666 * 2)))
         {
             if (_currentIsPreferred && ShouldUseFallbackShell())
                 ApplyFallbackShell();
@@ -158,14 +169,17 @@ public sealed partial class ShellPresenter : UserControl
         PART_ShellDisplay.Content = _currentShell = CreatePreferredShell(PreferredShell, Root);
         _currentIsPreferred = true;
 
+        OnPropertyChanged(nameof(IsPreferredShellActive));
+        OnPropertyChanged(nameof(IsFallbackShellActive));
+
         Shell CreatePreferredShell(StrixMusicShells preferredShell, IStrixDataRoot? root)
         {
-            Shell shell = preferredShell switch
+            var shell = preferredShell switch
             {
                 StrixMusicShells.Sandbox => new SandboxShell(),
                 StrixMusicShells.GrooveMusic => new GrooveMusic(),
                 StrixMusicShells.ZuneDesktop => new ZuneDesktop(),
-                _ => throw new NotSupportedException("This shell has not been set up for display."),
+                _ => ThrowHelper.ThrowNotSupportedException<Shell>("This shell has not been set up for display."),
             };
 
             shell.Root = root;
@@ -180,6 +194,9 @@ public sealed partial class ShellPresenter : UserControl
 
         PART_ShellDisplay.Content = _currentShell = CreateFallbackShell(FallbackShell, Root);
         _currentIsPreferred = false;
+
+        OnPropertyChanged(nameof(IsPreferredShellActive));
+        OnPropertyChanged(nameof(IsFallbackShellActive));
 
         Shell CreateFallbackShell(AdaptiveShells adaptiveShells, IStrixDataRoot? root)
         {

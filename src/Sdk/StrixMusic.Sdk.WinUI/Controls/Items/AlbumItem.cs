@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         protected virtual void OnAlbumChanged(IAlbum? oldValue, IAlbum? newValue)
         {
             if (newValue is not null)
-                SetValue(AlbumViewModelProperty, Album as AlbumViewModel ?? new AlbumViewModel(newValue, newValue.Root));
+                SetValue(AlbumViewModelProperty, Album as AlbumViewModel ?? new AlbumViewModel(newValue));
         }
     }
 }

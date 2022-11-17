@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrixMusic;
+namespace StrixMusic.AppModels;
 
 /// <summary>
 /// The input methods supported by the shell.

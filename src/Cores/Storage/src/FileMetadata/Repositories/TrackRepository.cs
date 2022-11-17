@@ -34,7 +34,7 @@ internal sealed class TrackRepository : ITrackRepository
     public event EventHandler<IEnumerable<TrackMetadata>>? MetadataRemoved;
 
     /// <inheritdoc />
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public Task AddOrUpdateAsync(params TrackMetadata[] trackMetadata)

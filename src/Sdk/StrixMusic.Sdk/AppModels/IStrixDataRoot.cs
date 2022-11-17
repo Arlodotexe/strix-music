@@ -18,11 +18,6 @@ namespace StrixMusic.Sdk.AppModels
     public interface IStrixDataRoot : IAppModel, IMerged<ICore>, IAsyncInit, IAsyncDisposable
     {
         /// <summary>
-        /// A unique identifier for this instance.
-        /// </summary>
-        public string Id { get; }
-
-        /// <summary>
         /// Configuration options for merging collections items together.
         /// </summary>
         public MergedCollectionConfig MergeConfig { get; }

@@ -3,7 +3,6 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
-using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -22,9 +21,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// Creates a new instance of the <see cref="LibraryViewModel"/> class.
         /// </summary>
         /// <param name="library">The <see cref="ILibrary"/> to wrap.</param>
-        /// <param name="viewModelRoot">The ViewModel-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
-        public LibraryViewModel(ILibrary library, IStrixDataRoot viewModelRoot)
-            : base(library, viewModelRoot)
+        public LibraryViewModel(ILibrary library)
+            : base(library)
         {
             _library = library;
         }

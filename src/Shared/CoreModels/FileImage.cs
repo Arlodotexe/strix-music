@@ -32,9 +32,9 @@ namespace StrixMusic.CoreModels
         public double? Width { get; set; }
 
         /// <inheritdoc/>
-        public ICore SourceCore => null!;
+        public ICore SourceCore { get; set; } = null!;
 
         /// <inheritdoc/>
-        public Task<Stream> OpenStreamAsync() => _file.OpenStreamAsync(FileAccess.Read);
+        public Task<Stream> OpenStreamAsync() => _file.OpenStreamAsync();
     }
 }

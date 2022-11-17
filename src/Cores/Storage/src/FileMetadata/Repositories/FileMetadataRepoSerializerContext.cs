@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using StrixMusic.Cores.Storage.FileMetadata.Models;
 
@@ -16,7 +17,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Repositories;
 [JsonSerializable(typeof(ImageMetadata))]
 [JsonSerializable(typeof(Lyrics))]
 [JsonSerializable(typeof(List<Models.FileMetadata>))]
-[JsonSerializable(typeof(Dictionary<string, Models.FileMetadata>))]
+[JsonSerializable(typeof(ConcurrentDictionary<string, Models.FileMetadata>))]
 [JsonSerializable(typeof(List<AlbumMetadata>))]
 [JsonSerializable(typeof(List<ArtistMetadata>))]
 [JsonSerializable(typeof(List<PlaylistMetadata>))]

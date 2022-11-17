@@ -34,7 +34,7 @@ internal sealed class PlaylistRepository : IPlaylistRepository
     public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
 
     /// <inheritdoc />
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public Task AddOrUpdateAsync(params PlaylistMetadata[] playlistMetadata)

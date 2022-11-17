@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StrixMusic;
+namespace StrixMusic.AppModels;
 
 /// <summary>
 /// Container for metadata about shells that are available to use in this app.

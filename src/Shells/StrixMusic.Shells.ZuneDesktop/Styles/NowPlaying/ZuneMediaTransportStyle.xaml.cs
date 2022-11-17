@@ -1,7 +1,4 @@
-﻿using StrixMusic.Sdk.WinUI.Controls.Views;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.WinUI.Controls;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying
 {

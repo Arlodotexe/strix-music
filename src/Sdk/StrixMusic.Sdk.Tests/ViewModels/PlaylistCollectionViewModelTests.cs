@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddImageAsync(new Mock.AppModels.MockImage(), i);
 
-            var vm = new PlaylistCollectionViewModel(data, new MockStrixDataRoot());
+            var vm = new PlaylistCollectionViewModel(data);
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Images.Count);
@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddUrlAsync(new Mock.AppModels.MockUrl(), i);
 
-            var vm = new PlaylistCollectionViewModel(data, new MockStrixDataRoot());
+            var vm = new PlaylistCollectionViewModel(data);
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Urls.Count);
@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.Tests.ViewModels
             foreach (var i in Enumerable.Range(0, itemCount))
                 await data.AddPlaylistItemAsync(new Mock.AppModels.MockPlaylist(), i);
 
-            var vm = new PlaylistCollectionViewModel(data, new MockStrixDataRoot());
+            var vm = new PlaylistCollectionViewModel(data);
 
             Assert.IsFalse(vm.IsInitialized);
             Assert.AreEqual(0, vm.Playlists.Count);

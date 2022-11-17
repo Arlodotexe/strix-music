@@ -37,7 +37,7 @@ internal sealed class AlbumRepository : IAlbumRepository
     public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataRemoved;
 
     /// <inheritdoc />
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public async Task AddOrUpdateAsync(params AlbumMetadata[] metadata)

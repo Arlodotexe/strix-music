@@ -33,11 +33,12 @@ internal sealed class ArtistRepository : IArtistRepository
 
     /// <inheritdoc />
     public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataRemoved;
-        
+
+    /// <inheritdoc />
     public string Id { get; }
 
     /// <inheritdoc />
-    public Task<int> GetItemCount() => Task.FromResult(_inMemoryMetadata.Count);
+    public int GetItemCount() => _inMemoryMetadata.Count;
 
     /// <inheritdoc />
     public Task AddOrUpdateAsync(params ArtistMetadata[] metadata)

@@ -22,17 +22,15 @@ public class GenrePluginWrapper : IGenre, IPluginWrapper
     /// Initializes a new instance of the <see cref="PlayableCollectionGroupPluginWrapperBase"/> class.
     /// </summary>
     /// <param name="genre">The instance to wrap around and apply plugins to.</param>
-    /// <param name="pluginRoot">The plugin-enabled <see cref="IStrixDataRoot" /> which is responsible for creating this and all parent instances.</param>
     /// <param name="plugins">The plugins that are applied to items returned from or emitted by this collection.</param>
-    internal GenrePluginWrapper(IGenre genre, IStrixDataRoot pluginRoot, params SdkModelPlugin[] plugins)
+    internal GenrePluginWrapper(IGenre genre, params SdkModelPlugin[] plugins)
     {
         foreach (var item in plugins)
             ActivePlugins.Import(item);
 
-        ActivePlugins = GlobalModelPluginConnector.Create(pluginRoot, ActivePlugins);
+        ActivePlugins = GlobalModelPluginConnector.Create(ActivePlugins);
 
         _genre = genre;
-        Root = pluginRoot;
         AttachEvents(_genre);
     }
     
@@ -62,7 +60,4 @@ public class GenrePluginWrapper : IGenre, IPluginWrapper
 
     /// <inheritdoc/>
     public string Name => _genre.Name;
-
-    /// <inheritdoc />
-    public IStrixDataRoot Root { get; }
 }

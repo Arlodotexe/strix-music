@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using CommunityToolkit.Diagnostics;
-using OwlCore;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using Windows.Media;
 using Windows.Storage.Streams;
 
-namespace StrixMusic
+namespace StrixMusic.MediaPlayback
 {
     /// <summary>
     /// Integrates an <see cref="IPlaybackHandlerService"/> with the system media transport controls.
@@ -16,6 +17,7 @@ namespace StrixMusic
     {
         private readonly IPlaybackHandlerService _playbackHandlerService;
         private readonly SystemMediaTransportControls _systemMediaTransportControls;
+        private readonly SynchronizationContext _synchronizationContext;
 
         /// <summary>
         /// Creates a new instance of <see cref="SystemMediaTransportControlsHandler"/>
@@ -23,6 +25,7 @@ namespace StrixMusic
         /// <param name="playbackHandlerService">The playback handler to use for display with the system transport controls.</param>
         public SystemMediaTransportControlsHandler(IPlaybackHandlerService playbackHandlerService)
         {
+            _synchronizationContext = SynchronizationContext.Current ?? new();
             _playbackHandlerService = playbackHandlerService;
             _systemMediaTransportControls = SystemMediaTransportControls.GetForCurrentView();
 
@@ -64,28 +67,28 @@ namespace StrixMusic
 
         private void SystemMediaTransportControls_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            _ = Threading.OnPrimaryThread(() =>
+            _ = _synchronizationContext.PostAsync(async () =>
             {
                 switch (args.Button)
                 {
                     case SystemMediaTransportControlsButton.Play:
-                        _playbackHandlerService.ResumeAsync();
+                        await _playbackHandlerService.ResumeAsync();
                         break;
                     case SystemMediaTransportControlsButton.Stop:
                     case SystemMediaTransportControlsButton.Pause:
-                        _playbackHandlerService.PauseAsync();
+                        await _playbackHandlerService.PauseAsync();
                         break;
                     case SystemMediaTransportControlsButton.FastForward:
-                        _playbackHandlerService.SeekAsync(_playbackHandlerService.Position + TimeSpan.FromSeconds(5));
+                        await _playbackHandlerService.SeekAsync(_playbackHandlerService.Position + TimeSpan.FromSeconds(5));
                         break;
                     case SystemMediaTransportControlsButton.Rewind:
-                        _playbackHandlerService.SeekAsync(_playbackHandlerService.Position - TimeSpan.FromSeconds(5));
+                        await _playbackHandlerService.SeekAsync(_playbackHandlerService.Position - TimeSpan.FromSeconds(5));
                         break;
                     case SystemMediaTransportControlsButton.Next:
-                        _playbackHandlerService.NextAsync();
+                        await _playbackHandlerService.NextAsync();
                         break;
                     case SystemMediaTransportControlsButton.Previous:
-                        _playbackHandlerService.PreviousAsync();
+                        await _playbackHandlerService.PreviousAsync();
                         break;
                     case SystemMediaTransportControlsButton.Record:
                     case SystemMediaTransportControlsButton.ChannelUp:
