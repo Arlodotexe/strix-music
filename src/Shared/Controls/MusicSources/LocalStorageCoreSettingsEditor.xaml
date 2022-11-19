@@ -6,14 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Sizes">
-                <VisualState x:Name="vSmall">
+                <VisualState x:Name="Minimum">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="300"/>
+                        <labs:ControlSizeTrigger MinWidth="300" TargetElement="{Binding ElementName=RootGrid}"/>
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
@@ -25,7 +26,7 @@
 
                 <VisualState x:Name="Small">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="500"/>
+                        <labs:ControlSizeTrigger MinWidth="500" TargetElement="{Binding ElementName=RootGrid}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SetupLabel.FontSize" Value="25"/>
@@ -34,19 +35,10 @@
 
                 <VisualState x:Name="Mid">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="720"/>
+                        <labs:ControlSizeTrigger MinWidth="720" TargetElement="{Binding ElementName=RootGrid}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SetupLabel.FontSize" Value="30"/>
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="Large">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="SetupLabel.FontSize" Value="50"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -59,17 +51,16 @@
             <TextBlock x:Name="SetupLabel" Text="Add your local music files" HorizontalAlignment="Center"
                        TextWrapping="WrapWholeWords"
                        TextAlignment="Center"
-                       Margin="0,60,0,0"
-                       FontSize="50"/>
+                       FontSize="20"/>
 
-            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" Source="ms-appx:///Assets/Cores/LocalFiles/Browse.png" Height="500" Width="600"/>
+            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="ms-appx:///Assets/Cores/LocalFiles/Browse.png" />
 
             <StackPanel  Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
 
-                <Button Tapped="BrowseButton_Tapped" Width="300" Height="60"
+                <Button Tapped="BrowseButton_Tapped" 
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" BorderThickness="3">
                     <StackPanel Orientation="Horizontal" Spacing="40">
-                        <TextBlock FontSize="30" VerticalAlignment="Center" Text="Pick a Folder"/>
+                        <TextBlock VerticalAlignment="Center" Text="Pick a Folder"/>
                         <Image Height="40" Source="ms-appx:///Assets/Cores/LocalFiles/folder-icon.png"/>
                     </StackPanel>
                 </Button>
