@@ -3,13 +3,14 @@ using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
+using StrixMusic.AppModels;
 
-namespace StrixMusic.Services;
+namespace StrixMusic.Settings;
 
 /// <summary>
 /// A container for the settings needed to instantiate a <see cref="OneDriveFolder"/>.
 /// </summary>
-public class OneDriveCoreSettings : SettingsBase, IInstanceId
+public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="OneDriveCoreSettings"/> class.
@@ -23,7 +24,7 @@ public class OneDriveCoreSettings : SettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreSettings"/> class.
+    /// Initializes a new instance of the <see cref="MusicSourcesSettings"/> class.
     /// </summary>
     public OneDriveCoreSettings()
         : this(new MemoryFolder(Guid.NewGuid().ToString(), nameof(OneDriveCoreSettings)))
@@ -54,7 +55,7 @@ public class OneDriveCoreSettings : SettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Gets or sets the instance ID of the core.
+    /// Gets or sets the instance ID of the music source.
     /// </summary>
     public string InstanceId
     {
@@ -106,4 +107,24 @@ public class OneDriveCoreSettings : SettingsBase, IInstanceId
         get => GetSetting(() => string.Empty);
         set => SetSetting(value);
     }
+
+    /// <inheritdoc />
+    public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
+    {
+        nameof(InstanceId) or nameof(UserId) or nameof(FolderId) or nameof(ClientId) or nameof(TenantId) or nameof(RedirectUri)
+            => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
+        _ => true,
+    };
+
+    /// <inheritdoc />
+    public override object GetSettingByName(string settingName) => settingName switch
+    {
+        nameof(InstanceId) => InstanceId,
+        nameof(UserId) => UserId,
+        nameof(FolderId) => FolderId,
+        nameof(ClientId) => ClientId,
+        nameof(TenantId) => TenantId,
+        nameof(RedirectUri) => RedirectUri,
+        _ => throw new ArgumentOutOfRangeException(nameof(settingName), settingName, @"Unknown setting name specified.")
+    };
 }

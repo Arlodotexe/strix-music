@@ -20,10 +20,11 @@
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableCore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\CoreSettingsEditor.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\CoreSetup\LocalStorageCoreSetupPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceSetupTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\FrameworkElementToTagConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -35,7 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Settings\IInstanceId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">
       <DependentUpon>ShellPresenter.xaml</DependentUpon>
@@ -66,11 +67,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Settings\OneDriveCoreSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializerContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Settings\CoreSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\MusicSourcesSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\InputMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\ShellMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\ShellInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MediaPlayback\SystemMediaTransportControlsHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\CoreSettingsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">
@@ -81,11 +83,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\CoreSettingsEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\CoreSetup\LocalStorageCoreSetupPage.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

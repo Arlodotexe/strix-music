@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.ComponentModel;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Settings
 {
     /// <summary>
     /// An <see cref="IAsyncSerializer{TSerialized}"/> and implementation for serializing and deserializing streams using System.Text.Json.

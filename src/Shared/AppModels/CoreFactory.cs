@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Diagnostics;
 using OwlCore.Storage;
-using OwlCore.Storage.SystemIO;
 using OwlCore.Storage.Uwp;
 using StrixMusic.CoreModels;
 using StrixMusic.Cores.Storage;
-using StrixMusic.Services;
+using StrixMusic.Settings;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
 
 namespace StrixMusic.AppModels;
@@ -31,7 +30,7 @@ public class CoreFactory
     }
 
     /// <summary>
-    /// Creates a local storage core.
+    /// Creates a <see cref="StorageCore"/> from the provided <see cref="LocalStorageCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
@@ -68,7 +67,7 @@ public class CoreFactory
     }
 
     /// <summary>
-    /// Creates storage core using a configured OneDrive folder.
+    /// Creates a <see cref="StorageCore"/> from the provided <see cref="OneDriveCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>

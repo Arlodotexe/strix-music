@@ -17,6 +17,7 @@ using OwlCore.Storage.Memory;
 using OwlCore.Storage.SystemIO;
 using OwlCore.Storage.Uwp;
 using StrixMusic.Cores.Storage;
+using StrixMusic.MediaPlayback;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
@@ -24,12 +25,12 @@ using StrixMusic.Sdk.PluginModels;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Services;
+using StrixMusic.Settings;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.MediaPlayback;
+using ShellSettings = StrixMusic.Settings.ShellSettings;
 
 namespace StrixMusic.AppModels;
 
@@ -54,14 +55,14 @@ public partial class AppRoot : IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
-        CoreSettings = new CoreSettings(dataFolder);
+        MusicSourcesSettings = new MusicSourcesSettings(dataFolder);
         ShellSettings = new ShellSettings(dataFolder);
     }
 
     /// <summary>
     /// A container for the settings used throughout the app.
     /// </summary>
-    public CoreSettings CoreSettings { get; set; }
+    public MusicSourcesSettings MusicSourcesSettings { get; set; }
 
     /// <summary>
     /// A container for the settings used by shells.
@@ -88,13 +89,13 @@ public partial class AppRoot : IAsyncInit
             cancellationToken.ThrowIfCancellationRequested();
 
             var coreFactory = new CoreFactory(_dataFolder);
-            await CoreSettings.LoadAsync(cancellationToken);
+            await MusicSourcesSettings.LoadAsync(cancellationToken);
 
             // Create local storage cores
-            var localStorageCores = await CoreSettings.ConfiguredLocalStorageCores.InParallel(coreFactory.CreateLocalStorageCoreAsync);
+            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(coreFactory.CreateLocalStorageCoreAsync);
 
             // Create OneDrive cores
-            var oneDriveCores = await CoreSettings.ConfiguredOneDriveCores.InParallel(coreFactory.CreateOneDriveCoreAsync);
+            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(coreFactory.CreateOneDriveCoreAsync);
 
             // Merge cores together and apply plugins
             var allCores = localStorageCores
@@ -113,7 +114,7 @@ public partial class AppRoot : IAsyncInit
             await StrixDataRoot.InitAsync(cancellationToken);
 
             // Create/Remove cores when settings are added/removed.
-            CoreSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
             IsInitialized = true;
         }

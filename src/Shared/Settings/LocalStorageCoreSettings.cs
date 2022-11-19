@@ -4,13 +4,14 @@ using OwlCore.Diagnostics;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
 using OwlCore.Storage.Uwp;
+using StrixMusic.AppModels;
 
-namespace StrixMusic.Services;
+namespace StrixMusic.Settings;
 
 /// <summary>
 /// A container for the settings needed to instantiate a <see cref="WindowsStorageFolder"/>.
 /// </summary>
-public class LocalStorageCoreSettings : SettingsBase, IInstanceId
+public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LocalStorageCoreSettings"/> class.
@@ -20,6 +21,7 @@ public class LocalStorageCoreSettings : SettingsBase, IInstanceId
         : base(folder, AppSettingsSerializer.Singleton)
     {
         InstanceId = folder.Id;
+
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
     }
@@ -57,7 +59,7 @@ public class LocalStorageCoreSettings : SettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Gets or sets the instance ID of the core.
+    /// Gets or sets the instance ID of the musicSource.
     /// </summary>
     public string InstanceId
     {
@@ -82,4 +84,21 @@ public class LocalStorageCoreSettings : SettingsBase, IInstanceId
         get => GetSetting(() => string.Empty);
         set => SetSetting(value);
     }
+
+    /// <inheritdoc />
+    public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
+    {
+        nameof(FutureAccessToken) or nameof(Path) or nameof(InstanceId)
+            => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
+        _ => true,
+    };
+
+    /// <inheritdoc />
+    public override object GetSettingByName(string settingName) => settingName switch
+    {
+        nameof(InstanceId) => InstanceId,
+        nameof(FutureAccessToken) => FutureAccessToken,
+        nameof(Path) => Path,
+        _ => throw new ArgumentOutOfRangeException(nameof(settingName), settingName, @"Unknown setting name specified.")
+    };
 }

@@ -1,4 +1,4 @@
-﻿using StrixMusic.Services;
+﻿using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,14 +15,9 @@ namespace StrixMusic.Controls
         public DataTemplate? ShellSettingsTemplate { get; set; }
 
         /// <summary>
-        /// The data template for core settings.
+        /// The data template for music source settings.
         /// </summary>
-        public DataTemplate? CoreSettingsTemplate { get; set; }
-
-        /// <summary>
-        /// The data template for core settings.
-        /// </summary>
-        public DataTemplate? GeneralSettingsTemplate { get; set; }
+        public DataTemplate? MusicSourcesSettingsTemplate { get; set; }
 
         /// <summary>
         /// The data template to use when no other valid template are found.
@@ -32,7 +27,7 @@ namespace StrixMusic.Controls
         /// <inheritdoc/>
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => item switch
         {
-            CoreSettings _ => CoreSettingsTemplate ?? base.SelectTemplateCore(item, container),
+            MusicSourcesSettings _ => MusicSourcesSettingsTemplate ?? base.SelectTemplateCore(item, container),
             ShellSettings _ => ShellSettingsTemplate ?? base.SelectTemplateCore(item, container),
             _ => FallbackTemplate ?? base.SelectTemplateCore(item, container)
         };

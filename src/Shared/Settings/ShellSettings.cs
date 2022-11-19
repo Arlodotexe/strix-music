@@ -10,10 +10,10 @@ using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
-using Windows.Storage;
 using StrixMusic.AppModels;
+using Windows.Storage;
 
-namespace StrixMusic.Services;
+namespace StrixMusic.Settings;
 
 /// <summary>
 /// A container for settings related to shells.

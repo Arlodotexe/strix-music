@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Services;
+﻿namespace StrixMusic.AppModels;
 
 /// <summary>
 /// Uniquely identifies an instance.
