@@ -63,9 +63,9 @@
                 <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEBE8;}" Content="Debug" Tag="Debug" />
             </muxc:NavigationView.MenuItems>
 
-            <ScrollViewer>
+            <ScrollViewer MaxWidth="1000">
                 <ContentControl Content="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay, Converter={StaticResource FrameworkElementToTagConverter}}"
-                                MaxWidth="1000" Margin="15"
+                                Margin="15"
                                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                     <ContentControl.ContentTemplateSelector>
                         <local:SettingsTemplateSelector>
