@@ -32,7 +32,7 @@ public class MusicSourcesSettings : SettingsBase
         (
                 name: "Local Storage",
                 description: "Listen to music on your local disk.",
-                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"),
+                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"),
                 defaultSettingsFactory: async () => new LocalStorageCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}")))
         );
 

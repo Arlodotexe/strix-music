@@ -85,7 +85,7 @@
                     </TextBlock>
                 </Grid>
 
-                <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,40">
+                <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,20">
                     <Border x:Name="ShellPresenterContainer"
                             Height="1080"
                             Width="1920">

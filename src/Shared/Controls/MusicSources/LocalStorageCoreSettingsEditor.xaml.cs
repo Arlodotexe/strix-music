@@ -23,19 +23,6 @@ public sealed partial class LocalStorageCoreSettingsEditor : UserControl
         Loaded += LocalStorageCoreSettingsEditor_Loaded;
     }
 
-    private async void BrowseButton_Tapped(object sender, TappedRoutedEventArgs e)
-    {
-        var folderPicker = new FolderPicker();
-        folderPicker.FileTypeFilter.Add("*");
-
-        folderPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-        folderPicker.CommitButtonText = "Scan folder";
-
-        var pickedFolder = await folderPicker.PickSingleFolderAsync();
-
-
-    }
-
     private void LocalStorageCoreSettingsEditor_Loaded(object sender, RoutedEventArgs e)
     {
         Loaded -= LocalStorageCoreSettingsEditor_Loaded;
@@ -57,7 +44,7 @@ public sealed partial class LocalStorageCoreSettingsEditor : UserControl
     /// The backing dependency property for <ses cref="EditingFinishedCommand" />.
     /// </summary>
     public static readonly DependencyProperty EditingFinishedCommandProperty =
-        DependencyProperty.Register(nameof(EditingFinishedCommand), typeof(IRelayCommand<MusicSourceData>), typeof(LocalStorageCoreSettingsEditor), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(EditingFinishedCommand), typeof(IRelayCommand<MusicSourceItem>), typeof(LocalStorageCoreSettingsEditor), new PropertyMetadata(null));
 
     /// <summary>
     /// Collection holding the data for <see cref="Settings" />
@@ -71,9 +58,22 @@ public sealed partial class LocalStorageCoreSettingsEditor : UserControl
     /// <summary>
     /// The command to use when editing has completed.
     /// </summary>
-    public IRelayCommand<MusicSourceData>? EditingFinishedCommand
+    public IRelayCommand<MusicSourceItem>? EditingFinishedCommand
     {
-        get => (IRelayCommand<MusicSourceData>?)GetValue(EditingFinishedCommandProperty);
+        get => (IRelayCommand<MusicSourceItem>?)GetValue(EditingFinishedCommandProperty);
         set => SetValue(EditingFinishedCommandProperty, value);
+    }
+
+    private async void BrowseButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var folderPicker = new FolderPicker();
+        folderPicker.FileTypeFilter.Add("*");
+
+        folderPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+        folderPicker.CommitButtonText = "Scan folder";
+
+        var pickedFolder = await folderPicker.PickSingleFolderAsync();
+
+
     }
 }

@@ -24,7 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceSetupTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\FrameworkElementToTagConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
@@ -155,7 +155,7 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\SuperShell.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalFiles\Logo.svg">
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\Logo.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
@@ -169,6 +169,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)MediaPlayback\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\ipfs-logo.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">

@@ -25,22 +25,25 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Content="{x:Bind CurrentSettings, Mode=OneWay}" Padding="10,5" 
-                        BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
-                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <ContentControl.ContentTemplateSelector>
-                <musicSources:MusicSourceSetupTemplateSelector>
-                    <musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
-                        <DataTemplate x:DataType="musicSources:MusicSourceData">
-                            <musicSources:LocalStorageCoreSettingsEditor Settings="{Binding Settings}" EditingFinishedCommand="{x:Bind EditingFinishedCommand}" />
-                        </DataTemplate>
-                    </musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
-                </musicSources:MusicSourceSetupTemplateSelector>
-            </ContentControl.ContentTemplateSelector>
-        </ContentControl>
+        <Border Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
+                BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1" Margin="0,0,0,20" Padding="50,30">
+            <ContentControl Content="{x:Bind CurrentSettings, Mode=OneWay}" Padding="10,5" 
+                            BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ContentControl.ContentTemplateSelector>
+                    <musicSources:MusicSourceSetupTemplateSelector>
+                        <musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
+                            <DataTemplate x:DataType="musicSources:MusicSourceItem">
+                                <musicSources:LocalStorageCoreSettingsEditor Settings="{Binding Settings}" EditingFinishedCommand="{x:Bind EditingFinishedCommand}" />
+                            </DataTemplate>
+                        </musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
+                    </musicSources:MusicSourceSetupTemplateSelector>
+                </ContentControl.ContentTemplateSelector>
+            </ContentControl>
+        </Border>
 
         <!-- Available core list -->
-        <TextBlock Margin="0,15,0,8" Grid.Row="1" Text="Connect a new service:"/>
+        <TextBlock Margin="0,15,0,8" Grid.Row="1" Text="Connect a new music source:"/>
 
         <GridView Grid.Row="2" ItemsSource="{x:Bind AppRoot.MusicSourcesSettings.AvailableMusicSources, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
@@ -59,7 +62,7 @@
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="appModels:AvailableMusicSource">
-                    <Grid Padding="10" Margin="5" Height="120" Width="110" RowSpacing="7" CornerRadius="4">
+                    <Grid Padding="10" Margin="5" Height="120" Width="110" RowSpacing="7" CornerRadius="4" ToolTipService.ToolTip="{x:Bind Description}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>

@@ -6,15 +6,15 @@ using StrixMusic.AppModels;
 namespace StrixMusic.Controls.MusicSources;
 
 /// <summary>
-/// Holds the data needed to modify the settings for a music musicSource.
+/// Holds the data needed to modify the settings for a music source.
 /// </summary>
 [ObservableObject]
-public sealed partial class MusicSourceData
+public sealed partial class MusicSourceItem
 {
     /// <summary>
-    /// Creates a new instance of <see cref="MusicSourceData"/>.
+    /// Creates a new instance of <see cref="MusicSourceItem"/>.
     /// </summary>
-    internal MusicSourceData(SettingsBase settings, AvailableMusicSource musicSource)
+    internal MusicSourceItem(SettingsBase settings, AvailableMusicSource musicSource)
     {
         Settings = settings;
         MusicSource = musicSource;
@@ -33,5 +33,5 @@ public sealed partial class MusicSourceData
     /// <summary>
     /// The command to use when editing has completed.
     /// </summary>
-    public IRelayCommand<MusicSourceData>? EditingFinishedCommand { get; set; }
+    public IRelayCommand<MusicSourceItem>? EditingFinishedCommand { get; set; }
 }

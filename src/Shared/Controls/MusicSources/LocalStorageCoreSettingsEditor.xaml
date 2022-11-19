@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid x:Name="RootGrid">
-        <VisualStateManager.VisualStateGroups>
+        <!--<VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Sizes">
                 <VisualState x:Name="Minimum">
                     <VisualState.StateTriggers>
@@ -18,9 +18,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="BorderStackPanel.Width" Value="200"/>
-                        <Setter Target="MainStackPanel.Width" Value="200"/>
-                        <Setter Target="SetupLabel.FontSize" Value="20"/>
+                        <Setter Target="SetupLabel.FontSize" Value="25"/>
                     </VisualState.Setters>
                 </VisualState>
 
@@ -38,35 +36,37 @@
                         <labs:ControlSizeTrigger MinWidth="720" TargetElement="{Binding ElementName=RootGrid}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SetupLabel.FontSize" Value="30"/>
+                        <Setter Target="SetupLabel.FontSize" Value="25"/>
                     </VisualState.Setters>
                 </VisualState>
-
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        </VisualStateManager.VisualStateGroups>-->
 
-        <StackPanel x:Name="MainStackPanel"
-                    VerticalAlignment="Center" Orientation="Vertical" HorizontalAlignment="Center" >
+        <Grid RowSpacing="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <TextBlock x:Name="SetupLabel" Text="Add your local music files" HorizontalAlignment="Center"
+            <Border>
+                <Image Source="ms-appx:///Assets/Cores/LocalStorage/browse.svg" MaxWidth="300"/>
+            </Border>
+
+            <StackPanel Grid.Row="1">
+                <TextBlock FontSize="18"
+                           Text="Add local audio files" HorizontalAlignment="Center"
+                           TextWrapping="WrapWholeWords"
+                           TextAlignment="Center"/>
+
+                <TextBlock FontSize="12" Opacity="0.5"
+                       Text="Select a folder containing audio files and playlists" HorizontalAlignment="Center"
                        TextWrapping="WrapWholeWords"
-                       TextAlignment="Center"
-                       FontSize="20"/>
-
-            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="ms-appx:///Assets/Cores/LocalFiles/Browse.png" />
-
-            <StackPanel  Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-
-                <Button Tapped="BrowseButton_Tapped" 
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" BorderThickness="3">
-                    <StackPanel Orientation="Horizontal" Spacing="40">
-                        <TextBlock VerticalAlignment="Center" Text="Pick a Folder"/>
-                        <Image Height="40" Source="ms-appx:///Assets/Cores/LocalFiles/folder-icon.png"/>
-                    </StackPanel>
-                </Button>
-
+                       TextAlignment="Center"/>
             </StackPanel>
-        </StackPanel>
+
+            <Button Grid.Row="2" Click="BrowseButton_OnClick" Content="Select a folder" HorizontalAlignment="Center"/>
+        </Grid>
 
     </Grid>
 </UserControl>

@@ -52,7 +52,7 @@
         <muxc:NavigationView Grid.Row="1" x:Name="PartNavigationView"
                              IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
                              PaneDisplayMode="Auto"
-                             OpenPaneLength="275"
+                             OpenPaneLength="215"
                              SelectedItem="{Binding ElementName=AppearanceNavigationViewItem, Mode=OneTime}">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE713;}" Content="General" Tag="{x:Bind AppRoot, Mode=OneWay}" />

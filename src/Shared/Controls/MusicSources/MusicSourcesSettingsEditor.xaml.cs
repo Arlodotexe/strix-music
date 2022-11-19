@@ -13,7 +13,7 @@ namespace StrixMusic.Controls.MusicSources;
 [ObservableObject]
 public sealed partial class MusicSourcesSettingsEditor : UserControl
 {
-    [ObservableProperty] private MusicSourceData? _currentSettings;
+    [ObservableProperty] private MusicSourceItem? _currentSettings;
 
     /// <summary>
     /// Creates a new instance of <see cref="MusicSourcesSettingsEditor"/>.
@@ -47,7 +47,7 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     {
         var settings = await availableMusicSource.DefaultSettingsFactory();
             
-        CurrentSettings = new MusicSourceData(settings, availableMusicSource)
+        CurrentSettings = new MusicSourceItem(settings, availableMusicSource)
         {
             EditingFinishedCommand = CompleteCoreSetupCommand,
         };
@@ -56,10 +56,10 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     /// <summary>
     /// Called when the setup process 
     /// </summary>
-    /// <param name="data">Editor data about the music source settings which has completed setup.</param>
+    /// <param name="item">Editor data about the music source settings which has completed setup.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     [RelayCommand]
-    public async Task CompleteCoreSetupAsync(MusicSourceData data)
+    public async Task CompleteCoreSetupAsync(MusicSourceItem item)
     {
         // TODO
     }

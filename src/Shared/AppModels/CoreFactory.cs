@@ -47,7 +47,7 @@ public class CoreFactory
         var storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
         var folder = new WindowsStorageFolder(storageFolder);
 
-        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalFiles/Logo.svg"));
+        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
 
         var core = new StorageCore
