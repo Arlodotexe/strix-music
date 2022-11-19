@@ -32,9 +32,7 @@
                 <musicSources:MusicSourceSetupTemplateSelector>
                     <musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
                         <DataTemplate x:DataType="musicSources:MusicSourceData">
-                            <Grid>
-
-                            </Grid>
+                            <musicSources:LocalStorageCoreSettingsEditor Settings="{Binding Settings}" EditingFinishedCommand="{x:Bind EditingFinishedCommand}" />
                         </DataTemplate>
                     </musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
                 </musicSources:MusicSourceSetupTemplateSelector>
@@ -42,9 +40,9 @@
         </ContentControl>
 
         <!-- Available core list -->
-        <TextBlock Margin="0,15,0,8" Grid.Row="1" Text="Connect a new music musicSource:"/>
+        <TextBlock Margin="0,15,0,8" Grid.Row="1" Text="Connect a new service:"/>
 
-        <GridView Grid.Row="2" ItemsSource="{x:Bind AppRoot.MusicSourcesSettings, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
+        <GridView Grid.Row="2" ItemsSource="{x:Bind AppRoot.MusicSourcesSettings.AvailableMusicSources, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
                     <core:InvokeCommandAction Command="{x:Bind StartCoreSetupCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />

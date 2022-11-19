@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceSetupTemplateSelector.cs" />
@@ -80,6 +81,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

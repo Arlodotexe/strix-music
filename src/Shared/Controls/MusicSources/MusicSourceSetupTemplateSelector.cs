@@ -19,9 +19,10 @@ internal sealed class MusicSourceSetupTemplateSelector : DataTemplateSelector
     /// Selects the DataTemplate to control editing a specific settings implementation.
     /// </summary>
     /// <returns>The data template that was selected for the provided data.</returns>
-    protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => item switch
+    protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => (item as MusicSourceData)?.Settings switch
     {
         LocalStorageCoreSettings => LocalStorageTemplate ?? base.SelectTemplateCore(item, container),
+        null => base.SelectTemplateCore(item, container),
         _ => ThrowHelper.ThrowNotSupportedException<DataTemplate>($"Settings template has not been set up for {item.GetType()}"),
     };
 }
