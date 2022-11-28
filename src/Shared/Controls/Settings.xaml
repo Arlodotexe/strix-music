@@ -59,9 +59,16 @@
             </muxc:NavigationView.MenuItems>
 
             <ScrollViewer>
-                <controls:SwitchPresenter Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
-                    <controls:Case Value="{x:Bind AppearanceNavigationViewItem}">
-                        <local:ShellSettingsEditor ShellSettings="{x:Bind AppRoot.ShellSettings}" Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" Margin="5" />
+                <controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
+                    <controls:Case x:Name="AppearanceSettings" Value="{x:Bind AppearanceNavigationViewItem}">
+                        <!-- Border is used as fallback Content when control is unloaded -->
+                        <Border>
+                            <local:ShellSettingsEditor
+                                x:Name="ShellSettingsEditor"
+                                x:Load="{x:Bind AreEqual(NavViewSwitchPresenter.CurrentCase, AppearanceSettings), Mode=OneWay}"
+                                ShellSettings="{x:Bind AppRoot.ShellSettings}"
+                                Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" Margin="5" />
+                        </Border>
                     </controls:Case>
 
                     <controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">

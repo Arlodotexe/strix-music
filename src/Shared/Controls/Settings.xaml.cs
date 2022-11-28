@@ -1,6 +1,7 @@
 ﻿using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace StrixMusic.Controls;
 
@@ -31,4 +32,10 @@ public sealed partial class Settings : UserControl
     /// </summary>
     public static readonly DependencyProperty AppRootProperty =
         DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(Settings), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Returns a value that indicates if the provided case is the active one.
+    /// </summary>
+    /// <returns>A value that indicates if the provided case is the active one.</returns>
+    public bool AreEqual(object expected, object value) => expected == value;
 }
