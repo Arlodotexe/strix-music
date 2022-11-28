@@ -10,13 +10,10 @@
     xmlns:musicSources="using:StrixMusic.Controls.MusicSources"
     xmlns:converters="using:StrixMusic.Converters"
     xmlns:settings="using:StrixMusic.Settings"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-
-    <UserControl.Resources>
-        <converters:FrameworkElementToTagConverter x:Key="FrameworkElementToTagConverter"/>
-    </UserControl.Resources>
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
@@ -45,50 +42,36 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <ContentControl Content="{x:Bind AppRoot, Mode=OneWay}" x:Name="AppRootHolder" Visibility="Collapsed" />
-
         <local:StrixIcon ShowText="True" Margin="10" MaxWidth="300" IsAnimated="True" />
 
         <muxc:NavigationView Grid.Row="1" x:Name="PartNavigationView"
                              IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
                              PaneDisplayMode="Auto"
                              OpenPaneLength="215"
-                             SelectedItem="{Binding ElementName=AppearanceNavigationViewItem, Mode=OneTime}">
+                             SelectedItem="{Binding ElementName=GeneralNavigationViewItem, Mode=OneTime}">
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE713;}" Content="General" Tag="{x:Bind AppRoot, Mode=OneWay}" />
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE2B1;}" Content="Appearance" Tag="{x:Bind AppRoot.ShellSettings, Mode=OneWay}" x:Name="AppearanceNavigationViewItem" />
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEA69;}" Content="Music sources" Tag="{x:Bind AppRoot.MusicSourcesSettings, Mode=OneWay}" />
-                <muxc:NavigationViewItem Icon="{ui:BitmapIcon Source=/Assets/Strix/ipfs-logo.png}" Content="IPFS" Tag="{x:Bind AppRoot, Mode=OneWay}" />
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEE57;}" Content="About" Tag="About" />
-                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEBE8;}" Content="Debug" Tag="Debug" />
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE713;}" Content="General" x:Name="GeneralNavigationViewItem" />
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE2B1;}" Content="Appearance" x:Name="AppearanceNavigationViewItem" />
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEA69;}" Content="Music sources" x:Name="MusicSourcesNavigationViewItem" />
+                <muxc:NavigationViewItem Icon="{ui:BitmapIcon Source=/Assets/Strix/ipfs-logo.png}" Content="IPFS" x:Name="IpfsNavigationViewItem"/>
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEE57;}" Content="About" Tag="About" x:Name="AboutNavigationViewItem" />
+                <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEBE8;}" Content="Debug" Tag="Debug" x:Name="DebugNavigationViewItem" />
             </muxc:NavigationView.MenuItems>
 
-            <ScrollViewer MaxWidth="1000">
-                <ContentControl Content="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay, Converter={StaticResource FrameworkElementToTagConverter}}"
-                                Margin="15"
-                                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                    <ContentControl.ContentTemplateSelector>
-                        <local:SettingsTemplateSelector>
-                            <local:SettingsTemplateSelector.MusicSourcesSettingsTemplate>
-                                <DataTemplate x:DataType="settings:MusicSourcesSettings">
-                                    <musicSources:MusicSourcesSettingsEditor AppRoot="{Binding ElementName=AppRootHolder, Path=Content, Mode=OneWay}"/>
-                                </DataTemplate>
-                            </local:SettingsTemplateSelector.MusicSourcesSettingsTemplate>
+            <ScrollViewer>
+                <controls:SwitchPresenter Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
+                    <controls:Case Value="{x:Bind AppearanceNavigationViewItem}">
+                        <local:ShellSettingsEditor ShellSettings="{x:Bind AppRoot.ShellSettings}" Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" Margin="5" />
+                    </controls:Case>
 
-                            <local:SettingsTemplateSelector.ShellSettingsTemplate>
-                                <DataTemplate x:DataType="settings:ShellSettings">
-                                    <local:ShellSettingsEditor ShellSettings="{x:Bind}" Root="{Binding ElementName=AppRootHolder, Path=Content.StrixDataRoot, Mode=OneWay}" Margin="5" />
-                                </DataTemplate>
-                            </local:SettingsTemplateSelector.ShellSettingsTemplate>
+                    <controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
+                        <musicSources:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}"/>
+                    </controls:Case>
 
-                            <local:SettingsTemplateSelector.FallbackTemplate>
-                                <DataTemplate>
-                                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE822;" FontSize="28"/>
-                                </DataTemplate>
-                            </local:SettingsTemplateSelector.FallbackTemplate>
-                        </local:SettingsTemplateSelector>
-                    </ContentControl.ContentTemplateSelector>
-                </ContentControl>
+                    <controls:Case IsDefault="True">
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE822;" FontSize="28"/>
+                    </controls:Case>
+                </controls:SwitchPresenter>
             </ScrollViewer>
         </muxc:NavigationView>
     </Grid>
