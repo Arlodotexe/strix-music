@@ -8,8 +8,11 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:appModels="using:StrixMusic.AppModels"
+    xmlns:settings="using:StrixMusic.Settings"
     xmlns:converters="using:OwlCore.WinUI.Converters"
     xmlns:musicSources="using:StrixMusic.Controls.MusicSources"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -17,6 +20,7 @@
     <Grid>
         <Grid.Resources>
             <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
+            <converters:ObjectToTypeConverter x:Key="ObjectToTypeConverter"/>
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -27,19 +31,30 @@
 
         <Border Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
                 BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1" Margin="0,0,0,20" Padding="50,30">
-            <ContentControl Content="{x:Bind CurrentSettings, Mode=OneWay}" Padding="10,5" 
-                            BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
-                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <ContentControl.ContentTemplateSelector>
-                    <musicSources:MusicSourceSetupTemplateSelector>
-                        <musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
-                            <DataTemplate x:DataType="musicSources:MusicSourceItem">
-                                <musicSources:LocalStorageCoreSettingsEditor Settings="{Binding Settings}" EditingFinishedCommand="{x:Bind EditingFinishedCommand}" />
-                            </DataTemplate>
-                        </musicSources:MusicSourceSetupTemplateSelector.LocalStorageTemplate>
-                    </musicSources:MusicSourceSetupTemplateSelector>
-                </ContentControl.ContentTemplateSelector>
-            </ContentControl>
+            <Grid>
+                <GridView ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:CoreViewModel">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <local:CoreImage Image="{x:Bind Logo, Mode=OneWay}" Margin="20,0"/>
+
+                                <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" Grid.Row="1" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                
+                <controls:SwitchPresenter Value="{x:Bind ObjectToType(CurrentSettings.Settings), Mode=OneWay}">
+                    <controls:Case Value="settings:LocalStorageCoreSettings">
+                        <musicSources:LocalStorageCoreSettingsEditor Settings="{Binding CurrentSettings.Settings, Mode=OneWay}" EditingFinishedCommand="{x:Bind CurrentSettings.EditingFinishedCommand, Mode=OneWay}" />
+                    </controls:Case>
+                </controls:SwitchPresenter>
+            </Grid>
         </Border>
 
         <!-- Available core list -->
@@ -51,15 +66,7 @@
                     <core:InvokeCommandAction Command="{x:Bind StartCoreSetupCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-
-            <GridView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="BorderThickness" Value="2" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
-                </Style>
-            </GridView.ItemContainerStyle>
+            
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="appModels:AvailableMusicSource">
                     <Grid Padding="10" Margin="5" Height="120" Width="110" RowSpacing="7" CornerRadius="4" ToolTipService.ToolTip="{x:Bind Description}">

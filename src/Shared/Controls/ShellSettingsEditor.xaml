@@ -14,11 +14,56 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:appModels="using:StrixMusic.AppModels">
+    xmlns:appModels="using:StrixMusic.AppModels"
+    xmlns:winUi="using:OwlCore.WinUI"
+    xmlns:attached="using:OwlCore.WinUI.Attached"
+    x:Name="RootControl">
 
     <UserControl.Resources>
         <converters:ShellEnumToDisplayNameConverter x:Key="ShellEnumToDisplayNameConverter" />
         <converters:ShellEnumToDescriptionConverter x:Key="ShellEnumToDescriptionConverter"/>
+
+        <SetterBaseCollection x:Name="HideShellSizeIndicator">
+            <!-- Hide shell size indicator -->
+            <Setter Target="ShellPresenterViewbox.IsHitTestVisible" Value="False"/>
+        </SetterBaseCollection>
+
+        <SetterBaseCollection x:Name="DisableClickingShell">
+            <!-- Disable clicking on shell -->
+            <Setter Target="CurrentSizeText.Visibility" Value="Collapsed"/>
+        </SetterBaseCollection>
+
+        <SetterBaseCollection x:Name="ReducedPresenterPadding">
+            <!-- Reduce presenter padding -->
+            <Setter Target="ShellPreviewBorder.Padding" Value="20,0"/>
+        </SetterBaseCollection>
+
+        <SetterBaseCollection x:Name="ShellViewboxLeftOfShellDescriptor">
+            <!-- Position shell descriptor on right column, making space for an icon or preview on left. -->
+            <Setter Target="ShellDescriptorGrid.(Grid.Column)" Value="1"/>
+            <Setter Target="ShellDescriptorGrid.(Grid.ColumnSpan)" Value="1"/>
+            <Setter Target="ShellDescriptorGrid.(Grid.Row)" Value="0"/>
+            <Setter Target="ShellDescriptorGrid.(Grid.RowSpan)" Value="2"/>
+
+            <!-- Position Shell Viewbox to the left of the descriptor -->
+            <Setter Target="ShellPresenterViewbox.(Grid.Column)" Value="0"/>
+            <Setter Target="ShellPresenterViewbox.(Grid.ColumnSpan)" Value="1"/>
+            <Setter Target="ShellPresenterViewbox.(Grid.Row)" Value="0"/>
+            <Setter Target="ShellPresenterViewbox.(Grid.RowSpan)" Value="2"/>
+            <Setter Target="ShellPresenterViewbox.MaxWidth" Value="150"/>
+            <Setter Target="ShellPresenterViewbox.MaxHeight" Value="150"/>
+
+            <!-- Change shell presenter to a reasonably small size -->
+            <Setter Target="ShellPresenterContainer.Width" Value="1200"/>
+            <Setter Target="ShellPresenterContainer.Height" Value="720"/>
+        </SetterBaseCollection>
+
+        <winUi:CompositeVisualStateSetter x:Name="ShortStateSetters">
+            <StaticResource ResourceKey="HideShellSizeIndicator"/>
+            <StaticResource ResourceKey="DisableClickingShell"/>
+            <StaticResource ResourceKey="ReducedPresenterPadding"/>
+            <StaticResource ResourceKey="ShellViewboxLeftOfShellDescriptor"/>
+        </winUi:CompositeVisualStateSetter>
     </UserControl.Resources>
 
     <Grid x:Name="RootGrid">
@@ -29,30 +74,33 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowStates">
-                <VisualState x:Name="NarrowState">
+
+                <VisualState x:Name="ShortState" attached:CompositeVisualStateSetter.Setters="{StaticResource ShortStateSetters}">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
+                        <labs:ControlSizeTrigger TargetElement="{x:Bind RootControl}" 
+                                                 MaxHeight="700"/>
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="CurrentSizeText.(Grid.Row)" Value="1" />
-                    </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="WideState">
-                    <VisualState.StateTriggers>
-                        <labs:ControlSizeTrigger MaxWidth="700" TargetElement="{Binding ElementName=RootGrid}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="CurrentSizeText.(Grid.Row)" Value="0" />
-                    </VisualState.Setters>
-                </VisualState>
+
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Border 
+        <Border x:Name="ShellPreviewBorder" MaxWidth="1000"
             Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
-            BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1" Margin="0,0,0,20">
-            <StackPanel Padding="50,30">
-                <Grid>
+            BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1"
+            Margin="0,15,0,20" Padding="50,30">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="ShellDescriptorGrid" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -85,7 +133,8 @@
                     </TextBlock>
                 </Grid>
 
-                <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,20">
+                <Viewbox x:Name="ShellPresenterViewbox" Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,20"
+                         Grid.Row="1" Grid.ColumnSpan="2">
                     <Border x:Name="ShellPresenterContainer"
                             Height="1080"
                             Width="1920">
@@ -112,7 +161,7 @@
                         </Grid>
                     </Border>
                 </Viewbox>
-            </StackPanel>
+            </Grid>
         </Border>
 
         <StackPanel Spacing="8" Grid.Row="1">

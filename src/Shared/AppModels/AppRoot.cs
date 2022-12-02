@@ -102,8 +102,6 @@ public partial class AppRoot : IAsyncInit
                 .Concat(oneDriveCores)
                 .ToList<ICore>();
 
-            await TemporaryCoreSetupAsync(allCores);
-
             if (!allCores.Any())
                 return;
 
@@ -117,58 +115,6 @@ public partial class AppRoot : IAsyncInit
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
             IsInitialized = true;
-        }
-    }
-
-    private async Task TemporaryCoreSetupAsync(List<ICore> allCores)
-    {
-        var folder = await PickFolderAsync();
-        if (folder is null)
-            return;
-
-        var storageCore = await CreateStorageCoreAsync(folder);
-
-        allCores.Add(storageCore);
-
-        async Task<WindowsStorageFolder?> PickFolderAsync()
-        {
-            var picker = new FolderPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.MusicLibrary,
-                FileTypeFilter = { "*" },
-            };
-
-            var pickedFolder = await picker.PickSingleFolderAsync();
-
-            return pickedFolder is null ? null : new WindowsStorageFolder(pickedFolder);
-        }
-
-        async Task<StorageCore> CreateStorageCoreAsync(IFolder folderToScan)
-        {
-            var settingsFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderToScan.Id.HashMD5Fast(), CreationCollisionOption.OpenIfExists);
-
-            return new StorageCore
-            (
-                folderToScan,
-                metadataCacheFolder: new WindowsStorageFolder(settingsFolder),
-                displayName: folderToScan switch
-                {
-                    AddressableIpfsFolder => "IPFS",
-                    IpfsFolder => "IPFS",
-                    AddressableIpnsFolder => "IPNS",
-                    IpnsFolder => "IPNS",
-                    MfsFolder => "Kubo MFS",
-                    MemoryFolder => "In Memory",
-                    SystemFolder => "Local Storage",
-                    WindowsStorageFolder => "Local Storage",
-                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(name: nameof(folderToScan), message: $"Folder type {folderToScan.GetType()} does not have a configured display name. Core cannot be created."),
-                },
-                fileScanProgress: new(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}"))
-            )
-            {
-                ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
-            };
         }
     }
 

@@ -25,12 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceSetupTemplateSelector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Converters\FrameworkElementToTagConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml.cs">
       <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
     </Compile>

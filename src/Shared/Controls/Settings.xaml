@@ -48,7 +48,7 @@
                              IsBackButtonVisible="Collapsed" IsSettingsVisible="False"
                              PaneDisplayMode="Auto"
                              OpenPaneLength="215"
-                             SelectedItem="{Binding ElementName=GeneralNavigationViewItem, Mode=OneTime}">
+                             SelectedItem="{x:Bind AppearanceNavigationViewItem}">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE713;}" Content="General" x:Name="GeneralNavigationViewItem" />
                 <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xE2B1;}" Content="Appearance" x:Name="AppearanceNavigationViewItem" />
@@ -58,28 +58,25 @@
                 <muxc:NavigationViewItem Icon="{ui:FontIcon Glyph=&#xEBE8;}" Content="Debug" Tag="Debug" x:Name="DebugNavigationViewItem" />
             </muxc:NavigationView.MenuItems>
 
-            <ScrollViewer>
-                <controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
-                    <controls:Case x:Name="AppearanceSettings" Value="{x:Bind AppearanceNavigationViewItem}">
-                        <!-- Border is used as fallback Content when control is unloaded -->
-                        <Border>
-                            <local:ShellSettingsEditor
+            <controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
+                <controls:Case x:Name="AppearanceSettings" Value="{x:Bind AppearanceNavigationViewItem}">
+                    <!-- Border is used as fallback Content when control is unloaded -->
+                    <Border>
+                        <local:ShellSettingsEditor
                                 x:Name="ShellSettingsEditor"
-                                x:Load="{x:Bind AreEqual(NavViewSwitchPresenter.CurrentCase, AppearanceSettings), Mode=OneWay}"
                                 ShellSettings="{x:Bind AppRoot.ShellSettings}"
                                 Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" Margin="5" />
-                        </Border>
-                    </controls:Case>
+                    </Border>
+                </controls:Case>
 
-                    <controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
-                        <musicSources:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}"/>
-                    </controls:Case>
+                <controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
+                    <musicSources:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}"/>
+                </controls:Case>
 
-                    <controls:Case IsDefault="True">
-                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE822;" FontSize="28"/>
-                    </controls:Case>
-                </controls:SwitchPresenter>
-            </ScrollViewer>
+                <controls:Case IsDefault="True">
+                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE822;" FontSize="28"/>
+                </controls:Case>
+            </controls:SwitchPresenter>
         </muxc:NavigationView>
     </Grid>
 </UserControl>

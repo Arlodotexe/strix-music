@@ -51,6 +51,12 @@ public sealed partial class ShellSettingsEditor : UserControl
     }
 
     /// <summary>
+    /// Inverts a boolean value.
+    /// </summary>
+    /// <returns>An inverted bool value.</returns>
+    public bool InverseBool(bool val) => !val;
+
+    /// <summary>
     /// Inverts a boolean then converts it to Visibility.
     /// </summary>
     /// <returns>An inverted visibility representation of the bool value.</returns>

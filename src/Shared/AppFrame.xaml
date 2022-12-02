@@ -52,7 +52,7 @@
         <Border x:Name="ShadowTarget" Visibility="Collapsed" />
 
         <Border x:Name="SettingsBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                CornerRadius="6" Visibility="Collapsed">
+                CornerRadius="6" Visibility="Visible">
             <Grid>
                 <ui:Effects.Shadow>
                     <ui:AttachedDropShadow IsMasked="True" Opacity="0.25" CornerRadius="6" BlurRadius="25" CastTo="{x:Bind ShadowTarget}"/>

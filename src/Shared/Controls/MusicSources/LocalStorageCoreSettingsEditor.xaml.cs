@@ -1,10 +1,11 @@
 ﻿using System;
-using Windows.Storage.Pickers;
+using CommunityToolkit.Mvvm.Input;
+using OwlCore.Extensions;
 using StrixMusic.Settings;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using CommunityToolkit.Mvvm.Input;
 
 namespace StrixMusic.Controls.MusicSources;
 
@@ -66,6 +67,9 @@ public sealed partial class LocalStorageCoreSettingsEditor : UserControl
 
     private async void BrowseButton_OnClick(object sender, RoutedEventArgs e)
     {
+        if (Settings is null)
+            return;
+
         var folderPicker = new FolderPicker();
         folderPicker.FileTypeFilter.Add("*");
 
@@ -73,7 +77,16 @@ public sealed partial class LocalStorageCoreSettingsEditor : UserControl
         folderPicker.CommitButtonText = "Scan folder";
 
         var pickedFolder = await folderPicker.PickSingleFolderAsync();
+        if (pickedFolder is null)
+            return;
 
+        var token = pickedFolder.Path.HashMD5Fast();
 
+        StorageApplicationPermissions.FutureAccessList.AddOrReplace(token, pickedFolder);
+
+        Settings.FutureAccessToken = token;
+        Settings.Path = pickedFolder.Path;
+
+        _ = Settings.SaveAsync();
     }
 }

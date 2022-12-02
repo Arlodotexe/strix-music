@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.Converters;
+namespace OwlCore.WinUI.Converters;
 
 /// <summary>
 /// Converts the provided <see cref="FrameworkElement"/> to the value held in its' <see cref="FrameworkElement.Tag"/>.

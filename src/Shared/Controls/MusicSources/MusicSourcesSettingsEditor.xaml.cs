@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
@@ -63,4 +64,10 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     {
         // TODO
     }
+
+    /// <summary>
+    /// Converts the input to the object's Type.
+    /// </summary>
+    /// <returns>The Type of the given object.</returns>
+    public Type ObjectToType(object value) => value.GetType();
 }
