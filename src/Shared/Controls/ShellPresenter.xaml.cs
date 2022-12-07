@@ -108,7 +108,8 @@ public sealed partial class ShellPresenter : UserControl
 
     private bool ShouldUseFallbackShell()
     {
-        Guard.IsFalse(!IsLoaded);
+        if (!IsLoaded)
+            return false;
 
         var currentShellData = ShellInfo.All[PreferredShell];
 

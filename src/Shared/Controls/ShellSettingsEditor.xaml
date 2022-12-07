@@ -1,220 +1,399 @@
 ﻿<UserControl
-    x:Class="StrixMusic.Controls.ShellSettingsEditor"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:strixMusic="using:StrixMusic"
-    xmlns:converters="using:StrixMusic.Converters"
-    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:appModels="using:StrixMusic.AppModels"
-    xmlns:winUi="using:OwlCore.WinUI"
-    xmlns:attached="using:OwlCore.WinUI.Attached"
-    x:Name="RootControl">
+	x:Class="StrixMusic.Controls.ShellSettingsEditor"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+	xmlns:appModels="using:StrixMusic.AppModels"
+	xmlns:attached="using:OwlCore.WinUI.Attached"
+	xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+	xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:converters="using:StrixMusic.Converters"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:local="using:StrixMusic.Controls"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:strixMusic="using:StrixMusic"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:winUi="using:OwlCore.WinUI"
+	x:Name="RootControl">
 
-    <UserControl.Resources>
-        <converters:ShellEnumToDisplayNameConverter x:Key="ShellEnumToDisplayNameConverter" />
-        <converters:ShellEnumToDescriptionConverter x:Key="ShellEnumToDescriptionConverter"/>
+	<UserControl.Resources>
+		<converters:ShellEnumToDisplayNameConverter x:Key="ShellEnumToDisplayNameConverter" />
+		<converters:ShellEnumToDescriptionConverter x:Key="ShellEnumToDescriptionConverter" />
+	</UserControl.Resources>
 
-        <SetterBaseCollection x:Name="HideShellSizeIndicator">
-            <!-- Hide shell size indicator -->
-            <Setter Target="ShellPresenterViewbox.IsHitTestVisible" Value="False"/>
-        </SetterBaseCollection>
+	<Grid x:Name="RootGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
 
-        <SetterBaseCollection x:Name="DisableClickingShell">
-            <!-- Disable clicking on shell -->
-            <Setter Target="CurrentSizeText.Visibility" Value="Collapsed"/>
-        </SetterBaseCollection>
+		<Border
+			x:Name="ShellPreviewBorder"
+			MaxWidth="1000"
+			MaxHeight="1000"
+			Margin="0,15,0,20"
+			Padding="50,30"
+			Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
+			BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+			BorderThickness="1">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
 
-        <SetterBaseCollection x:Name="ReducedPresenterPadding">
-            <!-- Reduce presenter padding -->
-            <Setter Target="ShellPreviewBorder.Padding" Value="20,0"/>
-        </SetterBaseCollection>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
-        <SetterBaseCollection x:Name="ShellViewboxLeftOfShellDescriptor">
-            <!-- Position shell descriptor on right column, making space for an icon or preview on left. -->
-            <Setter Target="ShellDescriptorGrid.(Grid.Column)" Value="1"/>
-            <Setter Target="ShellDescriptorGrid.(Grid.ColumnSpan)" Value="1"/>
-            <Setter Target="ShellDescriptorGrid.(Grid.Row)" Value="0"/>
-            <Setter Target="ShellDescriptorGrid.(Grid.RowSpan)" Value="2"/>
+				<Grid
+					x:Name="ShellDescriptorGrid"
+					Grid.Row="0"
+					Grid.ColumnSpan="2"
+					VerticalAlignment="Center"
+					RowSpacing="3">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
 
-            <!-- Position Shell Viewbox to the left of the descriptor -->
-            <Setter Target="ShellPresenterViewbox.(Grid.Column)" Value="0"/>
-            <Setter Target="ShellPresenterViewbox.(Grid.ColumnSpan)" Value="1"/>
-            <Setter Target="ShellPresenterViewbox.(Grid.Row)" Value="0"/>
-            <Setter Target="ShellPresenterViewbox.(Grid.RowSpan)" Value="2"/>
-            <Setter Target="ShellPresenterViewbox.MaxWidth" Value="150"/>
-            <Setter Target="ShellPresenterViewbox.MaxHeight" Value="150"/>
+					<TextBlock
+						x:Name="PreferredShellDisplayName"
+						Grid.Row="0"
+						Grid.Column="0"
+						FontSize="22"
+						Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"
+						TextWrapping="WrapWholeWords"
+						Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}" />
 
-            <!-- Change shell presenter to a reasonably small size -->
-            <Setter Target="ShellPresenterContainer.Width" Value="1200"/>
-            <Setter Target="ShellPresenterContainer.Height" Value="720"/>
-        </SetterBaseCollection>
+					<TextBlock
+						x:Name="FallbackShellDisplayName"
+						Grid.Row="0"
+						Grid.Column="0"
+						FontSize="22"
+						Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"
+						TextWrapping="WrapWholeWords"
+						Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}" />
 
-        <winUi:CompositeVisualStateSetter x:Name="ShortStateSetters">
-            <StaticResource ResourceKey="HideShellSizeIndicator"/>
-            <StaticResource ResourceKey="DisableClickingShell"/>
-            <StaticResource ResourceKey="ReducedPresenterPadding"/>
-            <StaticResource ResourceKey="ShellViewboxLeftOfShellDescriptor"/>
-        </winUi:CompositeVisualStateSetter>
-    </UserControl.Resources>
+					<TextBlock
+						x:Name="PreferredShellDescription"
+						Grid.Row="1"
+						Grid.Column="0"
+						FontSize="14"
+						Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"
+						TextWrapping="WrapWholeWords"
+						Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}" />
 
-    <Grid x:Name="RootGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+					<TextBlock
+						x:Name="FallbackShellDescription"
+						Grid.Row="1"
+						Grid.Column="0"
+						FontSize="14"
+						Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"
+						TextWrapping="WrapWholeWords"
+						Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}" />
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="WindowStates">
+					<TextBlock
+						x:Name="CurrentSizeText"
+						Grid.Row="1"
+						Grid.Column="1"
+						HorizontalAlignment="Right">
+						<Run Text="{Binding ElementName=ShellPresenterContainer, Path=Width}" />
+						<Run Text="x" />
+						<Run Text="{Binding ElementName=ShellPresenterContainer, Path=Height}" />
+					</TextBlock>
 
-                <VisualState x:Name="ShortState" attached:CompositeVisualStateSetter.Setters="{StaticResource ShortStateSetters}">
-                    <VisualState.StateTriggers>
-                        <labs:ControlSizeTrigger TargetElement="{x:Bind RootControl}" 
-                                                 MaxHeight="700"/>
-                    </VisualState.StateTriggers>
-                </VisualState>
+					<controls1:WrapPanel
+						x:Name="SizeButtonsPanel"
+						Grid.Row="0"
+						Grid.Column="2"
+						Margin="0"
+						HorizontalAlignment="Right">
+						<Button Margin="4,0" ToolTipService.ToolTip="Picture in picture (500 x 500)">
+							<Button.Content>
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE15A;" />
+							</Button.Content>
 
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+							<interactivity:Interaction.Behaviors>
+								<core:EventTriggerBehavior EventName="Click">
+									<core:ChangePropertyAction
+										PropertyName="Height"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="500" />
+									<core:ChangePropertyAction
+										PropertyName="Width"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="500" />
+								</core:EventTriggerBehavior>
+							</interactivity:Interaction.Behaviors>
+						</Button>
 
-        <Border x:Name="ShellPreviewBorder" MaxWidth="1000"
-            Background="{ThemeResource SystemControlChromeMediumLowAcrylicElementMediumBrush}"
-            BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1"
-            Margin="0,15,0,20" Padding="50,30">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+						<Button Margin="4,0" ToolTipService.ToolTip="Mobile phone (750 x 500)">
+							<Button.Content>
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE1C9;" />
+							</Button.Content>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+							<interactivity:Interaction.Behaviors>
+								<core:EventTriggerBehavior EventName="Click">
+									<core:ChangePropertyAction
+										PropertyName="Height"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="750" />
+									<core:ChangePropertyAction
+										PropertyName="Width"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="500" />
+								</core:EventTriggerBehavior>
+							</interactivity:Interaction.Behaviors>
+						</Button>
 
-                <Grid x:Name="ShellDescriptorGrid" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+						<Button Margin="4,0" ToolTipService.ToolTip="Tablet (800 x 1200)">
+							<Button.Content>
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE70A;" />
+							</Button.Content>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}"
-                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="20"
-                               Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
+							<interactivity:Interaction.Behaviors>
+								<core:EventTriggerBehavior EventName="Click">
+									<core:ChangePropertyAction
+										PropertyName="Height"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="800" />
+									<core:ChangePropertyAction
+										PropertyName="Width"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="1280" />
+								</core:EventTriggerBehavior>
+							</interactivity:Interaction.Behaviors>
+						</Button>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}"
-                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="20"
-                               Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
+						<Button Margin="4,0" ToolTipService.ToolTip="Desktop/Laptop (1920 x 1080)">
+							<Button.Content>
+								<FontIcon
+									Margin="3"
+									FontFamily="{ThemeResource SymbolThemeFontFamily}"
+									FontSize="14"
+									Glyph="&#xEC4E;" />
+							</Button.Content>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}"
-                           TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="14"
-                           Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"/>
+							<interactivity:Interaction.Behaviors>
+								<core:EventTriggerBehavior EventName="Click">
+									<core:ChangePropertyAction
+										PropertyName="Height"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="1080" />
+									<core:ChangePropertyAction
+										PropertyName="Width"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="1920" />
+								</core:EventTriggerBehavior>
+							</interactivity:Interaction.Behaviors>
+						</Button>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}"
-                               TextWrapping="WrapWholeWords" HorizontalAlignment="Left" FontSize="14"
-                               Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDescriptionConverter}}"/>
+						<Button
+							Margin="4,0,0,0"
+							Content="4K"
+							FontSize="15"
+							ToolTipService.ToolTip="4K (2160 x 3840)">
+							<interactivity:Interaction.Behaviors>
+								<core:EventTriggerBehavior EventName="Click">
+									<core:ChangePropertyAction
+										PropertyName="Height"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="2160" />
+									<core:ChangePropertyAction
+										PropertyName="Width"
+										TargetObject="{x:Bind ShellPresenterContainer}"
+										Value="3840" />
+								</core:EventTriggerBehavior>
+							</interactivity:Interaction.Behaviors>
+						</Button>
+					</controls1:WrapPanel>
+				</Grid>
 
-                    <TextBlock x:Name="CurrentSizeText" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
-                        <Run Text="{Binding ElementName=ShellPresenterContainer, Path=Width}"/>
-                        <Run Text="x"/>
-                        <Run Text="{Binding ElementName=ShellPresenterContainer, Path=Height}"/>
-                    </TextBlock>
-                </Grid>
+				<Viewbox
+					x:Name="ShellPresenterViewbox"
+					Grid.Row="1"
+					Grid.ColumnSpan="2"
+					Margin="0,10,20,20"
+					Stretch="Uniform"
+					StretchDirection="Both">
+					<Border
+						x:Name="ShellPresenterContainer"
+						Width="1920"
+						Height="1080">
+						<Grid BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1">
+							<strixMusic:ShellPresenter
+								x:Name="ShellPresenter"
+								FallbackShell="{x:Bind ShellSettings.FallbackShell}"
+								PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"
+								Root="{x:Bind Root, Mode=OneWay}" />
 
-                <Viewbox x:Name="ShellPresenterViewbox" Stretch="Uniform" StretchDirection="Both" Margin="0,20,20,20"
-                         Grid.Row="1" Grid.ColumnSpan="2">
-                    <Border x:Name="ShellPresenterContainer"
-                            Height="1080"
-                            Width="1920">
-                        <Grid BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                            <strixMusic:ShellPresenter x:Name="ShellPresenter"
-                                                       PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"
-                                                       FallbackShell="{x:Bind ShellSettings.FallbackShell}"
-                                                       Root="{x:Bind Root, Mode=OneWay}"/>
+							<labs:PropertySizer
+								Width="35"
+								Height="{Binding ElementName=ShellPresenterContainer, Path=Height}"
+								Margin="0,0,-45,0"
+								HorizontalAlignment="Right"
+								Binding="{x:Bind ShellPresenterContainer.Width, Mode=TwoWay}"
+								FontSize="25"
+								Maximum="4000"
+								Minimum="500" />
 
-                            <labs:PropertySizer HorizontalAlignment="Right"
-                                            Width="35" Margin="0,0,-45,0" FontSize="25"
-                                            Height="{Binding ElementName=ShellPresenterContainer, Path=Height}"
-                                            Minimum="500"
-                                            Maximum="5000"
-                                            Binding="{x:Bind ShellPresenterContainer.Width, Mode=TwoWay}"/>
+							<labs:PropertySizer
+								Width="{Binding ElementName=ShellPresenterContainer, Path=Width}"
+								Height="35"
+								Margin="0,0,0,-45"
+								VerticalAlignment="Bottom"
+								Binding="{x:Bind ShellPresenterContainer.Height, Mode=TwoWay}"
+								FontSize="25"
+								Maximum="4000"
+								Minimum="250"
+								Orientation="Horizontal" />
+						</Grid>
+					</Border>
+				</Viewbox>
+			</Grid>
+		</Border>
 
-                            <labs:PropertySizer VerticalAlignment="Bottom"
-                                            Orientation="Horizontal"
-                                            Height="35" Margin="0,0,0,-45" FontSize="25"
-                                            Width="{Binding ElementName=ShellPresenterContainer, Path=Width}"
-                                            Minimum="250"
-                                            Maximum="2000"
-                                            Binding="{x:Bind ShellPresenterContainer.Height, Mode=TwoWay}"/>
-                        </Grid>
-                    </Border>
-                </Viewbox>
-            </Grid>
-        </Border>
+		<StackPanel Grid.Row="1" Spacing="8">
+			<labs:SettingsCard Header="Preferred Skin" HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
+				<ComboBox ItemsSource="{ui:EnumValues Type=appModels:StrixMusicShells}" SelectedItem="{x:Bind ShellSettings.PreferredShell, Mode=TwoWay}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Converter={StaticResource ShellEnumToDisplayNameConverter}}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
 
-        <StackPanel Spacing="8" Grid.Row="1">
-            <labs:SettingsCard Header="Preferred Skin"
-                               HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
-                <ComboBox SelectedItem="{x:Bind ShellSettings.PreferredShell, Mode=TwoWay}"
-                          ItemsSource="{ui:EnumValues Type=appModels:StrixMusicShells}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="SelectionChanged">
+							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</ComboBox>
+			</labs:SettingsCard>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SelectionChanged">
-                            <core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}"/>
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </ComboBox>
-            </labs:SettingsCard>
+			<labs:SettingsCard
+				Description="The skin to use when the window size is unsupported by the Preferred Skin."
+				Header="Fallback Skin"
+				HeaderIcon="{ui:FontIcon Glyph=&#xE61F;}"
+				Visibility="{x:Bind IsAdaptiveShellToInvertedVisibility(ShellSettings.PreferredShell), Mode=OneWay}">
+				<ComboBox ItemsSource="{ui:EnumValues Type=appModels:AdaptiveShells}" SelectedItem="{x:Bind ShellSettings.FallbackShell, Mode=TwoWay}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Converter={StaticResource ShellEnumToDisplayNameConverter}}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
 
-            <labs:SettingsCard Header="Fallback Skin" Visibility="{x:Bind IsAdaptiveShellToInvertedVisibility(ShellSettings.PreferredShell), Mode=OneWay}"
-                               Description="The skin to used when the window size is unsupported by the Preferred Skin."
-                               HeaderIcon="{ui:FontIcon Glyph=&#xE61F;}">
-                <ComboBox SelectedItem="{x:Bind ShellSettings.FallbackShell, Mode=TwoWay}"
-                      ItemsSource="{ui:EnumValues Type=appModels:AdaptiveShells}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ShellEnumToDisplayNameConverter}}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="SelectionChanged">
+							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</ComboBox>
+			</labs:SettingsCard>
 
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SelectionChanged">
-                            <core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </ComboBox>
-            </labs:SettingsCard>
+			<labs:SettingsCard Header="Restore appearance defaults" HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
+				<Button
+					Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}"
+					CommandParameter="{x:Null}"
+					Content="Restore defaults">
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="Click">
+							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</Button>
+			</labs:SettingsCard>
 
-            <labs:SettingsCard Header="Restore appearance defaults"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
-                <Button Content="Restore defaults" Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}" CommandParameter="{x:Null}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </Button>
-            </labs:SettingsCard>
+			<ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.SaveCommand.IsRunning, Mode=OneWay}" />
+			<ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.LoadCommand.IsRunning, Mode=OneWay}" />
+		</StackPanel>
 
-            <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.SaveCommand.IsRunning, Mode=OneWay}" />
-            <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.LoadCommand.IsRunning, Mode=OneWay}"/>
-        </StackPanel>
-    </Grid>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="WindowStates">
+
+				<VisualState x:Name="ShortState">
+					<VisualState.StateTriggers>
+						<labs:ControlSizeTrigger MaxWidth="600" TargetElement="{x:Bind RootControl}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!--  Hide shell size indicator  -->
+						<Setter Target="CurrentSizeText.Visibility" Value="Collapsed" />
+
+						<!--  Move size buttons to bottom  -->
+						<Setter Target="SizeButtonsPanel.(Grid.Row)" Value="2" />
+						<Setter Target="SizeButtonsPanel.(Grid.Column)" Value="0" />
+						<Setter Target="SizeButtonsPanel.(Grid.ColumnSpan)" Value="2" />
+						<Setter Target="SizeButtonsPanel.HorizontalAlignment" Value="Left" />
+						<Setter Target="SizeButtonsPanel.Margin" Value="0,15,0,0" />
+
+						<!--  Move size indicator to bottom  -->
+						<Setter Target="CurrentSizeText.(Grid.Row)" Value="3" />
+						<Setter Target="CurrentSizeText.(Grid.RowSpan)" Value="1" />
+						<Setter Target="CurrentSizeText.VerticalAlignment" Value="Center" />
+
+						<!--  Disable clicking on shell  -->
+						<Setter Target="ShellPresenterViewbox.IsHitTestVisible" Value="False" />
+
+						<!--  Reduce presenter padding  -->
+						<Setter Target="ShellPreviewBorder.Padding" Value="10" />
+
+						<!--  Position shell descriptor on right column, making space for an icon or preview on left.  -->
+						<Setter Target="ShellDescriptorGrid.(Grid.Column)" Value="1" />
+						<Setter Target="ShellDescriptorGrid.(Grid.ColumnSpan)" Value="1" />
+						<Setter Target="ShellDescriptorGrid.(Grid.Row)" Value="0" />
+						<Setter Target="ShellDescriptorGrid.(Grid.RowSpan)" Value="3" />
+
+						<!--  Position Shell Viewbox to the left of the descriptor  -->
+						<Setter Target="ShellPresenterViewbox.(Grid.Column)" Value="0" />
+						<Setter Target="ShellPresenterViewbox.(Grid.ColumnSpan)" Value="1" />
+						<Setter Target="ShellPresenterViewbox.(Grid.Row)" Value="0" />
+						<Setter Target="ShellPresenterViewbox.(Grid.RowSpan)" Value="3" />
+						<Setter Target="ShellPresenterViewbox.MaxWidth" Value="150" />
+						<Setter Target="ShellPresenterViewbox.MaxHeight" Value="150" />
+
+						<!--  Change shell presenter to a reasonably small size  -->
+						<Setter Target="ShellPresenterContainer.Width" Value="1200" />
+						<Setter Target="ShellPresenterContainer.Height" Value="720" />
+					</VisualState.Setters>
+				</VisualState>
+
+				<VisualState x:Name="NarrowState">
+					<VisualState.StateTriggers>
+						<labs:ControlSizeTrigger MaxWidth="700" TargetElement="{x:Bind RootControl}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<!--  Move size buttons to bottom  -->
+						<Setter Target="SizeButtonsPanel.(Grid.Row)" Value="2" />
+						<Setter Target="SizeButtonsPanel.(Grid.Column)" Value="0" />
+						<Setter Target="SizeButtonsPanel.(Grid.ColumnSpan)" Value="2" />
+						<Setter Target="SizeButtonsPanel.HorizontalAlignment" Value="Left" />
+						<Setter Target="SizeButtonsPanel.Margin" Value="0,15,0,0" />
+
+						<!--  Move size indicator to bottom  -->
+						<Setter Target="CurrentSizeText.(Grid.Row)" Value="3" />
+						<Setter Target="CurrentSizeText.(Grid.RowSpan)" Value="1" />
+						<Setter Target="CurrentSizeText.VerticalAlignment" Value="Center" />
+
+						<!--  Allow DisplayName and Description to take up full width  -->
+						<Setter Target="FallbackShellDisplayName.(Grid.ColumnSpan)" Value="2" />
+						<Setter Target="PreferredShellDisplayName.(Grid.ColumnSpan)" Value="2" />
+						<Setter Target="FallbackShellDescription.(Grid.ColumnSpan)" Value="2" />
+						<Setter Target="PreferredShellDescription.(Grid.ColumnSpan)" Value="2" />
+
+						<!--  Reduce padding  -->
+						<Setter Target="ShellPreviewBorder.Padding" Value="20" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
 </UserControl>
