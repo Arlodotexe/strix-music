@@ -37,15 +37,15 @@ namespace StrixMusic.AppModels;
 /// <summary>
 /// The root for all data required by the Strix Music App to function.
 /// </summary>
-[ObservableObject]
-public partial class AppRoot : IAsyncInit
+public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
+    private PlaybackHandlerService? _playbackHandler;
 
     [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
-    
+
     [ObservableProperty]
     private MergedCore? _mergedCore;
 
@@ -57,6 +57,9 @@ public partial class AppRoot : IAsyncInit
         _dataFolder = dataFolder;
         MusicSourcesSettings = new MusicSourcesSettings(dataFolder);
         ShellSettings = new ShellSettings(dataFolder);
+
+        // Create/Remove cores when settings are added/removed.
+        MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
     }
 
     /// <summary>
@@ -88,14 +91,16 @@ public partial class AppRoot : IAsyncInit
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var coreFactory = new CoreFactory(_dataFolder);
-            await MusicSourcesSettings.LoadAsync(cancellationToken);
+            // Avoid overwriting unsaved changes.
+            // May have unsaved changed if a source was just added but settings were not saved before InitAsync is called.
+            if (!MusicSourcesSettings.HasUnsavedChanges)
+                await MusicSourcesSettings.LoadAsync(cancellationToken);
 
             // Create local storage cores
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(coreFactory.CreateLocalStorageCoreAsync);
+            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(settings => CoreFactory.CreateLocalStorageCoreAsync(settings, _dataFolder));
 
             // Create OneDrive cores
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(coreFactory.CreateOneDriveCoreAsync);
+            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(x => CoreFactory.CreateOneDriveCoreAsync(x, _dataFolder));
 
             // Merge cores together and apply plugins
             var allCores = localStorageCores
@@ -109,21 +114,16 @@ public partial class AppRoot : IAsyncInit
             var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
-            await StrixDataRoot.InitAsync(cancellationToken);
-
-            // Create/Remove cores when settings are added/removed.
-            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
-
             IsInitialized = true;
         }
     }
 
     private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        _ = HandleCoreSettingsCollectionChanged<LocalStorageCoreSettings>(e, async x => await new CoreFactory(_dataFolder).CreateLocalStorageCoreAsync(x));
+        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(e, async x => await CoreFactory.CreateLocalStorageCoreAsync(x, _dataFolder));
     }
 
-    private async Task HandleCoreSettingsCollectionChanged<TSettings>(NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
+    private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
         where TSettings : SettingsBase, IInstanceId
     {
         if (!IsInitialized)
@@ -132,7 +132,10 @@ public partial class AppRoot : IAsyncInit
             return;
         }
 
+        // InitAsync should populate these fields.
         Guard.IsNotNull(_mergedCore);
+        Guard.IsNotNull(_strixDataRoot);
+        Guard.IsNotNull(_playbackHandler);
 
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
@@ -140,7 +143,9 @@ public partial class AppRoot : IAsyncInit
             {
                 var newCore = await settingsToCoreFactory(item);
                 _mergedCore.AddSource(newCore);
-                await newCore.InitAsync();
+                await InitAsync();
+
+                SetupMediaPlayerForCore(newCore, _playbackHandler);
             }
         }
 
@@ -161,20 +166,12 @@ public partial class AppRoot : IAsyncInit
     private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot)
     {
         // Apply plugin layer
-        var playbackHandler = new PlaybackHandlerService();
+        _playbackHandler ??= new PlaybackHandlerService();
+
         foreach (var core in existingRoot.Sources)
-        {
-            var mediaPlayer = new MediaPlayer();
-            var mediaPlayerElement = new MediaPlayerElement();
-            
-            mediaPlayer.CommandManager.IsEnabled = false;
-            mediaPlayerElement.SetMediaPlayer(mediaPlayer);
-            playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
+            SetupMediaPlayerForCore(core, _playbackHandler);
 
-            MediaPlayerElements.Add(mediaPlayerElement);
-        }
-
-        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, new PlaybackHandlerPlugin(playbackHandler), new PopulateEmptyNamesPlugin
+        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, new PlaybackHandlerPlugin(_playbackHandler), new PopulateEmptyNamesPlugin
         {
             EmptyAlbumName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownAlbum") ?? "?",
             EmptyArtistName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownArtist") ?? "?",
@@ -182,5 +179,17 @@ public partial class AppRoot : IAsyncInit
         });
 
         return pluginLayer;
+    }
+
+    private void SetupMediaPlayerForCore(ICore core, IPlaybackHandlerService playbackHandler)
+    {
+        var mediaPlayer = new MediaPlayer();
+        var mediaPlayerElement = new MediaPlayerElement();
+
+        mediaPlayer.CommandManager.IsEnabled = false;
+        mediaPlayerElement.SetMediaPlayer(mediaPlayer);
+        playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
+
+        MediaPlayerElements.Add(mediaPlayerElement);
     }
 }

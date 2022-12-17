@@ -17,7 +17,7 @@ public partial class AvailableMusicSource
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _description;
     [ObservableProperty] private ICoreImage? _coreImage;
-    [ObservableProperty] private Func<Task<SettingsBase>> _defaultSettingsFactory;
+    [ObservableProperty] private Func<string, Task<SettingsBase>> _defaultSettingsFactory;
 
     /// <summary>
     /// Creates a new instance of <see cref="AvailableMusicSource"/>.
@@ -26,7 +26,7 @@ public partial class AvailableMusicSource
     /// <param name="description">The description of the available music source.</param>
     /// <param name="imageFactory">The imageFactory to use for the music source.</param>
     /// <param name="defaultSettingsFactory">A factory used to create a settings instance.</param>
-    public AvailableMusicSource(string name, string description, Func<Task<ICoreImage>> imageFactory, Func<Task<SettingsBase>> defaultSettingsFactory)
+    public AvailableMusicSource(string name, string description, Func<Task<ICoreImage>> imageFactory, Func<string, Task<SettingsBase>> defaultSettingsFactory)
     {
         _name = name;
         _description = description;

@@ -1,0 +1,68 @@
+﻿<Page
+	x:Class="StrixMusic.Controls.MusicSources.ConnectNew.ConnectNewMusicSource"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:appModels="using:StrixMusic.AppModels"
+	xmlns:controls="using:StrixMusic.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:local="using:StrixMusic.Controls.MusicSources"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+	mc:Ignorable="d">
+
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!--  Available core list  -->
+		<TextBlock Grid.Row="0" Text="Connect a new music source:" />
+
+		<GridView
+			Grid.Row="1"
+			IsItemClickEnabled="True"
+			ItemsSource="{x:Bind MusicSourcesSettings.AvailableMusicSources, Mode=OneWay}"
+			SelectionMode="None">
+			<interactivity:Interaction.Behaviors>
+				<core:EventTriggerBehavior EventName="ItemClick">
+					<core:InvokeCommandAction Command="{x:Bind SelectMusicSourceCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+				</core:EventTriggerBehavior>
+			</interactivity:Interaction.Behaviors>
+
+			<GridView.ItemTemplate>
+				<DataTemplate x:DataType="appModels:AvailableMusicSource">
+					<Grid
+						Width="110"
+						Height="120"
+						Margin="5"
+						Padding="10"
+						CornerRadius="4"
+						RowSpacing="7"
+						ToolTipService.ToolTip="{x:Bind Description}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<interactivity:Interaction.Behaviors>
+							<core:EventTriggerBehavior EventName="Loaded">
+								<core:InvokeCommandAction Command="{x:Bind LoadImageCommand}" />
+							</core:EventTriggerBehavior>
+						</interactivity:Interaction.Behaviors>
+
+						<controls:CoreImage Margin="20,0" Image="{x:Bind CoreImage, Mode=OneWay}" />
+
+						<TextBlock
+							Grid.Row="1"
+							Text="{x:Bind Name}"
+							TextAlignment="Center"
+							TextTrimming="CharacterEllipsis" />
+					</Grid>
+				</DataTemplate>
+			</GridView.ItemTemplate>
+		</GridView>
+	</Grid>
+</Page>

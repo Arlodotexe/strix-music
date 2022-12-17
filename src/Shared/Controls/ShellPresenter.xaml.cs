@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore;
+using StrixMusic.AppModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.WinUI;
 using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.AppModels;
 
-namespace StrixMusic;
+namespace StrixMusic.Controls;
 
 [ObservableObject]
 public sealed partial class ShellPresenter : UserControl

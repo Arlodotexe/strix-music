@@ -231,7 +231,7 @@
 						Width="1920"
 						Height="1080">
 						<Grid BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1">
-							<strixMusic:ShellPresenter
+							<local:ShellPresenter
 								x:Name="ShellPresenter"
 								FallbackShell="{x:Bind ShellSettings.FallbackShell}"
 								PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"

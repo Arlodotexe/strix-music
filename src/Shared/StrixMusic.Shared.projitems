@@ -22,9 +22,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ScanStartedNotice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourceItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -55,9 +57,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\Oobe\Welcome.xaml.cs">
-      <DependentUpon>Welcome.xaml</DependentUpon>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
     <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MediaPlayback\MediaPlayerElementAudioService.cs" />
@@ -81,7 +80,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\LocalStorageCoreSettingsEditor.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ScanStartedNotice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -98,10 +105,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Pages\Oobe\Welcome.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -10,6 +10,7 @@ using StrixMusic.AppModels;
 using StrixMusic.CoreModels;
 using StrixMusic.Sdk.CoreModels;
 using Windows.Storage;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Settings;
 
@@ -25,23 +26,24 @@ public class MusicSourcesSettings : SettingsBase
     public MusicSourcesSettings(IModifiableFolder folder)
         : base(folder, AppSettingsSerializer.Singleton)
     {
+        FlushDefaultValues = false;
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
 
         AvailableMusicSources.Add(new AvailableMusicSource
         (
-                name: "Local Storage",
-                description: "Listen to music on your local disk.",
-                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"),
-                defaultSettingsFactory: async () => new LocalStorageCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}")))
+            name: "Local Storage",
+            description: "Listen to music on your local disk.",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"),
+            defaultSettingsFactory: async instanceId => new LocalStorageCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
         AvailableMusicSources.Add(new AvailableMusicSource
         (
-                name: "OneDrive",
-                description: "Stream music directly from OneDrive.",
-                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
-                defaultSettingsFactory: async () => new OneDriveCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}")))
+            name: "OneDrive",
+            description: "Stream music directly from OneDrive.",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
+            defaultSettingsFactory: async instanceId => new OneDriveCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)

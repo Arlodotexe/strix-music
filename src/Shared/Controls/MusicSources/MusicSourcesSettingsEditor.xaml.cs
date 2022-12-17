@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Controls.MusicSources.ConnectNew;
 
 namespace StrixMusic.Controls.MusicSources;
 
@@ -14,8 +15,6 @@ namespace StrixMusic.Controls.MusicSources;
 [ObservableObject]
 public sealed partial class MusicSourcesSettingsEditor : UserControl
 {
-    [ObservableProperty] private MusicSourceItem? _currentSettings;
-
     /// <summary>
     /// Creates a new instance of <see cref="MusicSourcesSettingsEditor"/>.
     /// </summary>
@@ -38,31 +37,29 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
         get => (AppRoot?)GetValue(AppRootProperty);
         set => SetValue(AppRootProperty, value);
     }
-
-    /// <summary>
-    /// Begins the setup process for the provided music source.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    
     [RelayCommand]
-    public async Task StartCoreSetupAsync(AvailableMusicSource availableMusicSource)
+    private async Task AddNewMusicSourceAsync()
     {
-        var settings = await availableMusicSource.DefaultSettingsFactory();
-            
-        CurrentSettings = new MusicSourceItem(settings, availableMusicSource)
+        var param = new ConnectNewMusicSourceNavigationParams()
         {
-            EditingFinishedCommand = CompleteCoreSetupCommand,
+            AppRoot = AppRoot,
         };
-    }
+        
+        ConnectNewSourceFrame.Visibility = Visibility.Visible;
 
-    /// <summary>
-    /// Called when the setup process 
-    /// </summary>
-    /// <param name="item">Editor data about the music source settings which has completed setup.</param>
-    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-    [RelayCommand]
-    public async Task CompleteCoreSetupAsync(MusicSourceItem item)
-    {
-        // TODO
+        ConnectNewSourceFrame.Navigate(typeof(ConnectNewMusicSource), param);
+
+        try
+        {
+            await param.SetupCompleteTaskCompletionSource.Task;
+        }
+        catch (OperationCanceledException _)
+        {
+            // Ignored
+        }
+
+        ConnectNewSourceFrame.Visibility = Visibility.Collapsed;
     }
 
     /// <summary>

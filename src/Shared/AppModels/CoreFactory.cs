@@ -10,37 +10,28 @@ using StrixMusic.Cores.Storage;
 using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using OwlCore.Extensions;
 
 namespace StrixMusic.AppModels;
 
 /// <summary>
 /// Creates cores in the provided folder.
 /// </summary>
-public class CoreFactory
+public static class CoreFactory
 {
-    private readonly IModifiableFolder _dataFolder;
-
-    /// <summary>
-    /// Creates a new instance of <see cref="CoreFactory"/>.
-    /// </summary>
-    /// <param name="dataFolder">The folder where core data is stored.</param>
-    public CoreFactory(IModifiableFolder dataFolder)
-    {
-        _dataFolder = dataFolder;
-    }
-
     /// <summary>
     /// Creates a <see cref="StorageCore"/> from the provided <see cref="LocalStorageCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
+    /// <param name="storageCoreCacheContainingFolder">The folder where core metadata is saved.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<StorageCore> CreateLocalStorageCoreAsync(LocalStorageCoreSettings settings)
+    public static async Task<StorageCore> CreateLocalStorageCoreAsync(LocalStorageCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
     {
-        var coreData = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId) ??
-                       await _dataFolder.CreateFolderAsync(settings.InstanceId);
+        var coreCache = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast()) ??
+                       await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
 
-        if (coreData is not IModifiableFolder modifiableCoreData)
+        if (coreCache is not IModifiableFolder modifiableCoreCache)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
@@ -53,7 +44,7 @@ public class CoreFactory
         var core = new StorageCore
         (
             folder,
-            modifiableCoreData,
+            metadataCacheFolder: modifiableCoreCache,
             "Local Storage",
             fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folder.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
         {
@@ -70,12 +61,13 @@ public class CoreFactory
     /// Creates a <see cref="StorageCore"/> from the provided <see cref="OneDriveCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
+    /// <param name="storageCoreCacheContainingFolder"></param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings)
+    public static async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
     {
-        var coreData = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId) ??
-                       await _dataFolder.CreateFolderAsync(settings.InstanceId);
+        var coreData = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast()) ??
+                       await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
 
         if (coreData is not IModifiableFolder modifiableCoreData)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");

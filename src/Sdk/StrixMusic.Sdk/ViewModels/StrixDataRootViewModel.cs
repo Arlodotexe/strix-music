@@ -81,7 +81,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         var newSources = _dataRoot.Sources;
 
         var addedSources = newSources.Except(knownSources).ToArray();
-        var removedSources = knownSources.Except(addedSources);
+        var removedSources = knownSources.Except(newSources);
 
         foreach (var item in removedSources)
             Sources.Remove(Sources.First(x => x.InstanceId == item.InstanceId));
