@@ -42,9 +42,12 @@ public class StorageCore : ICore
         FolderScanner = new DepthFirstFolderScanner(folder);
         Folder = folder;
         DisplayName = displayName;
-        InstanceId = $"{nameof(StorageCore)}.{folder.Id}";
+        InstanceId = folder.Id;
         Devices = new List<ICoreDevice>();
         Library = new StorageCoreLibrary(this);
+
+        if (folder is IAddressableStorable addressable)
+            InstanceDescriptor = addressable.Path;
     }
 
     /// <inheritdoc />
@@ -78,10 +81,10 @@ public class StorageCore : ICore
     public string InstanceId { get; }
 
     /// <inheritdoc />
-    public virtual string InstanceDescriptor { get; set; } = string.Empty;
+    public string InstanceDescriptor { get; set; } = string.Empty;
 
     /// <inheritdoc />
-    public virtual MediaPlayerType PlaybackType => MediaPlayerType.Standard;
+    public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
     /// <inheritdoc />
     public ICore SourceCore => this;
