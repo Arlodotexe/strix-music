@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore.Diagnostics;
+using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.Uwp;
 using StrixMusic.CoreModels;
@@ -10,7 +11,6 @@ using StrixMusic.Cores.Storage;
 using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using OwlCore.Extensions;
 
 namespace StrixMusic.AppModels;
 
@@ -28,8 +28,8 @@ public static class CoreFactory
     /// <exception cref="InvalidOperationException"></exception>
     public static async Task<StorageCore> CreateLocalStorageCoreAsync(LocalStorageCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
     {
-        var coreCache = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast()) ??
-                       await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
+        var coreCache = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast())
+                     ?? await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
 
         if (coreCache is not IModifiableFolder modifiableCoreCache)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
@@ -66,8 +66,8 @@ public static class CoreFactory
     /// <exception cref="InvalidOperationException"></exception>
     public static async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
     {
-        var coreData = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast()) ??
-                       await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
+        var coreData = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast())
+                    ?? await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
 
         if (coreData is not IModifiableFolder modifiableCoreData)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");

@@ -68,7 +68,7 @@ public sealed partial class ScanStartedNotice : Page
     [RelayCommand]
     private async Task ContinueAsync()
     {
-        Guard.IsNotNull(_appRoot);
+        Guard.IsNotNull(_appRoot?.MusicSourcesSettings);
         Guard.IsNotNull(Settings);
         _appRoot.MusicSourcesSettings.ConfiguredLocalStorageCores.Add(Settings);
 

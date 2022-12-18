@@ -49,28 +49,19 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     [ObservableProperty]
     private MergedCore? _mergedCore;
 
+    [ObservableProperty]
+    private MusicSourcesSettings? _musicSourcesSettings;
+
+    [ObservableProperty]
+    private ShellSettings? _shellSettings;
+
     /// <summary>
     /// Creates a new instance of <see cref="AppRoot"/>.
     /// </summary>
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
-        MusicSourcesSettings = new MusicSourcesSettings(dataFolder);
-        ShellSettings = new ShellSettings(dataFolder);
-
-        // Create/Remove cores when settings are added/removed.
-        MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
     }
-
-    /// <summary>
-    /// A container for the settings used throughout the app.
-    /// </summary>
-    public MusicSourcesSettings MusicSourcesSettings { get; set; }
-
-    /// <summary>
-    /// A container for the settings used by shells.
-    /// </summary>
-    public ShellSettings ShellSettings { get; set; }
 
     /// <summary>
     /// The media players that were created to play audio for cores.
@@ -91,16 +82,22 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            MusicSourcesSettings = new MusicSourcesSettings(_dataFolder);
+            ShellSettings = new ShellSettings(_dataFolder);
+
+            // Create/Remove cores when settings are added/removed.
+            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+
             // Avoid overwriting unsaved changes.
             // May have unsaved changed if a source was just added but settings were not saved before InitAsync is called.
             if (!MusicSourcesSettings.HasUnsavedChanges)
                 await MusicSourcesSettings.LoadAsync(cancellationToken);
 
             // Create local storage cores
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(settings => CoreFactory.CreateLocalStorageCoreAsync(settings, _dataFolder));
+            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(async settings => await CoreFactory.CreateLocalStorageCoreAsync(settings, await GetOrCreateMusicSourceSettingsFolder()));
 
             // Create OneDrive cores
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(x => CoreFactory.CreateOneDriveCoreAsync(x, _dataFolder));
+            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(async settings => await CoreFactory.CreateOneDriveCoreAsync(settings, await GetOrCreateMusicSourceSettingsFolder()));
 
             // Merge cores together and apply plugins
             var allCores = localStorageCores
@@ -120,7 +117,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
     private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(e, async x => await CoreFactory.CreateLocalStorageCoreAsync(x, _dataFolder));
+        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(e, async x => await CoreFactory.CreateLocalStorageCoreAsync(x, await GetOrCreateMusicSourceSettingsFolder()));
     }
 
     private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
@@ -142,6 +139,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             foreach (var item in e.NewItems.Cast<TSettings>())
             {
                 var newCore = await settingsToCoreFactory(item);
+
                 _mergedCore.AddSource(newCore);
                 await InitAsync();
 
@@ -191,5 +189,18 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
 
         MediaPlayerElements.Add(mediaPlayerElement);
+    }
+
+    private async Task<IModifiableFolder> GetOrCreateMusicSourceSettingsFolder()
+    {
+        var folderName = "ConfiguredMusicSources";
+
+        var folder = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == folderName)
+                  ?? await _dataFolder.CreateFolderAsync(folderName);
+
+        if (folder is not IModifiableFolder modifiableFolder)
+            return ThrowHelper.ThrowArgumentException<IModifiableFolder>($"The modifiable folder {_dataFolder.Id} returned a non-modifiable folder. The settings folder for music sources must be modifiable.");
+        else
+            return modifiableFolder;
     }
 }

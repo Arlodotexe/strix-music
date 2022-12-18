@@ -25,7 +25,7 @@ public partial class AvailableMusicSource
     /// <param name="name">The display name of the available music source.</param>
     /// <param name="description">The description of the available music source.</param>
     /// <param name="imageFactory">The imageFactory to use for the music source.</param>
-    /// <param name="defaultSettingsFactory">A factory used to create a settings instance.</param>
+    /// <param name="defaultSettingsFactory">A factory used to create a settings instance. Passed parameter is the instance id of the core, which must be defined in a single place (not here).</param>
     public AvailableMusicSource(string name, string description, Func<Task<ICoreImage>> imageFactory, Func<string, Task<SettingsBase>> defaultSettingsFactory)
     {
         _name = name;
