@@ -76,7 +76,7 @@
 								x:Name="ShellSettingsEditor"
 								Margin="5"
 								Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}"
-								ShellSettings="{x:Bind AppRoot.ShellSettings}" />
+								ShellSettings="{x:Bind AppRoot.ShellSettings, Mode=OneWay}" />
 						</Border>
 					</controls:Case>
 
