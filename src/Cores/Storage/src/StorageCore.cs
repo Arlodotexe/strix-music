@@ -31,22 +31,22 @@ public class StorageCore : ICore
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageCore"/> class.
     /// </summary>
-    /// <param name="folder">The folder being scanned for music.</param>
-    /// <param name="metadataCacheFolder">A folder where metadata can be stored</param>
+    /// <param name="folderToScanToScan">The folder being scanned for music.</param>
+    /// <param name="metadataCacheFolder">A folder where metadata can be stored for fast retrieval later.</param>
     /// <param name="displayName">A user-friendly display name to use for this storage core.</param>
     /// <param name="fileScanProgress">Monitor the progress of a file scan.</param>
-    public StorageCore(IFolder folder, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
+    public StorageCore(IFolder folderToScan, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
     {
         _metadataCacheFolder = metadataCacheFolder;
         FileScanProgress = fileScanProgress;
-        FolderScanner = new DepthFirstFolderScanner(folder);
-        Folder = folder;
+        FolderScanner = new DepthFirstFolderScanner(folderToScan);
+        FolderToScan = folderToScan;
         DisplayName = displayName;
-        InstanceId = folder.Id;
+        InstanceId = folderToScan.Id;
         Devices = new List<ICoreDevice>();
         Library = new StorageCoreLibrary(this);
 
-        if (folder is IAddressableStorable addressable)
+        if (folderToScan is IAddressableStorable addressable)
             InstanceDescriptor = addressable.Path;
     }
 
@@ -56,7 +56,7 @@ public class StorageCore : ICore
     /// <summary>
     /// The folder being scanned for music.
     /// </summary>
-    public IFolder Folder { get; }
+    public IFolder FolderToScan { get; }
 
     /// <summary>
     /// The scanner used to discover files.

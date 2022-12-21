@@ -295,8 +295,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
                 if (playlistData is not null)
                 {
-                    await Playlists.AddOrUpdateAsync(new[] { playlistData
-});
+                    await Playlists.AddOrUpdateAsync(new[] { playlistData });
                 }
             }
 
