@@ -4,20 +4,20 @@
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Controls.Shells"
+    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Strix/Resources/Brushes.xaml" />
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Strix/Resources/ButtonStyles.xaml"/>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Strix/Styles/MediaSlider.xaml"/>
+        <ResourceDictionary Source="../Resources/Brushes.xaml" />
+        <ResourceDictionary Source="../Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="MediaSlider.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="StrixNowPlayingBarStyle" TargetType="shells:NowPlayingBar">
+    <Style x:Key="StrixNowPlayingBarStyle" TargetType="controls:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shells:NowPlayingBar">
+                    <ControlTemplate TargetType="controls:NowPlayingBar">
                         <UserControl>
                             <Grid VerticalAlignment="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -70,7 +70,7 @@
                                     <Rectangle Fill="#FF00FF" Width="80" Height="80" Margin="8"/>
                                 </Grid>
 
-                                <nowplaying:ProgressSlider x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
+                                <nowplaying:MediaSlider x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
                                                            FlowDirection="LeftToRight"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
@@ -110,6 +110,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixNowPlayingBarStyle}" TargetType="shells:NowPlayingBar"/>
+    <Style BasedOn="{StaticResource StrixNowPlayingBarStyle}" TargetType="controls:NowPlayingBar"/>
 
 </ResourceDictionary>

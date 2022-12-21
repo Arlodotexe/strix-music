@@ -4,7 +4,7 @@
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:base="using:StrixMusic.Sdk.Data.Base"
+    xmlns:base="using:StrixMusic.Sdk.BaseModels"
     x:Class="StrixMusic.Shells.Strix.Styles.SettingsViewStyle">
 
     <DataTemplate x:Key="StrixSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">

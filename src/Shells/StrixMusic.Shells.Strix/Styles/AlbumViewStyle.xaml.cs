@@ -1,10 +1,5 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
-using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
-using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.Strix.Styles
 {
@@ -23,12 +18,6 @@ namespace StrixMusic.Shells.Strix.Styles
 
         private void GoToArtist(object sender, RoutedEventArgs e)
         {
-            if ((sender as Control)?.DataContext is ArtistViewModel viewModel)
-            {
-                var navigationService = Shell.Ioc.GetRequiredService<INavigationService<Control>>();
-
-                navigationService.NavigateTo(typeof(ArtistView), false, viewModel);
-            }
         }
     }
 }
