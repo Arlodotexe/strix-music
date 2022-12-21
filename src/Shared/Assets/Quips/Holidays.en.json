@@ -1,0 +1,99 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "New Years Day",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 1,
+        "EndDay": 2
+      },
+      "Quips": [
+        "Happy New Years!"
+      ]
+    },
+    {
+      "Name": "Groundhog Day",
+      "Weight": 5,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 33,
+        "EndDay": 34
+      },
+      "Quips": [
+        "Checking on Punxsutawney Phil",
+        "Looking for Spring"
+      ]
+    },
+    {
+      "Name": "St Patrick's Day",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 76,
+        "EndDay": 78
+      },
+      "Quips": [
+        "Looking for gold",
+        "Searching for four leaf clovers",
+        "Oh how do you do, young Willie McBride"
+      ]
+    },
+    {
+      "Name": "April 1st",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 91,
+        "EndDay": 92
+      },
+      "Quips": [
+        "Error: April fools day",
+        "Unhandled exception: AprilFoolsDayException",
+        "Task failed successfully"
+      ]
+    },
+    {
+      "Name": "Halloween",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 304,
+        "EndDay": 305
+      },
+      "Quips": [
+        "Boo!",
+        "Resurrecting Frankenstein's monster",
+        "Trick or treat?",
+        "Feasting on Candy"
+      ]
+    },
+    {
+      "Name": "Christmas",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 358,
+        "EndDay": 360
+      },
+      "Quips": [
+        "Merry Christmas!",
+        "﻿Ho ho ho",
+        "Whipping elves"
+      ]
+    },
+    {
+      "Name": "New Years Eve",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 366,
+        "EndDay": 1
+      },
+      "Quips": [
+        "﻿See you next year"
+      ]
+    }
+  ],
+  "Integrated": true
+}

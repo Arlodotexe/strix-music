@@ -34,11 +34,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\QuipLoader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\AnnualRangeRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\QuipFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\QuipGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\QuipLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\TimeSpanRules\AnnualRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\TimeSpanRules\DailyRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\TimeSpanRules\ITimeSpanRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\TimeSpanRules\RuleType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Quips\TimeSpanRules\WeeklyRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -54,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CoreMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\QuipStorageService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml.cs">
       <DependentUpon>ShellSelector.xaml</DependentUpon>
@@ -108,6 +112,18 @@
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\SegoeMDL2.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Holidays.en-GB.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Holidays.en-US.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\US.en-US.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\CulturalRefs.en.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Generic.en.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Holidays.en.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Seasons.en.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\TimeOfDay.en.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\DayOfWeek.he.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Generic.he.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\Seasons.he.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Quips\TimeOfDay.he.json" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\default.sandbox\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\GrooveMusic.10.21061.10121.0\1.png" />

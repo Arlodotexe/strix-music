@@ -1,0 +1,19 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Generic",
+      "Weight": 1,
+      "TimeSpanType": "None",
+      "TimeSpanRule": null,
+      "Quips": [
+        "טוען",
+        "קבלת פנים לציונים",
+        "צוחק בקול רם",
+        "משבח גל גדות",
+        "לומד עברית",
+        "מזבזב זמן"
+      ]
+    }
+  ],
+  "Integrated": true
+}

@@ -1,0 +1,15 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Hogmanay",
+      "Weight": 3,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 366,
+        "EndDay": 2
+      },
+      "Quips": [ "Should auld acquaintance be forgot..." ]
+    }
+  ],
+  "Integrated": true
+}

@@ -1,0 +1,57 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Autumn",
+      "Weight": 2,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 265,
+        "EndDay": 355
+      },
+      "Quips": [
+        "Raking up leaves",
+        "﻿Drinking pumpkin spice",
+        "Making apple cider"
+      ]
+    },
+    {
+      "Name": "Winter",
+      "Weight": 2,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 355,
+        "EndDay": 79
+      },
+      "Quips": [
+        "Drinking Horchata",
+        "Making Hot Choclate",
+        "Shoveling snow"
+      ]
+    },
+    {
+      "Name": "Spring",
+      "Weight": 2,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 79,
+        "EndDay": 172
+      },
+      "Quips": [
+        "Blooming"
+      ]
+    },
+    {
+      "Name": "Summer",
+      "Weight": 2,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 172,
+        "EndDay": 265
+      },
+      "Quips": [
+        "Turning on the AC"
+      ]
+    }
+  ],
+  "Integrated": true
+}

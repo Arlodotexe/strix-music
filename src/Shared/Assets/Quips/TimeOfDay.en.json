@@ -1,0 +1,68 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Dawn",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 240,
+        "EndMinute": 420
+      },
+      "Quips": [
+        "Waking up or staying up?",
+        "Calling the rooster"
+      ]
+    },
+    {
+      "Name": "Morning",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 240,
+        "EndMinute": 420
+      },
+      "Quips": [
+        "Good Morning!",
+        "Waking up..."
+      ]
+    },
+    {
+      "Name": "Afternoon",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 720,
+        "EndMinute": 900
+      },
+      "Quips": [
+        "Good Afternoon!",
+        "Finishing lunch"
+      ]
+    },
+    {
+      "Name": "Evening",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 900,
+        "EndMinute": 1260
+      },
+      "Quips": [
+        "Good Evening!"
+      ]
+    },
+    {
+      "Name": "Night",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 1260,
+        "EndMinute": 0
+      },
+      "Quips": [
+        "Good Night!"
+      ]
+    }
+  ],
+  "Integrated": true
+}

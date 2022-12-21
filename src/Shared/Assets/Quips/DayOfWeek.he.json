@@ -1,0 +1,27 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Shabbot",
+      "Weight": 1,
+      "TimeSpanType": "DayOfWeek",
+      "TimeSpanRule": {
+        "DayOfWeek": "Saturday"
+      },
+      "Quips": [
+        "שבת שלום"
+      ]
+    },
+    {
+      "Name": "Sunday",
+      "Weight": 1,
+      "TimeSpanType": "DayOfWeek",
+      "TimeSpanRule": {
+        "DayOfWeek": "Sunday"
+      },
+      "Quips": [
+        "שבוע טוב"
+      ]
+    }
+  ],
+  "Integrated": true
+}

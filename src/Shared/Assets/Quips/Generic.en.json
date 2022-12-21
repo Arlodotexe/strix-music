@@ -1,0 +1,33 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Generic",
+      "Weight": 1,
+      "TimeSpanType": "None",
+      "TimeSpanRule": null,
+      "Quips": [
+        "Spinning right round",
+        "Hiding the ugly code",
+        "Generating stuff",
+        "Shaken not Shtirred",
+        "¡ǝldoǝd uɐᴉlɐɹʇsn∀ 'ǝɯoɔlǝM",
+        "Theeeeres a bathroom on the right",
+        "Roooooxanne",
+        "We're halfway there...",
+        "Party time!",
+        "3 days since last workplace injury",
+        "Curse your sudden but inevitable betrayl",
+        "Trying ever so hard",
+        "Killing time",
+        "Picking random numbers",
+        "Squashing bugs",
+        "Yielding the high ground",
+        "No Touching!",
+        "Are you still there?",
+        "Water tribe...",
+        "Learning English"
+      ]
+    }
+  ],
+  "Integrated": true
+}

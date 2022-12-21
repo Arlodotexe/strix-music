@@ -1,0 +1,20 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Voting",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 280,
+        "EndDay": 305
+      },
+      "Quips": [
+        "Register to Vote!",
+        "Get out the Vote!",
+        "Pokémon go to the polls",
+        "Cave Johnson for President"
+      ]
+    }
+  ],
+  "Integrated": true
+}

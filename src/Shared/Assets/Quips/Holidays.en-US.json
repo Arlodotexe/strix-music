@@ -1,0 +1,30 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "July 4th",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 185,
+        "EndDay": 186
+      },
+      "Quips": [
+        "*Eagle Screech*",
+        "Starting the Monster Trucks"
+      ]
+    },
+    {
+      "Name": "St Patrick's Day - US",
+      "Weight": 10,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 76,
+        "EndDay": 78
+      },
+      "Quips": [
+        "Give it up for Boston"
+      ]
+    }
+  ],
+  "Integrated": true
+}

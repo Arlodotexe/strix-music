@@ -106,8 +106,14 @@ namespace StrixMusic.Shared
             Logger.LogInformation("Setting up localization");
             var localizationService = appFrame.LocalizationService;
 
-            Logger.LogInformation("Enabling quips");
-            ShowQuip(localizationService); // TODO: Add debug boot mode
+            Logger.LogInformation($"Initializing {nameof(QuipStorageService)}");
+            var quipDirectory = await OpenAppDataDirectory("Quips");
+            var folderData = new FolderData(quipDirectory);
+            var quipStorageService = new QuipStorageService(folderData);
+            await quipStorageService.InitAsync();
+
+            Logger.LogInformation("Showing a quip");
+            ShowQuip(quipStorageService.GetQuip()); // TODO: Add debug boot mode
 
             Logger.LogInformation("Setting up playback and SMTP handlers");
 
@@ -599,11 +605,9 @@ namespace StrixMusic.Shared
             notification.Dismiss();
         }
 
-        private void ShowQuip(LocalizationResourceLoader localizationService)
+        private void ShowQuip(string quip)
         {
-            var quip = new QuipLoader(CultureInfo.CurrentCulture.TwoLetterISOLanguageName).GetGroupIndexQuip();
-
-            PART_Status.Text = localizationService.Quips?.GetString($"{quip.Item1}{quip.Item2}") ?? string.Empty;
+            PART_Status.Text = quip;
             _showingQuip = true;
         }
 
@@ -625,12 +629,15 @@ namespace StrixMusic.Shared
 
         private static async Task<AppSettings> InitAppSettings()
         {
-            var settingsDirectory = await ApplicationData.Current.LocalFolder.CreateFolderAsync(nameof(AppSettings), Windows.Storage.CreationCollisionOption.OpenIfExists);
+            var settingsDirectory = await OpenAppDataDirectory(nameof(AppSettings));
             var settings = new AppSettings(new FolderData(settingsDirectory));
 
             await settings.LoadAsync();
             return settings;
         }
+
+        private static async Task<StorageFolder> OpenAppDataDirectory(string directoryName)
+            => await ApplicationData.Current.LocalFolder.CreateFolderAsync(directoryName, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
         private static void SetupLogger()
         {

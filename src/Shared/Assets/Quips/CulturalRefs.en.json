@@ -1,0 +1,58 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "DrWho Anniversary",
+      "Weight": 5,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 204,
+        "EndDay": 205
+      },
+      "Quips": [
+        "Vwoop, Vwoop",
+        "Allons-y!",
+        "Wibbly wobbly. Timey wimey",
+        "Now with a fez",
+        "You’ve redecorated...",
+        "Spoilers",
+        "Geronimo",
+        "Fantastic!",
+        "Jelly baby?",
+        "Bow ties are cool",
+        "Bigger on the inside",
+        "Smaller on the outside?",
+        "Hello Sweety",
+        "Reversing polarity of the nuetron flow"
+      ]
+    },
+    {
+      "Name": "Star wars day",
+      "Weight": 5,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 124,
+        "EndDay": 125
+      },
+      "Quips": [
+        "﻿May the force be with you",
+        "﻿May the fourth be with you",
+        "﻿A long time ago in a galaxy far, far away...",
+        "That's no moon...",
+        "Shooting first"
+      ]
+    },
+    {
+      "Name": "Cinco De Quatro",
+      "Weight": 1,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 124,
+        "EndDay": 125
+      },
+      "Quips": [
+        "Happy Cinco de Quatro"
+      ]
+    }
+  ],
+  "Integrated": true
+}

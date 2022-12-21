@@ -1,0 +1,53 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Morning",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 240,
+        "EndMinute": 420
+      },
+      "Quips": [
+        "בוקר טוב"
+      ]
+    },
+    {
+      "Name": "Afternoon",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 720,
+        "EndMinute": 900
+      },
+      "Quips": [
+        "צהריים טוב"
+      ]
+    },
+    {
+      "Name": "Evening",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 900,
+        "EndMinute": 1260
+      },
+      "Quips": [
+        "ערב טוב"
+      ]
+    },
+    {
+      "Name": "Night",
+      "Weight": 2,
+      "TimeSpanType": "DailyRange",
+      "TimeSpanRule": {
+        "StartMinute": 1260,
+        "EndMinute": 0
+      },
+      "Quips": [
+        "לילה טוב"
+      ]
+    }
+  ],
+  "Integrated": true
+}

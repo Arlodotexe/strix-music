@@ -1,0 +1,17 @@
+﻿{
+  "QuipGroups": [
+    {
+      "Name": "Summer",
+      "Weight": 2,
+      "TimeSpanType": "AnnualRange",
+      "TimeSpanRule": {
+        "StartDay": 172,
+        "EndDay": 265
+      },
+      "Quips": [
+        "מקררע"
+      ]
+    }
+  ],
+  "Integrated": true
+}
