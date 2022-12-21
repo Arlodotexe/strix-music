@@ -88,7 +88,7 @@ public abstract class CoreSettingsBase : SettingsBase
         else
         {
             // Slow path. Make sure every value is valid.
-            CanCreateCore = _settingsValidity.Any(x => !x.Value);
+            CanCreateCore = _settingsValidity.All(x => x.Value);
         }
     }
 

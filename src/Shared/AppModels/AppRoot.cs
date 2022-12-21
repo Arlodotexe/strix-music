@@ -110,35 +110,53 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.Where(NeedsToBeCreated).InParallel(CoreFactory.CreateLocalStorageCoreAsync);
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.Where(NeedsToBeCreated).InParallel(CoreFactory.CreateOneDriveCoreAsync);
+            // Create cores that haven't already been set up.
+            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores
+                .Where(NeedsToBeCreated)
+                .Where(x => x.CanCreateCore)
+                .InParallel(CoreFactory.CreateLocalStorageCoreAsync);
+
+            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores
+                .Where(NeedsToBeCreated)
+                .Where(x => x.CanCreateCore)
+                .InParallel(CoreFactory.CreateOneDriveCoreAsync);
 
             // Merge cores together and apply plugins
-            var allCores = localStorageCores
-                .Concat(oneDriveCores)
-                .ToArray();
-
-            // A merged core cannot be created without at least one source.
-            if (!allCores.Any())
-                return;
+            var allNewCores = localStorageCores.Union(oneDriveCores).ToArray();
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
-            await allCores.InParallel(TryInitCore);
+            await allNewCores.InParallel(TryInitCore);
 
             // Prune cores that didn't load successfully
-            allCores = allCores.Where(x => x.IsInitialized).ToArray();
+            allNewCores = allNewCores.Where(x => x.IsInitialized).ToArray();
 
-            // If there's no cores initialized.
-            if (!allCores.Any())
+            // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
+            // If _mergedCore exists, set it up as the data root.
+            if (_mergedCore is not null)
+            {
+                foreach (var newCore in allNewCores)
+                    _mergedCore.AddSource(newCore);
+            }
+            else if (allNewCores.Any())
+            {
+                _mergedCore = new MergedCore(allNewCores);
+            }
+
+            // If merged core still couldn't be created
+            if (_mergedCore is null)
+            {
+                // It should *only* be because there are no cores to create.
+                Guard.HasSizeEqualTo(allNewCores, 0);
+
+                // TODO: Show OOBE if this InitAsync method is called and Initialized == false when completed.
                 return;
+            }
 
-            var mergedCore = _mergedCore ??= new MergedCore(allCores);
-            var mergedCoreWithPlugins = CreatePluginLayer(mergedCore);
+            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
-            // TODO: Show OOBE if this InitAsync method is called and Initialized == false when completed.
         }
     }
 
@@ -148,15 +166,26 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     }
 
     private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
-        where TSettings : SettingsBase, IInstanceId
+        where TSettings : CoreSettingsBase, IInstanceId
     {
         using (await _initMutex.DisposableWaitAsync())
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (var item in e.NewItems.Cast<TSettings>())
+                foreach (var settings in e.NewItems.Cast<TSettings>())
                 {
-                    var newCore = await settingsToCoreFactory(item);
+                    if (settings.HasUnsavedChanges)
+                        await settings.SaveAsync();
+                    else
+                        await settings.LoadAsync();
+
+                    if (!settings.CanCreateCore)
+                    {
+                        Logger.LogInformation($"Core settings for {settings.GetType()} (instance id {settings.InstanceId}) are invalid. Core cannot be created.");
+                        return;
+                    }
+
+                    var newCore = await settingsToCoreFactory(settings);
 
                     // Init core, present user with retry options on failure.
                     await TryInitCore(newCore);
@@ -166,7 +195,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     {
                         var settingsInstances = (IList<TSettings>)sender;
 
-                        Guard.IsTrue(settingsInstances.Remove(item));
+                        Guard.IsTrue(settingsInstances.Remove(settings));
                         await MusicSourcesSettings!.SaveAsync();
 
                         return;
@@ -179,10 +208,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         _mergedCore = new MergedCore(newCore.IntoList());
                     else
                         _mergedCore.AddSource(newCore);
-
-                    await InitAsync();
-
-                    SetupMediaPlayerForCore(newCore);
                 }
             }
 
@@ -207,6 +232,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 }
             }
         }
+
+        await InitAsync();
     }
 
     /// <inheritdoc />
