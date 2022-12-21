@@ -147,7 +147,7 @@ namespace StrixMusic.Sdk.AdapterModels
             if (IsInitialized)
                 return;
 
-            await _sources.InParallel(x => x.InitAsync(cancellationToken));
+            await _sources.InParallel(x => !x.IsInitialized ? x.InitAsync(cancellationToken) : Task.CompletedTask);
         }
 
         /// <inheritdoc />

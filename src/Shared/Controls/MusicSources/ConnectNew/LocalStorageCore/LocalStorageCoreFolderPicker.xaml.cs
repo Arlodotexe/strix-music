@@ -1,37 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using OwlCore.Extensions;
+using OwlCore.Storage.Uwp;
+using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore.Extensions;
-using OwlCore.Storage.Uwp;
-using StrixMusic.AppModels;
-using StrixMusic.Sdk.CoreModels;
-using StrixMusic.Settings;
-using CommunityToolkit.Mvvm.Input;
 
 namespace StrixMusic.Controls.MusicSources.ConnectNew.LocalStorageCore;
 
 /// <summary>
-/// Displays an instance of <see cref="LocalStorageCoreSettings"/> to be edited by the user.
+/// Displays UI to pick a folder, then navigate to the next "connect new" setup page for Local Storage once selected.
 /// </summary>
 [ObservableObject]
-public sealed partial class LocalStorageCoreSettingsEditor : Page
+public sealed partial class LocalStorageCoreFolderPicker : Page
 {
     private ConnectNewMusicSourceNavigationParams? _param;
 
     /// <summary>
-    /// Creates a new instance of <see cref="LocalStorageCoreSettingsEditor"/>.
+    /// Creates a new instance of <see cref="LocalStorageCoreFolderPicker"/>.
     /// </summary>
-    public LocalStorageCoreSettingsEditor()
+    public LocalStorageCoreFolderPicker()
     {
         this.InitializeComponent();
     }
@@ -69,7 +65,7 @@ public sealed partial class LocalStorageCoreSettingsEditor : Page
             var cd = new ContentDialog
             {
                 Title = "Folder already connected",
-                Content = new TextBlock() { Text = "The selected folder has already been set up. Please choose another one." },
+                Content = new TextBlock { Text = "The selected folder has already been set up. Please choose another one." },
                 PrimaryButtonText = "Ok",
             };
 
@@ -91,7 +87,7 @@ public sealed partial class LocalStorageCoreSettingsEditor : Page
         settings.FutureAccessToken = token;
         settings.Path = pickedFolder.Path;
 
-        Frame.Navigate(typeof(ScanStartedNotice), (_param, settings));
+        Frame.Navigate(typeof(ConfirmAndSave), (_param, settings));
     }
 
     [RelayCommand]

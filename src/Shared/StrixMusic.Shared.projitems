@@ -24,8 +24,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ScanStartedNotice.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreSettingsEditor.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -84,11 +84,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ScanStartedNotice.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreSettingsEditor.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

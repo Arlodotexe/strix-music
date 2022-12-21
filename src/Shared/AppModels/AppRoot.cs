@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -29,7 +31,12 @@ using StrixMusic.Settings;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using StrixMusic.Controls;
+using StrixMusic.Sdk.WinUI.Controls;
+using ProgressBar = Windows.UI.Xaml.Controls.ProgressBar;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
 
 namespace StrixMusic.AppModels;
@@ -39,9 +46,10 @@ namespace StrixMusic.AppModels;
 /// </summary>
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
+    private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
-    private PlaybackHandlerService? _playbackHandler;
+    private readonly PlaybackHandlerService _playbackHandler = new();
 
     [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
@@ -82,78 +90,121 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            MusicSourcesSettings = new MusicSourcesSettings(_dataFolder);
-            ShellSettings = new ShellSettings(_dataFolder);
+            if (MusicSourcesSettings is null)
+            {
+                var musicSourceSettingsFolder = await GetOrCreateSettingsFolder(nameof(MusicSourcesSettings));
+                MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
+            }
 
-            // Create/Remove cores when settings are added/removed.
-            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+            if (ShellSettings is null)
+            {
+                var shellSettingsFolder = await GetOrCreateSettingsFolder(nameof(ShellSettings));
+                ShellSettings = new ShellSettings(folder: shellSettingsFolder);
+            }
 
-            // Avoid overwriting unsaved changes.
+            // Load existing settings if there are no unsaved changes.
             // May have unsaved changed if a source was just added but settings were not saved before InitAsync is called.
             if (!MusicSourcesSettings.HasUnsavedChanges)
                 await MusicSourcesSettings.LoadAsync(cancellationToken);
 
-            // Create local storage cores
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.InParallel(async settings => await CoreFactory.CreateLocalStorageCoreAsync(settings, await GetOrCreateMusicSourceSettingsFolder()));
+            // Create/Remove cores when settings are added/removed.
+            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
-            // Create OneDrive cores
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.InParallel(async settings => await CoreFactory.CreateOneDriveCoreAsync(settings, await GetOrCreateMusicSourceSettingsFolder()));
+            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores.Where(NeedsToBeCreated).InParallel(CoreFactory.CreateLocalStorageCoreAsync);
+            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores.Where(NeedsToBeCreated).InParallel(CoreFactory.CreateOneDriveCoreAsync);
 
             // Merge cores together and apply plugins
             var allCores = localStorageCores
                 .Concat(oneDriveCores)
-                .ToList<ICore>();
+                .ToArray();
 
+            // A merged core cannot be created without at least one source.
             if (!allCores.Any())
                 return;
 
-            _mergedCore = new MergedCore(allCores);
-            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore);
+            // Initialize all cores.
+            // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
+            await allCores.InParallel(TryInitCore);
+
+            // Prune cores that didn't load successfully
+            allCores = allCores.Where(x => x.IsInitialized).ToArray();
+
+            // If there's no cores initialized.
+            if (!allCores.Any())
+                return;
+
+            var mergedCore = _mergedCore ??= new MergedCore(allCores);
+            var mergedCoreWithPlugins = CreatePluginLayer(mergedCore);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
+            // TODO: Show OOBE if this InitAsync method is called and Initialized == false when completed.
         }
     }
 
     private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(e, async x => await CoreFactory.CreateLocalStorageCoreAsync(x, await GetOrCreateMusicSourceSettingsFolder()));
+        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
     }
 
-    private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
+    private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
         where TSettings : SettingsBase, IInstanceId
     {
-        if (!IsInitialized)
+        using (await _initMutex.DisposableWaitAsync())
         {
-            await InitAsync();
-            return;
-        }
-
-        // InitAsync should populate these fields.
-        Guard.IsNotNull(_mergedCore);
-        Guard.IsNotNull(_strixDataRoot);
-        Guard.IsNotNull(_playbackHandler);
-
-        if (e.Action == NotifyCollectionChangedAction.Add)
-        {
-            foreach (var item in e.NewItems.Cast<TSettings>())
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var newCore = await settingsToCoreFactory(item);
+                foreach (var item in e.NewItems.Cast<TSettings>())
+                {
+                    var newCore = await settingsToCoreFactory(item);
 
-                _mergedCore.AddSource(newCore);
-                await InitAsync();
+                    // Init core, present user with retry options on failure.
+                    await TryInitCore(newCore);
 
-                SetupMediaPlayerForCore(newCore, _playbackHandler);
+                    // Core didn't init correctly and user chose not to retry.
+                    if (!newCore.IsInitialized)
+                    {
+                        var settingsInstances = (IList<TSettings>)sender;
+
+                        Guard.IsTrue(settingsInstances.Remove(item));
+                        await MusicSourcesSettings!.SaveAsync();
+
+                        return;
+                    }
+
+                    // A merged core cannot be created without at least one source.
+                    // If _mergedCore doesn't exist yet, this must be the first core being added.
+                    // We'll need to create _mergedCore ourselves here, and not overwrite it elsewhere if not null.
+                    if (_mergedCore is null)
+                        _mergedCore = new MergedCore(newCore.IntoList());
+                    else
+                        _mergedCore.AddSource(newCore);
+
+                    await InitAsync();
+
+                    SetupMediaPlayerForCore(newCore);
+                }
             }
-        }
 
-        if (e.Action == NotifyCollectionChangedAction.Remove)
-        {
-            foreach (var item in e.OldItems.Cast<TSettings>())
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var target = _mergedCore.Sources.First(x => x.InstanceId == item.InstanceId);
-                _mergedCore.RemoveSource(target);
-                await target.DisposeAsync();
+                if (_mergedCore is null)
+                {
+                    // Not yet loaded, nothing created so nothing to remove.
+                    return;
+                }
+
+                foreach (var item in e.OldItems.Cast<TSettings>())
+                {
+                    // TSettings is contractually obligated to implement IInstanceId.
+                    // If the target is null, it must be because the core hasn't been added to _mergedCore.
+                    var target = _mergedCore.Sources.FirstOrDefault(x => x.InstanceId == item.InstanceId);
+                    if (target is null)
+                        return;
+
+                    _mergedCore.RemoveSource(target);
+                    await target.DisposeAsync();
+                }
             }
         }
     }
@@ -161,13 +212,131 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     /// <inheritdoc />
     public bool IsInitialized { get; private set; }
 
+    /// <summary>
+    /// Attempts to safely initialize the provided <paramref name="core"/>, allowing the user to retry in case of failure.
+    /// </summary>
+    /// <param name="core">The <see cref="ICore"/> instance to attempt to initialize.</param>
+    private async Task TryInitCore(ICore core)
+    {
+        try
+        {
+            await core.InitAsync();
+        }
+        catch (Exception ex)
+        {
+            using (await _dialogMutex.DisposableWaitAsync())
+            {
+                await HandleFailureAsync(ex);
+            }
+
+            async Task HandleFailureAsync(Exception ex)
+            {
+                Logger.LogError($"Core failed to initialize: \"{core.DisplayName}\", id {core.InstanceId}.", ex);
+
+                StackPanel CreateCoreDataStackPanel() => new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 20,
+                    Children =
+                    {
+                        new CoreImage { Image = core.Logo, Height = 45, HorizontalAlignment = HorizontalAlignment.Left },
+                        new StackPanel
+                        {
+                            Spacing = 5,
+                            Children =
+                            {
+                                new TextBlock { Text = core.DisplayName, VerticalAlignment = VerticalAlignment.Bottom, FontSize = 16 },
+                                new TextBlock { Text = core.InstanceDescriptor, FontSize = 12 },
+                            },
+                        },
+                    },
+                };
+
+                var initCoreAsyncCommand = new AsyncRelayCommand(core.InitAsync, AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler);
+
+                // Wait for user to pick an option and close the dialog.
+                var retryConfirmationDialog = new ContentDialog
+                {
+                    Title = $"This failed to load:",
+                    Content = new StackPanel
+                    {
+                        Width = 275,
+                        Spacing = 15,
+                        Children =
+                        {
+                            CreateCoreDataStackPanel(),
+                            new Expander
+                            {
+                                Width = 275,
+                                Header = "View error",
+                                ExpandDirection = ExpandDirection.Down,
+                                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                                Content = new TextBlock { Text = $"Reason: {ex}", FontSize = 11, IsTextSelectionEnabled = true },
+                            },
+                        },
+                    },
+                    CloseButtonText = "Ignore, remove source",
+                    PrimaryButtonText = "Try again",
+                    PrimaryButtonCommand = initCoreAsyncCommand,
+                };
+
+                await retryConfirmationDialog.ShowAsync();
+
+                // User chose to ignore and remove source.
+                if (initCoreAsyncCommand.ExecutionTask is null)
+                    return;
+
+                // User chose to retry
+                // Wait for user to pick an option and close the dialog.
+                var retryStatusDialog = new ContentDialog
+                {
+                    Title = $"This failed to load:",
+                    Content = new StackPanel
+                    {
+                        Width = 250,
+                        Spacing = 7,
+                        Children =
+                        {
+                            CreateCoreDataStackPanel(),
+                            new ProgressBar { IsIndeterminate = true },
+                            new TextBlock { Text = $"Initializing music source..." },
+                        },
+                    },
+                    CloseButtonText = "Cancel, remove source",
+                    CloseButtonCommand = new RelayCommand(initCoreAsyncCommand.Cancel),
+                };
+
+                _ = retryStatusDialog.ShowAsync();
+
+                if (initCoreAsyncCommand.ExecutionTask.Status is TaskStatus.Running or TaskStatus.WaitingForActivation or TaskStatus.WaitingForChildrenToComplete or TaskStatus.WaitingToRun)
+                    await initCoreAsyncCommand.ExecutionTask;
+
+                retryStatusDialog.Hide();
+
+                if (initCoreAsyncCommand.ExecutionTask.Status == TaskStatus.Faulted)
+                {
+                    await HandleFailureAsync(initCoreAsyncCommand.ExecutionTask.Exception.Flatten());
+                }
+                else if (initCoreAsyncCommand.ExecutionTask.Status == TaskStatus.RanToCompletion)
+                {
+                    var successDialog = new ContentDialog
+                    {
+                        Title = $"Loaded successfully",
+                        Content = CreateCoreDataStackPanel(),
+                        CloseButtonText = "Ok",
+                    };
+
+                    await successDialog.ShowAsync();
+                }
+            }
+        }
+    }
+
     private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot)
     {
         // Apply plugin layer
-        _playbackHandler ??= new PlaybackHandlerService();
-
         foreach (var core in existingRoot.Sources)
-            SetupMediaPlayerForCore(core, _playbackHandler);
+            SetupMediaPlayerForCore(core);
 
         var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, new PlaybackHandlerPlugin(_playbackHandler), new PopulateEmptyNamesPlugin
         {
@@ -179,28 +348,27 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         return pluginLayer;
     }
 
-    private void SetupMediaPlayerForCore(ICore core, IPlaybackHandlerService playbackHandler)
+    private void SetupMediaPlayerForCore(ICore core)
     {
         var mediaPlayer = new MediaPlayer();
         var mediaPlayerElement = new MediaPlayerElement();
 
         mediaPlayer.CommandManager.IsEnabled = false;
         mediaPlayerElement.SetMediaPlayer(mediaPlayer);
-        playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
+        _playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
 
         MediaPlayerElements.Add(mediaPlayerElement);
     }
 
-    private async Task<IModifiableFolder> GetOrCreateMusicSourceSettingsFolder()
+    private async Task<IModifiableFolder> GetOrCreateSettingsFolder(string folderName)
     {
-        var folderName = "ConfiguredMusicSources";
-
-        var folder = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == folderName)
-                  ?? await _dataFolder.CreateFolderAsync(folderName);
+        var folder = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == folderName) ?? await _dataFolder.CreateFolderAsync(folderName);
 
         if (folder is not IModifiableFolder modifiableFolder)
             return ThrowHelper.ThrowArgumentException<IModifiableFolder>($"The modifiable folder {_dataFolder.Id} returned a non-modifiable folder. The settings folder for music sources must be modifiable.");
-        else
-            return modifiableFolder;
+
+        return modifiableFolder;
     }
+
+    bool NeedsToBeCreated<TSettings>(TSettings settings) where TSettings : SettingsBase, IInstanceId => _mergedCore?.Sources.All(y => settings.InstanceId != y.InstanceId) ?? true;
 }

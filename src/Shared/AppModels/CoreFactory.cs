@@ -11,6 +11,7 @@ using StrixMusic.Cores.Storage;
 using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.AppModels;
 
@@ -23,30 +24,32 @@ public static class CoreFactory
     /// Creates a <see cref="StorageCore"/> from the provided <see cref="LocalStorageCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
-    /// <param name="storageCoreCacheContainingFolder">The folder where core metadata is saved.</param>
+    /// <param name="cacheFolder">The folder where scanned file metadata is stored for fast retrieval later.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static async Task<StorageCore> CreateLocalStorageCoreAsync(LocalStorageCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
+    /// <exception cref="InvalidOperationException">A new folder was created in the data folder, but it's not modifiable.</exception>
+    public static async Task<ICore> CreateLocalStorageCoreAsync(LocalStorageCoreSettings settings)
     {
-        var coreCache = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast())
-                     ?? await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
+        var instanceId = settings.InstanceId.HashMD5Fast();
 
-        if (coreCache is not IModifiableFolder modifiableCoreCache)
+        var coreDataFolder = await settings.Folder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == instanceId) ??
+                       await settings.Folder.CreateFolderAsync(instanceId);
+
+        if (coreDataFolder is not IModifiableFolder modifiableCoreDataFolder)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
-        var storageFolder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
-        var folder = new WindowsStorageFolder(storageFolder);
+        var storageFolderToScan = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
+        var folderToScan = new WindowsStorageFolder(storageFolderToScan);
 
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
 
         var core = new StorageCore
         (
-            folder,
-            metadataCacheFolder: modifiableCoreCache,
+            folderToScan,
+            metadataCacheFolder: modifiableCoreDataFolder,
             "Local Storage",
-            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folder.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
+            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             Logo = logo,
@@ -61,13 +64,14 @@ public static class CoreFactory
     /// Creates a <see cref="StorageCore"/> from the provided <see cref="OneDriveCoreSettings"/>.
     /// </summary>
     /// <param name="settings">The settings used to create the folder abstraction.</param>
-    /// <param name="storageCoreCacheContainingFolder"></param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings, IModifiableFolder storageCoreCacheContainingFolder)
+    /// <exception cref="InvalidOperationException">A new folder was created in the data folder, but it's not modifiable.</exception>
+    public static async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings)
     {
-        var coreData = await storageCoreCacheContainingFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == settings.InstanceId.HashMD5Fast())
-                    ?? await storageCoreCacheContainingFolder.CreateFolderAsync(settings.InstanceId.HashMD5Fast());
+        var instanceId = settings.InstanceId.HashMD5Fast();
+
+        var coreData = await settings.Folder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == instanceId) ??
+                       await settings.Folder.CreateFolderAsync(instanceId);
 
         if (coreData is not IModifiableFolder modifiableCoreData)
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");

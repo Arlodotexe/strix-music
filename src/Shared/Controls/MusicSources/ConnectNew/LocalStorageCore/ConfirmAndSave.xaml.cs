@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OwlCore.Storage.Memory;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.AppModels;
 
@@ -26,16 +27,16 @@ namespace StrixMusic.Controls.MusicSources.ConnectNew.LocalStorageCore;
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 [ObservableObject]
-public sealed partial class ScanStartedNotice : Page
+public sealed partial class ConfirmAndSave : Page
 {
     private (ConnectNewMusicSourceNavigationParams, LocalStorageCoreSettings Settings) _param;
     [ObservableProperty] private ICore? _core;
     private AppRoot? _appRoot;
 
     /// <summary>
-    /// Creates a new instance of <see cref="ScanStartedNotice"/>.
+    /// Creates a new instance of <see cref="ConfirmAndSave"/>.
     /// </summary>
-    public ScanStartedNotice()
+    public ConfirmAndSave()
     {
         this.InitializeComponent();
     }
@@ -44,7 +45,7 @@ public sealed partial class ScanStartedNotice : Page
     /// The backing dependency property for <ses cref="Settings" />.
     /// </summary>
     public static readonly DependencyProperty SettingsProperty =
-        DependencyProperty.Register(nameof(Settings), typeof(LocalStorageCoreSettings), typeof(ScanStartedNotice), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Settings), typeof(LocalStorageCoreSettings), typeof(ConfirmAndSave), new PropertyMetadata(null));
 
     /// <summary>
     /// Collection holding the data for <see cref="Settings" />
@@ -70,10 +71,12 @@ public sealed partial class ScanStartedNotice : Page
     {
         Guard.IsNotNull(_appRoot?.MusicSourcesSettings);
         Guard.IsNotNull(Settings);
-        _appRoot.MusicSourcesSettings.ConfiguredLocalStorageCores.Add(Settings);
-
+        
         await Settings.SaveAsync();
+        
+        _appRoot.MusicSourcesSettings.ConfiguredLocalStorageCores.Add(Settings);
         await _appRoot.MusicSourcesSettings.SaveAsync();
+        
         _param.Item1.SetupCompleteTaskCompletionSource.SetResult(null);
     }
 
