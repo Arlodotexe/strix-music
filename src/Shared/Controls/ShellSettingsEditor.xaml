@@ -117,8 +117,10 @@
 						Grid.Row="0"
 						Grid.Column="2"
 						Margin="0"
-						HorizontalAlignment="Right">
-						<Button Margin="4,0" ToolTipService.ToolTip="Picture in picture (500 x 500)">
+						HorizontalAlignment="Right"
+						HorizontalSpacing="5"
+						VerticalSpacing="5">
+						<Button ToolTipService.ToolTip="Picture in picture (500 x 500)">
 							<Button.Content>
 								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE15A;" />
 							</Button.Content>
@@ -137,7 +139,7 @@
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
-						<Button Margin="4,0" ToolTipService.ToolTip="Mobile phone (750 x 500)">
+						<Button ToolTipService.ToolTip="Mobile phone (750 x 500)">
 							<Button.Content>
 								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE1C9;" />
 							</Button.Content>
@@ -156,7 +158,7 @@
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
-						<Button Margin="4,0" ToolTipService.ToolTip="Tablet (800 x 1200)">
+						<Button ToolTipService.ToolTip="Tablet (800 x 1200)">
 							<Button.Content>
 								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE70A;" />
 							</Button.Content>
@@ -175,7 +177,7 @@
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
-						<Button Margin="4,0" ToolTipService.ToolTip="Desktop/Laptop (1920 x 1080)">
+						<Button ToolTipService.ToolTip="Desktop/Laptop (1920 x 1080)">
 							<Button.Content>
 								<FontIcon
 									Margin="3"
@@ -199,7 +201,6 @@
 						</Button>
 
 						<Button
-							Margin="4,0,0,0"
 							Content="4K"
 							FontSize="15"
 							ToolTipService.ToolTip="4K (2160 x 3840)">

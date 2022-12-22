@@ -2,6 +2,7 @@
 	x:Class="StrixMusic.AppFrame"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
 	xmlns:controls="using:StrixMusic.Controls"
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
@@ -60,37 +61,113 @@
 			x:Name="SettingsBorder"
 			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 			CornerRadius="6"
-			Visibility="Visible">
+			Visibility="Collapsed">
 			<Grid>
+				<animations:Implicit.ShowAnimations>
+					<animations:OpacityAnimation
+						From="0"
+						To="1.0"
+						Duration="0:0:0.5" />
+				</animations:Implicit.ShowAnimations>
+
+				<animations:Implicit.HideAnimations>
+					<animations:OpacityAnimation
+						From="1.0"
+						To="0"
+						Duration="0:0:0.5" />
+				</animations:Implicit.HideAnimations>
+
 				<ui:Effects.Shadow>
 					<ui:AttachedDropShadow
 						BlurRadius="25"
 						CastTo="{x:Bind ShadowTarget}"
 						CornerRadius="6"
 						IsMasked="True"
-						Opacity="0.25" />
+						Opacity="0.40" />
 				</ui:Effects.Shadow>
 
 				<controls:Settings AppRoot="{x:Bind AppRoot}" />
 
 				<!--
-                For resizing the settings window.
-                Not needed if control takes up full window.
-
-                <labs:PropertySizer VerticalAlignment="Bottom"
-                                    Orientation="Horizontal"
-                                    Width="{Binding ElementName=SettingsBorder, Path=Width}"
-                                    Minimum="250" Opacity="0"
-                                    Maximum="3000"
-                                    Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"/>
-
-                <labs:PropertySizer HorizontalAlignment="Right"
-                                    Height="{Binding ElementName=SettingsBorder, Path=Height}"
-                                    Minimum="250" Maximum="5000" Opacity="0"
-                                    Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"/>
-
+					For resizing the settings window.
+					Not needed if control takes up full window.
 				-->
+				<labs:PropertySizer
+					Width="{Binding ElementName=SettingsBorder, Path=Width}"
+					VerticalAlignment="Bottom"
+					Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"
+					Maximum="3000"
+					Minimum="350"
+					Opacity="0"
+					Orientation="Horizontal" />
+
+				<labs:PropertySizer
+					Height="{Binding ElementName=SettingsBorder, Path=Height}"
+					HorizontalAlignment="Right"
+					Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"
+					Maximum="5000"
+					Minimum="350"
+					Opacity="0" />
 			</Grid>
 		</Border>
+
+		<Button
+			Width="50"
+			Height="32"
+			Margin="0,2,140,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			IsHitTestVisible="False"
+			Opacity="0.9">
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+				Glyph="&#xE7C2;" />
+		</Button>
+
+		<ToggleButton
+			x:Name="OpenSettingsUIToggleButton"
+			Width="50"
+			Height="32"
+			Margin="0,2,195,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Foreground="DarkGray"
+			Opacity="0.9">
+			<SymbolIcon Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Symbol="Setting" />
+
+			<interactivity:Interaction.Behaviors>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="True">
+					<core:GoToStateAction StateName="SettingsDialogVisible" />
+				</core:DataTriggerBehavior>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="False">
+					<core:GoToStateAction StateName="SettingsDialogHidden" />
+				</core:DataTriggerBehavior>
+			</interactivity:Interaction.Behaviors>
+		</ToggleButton>
+
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="ShellSettingsVisualStateGroup">
+				<VisualState x:Name="SettingsDialogVisible">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Visible" />
+					</VisualState.Setters>
+				</VisualState>
+
+				<VisualState x:Name="SettingsDialogHidden">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Collapsed" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 	</Grid>
 </UserControl>
