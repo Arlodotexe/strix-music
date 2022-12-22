@@ -1,75 +1,75 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:abstractui="using:OwlCore.WinUI.AbstractUI.Themes"
-    xmlns:styles="using:StrixMusic.Sdk.WinUI.Styles"
-    xmlns:collectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections"
-    xmlns:itemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
-    xmlns:nowplayingstyles="using:StrixMusic.Sdk.WinUI.Styles.NowPlaying"
-    xmlns:shellstyles="using:StrixMusic.Sdk.WinUI.Styles.Shells"
-    xmlns:viewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views"
-    xmlns:secondaryviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views.Secondary"
-    xmlns:owlcoreuno="using:OwlCore.WinUI.Controls">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:abstractui="using:OwlCore.WinUI.AbstractUI.Themes"
+	xmlns:collectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections"
+	xmlns:itemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
+	xmlns:nowplayingstyles="using:StrixMusic.Sdk.WinUI.Styles.NowPlaying"
+	xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+	xmlns:secondaryviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views.Secondary"
+	xmlns:shellstyles="using:StrixMusic.Sdk.WinUI.Styles.Shells"
+	xmlns:styles="using:StrixMusic.Sdk.WinUI.Styles"
+	xmlns:viewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views">
 
-    <ResourceDictionary.MergedDictionaries>
-        
-        <!--Styles for collections-->
-        <collectionstyles:AlbumCollectionStyle/>
-        <collectionstyles:ArtistCollectionStyle/>
-        <collectionstyles:PlaylistCollectionStyle/>
-        <collectionstyles:TrackCollectionStyle/>
+	<ResourceDictionary.MergedDictionaries>
 
-        <!--Styles for items-->
-        <itemstyles:AlbumItemStyle/>
-        <itemstyles:ArtistItemStyle/>
-        <itemstyles:PlaylistItemStyle/>
-        <itemstyles:TrackItemStyle/>
+		<!--  Styles for collections  -->
+		<collectionstyles:AlbumCollectionStyle />
+		<collectionstyles:ArtistCollectionStyle />
+		<collectionstyles:PlaylistCollectionStyle />
+		<collectionstyles:TrackCollectionStyle />
 
-        <!--Styles for shell related controls-->
-        <nowplayingstyles:MediaInfoStyle/>
-        <nowplayingstyles:MediaTransportStyle/>
+		<!--  Styles for items  -->
+		<itemstyles:AlbumItemStyle />
+		<itemstyles:ArtistItemStyle />
+		<itemstyles:PlaylistItemStyle />
+		<itemstyles:TrackItemStyle />
 
-        <!--Styles for shell related controls-->
-        <shellstyles:NowPlayingBarStyle/>
-        <shellstyles:PlayableCollectionGroupPivotStyle />
+		<!--  Styles for shell related controls  -->
+		<nowplayingstyles:MediaInfoStyle />
+		<nowplayingstyles:MediaTransportStyle />
 
-        <!--Styles for secondary pages-->
-        <secondaryviewstyles:AlbumViewStyle/>
-        <secondaryviewstyles:ArtistViewStyle/>
-        <secondaryviewstyles:PlaylistViewStyle/>
+		<!--  Styles for shell related controls  -->
+		<shellstyles:NowPlayingBarStyle />
+		<shellstyles:PlayableCollectionGroupPivotStyle />
 
-        <!--Styles for primary pages-->
-        <viewstyles:HomeViewStyle/>
-        <viewstyles:NowPlayingViewStyle/>
-        <viewstyles:SearchViewStyle/>
-        <viewstyles:SettingsViewStyle/>
+		<!--  Styles for secondary pages  -->
+		<secondaryviewstyles:AlbumViewStyle />
+		<secondaryviewstyles:ArtistViewStyle />
+		<secondaryviewstyles:PlaylistViewStyle />
 
-        <!--Other imported styles-->
-        <styles:SafeImageStyle/>
-        <abstractui:AbstractUICollectionPresenterStyle/>
+		<!--  Styles for primary pages  -->
+		<viewstyles:HomeViewStyle />
+		<viewstyles:NowPlayingViewStyle />
+		<viewstyles:SearchViewStyle />
+		<viewstyles:SettingsViewStyle />
 
-    </ResourceDictionary.MergedDictionaries>
+		<!--  Other imported styles  -->
+		<styles:SafeImageStyle />
+		<abstractui:AbstractUICollectionPresenterStyle />
 
-    <Style x:Key="MediaButton" TargetType="Button">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
+	</ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="MediaToggleContentButton" TargetType="owlcoreuno:ToggleContentButton">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
+	<Style x:Key="MediaButton" TargetType="Button">
+		<Setter Property="Margin" Value="4,0" />
+		<Setter Property="Padding" Value="12" />
+		<Setter Property="Background" Value="Transparent" />
+	</Style>
 
-    <Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">
-        <Setter Property="Margin" Value="8,12"/>
-        <Setter Property="Padding" Value="16,8"/>
-        <Setter Property="VerticalContentAlignment" Value="Top"/>
-    </Style>
+	<Style x:Key="MediaToggleContentButton" TargetType="owlcoreuno:ToggleContentButton">
+		<Setter Property="Margin" Value="4,0" />
+		<Setter Property="Padding" Value="12" />
+		<Setter Property="Background" Value="Transparent" />
+	</Style>
 
-    <Style x:Key="TrackListItemStyle" TargetType="ListViewItem">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-    </Style>
+	<Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">
+		<Setter Property="Margin" Value="8,12" />
+		<Setter Property="Padding" Value="16,8" />
+		<Setter Property="VerticalContentAlignment" Value="Top" />
+	</Style>
+
+	<Style x:Key="TrackListItemStyle" TargetType="ListViewItem">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+	</Style>
 
 </ResourceDictionary>

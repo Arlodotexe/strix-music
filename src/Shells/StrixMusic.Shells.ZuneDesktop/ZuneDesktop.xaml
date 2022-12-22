@@ -1,184 +1,280 @@
 ﻿<controls:Shell
-    x:Class="StrixMusic.Shells.ZuneDesktop.ZuneDesktop"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
-    xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
-    xmlns:collection="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections"
-    xmlns:a="using:OwlCore.WinUI.Attached"
-    xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
-    xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
-    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
-    xmlns:nowplayingstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying"
-    xmlns:nowplayingview="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.NowPlayingView"
-    xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
-    xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
-    xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
-    x:Name="RootControl" RequestedTheme="Dark">
+	x:Class="StrixMusic.Shells.ZuneDesktop.ZuneDesktop"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:a="using:OwlCore.WinUI.Attached"
+	xmlns:collection="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections"
+	xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
+	xmlns:controls="using:StrixMusic.Sdk.WinUI.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:nowplayingstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying"
+	xmlns:nowplayingview="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.NowPlayingView"
+	xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
+	xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
+	xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
+	xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
+	xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
+	x:Name="RootControl"
+	RequestedTheme="Dark"
+	mc:Ignorable="d">
 
-    <controls:Shell.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources.xaml" />
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/SmallPivotItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/PrimaryPivotItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ThinGridSplitterStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDesktopSearchTextBoxStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneRadioButtonListViewItem.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneSettingsListViewItem.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
-
-
-                <!--Collection related styles-->
-                <collectionstyles:AlbumCollectionStyle/>
-                <collectionstyles:ArtistCollectionStyle/>
-                <collectionstyles:TrackCollectionStyle/>
+	<controls:Shell.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/SmallPivotItemStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/PrimaryPivotItemStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ThinGridSplitterStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDesktopSearchTextBoxStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneRadioButtonListViewItem.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneSettingsListViewItem.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml" />
 
 
-                <!--Item related styles-->
-                <itemstyles:ArtistItemStyle/>
-                <itemstyles:AlbumItemStyle/>
-                <itemstyles:TrackItemStyle/>
-
-                <!--NowPlaying related styles-->
-                <nowplayingstyles:DefaultZuneMediaInfoStyle/>
-                <nowplayingstyles:ZuneMediaTransportStyle/>
-
-                <!--Shell related styles-->
-                <shellstyles:NowPlayingBarStyle/>
+				<!--  Collection related styles  -->
+				<collectionstyles:AlbumCollectionStyle />
+				<collectionstyles:ArtistCollectionStyle />
+				<collectionstyles:TrackCollectionStyle />
 
 
-                <!--View related styles-->
-                <viewstyles:NowPlayingViewStyle/>
-                <viewstyles:SettingsViewStyle/>
+				<!--  Item related styles  -->
+				<itemstyles:ArtistItemStyle />
+				<itemstyles:AlbumItemStyle />
+				<itemstyles:TrackItemStyle />
+
+				<!--  NowPlaying related styles  -->
+				<nowplayingstyles:DefaultZuneMediaInfoStyle />
+				<nowplayingstyles:ZuneMediaTransportStyle />
+
+				<!--  Shell related styles  -->
+				<shellstyles:NowPlayingBarStyle />
 
 
-                <!--Styles-->
-                <styles:SafeImageStyle/>
-                
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </controls:Shell.Resources>
+				<!--  View related styles  -->
+				<viewstyles:NowPlayingViewStyle />
+				<viewstyles:SettingsViewStyle />
 
-    <Grid Background="{ThemeResource ZuneLightBackground}">
-        <Grid.Resources>
-            <Storyboard x:Name="EnterDarkTheme">
-                <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
-                                 Duration="0:0:0.3" To="1"/>
-            </Storyboard>
-            <Storyboard x:Name="LeaveDarkTheme">
-                <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
-                                 Duration="0:0:0.3" To="0"/>
-            </Storyboard>
 
-            <Storyboard x:Name="ShowBackground">
-                <DoubleAnimation Storyboard.TargetName="BackgroundImage" Storyboard.TargetProperty="Opacity"
-                                 Duration="0:0:0.3" To=".1" From="0"/>
-            </Storyboard>
-            <Storyboard x:Name="HideBackground" Completed="BackgroundHideCompleted">
-                <DoubleAnimation Storyboard.TargetName="BackgroundImage" Storyboard.TargetProperty="Opacity"
-                                 Duration="0:0:0.3" To="0"/>
-            </Storyboard>
-        </Grid.Resources>
+				<!--  Styles  -->
+				<styles:SafeImageStyle />
 
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</controls:Shell.Resources>
 
-        <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1" Grid.RowSpan="2">
-            <Rectangle.Fill>
-                <ImageBrush x:Name="BackgroundImageBrush" AlignmentX="Right" AlignmentY="Top" Stretch="Uniform"/>
-            </Rectangle.Fill>
-        </Rectangle>
+	<Grid Background="{ThemeResource ZuneLightBackground}">
+		<Grid.Resources>
+			<Storyboard x:Name="EnterDarkTheme">
+				<DoubleAnimation
+					Storyboard.TargetName="DarkBackground"
+					Storyboard.TargetProperty="Opacity"
+					To="1"
+					Duration="0:0:0.3" />
+			</Storyboard>
+			<Storyboard x:Name="LeaveDarkTheme">
+				<DoubleAnimation
+					Storyboard.TargetName="DarkBackground"
+					Storyboard.TargetProperty="Opacity"
+					To="0"
+					Duration="0:0:0.3" />
+			</Storyboard>
 
-        <Grid x:Name="DarkBackground" Grid.RowSpan="2" Opacity="0">
-            <Rectangle Fill="{ThemeResource ZuneDarkBackgroundColor}"/>
+			<Storyboard x:Name="ShowBackground">
+				<DoubleAnimation
+					Storyboard.TargetName="BackgroundImage"
+					Storyboard.TargetProperty="Opacity"
+					From="0"
+					To=".1"
+					Duration="0:0:0.3" />
+			</Storyboard>
+			<Storyboard x:Name="HideBackground" Completed="BackgroundHideCompleted">
+				<DoubleAnimation
+					Storyboard.TargetName="BackgroundImage"
+					Storyboard.TargetProperty="Opacity"
+					To="0"
+					Duration="0:0:0.3" />
+			</Storyboard>
+		</Grid.Resources>
 
-            <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Quickplay-Background.png" AlignmentY="Center"/>
-                </Rectangle.Fill>
-            </Rectangle>
-        </Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
 
-        <Grid x:Name="CustomTitleBar" Background="Transparent" Height="64" VerticalAlignment="Top"/>
+		<Rectangle
+			x:Name="BackgroundImage"
+			Grid.RowSpan="2"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Opacity=".1">
+			<Rectangle.Fill>
+				<ImageBrush
+					x:Name="BackgroundImageBrush"
+					AlignmentX="Right"
+					AlignmentY="Top"
+					Stretch="Uniform" />
+			</Rectangle.Fill>
+		</Rectangle>
 
-        <Grid x:Name="MainContent">
-            <!--Settings | Help and Sign In-->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,160,0">
-                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                    <HyperlinkButton x:Uid="/Common/SettingsBTN" Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12" Click="SettingsLinkClicked"
-                                     a:TextHelpers.CharacterCasing="Upper"/>
-                    <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
-                    <HyperlinkButton x:Uid="/Common/HelpBTN" Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"
-                                     a:TextHelpers.CharacterCasing="Upper" NavigateUri="https://www.youtube.com/watch?v=dQw4w9WgXcQ"/>
-                </StackPanel>
+		<Grid
+			x:Name="DarkBackground"
+			Grid.RowSpan="2"
+			Opacity="0">
+			<Rectangle Fill="{ThemeResource ZuneDarkBackgroundColor}" />
 
-                <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
-                    <HyperlinkButton x:Uid="/Common/SignInBTN" Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"
-                                     a:TextHelpers.CharacterCasing="Upper"/>
-                    <Border Background="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right">
-                        <Image Margin="4">
-                            <Image.Source>
-                                <SvgImageSource UriSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/ZuneStrixLogo-white.svg"
-                                                RasterizePixelHeight="150" RasterizePixelWidth="150"/>
-                            </Image.Source>
-                        </Image>
-                    </Border>
-                </StackPanel>
-            </StackPanel>
+			<Rectangle
+				Width="1009"
+				Height="720"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Top">
+				<Rectangle.Fill>
+					<ImageBrush AlignmentY="Center" ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Quickplay-Background.png" />
+				</Rectangle.Fill>
+			</Rectangle>
+		</Grid>
 
-            <Pivot x:Name="Pivot" Margin="0,36,0,0" SelectionChanged="Pivot_SelectionChanged">
-                <Pivot.Resources>
-                    <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource PrimaryPivotItemStyle}"/>
-                </Pivot.Resources>
-                <Pivot.LeftHeader>
-                    <Grid Width="32"/>
-                </Pivot.LeftHeader>
-                <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI" Header="quickplay"
-                           a:TextHelpers.CharacterCasing="Lower">
-                    <quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
-                </PivotItem>
-                <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI" Header="collection"
-                           a:TextHelpers.CharacterCasing="Lower" >
-                    <collection:CollectionContent DataRoot="{x:Bind RootVm, Mode=OneWay}" x:Name="PART_CollectionContent"/>
-                </PivotItem>
-                <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI" Header="browse"
-                           a:TextHelpers.CharacterCasing="Lower">
-                </PivotItem>
-            </Pivot>
-        </Grid>
+		<Grid
+			x:Name="CustomTitleBar"
+			Height="64"
+			VerticalAlignment="Top"
+			Background="Transparent" />
 
-        <!--SettingsOverlay-->
-        <views:SettingsView x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+		<Grid x:Name="MainContent">
+			<!--  Settings | Help and Sign In  -->
+			<StackPanel
+				Margin="0,0,250,0"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Top"
+				Orientation="Horizontal">
+				<StackPanel Margin="0,12,0,0" Orientation="Horizontal">
+					<HyperlinkButton
+						x:Uid="/Common/SettingsBTN"
+						a:TextHelpers.CharacterCasing="Upper"
+						Click="SettingsLinkClicked"
+						Content="SETTINGS"
+						FontSize="12"
+						Style="{StaticResource ZuneTextHyperlinkButton}" />
+					<Rectangle
+						Width="2"
+						Height="12"
+						Margin="8,3,8,0"
+						VerticalAlignment="Top"
+						Fill="{ThemeResource HyperlinkForeground}"
+						Opacity=".5" />
+					<HyperlinkButton
+						x:Uid="/Common/HelpBTN"
+						a:TextHelpers.CharacterCasing="Upper"
+						Content="HELP"
+						FontSize="12"
+						NavigateUri="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+						Style="{StaticResource ZuneTextHyperlinkButton}" />
+				</StackPanel>
 
-        <!--Back Button-->
-        <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
-                VerticalAlignment="Top" HorizontalAlignment="Left"
-                Click="RequestBack">
-            <FontIcon Glyph="&#xE0A6;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" FontSize="12"/>
-        </Button>
+				<StackPanel Margin="96,0,0,0" Orientation="Horizontal">
+					<HyperlinkButton
+						x:Uid="/Common/SignInBTN"
+						Margin="0,8,8,0"
+						a:TextHelpers.CharacterCasing="Upper"
+						Content="SIGN IN"
+						FontSize="20"
+						Style="{StaticResource ZuneTextHyperlinkButton}" />
+					<Border
+						Width="48"
+						Height="48"
+						HorizontalAlignment="Right"
+						Background="#FF00FF">
+						<Image Margin="4">
+							<Image.Source>
+								<SvgImageSource
+									RasterizePixelHeight="150"
+									RasterizePixelWidth="150"
+									UriSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/ZuneStrixLogo-white.svg" />
+							</Image.Source>
+						</Image>
+					</Border>
+				</StackPanel>
+			</StackPanel>
 
-        <!--ZuneBar-->
-        <Rectangle Width="16" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0">
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Color="{StaticResource ZunePink}" Offset="0.0" />
-                    <GradientStop Color="{StaticResource ZuneOrange}" Offset="1.0" />
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
+			<Pivot
+				x:Name="Pivot"
+				Margin="0,36,0,0"
+				SelectionChanged="Pivot_SelectionChanged">
+				<Pivot.Resources>
+					<Style BasedOn="{StaticResource PrimaryPivotItemStyle}" TargetType="PivotHeaderItem" />
+				</Pivot.Resources>
+				<Pivot.LeftHeader>
+					<Grid Width="32" />
+				</Pivot.LeftHeader>
+				<PivotItem
+					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI"
+					a:TextHelpers.CharacterCasing="Lower"
+					Header="quickplay">
+					<quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
+				</PivotItem>
+				<PivotItem
+					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI"
+					a:TextHelpers.CharacterCasing="Lower"
+					Header="collection">
+					<collection:CollectionContent x:Name="PART_CollectionContent" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
+				</PivotItem>
+				<PivotItem
+					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI"
+					a:TextHelpers.CharacterCasing="Lower"
+					Header="browse" />
+			</Pivot>
+		</Grid>
 
-        <!--NowPlayingOverlay-->
-        <nowplayingview:ZuneNowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+		<!--  SettingsOverlay  -->
+		<views:SettingsView
+			x:Name="SettingsOverlay"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Visibility="Collapsed" />
 
-        <controls:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar" Devices="{x:Bind Root.Devices, Mode=OneWay}" />
-    </Grid>
+		<!--  Back Button  -->
+		<Button
+			Width="24"
+			Margin="40,12,-32,0"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Click="RequestBack"
+			Style="{StaticResource ZuneButton}">
+			<FontIcon
+				FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"
+				FontSize="12"
+				Glyph="&#xE0A6;" />
+		</Button>
+
+		<!--  ZuneBar  -->
+		<Rectangle
+			Width="16"
+			Height="56"
+			Margin="0,20,0,0"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top">
+			<Rectangle.Fill>
+				<LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+					<GradientStop Offset="0.0" Color="{StaticResource ZunePink}" />
+					<GradientStop Offset="1.0" Color="{StaticResource ZuneOrange}" />
+				</LinearGradientBrush>
+			</Rectangle.Fill>
+		</Rectangle>
+
+		<!--  NowPlayingOverlay  -->
+		<nowplayingview:ZuneNowPlayingView
+			x:Name="NowPlayingOverlay"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Visibility="Collapsed" />
+
+		<controls:NowPlayingBar
+			x:Name="NowPlayingBar"
+			Grid.Row="1"
+			Devices="{x:Bind Root.Devices, Mode=OneWay}" />
+	</Grid>
 </controls:Shell>

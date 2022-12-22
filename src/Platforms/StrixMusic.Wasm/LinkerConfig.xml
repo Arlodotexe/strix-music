@@ -69,10 +69,6 @@
 	<assembly fullname="OwlCore" />
 	<assembly fullname="NLog.Extensions.Logging" />
 	<assembly fullname="NLog" />
-	<assembly fullname="Nito.Disposables" />
-	<assembly fullname="Nito.Collections.Deque" />
-	<assembly fullname="Nito.AsyncEx.Tasks" />
-	<assembly fullname="Nito.AsyncEx.Coordination" />
 	<assembly fullname="Newtonsoft.Json" />
 	<assembly fullname="netstandard" />
 	<assembly fullname="Microsoft.Xaml.Interactivity" />

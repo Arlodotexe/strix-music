@@ -1,74 +1,74 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:converters="using:OwlCore.WinUI.Converters"
-    x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.ArtistCollectionStyle">
-    
-    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
+	x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.ArtistCollectionStyle"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
+	xmlns:converters="using:OwlCore.WinUI.Converters"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
-    <Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:ArtistCollection">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="collections:ArtistCollection">
-                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="collections:ArtistCollection">
-                                    <Grid>
-                                        <ContentControl x:Name="ContextHolder" Content="{x:Bind Collection}"
-                                                        Visibility="Collapsed" />
+	<converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
-                                        <GridView x:Name="PART_Selector"
-                                                  ItemsSource="{x:Bind  Collection.Artists}"
-                                                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None"
-                                                  IsItemClickEnabled="{x:Bind IsItemClickEnabled, Mode=OneWay}">
+	<Style x:Key="DefaultArtistCollectionStyle" TargetType="collections:ArtistCollection">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="collections:ArtistCollection">
+						<ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+							<ContentControl.ContentTemplate>
+								<DataTemplate x:DataType="collections:ArtistCollection">
+									<Grid>
+										<ContentControl
+											x:Name="ContextHolder"
+											Content="{x:Bind Collection}"
+											Visibility="Collapsed" />
 
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="ItemClick">
-                                                    <core:InvokeCommandAction
-                                                        Command="{x:Bind ItemClickCommand, Mode=OneWay}"
-                                                        InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                                                </core:EventTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
+										<GridView
+											x:Name="PART_Selector"
+											Padding="16"
+											HorizontalAlignment="Stretch"
+											IsItemClickEnabled="{x:Bind IsItemClickEnabled, Mode=OneWay}"
+											ItemsSource="{x:Bind Collection.Artists}"
+											SelectionMode="None">
 
-                                            <GridView.Header>
-                                                <Grid>
-                                                    <ProgressRing
-                                                        IsActive="{x:Bind Collection.PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}" />
+											<interactivity:Interaction.Behaviors>
+												<core:EventTriggerBehavior EventName="ItemClick">
+													<core:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+												</core:EventTriggerBehavior>
+											</interactivity:Interaction.Behaviors>
 
-                                                    <ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
-                                                </Grid>
-                                            </GridView.Header>
+											<GridView.Header>
+												<Grid>
+													<ProgressRing IsActive="{x:Bind Collection.PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}" />
 
-                                            <GridView.ItemTemplate>
-                                                <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-                                                    <items:ArtistItem Artist="{Binding}">
-                                                        <interactivity:Interaction.Behaviors>
-                                                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                                <core:InvokeCommandAction
-                                                                    Command="{Binding ElementName=ContextHolder, Path=ContextHolder.PlayAlbumCollectionAsyncCommand, Mode=OneWay}"
-                                                                    CommandParameter="{Binding}" />
-                                                            </core:EventTriggerBehavior>
-                                                        </interactivity:Interaction.Behaviors>
-                                                    </items:ArtistItem>
-                                                </DataTemplate>
-                                            </GridView.ItemTemplate>
-                                        </GridView>
-                                    </Grid>
-                                </DataTemplate>
-                            </ContentControl.ContentTemplate>
-                        </ContentControl>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
+													<ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
+												</Grid>
+											</GridView.Header>
 
-    <Style BasedOn="{StaticResource DefaultArtistCollectionStyle}" TargetType="collections:ArtistCollection" />
+											<GridView.ItemTemplate>
+												<DataTemplate x:Key="DefaultArtistCollectionItemStyle">
+													<items:ArtistItem Artist="{Binding}">
+														<interactivity:Interaction.Behaviors>
+															<core:EventTriggerBehavior EventName="DoubleTapped">
+																<core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=ContextHolder.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+															</core:EventTriggerBehavior>
+														</interactivity:Interaction.Behaviors>
+													</items:ArtistItem>
+												</DataTemplate>
+											</GridView.ItemTemplate>
+										</GridView>
+									</Grid>
+								</DataTemplate>
+							</ContentControl.ContentTemplate>
+						</ContentControl>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultArtistCollectionStyle}" TargetType="collections:ArtistCollection" />
 
 </ResourceDictionary>
