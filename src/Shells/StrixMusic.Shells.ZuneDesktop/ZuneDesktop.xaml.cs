@@ -112,11 +112,11 @@ namespace StrixMusic.Shells.ZuneDesktop
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
-            base.SetupTitleBar();
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(CustomTitleBar);
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif

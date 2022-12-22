@@ -114,7 +114,7 @@
 		<Button
 			Width="50"
 			Height="32"
-			Margin="0,2,140,0"
+			Margin="0,3,140,0"
 			Padding="0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
@@ -130,13 +130,17 @@
 			x:Name="OpenSettingsUIToggleButton"
 			Width="50"
 			Height="32"
-			Margin="0,2,195,0"
+			Margin="0,3,195,0"
 			Padding="0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
 			Foreground="DarkGray"
 			Opacity="0.9">
-			<SymbolIcon Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Symbol="Setting" />
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="14"
+				Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
+				Glyph="&#xE115;" />
 
 			<interactivity:Interaction.Behaviors>
 				<core:DataTriggerBehavior

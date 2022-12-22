@@ -144,11 +144,11 @@ namespace StrixMusic.Shells.Groove
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
-            base.SetupTitleBar();
-
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            Window.Current.SetTitleBar(CustomTitleBarBorder);
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
             titleBar.ButtonForegroundColor = Colors.White;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
 #endif
