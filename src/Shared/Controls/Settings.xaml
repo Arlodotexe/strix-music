@@ -40,10 +40,6 @@
 			SelectedItem="{x:Bind AppearanceNavigationViewItem}">
 			<muxc:NavigationView.MenuItems>
 				<muxc:NavigationViewItem
-					x:Name="GeneralNavigationViewItem"
-					Content="General"
-					Icon="{ui:FontIcon Glyph=&#xE713;}" />
-				<muxc:NavigationViewItem
 					x:Name="AppearanceNavigationViewItem"
 					Content="Appearance"
 					Icon="{ui:FontIcon Glyph=&#xE2B1;}" />
@@ -82,6 +78,16 @@
 
 					<controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
 						<musicSources:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}" />
+					</controls:Case>
+
+					<controls:Case Value="{x:Bind AboutNavigationViewItem}">
+						<StackPanel Spacing="2">
+							<TextBlock FontSize="16" Text="Music is scattered across the digital landscape." />
+							<TextBlock Text="Strix Music brings it all together again. We've created a common and flexible standard for all music sources, and we use it to merge all your music into one place." />
+
+							<!--  TODO: Insert website link  -->
+							<TextBlock Text="" />
+						</StackPanel>
 					</controls:Case>
 
 					<controls:Case IsDefault="True">

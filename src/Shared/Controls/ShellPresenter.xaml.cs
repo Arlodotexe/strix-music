@@ -18,7 +18,7 @@ namespace StrixMusic.Controls;
 [ObservableObject]
 public sealed partial class ShellPresenter : UserControl
 {
-    private Shell? _currentShell;
+    [ObservableProperty] private Shell? _currentShell;
     private bool _currentIsPreferred;
 
     /// <summary>
@@ -168,7 +168,7 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        PART_ShellDisplay.Content = _currentShell = CreatePreferredShell(PreferredShell, Root);
+        PART_ShellDisplay.Content = CurrentShell = CreatePreferredShell(PreferredShell, Root);
         _currentIsPreferred = true;
 
         OnPropertyChanged(nameof(IsPreferredShellActive));
@@ -194,7 +194,7 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        PART_ShellDisplay.Content = _currentShell = CreateFallbackShell(FallbackShell, Root);
+        PART_ShellDisplay.Content = CurrentShell = CreateFallbackShell(FallbackShell, Root);
         _currentIsPreferred = false;
 
         OnPropertyChanged(nameof(IsPreferredShellActive));

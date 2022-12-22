@@ -147,7 +147,7 @@
 		<Grid x:Name="MainContent">
 			<!--  Settings | Help and Sign In  -->
 			<StackPanel
-				Margin="0,0,245,0"
+				Margin="0,0,238,0"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Top"
 				Orientation="Horizontal">
@@ -158,7 +158,8 @@
 						Click="SettingsLinkClicked"
 						Content="SETTINGS"
 						FontSize="12"
-						Style="{StaticResource ZuneTextHyperlinkButton}" />
+						Style="{StaticResource ZuneTextHyperlinkButton}"
+						ToolTipService.ToolTip="Open Zune settings" />
 					<Rectangle
 						Width="2"
 						Height="12"
