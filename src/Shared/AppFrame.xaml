@@ -112,7 +112,7 @@
 		</Border>
 
 		<Button
-			Width="50"
+			Width="45"
 			Height="32"
 			Margin="0,3,140,0"
 			Padding="0"
@@ -122,23 +122,23 @@
 			Opacity="0.9">
 			<FontIcon
 				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="16"
 				Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
 				Glyph="&#xE7C2;" />
 		</Button>
 
 		<ToggleButton
 			x:Name="OpenSettingsUIToggleButton"
-			Width="50"
+			Width="45"
 			Height="32"
 			Margin="0,3,195,0"
 			Padding="0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
-			Foreground="DarkGray"
 			Opacity="0.9">
 			<FontIcon
 				FontFamily="{ThemeResource SymbolThemeFontFamily}"
-				FontSize="14"
+				FontSize="16"
 				Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
 				Glyph="&#xE115;" />
 
