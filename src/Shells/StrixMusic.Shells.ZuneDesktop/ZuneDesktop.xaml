@@ -147,7 +147,7 @@
 		<Grid x:Name="MainContent">
 			<!--  Settings | Help and Sign In  -->
 			<StackPanel
-				Margin="0,0,250,0"
+				Margin="0,0,245,0"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Top"
 				Orientation="Horizontal">

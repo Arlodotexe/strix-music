@@ -114,7 +114,7 @@
 		<Button
 			Width="45"
 			Height="32"
-			Margin="0,3,140,0"
+			Margin="0,3,145,0"
 			Padding="0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
