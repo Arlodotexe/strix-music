@@ -131,7 +131,7 @@
 			x:Name="OpenSettingsUIToggleButton"
 			Width="45"
 			Height="32"
-			Margin="0,3,195,0"
+			Margin="0,3,190,0"
 			Padding="0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
