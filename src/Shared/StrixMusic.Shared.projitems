@@ -121,6 +121,16 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\SegoeMDL2.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\adamdernis.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\amaidniazi.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\arlogodfrey.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-dark.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-light.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\linkedin.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\mastodon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\matthew.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\patreon.theme-dark.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\patreon.theme-light.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\default.sandbox\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\GrooveMusic.10.21061.10121.0\1.png" />
