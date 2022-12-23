@@ -19,6 +19,9 @@ namespace StrixMusic.Controls
 {
     public sealed partial class About : UserControl
     {
+        /// <summary>
+        /// Responsible for the showing and handling the about information.
+        /// </summary>
         public About()
         {
             this.InitializeComponent();
