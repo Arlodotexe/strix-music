@@ -11,14 +11,14 @@ namespace OwlCore.WinUI.Behaviors
     /// </summary>
     public class OpenUriAction : DependencyObject, IAction
     {
-        public string? Source { get; set; }
+        public Uri? Source { get; set; }
 
         /// <inheritdoc />
         public object? Execute(object sender, object parameter)
         {
             Guard.IsNotNull(Source);
 
-            Launcher.LaunchUriAsync(new Uri(Source));
+            Launcher.LaunchUriAsync(Source);
 
             return null;
         }
