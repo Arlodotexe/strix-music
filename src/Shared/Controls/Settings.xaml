@@ -307,10 +307,21 @@
 					</controls:Case>
 
 					<controls:Case IsDefault="True">
-						<FontIcon
-							FontFamily="{ThemeResource SymbolThemeFontFamily}"
-							FontSize="28"
-							Glyph="&#xE822;" />
+						<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+							<FontIcon
+								Margin="7"
+								HorizontalAlignment="Center"
+								FontFamily="{ThemeResource SymbolThemeFontFamily}"
+								FontSize="48"
+								FontWeight="ExtraLight"
+								Glyph="&#xE822;" />
+
+							<TextBlock
+								HorizontalAlignment="Center"
+								FontSize="20"
+								Text="Under construction" />
+							<TextBlock HorizontalAlignment="Center" Text="Check back later" />
+						</StackPanel>
 					</controls:Case>
 				</controls:SwitchPresenter>
 			</ScrollViewer>
