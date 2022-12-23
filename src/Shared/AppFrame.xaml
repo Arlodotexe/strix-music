@@ -136,7 +136,7 @@
 
 			<FontIcon
 				FontFamily="{ThemeResource SymbolThemeFontFamily}"
-				FontSize="16"
+				FontSize="18"
 				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 				Glyph="&#xE7C2;" />
 		</Button>
