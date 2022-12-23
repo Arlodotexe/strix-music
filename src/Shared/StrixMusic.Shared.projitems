@@ -129,6 +129,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\adamdernis.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\amaidniazi.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\arlogodfrey.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\discord.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-dark.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-light.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\linkedin.png" />

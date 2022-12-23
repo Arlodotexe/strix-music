@@ -103,6 +103,7 @@
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			Description="Ask questions, get real-time updates and give us your feedback."
 			Header="Find us on Discord"
+			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/discord.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
 				<core:EventTriggerBehavior EventName="Click">
@@ -112,7 +113,7 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="Founding developer, project manager."
+			Description="Project owner, Founding developer"
 			Header="Arlo Godfrey"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/arlogodfrey.png}">
 			<controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5">
@@ -146,7 +147,7 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="Lead developer."
+			Description="Developer, Maintainer"
 			Header="Amaid Niazi"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/amaidniazi.png}">
 			<controls:WrapPanel HorizontalSpacing="5" VerticalSpacing="5">
@@ -171,7 +172,7 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="Founding developer."
+			Description="Founding developer, "
 			Header="Adam Dernis"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/adamdernis.png}">
 
@@ -198,7 +199,7 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="Founding developer (inactive)."
+			Description="Founding developer (inactive)"
 			Header="Matthew"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/matthew.png}" />
 
@@ -212,7 +213,7 @@
 			ActionIconToolTip="Open getting started docs"
 			Description="Use any music source or plugin from our ecosystem in your own app."
 			Header="The universal music development kit"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE81E;}"
+			HeaderIcon="{ui:BitmapIcon Source=/Assets/StoreLogo.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
 				<core:EventTriggerBehavior EventName="Click">
