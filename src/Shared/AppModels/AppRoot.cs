@@ -38,6 +38,7 @@ using StrixMusic.Controls;
 using StrixMusic.Sdk.WinUI.Controls;
 using ProgressBar = Windows.UI.Xaml.Controls.ProgressBar;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
+using Windows.System;
 
 namespace StrixMusic.AppModels;
 
@@ -50,6 +51,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
     private readonly PlaybackHandlerService _playbackHandler = new();
+
+    /// <summary>
+    /// Holds the list of all logs.
+    /// </summary>
+    public ObservableCollection<string>? AppLogs { get; } = new ObservableCollection<string>();
 
     [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
@@ -69,6 +75,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
+
+        Logger.MessageReceived += Logger_MessageReceived;
     }
 
     /// <summary>
@@ -163,6 +171,17 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
+    }
+
+    private void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
+    {
+        var formatedMessage = LogFormatter.GetFormattedLogMessage(e);
+
+        if (AppLogs == null)
+            return;
+
+        AppLogs.Add(formatedMessage);
+        OnPropertyChanged(nameof(AppLogs));
     }
 
     private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
@@ -395,6 +414,15 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             return ThrowHelper.ThrowArgumentException<IModifiableFolder>($"The modifiable folder {_dataFolder.Id} returned a non-modifiable folder. The settings folder for music sources must be modifiable.");
 
         return modifiableFolder;
+    }
+
+    [RelayCommand]
+    private async void OpenLogFolder()
+    {
+        var logsLocation = LogFormatter.LogFolderPath;
+        StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(logsLocation);
+
+        await Launcher.LaunchFolderAsync(folder);
     }
 
     bool NeedsToBeCreated<TSettings>(TSettings settings) where TSettings : SettingsBase, IInstanceId => _mergedCore?.Sources.All(y => settings.InstanceId != y.InstanceId) ?? true;
