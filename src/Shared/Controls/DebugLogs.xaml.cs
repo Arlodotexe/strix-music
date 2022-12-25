@@ -1,21 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Diagnostics;
 using StrixMusic.AppModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -35,23 +21,6 @@ namespace StrixMusic.Controls
             Loaded += DebugLogs_Loaded;
         }
 
-        private void DebugLogs_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= DebugLogs_Loaded;
-            if (AppRoot != null && AppRoot.AppLogs != null)
-                AppRoot.AppLogs.CollectionChanged += AppLogs_CollectionChanged;
-
-            PART_SvLogs.ChangeView(0.0f, double.MaxValue, 1.0f);
-        }
-
-        private void AppLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                PART_SvLogs.ChangeView(0.0f, double.MaxValue, 1.0f);
-            }
-        }
-
         /// <summary>
         /// The data root for this app instance.
         /// </summary>
@@ -66,5 +35,28 @@ namespace StrixMusic.Controls
         /// </summary>
         public static readonly DependencyProperty AppRootProperty =
             DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(DebugLogs), new PropertyMetadata(null));
+
+        private void DebugLogs_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= DebugLogs_Loaded;
+            if (AppRoot != null && AppRoot.AppDebug != null && AppRoot.AppDebug.AppLogs != null)
+                AppRoot.AppDebug.AppLogs.CollectionChanged += AppLogs_CollectionChanged;
+
+            // Scrolls to the bottom.
+            ScrollToBottom();
+        }
+
+        private async void AppLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    ScrollToBottom();
+                });
+            }
+        }
+
+        private void ScrollToBottom() => PART_SvLogs.ChangeView(0.0f, double.MaxValue, 1.0f);
     }
 }

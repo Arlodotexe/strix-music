@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDebug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DebugLogs.xaml.cs">
       <DependentUpon>DebugLogs.xaml</DependentUpon>

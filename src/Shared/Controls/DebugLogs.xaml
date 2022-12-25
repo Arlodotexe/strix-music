@@ -23,11 +23,34 @@
 		Margin="20"
 		Spacing="4" VerticalAlignment="Top">
 
+
         <TextBlock
             MaxWidth="1000"
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
-			Text="Debug logs" />
+			Text="Debug Info" />
+
+        <labs:SettingsCard
+			ActionIcon="{ui:SymbolIcon Symbol=NewWindow}"
+			Header="{x:Bind AppRoot.AppDebug.WindowSizeStr, Mode=OneWay}"
+			IsClickEnabled="True" />
+
+        <labs:SettingsCard
+			ActionIcon="{ui:SymbolIcon Symbol=Clear}"
+			Header="Delete User Data"
+			HeaderIcon="{ui:SymbolIcon Symbol=Delete}"
+			IsClickEnabled="True">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Click">
+                    <core:InvokeCommandAction Command="{x:Bind AppRoot.AppDebug.DeleteUserDataCommand, Mode=OneWay}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </labs:SettingsCard>
+
+        <labs:SettingsCard
+			ActionIcon="{ui:SymbolIcon Symbol=Flag}"
+			Header="{x:Bind AppRoot.AppDebug.MemoryUsage}"
+			IsClickEnabled="True" />
 
         <labs:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
@@ -36,7 +59,7 @@
 			IsClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Click">
-                    <core:InvokeCommandAction Command="{x:Bind AppRoot.OpenLogFolderCommand, Mode=OneWay}"/>
+                    <core:InvokeCommandAction Command="{x:Bind AppRoot.AppDebug.OpenLogFolderCommand, Mode=OneWay}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </labs:SettingsCard>
@@ -48,8 +71,8 @@
 
         <ScrollViewer x:Name="PART_SvLogs"
                       MaxWidth="1600"
-                      MaxHeight="700" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
-            <ItemsControl  ItemsSource="{x:Bind AppRoot.AppLogs, Mode=OneWay}" >
+                      MaxHeight="450" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
+            <ItemsControl  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}" >
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
