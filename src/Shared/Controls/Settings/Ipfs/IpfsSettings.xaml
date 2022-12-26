@@ -30,7 +30,8 @@
 			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
 			Header="Enable IPFS"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
-			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}">
+			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
+			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.IpfsEnabled), Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="Toggled">
@@ -43,83 +44,102 @@
 			</ToggleSwitch>
 		</labs:SettingsCard>
 
-		<labs:SettingsCard
-			x:Name="IpfsStatusCard"
-			Description="{x:Bind Ipfs.InitStatus, Mode=OneWay}"
+		<labs:SettingsExpander
+			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
+			Header="Enable IPFS"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
-			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}"
+			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
+			IsExpanded="True"
 			Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=OneWay}">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=TwoWay}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Toggled">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+					<core:EventTriggerBehavior EventName="Toggled">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</ToggleSwitch>
 
-			<Grid>
-				<!--  If IPFS is not loaded  -->
-				<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
-					<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.IsInitialized), FallbackValue=Collapsed, Mode=OneWay}">
-						<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
-							<controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
-								<ProgressRing IsActive="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
+			<labs:SettingsExpander.Items>
+				<labs:SettingsCard
+					x:Name="IpfsStatusCard"
+					Description="{x:Bind Ipfs.InitStatus, Mode=OneWay}"
+					IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
 
-								<Button Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" Content="Start" />
+					<Grid>
+						<!--  If IPFS is not loaded  -->
+						<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
+							<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.IsInitialized), FallbackValue=Collapsed, Mode=OneWay}">
+								<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
+									<controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
+										<ProgressRing IsActive="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
 
-								<Ellipse
-									Width="25"
-									Height="25"
-									Fill="{ThemeResource SystemControlDisabledBaseLowBrush}" />
-							</controls:WrapPanel>
+										<Button Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" Content="Start" />
+
+										<Ellipse
+											Width="25"
+											Height="25"
+											Fill="{ThemeResource SystemControlDisabledBaseLowBrush}" />
+									</controls:WrapPanel>
+								</Border>
+							</Border>
 						</Border>
-					</Border>
-				</Border>
 
-				<!--  If IPFS is running and ready to use  -->
-				<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
-					<Border Visibility="{x:Bind Ipfs.IsInitialized, FallbackValue=Collapsed, Mode=OneWay}">
-						<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
-							<controls:WrapPanel
-								HorizontalSpacing="10"
-								VerticalSpacing="10"
-								Visibility="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
+						<!--  If IPFS is running and ready to use  -->
+						<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
+							<Border Visibility="{x:Bind Ipfs.IsInitialized, FallbackValue=Collapsed, Mode=OneWay}">
+								<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
+									<controls:WrapPanel
+										HorizontalSpacing="10"
+										VerticalSpacing="10"
+										Visibility="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
 
-								<Button
-									Command="{x:Bind Ipfs.StopCommand, Mode=OneWay}"
-									Content="Stop"
-									Visibility="{x:Bind InvertBoolToVisibility(Ipfs.StopCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}" />
+										<Button
+											Command="{x:Bind Ipfs.StopCommand, Mode=OneWay}"
+											Content="Stop"
+											Visibility="{x:Bind InvertBoolToVisibility(Ipfs.StopCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}" />
 
-								<Button
-									Command="{x:Bind Ipfs.StopCancelCommand, Mode=OneWay}"
-									Content="Cancel"
-									IsEnabled="{x:Bind InvertBool(Ipfs.StopCommand.IsRunning), FallbackValue=false, Mode=OneWay}"
-									Visibility="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=Collapsed, Mode=OneWay}" />
+										<Button
+											Command="{x:Bind Ipfs.StopCancelCommand, Mode=OneWay}"
+											Content="Cancel"
+											IsEnabled="{x:Bind InvertBool(Ipfs.StopCommand.IsRunning), FallbackValue=false, Mode=OneWay}"
+											Visibility="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=Collapsed, Mode=OneWay}" />
 
-								<Ellipse
-									Width="25"
-									Height="25"
-									Fill="MediumSeaGreen" />
+										<Ellipse
+											Width="25"
+											Height="25"
+											Fill="MediumSeaGreen" />
 
-								<ProgressRing IsActive="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
-							</controls:WrapPanel>
+										<ProgressRing IsActive="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.StopCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
+									</controls:WrapPanel>
+								</Border>
+							</Border>
 						</Border>
-					</Border>
-				</Border>
 
-				<!--  If IPFS is initializing  -->
-				<controls:WrapPanel
-					HorizontalSpacing="10"
-					VerticalSpacing="10"
-					Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}">
+						<!--  If IPFS is initializing  -->
+						<controls:WrapPanel
+							HorizontalSpacing="10"
+							VerticalSpacing="10"
+							Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}">
 
-					<ProgressRing IsActive="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
+							<ProgressRing IsActive="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" Visibility="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
 
-					<Button
-						Command="{x:Bind Ipfs.InitCancelCommand, Mode=OneWay}"
-						Content="Stop"
-						IsEnabled="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
+							<Button
+								Command="{x:Bind Ipfs.InitCancelCommand, Mode=OneWay}"
+								Content="Stop"
+								IsEnabled="{x:Bind Ipfs.InitCommand.IsRunning, FallbackValue=false, Mode=OneWay}" />
 
-					<Ellipse
-						Width="25"
-						Height="25"
-						Fill="DarkOrange" />
-				</controls:WrapPanel>
-			</Grid>
-		</labs:SettingsCard>
+							<Ellipse
+								Width="25"
+								Height="25"
+								Fill="DarkOrange" />
+						</controls:WrapPanel>
+					</Grid>
+				</labs:SettingsCard>
+			</labs:SettingsExpander.Items>
+		</labs:SettingsExpander>
 
 		<labs:SettingsCard
 			Description="The port of an existing Kubo node. If Kubo is not running on this port, we'll download and bootstrap a node on this port instead."
@@ -136,7 +156,7 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="The number of people who have enabled IPFS in Strix Music and are online right now"
+			Description="The number of other people who have enabled IPFS in Strix Music and are online right now"
 			Header="Users online"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE95A;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">

@@ -218,7 +218,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
             Everyone = new PeerRoom(ThisPeer, Client.PubSub, "StrixMusicAppEveryoneRoom");
 
-            InitStatus = "IPFS is loaded and ready to use";
+            InitStatus = "Kubo is running and ready to use";
             IsInitialized = true;
         }
     }
