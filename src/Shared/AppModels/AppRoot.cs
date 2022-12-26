@@ -73,6 +73,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
+         _appDebug = new AppDebug();
     }
 
     /// <summary>
@@ -93,11 +94,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 return;
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (_appDebug is null)
-            {
-                _appDebug = new AppDebug();
-            }
 
             if (MusicSourcesSettings is null)
             {

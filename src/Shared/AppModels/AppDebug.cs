@@ -13,10 +13,10 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.Diagnostics;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Core;
 
 namespace StrixMusic.AppModels
 {
@@ -33,15 +33,12 @@ namespace StrixMusic.AppModels
         [ObservableProperty]
         private string? _memoryUsage;
 
+        private DispatcherTimer _memoryWatchTimer;
+
         /// <summary>
         /// Holds the list of all logs.
         /// </summary>
         public ObservableCollection<string>? AppLogs { get; } = new ObservableCollection<string>();
-
-        /// <summary>
-        /// Command to delete user settings and data.
-        /// </summary>
-        public ICommand PerformUserDataDeletionCommand { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AppDebug"/>.
@@ -52,9 +49,19 @@ namespace StrixMusic.AppModels
             Window.Current.SizeChanged += Current_SizeChanged;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_MemoryChanged;
             MemoryManager.AppMemoryUsageDecreased += MemoryManager_MemoryChanged;
-            PerformUserDataDeletionCommand = new RelayCommand(PerformUserDataDeletion);
             UpdateMemoryUsage();
             SetWindowSize();
+            _memoryWatchTimer = new DispatcherTimer();
+            _memoryWatchTimer.Interval = TimeSpan.FromSeconds(3);
+            _memoryWatchTimer.Tick += DispatchTimer_Elapsed;
+            _memoryWatchTimer.Start();
+        }
+
+        private void DispatchTimer_Elapsed(object sender, object e)
+        {
+            _memoryWatchTimer.Stop();
+            UpdateMemoryUsage();
+            _memoryWatchTimer.Start();
         }
 
         private void MemoryManager_MemoryChanged(object sender, object e)
@@ -95,7 +102,7 @@ namespace StrixMusic.AppModels
         }
 
         [RelayCommand]
-        private async void OpenLogFolder()
+        private async Task OpenLogFolderAsync()
         {
             var logsLocation = LogFormatter.LogFolderPath;
             var folder = await StorageFolder.GetFolderFromPathAsync(logsLocation);
@@ -104,7 +111,7 @@ namespace StrixMusic.AppModels
         }
 
         [RelayCommand]
-        private async void DeleteUserData()
+        private async Task DeleteUserDataAsync()
         {
             var contentDialog = new ContentDialog()
             {
@@ -118,7 +125,8 @@ namespace StrixMusic.AppModels
             await contentDialog.ShowAsync();
         }
 
-        private async void PerformUserDataDeletion()
+        [RelayCommand]
+        private async Task PerformUserDataDeletionAsync()
         {
             try
             {
@@ -151,7 +159,9 @@ namespace StrixMusic.AppModels
         private string SizeSuffix(long value, int decimalPlaces = 1)
         {
             string[] sizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-            if (value < 0) { return "-" + SizeSuffix(-value, decimalPlaces); }
+
+            if (value < 0)
+                return "-" + SizeSuffix(-value, decimalPlaces);
 
             var i = 0;
             var dValue = (decimal)value;
