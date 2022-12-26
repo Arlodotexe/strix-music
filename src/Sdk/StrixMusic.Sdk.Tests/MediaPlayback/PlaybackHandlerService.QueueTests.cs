@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.Tests.MediaPlayback
 
             // Make sure no items end up at the same place.
             for (int o = 0; o < _nextItems.Count; o++)
-                Assert.AreNotEqual(o, _handlerService.NextItems[o]);
+                Assert.AreNotEqual(_nextItems[o], _handlerService.NextItems[o]);
 
             // Make sure all items from previous and next exist in next after shuffle.
             CollectionAssert.IsSubsetOf(_nextItems, _handlerService.NextItems.ToList());

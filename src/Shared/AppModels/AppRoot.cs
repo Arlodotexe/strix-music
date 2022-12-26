@@ -26,6 +26,9 @@ using StrixMusic.Settings;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OwlCore.Kubo;
+using StrixMusic.Plugins;
+using StrixMusic.Sdk.Plugins.Model;
 using ProgressBar = Windows.UI.Xaml.Controls.ProgressBar;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
 using ShowType = OwlCore.Extensions.ShowType;
@@ -182,7 +185,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 return;
             }
 
-            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore);
+            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore, Ipfs);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
@@ -388,18 +391,39 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
     }
 
-    private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot)
+    private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot, IpfsAccess ipfs)
     {
-        // Apply plugin layer
         foreach (var core in existingRoot.Sources)
             SetupMediaPlayerForCore(core);
 
-        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, new PlaybackHandlerPlugin(_playbackHandler), new PopulateEmptyNamesPlugin
+        var plugins = new List<SdkModelPlugin>
         {
-            EmptyAlbumName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownAlbum") ?? "?",
-            EmptyArtistName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownArtist") ?? "?",
-            EmptyDefaultName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownName") ?? "?",
-        });
+            new PlaybackHandlerPlugin(_playbackHandler),
+            new PopulateEmptyNamesPlugin
+            {
+                EmptyAlbumName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownAlbum") ?? "?",
+                EmptyArtistName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownArtist") ?? "?",
+                EmptyDefaultName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownName") ?? "?",
+            }
+        };
+
+        if (ipfs.Settings.IpfsEnabled)
+        {
+            Guard.IsNotNull(ipfs.ThisPeer);
+            Guard.IsNotNull(ipfs.Client);
+
+            if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
+            {
+                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).AssemblyQualifiedName;
+                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? typeof(AppRoot).AssemblyQualifiedName;
+
+                var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);
+
+                plugins.Add(new GlobalPlaybackStateCountPlugin(ipfs.ThisPeer, encryptedPubSub));
+            }
+        }
+
+        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, plugins.ToArray());
 
         return pluginLayer;
     }

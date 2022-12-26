@@ -7,6 +7,7 @@ using Ipfs.Http;
 using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using OwlCore.Storage;
+using StrixMusic.Plugins;
 
 namespace StrixMusic.Settings;
 
@@ -79,6 +80,16 @@ public partial class IpfsSettings : SettingsBase
     public string DownloadKuboBinaryFileId
     {
         get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value that indicates if the <see cref="GlobalPlaybackStateCountPlugin"/> should be enabled.
+    /// </summary>
+    /// <remarks>This option is not currently used. Needs further research.</remarks>
+    public bool GlobalPlaybackStateCountPluginEnabled
+    {
+        get => GetSetting(() => false);
         set => SetSetting(value);
     }
 

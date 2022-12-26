@@ -20,6 +20,12 @@
 		MaxWidth="750"
 		Margin="20"
 		Spacing="4">
+
+		<TextBlock
+			Margin="1,28,0,4"
+			Style="{StaticResource BodyStrongTextBlockStyle}"
+			Text="Basic settings" />
+
 		<interactivity:Interaction.Behaviors>
 			<core:EventTriggerBehavior EventName="Loaded">
 				<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand}" />
@@ -155,6 +161,11 @@
 			</controls1:NumberBox>
 		</labs:SettingsCard>
 
+		<TextBlock
+			Margin="1,28,0,4"
+			Style="{StaticResource BodyStrongTextBlockStyle}"
+			Text="Additional features" />
+
 		<labs:SettingsCard
 			Description="The number of other people who have enabled IPFS in Strix Music and are online right now"
 			Header="Users online"
@@ -163,6 +174,21 @@
 			<TextBlock>
 				<Run Text="{x:Bind Ipfs.Everyone.ConnectedPeers.Count, FallbackValue=?, Mode=OneWay}" />
 			</TextBlock>
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="Requires app restart. See how many people are listening to the same track, album, artist, playlist, etc., as you. Allows others to see when something is playing, paused, loading, or failing to load."
+			Header="Enable global playback state counters"
+			HeaderIcon="{ui:FontIcon Glyph=&#xEBDA;}"
+			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Toggled">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</ToggleSwitch>
 		</labs:SettingsCard>
 
 		<!--<labs:SettingsExpander

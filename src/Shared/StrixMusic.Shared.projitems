@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">
