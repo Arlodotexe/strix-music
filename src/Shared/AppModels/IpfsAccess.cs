@@ -75,10 +75,10 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
     private async void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_settings.IpfsEnabled))
+        if (e.PropertyName == nameof(_settings.Enabled))
         {
             // Shut down the node if IPFS is turned off.
-            if (IsInitialized && !_settings.IpfsEnabled)
+            if (IsInitialized && !_settings.Enabled)
                 await StopCommand.ExecuteAsync(null);
         }
     }
@@ -127,7 +127,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     {
         await Settings.LoadCommand.ExecuteAsync(null);
 
-        if (!Settings.IpfsEnabled || IsInitialized)
+        if (!Settings.Enabled || IsInitialized)
             return;
 
         using (await _initMutex.DisposableWaitAsync(cancellationToken))

@@ -115,7 +115,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 Ipfs = new IpfsAccess(ipfsSettings);
 
-                if (ipfsSettings.IpfsEnabled)
+                if (ipfsSettings.Enabled)
                 {
                     Logger.LogInformation("IPFS is enabled");
                     if (!ipfsSettings.UserPreferencesApplied)
@@ -407,7 +407,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             }
         };
 
-        if (ipfs.Settings.IpfsEnabled)
+        if (ipfs.Settings.Enabled)
         {
             Guard.IsNotNull(ipfs.ThisPeer);
             Guard.IsNotNull(ipfs.Client);

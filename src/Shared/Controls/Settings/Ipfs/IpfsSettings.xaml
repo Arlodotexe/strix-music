@@ -21,24 +21,24 @@
 		Margin="20"
 		Spacing="4">
 
-		<TextBlock
-			Margin="1,28,0,4"
-			Style="{StaticResource BodyStrongTextBlockStyle}"
-			Text="Basic settings" />
-
 		<interactivity:Interaction.Behaviors>
 			<core:EventTriggerBehavior EventName="Loaded">
 				<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand}" />
 			</core:EventTriggerBehavior>
 		</interactivity:Interaction.Behaviors>
 
+		<TextBlock
+			Margin="1,28,0,4"
+			Style="{StaticResource BodyStrongTextBlockStyle}"
+			Text="Basic settings" />
+
 		<labs:SettingsCard
 			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
 			Header="Enable IPFS"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
-			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.IpfsEnabled), Mode=OneWay}">
-			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=TwoWay}">
+			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.Enabled), Mode=OneWay}">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.Enabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
@@ -56,8 +56,8 @@
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
 			IsExpanded="True"
-			Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=OneWay}">
-			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.IpfsEnabled, Mode=TwoWay}">
+			Visibility="{x:Bind Ipfs.Settings.Enabled, Mode=OneWay}">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.Enabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
@@ -76,7 +76,7 @@
 
 					<Grid>
 						<!--  If IPFS is not loaded  -->
-						<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
+						<Border Visibility="{x:Bind Ipfs.Settings.Enabled, FallbackValue=Collapsed, Mode=OneWay}">
 							<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.IsInitialized), FallbackValue=Collapsed, Mode=OneWay}">
 								<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
 									<controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
@@ -94,7 +94,7 @@
 						</Border>
 
 						<!--  If IPFS is running and ready to use  -->
-						<Border Visibility="{x:Bind Ipfs.Settings.IpfsEnabled, FallbackValue=Collapsed, Mode=OneWay}">
+						<Border Visibility="{x:Bind Ipfs.Settings.Enabled, FallbackValue=Collapsed, Mode=OneWay}">
 							<Border Visibility="{x:Bind Ipfs.IsInitialized, FallbackValue=Collapsed, Mode=OneWay}">
 								<Border Visibility="{x:Bind InvertBoolToVisibility(Ipfs.InitCommand.IsRunning), FallbackValue=Collapsed, Mode=OneWay}">
 									<controls:WrapPanel

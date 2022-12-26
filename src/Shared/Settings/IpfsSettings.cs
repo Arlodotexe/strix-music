@@ -31,7 +31,7 @@ public partial class IpfsSettings : SettingsBase
     /// <summary>
     /// Gets or sets a value that indicates if Ipfs is enabled.
     /// </summary>
-    public bool IpfsEnabled
+    public bool Enabled
     {
         get => GetSetting(() => false);
         set => SetSetting(value);
