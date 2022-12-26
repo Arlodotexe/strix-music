@@ -22,22 +22,25 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\IpfsAccess.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml.cs">
       <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">
       <DependentUpon>ShellPresenter.xaml</DependentUpon>
@@ -85,27 +88,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\ConnectNewMusicSource.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\MusicSources\MusicSourcesSettingsEditor.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\MusicSourcesSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,6 +139,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\discord.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-dark.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-light.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\ipfs.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\linkedin.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\mastodon.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\matthew.png" />
@@ -156,7 +164,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-gray.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo-white.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\ZuneStrixLogo.svg" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\ipfs-logo.png" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />
@@ -186,7 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />
-    <None Include="$(MSBuildThisFileDirectory)Assets\Strix\ipfs-logo.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
       <SubType>Designer</SubType>

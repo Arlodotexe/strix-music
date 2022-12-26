@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using StrixMusic.AppModels;
-using StrixMusic.Sdk.AppModels;
-using StrixMusic.Settings;
 
-namespace StrixMusic.Controls.MusicSources.ConnectNew;
+namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew;
 
 /// <summary>
 /// Holds the parameters sent between all pages in the <see cref="ConnectNewMusicSource"/> page pipeline.

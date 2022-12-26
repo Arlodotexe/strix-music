@@ -18,7 +18,7 @@ namespace OwlCore.WinUI.Behaviors
         {
             Guard.IsNotNull(Source);
 
-            Launcher.LaunchUriAsync(Source);
+            _ = Launcher.LaunchUriAsync(Source);
 
             return null;
         }

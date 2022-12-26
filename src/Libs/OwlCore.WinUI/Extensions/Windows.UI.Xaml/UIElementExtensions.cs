@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace OwlCore.WinUI.Extensions.Windows.UI.Xaml
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// A collection of extension methods for <see cref="UIElement"/>

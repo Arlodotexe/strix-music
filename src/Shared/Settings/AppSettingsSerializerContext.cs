@@ -10,6 +10,7 @@ namespace StrixMusic.Settings
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(string))]
+    [JsonSerializable(typeof(int))]
     [JsonSerializable(typeof(LocalStorageCoreSettings))]
     [JsonSerializable(typeof(OneDriveCoreSettings))]
     [JsonSerializable(typeof(ObservableCollection<LocalStorageCoreSettings>))]

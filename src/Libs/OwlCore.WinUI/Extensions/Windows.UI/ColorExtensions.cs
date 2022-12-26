@@ -1,6 +1,7 @@
 ﻿using System;
+using Windows.UI;
 
-namespace Windows.UI
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// A collection of extension methods.

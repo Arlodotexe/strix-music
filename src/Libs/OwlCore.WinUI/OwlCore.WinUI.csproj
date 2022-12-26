@@ -21,13 +21,13 @@
     <PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.2" />
     <PackageReference Include="OwlCore" Version="0.1.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
-    <PackageReference Include="System.Text.Json" Version="6.0.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI" Version="7.1.3" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.3" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.3" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">

@@ -53,5 +53,8 @@
   <Capabilities>
     <Capability Name="internetClient" />
     <uap3:Capability Name="backgroundMediaPlayback"/>
+    <Capability Name="internetClientServer"/>
+    <Capability Name="privateNetworkClientServer"/>
+    <uap:Capability Name="musicLibrary"/>
   </Capabilities>
 </Package>
