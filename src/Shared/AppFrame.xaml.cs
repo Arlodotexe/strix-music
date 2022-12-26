@@ -27,8 +27,14 @@ public sealed partial class AppFrame : UserControl
         AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder));
     }
 
+    /// <summary>
+    /// Represents the active application view and its associative behaviors.
+    /// </summary>
     public ApplicationView CurrentApplicationView { get; } = ApplicationView.GetForCurrentView();
 
+    /// <summary>
+    /// Represents an app window and its thread.
+    /// </summary>
     public CoreApplicationView CurrentCoreApplicationView { get; } = CoreApplication.GetCurrentView();
 
     /// <summary>
