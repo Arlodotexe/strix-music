@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
 using OwlCore.Diagnostics;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
 using Windows.System.Diagnostics;
@@ -33,7 +36,20 @@ namespace StrixMusic.AppModels
         [ObservableProperty]
         private string? _memoryUsage;
 
+        [ObservableProperty]
+        private string? _windowHeight;
+
+        [ObservableProperty]
+        private string? _windowWidth;
+
+        [ObservableProperty]
+        private string? _totalMemory;
+
+        [ObservableProperty]
+        private string? _expectedMemoryLimit;
+
         private DispatcherTimer _memoryWatchTimer;
+        private ContentDialog? _deleteUserDataDialog;
 
         /// <summary>
         /// Holds the list of all logs.
@@ -73,14 +89,16 @@ namespace StrixMusic.AppModels
         {
             var memoryUsed = MemoryManager.AppMemoryUsage;
             var totalMemory = MemoryManager.AppMemoryUsageLimit;
-            MemoryUsage = $"App Memory used: {SizeSuffix((long)memoryUsed)}, Expected app memory usage limit: {SizeSuffix((long)totalMemory)}.";
+            MemoryUsage = SizeSuffix((long)memoryUsed);
+            TotalMemory = SizeSuffix((long)totalMemory);
         }
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e) => SetWindowSize();
 
         private void SetWindowSize()
         {
-            WindowSizeStr = $"Current size is: Height: {Window.Current.Bounds.Height}, Width: {Window.Current.Bounds.Width}";
+            WindowHeight = Window.Current.Bounds.Height.ToString(); ;
+            WindowWidth = Window.Current.Bounds.Width.ToString();
         }
 
         private async void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
@@ -113,7 +131,7 @@ namespace StrixMusic.AppModels
         [RelayCommand]
         private async Task DeleteUserDataAsync()
         {
-            var contentDialog = new ContentDialog()
+            _deleteUserDataDialog = new ContentDialog()
             {
                 Title = "Delete user data",
                 Content = "Are you sure you want to delete user data? If you hit yes, the app will restart.",
@@ -122,7 +140,7 @@ namespace StrixMusic.AppModels
                 PrimaryButtonCommand = PerformUserDataDeletionCommand
             };
 
-            await contentDialog.ShowAsync();
+            await _deleteUserDataDialog.ShowAsync();
         }
 
         [RelayCommand]
@@ -145,16 +163,50 @@ namespace StrixMusic.AppModels
                    result == AppRestartFailureReason.RestartPending ||
                    result == AppRestartFailureReason.Other)
                 {
-                    var msgBox = new MessageDialog("Restart Failed. Please restart the app manually.", result.ToString());
-                    await msgBox.ShowAsync();
+                    await ShowRetryContentDialogAsync($"Restart Failed. Please restart the app manually.", RestartAppCommand, null);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                var msgBox = new MessageDialog("Couldn't delete the user data.");
-                await msgBox.ShowAsync();
+                Guard.IsNotNull(_deleteUserDataDialog);
+
+                _deleteUserDataDialog.Hide();
+                await ShowRetryContentDialogAsync($"Couldn't delete the user data.", PerformUserDataDeletionCommand, ex);
             }
         }
+
+        private async Task ShowRetryContentDialogAsync(string error, ICommand retryCommand, Exception? ex)
+        {
+            Logger.LogError(error, ex);
+            var retryConfirmationDialog = new ContentDialog
+            {
+                Title = error,
+                Content = new StackPanel
+                {
+                    Width = 275,
+                    Spacing = 15,
+                    Children =
+                        {
+                            new Expander
+                            {
+                                Width = 275,
+                                Header = "View error",
+                                ExpandDirection = ExpandDirection.Down,
+                                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                                Content = new TextBlock { Text = $"Reason: {ex}", FontSize = 11, IsTextSelectionEnabled = true },
+                            },
+                        },
+                },
+                CloseButtonText = "Ignore, remove source",
+                PrimaryButtonText = "Try again",
+                PrimaryButtonCommand = retryCommand,
+            };
+
+            await retryConfirmationDialog.ShowAsync();
+        }
+
+        [RelayCommand]
+        private async Task<AppRestartFailureReason> RestartAppAsync() => await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
 
         private string SizeSuffix(long value, int decimalPlaces = 1)
         {
