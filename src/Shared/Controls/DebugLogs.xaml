@@ -35,10 +35,8 @@
 			IsClickEnabled="True" >
             <labs:SettingsCard.Content>
                 <TextBlock >
-                    <Run Text="{x:Bind AppRoot.AppDebug.WindowHeight, Mode=OneWay}"/>
-                    <Run Text="h x"/>
-                    <Run Text="{x:Bind AppRoot.AppDebug.WindowWidth, Mode=OneWay}"/>
-                    <Run Text="w"/>
+                     <Run Text="{x:Bind AppRoot.AppDebug.WindowWidth, Mode=OneWay}"/><Run Text="w x"/>
+                     <Run Text="{x:Bind AppRoot.AppDebug.WindowHeight, Mode=OneWay}"/><Run Text="h"/>
                 </TextBlock>
             </labs:SettingsCard.Content>
         </labs:SettingsCard>
@@ -58,12 +56,12 @@
         <labs:SettingsCard
 			Header="Memory"
 			IsClickEnabled="True" >
-                <TextBlock >
+            <TextBlock >
                     <Run Text="Memory Used:"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.MemoryUsage}"/>
                     <Run Text="Expected Memory Limit:"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.TotalMemory}"/>
-                </TextBlock>
+            </TextBlock>
         </labs:SettingsCard>
 
         <labs:SettingsCard
@@ -86,7 +84,10 @@
         <ScrollViewer x:Name="PART_SvLogs"
                       MaxWidth="1600"
                       MaxHeight="450" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
-            <ListView  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}" >
+            <ListView  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}"  
+                       MaxWidth="1600"
+                       MaxHeight="450"
+                       ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollMode="Enabled">
 
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
