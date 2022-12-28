@@ -65,7 +65,6 @@
                     <Run Text="Expected Memory Limit:"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.TotalMemory}"/>
                 </TextBlock>
-            </labs:SettingsCard.Content>
         </labs:SettingsCard>
 
         <labs:SettingsCard
