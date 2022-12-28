@@ -37,7 +37,7 @@
                 <TextBlock >
                     <Run Text="Height(px):"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.WindowHeight}"/>
-                    <Run Text=" Width(px):"/>
+                    <Run Text="{x:Bind AppRoot.AppDebug.WindowWidth, Mode=OneWay}"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.WindowWidth}"/>
                 </TextBlock>
             </labs:SettingsCard.Content>
