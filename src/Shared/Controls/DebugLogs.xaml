@@ -58,7 +58,6 @@
         <labs:SettingsCard
 			Header="Memory"
 			IsClickEnabled="True" >
-            <labs:SettingsCard.Content>
                 <TextBlock >
                     <Run Text="Memory Used:"/>
                     <Run Text="{x:Bind AppRoot.AppDebug.MemoryUsage}"/>
