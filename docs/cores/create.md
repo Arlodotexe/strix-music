@@ -169,13 +169,11 @@ namespace StrixMusic.Cores.MyMusicSource
 }
 ```
 
-To change a setting, simply set the property.
-
-To change the default value, change the return value in `GetSetting(() => "some default value");`. This should never be null.
-
-To save or load all settings from the provided folder abstraction, simple call `await settings.LoadAsync()` or `await settings.SaveAsync()`.
-
-To listen for changes to settings, subscribe to the `settings.PropertyChanged` event.
+- To change a setting, simply set the property.
+- To change the default value, change the return value in `GetSetting(() => "some default value");`. This should never be null.
+- To save or load all settings from the provided folder abstraction, simple call `await settings.LoadAsync()` or `await settings.SaveAsync()`.
+- To listen for changes to settings, subscribe to the `settings.PropertyChanged` event (easy bindings in XAML).
+- and more
 
 ### Constructors and dependencies
 
