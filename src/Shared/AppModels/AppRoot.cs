@@ -415,7 +415,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
             {
                 var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).AssemblyQualifiedName;
-                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? typeof(AppRoot).AssemblyQualifiedName;
+                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? ipfs.ThisPeer.Id.ToString();
 
                 var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);
 
