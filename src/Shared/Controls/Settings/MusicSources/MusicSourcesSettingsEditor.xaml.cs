@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using StrixMusic.Controls.MusicSources.ConnectNew;
 
-namespace StrixMusic.Controls.MusicSources;
+namespace StrixMusic.Controls.Settings.MusicSources;
 
 /// <summary>
 /// A control to view available music source and add new music sources.
@@ -41,14 +40,14 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     [RelayCommand]
     private async Task AddNewMusicSourceAsync()
     {
-        var param = new ConnectNewMusicSourceNavigationParams()
+        var param = new ConnectNew.ConnectNewMusicSourceNavigationParams()
         {
             AppRoot = AppRoot,
         };
         
         ConnectNewSourceFrame.Visibility = Visibility.Visible;
 
-        ConnectNewSourceFrame.Navigate(typeof(ConnectNewMusicSource), param);
+        ConnectNewSourceFrame.Navigate(typeof(ConnectNew.ConnectNewMusicSource), param);
 
         try
         {

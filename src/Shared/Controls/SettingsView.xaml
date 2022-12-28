@@ -1,5 +1,5 @@
 ﻿<UserControl
-	x:Class="StrixMusic.Controls.Settings"
+	x:Class="StrixMusic.Controls.SettingsView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
@@ -8,12 +8,14 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:ipfs="using:StrixMusic.Controls.Settings.Ipfs"
 	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:musicSources="using:StrixMusic.Controls.MusicSources"
+	xmlns:musicSources1="using:StrixMusic.Controls.Settings.MusicSources"
 	xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
 	xmlns:settings="using:StrixMusic.Settings"
+	xmlns:settings1="using:StrixMusic.Controls.Settings"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	x:Name="ControlRoot"
 	d:DesignHeight="300"
@@ -53,8 +55,8 @@
                 <muxc:NavigationViewItem
 					x:Name="IpfsNavigationViewItem"
 					Content="IPFS"
-					Icon="{ui:BitmapIcon Source=/Assets/Strix/ipfs-logo.png}" />
-                <muxc:NavigationViewItem
+					Icon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}" />
+				<muxc:NavigationViewItem
 					x:Name="AboutNavigationViewItem"
 					Content="About"
 					Icon="{ui:FontIcon Glyph=&#xEE57;}"
@@ -66,12 +68,12 @@
 					Tag="Debug" />
             </muxc:NavigationView.MenuItems>
 
-            <ScrollViewer MinHeight="{x:Bind NavViewSwitchPresenter.ActualHeight, Mode=OneWay}">
-                <controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
-                    <controls:Case x:Name="AppearanceSettings" Value="{x:Bind AppearanceNavigationViewItem}">
-                        <!--  Border is used as fallback Content when control is unloaded  -->
-                        <Border>
-                            <local:ShellSettingsEditor
+			<ScrollViewer MinHeight="{x:Bind NavViewSwitchPresenter.ActualHeight, Mode=OneWay}">
+				<controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
+					<controls:Case x:Name="AppearanceSettings" Value="{x:Bind AppearanceNavigationViewItem}">
+						<!--  Border is used as fallback Content when control is unloaded  -->
+						<Border>
+							<settings1:ShellSettingsEditor
 								x:Name="ShellSettingsEditor"
 								Margin="5"
 								Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}"
@@ -79,9 +81,13 @@
                         </Border>
                     </controls:Case>
 
-                    <controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
-                        <musicSources:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}" />
-                    </controls:Case>
+					<controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
+						<musicSources1:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}" />
+					</controls:Case>
+
+					<controls:Case Value="{x:Bind IpfsNavigationViewItem}">
+						<ipfs:IpfsSettings Ipfs="{x:Bind AppRoot.Ipfs, Mode=OneWay}" />
+					</controls:Case>
 
                     <controls:Case Value="{x:Bind AboutNavigationViewItem}">
                         <local:About />

@@ -1,5 +1,5 @@
 ﻿<UserControl
-	x:Class="StrixMusic.Controls.MusicSources.MusicSourcesSettingsEditor"
+	x:Class="StrixMusic.Controls.Settings.MusicSources.MusicSourcesSettingsEditor"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:appModels="using:StrixMusic.AppModels"

@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
-using OwlCore.Kubo;
 using OwlCore.Storage;
-using OwlCore.Storage.Memory;
-using OwlCore.Storage.SystemIO;
-using OwlCore.Storage.Uwp;
-using StrixMusic.Cores.Storage;
+using StrixMusic.Controls;
 using StrixMusic.MediaPlayback;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
@@ -29,16 +24,14 @@ using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Settings;
 using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls;
-using StrixMusic.Controls;
-using StrixMusic.Sdk.WinUI.Controls;
+using OwlCore.Kubo;
+using StrixMusic.Plugins;
+using StrixMusic.Sdk.Plugins.Model;
 using ProgressBar = Windows.UI.Xaml.Controls.ProgressBar;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
-using Windows.System;
+using ShowType = OwlCore.Extensions.ShowType;
 
 namespace StrixMusic.AppModels;
 
@@ -67,6 +60,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     [ObservableProperty]
     private ShellSettings? _shellSettings;
 
+    [ObservableProperty]
+    private IpfsAccess? _ipfs;
+
     /// <summary>
     /// Creates a new instance of <see cref="AppRoot"/>.
     /// </summary>
@@ -93,18 +89,53 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             if (IsInitialized)
                 return;
 
+            Logger.LogInformation($"Initializing app root using folder {_dataFolder.Id}");
             cancellationToken.ThrowIfCancellationRequested();
 
             if (MusicSourcesSettings is null)
             {
+                Logger.LogInformation($"Initializing {nameof(MusicSourcesSettings)}");
+
                 var musicSourceSettingsFolder = await GetOrCreateSettingsFolder(nameof(MusicSourcesSettings));
                 MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
             }
 
             if (ShellSettings is null)
             {
+                Logger.LogInformation($"Initializing {nameof(ShellSettings)}");
+
                 var shellSettingsFolder = await GetOrCreateSettingsFolder(nameof(ShellSettings));
                 ShellSettings = new ShellSettings(folder: shellSettingsFolder);
+            }
+
+            if (Ipfs is null)
+            {
+                Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
+
+                var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
+                var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
+
+                await ipfsSettings.LoadCommand.ExecuteAsync(null);
+
+                Ipfs = new IpfsAccess(ipfsSettings);
+
+                if (ipfsSettings.Enabled)
+                {
+                    Logger.LogInformation("IPFS is enabled");
+                    if (!ipfsSettings.UserPreferencesApplied)
+                        await Ipfs.ShowIpfsUserPreferencesConfirmationDialogAsync();
+
+                    Logger.LogInformation($"Initializing {nameof(Ipfs)}");
+                    await Ipfs.InitCommand.ExecuteAsync(null);
+
+                    if (!Ipfs.IsInitialized)
+                    {
+                        await Ipfs.ShowIpfsUserPreferencesConfirmationDialogAsync();
+
+                        Logger.LogInformation($"Initializing {nameof(Ipfs)}");
+                        await Ipfs.InitCommand.ExecuteAsync(null);
+                    }
+                }
             }
 
             // Load existing settings if there are no unsaved changes.
@@ -158,7 +189,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 return;
             }
 
-            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore);
+            var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore, Ipfs);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
@@ -248,7 +279,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     /// Attempts to safely initialize the provided <paramref name="core"/>, allowing the user to retry in case of failure.
     /// </summary>
     /// <param name="core">The <see cref="ICore"/> instance to attempt to initialize.</param>
-    private async Task TryInitCore(ICore core)
+    private static async Task TryInitCore(ICore core)
     {
         try
         {
@@ -312,7 +343,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     PrimaryButtonCommand = initCoreAsyncCommand,
                 };
 
-                await retryConfirmationDialog.ShowAsync();
+                await retryConfirmationDialog.ShowAsync(ShowType.QueueNext);
 
                 // User chose to ignore and remove source.
                 if (initCoreAsyncCommand.ExecutionTask is null)
@@ -338,7 +369,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     CloseButtonCommand = new RelayCommand(initCoreAsyncCommand.Cancel),
                 };
 
-                _ = retryStatusDialog.ShowAsync();
+                _ = retryStatusDialog.ShowAsync(ShowType.Interrupt);
 
                 if (initCoreAsyncCommand.ExecutionTask.Status is TaskStatus.Running or TaskStatus.WaitingForActivation or TaskStatus.WaitingForChildrenToComplete or TaskStatus.WaitingToRun)
                     await initCoreAsyncCommand.ExecutionTask;
@@ -358,24 +389,45 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         CloseButtonText = "Ok",
                     };
 
-                    await successDialog.ShowAsync();
+                    await successDialog.ShowAsync(ShowType.QueueLast);
                 }
             }
         }
     }
 
-    private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot)
+    private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot, IpfsAccess ipfs)
     {
-        // Apply plugin layer
         foreach (var core in existingRoot.Sources)
             SetupMediaPlayerForCore(core);
 
-        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, new PlaybackHandlerPlugin(_playbackHandler), new PopulateEmptyNamesPlugin
+        var plugins = new List<SdkModelPlugin>
         {
-            EmptyAlbumName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownAlbum") ?? "?",
-            EmptyArtistName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownArtist") ?? "?",
-            EmptyDefaultName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownName") ?? "?",
-        });
+            new PlaybackHandlerPlugin(_playbackHandler),
+            new PopulateEmptyNamesPlugin
+            {
+                EmptyAlbumName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownAlbum") ?? "?",
+                EmptyArtistName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownArtist") ?? "?",
+                EmptyDefaultName = Sdk.WinUI.Globalization.LocalizationResources.Music?.GetString("UnknownName") ?? "?",
+            }
+        };
+
+        if (ipfs.Settings.Enabled)
+        {
+            Guard.IsNotNull(ipfs.ThisPeer);
+            Guard.IsNotNull(ipfs.Client);
+
+            if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
+            {
+                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).AssemblyQualifiedName;
+                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? typeof(AppRoot).AssemblyQualifiedName;
+
+                var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);
+
+                plugins.Add(new GlobalPlaybackStateCountPlugin(ipfs.ThisPeer, encryptedPubSub));
+            }
+        }
+
+        var pluginLayer = new StrixDataRootPluginWrapper(existingRoot, plugins.ToArray());
 
         return pluginLayer;
     }

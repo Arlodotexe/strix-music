@@ -8,12 +8,12 @@ namespace StrixMusic.Controls;
 /// <summary>
 /// Displays the settings for the provided <see cref="AppRoot"/>.
 /// </summary>
-public sealed partial class Settings : UserControl
+public sealed partial class SettingsView : UserControl
 {
     /// <summary>
     /// Create a new instance of <see cref="Settings"/>.
     /// </summary>
-    public Settings()
+    public SettingsView()
     {
         this.InitializeComponent();
     }
@@ -31,7 +31,7 @@ public sealed partial class Settings : UserControl
     /// The backing dependency property for <see cref="AppRoot"/>.
     /// </summary>
     public static readonly DependencyProperty AppRootProperty =
-        DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(Settings), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(SettingsView), new PropertyMetadata(null));
 
     /// <summary>
     /// Returns a value that indicates if the provided case is the active one.

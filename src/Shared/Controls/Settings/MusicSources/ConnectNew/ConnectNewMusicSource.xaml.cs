@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
-using StrixMusic.Controls.MusicSources.ConnectNew.LocalStorageCore;
 using StrixMusic.Settings;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
-namespace StrixMusic.Controls.MusicSources.ConnectNew;
+namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew;
 
 /// <summary>
 /// A page should be hosted in a frame. Loading this page will initiate the setup process for connecting a new music source.
@@ -62,7 +60,7 @@ public sealed partial class ConnectNewMusicSource : Page
 
         var pageType = source.Name switch
         {
-            "Local Storage" => typeof(LocalStorageCoreFolderPicker),
+            "Local Storage" => typeof(LocalStorageCore.LocalStorageCoreFolderPicker),
             _ => throw new ArgumentOutOfRangeException(),
         };
 

@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using StrixMusic.Settings;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore.Storage.Memory;
-using StrixMusic.Sdk.CoreModels;
 using StrixMusic.AppModels;
+using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Settings;
 
-namespace StrixMusic.Controls.MusicSources.ConnectNew.LocalStorageCore;
+namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.

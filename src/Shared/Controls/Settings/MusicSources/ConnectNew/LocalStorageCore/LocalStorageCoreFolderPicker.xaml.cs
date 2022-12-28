@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Extensions;
-using OwlCore.Storage.Uwp;
-using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using OwlCore.Extensions;
+using OwlCore.Storage.Uwp;
+using StrixMusic.Helpers;
+using StrixMusic.Settings;
 
-namespace StrixMusic.Controls.MusicSources.ConnectNew.LocalStorageCore;
+namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 
 /// <summary>
 /// Displays UI to pick a folder, then navigate to the next "connect new" setup page for Local Storage once selected.
@@ -69,7 +70,7 @@ public sealed partial class LocalStorageCoreFolderPicker : Page
                 PrimaryButtonText = "Ok",
             };
 
-            await cd.ShowAsync();
+            await cd.ShowAsync(ShowType.Interrupt);
             return;
         }
 

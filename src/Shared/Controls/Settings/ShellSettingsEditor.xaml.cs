@@ -1,11 +1,11 @@
 ﻿using System;
-using StrixMusic.AppModels;
-using StrixMusic.Sdk.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.AppModels;
+using StrixMusic.Sdk.AppModels;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
 
-namespace StrixMusic.Controls;
+namespace StrixMusic.Controls.Settings;
 
 /// <summary>
 /// A control to view available shells and change the provided shell settings.

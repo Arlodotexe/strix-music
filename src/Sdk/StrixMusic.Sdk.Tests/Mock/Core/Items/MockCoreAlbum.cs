@@ -151,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
             return AsyncEnumerable.Empty<ICoreImage>();
         }
 
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
             yield return MockCoreItemFactory.CreateTrack(SourceCore);

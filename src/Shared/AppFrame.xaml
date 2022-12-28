@@ -96,7 +96,7 @@
 						Opacity="0.40" />
 				</ui:Effects.Shadow>
 
-				<controls:Settings AppRoot="{x:Bind AppRoot}" />
+				<controls:SettingsView AppRoot="{x:Bind AppRoot}" />
 
 				<!--
 					For resizing the settings window.
