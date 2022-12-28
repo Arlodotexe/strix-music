@@ -44,6 +44,20 @@ public abstract class CoreSettingsBase : SettingsBase
         }
     }
 
+    /// <summary>
+    /// Validates if a given setting is valid for core creation.
+    /// </summary>
+    /// <param name="propertyName">The name of the property to validate.</param>
+    /// <returns>A value that indicates if the provided setting is valid for core creation.</returns>
+    public abstract bool IsSettingValidForCoreCreation(string propertyName, object? value);
+
+    /// <summary>
+    /// Gets a setting value by the property name.
+    /// </summary>
+    /// <param name="settingName">The name of the property.</param>
+    /// <returns>The current value of the property with the name <paramref name="settingName"/>.</returns>
+    public abstract object GetSettingByName(string settingName);
+
     /// <inheritdoc />
     protected override void SetSetting<T>(T value, [CallerMemberName] string key = "")
     {
@@ -91,18 +105,4 @@ public abstract class CoreSettingsBase : SettingsBase
             CanCreateCore = _settingsValidity.All(x => x.Value);
         }
     }
-
-    /// <summary>
-    /// Validates if a given setting is valid for core creation.
-    /// </summary>
-    /// <param name="propertyName">The name of the property to validate.</param>
-    /// <returns>A value that indicates if the provided setting is valid for core creation.</returns>
-    public abstract bool IsSettingValidForCoreCreation(string propertyName, object? value);
-
-    /// <summary>
-    /// Gets a setting value by the property name.
-    /// </summary>
-    /// <param name="settingName">The name of the property.</param>
-    /// <returns>The current value of the property with the name <paramref name="settingName"/>.</returns>
-    public abstract object GetSettingByName(string settingName);
 }
