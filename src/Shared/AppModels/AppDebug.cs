@@ -97,7 +97,7 @@ namespace StrixMusic.AppModels
 
         private void SetWindowSize()
         {
-            WindowHeight = Window.Current.Bounds.Height.ToString(); ;
+            WindowHeight = Window.Current.Bounds.Height.ToString();
             WindowWidth = Window.Current.Bounds.Width.ToString();
         }
 
