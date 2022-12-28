@@ -104,7 +104,6 @@
                     <DataTemplate>
                         <StackPanel >
                             <TextBlock Text="{Binding}" TextWrapping="WrapWholeWords"/>
-                            <TextBlock Text="-----------------------------------------------------------------------------------------------------------------------------------------------"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
