@@ -60,7 +60,8 @@ public sealed partial class ConnectNewMusicSource : Page
 
         var pageType = source.Name switch
         {
-            "Local Storage" => typeof(LocalStorageCore.LocalStorageCoreFolderPicker),
+            "Local Storage" => typeof(MusicSources.ConnectNew.LocalStorageCore.LandingPage),
+            "OneDrive" => typeof(MusicSources.ConnectNew.OneDriveCore.LandingPage),
             _ => throw new ArgumentOutOfRangeException(),
         };
 

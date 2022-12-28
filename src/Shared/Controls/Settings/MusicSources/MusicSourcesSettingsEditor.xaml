@@ -10,7 +10,7 @@
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:musicSources="using:StrixMusic.Controls.MusicSources"
+	xmlns:musicSources="using:StrixMusic.Controls.Settings.MusicSources"
 	xmlns:settings="using:StrixMusic.Settings"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
 	d:DesignHeight="300"

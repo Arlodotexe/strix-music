@@ -21,14 +21,14 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 /// Displays UI to pick a folder, then navigate to the next "connect new" setup page for Local Storage once selected.
 /// </summary>
 [ObservableObject]
-public sealed partial class LocalStorageCoreFolderPicker : Page
+public sealed partial class LandingPage : Page
 {
     private ConnectNewMusicSourceNavigationParams? _param;
 
     /// <summary>
-    /// Creates a new instance of <see cref="LocalStorageCoreFolderPicker"/>.
+    /// Creates a new instance of <see cref="LandingPage"/>.
     /// </summary>
-    public LocalStorageCoreFolderPicker()
+    public LandingPage()
     {
         this.InitializeComponent();
     }

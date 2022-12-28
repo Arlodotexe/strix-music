@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -67,6 +68,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     {
         _dataFolder = dataFolder;
     }
+
+    /// <summary>
+    /// The message handler to use to handle all HTTP-based requests.
+    /// </summary>
+    public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
 
     /// <summary>
     /// The media players that were created to play audio for cores.
@@ -142,26 +148,15 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
 
-            // Create cores that haven't already been set up.
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores
-                .Where(NeedsToBeCreated)
-                .Where(x => x.CanCreateCore)
-                .InParallel(CoreFactory.CreateLocalStorageCoreAsync);
-
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores
-                .Where(NeedsToBeCreated)
-                .Where(x => x.CanCreateCore)
-                .InParallel(CoreFactory.CreateOneDriveCoreAsync);
-
             // Merge cores together and apply plugins
-            var allNewCores = localStorageCores.Union(oneDriveCores).ToArray();
+            var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken: cancellationToken);
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
             await allNewCores.InParallel(TryInitCore);
 
             // Prune cores that didn't load successfully
-            allNewCores = allNewCores.Where(x => x.IsInitialized).ToArray();
+            allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
 
             // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
             // If _mergedCore exists, set it up as the data root.
@@ -189,6 +184,26 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
+        }
+    }
+
+    private async IAsyncEnumerable<ICore> CreateConfiguredCoresAsync()
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        // Create cores that haven't already been set up.
+        foreach (var item in MusicSourcesSettings.ConfiguredLocalStorageCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            var core = await CoreFactory.CreateLocalStorageCoreAsync(item);
+            yield return core;
+        }
+
+        foreach (var item in MusicSourcesSettings.ConfiguredOneDriveCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            var core = await CoreFactory.CreateOneDriveCoreAsync(item, HttpMessageHandler);
+            yield return core;
         }
     }
 
