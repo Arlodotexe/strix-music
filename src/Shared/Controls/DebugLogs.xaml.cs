@@ -18,7 +18,6 @@ namespace StrixMusic.Controls
         public DebugLogs()
         {
             this.InitializeComponent();
-            Loaded += DebugLogs_Loaded;
         }
 
         /// <summary>
@@ -35,28 +34,5 @@ namespace StrixMusic.Controls
         /// </summary>
         public static readonly DependencyProperty AppRootProperty =
             DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(DebugLogs), new PropertyMetadata(null));
-
-        private void DebugLogs_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= DebugLogs_Loaded;
-            if (AppRoot != null && AppRoot.AppDebug != null && AppRoot.AppDebug.AppLogs != null)
-                AppRoot.AppDebug.AppLogs.CollectionChanged += AppLogs_CollectionChanged;
-
-            // Scrolls to the bottom.
-            ScrollToBottom();
-        }
-
-        private async void AppLogs_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    ScrollToBottom();
-                });
-            }
-        }
-
-        private void ScrollToBottom() => PART_SvLogs.ChangeView(0.0f, double.MaxValue, 1.0f);
     }
 }

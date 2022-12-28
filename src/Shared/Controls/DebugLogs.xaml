@@ -80,35 +80,30 @@
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Logs" />
-
-        <ScrollViewer x:Name="PART_SvLogs"
-                      MaxWidth="1600"
-                      MaxHeight="450" HorizontalScrollBarVisibility="Visible" HorizontalScrollMode="Enabled" >
-            <ListView  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}"  
+        <ListView  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}"  
                        MaxWidth="1600"
                        MaxHeight="450"
                        ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollMode="Enabled">
 
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel>
-                            <VirtualizingStackPanel.ChildrenTransitions>
-                                <TransitionCollection/>
-                            </VirtualizingStackPanel.ChildrenTransitions>
-                        </VirtualizingStackPanel>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom">
+                        <ItemsStackPanel.ChildrenTransitions>
+                            <TransitionCollection />
+                        </ItemsStackPanel.ChildrenTransitions>
+                    </ItemsStackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel >
-                            <TextBlock Text="{Binding}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel >
+                        <TextBlock Text="{Binding}" TextWrapping="WrapWholeWords"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
 
-            </ListView>
-        </ScrollViewer>
+        </ListView>
     </StackPanel>
 
 </UserControl>
