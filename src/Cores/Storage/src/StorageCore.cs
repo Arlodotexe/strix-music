@@ -27,6 +27,7 @@ public class StorageCore : ICore
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private CoreState _coreState;
     private ICoreImage? _logo;
+    private string _instanceDescriptor = string.Empty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageCore"/> class.
@@ -81,7 +82,15 @@ public class StorageCore : ICore
     public string InstanceId { get; }
 
     /// <inheritdoc />
-    public string InstanceDescriptor { get; set; } = string.Empty;
+    public string InstanceDescriptor
+    {
+        get => _instanceDescriptor;
+        set
+        {
+            _instanceDescriptor = value;
+            InstanceDescriptorChanged?.Invoke(this, value);
+        }
+    }
 
     /// <inheritdoc />
     public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
