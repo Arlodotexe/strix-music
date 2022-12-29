@@ -32,7 +32,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\FolderSelector.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\DeviceCodeLogin.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\LandingPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -40,6 +43,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml.cs">
       <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Storage\FolderBrowser.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Storage\StorableItemTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
@@ -110,7 +115,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LocalStorageCoreFolderPicker.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\FolderSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\DeviceCodeLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\LandingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Storage\FolderBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -203,6 +224,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\login.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\void.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
       <SubType>Designer</SubType>

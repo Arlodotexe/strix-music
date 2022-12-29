@@ -45,6 +45,12 @@
       },
       {
         "files": [
+          "app/**.md",
+          "app/**.yml"
+        ]
+      },
+      {
+        "files": [
           "plugins/**.md",
           "plugins/**.yml"
         ]

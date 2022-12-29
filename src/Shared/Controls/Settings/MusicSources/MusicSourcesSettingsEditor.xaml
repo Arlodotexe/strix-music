@@ -10,8 +10,9 @@
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:musicSources="using:StrixMusic.Controls.MusicSources"
+	xmlns:musicSources="using:StrixMusic.Controls.Settings.MusicSources"
 	xmlns:settings="using:StrixMusic.Settings"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
 	d:DesignHeight="300"
 	d:DesignWidth="400"
@@ -19,16 +20,52 @@
 
 	<Border Margin="20">
 		<Grid>
-			<StackPanel>
-				<StackPanel
-					HorizontalAlignment="Right"
-					Orientation="Horizontal"
-					Spacing="15">
-					<Button Command="{x:Bind AddNewMusicSourceCommand}" Content="Connect new source" />
-					<ProgressRing IsActive="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" />
+			<Grid
+				MaxWidth="1000"
+				Margin="20"
+				RowSpacing="20">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+
+				<StackPanel Spacing="15" Visibility="{x:Bind IsZeroToVisibility(AppRoot.StrixDataRoot.Sources.Count), FallbackValue=Visible, Mode=OneWay}">
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="20"
+						Text="It's quiet here"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="12"
+						Opacity="0.5"
+						Text="Add a new music source to start listening"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<Image MaxWidth="250" Source="ms-appx:///Assets/Settings/void.svg" />
 				</StackPanel>
 
-				<GridView ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+				<StackPanel
+					Grid.Row="0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					Orientation="Horizontal"
+					Spacing="12">
+					<ProgressRing IsActive="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" />
+
+					<Button
+						Command="{x:Bind AddNewMusicSourceCommand}"
+						Content="Connect new source"
+						IsEnabled="{x:Bind InvertBool(AddNewMusicSourceCommand.IsRunning), Mode=OneWay}" />
+				</StackPanel>
+
+				<GridView
+					Grid.Row="1"
+					IsEnabled="{x:Bind InvertBool(AddNewMusicSourceCommand.IsRunning), Mode=OneWay}"
+					ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="viewModels:CoreViewModel">
 							<Grid Margin="5">
@@ -39,6 +76,7 @@
 								</Grid.RowDefinitions>
 
 								<local:CoreImage
+									Width="100"
 									Height="100"
 									Margin="20,5"
 									Image="{x:Bind Logo, Mode=OneWay}" />
@@ -59,9 +97,25 @@
 						</DataTemplate>
 					</GridView.ItemTemplate>
 				</GridView>
-			</StackPanel>
+			</Grid>
 
-			<Frame x:Name="ConnectNewSourceFrame" />
+			<Border x:Name="ShadowTarget" Visibility="Visible" />
+
+			<Frame
+				x:Name="ConnectNewSourceFrame"
+				MaxWidth="600"
+				VerticalAlignment="Center"
+				BorderBrush="{ThemeResource SliderBorderThemeBrush}"
+				CornerRadius="5">
+				<ui:Effects.Shadow>
+					<ui:AttachedDropShadow
+						BlurRadius="15"
+						CastTo="{x:Bind ShadowTarget}"
+						CornerRadius="5"
+						IsMasked="True"
+						Opacity="0.75" />
+				</ui:Effects.Shadow>
+			</Frame>
 		</Grid>
 	</Border>
 </UserControl>

@@ -36,7 +36,7 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
         get => (AppRoot?)GetValue(AppRootProperty);
         set => SetValue(AppRootProperty, value);
     }
-    
+
     [RelayCommand]
     private async Task AddNewMusicSourceAsync()
     {
@@ -44,7 +44,7 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
         {
             AppRoot = AppRoot,
         };
-        
+
         ConnectNewSourceFrame.Visibility = Visibility.Visible;
 
         ConnectNewSourceFrame.Navigate(typeof(ConnectNew.ConnectNewMusicSource), param);
@@ -66,4 +66,12 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     /// </summary>
     /// <returns>The Type of the given object.</returns>
     public Type ObjectToType(object value) => value.GetType();
+
+    private Visibility IsZeroToVisibility(int arg) => arg == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    private Visibility IsNotZeroToVisibility(int arg) => arg != 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    private bool InvertBool(bool arg) => !arg;
+
+    private Visibility InvertBoolToVisibility(bool arg) => InvertBool(arg) ? Visibility.Visible : Visibility.Collapsed;
 }

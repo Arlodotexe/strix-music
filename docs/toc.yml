@@ -15,6 +15,14 @@
     href: get-started/basic-usage.md
   - name: Contributing
     href: get-started/contributing.md
+- name: App
+  href: app/
+  topicHref: app/index.md
+  items: 
+  - name: Introduction
+    href: app/index.md
+  - name: Add new music source
+    href: app/add-music-source.md
 - name: Cores
   href: cores/
   topicHref: cores/index.md

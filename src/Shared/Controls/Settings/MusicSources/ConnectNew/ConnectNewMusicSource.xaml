@@ -7,7 +7,7 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:local="using:StrixMusic.Controls.MusicSources"
+	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	mc:Ignorable="d">
@@ -18,11 +18,10 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<!--  Available core list  -->
-		<TextBlock Grid.Row="0" Text="Connect a new music source:" />
-
 		<GridView
 			Grid.Row="1"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
 			IsItemClickEnabled="True"
 			ItemsSource="{x:Bind MusicSourcesSettings.AvailableMusicSources, Mode=OneWay}"
 			SelectionMode="None">

@@ -31,19 +31,6 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     {
     }
 
-    /// <summary>
-    /// Copies all settings from once instance into another.
-    /// </summary>
-    public static void CopyFrom(OneDriveCoreSettings from, OneDriveCoreSettings to)
-    {
-        to.InstanceId = from.InstanceId;
-        to.UserId = from.UserId;
-        to.FolderId = from.FolderId;
-        to.ClientId = from.ClientId;
-        to.TenantId = from.TenantId;
-        to.RedirectUri = from.RedirectUri;
-    }
-
     private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
     {
         Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
@@ -58,6 +45,15 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// Gets or sets the instance ID of the music source.
     /// </summary>
     public string InstanceId
+    {
+        get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Gets or sets an ID that represents the authenticated user.
+    /// </summary>
+    public string UserDisplayName
     {
         get => GetSetting(() => string.Empty);
         set => SetSetting(value);
@@ -86,7 +82,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string ClientId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "c123569b-160c-46f6-ae87-d65d938959c1");
         set => SetSetting(value);
     }
 
@@ -95,7 +91,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string TenantId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "e6eab4f7-04d3-49dd-bc0b-ff3d3f76b74f");
         set => SetSetting(value);
     }
 
@@ -104,7 +100,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string RedirectUri
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "msalc123569b-160c-46f6-ae87-d65d938959c1://auth");
         set => SetSetting(value);
     }
 

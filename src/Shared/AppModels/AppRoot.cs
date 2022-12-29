@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -71,6 +72,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         _dataFolder = dataFolder;
          _appDebug = new AppDebug(dataFolder);
     }
+
+    /// <summary>
+    /// The message handler to use to handle all HTTP-based requests.
+    /// </summary>
+    public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
 
     /// <summary>
     /// The media players that were created to play audio for cores.
@@ -145,27 +151,17 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
-
-            // Create cores that haven't already been set up.
-            var localStorageCores = await MusicSourcesSettings.ConfiguredLocalStorageCores
-                .Where(NeedsToBeCreated)
-                .Where(x => x.CanCreateCore)
-                .InParallel(CoreFactory.CreateLocalStorageCoreAsync);
-
-            var oneDriveCores = await MusicSourcesSettings.ConfiguredOneDriveCores
-                .Where(NeedsToBeCreated)
-                .Where(x => x.CanCreateCore)
-                .InParallel(CoreFactory.CreateOneDriveCoreAsync);
+            MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
 
             // Merge cores together and apply plugins
-            var allNewCores = localStorageCores.Union(oneDriveCores).ToArray();
+            var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken: cancellationToken);
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
             await allNewCores.InParallel(TryInitCore);
 
             // Prune cores that didn't load successfully
-            allNewCores = allNewCores.Where(x => x.IsInitialized).ToArray();
+            allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
 
             // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
             // If _mergedCore exists, set it up as the data root.
@@ -196,9 +192,40 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
     }
 
-    private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private async IAsyncEnumerable<ICore> CreateConfiguredCoresAsync()
     {
-        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        // Create cores that haven't already been set up.
+        foreach (var item in MusicSourcesSettings.ConfiguredLocalStorageCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            var core = await CoreFactory.CreateLocalStorageCoreAsync(item);
+            yield return core;
+        }
+
+        foreach (var item in MusicSourcesSettings.ConfiguredOneDriveCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            var core = await CoreFactory.CreateOneDriveCoreAsync(item, HttpMessageHandler);
+            yield return core;
+        }
+    }
+
+    private async void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        await HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
+        await MusicSourcesSettings.SaveAsync();
+    }
+
+    private async void ConfiguredOneDriveCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        await HandleCoreSettingsCollectionChangedAsync<OneDriveCoreSettings>(sender, e, async x => await CoreFactory.CreateOneDriveCoreAsync(x, HttpMessageHandler));
+        await MusicSourcesSettings.SaveAsync();
     }
 
     private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
@@ -419,7 +446,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
             {
                 var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).AssemblyQualifiedName;
-                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? typeof(AppRoot).AssemblyQualifiedName;
+                var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? ipfs.ThisPeer.Id.ToString();
 
                 var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);
 
