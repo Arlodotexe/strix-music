@@ -19,13 +19,36 @@
 
 	<Border Margin="20">
 		<Grid>
-			<StackPanel>
+			<Grid
+				MaxWidth="1000"
+				Margin="20"
+				RowSpacing="20">
 				<StackPanel
 					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
 					Orientation="Horizontal"
 					Spacing="15">
 					<Button Command="{x:Bind AddNewMusicSourceCommand}" Content="Connect new source" />
 					<ProgressRing IsActive="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" />
+				</StackPanel>
+
+				<StackPanel Spacing="15" Visibility="{x:Bind IsZeroToVisibility(AppRoot.StrixDataRoot.Sources.Count), FallbackValue=Visible, Mode=OneWay}">
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="20"
+						Text="It's quiet here"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="12"
+						Opacity="0.5"
+						Text="Add a new music source to start listening"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<Image MaxWidth="250" Source="ms-appx:///Assets/Settings/void.svg" />
 				</StackPanel>
 
 				<GridView ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
@@ -39,6 +62,7 @@
 								</Grid.RowDefinitions>
 
 								<local:CoreImage
+									Width="100"
 									Height="100"
 									Margin="20,5"
 									Image="{x:Bind Logo, Mode=OneWay}" />
@@ -59,7 +83,7 @@
 						</DataTemplate>
 					</GridView.ItemTemplate>
 				</GridView>
-			</StackPanel>
+			</Grid>
 
 			<Frame x:Name="ConnectNewSourceFrame" />
 		</Grid>

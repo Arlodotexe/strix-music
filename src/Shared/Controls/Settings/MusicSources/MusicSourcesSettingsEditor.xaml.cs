@@ -66,4 +66,6 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     /// </summary>
     /// <returns>The Type of the given object.</returns>
     public Type ObjectToType(object value) => value.GetType();
+
+    private Visibility IsZeroToVisibility(int arg) => arg == 0 ? Visibility.Collapsed : Visibility.Visible;
 }

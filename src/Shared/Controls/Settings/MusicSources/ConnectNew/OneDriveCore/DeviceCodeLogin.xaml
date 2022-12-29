@@ -1,0 +1,128 @@
+﻿<Page
+	x:Class="StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore.DeviceCodeLogin"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
+	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+	mc:Ignorable="d">
+
+	<Grid
+		MaxWidth="550"
+		Margin="20"
+		RowSpacing="20">
+		<interactivity:Interaction.Behaviors>
+			<core:EventTriggerBehavior EventName="Loaded">
+				<core:InvokeCommandAction Command="{x:Bind StartDeviceCodeAuthCommand}" />
+			</core:EventTriggerBehavior>
+		</interactivity:Interaction.Behaviors>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Visibility="{x:Bind InvertBoolToVisibility(StartDeviceCodeAuthCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Visible}">
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="20"
+				Text="Let's login"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="12"
+				Opacity="0.5"
+				Text="You'll need your phone or computer"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+		</StackPanel>
+
+		<StackPanel Visibility="{x:Bind BoolToVisibility(StartDeviceCodeAuthCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Collapsed}">
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="20"
+				Text="Something went wrong"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="12"
+				Foreground="Red"
+				Opacity="0.5"
+				Text="{x:Bind StartDeviceCodeAuthCommand.ExecutionTask.Exception.Message, FallbackValue='', Mode=OneWay}"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="1" Spacing="12">
+			<StackPanel
+				x:Name="VerificationUrlDisplayPanel"
+				Grid.Row="1"
+				HorizontalAlignment="Center"
+				x:Load="{x:Bind IsNotNull(DeviceCodeResult), Mode=OneWay}"
+				Orientation="Horizontal"
+				Spacing="5">
+				<TextBlock VerticalAlignment="Center" Text="Open" />
+
+				<Button Padding="8" VerticalAlignment="Center">
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="Click">
+							<behaviors:OpenUriAction Source="{x:Bind StringToUri(DeviceCodeResult.VerificationUrl), Mode=OneWay}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+
+						<TextBlock Text="{x:Bind DeviceCodeResult.VerificationUrl, FallbackValue='Loading', Mode=OneWay}" />
+					</StackPanel>
+				</Button>
+			</StackPanel>
+
+			<Image MaxWidth="250" Source="ms-appx:///Assets/Cores/OneDrive/login.svg" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="2" Spacing="12">
+			<StackPanel
+				x:Name="DeviceCodeDisplayPanel"
+				HorizontalAlignment="Center"
+				x:Load="{x:Bind IsNotNull(DeviceCodeResult), Mode=OneWay}"
+				Spacing="16">
+
+				<StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+					<TextBlock HorizontalAlignment="Center" Text="Enter the code:" />
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="26"
+						IsTextSelectionEnabled="True"
+						Text="{x:Bind DeviceCodeResult.UserCode, Mode=OneWay}" />
+				</StackPanel>
+			</StackPanel>
+
+			<controls:Loading IsLoading="{x:Bind StartDeviceCodeAuthCommand.IsRunning, Mode=OneWay}">
+				<StackPanel Padding="12" Orientation="Horizontal">
+					<ProgressRing Margin="0,0,12,0" IsActive="True" />
+					<TextBlock VerticalAlignment="Center" Text="{x:Bind Status, Mode=OneWay}" />
+				</StackPanel>
+			</controls:Loading>
+		</StackPanel>
+
+		<StackPanel
+			Grid.Row="3"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal"
+			Spacing="10">
+			<Button Command="{x:Bind CancelCommand}" Content="Cancel" />
+		</StackPanel>
+	</Grid>
+</Page>

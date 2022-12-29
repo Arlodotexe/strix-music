@@ -86,24 +86,31 @@ To:
 In `StrixMusic.AppModels.AppRoot.CreateConfiguredCores`, turn your configured settings instances into `ICore`, like we did for the highlighted portion:
 ![](../assets/app/add-music-source/add-to-createconfiguredcoresasync.png)
 
+Scroll down and subscribe to the `ObservableCollection` you created in `MusicSourcesSettings`, telling the `AppRoot` how to turn new Settings into an instance of `ICore` after the app has loaded.
+
+For our example, we've added the highlighted portion:
+![](../assets/app/add-music-source/settings-changed-event.png)
+
 ## Create and link first time setup UI
 Open the solution explorer. In the shared project, create a new folder in `Controls/Settings/MusicSources/ConnectNew/`, then create a new `Page`.
 
-This new page will be navigated to when the user has requested to create a core instance. You'll be provided with a parameter of type `ValueTuple<ConnectNewMusicSourceNavigationParams, SettingsBase>`.
+This new page will be navigated to when the user has requested to create a core instance. You'll be provided with a parameter of type `ConnectNewMusicSourceNavigationParams`.
 
-You'll need this parameter to complete or cancel setup. Retrieve the value, and cast to the actual settings type you're using:
+You'll need this parameter to complete or cancel setup, to reference the selected `AvailableMusicSource`, and to construct a default settings instance, like so:
+
 ```cs
     /// <inheritdoc />
     override protected async void OnNavigatedTo(NavigationEventArgs e)
     {
-        var param = ((ConnectNewMusicSourceNavigationParams NavParams, OneDriveCoreSettings Settings))e.Parameter;
+        var param = (ConnectNewMusicSourceNavigationParams)e.Parameter;
+        Guard.IsNotNull(param.SelectedSourceToConnect);
         
         // Save in a field to access from another method
         _param = param;
 
         // Get an instance ID and create a new settings instance with default values
         var instanceId = ...;
-        var defaultSettings = await _param.SelectedSourceToConnect.DefaultSettingsFactory(instanceId);  
+        var defaultSettings = await param.SelectedSourceToConnect.DefaultSettingsFactory(instanceId);  
         var settings = (OneDriveCoreSettings)defaultSettings;
 
         // Assign settings values needed to create a core
