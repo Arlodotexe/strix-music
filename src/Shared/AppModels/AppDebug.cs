@@ -143,7 +143,7 @@ namespace StrixMusic.AppModels
                 PrimaryButtonCommand = PerformUserDataDeletionCommand
             };
 
-            await _deleteUserDataDialog.ShowAsync();
+            await _deleteUserDataDialog.ShowAsync(ShowType.Interrupt);
         }
 
         [RelayCommand]
@@ -169,7 +169,6 @@ namespace StrixMusic.AppModels
             {
                 Guard.IsNotNull(_deleteUserDataDialog);
 
-                _deleteUserDataDialog.Hide();
                 await ShowRetryContentDialogAsync($"Couldn't delete the user data.", PerformUserDataDeletionCommand, ex);
             }
         }
@@ -201,7 +200,7 @@ namespace StrixMusic.AppModels
                 PrimaryButtonCommand = retryCommand,
             };
 
-            await retryConfirmationDialog.ShowAsync();
+            await retryConfirmationDialog.ShowAsync(ShowType.Interrupt);
         }
 
         [RelayCommand]
