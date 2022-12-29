@@ -55,13 +55,17 @@
         </labs:SettingsCard>
 
         <labs:SettingsCard
-			Header="Memory"
+			Header="Memory Usage"
+         
 			IsClickEnabled="True" >
-            <TextBlock >
-                    <Run Text="Memory Used:"/>
-                    <Run Text="{x:Bind AppDebug.MemoryUsage}"/>
+            <labs:SettingsCard.Description>
+                <TextBlock >
                     <Run Text="Expected Memory Limit:"/>
                     <Run Text="{x:Bind AppDebug.TotalMemory}"/>
+                </TextBlock>
+            </labs:SettingsCard.Description>
+            <TextBlock >
+                    <Run Text="{x:Bind AppDebug.MemoryUsage}"/>
             </TextBlock>
         </labs:SettingsCard>
 
