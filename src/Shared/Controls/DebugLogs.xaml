@@ -23,6 +23,12 @@
 		Margin="20"
 		Spacing="4" VerticalAlignment="Top">
 
+        <StackPanel
+					HorizontalAlignment="Right"
+					Orientation="Horizontal"
+					Spacing="15">
+					<Button Command="{x:Bind AppDebug.DeleteUserDataCommand,Mode=OneWay}" Content="Delete user data" />
+				</StackPanel>
 
         <TextBlock
             MaxWidth="1000"
@@ -41,22 +47,8 @@
                 </TextBlock>
             </labs:SettingsCard.Content>
         </labs:SettingsCard>
-
-        <labs:SettingsCard
-			ActionIcon="{ui:SymbolIcon Symbol=Clear}"
-			Header="Delete User Data"
-			HeaderIcon="{ui:SymbolIcon Symbol=Delete}"
-			IsClickEnabled="True">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Click">
-                    <core:InvokeCommandAction Command="{x:Bind AppDebug.DeleteUserDataCommand, Mode=OneWay}"/>
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </labs:SettingsCard>
-
         <labs:SettingsCard
 			Header="Memory Usage"
-         
 			IsClickEnabled="True" >
             <labs:SettingsCard.Description>
                 <TextBlock >
@@ -87,7 +79,7 @@
 			Text="Logs" />
         <ListView  ItemsSource="{x:Bind AppDebug.AppLogs, Mode=OneWay}"  
                        MaxWidth="1600"
-                       MaxHeight="450"
+                       MaxHeight="500"
                        ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollMode="Enabled">
 
             <ListView.ItemsPanel>
