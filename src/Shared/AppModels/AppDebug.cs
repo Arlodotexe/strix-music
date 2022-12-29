@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using OwlCore.Diagnostics;
+using OwlCore.Extensions;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
@@ -103,20 +104,19 @@ namespace StrixMusic.AppModels
 
         private async void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
         {
-            await _semaphoreSlim.WaitAsync();
-
-            var formatedMessage = LogFormatter.GetFormattedLogMessage(e);
-
-            if (AppLogs == null)
-                return;
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
+            using (await _semaphoreSlim.DisposableWaitAsync())
             {
-                AppLogs.Add(formatedMessage);
-            });
+                var formatedMessage = LogFormatter.GetFormattedLogMessage(e);
 
-            _semaphoreSlim.Release();
+                if (AppLogs == null)
+                    return;
+
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    AppLogs.Add(formatedMessage);
+                });
+            }
         }
 
         [RelayCommand]
