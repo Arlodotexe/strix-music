@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ITrackCollection"/>.
     /// </summary>
-    public class TrackCollectionViewModel : ObservableObject, ISdkViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
+    public class TrackCollectionViewModel : ObservableObject, ISdkViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IDelegatable<ITrackCollection>
     {
         private readonly ITrackCollection _collection;
 
@@ -191,6 +191,9 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Urls.ChangeCollection(addedItems, removedItems);
         }, null);
+
+        /// <inheritdoc/>
+        ITrackCollection IDelegatable<ITrackCollection>.Inner => _collection;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

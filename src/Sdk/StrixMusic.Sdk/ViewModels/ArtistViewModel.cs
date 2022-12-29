@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IArtist"/>.
     /// </summary>
-    public sealed class ArtistViewModel : ObservableObject, IArtist, ISdkViewModel, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IUrlCollectionViewModel
+    public sealed class ArtistViewModel : ObservableObject, IArtist, ISdkViewModel, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IArtist>
     {
         private readonly IArtist _artist;
 
@@ -147,6 +148,9 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= ArtistViewModel_ImagesChanged;
             GenresChanged -= ArtistViewModel_GenresChanged;
         }
+
+        /// <inheritdoc/>
+        IArtist IDelegatable<IArtist>.Inner => _artist;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

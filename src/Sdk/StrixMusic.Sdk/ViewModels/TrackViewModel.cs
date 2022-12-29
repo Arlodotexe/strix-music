@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ITrack"/>.
     /// </summary>
-    public sealed class TrackViewModel : ObservableObject, ISdkViewModel, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
+    public sealed class TrackViewModel : ObservableObject, ISdkViewModel, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IDelegatable<ITrack>
     {
         private readonly SemaphoreSlim _populateArtistsMutex = new(1, 1);
         private readonly SemaphoreSlim _populateImagesMutex = new(1, 1);
@@ -144,6 +144,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             _model.PlaybackStateChanged -= OnPlaybackStateChanged;
         }
+
+        /// <inheritdoc/>
+        ITrack IDelegatable<ITrack>.Inner => _model;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

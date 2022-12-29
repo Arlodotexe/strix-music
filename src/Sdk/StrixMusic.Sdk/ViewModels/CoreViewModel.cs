@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ICore"/>.
     /// </summary>
-    public sealed partial class CoreViewModel : ObservableObject, ISdkViewModel, ICore
+    public sealed partial class CoreViewModel : ObservableObject, ISdkViewModel, ICore, IDelegatable<ICore>
     {
         private readonly ICore _core;
         private readonly SynchronizationContext _syncContext;
@@ -85,6 +85,9 @@ namespace StrixMusic.Sdk.ViewModels
                 OnPropertyChanged(nameof(IsCoreStateLoaded));
             }, null);
         }
+
+        /// <inheritdoc/>
+        ICore IDelegatable<ICore>.Inner => _core;
 
         /// <inheritdoc />
         public string Id => _core.Id;

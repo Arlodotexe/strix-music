@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
@@ -18,7 +19,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IDevice"/>.
     /// </summary>
-    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice
+    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice, IDelegatable<IDevice>
     {
         private readonly SynchronizationContext _syncContext;
         private readonly IDevice _model;
@@ -119,6 +120,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             NowPlayingChanged?.Invoke(sender, e);
         }, null);
+
+        /// <inheritdoc/>
+        IDevice IDelegatable<IDevice>.Inner => _model;
 
         /// <inheritdoc />
         public ICore? SourceCore { get; set; }
