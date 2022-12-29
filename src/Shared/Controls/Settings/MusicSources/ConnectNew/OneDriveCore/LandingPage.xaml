@@ -1,14 +1,61 @@
 ﻿<Page
-    x:Class="StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore.LandingPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	x:Class="StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore.LandingPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+	mc:Ignorable="d">
 
-    <Grid>
+	<StackPanel
+		MaxWidth="550"
+		Margin="20"
+		Spacing="15">
 
-    </Grid>
+		<labs:SettingsExpander
+			Description="Authenticate your Microsoft account against your own trusted app identity"
+			Header="Configure application identity"
+			IsEnabled="{x:Bind IsNotNull(Settings), Mode=OneWay}"
+			IsExpanded="True">
+			<labs:SettingsExpander.Items>
+				<labs:SettingsCard ContentAlignment="Left">
+					<StackPanel
+						Margin="0,10"
+						Padding="0,10"
+						Spacing="17">
+						<PasswordBox
+							Width="300"
+							Description="Required"
+							Header="Client ID"
+							Password="{x:Bind Settings.ClientId, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+							PlaceholderText="Enter a value" />
+
+						<PasswordBox
+							Width="300"
+							Description="Required"
+							Header="Tenant ID"
+							Password="{x:Bind Settings.TenantId, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+							PlaceholderText="Enter a value" />
+
+						<TextBox
+							Width="300"
+							Description="Optional"
+							Header="Redirect URI"
+							PlaceholderText="Enter a value"
+							Text="{x:Bind Settings.RedirectUri, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<Button Command="{x:Bind CancelCommand}" Content="Cancel" />
+							<Button
+								Command="{x:Bind TryContinueCommand}"
+								Content="Continue"
+								IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.ClientId, Settings.TenantId), FallbackValue=false, Mode=OneWay}" />
+						</StackPanel>
+					</StackPanel>
+				</labs:SettingsCard>
+			</labs:SettingsExpander.Items>
+		</labs:SettingsExpander>
+	</StackPanel>
 </Page>

@@ -63,7 +63,6 @@ public sealed partial class ConfirmAndSave : Page
         await Settings.SaveAsync();
         
         _appRoot.MusicSourcesSettings.ConfiguredLocalStorageCores.Add(Settings);
-        await _appRoot.MusicSourcesSettings.SaveAsync();
         
         _param.Item1.SetupCompleteTaskCompletionSource.SetResult(null);
     }

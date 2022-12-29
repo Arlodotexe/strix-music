@@ -53,6 +53,15 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// <summary>
     /// Gets or sets an ID that represents the authenticated user.
     /// </summary>
+    public string UserDisplayName
+    {
+        get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Gets or sets an ID that represents the authenticated user.
+    /// </summary>
     public string UserId
     {
         get => GetSetting(() => string.Empty);
@@ -73,7 +82,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string ClientId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "***REMOVED***");
         set => SetSetting(value);
     }
 
@@ -82,7 +91,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string TenantId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "***REMOVED***");
         set => SetSetting(value);
     }
 
@@ -91,7 +100,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string RedirectUri
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => "msal***REMOVED***://auth");
         set => SetSetting(value);
     }
 

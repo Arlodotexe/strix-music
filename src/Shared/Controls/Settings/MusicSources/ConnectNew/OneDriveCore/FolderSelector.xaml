@@ -1,0 +1,101 @@
+﻿<Page
+	x:Class="StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore.FolderSelector"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
+	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:storage="using:StrixMusic.Controls.Storage"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+	mc:Ignorable="d">
+
+	<Grid
+		MaxWidth="1000"
+		Margin="20"
+		RowSpacing="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Visibility="{x:Bind InvertBoolToVisibility(AuthenticateCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Visible}">
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="20"
+				Text="Select a folder"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="12"
+				Opacity="0.5"
+				Text="{x:Bind Settings.UserDisplayName, Mode=OneWay}"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+		</StackPanel>
+
+		<StackPanel Visibility="{x:Bind BoolToVisibility(AuthenticateCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Collapsed}">
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="20"
+				Text="Something went wrong"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+
+			<TextBlock
+				HorizontalAlignment="Center"
+				FontSize="12"
+				Foreground="Red"
+				Opacity="0.5"
+				Text="{x:Bind AuthenticateCommand.ExecutionTask.Exception.Message, FallbackValue='', Mode=OneWay}"
+				TextAlignment="Center"
+				TextWrapping="WrapWholeWords" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="1" Spacing="12">
+			<Image MaxWidth="250" Source="ms-appx:///Assets/Cores/OneDrive/login.svg" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="2" Spacing="12">
+			<StackPanel Visibility="{x:Bind IsNotNullToVisibility(RootFolder), Mode=OneWay}">
+				<storage:FolderBrowser x:Name="FolderBrowser" InitialFolder="{x:Bind RootFolder, Mode=OneWay}" />
+			</StackPanel>
+
+			<controls:Loading IsLoading="{x:Bind AuthenticateCommand.IsRunning, Mode=OneWay}">
+				<StackPanel Padding="12" Orientation="Horizontal">
+					<ProgressRing Margin="0,0,12,0" IsActive="True" />
+					<TextBlock VerticalAlignment="Center" Text="Authenticating" />
+				</StackPanel>
+			</controls:Loading>
+
+			<controls:Loading IsLoading="{x:Bind GetRootFolderCommand.IsRunning, Mode=OneWay}">
+				<StackPanel Padding="12" Orientation="Horizontal">
+					<ProgressRing Margin="0,0,12,0" IsActive="True" />
+					<TextBlock VerticalAlignment="Center" Text="Loading OneDrive" />
+				</StackPanel>
+			</controls:Loading>
+		</StackPanel>
+
+		<StackPanel
+			Grid.Row="3"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal"
+			Spacing="10">
+			<Button Command="{x:Bind CancelCommand}" Content="Cancel" />
+
+			<Button
+				Command="{x:Bind PickFolderCommand, Mode=OneWay}"
+				CommandParameter="{x:Bind AsFolder(FolderBrowser.SelectedItem), Mode=OneWay}"
+				Content="Select folder"
+				IsEnabled="{x:Bind IsFolder(FolderBrowser.SelectedItem), FallbackValue=false, Mode=OneWay}" />
+		</StackPanel>
+	</Grid>
+</Page>

@@ -147,6 +147,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+            MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
 
             // Merge cores together and apply plugins
             var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken: cancellationToken);
@@ -207,9 +208,20 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
     }
 
-    private void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private async void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        _ = HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        await HandleCoreSettingsCollectionChangedAsync<LocalStorageCoreSettings>(sender, e, CoreFactory.CreateLocalStorageCoreAsync);
+        await MusicSourcesSettings.SaveAsync();
+    }
+
+    private async void ConfiguredOneDriveCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        await HandleCoreSettingsCollectionChangedAsync<OneDriveCoreSettings>(sender, e, async x => await CoreFactory.CreateOneDriveCoreAsync(x, HttpMessageHandler));
+        await MusicSourcesSettings.SaveAsync();
     }
 
     private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)

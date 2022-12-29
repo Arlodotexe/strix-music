@@ -10,8 +10,7 @@
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	mc:Ignorable="d">
 
-	<Grid x:Name="RootGrid" Margin="20">
-
+	<Grid Margin="20">
 		<Grid RowSpacing="20">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -50,6 +49,5 @@
 				<Button Click="BrowseButton_OnClick" Content="Select a folder" />
 			</StackPanel>
 		</Grid>
-
-	</Grid>
+    </Grid>
 </Page>

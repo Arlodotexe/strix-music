@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using StrixMusic.AppModels;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew;
@@ -22,4 +23,9 @@ public class ConnectNewMusicSourceNavigationParams
     /// Holds the <see cref="AppRoot"/> where the new music source will be added.
     /// </summary>
     public AppRoot? AppRoot { get; internal set; }
+
+    /// <summary>
+    /// The message handler to use for any HTTP requests made during setup.
+    /// </summary>
+    public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
 }
