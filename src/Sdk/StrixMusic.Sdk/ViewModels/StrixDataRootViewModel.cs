@@ -32,7 +32,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public StrixDataRootViewModel(IStrixDataRoot dataRoot)
     {
         _dataRoot = dataRoot;
-        _knownSources = dataRoot.Sources;
+        _knownSources = dataRoot.Sources.ToList();
 
         Library = new LibraryViewModel(dataRoot.Library);
 
@@ -77,17 +77,19 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
     private void DataRootOnSourcesChanged(object sender, EventArgs e)
     {
-        var knownSources = _knownSources;
+        var previousSources = _knownSources;
         var newSources = _dataRoot.Sources;
 
-        var addedSources = newSources.Except(knownSources).ToArray();
-        var removedSources = knownSources.Except(newSources);
+        var addedSources = newSources.Except(previousSources).ToArray();
+        var removedSources = previousSources.Except(newSources);
 
         foreach (var item in removedSources)
             Sources.Remove(Sources.First(x => x.InstanceId == item.InstanceId));
 
         foreach (var item in addedSources)
             Sources.Add(new CoreViewModel(item));
+
+        _knownSources = newSources;
     }
 
     private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems)
