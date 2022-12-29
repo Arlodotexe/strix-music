@@ -69,7 +69,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
-         _appDebug = new AppDebug();
+         _appDebug = new AppDebug(dataFolder);
     }
 
     /// <summary>

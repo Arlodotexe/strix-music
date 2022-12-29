@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
+using OwlCore.Storage;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
@@ -30,6 +31,7 @@ namespace StrixMusic.AppModels
     public partial class AppDebug : ObservableObject
     {
         private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly IModifiableFolder _dataFolder;
 
         [ObservableProperty]
         private string? _windowSizeStr;
@@ -60,8 +62,9 @@ namespace StrixMusic.AppModels
         /// <summary>
         /// Creates a new instance of <see cref="AppDebug"/>.
         /// </summary>
-        public AppDebug()
+        public AppDebug(IModifiableFolder folder)
         {
+            _dataFolder = folder;
             Logger.MessageReceived += Logger_MessageReceived;
             Window.Current.SizeChanged += Current_SizeChanged;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_MemoryChanged;
@@ -148,14 +151,10 @@ namespace StrixMusic.AppModels
         {
             try
             {
-                var localDataFolder = ApplicationData.Current.LocalFolder.Path;
-                var localCache = ApplicationData.Current.LocalCacheFolder.Path;
-
-                var folder = await StorageFolder.GetFolderFromPathAsync(localDataFolder);
-                await folder.DeleteAsync();
-
-                folder = await StorageFolder.GetFolderFromPathAsync(localCache);
-                await folder.DeleteAsync();
+                await foreach (var item in _dataFolder.GetItemsAsync())
+                {
+                    await _dataFolder.DeleteAsync(item);
+                }
 
                 var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
 
