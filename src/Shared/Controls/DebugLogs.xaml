@@ -35,8 +35,9 @@
 			IsClickEnabled="True" >
             <labs:SettingsCard.Content>
                 <TextBlock >
-                     <Run Text="{x:Bind AppRoot.AppDebug.WindowWidth, Mode=OneWay}"/><Run Text="w x"/>
-                     <Run Text="{x:Bind AppRoot.AppDebug.WindowHeight, Mode=OneWay}"/><Run Text="h"/>
+                    <!--Separating Runs with a newline creates an unecessery space b/w two related text elements.-->
+                     <Run Text="{x:Bind AppDebug.WindowWidth, Mode=OneWay}"/><Run Text="w x"/>
+                     <Run Text="{x:Bind AppDebug.WindowHeight, Mode=OneWay}"/><Run Text="h"/>
                 </TextBlock>
             </labs:SettingsCard.Content>
         </labs:SettingsCard>
@@ -48,7 +49,7 @@
 			IsClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Click">
-                    <core:InvokeCommandAction Command="{x:Bind AppRoot.AppDebug.DeleteUserDataCommand, Mode=OneWay}"/>
+                    <core:InvokeCommandAction Command="{x:Bind AppDebug.DeleteUserDataCommand, Mode=OneWay}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </labs:SettingsCard>
@@ -58,9 +59,9 @@
 			IsClickEnabled="True" >
             <TextBlock >
                     <Run Text="Memory Used:"/>
-                    <Run Text="{x:Bind AppRoot.AppDebug.MemoryUsage}"/>
+                    <Run Text="{x:Bind AppDebug.MemoryUsage}"/>
                     <Run Text="Expected Memory Limit:"/>
-                    <Run Text="{x:Bind AppRoot.AppDebug.TotalMemory}"/>
+                    <Run Text="{x:Bind AppDebug.TotalMemory}"/>
             </TextBlock>
         </labs:SettingsCard>
 
@@ -71,7 +72,7 @@
 			IsClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Click">
-                    <core:InvokeCommandAction Command="{x:Bind AppRoot.AppDebug.OpenLogFolderCommand, Mode=OneWay}"/>
+                    <core:InvokeCommandAction Command="{x:Bind AppDebug.OpenLogFolderCommand, Mode=OneWay}"/>
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </labs:SettingsCard>
@@ -80,7 +81,7 @@
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Logs" />
-        <ListView  ItemsSource="{x:Bind AppRoot.AppDebug.AppLogs, Mode=OneWay}"  
+        <ListView  ItemsSource="{x:Bind AppDebug.AppLogs, Mode=OneWay}"  
                        MaxWidth="1600"
                        MaxHeight="450"
                        ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollMode="Enabled">

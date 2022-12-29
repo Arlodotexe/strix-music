@@ -94,7 +94,7 @@
                     </controls:Case>
 
                     <controls:Case IsDefault="True">
-                        <local:DebugLogs  AppRoot="{x:Bind AppRoot}"/>
+                        <local:DebugLogs  AppDebug="{x:Bind AppRoot.AppDebug}"/>
                     </controls:Case>
                 </controls:SwitchPresenter>
             </ScrollViewer>

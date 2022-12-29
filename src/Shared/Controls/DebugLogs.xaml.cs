@@ -23,16 +23,16 @@ namespace StrixMusic.Controls
         /// <summary>
         /// The data root for this app instance.
         /// </summary>
-        public AppRoot? AppRoot
+        public AppDebug? AppDebug
         {
-            get => (AppRoot?)GetValue(AppRootProperty);
-            set => SetValue(AppRootProperty, value);
+            get => (AppDebug?)GetValue(AppDebugProperty);
+            set => SetValue(AppDebugProperty, value);
         }
 
         /// <summary>
-        /// The backing dependency property for <see cref="AppRoot"/>.
+        /// The backing dependency property for <see cref="AppDebug"/>.
         /// </summary>
-        public static readonly DependencyProperty AppRootProperty =
-            DependencyProperty.Register(nameof(AppRoot), typeof(AppRoot), typeof(DebugLogs), new PropertyMetadata(null));
+        public static readonly DependencyProperty AppDebugProperty =
+            DependencyProperty.Register(nameof(AppDebug), typeof(AppDebug), typeof(DebugLogs), new PropertyMetadata(null));
     }
 }
