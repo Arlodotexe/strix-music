@@ -137,10 +137,6 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // IPFS will not be used if the user has not been briefed on what it is, and given a chance to apply preferences.
-            if (!Settings.UserPreferencesApplied)
-                await ShowIpfsUserPreferencesConfirmationDialogAsync();
-
             InitStatus = "Checking if IPFS is already running";
             Client = await ScanLocalhostForRunningKuboCompliantRpcApi(cancellationToken);
 
@@ -311,32 +307,5 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         }
 
         return null;
-    }
-
-    /// <summary>
-    /// Displays the confirmation dialog for IPFS preferences.
-    /// </summary>
-    /// <returns>A Task that represents the asynchronous operation.</returns>
-    public async Task ShowIpfsUserPreferencesConfirmationDialogAsync()
-    {
-        Logger.LogInformation("User has not confirmed IPFS preferences, displaying dialog.");
-        Settings.UserPreferencesApplied = true;
-
-        await new ContentDialog
-        {
-            Title = "Confirm your IPFS preferences",
-            Width = 600,
-            Content = new StackPanel
-            {
-                Children =
-                {
-                    new TextBlock { Text = "Please confirm these settings are correct before continuing:"},
-                    new StrixMusic.Controls.Settings.Ipfs.IpfsSettings { Ipfs = this, },
-                }
-            },
-            CloseButtonText = "Continue",
-        }.ShowAsync(ShowType.QueueNext);
-
-        Logger.LogInformation("IPFS preferences confirmation dialog closed.");
     }
 }

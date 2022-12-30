@@ -134,20 +134,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 if (ipfsSettings.Enabled)
                 {
-                    Logger.LogInformation("IPFS is enabled");
-                    if (!ipfsSettings.UserPreferencesApplied)
-                        await Ipfs.ShowIpfsUserPreferencesConfirmationDialogAsync();
-
                     Logger.LogInformation($"Initializing {nameof(Ipfs)}");
                     await Ipfs.InitCommand.ExecuteAsync(null);
-
-                    if (!Ipfs.IsInitialized)
-                    {
-                        await Ipfs.ShowIpfsUserPreferencesConfirmationDialogAsync();
-
-                        Logger.LogInformation($"Initializing {nameof(Ipfs)}");
-                        await Ipfs.InitCommand.ExecuteAsync(null);
-                    }
                 }
             }
 

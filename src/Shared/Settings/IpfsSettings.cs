@@ -38,15 +38,6 @@ public partial class IpfsSettings : SettingsBase
     }
 
     /// <summary>
-    /// Gets or sets a value that indicates if the user has been asked to input their preferences for these settings.
-    /// </summary>
-    public bool UserPreferencesApplied
-    {
-        get => GetSetting(() => false);
-        set => SetSetting(value);
-    }
-
-    /// <summary>
     /// Gets or sets a value that indicates if the user has been shown a firewall warning when starting IPFS.
     /// </summary>
     public bool FirewallWarningDisplayed
