@@ -30,7 +30,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellSettingsEditor.xaml.cs">
       <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
     </Compile>
