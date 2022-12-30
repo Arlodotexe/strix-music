@@ -22,20 +22,20 @@
 	d:DesignWidth="400"
 	mc:Ignorable="d">
 
-    <Grid Padding="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+	<Grid Padding="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
 
-        <local:StrixIcon
+		<local:StrixIcon
 			x:Name="TopStrixIcon"
 			MaxWidth="300"
 			Margin="10"
 			IsAnimated="True"
 			ShowText="True" />
 
-        <muxc:NavigationView
+		<muxc:NavigationView
 			x:Name="PartNavigationView"
 			Grid.Row="1"
 			IsBackButtonVisible="Collapsed"
@@ -43,16 +43,16 @@
 			OpenPaneLength="215"
 			PaneDisplayMode="Top"
 			SelectedItem="{x:Bind AppearanceNavigationViewItem}">
-            <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem
+			<muxc:NavigationView.MenuItems>
+				<muxc:NavigationViewItem
 					x:Name="AppearanceNavigationViewItem"
 					Content="Appearance"
 					Icon="{ui:FontIcon Glyph=&#xE2B1;}" />
-                <muxc:NavigationViewItem
+				<muxc:NavigationViewItem
 					x:Name="MusicSourcesNavigationViewItem"
 					Content="Music sources"
 					Icon="{ui:FontIcon Glyph=&#xEA69;}" />
-                <muxc:NavigationViewItem
+				<muxc:NavigationViewItem
 					x:Name="IpfsNavigationViewItem"
 					Content="IPFS"
 					Icon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}" />
@@ -61,12 +61,12 @@
 					Content="About"
 					Icon="{ui:FontIcon Glyph=&#xEE57;}"
 					Tag="About" />
-                <muxc:NavigationViewItem
-					x:Name="DebugNavigationViewItem"
-					Content="Debug"
-					Icon="{ui:FontIcon Glyph=&#xEBE8;}"
+				<muxc:NavigationViewItem
+					x:Name="DiagnosticsNavigationViewItem"
+					Content="Diagnostics"
+					Icon="{ui:FontIcon Glyph=&#xE9D9;}"
 					Tag="Debug" />
-            </muxc:NavigationView.MenuItems>
+			</muxc:NavigationView.MenuItems>
 
 			<ScrollViewer MinHeight="{x:Bind NavViewSwitchPresenter.ActualHeight, Mode=OneWay}">
 				<controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
@@ -78,8 +78,8 @@
 								Margin="5"
 								Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}"
 								ShellSettings="{x:Bind AppRoot.ShellSettings, Mode=OneWay}" />
-                        </Border>
-                    </controls:Case>
+						</Border>
+					</controls:Case>
 
 					<controls:Case Value="{x:Bind MusicSourcesNavigationViewItem}">
 						<musicSources1:MusicSourcesSettingsEditor AppRoot="{x:Bind AppRoot, Mode=OneWay}" />
@@ -89,40 +89,40 @@
 						<ipfs:IpfsSettings Ipfs="{x:Bind AppRoot.Ipfs, Mode=OneWay}" />
 					</controls:Case>
 
-                    <controls:Case Value="{x:Bind AboutNavigationViewItem}">
-                        <local:About />
-                    </controls:Case>
+					<controls:Case Value="{x:Bind AboutNavigationViewItem}">
+						<local:About />
+					</controls:Case>
 
-                    <controls:Case IsDefault="True">
-                        <local:DebugLogs  AppDebug="{x:Bind AppRoot.AppDebug}"/>
-                    </controls:Case>
-                </controls:SwitchPresenter>
-            </ScrollViewer>
-        </muxc:NavigationView>
+					<controls:Case Value="{x:Bind DiagnosticsNavigationViewItem}">
+						<local:Diagnostics DiagnosticData="{x:Bind AppRoot.Debug}" />
+					</controls:Case>
+				</controls:SwitchPresenter>
+			</ScrollViewer>
+		</muxc:NavigationView>
 
-        <VisualStateManager.VisualStateGroups>
+		<VisualStateManager.VisualStateGroups>
 
-            <VisualStateGroup x:Name="NavigationViewVisualStateGroup">
-                <VisualState x:Name="Nav_WideState">
-                    <VisualState.StateTriggers>
-                        <labs:ControlSizeTrigger MinWidth="{x:Bind PartNavigationView.CompactModeThresholdWidth, Mode=OneWay}" TargetElement="{x:Bind ControlRoot}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="PartNavigationView.PaneDisplayMode" Value="Auto" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
+			<VisualStateGroup x:Name="NavigationViewVisualStateGroup">
+				<VisualState x:Name="Nav_WideState">
+					<VisualState.StateTriggers>
+						<labs:ControlSizeTrigger MinWidth="{x:Bind PartNavigationView.CompactModeThresholdWidth, Mode=OneWay}" TargetElement="{x:Bind ControlRoot}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="PartNavigationView.PaneDisplayMode" Value="Auto" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
 
-            <VisualStateGroup x:Name="StrixIconWindowStates">
-                <VisualState x:Name="StrixIconTallState">
-                    <VisualState.StateTriggers>
-                        <labs:ControlSizeTrigger MaxHeight="500" TargetElement="{x:Bind ControlRoot}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TopStrixIcon.Visibility" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-    </Grid>
+			<VisualStateGroup x:Name="StrixIconWindowStates">
+				<VisualState x:Name="StrixIconTallState">
+					<VisualState.StateTriggers>
+						<labs:ControlSizeTrigger MaxHeight="500" TargetElement="{x:Bind ControlRoot}" />
+					</VisualState.StateTriggers>
+					<VisualState.Setters>
+						<Setter Target="TopStrixIcon.Visibility" Value="Collapsed" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
 </UserControl>

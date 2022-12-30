@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,59 +23,79 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Settings;
 
 namespace StrixMusic.AppModels
 {
     /// <summary>
-    /// Responsible for handling debug information.
+    /// Responsible for handling app debug and diagnostics.
     /// </summary>
-    public partial class AppDebug : ObservableObject
+    public partial class AppDiagnostics : ObservableObject
     {
-        private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly SynchronizationContext _syncContext;
+        private readonly DispatcherTimer _memoryWatchTimer;
+        private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
         private readonly IModifiableFolder _dataFolder;
 
-        [ObservableProperty]
-        private string? _windowSizeStr;
-
-        [ObservableProperty]
-        private string? _memoryUsage;
-
-        [ObservableProperty]
-        private string? _windowHeight;
-
-        [ObservableProperty]
-        private string? _windowWidth;
-
-        [ObservableProperty]
-        private string? _totalMemory;
-
-        [ObservableProperty]
-        private string? _expectedMemoryLimit;
-
-        private DispatcherTimer _memoryWatchTimer;
         private ContentDialog? _deleteUserDataDialog;
+        
+        [ObservableProperty] private DiagnosticSettings _settings;
+        [ObservableProperty] private string? _windowSizeStr;
+        [ObservableProperty] private string? _memoryUsage;
+        [ObservableProperty] private string? _windowHeight;
+        [ObservableProperty] private string? _windowWidth;
+        [ObservableProperty] private string? _totalMemory;
+        [ObservableProperty] private string? _expectedMemoryLimit;
 
         /// <summary>
         /// Holds the list of all logs.
         /// </summary>
-        public ObservableCollection<string>? AppLogs { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string>? Logs { get; } = new();
 
         /// <summary>
-        /// Creates a new instance of <see cref="AppDebug"/>.
+        /// Creates a new instance of <see cref="AppDiagnostics"/>.
         /// </summary>
-        public AppDebug(IModifiableFolder folder)
+        public AppDiagnostics(IModifiableFolder dataFolder)
         {
-            _dataFolder = folder;
-            Logger.MessageReceived += Logger_MessageReceived;
+            _syncContext = SynchronizationContext.Current ?? new();
+            _settings = new DiagnosticSettings(dataFolder);
+            _dataFolder = dataFolder;
+
+            if (_settings.IsLoggingEnabled)
+                Logger.MessageReceived += Logger_MessageReceived;
+            
+            _settings.PropertyChanged += SettingsOnPropertyChanged;
             Window.Current.SizeChanged += Current_SizeChanged;
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_MemoryChanged;
             MemoryManager.AppMemoryUsageDecreased += MemoryManager_MemoryChanged;
+
             UpdateMemoryUsage();
             SetWindowSize();
-            _memoryWatchTimer = new DispatcherTimer();
-            _memoryWatchTimer.Interval = TimeSpan.FromSeconds(3);
+
+            _memoryWatchTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(3)
+            };
+
             _memoryWatchTimer.Tick += DispatchTimer_Elapsed;
             _memoryWatchTimer.Start();
+        }
+
+        private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_settings.IsLoggingEnabled))
+            {
+                if (_settings.IsLoggingEnabled)
+                {
+                    Logger.MessageReceived += Logger_MessageReceived;
+                    Logger.LogInformation("Logger enabled");
+                }
+                else
+                {
+                    Logger.LogInformation("Logger disabled");
+                    Logger.MessageReceived -= Logger_MessageReceived;
+                }
+            }
         }
 
         private void DispatchTimer_Elapsed(object sender, object e)
@@ -84,15 +105,13 @@ namespace StrixMusic.AppModels
             _memoryWatchTimer.Start();
         }
 
-        private void MemoryManager_MemoryChanged(object sender, object e)
-        {
-            UpdateMemoryUsage();
-        }
+        private void MemoryManager_MemoryChanged(object sender, object e) => UpdateMemoryUsage();
 
         private void UpdateMemoryUsage()
         {
             var memoryUsed = MemoryManager.AppMemoryUsage;
             var totalMemory = MemoryManager.AppMemoryUsageLimit;
+
             MemoryUsage = SizeSuffix((long)memoryUsed);
             TotalMemory = SizeSuffix((long)totalMemory);
         }
@@ -109,15 +128,15 @@ namespace StrixMusic.AppModels
         {
             using (await _semaphoreSlim.DisposableWaitAsync())
             {
-                var formatedMessage = LogFormatter.GetFormattedLogMessage(e);
+                var formattedLogMessage = LogFormatter.GetFormattedLogMessage(e);
 
-                if (AppLogs == null)
+                if (Logs == null)
                     return;
 
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
+                await _syncContext.PostAsync(() =>
                 {
-                    AppLogs.Add(formatedMessage);
+                    Logs.Add(formattedLogMessage);
+                    return Task.CompletedTask;
                 });
             }
         }
@@ -137,7 +156,7 @@ namespace StrixMusic.AppModels
             _deleteUserDataDialog = new ContentDialog()
             {
                 Title = "Delete user data",
-                Content = "Are you sure you want to delete user data? If you hit yes, the app will restart.",
+                Content = "Are you sure you want to delete user data? The app will restart.",
                 PrimaryButtonText = "Yes",
                 SecondaryButtonText = "No",
                 PrimaryButtonCommand = PerformUserDataDeletionCommand
@@ -156,7 +175,7 @@ namespace StrixMusic.AppModels
                     await _dataFolder.DeleteAsync(item);
                 }
 
-                var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
+                var result = await CoreApplication.RequestRestartAsync(launchArguments: string.Empty);
 
                 if (result == AppRestartFailureReason.NotInForeground ||
                    result == AppRestartFailureReason.RestartPending ||
@@ -169,9 +188,12 @@ namespace StrixMusic.AppModels
             {
                 Guard.IsNotNull(_deleteUserDataDialog);
 
-                await ShowRetryContentDialogAsync($"Couldn't delete the user data.", PerformUserDataDeletionCommand, ex);
+                await ShowRetryContentDialogAsync($"Couldn't delete user data.", PerformUserDataDeletionCommand, ex);
             }
         }
+
+        [RelayCommand]
+        private async Task<AppRestartFailureReason> RestartAppAsync() => await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
 
         private async Task ShowRetryContentDialogAsync(string error, ICommand retryCommand, Exception? ex)
         {
@@ -195,16 +217,13 @@ namespace StrixMusic.AppModels
                             },
                         },
                 },
-                CloseButtonText = "Ignore, remove source",
+                CloseButtonText = "Ignore",
                 PrimaryButtonText = "Try again",
                 PrimaryButtonCommand = retryCommand,
             };
 
             await retryConfirmationDialog.ShowAsync(ShowType.Interrupt);
         }
-
-        [RelayCommand]
-        private async Task<AppRestartFailureReason> RestartAppAsync() => await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
 
         private string SizeSuffix(long value, int decimalPlaces = 1)
         {

@@ -19,14 +19,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDebug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDiagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IpfsAccess.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\DebugLogs.xaml.cs">
-      <DependentUpon>DebugLogs.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml.cs">
+      <DependentUpon>Diagnostics.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LogFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\DiagnosticSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">
       <DependentUpon>ShellPresenter.xaml</DependentUpon>
@@ -99,7 +100,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Controls\DebugLogs.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
