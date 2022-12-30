@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
+using OwlCore.Storage;
 
 namespace StrixMusic.Controls.Settings.MusicSources;
 
@@ -71,7 +72,29 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
 
     private Visibility IsNotZeroToVisibility(int arg) => arg != 0 ? Visibility.Visible : Visibility.Collapsed;
 
-    private bool InvertBool(bool arg) => !arg;
+    private IFolder? AsFolder(object obj) => obj as IFolder;
 
-    private Visibility InvertBoolToVisibility(bool arg) => InvertBool(arg) ? Visibility.Visible : Visibility.Collapsed;
+    private bool IsFolder(object obj) => obj is IFolder;
+
+    private bool And(bool val1, bool val2) => val1 && val2;
+
+    private bool AndNot(bool val1, bool val2) => !(val1 && val2);
+
+    private bool AllNotNullOrWhiteSpace(string value, string value2) => !string.IsNullOrWhiteSpace(value) && !string.IsNullOrWhiteSpace(value2);
+
+    private bool IsNull(object? obj) => obj is null;
+
+    private bool IsNotNull(object? obj) => obj is not null;
+
+    private Visibility IsNullToVisibility(object? obj) => obj is null ? Visibility.Visible : Visibility.Collapsed;
+
+    private Visibility IsNotNullToVisibility(object? obj) => obj is not null ? Visibility.Visible : Visibility.Collapsed;
+
+    private bool InvertBool(bool val) => !val;
+
+    private Visibility BoolToVisibility(bool val) => val ? Visibility.Visible : Visibility.Collapsed;
+
+    private Visibility InvertBoolToVisibility(bool val) => !val ? Visibility.Visible : Visibility.Collapsed;
+
+    private Uri StringToUri(string value) => new Uri(value);
 }

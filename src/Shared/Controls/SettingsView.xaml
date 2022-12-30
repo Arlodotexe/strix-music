@@ -62,9 +62,9 @@
 					Icon="{ui:FontIcon Glyph=&#xEE57;}"
 					Tag="About" />
 				<muxc:NavigationViewItem
-					x:Name="DebugNavigationViewItem"
-					Content="Debug"
-					Icon="{ui:FontIcon Glyph=&#xEBE8;}"
+					x:Name="DiagnosticsNavigationViewItem"
+					Content="Diagnostics"
+					Icon="{ui:FontIcon Glyph=&#xE9D9;}"
 					Tag="Debug" />
 			</muxc:NavigationView.MenuItems>
 
@@ -93,22 +93,8 @@
 						<local:About />
 					</controls:Case>
 
-					<controls:Case IsDefault="True">
-						<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-							<FontIcon
-								Margin="7"
-								HorizontalAlignment="Center"
-								FontFamily="{ThemeResource SymbolThemeFontFamily}"
-								FontSize="48"
-								FontWeight="ExtraLight"
-								Glyph="&#xE822;" />
-
-							<TextBlock
-								HorizontalAlignment="Center"
-								FontSize="20"
-								Text="Under construction" />
-							<TextBlock HorizontalAlignment="Center" Text="Check back later" />
-						</StackPanel>
+					<controls:Case Value="{x:Bind DiagnosticsNavigationViewItem}">
+						<local:Diagnostics DiagnosticData="{x:Bind AppRoot.Debug}" />
 					</controls:Case>
 				</controls:SwitchPresenter>
 			</ScrollViewer>

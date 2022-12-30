@@ -116,7 +116,10 @@ public partial class MusicSourcesSettings : SettingsBase
         using (await _saveLoadMutex.DisposableWaitAsync())
         {
             if (!wasLoadingOnEntry)
+            {
+                Logger.LogInformation($"Loading {nameof(MusicSourcesSettings)}");
                 await base.LoadAsync(cancellationToken);
+            }
         }
     }
 }

@@ -97,7 +97,7 @@ namespace StrixMusic
 
         private void SetupLogger()
         {
-            var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\Logs\${date:format=yyyy-MM-dd}.log";
+            var logPath = LogFormatter.LogFolderPath + @"\${date:format=yyyy-MM-dd}.log";
 
             NLog.LogManager.Configuration = CreateConfig(shouldArchive: true);
 
@@ -145,7 +145,7 @@ namespace StrixMusic
 
         private void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
         {
-            var message = $"{DateTime.UtcNow:O} [{e.Level}] [Thread {Thread.CurrentThread.ManagedThreadId}] L{e.CallerLineNumber} {Path.GetFileName(e.CallerFilePath)} {e.CallerMemberName} {(e.Exception is not null ? $"Exception: {e.Exception} |" : string.Empty)} {e.Message}";
+            var message = LogFormatter.GetFormattedLogMessage(e);
 
             NLog.LogManager.GetLogger(string.Empty).Log(NLog.LogLevel.Info, message);
             Console.WriteLine(message);

@@ -47,6 +47,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private readonly PlaybackHandlerService _playbackHandler = new();
 
     [ObservableProperty]
+    private AppDiagnostics? _debug;
+
+    [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
 
     [ObservableProperty]
@@ -93,6 +96,14 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             Logger.LogInformation($"Initializing app root using folder {_dataFolder.Id}");
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (Debug is null)
+            {
+                Logger.LogInformation($"Initializing {nameof(DebugSettings)}");
+
+                var debugSettingsFolder = await GetOrCreateSettingsFolder(nameof(DebugSettings));
+                Debug = new AppDiagnostics(debugSettingsFolder);
+            }
 
             if (MusicSourcesSettings is null)
             {
@@ -168,6 +179,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             }
             else if (allNewCores.Any())
             {
+                Logger.LogInformation($"Creating {nameof(MergedCore)} and adding {allNewCores.Count} new cores.");
                 _mergedCore = new MergedCore(allNewCores);
             }
 
@@ -185,6 +197,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
+            Logger.LogInformation($"{nameof(AppRoot)} is initialized and ready to use.");
         }
     }
 
@@ -240,7 +253,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                     if (!settings.CanCreateCore)
                     {
-                        Logger.LogInformation($"Core settings for {settings.GetType()} (instance id {settings.InstanceId}) are invalid. Core cannot be created.");
+                        Logger.LogInformation($"Core settings for {settings.GetType()} ({nameof(settings.InstanceId)} {settings.InstanceId}) are invalid. Core cannot be created.");
                         return;
                     }
 
@@ -252,6 +265,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     // Core didn't init correctly and user chose not to retry.
                     if (!newCore.IsInitialized)
                     {
+                        Logger.LogInformation($"Core {newCore.InstanceId} didn't initialize correctly, and the choose chose not to retry.");
                         var settingsInstances = (IList<TSettings>)sender;
 
                         Guard.IsTrue(settingsInstances.Remove(settings));
@@ -260,13 +274,22 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         return;
                     }
 
+                    Logger.LogInformation($"Core initialized.");
+
                     // A merged core cannot be created without at least one source.
                     // If _mergedCore doesn't exist yet, this must be the first core being added.
                     // We'll need to create _mergedCore ourselves here, and not overwrite it elsewhere if not null.
                     if (_mergedCore is null)
+                    {
+                        Logger.LogInformation($"Creating {nameof(MergedCore)} and adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore = new MergedCore(newCore.IntoList());
+
+                    }
                     else
+                    {
+                        Logger.LogInformation($"Adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore.AddSource(newCore);
+                    }
                 }
             }
 
@@ -304,6 +327,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     /// <param name="core">The <see cref="ICore"/> instance to attempt to initialize.</param>
     private static async Task TryInitCore(ICore core)
     {
+        Logger.LogInformation($"Started init for core {core.DisplayName}, instance id \"{core.InstanceId}\"");
+
         try
         {
             await core.InitAsync();

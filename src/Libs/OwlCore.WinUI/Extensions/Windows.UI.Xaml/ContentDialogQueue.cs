@@ -60,12 +60,12 @@ namespace OwlCore.Extensions
                 _interruptedDialog = CurrentDialog;
                 _interruptedDialog.Hide();
 
-                var res = await contentDialog.ShowAsync();
-
+                // This needs to happen before ShowAsync because if you open two "Inturrupt" dialogs,
+                // It will yield to a race condition as ShowAsync waits for a response from opened dialog.
                 CurrentDialog = contentDialog;
                 _interruptedDialog = null;
 
-                return res;
+                return await contentDialog.ShowAsync();
             }
 
             // To show a dialog for after the current one closes.
