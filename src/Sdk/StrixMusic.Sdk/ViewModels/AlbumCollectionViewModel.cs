@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IAlbumCollection"/>.
     /// </summary>
-    public sealed class AlbumCollectionViewModel : ObservableObject, ISdkViewModel, IAlbumCollectionViewModel, IUrlCollectionViewModel, IImageCollectionViewModel
+    public sealed class AlbumCollectionViewModel : ObservableObject, ISdkViewModel, IAlbumCollectionViewModel, IUrlCollectionViewModel, IImageCollectionViewModel, IDelegatable<IAlbumCollection>
     {
         private readonly IAlbumCollection _collection;
 
@@ -187,6 +187,9 @@ namespace StrixMusic.Sdk.ViewModels
                 SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
             }
         }, null);
+
+        /// <inheritdoc/>
+        IAlbumCollection IDelegatable<IAlbumCollection>.Inner => _collection;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

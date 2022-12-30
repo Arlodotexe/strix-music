@@ -827,6 +827,7 @@ Global
 		SolutionGuid = {48425E8F-F5B5-47DB-A42B-29BD64798016}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\StrixMusic.Shared.projitems*{2e82db60-ba1e-402c-a4f8-56da621b04e9}*SharedItemsImports = 13
 		Shared\StrixMusic.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

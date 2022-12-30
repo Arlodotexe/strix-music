@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using CommunityToolkit.Diagnostics;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 
@@ -11,8 +12,10 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IUser"/>
     /// </summary>
-    public class UserViewModel : UserProfileViewModel, ISdkViewModel
+    public class UserViewModel : UserProfileViewModel, ISdkViewModel, IDelegatable<IUser>
     {
+        private readonly IUser _user;
+
         /// <summary>
         /// A ViewModel for <see cref="IUser"/>.
         /// </summary>
@@ -22,8 +25,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(user, nameof(user));
 
+            _user = user;
             Library = new LibraryViewModel(user.Library);
         }
+
+        /// <inheritdoc/>
+        IUser IDelegatable<IUser>.Inner => _user;
 
         /// <inheritdoc cref="ILibraryBase"/>
         public LibraryViewModel Library { get; }
