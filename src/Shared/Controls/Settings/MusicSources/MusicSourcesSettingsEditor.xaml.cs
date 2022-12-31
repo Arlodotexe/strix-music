@@ -50,7 +50,7 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
         get => (AppRoot?)GetValue(AppRootProperty);
         set => SetValue(AppRootProperty, value);
     }
-    
+
     private void RemoveMusicSource(ICore core)
     {
         Guard.IsNotNull(AppRoot?.MusicSourcesSettings);
@@ -75,6 +75,32 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
 
     private async void DeleteMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
+        // At least one core must stay present in MergedCore.
+        // AppRoot is not yet set up to safely deconstruct MergedCore, ViewModels, plugins, etc.
+        if (AppRoot?.StrixDataRoot?.Sources.Count == 1)
+        {
+            Guard.IsNotNull(AppRoot.Diagnostics);
+
+            new ContentDialog
+            {
+                Title = "App restart required",
+                Content = new TextBlock { Text = "This action requires an app restart. Are you sure?" },
+                PrimaryButtonText = "Yes, restart",
+                PrimaryButtonCommand = new AsyncRelayCommand(async () =>
+                {
+                    Guard.IsNotNull(AppRoot.MusicSourcesSettings);
+
+                    AppRoot.MusicSourcesSettings.ResetAllSettings();
+                    await AppRoot.MusicSourcesSettings.SaveAsync();
+                    await AppRoot.Diagnostics.RestartAppCommand.ExecuteAsync(null);
+                }),
+                CloseButtonText = "Cancel",
+            }
+            .ShowAsync(ShowType.Interrupt);
+
+            return;
+        }
+
         var menuFlyoutItem = (MenuFlyoutItem)sender;
         var core = (CoreViewModel)menuFlyoutItem.DataContext;
 
@@ -120,6 +146,8 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     /// </summary>
     /// <returns>The Type of the given object.</returns>
     public Type ObjectToType(object value) => value.GetType();
+
+    private static bool IsGreaterThanOne(int arg) => arg > 1;
 
     private Visibility IsZeroToVisibility(int arg) => arg == 0 ? Visibility.Visible : Visibility.Collapsed;
 
