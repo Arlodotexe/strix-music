@@ -94,7 +94,7 @@
 					</controls:Case>
 
 					<controls:Case Value="{x:Bind DiagnosticsNavigationViewItem}">
-						<local:Diagnostics DiagnosticData="{x:Bind AppRoot.Debug}" />
+						<local:Diagnostics DiagnosticData="{x:Bind AppRoot.Diagnostics}" />
 					</controls:Case>
 				</controls:SwitchPresenter>
 			</ScrollViewer>

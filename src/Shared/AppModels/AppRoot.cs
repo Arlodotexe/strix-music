@@ -50,7 +50,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private readonly PlaybackHandlerService _playbackHandler = new();
 
     [ObservableProperty]
-    private AppDiagnostics? _debug;
+    private AppDiagnostics? _diagnostics;
 
     [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
@@ -100,14 +100,14 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             Logger.LogInformation($"Initializing app root using folder {_dataFolder.Id}");
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (Debug is null)
+            if (Diagnostics is null)
             {
                 Logger.LogInformation($"Initializing {nameof(DebugSettings)}");
 
                 var debugSettingsFolder = await GetOrCreateSettingsFolder(nameof(DebugSettings));
-                Debug = new AppDiagnostics(debugSettingsFolder);
+                Diagnostics = new AppDiagnostics(debugSettingsFolder);
 
-                await Debug.Settings.LoadCommand.ExecuteAsync(cancellationToken);
+                await Diagnostics.Settings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
             if (MusicSourcesSettings is null)
