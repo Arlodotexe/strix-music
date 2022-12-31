@@ -93,6 +93,15 @@
 									Text="{x:Bind InstanceDescriptor, Mode=OneWay}"
 									TextAlignment="Center"
 									TextTrimming="CharacterEllipsis" />
+
+								<Grid.ContextFlyout>
+									<MenuFlyout>
+										<MenuFlyoutItem
+											Click="DeleteMenuFlyoutItem_OnClick"
+											Icon="Delete"
+											Text="Remove source" />
+									</MenuFlyout>
+								</Grid.ContextFlyout>
 							</Grid>
 						</DataTemplate>
 					</GridView.ItemTemplate>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -42,6 +43,8 @@ namespace StrixMusic.AppModels;
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
+    private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
+
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
     private readonly PlaybackHandlerService _playbackHandler = new();
@@ -103,6 +106,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 var debugSettingsFolder = await GetOrCreateSettingsFolder(nameof(DebugSettings));
                 Debug = new AppDiagnostics(debugSettingsFolder);
+
+                await Debug.Settings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
             if (MusicSourcesSettings is null)
@@ -111,6 +116,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 var musicSourceSettingsFolder = await GetOrCreateSettingsFolder(nameof(MusicSourcesSettings));
                 MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
+
+                await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
             if (ShellSettings is null)
@@ -119,6 +126,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 var shellSettingsFolder = await GetOrCreateSettingsFolder(nameof(ShellSettings));
                 ShellSettings = new ShellSettings(folder: shellSettingsFolder);
+
+                await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
             if (Ipfs is null)
@@ -128,21 +137,15 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
                 var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
 
-                await ipfsSettings.LoadCommand.ExecuteAsync(null);
-
                 Ipfs = new IpfsAccess(ipfsSettings);
 
+                await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
                 if (ipfsSettings.Enabled)
                 {
                     Logger.LogInformation($"Initializing {nameof(Ipfs)}");
                     await Ipfs.InitCommand.ExecuteAsync(null);
                 }
             }
-
-            // Load existing settings if there are no unsaved changes.
-            // May have unsaved changed if a source was just added but settings were not saved before InitAsync is called.
-            if (!MusicSourcesSettings.HasUnsavedChanges)
-                await MusicSourcesSettings.LoadAsync(cancellationToken);
 
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
@@ -153,7 +156,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
-            await allNewCores.InParallel(TryInitCore);
+            await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
             allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
@@ -247,13 +250,21 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                     var newCore = await settingsToCoreFactory(settings);
 
-                    // Init core, present user with retry options on failure.
-                    await TryInitCore(newCore);
+                    try
+                    {
+
+                        // Init core, present user with retry options on failure.
+                        await TryInitCore(newCore, CancellationToken.None);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        return;
+                    }
 
                     // Core didn't init correctly and user chose not to retry.
                     if (!newCore.IsInitialized)
                     {
-                        Logger.LogInformation($"Core {newCore.InstanceId} didn't initialize correctly, and the choose chose not to retry.");
+                        Logger.LogInformation($"Core {newCore.InstanceId} didn't initialize correctly, and the user chose not to retry.");
                         var settingsInstances = (IList<TSettings>)sender;
 
                         Guard.IsTrue(settingsInstances.Remove(settings));
@@ -297,8 +308,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     if (target is null)
                         return;
 
-                    _mergedCore.RemoveSource(target);
+                    if (_ongoingCoreInitCancellationTokens.TryGetValue(target.InstanceId, out var cancellationTokenSource))
+                        cancellationTokenSource.Cancel();
+
                     await target.DisposeAsync();
+                    _mergedCore.RemoveSource(target);
                 }
             }
         }
@@ -313,17 +327,26 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     /// Attempts to safely initialize the provided <paramref name="core"/>, allowing the user to retry in case of failure.
     /// </summary>
     /// <param name="core">The <see cref="ICore"/> instance to attempt to initialize.</param>
-    private static async Task TryInitCore(ICore core)
+    private async Task TryInitCore(ICore core, CancellationToken cancellationToken)
     {
         Logger.LogInformation($"Started init for core {core.DisplayName}, instance id \"{core.InstanceId}\"");
 
         try
         {
-            await core.InitAsync();
+            // Cancel any existing setup requests
+            if (_ongoingCoreInitCancellationTokens.TryGetValue(core.InstanceId, out var cancellationTokenSource))
+                cancellationTokenSource.Cancel();
+
+            // Create new cancellation source, link with new parent token.
+            cancellationTokenSource ??= CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cancellationToken = cancellationTokenSource.Token;
+            _ongoingCoreInitCancellationTokens.TryAdd(core.InstanceId, cancellationTokenSource);
+
+            await core.InitAsync(cancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
-            using (await _dialogMutex.DisposableWaitAsync())
+            using (await _dialogMutex.DisposableWaitAsync(cancellationToken))
             {
                 await HandleFailureAsync(ex);
             }
@@ -433,6 +456,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
     private StrixDataRootPluginWrapper CreatePluginLayer(MergedCore existingRoot, IpfsAccess ipfs)
     {
+        Logger.LogInformation("Creating plugin layer");
+
         foreach (var core in existingRoot.Sources)
             SetupMediaPlayerForCore(core);
 

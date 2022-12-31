@@ -70,7 +70,7 @@
 						x:Name="PreferredShellDisplayName"
 						Grid.Row="0"
 						Grid.Column="0"
-						FontSize="22"
+						FontSize="18"
 						Text="{x:Bind ShellSettings.PreferredShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"
 						TextWrapping="WrapWholeWords"
 						Visibility="{x:Bind ShellPresenter.IsPreferredShellActive, Mode=OneWay}" />
@@ -79,7 +79,7 @@
 						x:Name="FallbackShellDisplayName"
 						Grid.Row="0"
 						Grid.Column="0"
-						FontSize="22"
+						FontSize="18"
 						Text="{x:Bind ShellSettings.FallbackShell, Mode=OneWay, Converter={StaticResource ShellEnumToDisplayNameConverter}}"
 						TextWrapping="WrapWholeWords"
 						Visibility="{x:Bind ShellPresenter.IsFallbackShellActive, Mode=OneWay}" />

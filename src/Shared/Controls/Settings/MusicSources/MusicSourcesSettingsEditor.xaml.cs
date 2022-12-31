@@ -1,11 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OwlCore.Extensions;
 using StrixMusic.AppModels;
 using OwlCore.Storage;
+using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Settings;
+using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Controls.Settings.MusicSources;
 
@@ -15,12 +25,15 @@ namespace StrixMusic.Controls.Settings.MusicSources;
 [ObservableObject]
 public sealed partial class MusicSourcesSettingsEditor : UserControl
 {
+    private readonly SynchronizationContext _syncContext;
+
     /// <summary>
     /// Creates a new instance of <see cref="MusicSourcesSettingsEditor"/>.
     /// </summary>
     public MusicSourcesSettingsEditor()
     {
         InitializeComponent();
+        _syncContext = SynchronizationContext.Current;
     }
 
     /// <summary>
@@ -36,6 +49,46 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     {
         get => (AppRoot?)GetValue(AppRootProperty);
         set => SetValue(AppRootProperty, value);
+    }
+    
+    private void RemoveMusicSource(ICore core)
+    {
+        Guard.IsNotNull(AppRoot?.MusicSourcesSettings);
+
+        if (TryRemoveFrom(AppRoot.MusicSourcesSettings.ConfiguredLocalStorageCores, core.InstanceId))
+            return;
+
+        if (TryRemoveFrom(AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores, core.InstanceId))
+            return;
+    }
+
+    private static bool TryRemoveFrom<T>(ObservableCollection<T> collection, string instanceId)
+        where T : CoreSettingsBase, IInstanceId
+    {
+        var target = collection.FirstOrDefault(x => x.InstanceId == instanceId);
+
+        if (target is null)
+            return false;
+
+        return collection.Remove(target);
+    }
+
+    private async void DeleteMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        var menuFlyoutItem = (MenuFlyoutItem)sender;
+        var core = (CoreViewModel)menuFlyoutItem.DataContext;
+
+        Guard.IsNotNull(AppRoot?.MergedCore);
+        Guard.IsNotNull(AppRoot?.MusicSourcesSettings);
+
+        await new ContentDialog
+        {
+            Title = "Are you sure?",
+            Content = new TextBlock { Text = $"{core.DisplayName} ({core.InstanceDescriptor}) will be removed." },
+            CloseButtonText = "Cancel",
+            PrimaryButtonText = "Yes",
+            PrimaryButtonCommand = new RelayCommand(() => RemoveMusicSource(core)),
+        }.ShowAsync(ShowType.QueueNext);
     }
 
     [RelayCommand]

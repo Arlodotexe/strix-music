@@ -199,6 +199,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         Logger.LogInformation($"Loading metadata cache");
         {
             var fileMetadataCache = await TryGetFileMetadataCacheAsync(cancellationToken) ?? new();
+            cancellationToken.ThrowIfCancellationRequested();
 
             // A file must be discovered before cached metadata is made available.
             Logger.LogInformation($"Discovering files");
@@ -208,6 +209,8 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
             var discoveredUncachedFiles = new List<IFile>();
             await foreach (var files in _folderScanner.ScanFolderAsync(cancellationToken).Batch(ScanBatchSize, cancellationToken))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 seenFiles.AddRange(files);
                 ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed, ScanState.FilesFound + ScanBatchSize);
 
@@ -233,6 +236,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 // Emit existing metadata
                 ScanState = new FileScanState(ScanState.Stage, allValidItems.Count, seenFiles.Count);
                 await DigestFileMetadataAsync(cachedMetadataWithKnownFile);
+                cancellationToken.ThrowIfCancellationRequested();
             }
 
             // Scan remaining files in manual batches.
@@ -253,6 +257,8 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
             async Task ScanUncachedFilesAsync(IEnumerable<IFile> files)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // Scan uncached audio files
                 var processedMetadata = await files.InParallel(ScanFileAsync);
 
@@ -269,6 +275,8 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                     var fileMetadata = await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.FileProperties, cancellationToken) ??
                                        await AudioMetadataScanner.ScanMusicFileAsync(file, MetadataScanTypes.TagLib, cancellationToken);
 
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     ScanState = new FileScanState(ScanState.Stage, ScanState.FilesProcessed + 1, ScanState.FilesFound);
 
                     // File has no audio metadata
@@ -282,6 +290,8 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 }
             }
         }
+        
+        cancellationToken.ThrowIfCancellationRequested();
 
         // Playlists must be scanned after all files have been seen, so removed files can have metadata omitted.
         Logger.LogInformation($"Starting metadata scan of playlist files");
@@ -480,6 +490,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
     /// <inheritdoc />
     public ValueTask DisposeAsync()
     {
+        _inProgressScanTaskCompletionSource?.SetCanceled();
         _folderScanner.Dispose();
         return default;
     }

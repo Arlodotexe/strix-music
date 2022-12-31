@@ -82,6 +82,9 @@ To:
 
 ```
 
+Lastly, open up `MusicSourcesSettingsEditor.xaml.cs`. Set up your music source in `RemoveMusicSource`. For our example, we're adding the highlighted lines:
+![](../assets/app/add-music-source/core-removal.png) 
+
 ## Tell AppRoot how to turn settings into core instances
 In `StrixMusic.AppModels.AppRoot.CreateConfiguredCores`, turn your configured settings instances into `ICore`, like we did for the highlighted portion:
 ![](../assets/app/add-music-source/add-to-createconfiguredcoresasync.png)
