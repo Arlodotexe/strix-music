@@ -92,7 +92,7 @@ For our example, we've added the highlighted portion:
 ![](../assets/app/add-music-source/settings-changed-event.png)
 
 ## Create and link first time setup UI
-Open the solution explorer. In the shared project, create a new folder in `Controls/Settings/MusicSources/ConnectNew/`, then create a new `Page`.
+Open the solution explorer. In the shared project, create a new folder in `Controls/Settings/MusicSources/ConnectNew/MyMusicSourceName`, then create a new `Page` in that folder.
 
 This new page will be navigated to when the user has requested to create a core instance. You'll be provided with a parameter of type `ConnectNewMusicSourceNavigationParams`.
 
@@ -128,10 +128,15 @@ You'll need this parameter to complete or cancel setup, to reference the selecte
     }
 ```
 
-In `StrixMusic.Controls.Settings.MusicSources.ConnectNew.ConnectNewMusicSource.SelectMusicSource`, redirect the provided `AvailableMusicSource` to this page:
+In `StrixMusic.Controls.Settings.MusicSources.ConnectNew.ConnectNewMusicSource.SelectMusicSource`, redirect the provided `AvailableMusicSource` to your page.
 
 For our example, we're adding the highlighted line:
+
 ![](../assets/app/add-music-source/select-music-source.png)
 
 ## Create and link the "Options" control
-TODO
+This is not yet implemented. When we add a music source that needs to provide a user with options after the first setup, we'll document the process.
+
+## Wrapping up
+
+If all of the above is done, users should be able to set up and use the newly added music source in the Strix Music App.
