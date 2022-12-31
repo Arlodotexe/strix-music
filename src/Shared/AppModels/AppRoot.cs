@@ -303,7 +303,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 foreach (var item in e.OldItems.Cast<TSettings>())
                 {
                     // TSettings is contractually obligated to implement IInstanceId.
-                    // If the target is null, it must be because the core hasn't been added to _mergedCore.
+                    // If the target is null, it must be because the core hasn't been added to _mergedCore (which we can safely ignore).
                     var target = _mergedCore.Sources.FirstOrDefault(x => x.InstanceId == item.InstanceId);
                     if (target is null)
                         return;
