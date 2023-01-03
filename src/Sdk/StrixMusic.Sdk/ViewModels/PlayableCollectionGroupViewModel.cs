@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
-    public class PlayableCollectionGroupViewModel : ObservableObject, ISdkViewModel, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
+    public class PlayableCollectionGroupViewModel : ObservableObject, ISdkViewModel, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IPlayableCollectionGroup>
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
 
@@ -180,6 +180,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChildItemsChanged -= PlayableCollectionGroupViewModel_ChildItemsChanged;
             ImagesChanged -= PlayableCollectionGroupViewModel_ImagesChanged;
         }
+
+        /// <inheritdoc/>
+        IPlayableCollectionGroup IDelegatable<IPlayableCollectionGroup>.Inner => _collectionGroup;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

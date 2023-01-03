@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IDiscoverables"/>.
     /// </summary>
-    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables
+    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables, IDelegatable<IDiscoverables>
     {
         private readonly IDiscoverables _discoverables;
 
@@ -26,6 +27,9 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _discoverables = discoverables;
         }
+
+        /// <inheritdoc/>
+        IDiscoverables IDelegatable<IDiscoverables>.Inner => _discoverables;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreDiscoverables> IMerged<ICoreDiscoverables>.Sources => this.GetSources<ICoreDiscoverables>();
