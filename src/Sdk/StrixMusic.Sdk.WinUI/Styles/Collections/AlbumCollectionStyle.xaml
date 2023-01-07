@@ -1,72 +1,73 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.AlbumCollectionStyle"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:converters="using:OwlCore.WinUI.Converters">
-    
-    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
+	x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.AlbumCollectionStyle"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
+	xmlns:converters="using:OwlCore.WinUI.Converters"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
-    <Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:AlbumCollection">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="collections:AlbumCollection">
-                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="collections:AlbumCollection">
-                                    <Grid>
-                                        <ContentControl x:Name="ContextHolder" Content="{x:Bind Collection, Mode=OneWay}"
-                                                        Visibility="Collapsed" />
+	<converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
-                                        <GridView x:Name="PART_Selector"
-                                                  ItemsSource="{x:Bind Collection.Albums, Mode=OneWay}"
-                                                  HorizontalContentAlignment="Stretch"
-                                                  VerticalContentAlignment="Stretch"
-                                                  Padding="16" HorizontalAlignment="Stretch"
-                                                  SelectionMode="None"
-                                                  IsItemClickEnabled="{x:Bind IsItemClickEnabled, Mode=OneWay}">
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="ItemClick">
-                                                    <core:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
-                                                </core:EventTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
+	<Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:AlbumCollection">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="collections:AlbumCollection">
+						<ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+							<ContentControl.ContentTemplate>
+								<DataTemplate x:DataType="collections:AlbumCollection">
+									<Grid>
+										<ContentControl
+											x:Name="ContextHolder"
+											Content="{x:Bind Collection, Mode=OneWay}"
+											Visibility="Collapsed" />
 
-                                            <GridView.ItemTemplate>
-                                                <DataTemplate x:Key="DefaultAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
-                                                    <items:AlbumItem Album="{x:Bind}">
-                                                        <interactivity:Interaction.Behaviors>
-                                                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                                <core:InvokeCommandAction
-                                                                    Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumCollectionAsyncCommand, Mode=OneWay}"
-                                                                    CommandParameter="{x:Bind}" />
-                                                            </core:EventTriggerBehavior>
-                                                        </interactivity:Interaction.Behaviors>
-                                                    </items:AlbumItem>
-                                                </DataTemplate>
-                                            </GridView.ItemTemplate>
-                                            <GridView.Header>
-                                                <Grid>
-                                                    <ProgressRing
-                                                        IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}" />
-                                                    <ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
-                                                </Grid>
-                                            </GridView.Header>
-                                        </GridView>
-                                    </Grid>
-                                </DataTemplate>
-                            </ContentControl.ContentTemplate>
-                        </ContentControl>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
+										<GridView
+											x:Name="PART_Selector"
+											Padding="16"
+											HorizontalAlignment="Stretch"
+											HorizontalContentAlignment="Stretch"
+											VerticalContentAlignment="Stretch"
+											IsItemClickEnabled="{x:Bind IsItemClickEnabled, Mode=OneWay}"
+											ItemsSource="{x:Bind Collection.Albums, Mode=OneWay}"
+											SelectionMode="None">
+											<interactivity:Interaction.Behaviors>
+												<core:EventTriggerBehavior EventName="ItemClick">
+													<core:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+												</core:EventTriggerBehavior>
+											</interactivity:Interaction.Behaviors>
 
-    <Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="collections:AlbumCollection" />
+											<GridView.ItemTemplate>
+												<DataTemplate x:Key="DefaultAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
+													<items:AlbumItem Album="{x:Bind}">
+														<interactivity:Interaction.Behaviors>
+															<core:EventTriggerBehavior EventName="DoubleTapped">
+																<core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+															</core:EventTriggerBehavior>
+														</interactivity:Interaction.Behaviors>
+													</items:AlbumItem>
+												</DataTemplate>
+											</GridView.ItemTemplate>
+											<GridView.Header>
+												<Grid>
+													<ProgressRing IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}" />
+													<ContentPresenter Content="{x:Bind EmptyContent, Mode=OneWay}" Visibility="{x:Bind EmptyContentVisibility, Mode=OneWay}" />
+												</Grid>
+											</GridView.Header>
+										</GridView>
+									</Grid>
+								</DataTemplate>
+							</ContentControl.ContentTemplate>
+						</ContentControl>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="collections:AlbumCollection" />
 
 </ResourceDictionary>

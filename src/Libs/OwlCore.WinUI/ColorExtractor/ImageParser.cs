@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp.Advanced;
 
 namespace OwlCore.WinUI.ColorExtractor
 {
@@ -42,7 +43,7 @@ namespace OwlCore.WinUI.ColorExtractor
             var pos = 0;
             for (var row = 0; row < image.Height; row++)
             {
-                var rowPixels = image.GetPixelRowSpan(row);
+                var rowPixels = image.DangerousGetPixelRowMemory(row).Span;
                 for (var i = 0; i < pixelsPerRow; i++)
                 {
                     var b = rowPixels[i * nth].B / 255f;

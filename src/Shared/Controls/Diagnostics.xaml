@@ -1,0 +1,134 @@
+﻿<UserControl
+	x:Class="StrixMusic.Controls.Diagnostics"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
+	xmlns:color="using:OwlCore.WinUI.Converters.Color"
+	xmlns:controls="using:StrixMusic.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:local="using:StrixMusic.Controls"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+	d:DesignHeight="300"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+
+	<Grid MaxWidth="1300" Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<StackPanel
+			Grid.Row="1"
+			Margin="20"
+			VerticalAlignment="Top"
+			Spacing="4">
+
+			<labs:SettingsCard Header="Window Size">
+				<labs:SettingsCard.Content>
+					<TextBlock>
+						<!--  Separating Runs with a newline creates an unnecessary space b/w two related text elements.  -->
+						<Run Text="{x:Bind DiagnosticData.WindowWidth, Mode=OneWay}" /><Run Text="w x" />
+						<Run Text="{x:Bind DiagnosticData.WindowHeight, Mode=OneWay}" /><Run Text="h" />
+					</TextBlock>
+				</labs:SettingsCard.Content>
+			</labs:SettingsCard>
+
+			<labs:SettingsCard Header="Memory Usage">
+				<labs:SettingsCard.Description>
+					<TextBlock>
+						<Run Text="System memory limit:" />
+						<Run Text="{x:Bind DiagnosticData.TotalMemory, Mode=OneWay}" />
+					</TextBlock>
+				</labs:SettingsCard.Description>
+
+				<TextBlock Text="{x:Bind DiagnosticData.MemoryUsage, Mode=OneWay}" />
+			</labs:SettingsCard>
+
+			<labs:SettingsCard Description="When enabled, log files will be saved to disk" Header="Enable logging">
+				<ToggleSwitch IsEnabled="{x:Bind InvertBool(DiagnosticData.Settings.SaveCommand.IsRunning), Mode=OneWay}" IsOn="{x:Bind DiagnosticData.Settings.IsLoggingEnabled, Mode=TwoWay}">
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="Toggled">
+							<core:InvokeCommandAction Command="{x:Bind DiagnosticData.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</ToggleSwitch>
+			</labs:SettingsCard>
+
+			<labs:SettingsCard
+				ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+				Description="Show the folder where all past logs are saved"
+				Header="Open logs folder"
+				HeaderIcon="{ui:SymbolIcon Symbol=Folder}"
+				IsClickEnabled="True">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Click">
+						<core:InvokeCommandAction Command="{x:Bind DiagnosticData.OpenLogFolderCommand, Mode=OneWay}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</labs:SettingsCard>
+
+			<labs:SettingsCard
+				Description="An app restart will be required. All cores will be deleted and your preferences will be reset."
+				Header="Erase all data"
+				HeaderIcon="{ui:FontIcon Glyph=&#xE75C;}"
+				IsClickEnabled="True">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Click">
+						<core:InvokeCommandAction Command="{x:Bind DiagnosticData.DeleteUserDataCommand, Mode=OneWay}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</labs:SettingsCard>
+
+			<ListView
+				Height="600"
+				Margin="10,40"
+				Padding="16,32"
+				Background="{ThemeResource SystemAltLowColor}"
+				CornerRadius="5"
+				ItemsSource="{x:Bind DiagnosticData.Logs, Mode=OneWay}"
+				ScrollViewer.HorizontalScrollBarVisibility="Visible"
+				ScrollViewer.HorizontalScrollMode="Enabled"
+				SelectionMode="None">
+				<ListView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<ItemsStackPanel VerticalAlignment="Bottom" ItemsUpdatingScrollMode="KeepLastItemInView">
+							<ItemsStackPanel.ChildrenTransitions>
+								<TransitionCollection />
+							</ItemsStackPanel.ChildrenTransitions>
+						</ItemsStackPanel>
+					</ItemsPanelTemplate>
+				</ListView.ItemsPanel>
+
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Style.Setters>
+							<Setter Property="MinHeight" Value="0" />
+							<Setter Property="Margin" Value="0,2" />
+						</Style.Setters>
+					</Style>
+				</ListView.ItemContainerStyle>
+
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<StackPanel>
+							<TextBlock
+								FontSize="12"
+								IsTextSelectionEnabled="True"
+								Text="{Binding}" />
+						</StackPanel>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackPanel>
+	</Grid>
+</UserControl>

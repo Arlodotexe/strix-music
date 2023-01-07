@@ -27,24 +27,28 @@ public class StorageCore : ICore
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private CoreState _coreState;
     private ICoreImage? _logo;
+    private string _instanceDescriptor = string.Empty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageCore"/> class.
     /// </summary>
-    /// <param name="folder">The folder being scanned for music.</param>
-    /// <param name="metadataCacheFolder">A folder where metadata can be stored</param>
+    /// <param name="folderToScanToScan">The folder being scanned for music.</param>
+    /// <param name="metadataCacheFolder">A folder where metadata can be stored for fast retrieval later.</param>
     /// <param name="displayName">A user-friendly display name to use for this storage core.</param>
     /// <param name="fileScanProgress">Monitor the progress of a file scan.</param>
-    public StorageCore(IFolder folder, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
+    public StorageCore(IFolder folderToScan, IModifiableFolder metadataCacheFolder, string displayName, Progress<FileScanState>? fileScanProgress = null)
     {
         _metadataCacheFolder = metadataCacheFolder;
         FileScanProgress = fileScanProgress;
-        FolderScanner = new DepthFirstFolderScanner(folder);
-        Folder = folder;
+        FolderScanner = new DepthFirstFolderScanner(folderToScan);
+        FolderToScan = folderToScan;
         DisplayName = displayName;
-        InstanceId = $"{nameof(StorageCore)}.{folder.Id}";
+        InstanceId = folderToScan.Id;
         Devices = new List<ICoreDevice>();
         Library = new StorageCoreLibrary(this);
+
+        if (folderToScan is IAddressableStorable addressable)
+            InstanceDescriptor = addressable.Path;
     }
 
     /// <inheritdoc />
@@ -53,7 +57,7 @@ public class StorageCore : ICore
     /// <summary>
     /// The folder being scanned for music.
     /// </summary>
-    public IFolder Folder { get; }
+    public IFolder FolderToScan { get; }
 
     /// <summary>
     /// The scanner used to discover files.
@@ -78,10 +82,18 @@ public class StorageCore : ICore
     public string InstanceId { get; }
 
     /// <inheritdoc />
-    public virtual string InstanceDescriptor { get; set; } = string.Empty;
+    public string InstanceDescriptor
+    {
+        get => _instanceDescriptor;
+        set
+        {
+            _instanceDescriptor = value;
+            InstanceDescriptorChanged?.Invoke(this, value);
+        }
+    }
 
     /// <inheritdoc />
-    public virtual MediaPlayerType PlaybackType => MediaPlayerType.Standard;
+    public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
     /// <inheritdoc />
     public ICore SourceCore => this;

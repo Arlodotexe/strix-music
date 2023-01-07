@@ -23,7 +23,6 @@ namespace StrixMusic.Shells.ZuneDesktop
     /// </summary>
     public sealed partial class ZuneDesktop : Shell
     {
-        private IModifiableFolder? _settingStorage;
         private ZuneDesktopSettings? _settings;
 
         /// <summary>
@@ -35,6 +34,10 @@ namespace StrixMusic.Shells.ZuneDesktop
             Unloaded += OnUnloaded;
 
             this.InitializeComponent();
+
+            WindowHostOptions.ButtonForegroundColor = Colors.White;
+            WindowHostOptions.ExtendViewIntoTitleBar = true;
+            WindowHostOptions.CustomTitleBar = CustomTitleBar;
 
             // Register settings view navigation
             WeakReferenceMessenger.Default.Register<SettingsViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
@@ -95,7 +98,7 @@ namespace StrixMusic.Shells.ZuneDesktop
                 BackgroundImage.Visibility = Visibility.Visible;
             }
 
-            BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
+            var bitmapImage = new BitmapImage(backgroundImage.Path);
             BackgroundImageBrush.ImageSource = bitmapImage;
             BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
             BackgroundImageBrush.Stretch = backgroundImage.Stretch;
@@ -107,19 +110,6 @@ namespace StrixMusic.Shells.ZuneDesktop
             {
                 HideBackground.Begin();
             });
-        }
-
-        /// <inheritdoc/>
-        protected override void SetupTitleBar()
-        {
-            base.SetupTitleBar();
-#if NETFX_CORE
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            Window.Current.SetTitleBar(CustomTitleBar);
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-#endif
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -146,19 +136,10 @@ namespace StrixMusic.Shells.ZuneDesktop
             }
 
             RootControl.RequestedTheme = theme;
-            Storyboard transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
+            var transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
             transition.Begin();
 
-            if (theme == ElementTheme.Dark)
-            {
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonForegroundColor = Colors.White;
-            }
-            else
-            {
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonForegroundColor = Colors.Black;
-            }
+            WindowHostOptions.ButtonForegroundColor = theme == ElementTheme.Dark ? Colors.White : Colors.Black;
         }
 
         private void SettingsService_SettingChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -224,7 +205,6 @@ namespace StrixMusic.Shells.ZuneDesktop
 
             if (newValue is not null)
             {
-                _settingStorage = newValue;
                 _settings = new ZuneDesktopSettings(newValue);
                 _settings.PropertyChanged += SettingsService_SettingChanged;
 

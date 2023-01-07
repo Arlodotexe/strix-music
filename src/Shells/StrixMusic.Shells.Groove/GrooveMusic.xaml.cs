@@ -53,6 +53,17 @@ namespace StrixMusic.Shells.Groove
         {
             this.InitializeComponent();
 
+            WindowHostOptions.IsSystemBackButtonVisible = true;
+            WindowHostOptions.BackgroundColor = Colors.Black;
+            WindowHostOptions.ForegroundColor = Colors.White;
+            
+            WindowHostOptions.IsSystemBackButtonVisible = true;
+            WindowHostOptions.ExtendViewIntoTitleBar = true;
+            WindowHostOptions.CustomTitleBar = CustomTitleBarBorder;
+
+            var currentView = SystemNavigationManager.GetForCurrentView();
+            currentView.BackRequested += CurrentView_BackRequested;
+
             // Register home page navigation
             WeakReferenceMessenger.Default.Register<HomeViewNavigationRequestMessage>(this, (s, e) => NavigatePage(e));
 
@@ -139,23 +150,6 @@ namespace StrixMusic.Shells.Groove
         {
             get => (RelayCommand)GetValue(HamburgerPressedCommandProperty);
             set => SetValue(HamburgerPressedCommandProperty, value);
-        }
-
-        /// <inheritdoc/>
-        protected override void SetupTitleBar()
-        {
-            base.SetupTitleBar();
-
-#if NETFX_CORE
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonForegroundColor = Colors.White;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-#endif
-
-            SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
-            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            currentView.BackRequested += CurrentView_BackRequested;
         }
 
         private void CurrentView_BackRequested(object sender, BackRequestedEventArgs e)

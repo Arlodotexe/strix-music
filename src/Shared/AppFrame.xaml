@@ -1,83 +1,196 @@
 ﻿<UserControl
-    x:Class="StrixMusic.AppFrame"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:controls="using:StrixMusic.Controls"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
-    mc:Ignorable="d">
+	x:Class="StrixMusic.AppFrame"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+	xmlns:color="using:OwlCore.WinUI.Converters.Color"
+	xmlns:controls="using:StrixMusic.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+	d:DesignHeight="300"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
 
-    <Grid x:Name="RootGrid">
-        <interactivity:Interaction.Behaviors>
-            <core:EventTriggerBehavior EventName="Loaded">
-                <core:InvokeCommandAction Command="{x:Bind AppRoot.InitCommand}" />
-            </core:EventTriggerBehavior>
-        </interactivity:Interaction.Behaviors>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<color:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+		</ResourceDictionary>
+	</UserControl.Resources>
 
-        <ShellPresenter xmlns="using:StrixMusic"
-                        FallbackShell="{x:Bind AppRoot.ShellSettings.FallbackShell, Mode=OneWay}"
-                        PreferredShell="{x:Bind AppRoot.ShellSettings.PreferredShell, Mode=OneWay}"
-                        Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
+	<Grid x:Name="RootGrid">
+		<interactivity:Interaction.Behaviors>
+			<core:EventTriggerBehavior EventName="Loaded">
+				<core:InvokeCommandAction Command="{x:Bind AppRoot.InitCommand}" />
+			</core:EventTriggerBehavior>
+		</interactivity:Interaction.Behaviors>
 
-        <StackPanel Spacing="0" CornerRadius="0,0,5,5" Padding="15"
-                    Visibility="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}"
-                    Background="{ThemeResource OobePageBackgroundColor}"
-                    VerticalAlignment="Top" HorizontalAlignment="Center">
-            <ProgressBar IsIndeterminate="True" IsEnabled="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}" />
+		<controls:ShellPresenter
+			xmlns="using:StrixMusic"
+			x:Name="ShellPresenter"
+			FallbackShell="{x:Bind AppRoot.ShellSettings.FallbackShell, Mode=OneWay}"
+			PreferredShell="{x:Bind AppRoot.ShellSettings.PreferredShell, Mode=OneWay}"
+			PropertyChanged="ShellPresenter_OnPropertyChanged"
+			PropertyChanging="ShellPresenter_OnPropertyChanging"
+			Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
 
-            <ItemsControl ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:CoreViewModel">
-                        <StackPanel Spacing="5">
-                            <CoreImage xmlns="using:StrixMusic.Controls" Image="{x:Bind Logo, Mode=OneWay}" />
-                            <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
-                            <TextBlock Text="{x:Bind InstanceDescriptor, Mode=OneWay}"/>
-                            <TextBlock Text="{x:Bind CoreState, Mode=OneWay}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+		<StackPanel
+			Padding="15"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Top"
+			Background="{ThemeResource OobePageBackgroundColor}"
+			CornerRadius="0,0,5,5"
+			Spacing="0"
+			Visibility="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}">
+			<ProgressBar IsEnabled="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}" IsIndeterminate="True" />
 
-        <ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Visibility="Collapsed"/>
+			<ItemsControl ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="viewModels:CoreViewModel">
+						<StackPanel Spacing="5">
+							<CoreImage xmlns="using:StrixMusic.Controls" Image="{x:Bind Logo, Mode=OneWay}" />
+							<TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
+							<TextBlock Text="{x:Bind InstanceDescriptor, Mode=OneWay}" />
+							<TextBlock Text="{x:Bind CoreState, Mode=OneWay}" />
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</StackPanel>
 
-        <Border x:Name="ShadowTarget" Visibility="Collapsed" />
+		<ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Visibility="Collapsed" />
 
-        <Border x:Name="SettingsBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                CornerRadius="6" Visibility="Collapsed">
-            <Grid>
-                <ui:Effects.Shadow>
-                    <ui:AttachedDropShadow IsMasked="True" Opacity="0.25" CornerRadius="6" BlurRadius="25" CastTo="{x:Bind ShadowTarget}"/>
-                </ui:Effects.Shadow>
+		<Border x:Name="ShadowTarget" Visibility="Collapsed" />
 
-                <controls:Settings AppRoot="{x:Bind AppRoot}"/>
+		<Border
+			x:Name="SettingsBorder"
+			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+			CornerRadius="6"
+			Visibility="Collapsed">
+			<Grid>
+				<animations:Implicit.ShowAnimations>
+					<animations:OpacityAnimation
+						From="0"
+						To="1.0"
+						Duration="0:0:0.5" />
+				</animations:Implicit.ShowAnimations>
 
-                <!--
-                For resizing the settings window.
-                Not needed if control takes up full window.
-                
-                <labs:PropertySizer VerticalAlignment="Bottom"
-                                    Orientation="Horizontal"
-                                    Width="{Binding ElementName=SettingsBorder, Path=Width}"
-                                    Minimum="250" Opacity="0"
-                                    Maximum="3000"
-                                    Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"/>
+				<animations:Implicit.HideAnimations>
+					<animations:OpacityAnimation
+						From="1.0"
+						To="0"
+						Duration="0:0:0.5" />
+				</animations:Implicit.HideAnimations>
 
-                <labs:PropertySizer HorizontalAlignment="Right"
-                                    Height="{Binding ElementName=SettingsBorder, Path=Height}"
-                                    Minimum="250" Maximum="5000" Opacity="0"
-                                    Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"/>
-                
-                -->
-            </Grid>
-        </Border>
-    </Grid>
-</UserControl> 
+				<ui:Effects.Shadow>
+					<ui:AttachedDropShadow
+						BlurRadius="25"
+						CastTo="{x:Bind ShadowTarget}"
+						CornerRadius="6"
+						IsMasked="True"
+						Opacity="0.40" />
+				</ui:Effects.Shadow>
+
+				<controls:SettingsView AppRoot="{x:Bind AppRoot}" />
+
+				<!--
+					For resizing the settings window.
+					Not needed if control takes up full window.
+				-->
+				<labs:PropertySizer
+					Width="{Binding ElementName=SettingsBorder, Path=Width}"
+					VerticalAlignment="Bottom"
+					Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"
+					Maximum="3000"
+					Minimum="350"
+					Opacity="0"
+					Orientation="Horizontal" />
+
+				<labs:PropertySizer
+					Height="{Binding ElementName=SettingsBorder, Path=Height}"
+					HorizontalAlignment="Right"
+					Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"
+					Maximum="5000"
+					Minimum="350"
+					Opacity="0" />
+			</Grid>
+		</Border>
+
+		<Button
+			Width="50"
+			Height="32"
+			Margin="0,0,138,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			BorderThickness="0"
+			CornerRadius="0"
+			IsHitTestVisible="False"
+			Opacity="0.9">
+
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="18"
+				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+				Glyph="&#xE7C2;" />
+		</Button>
+
+		<ToggleButton
+			x:Name="OpenSettingsUIToggleButton"
+			Width="50"
+			Height="32"
+			Margin="0,0,188,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			BorderThickness="0"
+			CornerRadius="0"
+			Opacity="0.9"
+			ToolTipService.ToolTip="Open app settings">
+
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="16"
+				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+				Glyph="&#xE115;" />
+
+			<interactivity:Interaction.Behaviors>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="True">
+					<core:GoToStateAction StateName="SettingsDialogVisible" />
+				</core:DataTriggerBehavior>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="False">
+					<core:GoToStateAction StateName="SettingsDialogHidden" />
+				</core:DataTriggerBehavior>
+			</interactivity:Interaction.Behaviors>
+		</ToggleButton>
+
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="ShellSettingsVisualStateGroup">
+				<VisualState x:Name="SettingsDialogVisible">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Visible" />
+					</VisualState.Setters>
+				</VisualState>
+
+				<VisualState x:Name="SettingsDialogHidden">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Collapsed" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
+</UserControl>

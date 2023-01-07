@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore;
+using StrixMusic.AppModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.WinUI;
 using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.AppModels;
 
-namespace StrixMusic;
+namespace StrixMusic.Controls;
 
 [ObservableObject]
 public sealed partial class ShellPresenter : UserControl
 {
-    private Shell? _currentShell;
+    [ObservableProperty] private Shell? _currentShell;
     private bool _currentIsPreferred;
 
     /// <summary>
@@ -108,7 +109,8 @@ public sealed partial class ShellPresenter : UserControl
 
     private bool ShouldUseFallbackShell()
     {
-        Guard.IsFalse(!IsLoaded);
+        if (!IsLoaded)
+            return false;
 
         var currentShellData = ShellInfo.All[PreferredShell];
 
@@ -166,7 +168,7 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        PART_ShellDisplay.Content = _currentShell = CreatePreferredShell(PreferredShell, Root);
+        PART_ShellDisplay.Content = CurrentShell = CreatePreferredShell(PreferredShell, Root);
         _currentIsPreferred = true;
 
         OnPropertyChanged(nameof(IsPreferredShellActive));
@@ -192,7 +194,7 @@ public sealed partial class ShellPresenter : UserControl
     {
         PART_ShellDisplay.Content = null;
 
-        PART_ShellDisplay.Content = _currentShell = CreateFallbackShell(FallbackShell, Root);
+        PART_ShellDisplay.Content = CurrentShell = CreateFallbackShell(FallbackShell, Root);
         _currentIsPreferred = false;
 
         OnPropertyChanged(nameof(IsPreferredShellActive));

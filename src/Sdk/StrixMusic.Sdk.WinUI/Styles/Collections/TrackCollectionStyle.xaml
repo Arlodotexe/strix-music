@@ -1,61 +1,67 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.TrackCollectionStyle"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:converters="using:OwlCore.WinUI.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
-    
-    <converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
+	x:Class="StrixMusic.Sdk.WinUI.Styles.Collections.TrackCollectionStyle"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
+	xmlns:converters="using:OwlCore.WinUI.Converters"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
-    <Style x:Key="DefaultTrackListControlStyle" TargetType="collections:TrackCollection">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="collections:TrackCollection">
-                        <Grid>
-                            <ContentControl x:Name="ContextHolder" Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}" Visibility="Collapsed"/>
-                            <ListView x:Name="PART_Selector" ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
-                                   ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
-                                   Padding="16" HorizontalAlignment="Stretch"
-                                   SelectionMode="None" 
-                                   IsItemClickEnabled="{Binding IsItemClickEnabled, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="ItemClick">
-                                        <core:InvokeCommandAction Command="{Binding ItemClickCommand, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                                    </core:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
-                                <ListView.Header>
-                                    <Grid>
-                                        <ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+	<converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
 
-                                        <ContentPresenter Content="{Binding EmptyContent, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{Binding EmptyContentVisibility, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
-                                    </Grid>
-                                </ListView.Header>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="viewModels:TrackViewModel">
-                                        <items:TrackItem Track="{Binding}">
-                                            <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" 
-                                                                              CommandParameter="{Binding}" />
-                                                </core:EventTriggerBehavior>
-                                            </interactivity:Interaction.Behaviors>
-                                        </items:TrackItem>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
+	<Style x:Key="DefaultTrackListControlStyle" TargetType="collections:TrackCollection">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="collections:TrackCollection">
+						<Grid>
+							<ContentControl
+								x:Name="ContextHolder"
+								Content="{Binding Collection, RelativeSource={RelativeSource TemplatedParent}}"
+								Visibility="Collapsed" />
+							<ListView
+								x:Name="PART_Selector"
+								Padding="16"
+								HorizontalAlignment="Stretch"
+								ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
+								IsItemClickEnabled="{Binding IsItemClickEnabled, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+								ItemContainerStyle="{StaticResource TrackListItemStyle}"
+								ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+								SelectionMode="None">
+								<interactivity:Interaction.Behaviors>
+									<core:EventTriggerBehavior EventName="ItemClick">
+										<core:InvokeCommandAction Command="{Binding ItemClickCommand, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+									</core:EventTriggerBehavior>
+								</interactivity:Interaction.Behaviors>
+								<ListView.Header>
+									<Grid>
+										<ProgressRing IsActive="{Binding Collection.PopulateMoreTracksCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
 
-    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="collections:TrackCollection"/>
+										<ContentPresenter Content="{Binding EmptyContent, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" Visibility="{Binding EmptyContentVisibility, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+									</Grid>
+								</ListView.Header>
+								<ListView.ItemTemplate>
+									<DataTemplate x:DataType="viewModels:TrackViewModel">
+										<items:TrackItem Track="{Binding}">
+											<interactivity:Interaction.Behaviors>
+												<core:EventTriggerBehavior EventName="DoubleTapped">
+													<core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+												</core:EventTriggerBehavior>
+											</interactivity:Interaction.Behaviors>
+										</items:TrackItem>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="collections:TrackCollection" />
 
 </ResourceDictionary>

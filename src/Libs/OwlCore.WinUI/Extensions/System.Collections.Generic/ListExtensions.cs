@@ -1,4 +1,6 @@
-﻿namespace System.Collections.Generic
+﻿using System.Collections.Generic;
+
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// A collection of extension methods.

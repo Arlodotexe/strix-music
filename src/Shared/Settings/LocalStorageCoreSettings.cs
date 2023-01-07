@@ -20,8 +20,6 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     public LocalStorageCoreSettings(IModifiableFolder folder)
         : base(folder, AppSettingsSerializer.Singleton)
     {
-        InstanceId = folder.Id;
-
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
     }
@@ -59,7 +57,7 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Gets or sets the instance ID of the musicSource.
+    /// Gets or sets the instance ID of the source.
     /// </summary>
     public string InstanceId
     {
@@ -88,8 +86,7 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     /// <inheritdoc />
     public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
     {
-        nameof(FutureAccessToken) or nameof(Path) or nameof(InstanceId)
-            => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
+        nameof(FutureAccessToken) or nameof(Path) or nameof(InstanceId) => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
         _ => true,
     };
 

@@ -21,6 +21,9 @@ namespace StrixMusic.Settings;
 public partial class ShellSettings : SettingsBase, IInstanceId
 {
     [JsonIgnore]
+    private readonly SemaphoreSlim _saveLoadMutex = new(1, 1);
+
+    [JsonIgnore]
     private readonly ApplicationDataContainer _localSettings;
 
     /// <summary>
@@ -98,11 +101,33 @@ public partial class ShellSettings : SettingsBase, IInstanceId
 
     /// <inheritdoc />
     [RelayCommand]
-    public override Task LoadAsync(CancellationToken? cancellationToken = null) => base.LoadAsync(cancellationToken);
+    public override async Task SaveAsync(CancellationToken? cancellationToken = null)
+    {
+        // Subsequent concurrent calls to this method will wait for the first call to complete, without saving settings again.
+        // Forces the AsyncRelayCommand to wait for raw method calls to complete.
+        var wasSavingOnEntry = _saveLoadMutex.CurrentCount == 0;
+
+        using (await _saveLoadMutex.DisposableWaitAsync())
+        {
+            if (!wasSavingOnEntry)
+                await base.SaveAsync(cancellationToken);
+        }
+    }
 
     /// <inheritdoc />
     [RelayCommand]
-    public override Task SaveAsync(CancellationToken? cancellationToken = null) => base.SaveAsync(cancellationToken);
+    public override async Task LoadAsync(CancellationToken? cancellationToken = null)
+    {
+        // Subsequent concurrent calls to this method will wait for the first call to complete, without loading settings again.
+        // Forces the AsyncRelayCommand to wait for raw method calls to complete.
+        var wasLoadingOnEntry = _saveLoadMutex.CurrentCount == 0;
+
+        using (await _saveLoadMutex.DisposableWaitAsync())
+        {
+            if (!wasLoadingOnEntry)
+                await base.LoadAsync(cancellationToken);
+        }
+    }
 
     /// <inheritdoc />
     [RelayCommand]

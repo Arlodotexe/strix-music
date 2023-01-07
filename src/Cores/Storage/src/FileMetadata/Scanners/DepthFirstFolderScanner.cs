@@ -215,10 +215,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
     /// <inheritdoc/>
     public void Dispose()
     {
-        foreach (var item in _knownSubFolders)
+        lock (_knownSubFolders)
         {
-            if (item.Value.folder is IMutableFolder mutableFolder)
-                _ = DisableFolderWatcherAsync(mutableFolder, CancellationToken.None);
+            foreach (var item in _knownSubFolders)
+            {
+                if (item.Value.folder is IMutableFolder mutableFolder)
+                    _ = DisableFolderWatcherAsync(mutableFolder, CancellationToken.None);
+            }
         }
 
         if (RootFolder is IMutableFolder mutableRoot)

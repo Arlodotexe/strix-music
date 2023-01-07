@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
@@ -10,14 +12,19 @@ using StrixMusic.AppModels;
 using StrixMusic.CoreModels;
 using StrixMusic.Sdk.CoreModels;
 using Windows.Storage;
+using OwlCore.Extensions;
+using CommunityToolkit.Mvvm.Input;
 
 namespace StrixMusic.Settings;
 
 /// <summary>
-/// A container for all settings related to cores.
+/// A container for all settings related to configured music sources.
 /// </summary>
-public class MusicSourcesSettings : SettingsBase
+public partial class MusicSourcesSettings : SettingsBase
 {
+    [JsonIgnore]
+    private readonly SemaphoreSlim _saveLoadMutex = new(1, 1);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MusicSourcesSettings"/> class.
     /// </summary>
@@ -25,23 +32,25 @@ public class MusicSourcesSettings : SettingsBase
     public MusicSourcesSettings(IModifiableFolder folder)
         : base(folder, AppSettingsSerializer.Singleton)
     {
+
+        FlushDefaultValues = false;
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
 
         AvailableMusicSources.Add(new AvailableMusicSource
         (
-                name: "Local Storage",
-                description: "Listen to music on your local disk.",
-                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"),
-                defaultSettingsFactory: async () => new LocalStorageCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}")))
+            name: "Local Storage",
+            description: "Listen to music on your local disk.",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"),
+            defaultSettingsFactory: async instanceId => new LocalStorageCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
         AvailableMusicSources.Add(new AvailableMusicSource
         (
-                name: "OneDrive",
-                description: "Stream music directly from OneDrive.",
-                imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
-                defaultSettingsFactory: async () => new OneDriveCoreSettings(await GetDataFolderByName($"{Guid.NewGuid()}")))
+            name: "OneDrive",
+            description: "Stream music directly from OneDrive.",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/OneDrive/Logo.svg"),
+            defaultSettingsFactory: async instanceId => new OneDriveCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)
@@ -79,5 +88,38 @@ public class MusicSourcesSettings : SettingsBase
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
 
         return modifiableData;
+    }
+
+    /// <inheritdoc />
+    [RelayCommand]
+    public override async Task SaveAsync(CancellationToken? cancellationToken = null)
+    {
+        // Subsequent concurrent calls to this method will wait for the first call to complete, without saving settings again.
+        // Forces the AsyncRelayCommand to wait for raw method calls to complete.
+        var wasSavingOnEntry = _saveLoadMutex.CurrentCount == 0;
+
+        using (await _saveLoadMutex.DisposableWaitAsync())
+        {
+            if (!wasSavingOnEntry)
+                await base.SaveAsync(cancellationToken);
+        }
+    }
+
+    /// <inheritdoc />
+    [RelayCommand]
+    public override async Task LoadAsync(CancellationToken? cancellationToken = null)
+    {
+        // Subsequent concurrent calls to this method will wait for the first call to complete, without loading settings again.
+        // Forces the AsyncRelayCommand to wait for raw method calls to complete.
+        var wasLoadingOnEntry = _saveLoadMutex.CurrentCount == 0;
+
+        using (await _saveLoadMutex.DisposableWaitAsync())
+        {
+            if (!wasLoadingOnEntry)
+            {
+                Logger.LogInformation($"Loading {nameof(MusicSourcesSettings)}");
+                await base.LoadAsync(cancellationToken);
+            }
+        }
     }
 }

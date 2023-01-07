@@ -31,19 +31,6 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     {
     }
 
-    /// <summary>
-    /// Copies all settings from once instance into another.
-    /// </summary>
-    public static void CopyFrom(OneDriveCoreSettings from, OneDriveCoreSettings to)
-    {
-        to.InstanceId = from.InstanceId;
-        to.UserId = from.UserId;
-        to.FolderId = from.FolderId;
-        to.ClientId = from.ClientId;
-        to.TenantId = from.TenantId;
-        to.RedirectUri = from.RedirectUri;
-    }
-
     private void AppSettings_SaveFailed(object? sender, SettingPersistFailedEventArgs e)
     {
         Logger.LogError($"Failed to save setting {e.SettingName}", e.Exception);
@@ -58,6 +45,15 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// Gets or sets the instance ID of the music source.
     /// </summary>
     public string InstanceId
+    {
+        get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Gets or sets an ID that represents the authenticated user.
+    /// </summary>
+    public string UserDisplayName
     {
         get => GetSetting(() => string.Empty);
         set => SetSetting(value);

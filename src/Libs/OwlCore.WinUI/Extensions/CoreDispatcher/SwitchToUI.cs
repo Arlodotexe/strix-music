@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Windows.UI.Core;
 
-namespace OwlCore.WinUI.Extensions
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Provides extensions for <see cref="CoreDispatcher"/>

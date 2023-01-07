@@ -139,7 +139,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public IDiscoverables? Discoverables => _discoverables;
 
         /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
+        public bool IsInitialized => _sources.TrueForAll(x => x.IsInitialized);
 
         /// <inheritdoc />
         public async Task InitAsync(CancellationToken cancellationToken = default)
@@ -147,9 +147,7 @@ namespace StrixMusic.Sdk.AdapterModels
             if (IsInitialized)
                 return;
 
-            await _sources.InParallel(x => x.InitAsync(cancellationToken));
-
-            IsInitialized = true;
+            await _sources.InParallel(x => !x.IsInitialized ? x.InitAsync(cancellationToken) : Task.CompletedTask);
         }
 
         /// <inheritdoc />
@@ -266,16 +264,13 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            if (IsInitialized)
-                return;
-
             foreach (var source in _sources)
             {
                 DetachEvents(source);
-                await source.DisposeAsync();
-            }
 
-            IsInitialized = false;
+                if (source.IsInitialized)
+                    await source.DisposeAsync();
+            }
         }
     }
 }
