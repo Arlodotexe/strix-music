@@ -29,7 +29,7 @@ The foundation has been laid, and we've entered the next stage in development: *
    - Bring new music services to the Strix ecosystem.
 
 ## **The Strix Music App**
-  - Our incubation and demo app for the Strix SDK.
+  - Our incubation and demo app for the Strix Music SDK.
   - You rely on the SDK for your apps, so we built our own app to catch bugs, test new features, and push boundaries. Dogfooding ftw!
   - Much like how Surface is Microsoft's vision for making the most of Windows, this app is _our_ vision for making the most of the SDK.
   - Multi-service, thanks to the Strix Music SDK.
