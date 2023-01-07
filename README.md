@@ -1,5 +1,7 @@
-# <a href="https://strixmusic.com/" target="_blank"><img align="left" src="www/favicon.ico" height="100" /></a> Strix Music
-Music is scattered across the digital landscape. Strix Music brings it all together again, by defining a common and flexible standard for all music sources.
+# Strix Music
+### Break down the digital walls between your music libraries
+
+<img src="www/strix.png" height="600" />
 
 # Welcome to the open source alpha
 
