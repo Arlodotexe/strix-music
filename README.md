@@ -1,7 +1,11 @@
-# Strix Music
+
+# Strix Music App & SDK
+
 ### Break down the digital walls between your music libraries
 
-<img src="www/strix.png" height="600" />
+
+<img src="docs/assets/services.png" />
+
 
 # Welcome to the open source alpha
 
