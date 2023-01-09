@@ -188,7 +188,7 @@
 								<TextBlock
 									x:Uid="/Music/MyMusicTB"
 									Grid.Column="1"
-									Text="Recently Played" />
+									Text="My Music" />
 							</Grid>
 						</ToggleButton>
 						<ToggleButton
