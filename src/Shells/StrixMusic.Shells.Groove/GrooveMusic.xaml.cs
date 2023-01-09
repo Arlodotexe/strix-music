@@ -159,19 +159,18 @@ namespace StrixMusic.Shells.Groove
 
         private void NavigationButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (sender is ToggleButton button)
+            if (sender is not ToggleButton button || Root is null)
+                return;
+
+            switch (button.Tag as string)
             {
-                switch (button.Tag as string)
-                {
-                    case "MyMusic":
-                        Guard.IsNotNull(Root?.Library, nameof(Root.Library));
-                        WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)Root.Library));
-                        break;
-                    case "Playlists":
-                        Guard.IsNotNull(Root?.Library, nameof(Root.Library));
-                        WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage((LibraryViewModel)Root.Library));
-                        break;
-                }
+                case "MyMusic":
+                    WeakReferenceMessenger.Default.Send(new HomeViewNavigationRequestMessage((LibraryViewModel)Root.Library));
+                    break;
+                case "Playlists":
+
+                    WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage((LibraryViewModel)Root.Library));
+                    break;
             }
         }
 
