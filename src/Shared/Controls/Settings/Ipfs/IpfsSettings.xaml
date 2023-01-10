@@ -148,8 +148,8 @@
 		</labs:SettingsExpander>
 
 		<labs:SettingsCard
-			Description="The port of an existing Kubo node. If Kubo is not running on this port, we'll download and bootstrap a node on this port instead."
-			Header="RPC API Port Number"
+			Description="If a node is not already running on this port, we'll download Kubo and bootstrap it on this port for you."
+			Header="Kubo RPC Port"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
 			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeApiPort, Mode=TwoWay}">
