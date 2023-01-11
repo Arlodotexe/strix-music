@@ -73,6 +73,9 @@ namespace OwlCore.Extensions
             {
                 _queue.Add(contentDialog);
                 await WhenNextInQueueAsync(contentDialog);
+
+                // Close any open dialog and dequeue this one.
+                CurrentDialog = null;
                 _queue.Remove(contentDialog);
             }
 
@@ -81,9 +84,13 @@ namespace OwlCore.Extensions
             {
                 _queue.InsertOrAdd(0, contentDialog);
                 await WhenNextInQueueAsync(contentDialog);
+
+                // Close any open dialog and dequeue this one.
+                CurrentDialog = null;
                 _queue.Remove(contentDialog);
             }
 
+            // Open this dialog.
             Guard.IsNull(CurrentDialog);
             CurrentDialog = contentDialog;
 
@@ -98,6 +105,9 @@ namespace OwlCore.Extensions
                 if (_queue.LastOrDefault() == contentDialog)
                     taskCompletionSource.SetResult(null);
             };
+
+            if (_queue.LastOrDefault() == contentDialog)
+                taskCompletionSource.SetResult(null);
 
             return taskCompletionSource.Task;
         }
