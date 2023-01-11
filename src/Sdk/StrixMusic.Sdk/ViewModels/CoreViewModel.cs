@@ -34,14 +34,12 @@ namespace StrixMusic.Sdk.ViewModels
             _syncContext = SynchronizationContext.Current;
 
             _core = core;
-            CoreState = _core.CoreState;
             
             AttachEvents();
         }
 
         private void AttachEvents()
         {
-            _core.CoreStateChanged += Core_CoreStateChanged;
             _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
             _core.LogoChanged += OnLogoChanged;
             _core.DisplayNameChanged += OnDisplayNameChanged;
@@ -49,7 +47,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void DetachEvents()
         {
-            _core.CoreStateChanged -= Core_CoreStateChanged;
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
             _core.LogoChanged -= OnLogoChanged;
             _core.DisplayNameChanged -= OnDisplayNameChanged;
@@ -70,21 +67,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             OnPropertyChanged(nameof(Logo));
         }, null);
-
-        /// <inheritdoc cref="ICore.CoreState" />
-        private void Core_CoreStateChanged(object sender, CoreState e)
-        {
-            CoreState = e;
-
-            _syncContext.Post(_ =>
-            {
-                OnPropertyChanged(nameof(CoreState));
-                
-                OnPropertyChanged(nameof(IsCoreStateUnloaded));
-                OnPropertyChanged(nameof(IsCoreStateLoading));
-                OnPropertyChanged(nameof(IsCoreStateLoaded));
-            }, null);
-        }
 
         /// <inheritdoc/>
         ICore IDelegatable<ICore>.Inner => _core;
@@ -112,39 +94,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
 
-        /// <inheritdoc cref="ICore.CoreState" />
-        public CoreState CoreState { get; internal set; }
-
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Unloaded"/>.
-        /// </summary>
-        public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loading"/>.
-        /// </summary>
-        public bool IsCoreStateLoading => CoreState == CoreState.Loading;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loaded"/>.
-        /// </summary>
-        public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
         /// <inheritdoc />
         public event EventHandler<string>? DisplayNameChanged
         {
             add => _core.DisplayNameChanged += value;
             remove => _core.DisplayNameChanged -= value;
-        }
-
-        /// <inheritdoc cref="ICore.CoreStateChanged" />
-        public event EventHandler<CoreState>? CoreStateChanged
-        {
-            add => _core.CoreStateChanged += value;
-            remove => _core.CoreStateChanged -= value;
         }
 
         /// <inheritdoc />
