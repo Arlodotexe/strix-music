@@ -120,6 +120,17 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     [RelayCommand]
     private async Task AddNewMusicSourceAsync()
     {
+        if (AppRoot?.StrixDataRoot is not null && AppRoot.StrixDataRoot.Sources.Count == 1)
+        {
+            await new ContentDialog
+            {
+                Title = "Feature not available",
+                Content = "Adding more than one music source is not stable. Please check back later.",
+                CloseButtonText = "Ok",
+            }.ShowAsync(ShowType.QueueNext);
+            return;
+        }
+
         var param = new ConnectNew.ConnectNewMusicSourceNavigationParams()
         {
             AppRoot = AppRoot,
