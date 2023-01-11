@@ -219,7 +219,7 @@ public class StorageCore : ICore
     {
         Guard.IsTrue(IsInitialized);
 
-        var file = FolderScanner.KnownFiles.FirstOrDefault(x => x.Id == track.Id);
+        var file = FolderScanner.KnownFiles.ToArray().FirstOrDefault(x => x.Id == track.Id);
         if (file is null)
             return null;
 
