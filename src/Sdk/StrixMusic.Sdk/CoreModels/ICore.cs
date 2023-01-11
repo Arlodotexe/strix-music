@@ -98,11 +98,6 @@ namespace StrixMusic.Sdk.CoreModels
         public ICoreDiscoverables? Discoverables { get; }
 
         /// <summary>
-        /// The current state of the core.
-        /// </summary>
-        public CoreState CoreState { get; }
-
-        /// <summary>
         /// Given the ID of an instance created by this core, return the fully constructed instance.
         /// </summary>
         /// <returns>The requested instance, cast down to <see cref="ICoreModel"/>.</returns>
@@ -120,11 +115,6 @@ namespace StrixMusic.Sdk.CoreModels
         /// Raised when the <see cref="Logo"/> is changed.
         /// </summary>
         public event EventHandler<ICoreImage?>? LogoChanged;
-
-        /// <summary>
-        /// Raised when the <see cref="AppModels.CoreState"/> has changed.
-        /// </summary>
-        public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <summary>
         /// Raised when the contents of <see cref="Devices"/> is changed.

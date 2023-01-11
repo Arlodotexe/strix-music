@@ -25,7 +25,6 @@ public class StorageCore : ICore
 {
     private readonly IModifiableFolder _metadataCacheFolder;
     private readonly SemaphoreSlim _initMutex = new(1, 1);
-    private CoreState _coreState;
     private ICoreImage? _logo;
     private string _instanceDescriptor = string.Empty;
 
@@ -114,17 +113,6 @@ public class StorageCore : ICore
     public ScannerWaitBehavior ScannerWaitBehavior { get; set; } = ScannerWaitBehavior.AlwaysWait;
 
     /// <inheritdoc/>
-    public CoreState CoreState
-    {
-        get => _coreState;
-        set
-        {
-            _coreState = value;
-            CoreStateChanged?.Invoke(this, value);
-        }
-    }
-
-    /// <inheritdoc/>
     public ICoreUser? User => null;
 
     /// <inheritdoc/>
@@ -144,9 +132,6 @@ public class StorageCore : ICore
 
     /// <inheritdoc/>
     public ICorePlayableCollectionGroup? Pins => null;
-
-    /// <inheritdoc/>
-    public event EventHandler<CoreState>? CoreStateChanged;
 
     /// <inheritdoc />
     public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
@@ -171,8 +156,6 @@ public class StorageCore : ICore
             if (IsInitialized)
                 return;
 
-            CoreState = CoreState.Loading;
-
             FileMetadataManager = new FileMetadataManager(FolderScanner, _metadataCacheFolder, FileScanProgress);
 
             if (ScannerWaitBehavior == ScannerWaitBehavior.AlwaysWait)
@@ -193,8 +176,6 @@ public class StorageCore : ICore
             await ((StorageCoreLibrary)Library).InitAsync(cancellationToken);
             IsInitialized = true;
         }
-
-        CoreState = CoreState.Loaded;
     }
 
     /// <inheritdoc/>
