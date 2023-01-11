@@ -18,7 +18,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
     {
         private List<ICoreDevice> _devices;
         private string instanceDescriptor = "For testing only";
-        private CoreState coreState;
 
         public MockCore()
         {
@@ -42,13 +41,9 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
             await Task.Delay(500);
 
             ((MockCoreLibrary)Library).PopulateMockItems();
-
-            CoreState = CoreState.Loaded;
         }
 
         public bool IsInitialized { get; }
-
-        public event EventHandler<CoreState>? CoreStateChanged;
 
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
@@ -90,16 +85,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
         public ICoreRecentlyPlayed? RecentlyPlayed { get; set; }
 
         public ICoreDiscoverables? Discoverables { get; set; }
-
-        public CoreState CoreState
-        {
-            get => coreState;
-            set
-            {
-                coreState = value;
-                CoreStateChanged?.Invoke(this, value);
-            }
-        }
 
         public ICore SourceCore { get; set; }
 
