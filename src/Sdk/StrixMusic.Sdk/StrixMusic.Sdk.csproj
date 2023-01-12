@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -74,4 +74,8 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="dotnet build --no-dependencies ../$(MSBuildProjectName).Tests" />
+    </Target>
 </Project>
