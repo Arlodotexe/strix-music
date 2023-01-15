@@ -246,7 +246,7 @@
 			Click="RequestBack"
 			Style="{StaticResource ZuneButton}">
 			<FontIcon
-				FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
 				FontSize="12"
 				Glyph="&#xE0A6;" />
 		</Button>

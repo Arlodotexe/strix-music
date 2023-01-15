@@ -21,7 +21,7 @@
                 <ControlTemplate TargetType="nowplaying:MediaTransports">
                     <StackPanel Orientation="Horizontal">
                         <ToggleButton Style="{StaticResource MediaToggleButton}">
-                            <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE8B1;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
 
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
@@ -37,7 +37,7 @@
                                         <core:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE100;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </Button>
                             <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{Binding Device.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -46,9 +46,9 @@
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <owlcoreuno:ToggleContentButton.CheckedContent>
-                                    <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                    <FontIcon Glyph="&#xE103;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                                 </owlcoreuno:ToggleContentButton.CheckedContent>
-                                <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE102;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton>
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
@@ -56,7 +56,7 @@
                                         <core:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE101;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </Button>
                         </StackPanel>
 
@@ -69,12 +69,12 @@
                             </interactivity:Interaction.Behaviors>
 
                             <owlcoreuno:ToggleContentButton.IndeterminateContent>
-                                <FontIcon Glyph="&#xE8ED;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE8ED;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton.IndeterminateContent>
                             <owlcoreuno:ToggleContentButton.CheckedContent>
-                                <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE8EE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton.CheckedContent>
-                            <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE8EE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                         </owlcoreuno:ToggleContentButton>
                     </StackPanel>
                 </ControlTemplate>
