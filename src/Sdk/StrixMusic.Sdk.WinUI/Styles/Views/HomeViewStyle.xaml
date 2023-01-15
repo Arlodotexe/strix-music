@@ -7,9 +7,9 @@
 	xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
 	xmlns:view="using:StrixMusic.Sdk.WinUI.Controls.Views">
 
-	<DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="appModels:IStrixDataRoot">
+	<DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="view:HomeView">
 		<UserControl>
-			<controls:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
+			<controls:PlayableCollectionGroupPivot PlayableCollectionGroup="{x:Bind DataRoot.Library, Mode=OneWay}" RestoreSelectedPivot="True">
 				<controls:PlayableCollectionGroupPivot.AllEmptyContent>
 					<TextBlock x:Uid="/Common/NothingToShowTB" Text="Nothing to show!" />
 				</controls:PlayableCollectionGroupPivot.AllEmptyContent>

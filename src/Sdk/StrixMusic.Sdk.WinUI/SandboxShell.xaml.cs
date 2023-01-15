@@ -18,28 +18,7 @@ namespace StrixMusic.Sdk.WinUI
             this.InitializeComponent();
         }
 
-        private void DefaultShell_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Unloaded -= DefaultShell_Unloaded;
-        }
-
-        private void Shell_BackRequested(object sender, EventArgs e)
-        {
-            if (OverlayContent.Visibility == Visibility.Visible)
-            {
-                OverlayContent.Visibility = Visibility.Collapsed;
-                return;
-            }
-            
-            // TODO
-        }
-
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            // TODO
-        }
-
-        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             // TODO
         }

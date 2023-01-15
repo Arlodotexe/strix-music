@@ -44,7 +44,6 @@
 								</Pivot>
 
 								<ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
-
 							</Grid>
 						</Border>
 					</ControlTemplate>
