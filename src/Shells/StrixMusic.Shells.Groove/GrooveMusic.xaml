@@ -86,7 +86,7 @@
 							Width="48"
 							Command="{x:Bind HamburgerPressedCommand}"
 							Style="{StaticResource GrooveButton}">
-							<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE700;" />
+							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
 						</Button>
 
 						<!--  Small Header text  -->
@@ -107,7 +107,7 @@
 							Width="48"
 							HorizontalAlignment="Right"
 							Style="{StaticResource GrooveButton}">
-							<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE11A;" />
+							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
 						</Button>
 					</Grid>
 
@@ -151,7 +151,7 @@
 							Background="Transparent"
 							BorderThickness="0"
 							Command="{x:Bind HamburgerPressedCommand}">
-							<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE700;" />
+							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
 						</Button>
 
 						<!--  Search Box  -->
@@ -160,7 +160,7 @@
 							Width="48"
 							HorizontalAlignment="Left"
 							Style="{StaticResource GrooveButton}">
-							<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE11A;" />
+							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
 						</Button>
 						<AutoSuggestBox
 							x:Name="SearchBox"
@@ -183,7 +183,7 @@
 									<ColumnDefinition />
 								</Grid.ColumnDefinitions>
 
-								<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xEC4F;" />
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEC4F;" />
 
 								<TextBlock
 									x:Uid="/Music/MyMusicTB"
@@ -203,7 +203,7 @@
 								</Grid.ColumnDefinitions>
 
 								<!--<SymbolIcon Symbol="Clock"/>-->
-								<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE2AD;" />
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE2AD;" />
 
 								<TextBlock
 									x:Uid="/Music/RecentPlayedTB"
@@ -222,7 +222,7 @@
 									<ColumnDefinition />
 								</Grid.ColumnDefinitions>
 
-								<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xF61F;" />
+								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF61F;" />
 
 								<TextBlock
 									x:Uid="/Music/NowPlayingTB"
@@ -257,7 +257,7 @@
 										<ColumnDefinition />
 									</Grid.ColumnDefinitions>
 
-									<FontIcon FontFamily="ms-appx://StrixMusic.Sdk.WinUI/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" Glyph="&#xE142;" />
+									<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE142;" />
 
 									<TextBlock
 										x:Uid="/Music/PlaylistsTB"

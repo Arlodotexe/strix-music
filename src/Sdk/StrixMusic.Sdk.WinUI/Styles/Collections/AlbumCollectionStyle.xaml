@@ -41,7 +41,7 @@
 											</interactivity:Interaction.Behaviors>
 
 											<GridView.ItemTemplate>
-												<DataTemplate x:Key="DefaultAlbumCollectionItemStyle" x:DataType="viewModels:AlbumViewModel">
+												<DataTemplate x:DataType="viewModels:AlbumViewModel">
 													<items:AlbumItem Album="{x:Bind}">
 														<interactivity:Interaction.Behaviors>
 															<core:EventTriggerBehavior EventName="DoubleTapped">
@@ -51,6 +51,7 @@
 													</items:AlbumItem>
 												</DataTemplate>
 											</GridView.ItemTemplate>
+
 											<GridView.Header>
 												<Grid>
 													<ProgressRing IsActive="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}" />

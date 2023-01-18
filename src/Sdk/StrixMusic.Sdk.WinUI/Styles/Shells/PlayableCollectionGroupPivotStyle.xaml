@@ -11,42 +11,59 @@
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="controls:PlayableCollectionGroupPivot">
-						<Border
-							Background="{TemplateBinding Background}"
-							BorderBrush="{TemplateBinding BorderBrush}"
-							BorderThickness="{TemplateBinding BorderThickness}">
-							<Grid>
-								<Pivot x:Name="PART_Pivot">
-									<PivotItem
-										x:Name="PART_SongsPivotItem"
-										x:Uid="/Music/SongsPVI"
-										Header="Songs">
-										<collections:TrackCollection x:Uid="NothingToShowCOLC" Collection="{Binding}" />
-									</PivotItem>
-									<PivotItem
-										x:Name="PART_AlbumsPivotItem"
-										x:Uid="/Music/AlbumsPVI"
-										Header="Albums">
-										<collections:AlbumCollection x:Uid="NothingToShowCOLC" Collection="{Binding}" />
-									</PivotItem>
-									<PivotItem
-										x:Name="PART_ArtistsPivotItem"
-										x:Uid="/Music/ArtistsPVI"
-										Header="Artists">
-										<collections:ArtistCollection x:Uid="NothingToShowCOLC" Collection="{Binding}" />
-									</PivotItem>
-									<PivotItem
-										x:Name="PART_PlaylistsPivotItem"
-										x:Uid="/Music/PlaylistsPVI"
-										Header="Playlists">
-										<collections:PlaylistCollection x:Uid="NothingToShowCOLC" Collection="{Binding}" />
-									</PivotItem>
-								</Pivot>
+						<ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+							<ContentControl.ContentTemplate>
+								<DataTemplate x:DataType="controls:PlayableCollectionGroupPivot">
+									<Border
+										Background="{TemplateBinding Background}"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{TemplateBinding BorderThickness}">
+										<Grid>
+											<Pivot x:Name="PART_Pivot">
+												<PivotItem
+													x:Name="PART_SongsPivotItem"
+													x:Uid="/Music/SongsPVI"
+													Header="Songs">
+													<collections:TrackCollection
+														x:Uid="NothingToShowCOLC"
+														Collection="{x:Bind ViewModel, Mode=OneWay}"
+														IsItemClickEnabled="True" />
+												</PivotItem>
+												<PivotItem
+													x:Name="PART_AlbumsPivotItem"
+													x:Uid="/Music/AlbumsPVI"
+													Header="Albums">
+													<collections:AlbumCollection
+														x:Uid="NothingToShowCOLC"
+														Collection="{x:Bind ViewModel, Mode=OneWay}"
+														IsItemClickEnabled="True" />
+												</PivotItem>
+												<PivotItem
+													x:Name="PART_ArtistsPivotItem"
+													x:Uid="/Music/ArtistsPVI"
+													Header="Artists">
+													<collections:ArtistCollection
+														x:Uid="NothingToShowCOLC"
+														Collection="{x:Bind ViewModel, Mode=OneWay}"
+														IsItemClickEnabled="True" />
+												</PivotItem>
+												<PivotItem
+													x:Name="PART_PlaylistsPivotItem"
+													x:Uid="/Music/PlaylistsPVI"
+													Header="Playlists">
+													<collections:PlaylistCollection
+														x:Uid="NothingToShowCOLC"
+														Collection="{x:Bind ViewModel, Mode=OneWay}"
+														IsItemClickEnabled="True" />
+												</PivotItem>
+											</Pivot>
 
-								<ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
-
-							</Grid>
-						</Border>
+											<ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
+										</Grid>
+									</Border>
+								</DataTemplate>
+							</ContentControl.ContentTemplate>
+						</ContentControl>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>

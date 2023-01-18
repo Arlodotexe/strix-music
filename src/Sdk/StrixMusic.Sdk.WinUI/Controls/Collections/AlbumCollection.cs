@@ -21,6 +21,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public AlbumCollection()
         {
             this.DefaultStyleKey = typeof(AlbumCollection);
+            DataContext = this;
         }
 
         /// <inheritdoc />
