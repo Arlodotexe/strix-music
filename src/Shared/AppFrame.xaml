@@ -142,7 +142,7 @@
 							RadiusX="0.6"
 							RadiusY="0.4">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+							<GradientStop Offset="1" Color="Transparent" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
@@ -162,7 +162,7 @@
 							RadiusX="0.5"
 							RadiusY="0.7">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+							<GradientStop Offset="1" Color="Transparent" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
@@ -182,7 +182,7 @@
 							RadiusX="0.3"
 							RadiusY="0.8">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+							<GradientStop Offset="1" Color="Transparent" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
