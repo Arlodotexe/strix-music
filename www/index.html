@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="author" content="Arlo Godfrey" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Music is scattered across the digital landscape. Strix Music brings it all together again.">
+    <meta name="description"
+        content="Music is scattered across the digital landscape. Strix Music brings it all together again.">
     <title>Strix Music • Home</title>
     <style>
         * {
@@ -15,20 +16,22 @@
         body {
             padding: 20px;
             background-color: #1E1E23;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
-        .image-container, .center {
+        .image-container,
+        .center {
             display: flex;
             justify-content: center;
         }
 
         p.tagline {
-            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            font-weight: 600;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: lighter;
             font-size: 16px;
             letter-spacing: 0.1em;
             line-height: 1.7em;
-            max-width: 500px;
+            max-width: 800px;
             text-align: center;
         }
 
@@ -43,30 +46,36 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            max-width: 618px;
+            gap: 7px;
+            column-gap: 20px;
+            margin: auto;
         }
 
-        nav a {
-            margin: 0 15
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
-        nav button {
+        button {
             appearance: none;
             background-color: transparent;
-            border: 2px solid #e8e8e8;
+            border: 2px solid #e8e8e856;
             border-radius: 6px;
             box-sizing: border-box;
             color: #ebebeb;
             cursor: pointer;
             display: inline-block;
-            font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             line-height: normal;
             margin: 5px;
             min-height: 30px;
             min-width: 0;
             outline: none;
-            padding: 15px 30px;
+            padding: 10px 15px;
             text-align: center;
             text-decoration: none;
             transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
@@ -77,16 +86,16 @@
             will-change: transform;
         }
 
-        nav button:disabled {
+        button:disabled {
             pointer-events: none;
         }
 
-        nav button:hover {
+        button:hover {
             color: rgb(0, 0, 0);
             background-color: #eeeeff;
         }
 
-        nav button:active {
+        button:active {
             box-shadow: none;
             transform: translateY(-2);
         }
@@ -94,173 +103,95 @@
         .detail-container {
             display: flex;
             justify-content: center;
-        }
-
-        .detail-container .title {
-            max-width: 525px;
-            margin-top: 100px;
+            text-align: left;
         }
 
         .detail-container .desc {
-            font-family: Avenir;
-            font-size: 24px;
+            font-size: 16px;
             line-height: 1.3em;
-            letter-spacing: 0em;
-            max-width: 450px;
-            margin-top: 50px;
+            margin-top: 10px;
+
+            background-color: transparent;
         }
 
         .detail-container .desc>* {
             margin: 25px auto;
         }
 
-        .promise-container {
-            margin-top: 200px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .promise-container .item,
-        .timeline-container .item {
-            max-width: 700px;
-            margin: 65px auto;
-        }
-
         .label {
-            font-weight: bold;
-            font-family: Avenir;
-            font-size: 21px;
+            font-weight: 600;
+            font-size: 20px;
             line-height: 1.3em;
-            letter-spacing: 0.2em;
-        }
-
-        .promise-container .desc {
-            font-family: Avenir;
-            font-size: 21px;
             letter-spacing: 0.05em;
-            margin: 30px auto;
+            color: rgba(252, 252, 252, 0.288);
         }
 
         .title {
+            text-align: center;
             font-family: Bonkers;
-            font-size: 64px;
+            font-size: 45px;
             color: rgb(150, 29, 172);
         }
 
-        .promise-container .title,
-        .timeline-container .title {
-            text-align: center;
+        section ul {
+            margin-top: 20px;
         }
 
-        .timeline-container ul {
-            margin-top: 25px;
-        }
-
-        .timeline-container li {
+        section li {
             margin: 7px;
             font-size: 16px;
             line-height: 1.3em;
-            font-family: Avenir;
         }
 
-        .grid {
-            max-width: 100vw;
-            display: grid;
-            row-gap: 0px;
-            column-gap: 15%;
+        section .desc {
+            font-size: 18px;
+            letter-spacing: 0.05em;
+            margin: 15px auto 20px auto;
+            text-align: center;
         }
 
-        @media screen and (min-width: 1200px) {
-            .grid {
-                grid-template-columns: auto auto;
-                row-gap: 200px;
-            }
+        .space-top {
+            margin-top: 55px;
+        }
 
-            .detail-container #item3 {
-                grid-column: 2;
-                grid-row: 2;
-            }
+        .space-bottom {
+            margin-bottom: 55px;
+        }
 
-            .detail-container #item7 {
-                grid-column: 2;
-                grid-row: 4;
-            }
+        .card {
+            border: 1px solid #e8e8e814;
+            max-width: 700px;
+            border-radius: 6px;
+            padding: 27px;
+            margin: 15px auto;
+            box-shadow: 0px -168px 300px #700baa17;
+        }
 
-            .detail-container .desc {
-                max-width: 700px;
-                margin-top: unset;
-            }
+        .card .card {
+            border: 1px solid #2e2a2a;
+            box-shadow: 0px 0px 14px #700baa33;
+            max-width: 500px;
+            margin: 15px;
+            gap: 15px;
+            padding: 26px;
+        }
 
-            .detail-container .title {
-                margin-top: unset;
-            }
+        .card .card .title {
+            font-size: 26px;
+            color: rgba(252, 252, 252, 0.288);
+        }
+
+        .card .title,
+        .card .desc,
+        .card .label {
+            margin: 10px;
+            font-size: 26px;
+            color: rgb(252 252 252 / 42%);
         }
 
         @font-face {
             font-family: Bonkers;
             src: url(assets/fonts/Bonkers.otf);
-        }
-
-        @font-face {
-            font-family: K2D;
-            src: url(assets/fonts/K2D-Regular.ttf);
-        }
-
-        @font-face {
-            font-family: Avenir;
-            src: url(assets/fonts/AvenirLTStd-Book.otf);
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes down {
-            0% {
-                transform: translateY(-7px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDownThenFadeOutUp {
-            0% {
-                transform: translateY(-7px);
-                opacity: 0;
-            }
-
-            30% {
-                transform: translateY(0px);
-                opacity: 1;
-            }
-
-            60% {
-                transform: translateY(0px);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(7px);
-                opacity: 0;
-            }
-        }
-
-        @keyframes longDown {
-            0% {
-                transform: translateY(-30px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
@@ -270,140 +201,74 @@
         <img class="logo" src="Wide_HighRes.png" />
     </div>
 
-    <div class="center">
+    <div class="center space-bottom">
         <div>
             <p class="tagline">Music is scattered across the digital landscape.</p>
-            <p class="tagline">Strix Music brings it together again.</p>
+            <p class="tagline">Strix Music lets you access all your music into one place.</p>
         </div>
-    </div>
-
-    <div class="image-container">
-        <img class="logo" src="services.webp" />
     </div>
 
     <nav>
-        <a href="docs"><button>View Docs</button></a>
         <a href="source"><button>View Source</button></a>
         <a href="https://github.com/Arlodotexe/strix-music/"><button>View on GitHub</button></a>
-        <a href="sdk"><button>Get the SDK</button></a>
     </nav>
 
-    <div class="detail-container" style="margin-top: 70px">
-        <div class="grid">
-            <div class="title" id="item1">Listen without limits</div>
+    <main>
 
-            <div class="desc" style="max-width: 450px" id="item2">
-                <p>Audio files, cloud storage, streaming services, they all work with Strix Music.</p>
-                <p>ALL your music. One convenient place.</p>
-            </div>
-
-            <div class="title" id="item3">Shape shifting superpowers</div>
-
-            <div class="desc" style="max-width: 500px" id="item4">
-                <p>Strix can be completely reskinned and infinitely customized.</p>
-                <p>Personal taste is important. Make yourself at home.</p>
-            </div>
-
-            <div class="title" id="item5">Where you need us most</div>
-
-            <div class="desc" style="max-width: 500px" id="item6">
-                <p>
-                    Strix Music is set to support Windows, Android, iOS, Linux, MacOS and web browsers. We've got you
-                    covered.
-                </p>
-            </div>
-
-            <div class="title" id="item7">
-                Developers.
-                Developers.
-                Developers.
-            </div>
-
-            <div class="desc" style="font-size: 20px" id="item8">
-                <p
-                    style="font-size:26px; border-bottom: 1px solid white; margin: unset; width: fit-content; padding-bottom: 10px;">
-                    Strix Music SDK
-                </p>
-
-                <p>
-                    A highly flexible and standardized development kit for music apps.
-                </p>
-
-                <p>
-                    Expand any Strix-compatible app with new music sources, hand crafted skins, or generic plugins.
-                </p>
-
-                <p>
-                    Rapidly interface with any music service in your apps. Build without limits.
-                </p>
-            </div>
+        <div class="image-container">
+            <img class="logo" src="services.webp" />
         </div>
-    </div>
 
-    <div class="promise-container">
-        <div>
-            <div class="title">Our promise</div>
-
-            <div class="item">
-                <div class="label">Free forever</div>
-                <div class="desc">Strix Music is 100% free, forever. No ads, paywalls or IAP.</div>
-            </div>
-
-            <div class="item">
-                <div class="label">Distributed</div>
-                <div class="desc">No part of Strix Music will ever rely on a central server. Hello from IPFS!</div>
-            </div>
-
-            <div class="item">
-                <div class="label">Open source</div>
-                <div class="desc">The source code for Strix Music and the SDK will be free and open source.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="timeline-container">
-        <div>
-            <div class="title">Timeline</div>
-
-            <div class="item">
-                <div class="label">January - February 2022</div>
+        <section class="space-bottom space-top">
+            <div class="card">
+                <div class="title">Strix Music App</div>
                 <ul>
-                    <li>Preparation for open source.</li>
-                    <li>Documentation, Bug fixes, Unit tests and DevOps.</li>
-                    <li>Finalizing the SDK.</li>
+                    <li>Listen to your music from Local Storage and OneDrive</li>
+                    <li>Faithful UI recreations of Zune Desktop and Groove Music.</li>
+                    <li>Offline first. No internet connection is required to use this app.</li>
+                    <li>Private by design. No logs are generated and no servers are contacted, unless you say so.</li>
+                    <li>Free of charge. We'll never have ads, paywalls, or charge you to use the App or SDK.</li>
+                    <li>Open source. Licensed under GPLv3, you have the freedom to inspect, run, copy, distribute,
+                        change and improve this software.</li>
                 </ul>
-            </div>
 
-            <div class="item">
-                <div class="label">February - May 2022</div>
                 <ul>
-                    <li>Releasing as open source, still in Alpha.</li>
-                    <li>Releasing the plugin system for the SDK.</li>
-                    <li>Increased focus on UI improvements.</li>
+                    <li>Planned support for Windows, macOS, Linux, Android, iOS and WebAssembly.</li>
+                    <li>Planned support for Spotify.</li>
+                    <li>Alpha builds are available to our supporters <a href="https://patreon.com/Arlodotexe" target="_blank">on Patreon</a>.</li>
+
                 </ul>
+
+                <a href="https://patreon.com/Arlodotexe/" target="_blank"><button>Get Alpha Access</button></a>
             </div>
 
-            <div class="item">
-                <div class="label">May - July 2022</div>
+            <div class="card">
+                <div class="title">Strix Music SDK</div>
                 <ul>
-                    <li>Open beta for App and SDK.</li>
-                    <li>Adding more services. Google Drive, Dropbox, YouTube Music, etc.</li>
-                    <li>Addressing user feedback, dev issues and community contributions.</li>
+                    <li>The universal music development kit, now available for .NET.</li>
+                    <li>Use any music source or plugin from our ecosystem in your own project.</li>
+                    <li>Add new functionality to any app that uses the Strix Music SDK.</li>
+                    <li>Open source. Licensed under LGPL, you have the freedom to inspect, run, copy, distribute, change
+                        and improve this software.</li>
                 </ul>
+
+                <a href="sdk"><button>Get the SDK</button></a>
+                <a href="docs"><button>View Docs</button></a>
             </div>
 
-            <div class="item">
-                <div class="label">August - September 2022</div>
+            <div class="card">
+                <div class="title">We're working on:</div>
                 <ul>
-                    <li>Bug fixes</li>
-                    <li>Final touches</li>
-                    <li>Launch!</li>
+                    <li>Resolving lingering tech debt in the Strix Music App and Sdk.</li>
+                    <li>Fleshing out the UI for Zune Desktop and Groove Music shells.</li>
+                    <li>Bug bashes, planning for new cores.</li>
                 </ul>
+
+                <a href="https://github.com/users/Arlodotexe/projects/1" target="_blank"><button>See project board</button></a>
+                <a href="https://discord.gg/bVQCKj476n" target="_blank"><button>Join us on Discord</button></a>
             </div>
-        </div>
-    </div>
-
-
+        </section>
+    </main>
 </body>
 
 </html>
