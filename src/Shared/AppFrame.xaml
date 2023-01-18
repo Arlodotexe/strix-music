@@ -12,6 +12,7 @@
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:media="using:Microsoft.UI.Xaml.Media"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
 	d:DesignHeight="300"
@@ -21,6 +22,21 @@
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<color:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Name="Dark">
+					<Color x:Key="LowBackgroundBrushColor">#1E1E23</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+				<ResourceDictionary x:Name="Light">
+					<Color x:Key="LowBackgroundBrushColor">#FFCCCCCC</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+				<ResourceDictionary x:Name="HighContrast">
+					<Color x:Key="LowBackgroundBrushColor">#FF333333</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
 
@@ -85,10 +101,9 @@
 
 		<Border
 			x:Name="SettingsBorder"
-			Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 			CornerRadius="6"
 			Visibility="Collapsed">
-			<Grid>
+			<Grid Background="{ThemeResource LowBackgroundBrush}">
 				<animations:Implicit.ShowAnimations>
 					<animations:OpacityAnimation
 						From="0"
@@ -112,7 +127,67 @@
 						Opacity="0.40" />
 				</ui:Effects.Shadow>
 
-				<controls:SettingsView AppRoot="{x:Bind AppRoot}" />
+				<Rectangle
+					Width="1000"
+					Height="400"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.6,0.4"
+							GradientOrigin="0.75,0.3"
+							MappingMode="RelativeToBoundingBox"
+							Opacity="0.3"
+							RadiusX="0.6"
+							RadiusY="0.4">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<Rectangle
+					Width="1500"
+					Height="800"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Top"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.3,0.3"
+							GradientOrigin="0.1,0.1"
+							MappingMode="RelativeToBoundingBox"
+							Opacity="0.2"
+							RadiusX="0.5"
+							RadiusY="0.7">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<Rectangle
+					Width="1400"
+					Height="800"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Bottom"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.4,0.6"
+							GradientOrigin="0.3,0.75"
+							MappingMode="RelativeToBoundingBox"
+							Opacity="0.25"
+							RadiusX="0.3"
+							RadiusY="0.8">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<controls:SettingsView AppRoot="{x:Bind AppRoot}" Visibility="Visible" />
 
 				<!--
 					For resizing the settings window.

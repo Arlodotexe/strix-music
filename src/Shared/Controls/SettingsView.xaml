@@ -38,6 +38,7 @@
 		<muxc:NavigationView
 			x:Name="PartNavigationView"
 			Grid.Row="1"
+			Background="Transparent"
 			IsBackButtonVisible="Collapsed"
 			IsSettingsVisible="False"
 			OpenPaneLength="215"

@@ -13,7 +13,6 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:sys="using:System"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	mc:Ignorable="d">
 
 	<StackPanel
