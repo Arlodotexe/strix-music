@@ -1,10 +1,8 @@
-
-
 <img src="docs/assets/logos/Wide.svg" />
 
 ### Break down the digital walls between your music libraries
 
-# Welcome to the open source alpha
+## Welcome to the open source alpha
 
 We spent the last 2 years designing and refining the SDK, making sure it could cleanly handle anything we threw at it.
 
