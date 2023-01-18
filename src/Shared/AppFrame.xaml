@@ -21,22 +21,25 @@
 
 	<UserControl.Resources>
 		<ResourceDictionary>
-			<color:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
-
 			<ResourceDictionary.ThemeDictionaries>
 				<ResourceDictionary x:Name="Dark">
 					<Color x:Key="LowBackgroundBrushColor">#1E1E23</Color>
 					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
 				</ResourceDictionary>
 				<ResourceDictionary x:Name="Light">
-					<Color x:Key="LowBackgroundBrushColor">#FFCCCCCC</Color>
+					<Color x:Key="LowBackgroundBrushColor">#D5D5DC</Color>
 					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
 				</ResourceDictionary>
 				<ResourceDictionary x:Name="HighContrast">
-					<Color x:Key="LowBackgroundBrushColor">#FF333333</Color>
+					<Color x:Key="LowBackgroundBrushColor">#D6D6DF</Color>
 					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
 				</ResourceDictionary>
 			</ResourceDictionary.ThemeDictionaries>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary>
+					<color:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
 
@@ -108,14 +111,14 @@
 					<animations:OpacityAnimation
 						From="0"
 						To="1.0"
-						Duration="0:0:0.5" />
+						Duration="0:0:0.25" />
 				</animations:Implicit.ShowAnimations>
 
 				<animations:Implicit.HideAnimations>
 					<animations:OpacityAnimation
 						From="1.0"
 						To="0"
-						Duration="0:0:0.5" />
+						Duration="0:0:0.25" />
 				</animations:Implicit.HideAnimations>
 
 				<ui:Effects.Shadow>
@@ -137,12 +140,11 @@
 						<media:RadialGradientBrush
 							Center="0.6,0.4"
 							GradientOrigin="0.75,0.3"
-							MappingMode="RelativeToBoundingBox"
 							Opacity="0.3"
 							RadiusX="0.6"
 							RadiusY="0.4">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="Transparent" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
@@ -157,12 +159,11 @@
 						<media:RadialGradientBrush
 							Center="0.3,0.3"
 							GradientOrigin="0.1,0.1"
-							MappingMode="RelativeToBoundingBox"
 							Opacity="0.2"
 							RadiusX="0.5"
 							RadiusY="0.7">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="Transparent" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
@@ -177,12 +178,11 @@
 						<media:RadialGradientBrush
 							Center="0.4,0.6"
 							GradientOrigin="0.3,0.75"
-							MappingMode="RelativeToBoundingBox"
 							Opacity="0.25"
 							RadiusX="0.3"
 							RadiusY="0.8">
 							<GradientStop Offset="0" Color="#FF6D157D" />
-							<GradientStop Offset="1" Color="Transparent" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
 						</media:RadialGradientBrush>
 					</Rectangle.Fill>
 				</Rectangle>
