@@ -18,6 +18,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public TrackCollection()
         {
             DefaultStyleKey = typeof(TrackCollection);
+            DataContext = this;
         }
 
         /// <summary>

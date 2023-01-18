@@ -15,6 +15,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Views
         public HomeView()
         {
             this.DefaultStyleKey = typeof(HomeView);
+            DataContext = this;
         }
 
         /// <summary>

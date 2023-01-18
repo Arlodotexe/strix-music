@@ -7,28 +7,34 @@
 	xmlns:selectors="using:StrixMusic.Sdk.WinUI.TemplateSelectors"
 	xmlns:view="using:StrixMusic.Sdk.WinUI.Controls.Views">
 
-	<DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="view:HomeView">
-		<UserControl>
-			<controls:PlayableCollectionGroupPivot PlayableCollectionGroup="{x:Bind DataRoot.Library, Mode=OneWay}" RestoreSelectedPivot="True">
-				<controls:PlayableCollectionGroupPivot.AllEmptyContent>
-					<TextBlock x:Uid="/Common/NothingToShowTB" Text="Nothing to show!" />
-				</controls:PlayableCollectionGroupPivot.AllEmptyContent>
-			</controls:PlayableCollectionGroupPivot>
-		</UserControl>
-	</DataTemplate>
+	<!--  Implicitly applied default style  -->
+	<Style BasedOn="{StaticResource DefaultHomeViewStyle}" TargetType="view:HomeView" />
 
 	<Style x:Key="DefaultHomeViewStyle" TargetType="view:HomeView">
 		<Style.Setters>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="view:HomeView">
-						<ContentControl ContentTemplate="{StaticResource DefaultHomeViewTemplate}" />
+						<ContentControl
+							x:Name="ContentContainer"
+							HorizontalContentAlignment="Stretch"
+							VerticalContentAlignment="Stretch">
+							<ContentControl.ContentTemplate>
+								<DataTemplate x:DataType="view:HomeView">
+									<Grid>
+										<controls:PlayableCollectionGroupPivot Collection="{x:Bind DataRoot.Library, Mode=OneWay}" RestoreSelectedPivot="True">
+											<controls:PlayableCollectionGroupPivot.AllEmptyContent>
+												<TextBlock x:Uid="/Common/NothingToShowTB" Text="Nothing to show" />
+											</controls:PlayableCollectionGroupPivot.AllEmptyContent>
+										</controls:PlayableCollectionGroupPivot>
+									</Grid>
+								</DataTemplate>
+							</ContentControl.ContentTemplate>
+						</ContentControl>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
 		</Style.Setters>
 	</Style>
-
-	<Style BasedOn="{StaticResource DefaultHomeViewStyle}" TargetType="view:HomeView" />
 
 </ResourceDictionary>

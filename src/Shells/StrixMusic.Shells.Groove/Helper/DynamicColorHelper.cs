@@ -50,6 +50,10 @@ namespace StrixMusic.Shells.Groove.Helper
                 //var palette = KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 3);
                 var kernel = new GaussianKernel(.15);
                 var palette = ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
+
+                if (palette.Length == 0)
+                    return Color.FromArgb(255, 0, 0, 0);
+
                 var primary = clamps.Clamp(palette[0].Item1);
 
                 var finalColor = Color.FromArgb(255,

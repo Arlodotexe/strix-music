@@ -4,6 +4,7 @@ using System.Threading;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.WinUI.Controls.Views;
 
@@ -12,10 +13,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
     /// <summary>
     /// Displays the content of a PlayableCollectionGroupViewModel in a Pivot.
     /// </summary>
+    [ObservableObject]
     public sealed partial class PlayableCollectionGroupPivot : Control
     {
         private static readonly Dictionary<string, int> _pivotItemPositionMemo = new();
         private SynchronizationContext _synchronizationContext;
+        [ObservableProperty] private PlayableCollectionGroupViewModel? _viewModel = null;
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="RestoreSelectedPivot"/> property.
@@ -127,6 +130,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         public PlayableCollectionGroupPivot()
         {
             _synchronizationContext = SynchronizationContext.Current ?? new();
+            DataContext = this;
         }
 
         /// <inheritdoc />
@@ -159,12 +163,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 PART_Pivot.SelectionChanged += PivotSelectionChanged;
             }
 
-            if (PlayableCollectionGroup != null)
+            if (Collection != null)
             {
-                PlayableCollectionGroup.AlbumItemsCountChanged += AnyItemCountChanged;
-                PlayableCollectionGroup.ArtistItemsCountChanged += AnyItemCountChanged;
-                PlayableCollectionGroup.AlbumItemsCountChanged += AnyItemCountChanged;
-                PlayableCollectionGroup.PlaylistItemsCountChanged += AnyItemCountChanged;
+                Collection.AlbumItemsCountChanged += AnyItemCountChanged;
+                Collection.ArtistItemsCountChanged += AnyItemCountChanged;
+                Collection.AlbumItemsCountChanged += AnyItemCountChanged;
+                Collection.PlaylistItemsCountChanged += AnyItemCountChanged;
             }
         }
 
@@ -179,12 +183,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 PART_Pivot.SelectionChanged -= PivotSelectionChanged;
             }
 
-            if (PlayableCollectionGroup != null)
+            if (Collection != null)
             {
-                PlayableCollectionGroup.AlbumItemsCountChanged -= AnyItemCountChanged;
-                PlayableCollectionGroup.ArtistItemsCountChanged -= AnyItemCountChanged;
-                PlayableCollectionGroup.AlbumItemsCountChanged -= AnyItemCountChanged;
-                PlayableCollectionGroup.PlaylistItemsCountChanged -= AnyItemCountChanged;
+                Collection.AlbumItemsCountChanged -= AnyItemCountChanged;
+                Collection.ArtistItemsCountChanged -= AnyItemCountChanged;
+                Collection.AlbumItemsCountChanged -= AnyItemCountChanged;
+                Collection.PlaylistItemsCountChanged -= AnyItemCountChanged;
             }
         }
 
@@ -195,10 +199,10 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// </summary>
         public void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (PART_Pivot == null || PlayableCollectionGroup is null)
+            if (PART_Pivot == null || Collection is null)
                 return;
 
-            _pivotItemPositionMemo[PlayableCollectionGroup.Id] = PART_Pivot.SelectedIndex;
+            _pivotItemPositionMemo[Collection.Id] = PART_Pivot.SelectedIndex;
         }
 
         /// <summary>
@@ -227,12 +231,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
 
         private void RestoreMostRecentSelectedPivot()
         {
-            if (!RestoreSelectedPivot || PART_Pivot == null || PlayableCollectionGroup is null)
+            if (!RestoreSelectedPivot || PART_Pivot == null || Collection is null)
                 return;
 
             var pivotSelectionMemo = _pivotItemPositionMemo;
 
-            if (pivotSelectionMemo != null && pivotSelectionMemo.TryGetValue(PlayableCollectionGroup.Id, out var value))
+            if (pivotSelectionMemo != null && pivotSelectionMemo.TryGetValue(Collection.Id, out var value))
             {
                 PART_Pivot.SelectedIndex = value;
             }
@@ -243,17 +247,17 @@ namespace StrixMusic.Sdk.WinUI.Controls
             if (!HideEmptyPivots)
                 return;
 
-            TogglePivotItemViaCollectionCount(nameof(PART_SongsPivotItem), PART_SongsPivotItem, PlayableCollectionGroup?.TotalTrackCount ?? 0);
-            TogglePivotItemViaCollectionCount(nameof(PART_AlbumsPivotItem), PART_AlbumsPivotItem, PlayableCollectionGroup?.TotalAlbumItemsCount ?? 0);
-            TogglePivotItemViaCollectionCount(nameof(PART_ArtistsPivotItem), PART_ArtistsPivotItem, PlayableCollectionGroup?.TotalArtistItemsCount ?? 0);
-            TogglePivotItemViaCollectionCount(nameof(PART_PlaylistsPivotItem), PART_PlaylistsPivotItem, PlayableCollectionGroup?.TotalPlaylistItemsCount ?? 0);
+            TogglePivotItemViaCollectionCount(nameof(PART_SongsPivotItem), PART_SongsPivotItem, Collection?.TotalTrackCount ?? 0);
+            TogglePivotItemViaCollectionCount(nameof(PART_AlbumsPivotItem), PART_AlbumsPivotItem, Collection?.TotalAlbumItemsCount ?? 0);
+            TogglePivotItemViaCollectionCount(nameof(PART_ArtistsPivotItem), PART_ArtistsPivotItem, Collection?.TotalArtistItemsCount ?? 0);
+            TogglePivotItemViaCollectionCount(nameof(PART_PlaylistsPivotItem), PART_PlaylistsPivotItem, Collection?.TotalPlaylistItemsCount ?? 0);
 
             if (PART_AllEmptyContentPresenter != null)
             {
-                var allEmpty = (PlayableCollectionGroup?.TotalTrackCount ?? 0) == 0 &&
-                               (PlayableCollectionGroup?.TotalAlbumItemsCount ?? 0) == 0 &&
-                               (PlayableCollectionGroup?.TotalArtistItemsCount ?? 0) == 0 &&
-                               (PlayableCollectionGroup?.TotalPlaylistItemsCount ?? 0) == 0;
+                var allEmpty = (Collection?.TotalTrackCount ?? 0) == 0 &&
+                               (Collection?.TotalAlbumItemsCount ?? 0) == 0 &&
+                               (Collection?.TotalArtistItemsCount ?? 0) == 0 &&
+                               (Collection?.TotalPlaylistItemsCount ?? 0) == 0;
 
                 PART_AllEmptyContentPresenter.Visibility = allEmpty ? Visibility.Visible : Visibility.Collapsed;
             }
@@ -285,16 +289,31 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// <summary>
         /// The root object containing all data needed to power strix.
         /// </summary>
-        public IPlayableCollectionGroup? PlayableCollectionGroup
+        public IPlayableCollectionGroup? Collection
         {
-            get => (IPlayableCollectionGroup?)GetValue(PlayableCollectionGroupProperty);
-            set => SetValue(PlayableCollectionGroupProperty, value);
+            get => (IPlayableCollectionGroup?)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>
-        /// Backing dependency property for <see cref="PlayableCollectionGroup"/>.
+        /// Backing dependency property for <see cref="Collection"/>.
         /// </summary>
-        public static readonly DependencyProperty PlayableCollectionGroupProperty =
-            DependencyProperty.Register(nameof(PlayableCollectionGroup), typeof(IPlayableCollectionGroup), typeof(PlayableCollectionGroupPivot), new PropertyMetadata(null));
+        public static readonly DependencyProperty CollectionProperty =
+            DependencyProperty.Register(nameof(Collection), typeof(IPlayableCollectionGroup), typeof(PlayableCollectionGroupPivot), new PropertyMetadata(null, (d, e) => ((PlayableCollectionGroupPivot)d).OnPlayableCollectionGroupChanged(e.OldValue as IPlayableCollectionGroup, e.NewValue as IPlayableCollectionGroup)));
+
+        private void OnPlayableCollectionGroupChanged(IPlayableCollectionGroup? oldValue, IPlayableCollectionGroup? newValue)
+        {
+            if (newValue is not null)
+            {
+                if (newValue is PlayableCollectionGroupViewModel vm)
+                    ViewModel = vm;
+                else
+                    ViewModel = new PlayableCollectionGroupViewModel(newValue);
+            }
+            else
+            {
+                ViewModel = null;
+            }
+        }
     }
 }
