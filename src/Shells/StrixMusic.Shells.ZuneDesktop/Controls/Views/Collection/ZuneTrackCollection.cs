@@ -110,103 +110,101 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
         {
-            await _collectionModifyMutex.WaitAsync();
-
-            foreach (var item in TrackItems)
-                DetachEvents(item);
-
-            _trackItems.Clear();
-            OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
-
-            if (newValue is not null)
-            {
-                if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
-                    await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
-                else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
-                    await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
-
-                foreach (var item in newValue.Tracks)
-                {
-                    var newItems = new ZuneTrackCollectionItem
-                    {
-                        ParentCollection = newValue,
-                        Track = item,
-                    };
-
-                    _trackItems.Add(newItems);
-                    AttachEvents(newItems);
-                }
-
-                newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
-                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
-            }
-
             if (oldValue is not null)
             {
                 oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
 
-            _collectionModifyMutex.Release();
-        }
-
-        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            await _collectionModifyMutex.WaitAsync();
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                var tracks = e.NewItems.Cast<TrackViewModel>();
-                foreach (var item in tracks)
-                {
-                    await item.InitArtistCollectionAsync();
-                }
-
-                var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
-                {
-                    var newItem = new ZuneTrackCollectionItem
-                    {
-                        Track = x,
-                        ParentCollection = Collection,
-                        ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
-                    };
-
-                    AttachEvents(newItem);
-                    return newItem;
-                });
-                _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    var target = TrackItems.FirstOrDefault(x => x.Track == item);
-                    if (target is not null)
-                    {
-                        _trackItems.Remove(target);
-                        DetachEvents(target);
-                    }
-                }
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
-            {
-                for (var i = 0; i < e.OldItems.Count; i++)
-                    _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            using (await _collectionModifyMutex.DisposableWaitAsync())
             {
                 foreach (var item in TrackItems)
                     DetachEvents(item);
 
                 _trackItems.Clear();
+                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+
+                if (newValue is not null)
+                {
+                    if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
+                        await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
+                    else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
+                        await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
+
+                    foreach (var item in newValue.Tracks)
+                    {
+                        var newItems = new ZuneTrackCollectionItem
+                        {
+                            ParentCollection = newValue,
+                            Track = item,
+                        };
+
+                        _trackItems.Add(newItems);
+                        AttachEvents(newItems);
+                    }
+
+                    newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
+                    OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+                }
             }
+        }
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
-                throw new NotImplementedException();
+        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                {
+                    var tracks = e.NewItems.Cast<TrackViewModel>();
+                    foreach (var item in tracks)
+                    {
+                        await item.InitArtistCollectionAsync();
+                    }
 
-            _collectionModifyMutex.Release();
+                    var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
+                    {
+                        var newItem = new ZuneTrackCollectionItem
+                        {
+                            Track = x,
+                            ParentCollection = Collection,
+                            ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
+                        };
+
+                        AttachEvents(newItem);
+                        return newItem;
+                    });
+                    _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+                {
+                    foreach (var item in e.OldItems)
+                    {
+                        var target = TrackItems.FirstOrDefault(x => x.Track == item);
+                        if (target is not null)
+                        {
+                            _trackItems.Remove(target);
+                            DetachEvents(target);
+                        }
+                    }
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
+                {
+                    for (var i = 0; i < e.OldItems.Count; i++)
+                        _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+                {
+                    foreach (var item in TrackItems)
+                        DetachEvents(item);
+
+                    _trackItems.Clear();
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
+                    throw new NotImplementedException();
+            }
         }
 
         private async void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
