@@ -26,7 +26,10 @@ public class PlaybackHandlerPlugin : SdkModelPlugin
     public PlaybackHandlerPlugin(IPlaybackHandlerService playbackHandler)
         : base(_metadata)
     {
+        // Inject local playback device
         StrixDataRoot.Add(x => new StrixDataRootPlaybackHandlerPlugin(_metadata, x, playbackHandler));
+
+        // Redirect playback requests to playback handler.
         ArtistCollection.Add(x => new ArtistCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
         AlbumCollection.Add(x => new AlbumCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
         TrackCollection.Add(x => new TrackCollectionPlaybackHandlerPlugin(_metadata, x, playbackHandler));
