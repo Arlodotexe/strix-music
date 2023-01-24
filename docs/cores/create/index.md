@@ -6,7 +6,6 @@ To follow current recommendations, these instructions are for creating a new cor
 > [!WARNING] 
 >
 > Until we reach our golden release `1.0.0-sdk-stable`:
-> - We are in a rapid release cycle. Builds are automatically published every other weekday.
 > - Breaking changes may be introduced as we address feedback from the community.
 > - Comprehensive [changelogs](../reference/changelogs/) are included with every release.
 > - We advise keeping development (e.g. creating cores) for the SDK in the [main repo](https://github.com/Arlodotexe/strix-music) so we can automatically migrate breaking changes for you.
@@ -25,29 +24,29 @@ To follow current recommendations, these instructions are for creating a new cor
 
 Start by opening the StrixMusic solution in Visual Studio.
 
-![The StrixMusic solution open, showing the solution explorer](../assets/cores/create/open-vs.png)
+![The StrixMusic solution open, showing the solution explorer](./assets/open-vs.png)
 
 Right click the "Cores" folder -> Add -> New Project
 
-![The expanded context menu for a folder in the solution explorer](../assets/cores/create/context-menu-new-project.png)
+![The expanded context menu for a folder in the solution explorer](./assets/context-menu-new-project.png)
 
 In the list of project templates, search for "Class Library" and select the C# class library capable of target .NET Standard.
 
-![The add new project dialog box with "class library" in the search box](../assets/cores/create/add-new-project-select-template.png)
+![The add new project dialog box with "class library" in the search box](./assets/add-new-project-select-template.png)
 
 Click "Next". Name the project `StrixMusic.Cores.MyMusicSource`, replacing `MyMusicSource` with your desired name.
 
 Then, change the location to `.\src\Cores\` and click "Next".
 
-![The project configuration screen with the recommended settings](../assets/cores/create/configure-new-project.png)
+![The project configuration screen with the recommended settings](./assets/configure-new-project.png)
 
 Change the Framework to `.NET Standard 2.0` and click "Create".
 
-![The framework dropdown with .NET Standard 2.0 selected](../assets/cores/create/additional-information.png)
+![The framework dropdown with .NET Standard 2.0 selected](./assets/additional-information.png)
 
 You'll be greeted with an empty project and a starter class file. You can delete the default `Class1.cs` or repurpose it for your core in the next section.
 
-![](../assets/cores/create/empty-core-project.png)
+![](./assets/empty-core-project.png)
 
 ## Enable nullables and C# 10
 Open up the `.csproj` for your new core and add the following lines before the closing `</Project>`:
@@ -71,11 +70,11 @@ Finally, add a reference to the Strix Music SDK to your project.
 
 Right click the new project -> Add -> Project Reference.
 
-![](../assets/cores/create/new-project-context-menu-add-projectreference.png)
+![](./assets/new-project-context-menu-add-projectreference.png)
 
 Check the `StrixMusic.Sdk` box and click "OK".
 
-![](../assets/cores/create/reference-manager-new-core.png)
+![](./assets/reference-manager-new-core.png)
 
 # Set up your models.
 
@@ -85,16 +84,16 @@ All music services are different, therefore you should implement each CoreModel 
 
 Start by creating a class called `MyMusicSourceCore` (again, replacing `MyMusicSource` with the desired name) and implement the [`ICore`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html) interface:
 
-![](../assets/cores/create/core-unimplemented.png)
+![](./assets/core-unimplemented.png)
 
-![](../assets/cores/create/core-unimplemented-autofilled.png)
+![](./assets/core-unimplemented-autofilled.png)
 
 ### Create registration metadata
 Cores need a way to identify themselves before and after construction.
 
 Create a public, static property containing `CoreMetadata`, and point the instance `Registration` to it:
 
-![](../assets/cores/create/core-registration.png)
+![](./assets/core-registration.png)
 
 This allows consumers of your core to identify it before creating an instance.
 
@@ -129,7 +128,7 @@ public Task InitAsync(CancellationToken cancellationToken = default)
 
 Then fix properties by doing a replace all, trading `=> throw new NotImplementedException();` for `{ get; private set; }`. The end result should look a bit like this:
 
-![](../assets/cores/create/core-unimplemented-fixed-bodies.png)
+![](./assets/core-unimplemented-fixed-bodies.png)
 
 
 ### Setting storage
@@ -184,14 +183,14 @@ The constructor for a core should be _very_ lightweight, only doing enough to sa
 
 We'll create a `Settings` property and a constructor which takes an instance of the settings container, where data can be stored.
 
-![](../assets/cores/create/core-unimplemented-constructors.png)
+![](./assets/core-unimplemented-constructors.png)
 
 > [!TIP]
 > This approach opens the door to configuring a core before creating it, bypassing any user-interactive setup.
 
 Then, we'll set up an example API service. This is where our music service's data will come from:
 
-![](../assets/cores/create/core-unimplemented-with-api-prop.png)
+![](./assets/core-unimplemented-with-api-prop.png)
 
 ## Implement the library
 > [!WARNING]
@@ -203,17 +202,17 @@ Then, we'll set up an example API service. This is where our music service's dat
 
 We'll be following the above advice, and creating a `MyMusicSourcePlayableCollectionGroupBase`.
 
-![](../assets/cores/create/playablecollectiongroup-base.png)
+![](./assets/playablecollectiongroup-base.png)
 
 After implementing, replace the implementation defaults the same [as above](#replace-implementation-defaults).
 
 All core implementations are required to have a `SourceCore` property which points to the `ICore` instance that created it. This should be trickled down via constructors:
 
-![](../assets/cores/create/playablecollectiongroup-base-constructor.png)
+![](./assets/playablecollectiongroup-base-constructor.png)
 
 This also allows us to access our already configured backend service, ready to use:
 
-![](../assets/cores/create/playablecollectiongroup-base-api-access.png)
+![](./assets/playablecollectiongroup-base-api-access.png)
 
 For now, we'll only focus on albums, so that's all we're going to set up. You can implement the rest outside of this tutorial.
 
@@ -223,11 +222,11 @@ Search the document for "AlbumItems", and make each member you find `virtual`. C
 
 Create a new class called `MyMusicSourceLibrary`. Inherit from `ICoreLibrary` and the new `MyMusicSourcePlayableCollectionGroupBase`:
 
-![](../assets/cores/create/core-unimplemented-library.png)
+![](./assets/core-unimplemented-library.png)
 
 Then, we can override the `GetAlbumItemsAsync` method and use our API to return albums in the user's library:
 
-![](../assets/cores/create/core-implemented-library-precorealbum.png)
+![](./assets/core-implemented-library-precorealbum.png)
 
 You'll notice there's still an error. That's because we're trying to return our API's `Album` type, when we need to return a CoreModel.
 
@@ -237,11 +236,11 @@ To solve this, let's implement `ICoreAlbum` and use our API's `Album` type to po
 
 Our backend service also has a method to get an album's tracks, so we can put some skeleton code in place for that while we're at it.
 
-![](../assets/cores/create/album-implementation.png)
+![](./assets/album-implementation.png)
 
 Now, we can return to our Library and finish implementing getting albums:
 
-![](../assets/cores/create/core-implemented-library-postcorealbum.png)
+![](./assets/core-implemented-library-postcorealbum.png)
 
 Great! There's just one more issue to solve.
 
