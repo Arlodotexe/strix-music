@@ -12,7 +12,6 @@ using OwlCore.Storage;
 using StrixMusic.Cores.Storage.FileMetadata;
 using StrixMusic.Cores.Storage.FileMetadata.Scanners;
 using StrixMusic.Cores.Storage.Models;
-using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -21,7 +20,7 @@ namespace StrixMusic.Cores.Storage;
 /// <summary>
 /// A common base class for all cores that handle scanning any kind of file system for audio files.
 /// </summary>
-public class StorageCore : ICore
+public sealed class StorageCore : ICore
 {
     private readonly IModifiableFolder _metadataCacheFolder;
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -31,7 +30,7 @@ public class StorageCore : ICore
     /// <summary>
     /// Initializes a new instance of the <see cref="StorageCore"/> class.
     /// </summary>
-    /// <param name="folderToScanToScan">The folder being scanned for music.</param>
+    /// <param name="folderToScan">The folder being scanned for music.</param>
     /// <param name="metadataCacheFolder">A folder where metadata can be stored for fast retrieval later.</param>
     /// <param name="displayName">A user-friendly display name to use for this storage core.</param>
     /// <param name="fileScanProgress">Monitor the progress of a file scan.</param>
@@ -64,10 +63,10 @@ public class StorageCore : ICore
     public IFolderScanner FolderScanner { get; }
 
     /// <inheritdoc />
-    public virtual string DisplayName { get; }
+    public string DisplayName { get; }
 
     /// <inheritdoc />
-    public virtual ICoreImage? Logo
+    public ICoreImage? Logo
     {
         get => _logo;
         set
@@ -146,7 +145,7 @@ public class StorageCore : ICore
     public event EventHandler<string>? DisplayNameChanged;
 
     /// <inheritdoc/>
-    public virtual async Task InitAsync(CancellationToken cancellationToken = default)
+    public async Task InitAsync(CancellationToken cancellationToken = default)
     {
         if (IsInitialized)
             return;
@@ -215,7 +214,7 @@ public class StorageCore : ICore
     /// <remarks>
     /// You may override this and return a different MediaSourceConfig if needed, such as a Stream instead of a file path.
     /// </remarks>
-    public virtual async Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default)
+    public async Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default)
     {
         Guard.IsTrue(IsInitialized);
 

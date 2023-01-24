@@ -355,7 +355,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             {
                 Logger.LogError($"Core failed to initialize: \"{core.DisplayName}\", id {core.InstanceId}.", ex);
 
-                StackPanel CreateCoreDataStackPanel() => new StackPanel
+                StackPanel CreateCoreDataStackPanel() => new()
                 {
                     Orientation = Orientation.Horizontal,
                     Spacing = 20,
