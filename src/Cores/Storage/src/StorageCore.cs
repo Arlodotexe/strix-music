@@ -181,7 +181,7 @@ public sealed class StorageCore : ICore
     public bool IsInitialized { get; set; }
 
     /// <inheritdoc/>
-    public virtual ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         if (FileMetadataManager is not null)
             return FileMetadataManager.DisposeAsync();
