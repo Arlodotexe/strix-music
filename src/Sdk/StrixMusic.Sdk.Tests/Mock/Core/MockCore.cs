@@ -47,9 +47,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
 
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
-        /// <inheritdoc />
-        public event EventHandler? AbstractConfigPanelChanged;
-
         public event EventHandler<string>? InstanceDescriptorChanged;
         public event EventHandler<ICoreImage?>? LogoChanged;
         public event EventHandler<string>? DisplayNameChanged;
@@ -65,9 +62,6 @@ namespace StrixMusic.Sdk.Tests.Mock.Core
                 InstanceDescriptorChanged?.Invoke(this, value);
             }
         }
-
-        /// <inheritdoc />
-        public AbstractUICollection AbstractConfigPanel { get; } = new("test");
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType { get; }

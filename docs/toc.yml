@@ -22,7 +22,8 @@
   - name: Introduction
     href: app/index.md
   - name: Add new music source
-    href: app/add-music-source.md
+    topicHref: app/add-music-source.md
+    href: app/
 - name: Cores
   href: cores/
   topicHref: cores/index.md
@@ -30,7 +31,8 @@
   - name: Introduction
     href: cores/index.md
   - name: Create a core
-    href: cores/create/index.md
+    topicHref: cores/create/index.md
+    href: cores/create/
 - name: Plugins
   href: plugins/
   topicHref: plugins/index.md
