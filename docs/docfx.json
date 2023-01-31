@@ -20,7 +20,7 @@
   "build": {
     "resource": {
       "files": [
-        "assets/**"
+        "**/assets/**"
       ]
     },
     "content": [
