@@ -30,7 +30,7 @@
   - name: Introduction
     href: cores/index.md
   - name: Create a core
-    href: cores/create.md
+    href: cores/create/index.md
 - name: Plugins
   href: plugins/
   topicHref: plugins/index.md
