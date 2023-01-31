@@ -16,7 +16,7 @@ You'll need to:
 - Create and link the "Options" control for your core.
 
 ## Create your core settings
-Settings are used to store the data that's required to construct a core. We'll be turning a settings class into an `ICore` instance, so this up.
+Settings are used to store the data that's required to construct a core. We'll be turning a settings class into an `ICore` instance.
 
 ### Initial setup
 
