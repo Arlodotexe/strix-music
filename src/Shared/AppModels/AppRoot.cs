@@ -48,6 +48,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
     private readonly PlaybackHandlerService _playbackHandler = new();
+    private readonly SystemMediaTransportControlsHandler _smtcHandler;
 
     [ObservableProperty]
     private AppDiagnostics? _diagnostics;
@@ -73,6 +74,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
+        _smtcHandler = new SystemMediaTransportControlsHandler(_playbackHandler);
     }
 
     /// <summary>
