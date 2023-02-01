@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="album"><inheritdoc cref="IAlbum"/></param>
         public AlbumViewModel(IAlbum album)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _album = album;
             
@@ -333,45 +333,45 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.GenresCountChanged -= value;
         }
 
-        private void AlbumNameChanged(object sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
+        private void AlbumNameChanged(object? sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
 
-        private void AlbumDescriptionChanged(object sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
+        private void AlbumDescriptionChanged(object? sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
 
-        private void AlbumPlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
+        private void AlbumPlaybackStateChanged(object? sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
 
-        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
+        private void OnDownloadInfoChanged(object? sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
 
-        private void AlbumDatePublishedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DatePublished)), null);
+        private void AlbumDatePublishedChanged(object? sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DatePublished)), null);
 
-        private void OnTrackItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalTrackCount)), null);
+        private void OnTrackItemsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalTrackCount)), null);
 
-        private void OnImagesCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
+        private void OnImagesCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
 
-        private void OnUrlsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
+        private void OnUrlsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
 
-        private void OnArtistItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
+        private void OnArtistItemsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
 
-        private void OnGenresItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalGenreCount)), null);
+        private void OnGenresItemsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalGenreCount)), null);
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
+        private void OnLastPlayedChanged(object? sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
+        private void OnIsChangeDurationAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
+        private void OnIsChangeNameAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
 
-        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)), null);
+        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)), null);
+        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)), null);
 
-        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
 
-        private void OnIsChangeDatePublishedAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDatePublishedAsyncAvailableChanged)), null);
+        private void OnIsChangeDatePublishedAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDatePublishedAsyncAvailableChanged)), null);
 
-        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _syncContext.Post(_ =>
+        private void AlbumViewModel_TrackItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentTracksSortingType == TrackSortingType.Unsorted)
             {
@@ -437,7 +437,7 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }, null);
 
-        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void AlbumViewModel_ImagesChanged(object? sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
             => _syncContext.Post(_ => Images.ChangeCollection(addedItems, removedItems), null);
 
         private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems)
@@ -885,28 +885,28 @@ namespace StrixMusic.Sdk.ViewModels
         public Task InitGenreCollectionAsync(CancellationToken cancellationToken = default) => CollectionInit.GenreCollectionAsync(this, cancellationToken);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollectionItem other) => _album.Equals(other);
+        public bool Equals(ICoreAlbumCollectionItem? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => _album.Equals(other);
+        public bool Equals(ICoreArtistCollectionItem? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _album.Equals(other);
+        public bool Equals(ICoreImageCollection? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => _album.Equals(other);
+        public bool Equals(ICoreArtistCollection? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => _album.Equals(other);
+        public bool Equals(ICoreTrackCollection? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => _album.Equals(other);
+        public bool Equals(ICoreGenreCollection? other) => _album.Equals(other!);
 
         /// <inheritdoc/>
-        public bool Equals(ICoreUrlCollection other) => _album.Equals(other);
+        public bool Equals(ICoreUrlCollection? other) => _album.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbum other) => _album.Equals(other);
+        public bool Equals(ICoreAlbum? other) => _album.Equals(other!);
 
         /// <inheritdoc />
         public Task InitAsync(CancellationToken cancellationToken = default)

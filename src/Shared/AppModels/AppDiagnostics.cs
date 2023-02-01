@@ -1,29 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
+using NLog.Config;
+using NLog.Targets;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Storage;
+using StrixMusic.Settings;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
-using Windows.System.Diagnostics;
-using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Settings;
 
 namespace StrixMusic.AppModels
 {
@@ -38,19 +33,11 @@ namespace StrixMusic.AppModels
         private readonly IModifiableFolder _dataFolder;
 
         private ContentDialog? _deleteUserDataDialog;
-        
-        [ObservableProperty] private DiagnosticSettings _settings;
-        [ObservableProperty] private string? _windowSizeStr;
-        [ObservableProperty] private string? _memoryUsage;
-        [ObservableProperty] private string? _windowHeight;
-        [ObservableProperty] private string? _windowWidth;
-        [ObservableProperty] private string? _totalMemory;
-        [ObservableProperty] private string? _expectedMemoryLimit;
 
-        /// <summary>
-        /// Holds the list of all logs.
-        /// </summary>
-        public ObservableCollection<string>? Logs { get; } = new();
+        private DiagnosticSettings _settings;
+        private string? _memoryUsage;
+        private string? _totalMemory;
+        private string? _expectedMemoryLimit;
 
         /// <summary>
         /// Creates a new instance of <see cref="AppDiagnostics"/>.
@@ -63,14 +50,14 @@ namespace StrixMusic.AppModels
 
             if (_settings.IsLoggingEnabled)
                 Logger.MessageReceived += Logger_MessageReceived;
-            
+
             _settings.PropertyChanged += SettingsOnPropertyChanged;
-            Window.Current.SizeChanged += Current_SizeChanged;
+
+#if !__WASM__
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_MemoryChanged;
             MemoryManager.AppMemoryUsageDecreased += MemoryManager_MemoryChanged;
 
             UpdateMemoryUsage();
-            SetWindowSize();
 
             _memoryWatchTimer = new DispatcherTimer
             {
@@ -79,9 +66,42 @@ namespace StrixMusic.AppModels
 
             _memoryWatchTimer.Tick += DispatchTimer_Elapsed;
             _memoryWatchTimer.Start();
+#endif
         }
 
-        private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        /// <summary>
+        /// A container for all settings related to debugging and diagnostics.
+        /// </summary>
+        public DiagnosticSettings Settings
+        {
+            get => _settings;
+            set => SetProperty(ref _settings, value);
+        }
+
+        /// <summary>
+        /// The current memory usage.
+        /// </summary>
+        public string? MemoryUsage
+        {
+            get => _memoryUsage;
+            set => SetProperty(ref _memoryUsage, value);
+        }
+
+        /// <summary>
+        /// The total memory available to the app.
+        /// </summary>
+        public string? TotalMemory
+        {
+            get => _totalMemory;
+            set => SetProperty(ref _totalMemory, value);
+        }
+
+        /// <summary>
+        /// Holds the list of all logs.
+        /// </summary>
+        public ObservableCollection<string>? Logs { get; } = new();
+
+        private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_settings.IsLoggingEnabled))
             {
@@ -98,14 +118,14 @@ namespace StrixMusic.AppModels
             }
         }
 
-        private void DispatchTimer_Elapsed(object sender, object e)
+        private void DispatchTimer_Elapsed(object? sender, object e)
         {
             _memoryWatchTimer.Stop();
             UpdateMemoryUsage();
             _memoryWatchTimer.Start();
         }
 
-        private void MemoryManager_MemoryChanged(object sender, object e) => UpdateMemoryUsage();
+        private void MemoryManager_MemoryChanged(object? sender, object e) => UpdateMemoryUsage();
 
         private void UpdateMemoryUsage()
         {
@@ -116,15 +136,7 @@ namespace StrixMusic.AppModels
             TotalMemory = SizeSuffix((long)totalMemory);
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e) => SetWindowSize();
-
-        private void SetWindowSize()
-        {
-            WindowHeight = Window.Current.Bounds.Height.ToString();
-            WindowWidth = Window.Current.Bounds.Width.ToString();
-        }
-
-        private async void Logger_MessageReceived(object sender, LoggerMessageEventArgs e)
+        private async void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
         {
             using (await _semaphoreSlim.DisposableWaitAsync())
             {

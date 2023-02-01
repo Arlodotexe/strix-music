@@ -46,7 +46,7 @@ namespace OwlCore.WinUI.Collections
         /// <param name="onBatchComplete">The action to fire when the items are done being retrieved.</param>
         /// <param name="onBatchStart">The action to fire when the <see cref="LoadMoreItemsAsync"/> is called.</param>
         public IncrementalLoadingCollection(int take, Func<int, Task<List<T>>> loadMoreItems, Action<List<T>>? onBatchComplete = null, Action? onBatchStart = null)
-            : base(SynchronizationContext.Current)
+            : base(SynchronizationContext.Current ?? new SynchronizationContext())
         {
             Take = take;
             _loadMoreItems = loadMoreItems;

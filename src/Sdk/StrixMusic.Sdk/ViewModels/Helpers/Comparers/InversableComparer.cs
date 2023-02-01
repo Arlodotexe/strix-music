@@ -11,6 +11,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// </summary>
     /// <typeparam name="T">The type of items compared.</typeparam>
     public abstract class InversableComparer<T> : Comparer<T>
+        where T : notnull
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InversableComparer{T}"/> class.

@@ -1,23 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Graph;
 using StrixMusic.Settings;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 
@@ -28,8 +16,17 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 public sealed partial class LandingPage : Page
 {
     private ConnectNewMusicSourceNavigationParams? _param;
-    [ObservableProperty] private OneDriveCoreSettings? _settings = null;
 
+    private OneDriveCoreSettings? _settings = null;
+
+    /// <summary>
+    /// The settings instance being manipulated.
+    /// </summary>
+    public OneDriveCoreSettings? Settings
+    {
+        get => _settings;
+        set => SetProperty(ref _settings, value);
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="LandingPage"/>.

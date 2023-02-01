@@ -24,7 +24,7 @@ public sealed partial class ShellSettingsEditor : UserControl
     /// The backing dependency property for <see cref="ShellSettings"/>.
     /// </summary>
     public static readonly DependencyProperty ShellSettingsProperty =
-        DependencyProperty.Register(nameof(ShellSettings), typeof(int), typeof(ShellSettingsEditor), new PropertyMetadata(new ShellSettings { InstanceId = $"{Guid.NewGuid()}" }));
+        DependencyProperty.Register(nameof(ShellSettings), typeof(ShellSettings), typeof(ShellSettingsEditor), new PropertyMetadata(new ShellSettings { InstanceId = $"{Guid.NewGuid()}" }));
 
     /// <summary>
     /// The AppRoot to provide to displayed shells. Optional.

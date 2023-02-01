@@ -64,7 +64,7 @@ namespace StrixMusic.Sdk.AdapterModels
             _source.NowPlayingChanged -= Source_NowPlayingChanged;
         }
 
-        private void Source_NowPlayingChanged(object sender, ICoreTrack e)
+        private void Source_NowPlayingChanged(object? sender, ICoreTrack e)
         {
             var nowPlaying = new MergedTrack(e.IntoList(), new MergedCollectionConfig());
 

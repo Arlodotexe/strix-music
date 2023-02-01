@@ -152,7 +152,7 @@ namespace StrixMusic.Shells.Groove
             set => SetValue(HamburgerPressedCommandProperty, value);
         }
 
-        private void CurrentView_BackRequested(object sender, BackRequestedEventArgs e)
+        private void CurrentView_BackRequested(object? sender, BackRequestedEventArgs e)
         {
             _navigationTracker.NavigateBackwards();
         }

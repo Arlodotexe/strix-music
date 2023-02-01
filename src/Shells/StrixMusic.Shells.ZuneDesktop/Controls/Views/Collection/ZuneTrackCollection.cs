@@ -148,12 +148,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Tracks_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             using (await _collectionModifyMutex.DisposableWaitAsync())
             {
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
                 {
+                    if (e.NewItems is null)
+                        return;
+
                     var tracks = e.NewItems.Cast<TrackViewModel>();
                     foreach (var item in tracks)
                     {
@@ -177,6 +180,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
                 {
+                    if (e.OldItems is null)
+                        return;
+
                     foreach (var item in e.OldItems)
                     {
                         var target = TrackItems.FirstOrDefault(x => x.Track == item);
@@ -190,6 +196,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
                 {
+                    if (e.OldItems is null)
+                        return;
+
                     for (var i = 0; i < e.OldItems.Count; i++)
                         _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
                 }
@@ -260,7 +269,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 DetachEvents(item);
         }
 
-        private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Item_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ZuneTrackCollectionItem.ShouldShowArtistList))
                 OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));

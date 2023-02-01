@@ -60,7 +60,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICoreGenre other)
+        public bool Equals(ICoreGenre? other)
         {
             return other?.Name == Name;
         }

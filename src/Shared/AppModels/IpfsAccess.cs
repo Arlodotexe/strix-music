@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Ipfs;
 using Ipfs.Http;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Kubo;
 using OwlCore.Storage;
-using OwlCore.Storage.Memory;
 using OwlCore.Storage.SystemIO;
-using StrixMusic.Helpers;
 using StrixMusic.Settings;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using static System.Environment;
 
 namespace StrixMusic.AppModels;
@@ -32,35 +30,14 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 {
     private readonly SemaphoreSlim _initMutex = new(1, 1);
 
-    [ObservableProperty]
-    private bool _isInitialized;
-
-    [ObservableProperty]
-    private bool _isRunningEmbeddedNode;
-
-    [ObservableProperty]
-    private string _initStatus = "IPFS is not loaded";
-
-    [ObservableProperty]
     private IpfsSettings _settings;
-
-    [ObservableProperty]
+    private bool _isInitialized;
+    private bool _isRunningEmbeddedNode;
+    private string _initStatus = "IPFS is not loaded";
     private KuboBootstrapper? _kuboBootstrapper;
-
-    [ObservableProperty]
     private PeerRoom? _everyone;
-
-    [ObservableProperty]
     private IpfsClient? _client;
-
-    [ObservableProperty]
     private Ipfs.Peer? _thisPeer;
-
-    partial void OnInitStatusChanged(string? value)
-    {
-        if (value is not null)
-            OwlCore.Diagnostics.Logger.LogInformation(value);
-    }
 
     /// <summary>
     /// Creates a new instance of <see cref="IpfsAccess"/>.
@@ -73,7 +50,79 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         _settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
-    private async void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    /// <summary>
+    /// A container for all settings related to Ipfs.
+    /// </summary>
+    public IpfsSettings Settings
+    {
+        get => _settings;
+        set => SetProperty(ref _settings, value);
+    }
+
+    /// <summary>
+    /// Gets a boolean that indicates if IPFS can be accessed.
+    /// </summary>
+    public bool IsInitialized
+    {
+        get => _isInitialized;
+        set => SetProperty(ref _isInitialized, value);
+    }
+
+    /// <summary>
+    /// Gets a boolean that indicates if a node was downloaded and boostrapped by the application.
+    /// </summary>
+    public bool IsRunningEmbeddedNode
+    {
+        get => _isRunningEmbeddedNode;
+        set => SetProperty(ref _isRunningEmbeddedNode, value);
+    }
+
+    /// <summary>
+    /// Detailed status info for <see cref="InitAsync"/>. 
+    /// </summary>
+    public string InitStatus
+    {
+        get => _initStatus;
+        set => SetProperty(ref _initStatus, value);
+    }
+
+    /// <summary>
+    /// The bootstrapper that was used to start an embedded node.
+    /// </summary>
+    public KuboBootstrapper? KuboBootstrapper
+    {
+        get => _kuboBootstrapper;
+        set => SetProperty(ref _kuboBootstrapper, value);
+    }
+
+    /// <summary>
+    /// A room where all users of the application are present.
+    /// </summary>
+    public PeerRoom? Everyone
+    {
+        get => _everyone;
+        set => SetProperty(ref _everyone, value);
+    }
+
+    /// <summary>
+    /// The configured IPFS client, if available.
+    /// </summary>
+    public IpfsClient? Client
+    {
+        get => _client;
+        set => SetProperty(ref _client, value);
+    }
+
+    /// <summary>
+    /// The peer information for this user, if the daemon is running and accessible.
+    /// </summary>
+    public Ipfs.Peer? ThisPeer
+    {
+        get => _thisPeer;
+        set => SetProperty(ref _thisPeer, value);
+    }
+
+    private async void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(_settings.Enabled))
         {
@@ -197,7 +246,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 InitStatus = "Starting Kubo";
                 Guard.IsNotNull(kuboBin);
 
-                KuboBootstrapper = new KuboBootstrapper(kuboBin, Path.Combine(Path.GetDirectoryName(kuboBin.Path), ".ipfs"))
+                var kuboBinParentFolder = await kuboBin.GetParentAsync(cancellationToken);
+                Guard.IsNotNull(kuboBinParentFolder);
+
+                var ipfsFolder = await ((IModifiableFolder)kuboBinParentFolder).CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
+
+                KuboBootstrapper = new KuboBootstrapper(kuboBin, ipfsFolder.Path)
                 {
                     ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
                 };
@@ -217,6 +271,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
             InitStatus = "Kubo is running and ready to use";
             IsInitialized = true;
         }
+    }
+
+    private void OnInitStatusChanged(string? value)
+    {
+        if (value is not null)
+            OwlCore.Diagnostics.Logger.LogInformation(value);
     }
 
     /// <summary>

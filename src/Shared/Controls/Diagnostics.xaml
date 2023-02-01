@@ -33,16 +33,6 @@
 			VerticalAlignment="Top"
 			Spacing="4">
 
-			<labs:SettingsCard Header="Window Size">
-				<labs:SettingsCard.Content>
-					<TextBlock>
-						<!--  Separating Runs with a newline creates an unnecessary space b/w two related text elements.  -->
-						<Run Text="{x:Bind DiagnosticData.WindowWidth, Mode=OneWay}" /><Run Text="w x" />
-						<Run Text="{x:Bind DiagnosticData.WindowHeight, Mode=OneWay}" /><Run Text="h" />
-					</TextBlock>
-				</labs:SettingsCard.Content>
-			</labs:SettingsCard>
-
 			<labs:SettingsCard Header="Memory Usage">
 				<labs:SettingsCard.Description>
 					<TextBlock>

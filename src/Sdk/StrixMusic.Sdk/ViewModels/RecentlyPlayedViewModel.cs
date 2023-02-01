@@ -35,6 +35,6 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreRecentlyPlayed> IMerged<ICoreRecentlyPlayed>.Sources => this.GetSources<ICoreRecentlyPlayed>();
 
         /// <inheritdoc />
-        public bool Equals(ICoreRecentlyPlayed other) => _recentlyPlayed.Equals(other);
+        public bool Equals(ICoreRecentlyPlayed? other) => _recentlyPlayed.Equals(other!);
     }
 }

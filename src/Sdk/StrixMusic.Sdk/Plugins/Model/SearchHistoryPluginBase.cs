@@ -28,7 +28,7 @@ public class SearchHistoryPluginBase : PlayableCollectionGroupPluginBase, IModel
     }
 
     /// <inheritdoc />
-    public virtual bool Equals(ICoreSearchHistory other) => Inner.Equals(other);
+    public virtual bool Equals(ICoreSearchHistory? other) => Inner.Equals(other!);
 
     /// <inheritdoc/>
     public new IReadOnlyList<ICoreSearchHistory> Sources => ((IMerged<ICoreSearchHistory>)Inner).Sources;

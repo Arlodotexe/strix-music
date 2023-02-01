@@ -364,7 +364,7 @@ namespace OwlCore.WinUI.Controls
             }
         }
 
-        private void StoryboardMarquee_Completed(object sender, object e)
+        private void StoryboardMarquee_Completed(object? sender, object e)
         {
             IsStopped = true;
             if (_storyboardMarquee != null)

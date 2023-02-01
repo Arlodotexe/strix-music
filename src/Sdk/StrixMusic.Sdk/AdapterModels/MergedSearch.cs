@@ -128,6 +128,6 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>true. We always merge together search sources.</returns>
-        public bool Equals(ICoreSearch other) => true;
+        public bool Equals(ICoreSearch? other) => true;
     }
 }

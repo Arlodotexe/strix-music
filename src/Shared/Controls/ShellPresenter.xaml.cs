@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore;
@@ -12,13 +9,14 @@ using StrixMusic.Sdk.WinUI;
 using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove;
 using StrixMusic.Shells.ZuneDesktop;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Controls;
 
 [ObservableObject]
 public sealed partial class ShellPresenter : UserControl
 {
-    [ObservableProperty] private Shell? _currentShell;
     private bool _currentIsPreferred;
 
     /// <summary>
@@ -29,7 +27,7 @@ public sealed partial class ShellPresenter : UserControl
         this.InitializeComponent();
 
         SizeChanged += ShellPresenter_SizeChanged;
-        
+
         RegisterPropertyChangedCallback(WidthProperty, (d, e) => _ = ((ShellPresenter)d).OnSizeChangedAsync());
     }
 
@@ -65,7 +63,13 @@ public sealed partial class ShellPresenter : UserControl
         DependencyProperty.Register(nameof(FallbackShell), typeof(AdaptiveShells), typeof(ShellPresenter), new PropertyMetadata(StrixMusicShells.Sandbox, (d, e) => ((ShellPresenter)d).OnFallbackShellChanged((AdaptiveShells)e.OldValue, (AdaptiveShells)e.NewValue)));
 
     /// <summary>
-    /// Identifies the <see cref="Root"/> dependency property.
+    /// Identifies the <see cref="CurrentShell"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty CurrentShellProperty =
+        DependencyProperty.Register(nameof(CurrentShell), typeof(Shell), typeof(ShellPresenter), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Identifies the <see cref="FallbackShell"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty RootProperty =
         DependencyProperty.Register(nameof(Root), typeof(IStrixDataRoot), typeof(ShellPresenter), new PropertyMetadata(null, (d, e) => ((ShellPresenter)d).OnRootChanged(e.OldValue as IStrixDataRoot, e.NewValue as IStrixDataRoot)));
@@ -86,6 +90,19 @@ public sealed partial class ShellPresenter : UserControl
     {
         get => (StrixMusicShells)GetValue(PreferredShellProperty);
         set => SetValue(PreferredShellProperty, value);
+    }
+
+    /// <summary>
+    /// The adaptive shell to use when  the<see cref="PreferredShell"/> isn't able to fit the current screen size.
+    /// </summary>
+    public Shell? CurrentShell
+    {
+        get => (Shell?)GetValue(CurrentShellProperty);
+        private set
+        {
+            SetValue(CurrentShellProperty, value);
+            CurrentShellChanged?.Invoke(this, value);
+        }
     }
 
     /// <summary>
@@ -120,6 +137,11 @@ public sealed partial class ShellPresenter : UserControl
         return isWindowTooBig || isWindowTooSmall;
     }
 
+    /// <summary>
+    /// Raised when <see cref="CurrentShell"/> is changed.
+    /// </summary>
+    public event EventHandler<Shell?>? CurrentShellChanged;
+
     private void OnRootChanged(IStrixDataRoot? oldValue, IStrixDataRoot? newValue)
     {
         if (!IsLoaded)
@@ -128,10 +150,10 @@ public sealed partial class ShellPresenter : UserControl
         if (oldValue == newValue)
             return;
 
-        if (_currentShell is not null)
-            _currentShell.Root = newValue;
+        if (CurrentShell is not null)
+            CurrentShell.Root = newValue;
 
-        if (_currentShell is null)
+        if (CurrentShell is null)
         {
             if (!ShouldUseFallbackShell())
                 ApplyFallbackShell();

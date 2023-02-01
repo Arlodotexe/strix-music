@@ -40,5 +40,5 @@ public class SearchHistoryPluginWrapper : PlayableCollectionGroupPluginWrapperBa
     public IReadOnlyList<ICoreSearchHistory> Sources => ((IMerged<ICoreSearchHistory>)_searchHistory).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreSearchHistory other) => _searchHistory.Equals(other);
+    public bool Equals(ICoreSearchHistory? other) => _searchHistory.Equals(other!);
 }

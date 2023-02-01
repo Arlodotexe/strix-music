@@ -14,13 +14,16 @@ using Microsoft.UI.Xaml.Controls;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
+using OwlCore.Kubo;
 using OwlCore.Storage;
 using StrixMusic.Controls;
 using StrixMusic.MediaPlayback;
+using StrixMusic.Plugins;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.PluginModels;
+using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Plugins.PlaybackHandler;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
 using StrixMusic.Sdk.ViewModels;
@@ -28,9 +31,6 @@ using StrixMusic.Settings;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Kubo;
-using StrixMusic.Plugins;
-using StrixMusic.Sdk.Plugins.Model;
 using ProgressBar = Windows.UI.Xaml.Controls.ProgressBar;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
 using ShowType = OwlCore.Extensions.ShowType;
@@ -50,22 +50,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SystemMediaTransportControlsHandler _smtcHandler;
 
-    [ObservableProperty]
     private AppDiagnostics? _diagnostics;
-
-    [ObservableProperty]
     private StrixDataRootViewModel? _strixDataRoot;
-
-    [ObservableProperty]
     private MergedCore? _mergedCore;
-
-    [ObservableProperty]
     private MusicSourcesSettings? _musicSourcesSettings;
-
-    [ObservableProperty]
     private ShellSettings? _shellSettings;
-
-    [ObservableProperty]
     private IpfsAccess? _ipfs;
 
     /// <summary>
@@ -74,7 +63,64 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     public AppRoot(IModifiableFolder dataFolder)
     {
         _dataFolder = dataFolder;
+
+#if !__WASM__
         _smtcHandler = new SystemMediaTransportControlsHandler(_playbackHandler);
+#endif
+    }
+
+    /// <summary>
+    /// Responsible for handling app debug and diagnostics.
+    /// </summary>
+    public AppDiagnostics? Diagnostics
+    {
+        get => _diagnostics;
+        set => SetProperty(ref _diagnostics, value);
+    }
+
+    /// <summary>
+    /// The configured strix dataroot, if any.
+    /// </summary>
+    public StrixDataRootViewModel? StrixDataRoot
+    {
+        get => _strixDataRoot;
+        set => SetProperty(ref _strixDataRoot, value);
+    }
+
+    /// <summary>
+    /// A container for all settings related to configured music sources.
+    /// </summary>
+    public MusicSourcesSettings? MusicSourcesSettings
+    {
+        get => _musicSourcesSettings;
+        set => SetProperty(ref _musicSourcesSettings, value);
+    }
+
+    /// <summary>
+    /// The underlying MergedCore that was used to create the current <see cref="StrixDataRoot"/>, if any. 
+    /// </summary>
+    public MergedCore? MergedCore
+    {
+        get => _mergedCore;
+        set => SetProperty(ref _mergedCore, value);
+    }
+
+    /// <summary>
+    /// User preferences for shells.
+    /// </summary>
+    public ShellSettings? ShellSettings
+    {
+        get => _shellSettings;
+        set => SetProperty(ref _shellSettings, value);
+    }
+
+    /// <summary>
+    /// Managed access to the IPFS protocol.
+    /// </summary>
+    public IpfsAccess? Ipfs
+    {
+        get => _ipfs;
+        set => SetProperty(ref _ipfs, value);
     }
 
     /// <summary>
@@ -214,7 +260,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
     }
 
-    private async void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private async void ConfiguredLocalStorageCores_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Guard.IsNotNull(MusicSourcesSettings);
 
@@ -222,7 +268,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         await MusicSourcesSettings.SaveAsync();
     }
 
-    private async void ConfiguredOneDriveCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private async void ConfiguredOneDriveCores_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Guard.IsNotNull(MusicSourcesSettings);
 
@@ -230,13 +276,16 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         await MusicSourcesSettings.SaveAsync();
     }
 
-    private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
+    private async Task HandleCoreSettingsCollectionChangedAsync<TSettings>(object? sender, NotifyCollectionChangedEventArgs e, Func<TSettings, Task<ICore>> settingsToCoreFactory)
         where TSettings : CoreSettingsBase, IInstanceId
     {
         using (await _initMutex.DisposableWaitAsync())
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
+                if (e.NewItems is null)
+                    return;
+
                 foreach (var settings in e.NewItems.Cast<TSettings>())
                 {
                     if (settings.HasUnsavedChanges)
@@ -267,9 +316,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     if (!newCore.IsInitialized)
                     {
                         Logger.LogInformation($"Core {newCore.InstanceId} didn't initialize correctly, and the user chose not to retry.");
-                        var settingsInstances = (IList<TSettings>)sender;
+                        var settingsInstances = sender as IList<TSettings>;
 
-                        Guard.IsTrue(settingsInstances.Remove(settings));
+                        Guard.IsTrue(settingsInstances?.Remove(settings) ?? false);
                         await MusicSourcesSettings!.SaveAsync();
 
                         return;
@@ -301,6 +350,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     // Not yet loaded, nothing created so nothing to remove.
                     return;
                 }
+
+                if (e.OldItems is null)
+                    return;
 
                 foreach (var item in e.OldItems.Cast<TSettings>())
                 {
@@ -353,7 +405,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 await HandleFailureAsync(ex);
             }
 
-            async Task HandleFailureAsync(Exception ex)
+            async Task HandleFailureAsync(Exception? ex)
             {
                 Logger.LogError($"Core failed to initialize: \"{core.DisplayName}\", id {core.InstanceId}.", ex);
 
@@ -439,7 +491,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 if (initCoreAsyncCommand.ExecutionTask.Status == TaskStatus.Faulted)
                 {
-                    await HandleFailureAsync(initCoreAsyncCommand.ExecutionTask.Exception.Flatten());
+                    await HandleFailureAsync(initCoreAsyncCommand.ExecutionTask?.Exception?.Flatten());
                 }
                 else if (initCoreAsyncCommand.ExecutionTask.Status == TaskStatus.RanToCompletion)
                 {
@@ -481,7 +533,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
             {
-                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).AssemblyQualifiedName;
+                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).FullName;
                 var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? ipfs.ThisPeer.Id.ToString();
 
                 var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);

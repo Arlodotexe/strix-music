@@ -148,7 +148,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
             return scaleTransform;
         }
 
-        private void Storyboard_Completed(object sender, object e)
+        private void Storyboard_Completed(object? sender, object e)
         {
             for (int i = 0; i < _dAnimations.Length; i++)
             {

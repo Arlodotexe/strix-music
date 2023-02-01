@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual string? TextLyrics => Inner.TextLyrics;
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreLyrics other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreLyrics? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreLyrics> Sources => Inner.Sources;

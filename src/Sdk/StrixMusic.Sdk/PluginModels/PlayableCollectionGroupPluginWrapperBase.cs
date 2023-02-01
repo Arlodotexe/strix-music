@@ -114,7 +114,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
         playableCollectionGroup.ChildItemsChanged -= OnChildItemsChanged;
     }
 
-    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     private void OnChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems)
     {
@@ -172,53 +172,53 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
         ImagesChanged?.Invoke(sender, wrappedAdded, wrappedRemoved);
     }
 
-    private void OnDownloadInfoChanged(object sender, DownloadInfo e) => DownloadInfoChanged?.Invoke(sender, e);
+    private void OnDownloadInfoChanged(object? sender, DownloadInfo e) => DownloadInfoChanged?.Invoke(sender, e);
 
-    private void OnChildrenCountChanged(object sender, int e) => ChildrenCountChanged?.Invoke(sender, e);
+    private void OnChildrenCountChanged(object? sender, int e) => ChildrenCountChanged?.Invoke(sender, e);
 
-    private void OnArtistItemsCountChanged(object sender, int e) => ArtistItemsCountChanged?.Invoke(sender, e);
+    private void OnArtistItemsCountChanged(object? sender, int e) => ArtistItemsCountChanged?.Invoke(sender, e);
 
-    private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseArtistCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPauseArtistCollectionAsyncAvailableChanged(object? sender, bool e) => IsPauseArtistCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayArtistCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPlayArtistCollectionAsyncAvailableChanged(object? sender, bool e) => IsPlayArtistCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnAlbumItemsCountChanged(object sender, int e) => AlbumItemsCountChanged?.Invoke(sender, e);
+    private void OnAlbumItemsCountChanged(object? sender, int e) => AlbumItemsCountChanged?.Invoke(sender, e);
 
-    private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseAlbumCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object? sender, bool e) => IsPauseAlbumCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayAlbumCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object? sender, bool e) => IsPlayAlbumCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnTracksCountChanged(object sender, int e) => TracksCountChanged?.Invoke(sender, e);
+    private void OnTracksCountChanged(object? sender, int e) => TracksCountChanged?.Invoke(sender, e);
 
-    private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => IsPauseTrackCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPauseTrackCollectionAsyncAvailableChanged(object? sender, bool e) => IsPauseTrackCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayTrackCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPlayTrackCollectionAsyncAvailableChanged(object? sender, bool e) => IsPlayTrackCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnPlaylistItemsCountChanged(object sender, int e) => PlaylistItemsCountChanged?.Invoke(sender, e);
+    private void OnPlaylistItemsCountChanged(object? sender, int e) => PlaylistItemsCountChanged?.Invoke(sender, e);
 
-    private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => IsPausePlaylistCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object? sender, bool e) => IsPausePlaylistCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => IsPlayPlaylistCollectionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object? sender, bool e) => IsPlayPlaylistCollectionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => IsChangeDurationAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsChangeDurationAsyncAvailableChanged(object? sender, bool e) => IsChangeDurationAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => IsChangeDescriptionAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsChangeDescriptionAsyncAvailableChanged(object? sender, bool e) => IsChangeDescriptionAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => IsChangeNameAsyncAvailableChanged?.Invoke(sender, e);
+    private void OnIsChangeNameAsyncAvailableChanged(object? sender, bool e) => IsChangeNameAsyncAvailableChanged?.Invoke(sender, e);
 
-    private void OnLastPlayedChanged(object sender, DateTime? e) => LastPlayedChanged?.Invoke(sender, e);
+    private void OnLastPlayedChanged(object? sender, DateTime? e) => LastPlayedChanged?.Invoke(sender, e);
 
-    private void OnDurationChanged(object sender, TimeSpan e) => DurationChanged?.Invoke(sender, e);
+    private void OnDurationChanged(object? sender, TimeSpan e) => DurationChanged?.Invoke(sender, e);
 
-    private void OnDescriptionChanged(object sender, string? e) => DescriptionChanged?.Invoke(sender, e);
+    private void OnDescriptionChanged(object? sender, string? e) => DescriptionChanged?.Invoke(sender, e);
 
-    private void OnNameChanged(object sender, string e) => NameChanged?.Invoke(sender, e);
+    private void OnNameChanged(object? sender, string e) => NameChanged?.Invoke(sender, e);
 
-    private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
+    private void OnPlaybackStateChanged(object? sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
 
-    private void OnUrlsCountChanged(object sender, int e) => UrlsCountChanged?.Invoke(sender, e);
+    private void OnUrlsCountChanged(object? sender, int e) => UrlsCountChanged?.Invoke(sender, e);
 
-    private void OnImagesCountChanged(object sender, int e) => ImagesCountChanged?.Invoke(sender, e);
+    private void OnImagesCountChanged(object? sender, int e) => ImagesCountChanged?.Invoke(sender, e);
     
     /// <inheritdoc cref="IMerged.SourcesChanged"/>
     public event EventHandler? SourcesChanged;
@@ -494,7 +494,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task<bool> IsRemoveChildAvailableAsync(int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.IsRemoveChildAvailableAsync(index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreImageCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreImageCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => ((IMerged<ICoreImageCollection>)_playableCollectionGroup).Sources;
@@ -536,7 +536,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddImageAsync(image, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreUrlCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreUrlCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => _playableCollectionGroup.GetUrlsAsync(limit, offset, cancellationToken).Select(x => new UrlPluginWrapper(x, _plugins));
@@ -551,10 +551,10 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => _playableCollectionGroup.StartDownloadOperationAsync(operation, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICorePlaylistCollectionItem other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICorePlaylistCollectionItem? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
-    public bool Equals(ICorePlaylistCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICorePlaylistCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayPlaylistCollectionAsync(playlistItem, cancellationToken);
@@ -566,7 +566,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlistItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddPlaylistItemAsync(playlistItem, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreTrackCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreTrackCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayTrackCollectionAsync(track, cancellationToken);
@@ -578,10 +578,10 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddTrackAsync(ITrack track, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddTrackAsync(track, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreAlbumCollectionItem other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreAlbumCollectionItem? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreAlbumCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreAlbumCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayAlbumCollectionAsync(albumItem, cancellationToken);
@@ -593,10 +593,10 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddAlbumItemAsync(IAlbumCollectionItem albumItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddAlbumItemAsync(albumItem, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreArtistCollectionItem other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreArtistCollectionItem? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreArtistCollection other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICoreArtistCollection? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayArtistCollectionAsync(artistItem, cancellationToken);
@@ -608,7 +608,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddArtistItemAsync(IArtistCollectionItem artistItem, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddArtistItemAsync(artistItem, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICorePlayableCollectionGroupChildren other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICorePlayableCollectionGroupChildren? other) => _playableCollectionGroup.Equals(other!);
 
     /// <inheritdoc/>
     public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup, CancellationToken cancellationToken = default) => _playableCollectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup, cancellationToken);
@@ -620,7 +620,7 @@ public abstract class PlayableCollectionGroupPluginWrapperBase : IPlayableCollec
     public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => _playableCollectionGroup.AddChildAsync(child, index, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICorePlayableCollectionGroup other) => _playableCollectionGroup.Equals(other);
+    public bool Equals(ICorePlayableCollectionGroup? other) => _playableCollectionGroup.Equals(other!);
 
     private IArtistCollectionItem Transform(IArtistCollectionItem item) => item switch
     {

@@ -22,9 +22,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
         }
 
         /// <inheritdoc/>
-        public override int Compare(TPlayableBase x, TPlayableBase y)
+        public override int Compare(TPlayableBase? x, TPlayableBase? y)
         {
-            int value = string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
+            int value = string.Compare(x?.Name, y?.Name, false, CultureInfo.CurrentCulture);
             return IsDescending ? -value : value;
         }
     }

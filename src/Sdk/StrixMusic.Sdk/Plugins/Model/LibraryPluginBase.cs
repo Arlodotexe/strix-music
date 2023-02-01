@@ -28,7 +28,7 @@ public class LibraryPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin
     }
 
     /// <inheritdoc />
-    public virtual bool Equals(ICoreLibrary other) => Inner.Equals(other);
+    public virtual bool Equals(ICoreLibrary? other) => Inner.Equals(other!);
 
     /// <inheritdoc/>
     public new IReadOnlyList<ICoreLibrary> Sources => ((IMerged<ICoreLibrary>)Inner).Sources;

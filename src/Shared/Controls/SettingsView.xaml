@@ -35,7 +35,7 @@
 			IsAnimated="True"
 			ShowText="True" />
 
-		<muxc:NavigationView
+		<NavigationView
 			x:Name="PartNavigationView"
 			Grid.Row="1"
 			Background="Transparent"
@@ -44,30 +44,30 @@
 			OpenPaneLength="215"
 			PaneDisplayMode="Top"
 			SelectedItem="{x:Bind AppearanceNavigationViewItem}">
-			<muxc:NavigationView.MenuItems>
-				<muxc:NavigationViewItem
+			<NavigationView.MenuItems>
+				<NavigationViewItem
 					x:Name="AppearanceNavigationViewItem"
 					Content="Appearance"
 					Icon="{ui:FontIcon Glyph=&#xE2B1;}" />
-				<muxc:NavigationViewItem
+				<NavigationViewItem
 					x:Name="MusicSourcesNavigationViewItem"
 					Content="Music sources"
 					Icon="{ui:FontIcon Glyph=&#xEA69;}" />
-				<muxc:NavigationViewItem
+				<NavigationViewItem
 					x:Name="IpfsNavigationViewItem"
 					Content="IPFS"
 					Icon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}" />
-				<muxc:NavigationViewItem
+				<NavigationViewItem
 					x:Name="AboutNavigationViewItem"
 					Content="About"
 					Icon="{ui:FontIcon Glyph=&#xEE57;}"
 					Tag="About" />
-				<muxc:NavigationViewItem
+				<NavigationViewItem
 					x:Name="DiagnosticsNavigationViewItem"
 					Content="Diagnostics"
 					Icon="{ui:FontIcon Glyph=&#xE9D9;}"
 					Tag="Debug" />
-			</muxc:NavigationView.MenuItems>
+			</NavigationView.MenuItems>
 
 			<ScrollViewer MinHeight="{x:Bind NavViewSwitchPresenter.ActualHeight, Mode=OneWay}">
 				<controls:SwitchPresenter x:Name="NavViewSwitchPresenter" Value="{x:Bind PartNavigationView.SelectedItem, Mode=OneWay}">
@@ -99,7 +99,7 @@
 					</controls:Case>
 				</controls:SwitchPresenter>
 			</ScrollViewer>
-		</muxc:NavigationView>
+		</NavigationView>
 
 		<VisualStateManager.VisualStateGroups>
 

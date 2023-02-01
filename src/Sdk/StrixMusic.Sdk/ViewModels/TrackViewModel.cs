@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
         public TrackViewModel(ITrack track)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _model = track;
             
@@ -319,64 +319,64 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _model.UrlsChanged -= value;
         }
 
-        private void Track_TrackNumberChanged(object sender, int? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TrackNumber)), null);
+        private void Track_TrackNumberChanged(object? sender, int? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TrackNumber)), null);
 
-        private void Track_PlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
+        private void Track_PlaybackStateChanged(object? sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
 
-        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
+        private void OnDownloadInfoChanged(object? sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
 
-        private void Track_NameChanged(object sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
+        private void Track_NameChanged(object? sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
 
-        private void Track_LyricsChanged(object sender, ILyrics? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Lyrics)), null);
+        private void Track_LyricsChanged(object? sender, ILyrics? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Lyrics)), null);
 
-        private void Track_LanguageChanged(object sender, CultureInfo? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Language)), null);
+        private void Track_LanguageChanged(object? sender, CultureInfo? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Language)), null);
 
-        private void Track_IsExplicitChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsExplicit)), null);
+        private void Track_IsExplicitChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsExplicit)), null);
 
-        private void Track_DescriptionChanged(object sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
+        private void Track_DescriptionChanged(object? sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
+        private void OnLastPlayedChanged(object? sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
+        private void OnIsChangeDurationAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
+        private void OnIsChangeNameAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
 
-        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
 
-        private void Track_AlbumChanged(object sender, IAlbum? e)
+        private void Track_AlbumChanged(object? sender, IAlbum? e)
         {
             Album = e is null ? null : new AlbumViewModel(e);
             _syncContext.Post(_ => OnPropertyChanged(nameof(Album)), null);
         }
 
-        private void OnArtistItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
+        private void OnArtistItemsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
 
-        private void OnImagesCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
+        private void OnImagesCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
 
-        private void OnGenresCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalGenreCount)), null);
+        private void OnGenresCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalGenreCount)), null);
 
-        private void OnUrlsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
+        private void OnUrlsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
 
-        private void TrackViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
+        private void TrackViewModel_ImagesChanged(object? sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
         {
             Images.ChangeCollection(addedItems, removedItems);
         }, null);
 
-        private void TrackViewModel_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => _syncContext.Post(_ =>
+        private void TrackViewModel_GenresChanged(object? sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems) => _syncContext.Post(_ =>
         {
             Genres.ChangeCollection(addedItems, removedItems);
         }, null);
 
-        private void TrackViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _syncContext.Post(_ =>
+        private void TrackViewModel_UrlsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems) => _syncContext.Post(_ =>
         {
             Urls.ChangeCollection(addedItems, removedItems);
         }, null);
 
-        private void TrackViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _syncContext.Post(_ =>
+        private void TrackViewModel_ArtistItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems) => _syncContext.Post(_ =>
         {
             if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
             {
@@ -416,7 +416,7 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }, null);
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ =>
+        private void OnPlaybackStateChanged(object? sender, PlaybackState e) => _syncContext.Post(_ =>
         {
             PlaybackStateChanged?.Invoke(this, PlaybackState);
             OnPropertyChanged(nameof(PlaybackState));
@@ -801,22 +801,22 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitGenreCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => _model.Equals(other);
+        public bool Equals(ICoreArtistCollectionItem? other) => _model.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _model.Equals(other);
+        public bool Equals(ICoreImageCollection? other) => _model.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => _model.Equals(other);
+        public bool Equals(ICoreArtistCollection? other) => _model.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => _model.Equals(other);
+        public bool Equals(ICoreGenreCollection? other) => _model.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => _model.Equals(other);
+        public bool Equals(ICoreUrlCollection? other) => _model.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrack other) => _model.Equals(other);
+        public bool Equals(ICoreTrack? other) => _model.Equals(other!);
 
         private Task ChangeNameInternalAsync(string? name, CancellationToken cancellationToken = default)
         {

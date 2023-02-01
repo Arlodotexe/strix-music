@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
@@ -54,11 +55,12 @@ namespace StrixMusic.Sdk.WinUI.Controls
             device.IsActiveChanged -= Device_IsActiveChanged;
         }
 
-        private void Device_IsActiveChanged(object sender, bool e)
+        private void Device_IsActiveChanged(object? sender, bool e)
         {
             if (e)
             {
-                var device = (IDevice)sender;
+                var device = sender as IDevice;
+                Guard.IsNotNull(device);
 
                 if (device is not DeviceViewModel dvm)
                     dvm = new DeviceViewModel(device);
@@ -93,7 +95,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// The backing dependency property for <see cref="Devices"/>.
         /// </summary>
         public static readonly DependencyProperty DevicesProperty =
-            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(new List<IDevice>(), (s, e) => ((NowPlayingBar)s).OnDevicesChanged( (IReadOnlyList<IDevice>)e.OldValue, (IReadOnlyList<IDevice>)e.NewValue)));
+            DependencyProperty.Register(nameof(Devices), typeof(IReadOnlyList<IDevice>), typeof(NowPlayingBar), new PropertyMetadata(new List<IDevice>(), (s, e) => ((NowPlayingBar)s).OnDevicesChanged((IReadOnlyList<IDevice>)e.OldValue, (IReadOnlyList<IDevice>)e.NewValue)));
 
         /// <summary>
         /// Backing dependency property for <see cref="ActiveDevice"/>.

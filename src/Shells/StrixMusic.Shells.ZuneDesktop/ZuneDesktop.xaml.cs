@@ -142,7 +142,7 @@ namespace StrixMusic.Shells.ZuneDesktop
             WindowHostOptions.ButtonForegroundColor = theme == ElementTheme.Dark ? Colors.White : Colors.Black;
         }
 
-        private void SettingsService_SettingChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void SettingsService_SettingChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ZuneDesktopSettings.BackgroundImage))
             {

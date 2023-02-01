@@ -54,24 +54,24 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
             _playbackHandler.CurrentItemChanged -= PlaybackHandler_CurrentItemChanged;
         }
 
-        private void PlaybackHandler_CurrentItemChanged(object sender, PlaybackItem? e)
+        private void PlaybackHandler_CurrentItemChanged(object? sender, PlaybackItem? e)
         {
             Guard.IsNotNull(e, nameof(e));
 
             SetPlaybackData(PlaybackContext, e);
         }
 
-        private void PlaybackHandler_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
+        private void PlaybackHandler_PlaybackStateChanged(object? sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
 
-        private void PlaybackHandler_PositionChanged(object sender, TimeSpan e) => PositionChanged?.Invoke(sender, e);
+        private void PlaybackHandler_PositionChanged(object? sender, TimeSpan e) => PositionChanged?.Invoke(sender, e);
 
-        private void PlaybackHandler_VolumeChanged(object sender, double e) => VolumeChanged?.Invoke(this, e);
+        private void PlaybackHandler_VolumeChanged(object? sender, double e) => VolumeChanged?.Invoke(this, e);
 
-        private void PlaybackHandler_PlaybackSpeedChanged(object sender, double e) => PlaybackSpeedChanged?.Invoke(sender, e);
+        private void PlaybackHandler_PlaybackSpeedChanged(object? sender, double e) => PlaybackSpeedChanged?.Invoke(sender, e);
 
-        private void PlaybackHandler_RepeatStateChanged(object sender, RepeatState e) => RepeatStateChanged?.Invoke(sender, e);
+        private void PlaybackHandler_RepeatStateChanged(object? sender, RepeatState e) => RepeatStateChanged?.Invoke(sender, e);
 
-        private void PlaybackHandler_ShuffleStateChanged(object sender, bool e) => ShuffleStateChanged?.Invoke(sender, e);
+        private void PlaybackHandler_ShuffleStateChanged(object? sender, bool e) => ShuffleStateChanged?.Invoke(sender, e);
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsActiveChanged;
