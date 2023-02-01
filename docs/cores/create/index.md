@@ -62,7 +62,7 @@ Open up the `.csproj` for your new core and add the following lines before the c
 This tells the compiler to use C# 10, enable nullable reference types, and treat nullable warnings as errors.
 
 > [!TIP]
-> This is _highly_ recommended to help avoid sneaky `NullReferenceException`s in your code. 
+> This is _highly_ recommended to help avoid `NullReferenceException`s at runtime.
 
 ## Add the SDK
 
@@ -82,20 +82,9 @@ All music services are different, therefore you should implement each CoreModel 
 
 ## Implement ICore
 
-Start by creating a class called `MyMusicSourceCore` (again, replacing `MyMusicSource` with the desired name) and implement the [`ICore`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html) interface:
+Start by creating a class called `MyMusicSourceCore` (again, replacing `MyMusicSource` with the desired name) and implement the interface [`ICore`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html):
 
 ![](./assets/core-unimplemented.png)
-
-![](./assets/core-unimplemented-autofilled.png)
-
-### Create registration metadata
-Cores need a way to identify themselves before and after construction.
-
-Create a public, static property containing `CoreMetadata`, and point the instance `Registration` to it:
-
-![](./assets/core-registration.png)
-
-This allows consumers of your core to identify it before creating an instance.
 
 ### Replace implementation defaults
 Visual Studio autofilled each property and method with `=> throw new NotImplementedException();`.
@@ -110,9 +99,9 @@ public ValueTask DisposeAsync()
     return default;
 }
 
-public Task<ICoreMember?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
+public Task<ICoreModel?> GetContextByIdAsync(string id, CancellationToken cancellationToken = default)
 {
-    return Task.FromResult<ICoreMember?>(null);
+    return Task.FromResult<ICoreModel?>(null);
 }
 
 public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default)
@@ -130,65 +119,28 @@ Then fix properties by doing a replace all, trading `=> throw new NotImplemented
 
 ![](./assets/core-unimplemented-fixed-bodies.png)
 
-
-### Setting storage
-Before continuing, we should set up a place for our core to persist settings. For the sake of simplicity, let's say the only setting for this core is an API token.
-
-We highly recommend using `SettingsBase` from OwlCore:
-
-```csharp
-using OwlCore.AbstractStorage;
-using OwlCore.Services;
-using StrixMusic.Sdk.Services;
-
-namespace StrixMusic.Cores.MyMusicSource
-{
-    /// <summary>
-    /// A container for <see cref="MyMusicSourceCore"/> settings.
-    /// </summary>
-    public sealed class MyMusicSourceSettings : SettingsBase
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref="MyMusicSourceSettings"/>.
-        /// </summary>
-        public MyMusicSourceSettings(IFolderData folder)
-            : base(folder, NewtonsoftStreamSerializer.Singleton)
-        {
-        }
-
-        /// <summary>
-        /// The API key used for login, if any.
-        /// </summary>
-        public string ApiKey
-        {
-            get => GetSetting(() => string.Empty);
-            set => SetSetting(value);
-        }
-    }
-}
-```
-
-- To change a setting, simply set the property.
-- To change the default value, change the return value in `GetSetting(() => "some default value");`. This should never be null.
-- To save or load all settings from the provided folder abstraction, simple call `await settings.LoadAsync()` or `await settings.SaveAsync()`.
-- To listen for changes to settings, subscribe to the `settings.PropertyChanged` event (easy bindings in XAML).
-- and more
-
 ### Constructors and dependencies
 
 > [!NOTE]
 > Any dependencies required for your core to function should be exposed in the constructor.
 
-The constructor for a core should be _very_ lightweight, only doing enough to satisfy dependencies and non-nullable properties. Cores should also always be multi-instantiable, using the [`InstanceId`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_InstanceId) to identify each instance, passed in via the constructor along with any dependencies.
+The constructor for a core should be _very_ lightweight, only doing enough to satisfy dependencies and non-nullable properties.
 
-We'll create a `Settings` property and a constructor which takes an instance of the settings container, where data can be stored.
+Cores should also always be multi-instantiable, using the [`InstanceId`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_InstanceId) to identify each instance.
+
+Start by assigning all the non-nullable properties. Replace the values with your own as needed. Leave out `Library` for now.
+
+![](./assets/core-unimplemented-constructor-requiredvalues.png)
+
+Next, pass any data needed for your core to function into the constructor.
+
+For our example, we'll take an `apiKey` string:
 
 ![](./assets/core-unimplemented-constructors.png)
 
-> [!TIP]
-> This approach opens the door to configuring a core before creating it, bypassing any user-interactive setup.
+Then, we'll set up a `MusicBackendService` for this example to retrieve our data.
 
-Then, we'll set up an example API service. This is where our music service's data will come from:
+Your core will use something else to retrieve data - an API instance, a database context, whatever is needed.
 
 ![](./assets/core-unimplemented-with-api-prop.png)
 
@@ -203,8 +155,6 @@ Then, we'll set up an example API service. This is where our music service's dat
 We'll be following the above advice, and creating a `MyMusicSourcePlayableCollectionGroupBase`.
 
 ![](./assets/playablecollectiongroup-base.png)
-
-After implementing, replace the implementation defaults the same [as above](#replace-implementation-defaults).
 
 All core implementations are required to have a `SourceCore` property which points to the `ICore` instance that created it. This should be trickled down via constructors:
 
@@ -285,79 +235,26 @@ public class MyMusicSourceLibrary : MyMusicSourcePlayableCollectionGroupBase, IC
 }
 ```
 
-This has the obvious drawback of increasing the time it takes to get each album, but since the SDK using `IAsyncEnumerable`, each item is asynchronously returned as soon as it possibly can.
+This has the obvious drawback of increasing the time it takes to get each album, The performance impact of this is partially mitigated by `IAsyncEnumerable`, and can further mitigating using a caching strategy in your core.
 
-Cores which have this issue can use caching mechanisms to further mitigate the issue.
+# Finish implementing the core
+There are 6 types of collections:
+- `ICoreImageCollection`
+- `ICoreAlbumCollection`
+- `ICoreArtistCollection` 
+- `ICorePlaylistCollection`
+- `ICoreTrackCollection`
+- `ICorePlayableCollectionGroup`
 
-Small issues like this tend to appear when you try to adapt one API to another. If your API does this, this is the only workaround that's guaranteed to work as expected.
+Each of the models (Album, Artist, Track, Playlist, Search, Library, etc) support some combination of these interfaces.
 
-We caught this problem early in development, and made 100% sure you could realistically create a core with a backend that does this.
+For example, an `ICoreTrack` is an image collection and artist collection.
 
-## Initializing the core
+`ICorePlayableCollectionGroup`, used by library, search, recently played, etc., implements _all_ of these collection types.
+
+You're now equipped with the blueprints you need to implement any of these collections.
+
+# Initializing the core
 Before your core can be used, consumers are required to call `InitAsync` on your core.
 
 This is your opportunity to perform any async setup needed before usage, such as login, database init, user configuration, etc.
-
-This is also the place to make sure you _have_ all the data you need to operate. If any data is missing, you can change the CoreState to `NeedsConfiguration` and assign some AbstractUI to the [`AbstractConfigPanel`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_AbstractConfigPanel).
-
-The consuming application should display this UI to the user, and when the user has provided an indication that they're finished (via an event on one of your components), async initialization can continue as normal.
-
-For our example core, the `InitAsync` method would look a bit like this:
-
-```csharp
-
-public async Task InitAsync(CancellationToken cancellationToken = default)
-{
-    CoreState = CoreState.Loading;
-    CoreStateChanged?.Invoke(this, CoreState);
-
-    await Settings.LoadAsync();
-
-CheckConfig:
-    if (string.IsNullOrWhiteSpace(Settings.ApiKey))
-    {
-        CoreState = CoreState.NeedsConfiguration;
-        CoreStateChanged?.Invoke(this, CoreState);
-        
-        var textBox = new AbstractTextBox(id: "api-key", value: Settings.ApiKey)
-        {
-            Title = "Enter an API key",
-        };
-
-        var doneButton = new AbstractButton(id: "config-done", "Done", type: AbstractButtonType.Confirm);
-        var doneButtonClickedTaskCompletionSource = new TaskCompletionSource<object?>();
-
-        textBox.ValueChanged += TextBox_ValueChanged;
-        doneButton.Clicked += DoneButton_Clicked;
-
-        AbstractConfigPanel = new AbstractUICollection(id: "panel-id")
-        {
-            textBox,
-            doneButton,
-        };
-
-        AbstractConfigPanelChanged?.Invoke(this, EventArgs.Empty);
-
-        await doneButtonClickedTaskCompletionSource.Task;
-        await Settings.SaveAsync();
-        
-        textBox.ValueChanged -= TextBox_ValueChanged;
-        doneButton.Clicked -= DoneButton_Clicked;
-
-        goto CheckConfig;
-
-        void TextBox_ValueChanged(object sender, string e) => Settings.ApiKey = e;
-        void DoneButton_Clicked(object sender, EventArgs e) => doneButtonClickedTaskCompletionSource.SetResult(null);
-    }
-
-    CoreState = CoreState.Configured;
-    CoreStateChanged?.Invoke(this, CoreState);
-
-    Api = new MusicBackendService(Settings.ApiKey);
-
-    await Api.Login();
-
-    CoreState = CoreState.Loaded;
-    CoreStateChanged?.Invoke(this, CoreState);
-}
-```
