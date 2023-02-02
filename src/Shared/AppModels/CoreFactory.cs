@@ -45,8 +45,13 @@ public static class CoreFactory
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
+
+#if __WASM__
+        var folderToScan = AppRoot.KnownFolders.First(x => x is IAddressableFolder adrFolder && settings.Path == adrFolder.Path);
+#else
         var storageFolderToScan = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
         var folderToScan = new WindowsStorageFolder(storageFolderToScan);
+#endif
 
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));

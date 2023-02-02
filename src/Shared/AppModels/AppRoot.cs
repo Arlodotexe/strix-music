@@ -45,10 +45,10 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
 
+    private readonly SystemMediaTransportControlsHandler? _smtcHandler;
+    private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
     private readonly IModifiableFolder _dataFolder;
-    private readonly PlaybackHandlerService _playbackHandler = new();
-    private readonly SystemMediaTransportControlsHandler _smtcHandler;
 
     private AppDiagnostics? _diagnostics;
     private StrixDataRootViewModel? _strixDataRoot;
@@ -68,6 +68,10 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         _smtcHandler = new SystemMediaTransportControlsHandler(_playbackHandler);
 #endif
     }
+
+#if __WASM__
+    public static List<IFolder> KnownFolders { get; set; } = new();
+#endif
 
     /// <summary>
     /// Responsible for handling app debug and diagnostics.
@@ -533,7 +537,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             if (ipfs.Settings.GlobalPlaybackStateCountPluginEnabled)
             {
-                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).FullName;
+                var pw = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.pw") ?? typeof(AppRoot).FullName ?? string.Empty;
                 var salt = Environment.GetEnvironmentVariable($"EncryptionKeys.{nameof(GlobalPlaybackStateCountPlugin)}.salt") ?? ipfs.ThisPeer.Id.ToString();
 
                 var encryptedPubSub = new AesPasswordEncryptedPubSub(ipfs.Client.PubSub, pw, salt);
@@ -549,6 +553,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
     private void SetupMediaPlayerForCore(ICore core)
     {
+#if __WASM__
+        return;
+#endif
         var mediaPlayer = new MediaPlayer();
         var mediaPlayerElement = new MediaPlayerElement();
 

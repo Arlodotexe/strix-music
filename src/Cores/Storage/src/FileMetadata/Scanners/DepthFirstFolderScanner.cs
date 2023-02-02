@@ -82,42 +82,55 @@ internal class DepthFirstFolderScanner : IFolderScanner
     private async Task EnableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        lock (_knownSubFolders)
+        try
         {
-            if (folder.Id == RootFolder.Id)
-                _rootFolderWatcher = folderWatcher;
-            else
-                _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
-        }
+            var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
 
-        folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            lock (_knownSubFolders)
+            {
+                if (folder.Id == RootFolder.Id)
+                    _rootFolderWatcher = folderWatcher;
+                else
+                    _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
+            }
+
+            folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
+        }
+        catch (System.Exception ex)
+        {
+            OwlCore.Diagnostics.Logger.LogError("Couldn't get folder watcher", ex);
+        }
     }
 
     private async Task DisableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var folderWatcher = folder.Id == RootFolder.Id ? _rootFolderWatcher : _knownSubFolders[folder.Id].FolderWatcher;
-        Guard.IsNotNull(folderWatcher);
-
-        folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
-
-        if (folder.Id == RootFolder.Id)
-            _rootFolderWatcher = null;
-        else
+        try
         {
-            lock (_knownSubFolders)
-            {
-                _knownSubFolders[folder.Id].FolderWatcher = null;
-            }
-        }
+            var folderWatcher = folder.Id == RootFolder.Id ? _rootFolderWatcher : _knownSubFolders[folder.Id].FolderWatcher;
+            Guard.IsNotNull(folderWatcher);
 
-        await folderWatcher.DisposeAsync();
-        cancellationToken.ThrowIfCancellationRequested();
+            folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
+
+            if (folder.Id == RootFolder.Id)
+                _rootFolderWatcher = null;
+            else
+            {
+                lock (_knownSubFolders)
+                {
+                    _knownSubFolders[folder.Id].FolderWatcher = null;
+                }
+            }
+
+            await folderWatcher.DisposeAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+        catch (System.Exception ex)
+        {
+            OwlCore.Diagnostics.Logger.LogError("Couldn't get folder watcher", ex);
+        }
     }
 
     private async void FolderWatcherOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

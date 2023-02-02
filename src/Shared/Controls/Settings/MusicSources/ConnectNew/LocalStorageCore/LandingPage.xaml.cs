@@ -14,6 +14,7 @@ using OwlCore.Extensions;
 using OwlCore.Storage.Uwp;
 using StrixMusic.Helpers;
 using StrixMusic.Settings;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 
@@ -75,10 +76,16 @@ public sealed partial class LandingPage : Page
         }
 
         var token = pickedFolder.Path.HashMD5Fast();
-        var instanceId = new WindowsStorageFolder(pickedFolder).Id; // Same way a StorageCore gets the InstanceId.
+        var folder = new WindowsStorageFolder(pickedFolder);
+        var instanceId = folder.Id; // Same way a StorageCore gets the InstanceId.
 
+#if __WASM__
+        // FutureAccessList isn't implemented in Uno. The folder must be tracked manually.
+        AppRoot.KnownFolders.Add(folder);
+#else
         // Make it accessible across restarts.
         StorageApplicationPermissions.FutureAccessList.AddOrReplace(token, pickedFolder);
+#endif
 
         // Configure settings
         var defaultSettings = await _param.SelectedSourceToConnect.DefaultSettingsFactory(instanceId);
