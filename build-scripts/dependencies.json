@@ -1,7 +1,7 @@
 [
   {
     "name": "docfx",
-    "outputPath": "dependencies/docfx.zip",
+    "outputPath": "dependencies/binaries/docfx.zip",
     "originalUrl": "https://github.com/dotnet/docfx/releases/latest/download/docfx.zip",
     "cid": "QmUXothUyJRHfCCpB2VHxB1u7HY9tdboxnjR5Estz9SAvj"
   },
