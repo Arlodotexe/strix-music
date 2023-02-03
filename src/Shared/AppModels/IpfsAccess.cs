@@ -191,7 +191,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
             if (Client is null)
             {
-                InitStatus = "Checking for downloaded Kubo binary";
+#if __WASM__
+                InitStatus = "No local Kubo daemon was found. IPFS cannot be initialized.";
+                return;
+#else
+InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping...";
+#endif
                 var kuboBin = await GetDownloadedKuboBinaryAsync(cancellationToken);
                 if (kuboBin is null)
                 {
@@ -284,11 +289,6 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// </summary>
     public async Task<IpfsClient?> ScanLocalhostForRunningKuboCompliantRpcApi(CancellationToken cancellationToken)
     {
-        var httpClient = new HttpClient(MessageHandler)
-        {
-            Timeout = TimeSpan.FromMilliseconds(50),
-        };
-
         var innerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var mutex = new SemaphoreSlim(20, 20);
         var checkedPorts = new HashSet<int>();
@@ -313,7 +313,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 if (!checkedPorts.Add(port))
                     return;
 
-                var url = $"http://localhost:{port}";
+                var url = $"http://127.0.0.1:{port}";
                 Logger.LogInformation($"Scanning {url} for a Kubo Compliant RPC API");
 
                 var client = new IpfsClient(url);

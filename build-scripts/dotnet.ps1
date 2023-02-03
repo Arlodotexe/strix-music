@@ -55,7 +55,7 @@ $runtime += "-$arch";
 $dependencies = Get-Content -Path $dependencySourcesPath | ConvertFrom-Json -ErrorAction Stop;
 
 if ($skipDownload -eq $false) {
-    Invoke-Expression -Command './GatherDependencies.ps1 -dependencyName "dotnet-sdk-$runtime" -outputPath $workingDirectory -dependencySourcesPath $dependencySourcesPath -fallbackOnly:$fallbackOnly -ErrorAction Stop'
+    Invoke-Expression -Command './RestoreDependencies.ps1 -dependencyName "dotnet-sdk-$runtime" -outputPath $workingDirectory -dependencySourcesPath $dependencySourcesPath -fallbackOnly:$fallbackOnly -ErrorAction Stop'
 }
 
 $dependency = $dependencies | Where-Object { $_.name -eq "dotnet-sdk-$runtime" };

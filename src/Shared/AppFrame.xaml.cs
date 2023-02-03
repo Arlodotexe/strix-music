@@ -26,7 +26,12 @@ public sealed partial class AppFrame : UserControl
     {
         InitializeComponent();
 
-        AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder));
+        AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder))
+        {
+#if __WASM__
+            HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
+#endif
+        };
     }
 
     /// <summary>

@@ -189,7 +189,10 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
                 var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
 
-                Ipfs = new IpfsAccess(ipfsSettings);
+                Ipfs = new IpfsAccess(ipfsSettings)
+                {
+                    MessageHandler = HttpMessageHandler,
+                };
 
                 await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
                 if (ipfsSettings.Enabled)

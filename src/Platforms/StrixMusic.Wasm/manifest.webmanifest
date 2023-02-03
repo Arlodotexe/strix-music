@@ -1,6 +1,6 @@
 {
-  "background_color": "#ffffff",
-  "description": "$ext_safeprojectname$",
+  "background_color": "#1E1E23",
+  "description": "The web version of the Strix Music App",
   "display": "standalone",
   "icons": [
     {
@@ -29,9 +29,9 @@
       "type": "image/png"
     }
   ],
-  "name": "$ext_safeprojectname$",
-  "short_name": "$ext_safeprojectname$",
+  "name": "Strix Music",
+  "short_name": "Strix Music",
   "start_url": "/index.html",
-  "theme_color": "#ffffff",
+  "theme_color": "#1E1E23",
   "scope": "/"
 }

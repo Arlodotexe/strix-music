@@ -13,15 +13,6 @@ Param (
 Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.sh -OutFile dotnet-install.sh
 Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
 
-function Get-UrlStatusCode([string] $Url) {
-    try {
-        (Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -Method head).StatusCode
-    }
-    catch [Net.WebException] {
-        [int]$_.Exception.Response.StatusCode
-    }
-}
-
 function GetUrlFromDryRun([string] $result) {
     $match = select-string "primary: (.+?) " -inputobject $result
 
@@ -29,7 +20,16 @@ function GetUrlFromDryRun([string] $result) {
         $url = $captureGroup.value -Replace "primary: ", "";
         
         Write-Verbose "Testing url at $url";
-        if (Get-UrlStatusCode $url -eq 200) {
+        $req = [system.Net.WebRequest]::Create($url)
+
+        try {
+            $res = $req.GetResponse()
+        }
+        catch [System.Net.WebException] {
+            $res = $_.Exception.Response
+        }
+            
+        if ($res.StatusCode -eq "OK") {
             Write-Verbose "Success"
             return $url.Trim();
         }
@@ -38,8 +38,8 @@ function GetUrlFromDryRun([string] $result) {
         }
     }
 
-    Write-Error "No valid URLs were found."
-    exit -1;
+    Write-Verbose "No valid URLs were found."
+    return "";
 }
 
 function GetDownloadUrl([string] $osTarget, [string] $arch) {
@@ -55,6 +55,10 @@ function GetDownloadUrl([string] $osTarget, [string] $arch) {
     if ($osTarget -eq "win") {
         $result = ./dotnet-install.ps1 -JSonFile ../global.json -Architecture $arch -DryRun 6>&1
         
+        if ($arch -eq "arm") {
+            Write-Host $result;
+        }
+
         return GetUrlFromDryRun $result;
     }
 }
@@ -72,6 +76,11 @@ foreach ($variant in $variants) {
     $arch = $parts[1];
     
     $url = GetDownloadUrl $os $arch
+
+    if ($url -eq "") {
+        Write-Warning "No accessible URLs found for $variant. Skipping.";
+        continue;
+    }
 
     $fileName = ([uri]$url).Segments[-1]
 
@@ -118,10 +127,10 @@ foreach ($variant in $variants) {
 
     if (!$found) {
         $dependencies += [PSCustomObject]@{
-            name = "dotnet-sdk-$variant"
+            name        = "dotnet-sdk-$variant"
             originalUrl = $url
-            cid = $cid
-            outputPath = "dotnet/$fileName"
+            cid         = $cid
+            outputPath  = "dotnet/$fileName"
         }
     }
     

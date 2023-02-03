@@ -4,7 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>
     <WasmPWAManifestFile>manifest.webmanifest</WasmPWAManifestFile>
+    <WasmShellMonoRuntimeExecutionMode>Interpreter</WasmShellMonoRuntimeExecutionMode>
+    <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
+    <WasmShellGenerateAOTProfile>false</WasmShellGenerateAOTProfile>
+    <WasmShellEnableThreads>false</WasmShellEnableThreads>
+    <WasmShellPThreadsPoolSize Condition="$(WasmShellEnableThreads) == 'true'">8</WasmShellPThreadsPoolSize>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
     <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
@@ -14,23 +20,19 @@
 		IL Linking is disabled in Debug configuration.
 		When building in Release, see https://platform.uno/docs/articles/features/using-il-linker-webassembly.html
 		-->
-    <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Assets\SplashScreen.png" />
+    <WasmShellExtraEmccFlags Include="-s MAXIMUM_MEMORY=4GB"/>
 
+    <Content Include="Assets\SplashScreen.png" />
     <Content Include="manifest.webmanifest" />
     <Content Include="Assets\AppIcon-*.png" />
-
   </ItemGroup>
+
   <ItemGroup>
     <UpToDateCheckInput Include="..\..\StrixMusic.Shared\**\*.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
     <EmbeddedResource Include="WasmScripts\AppManifest.js" />
-  </ItemGroup>
-  <ItemGroup>
     <LinkerDescriptor Include="LinkerConfig.xml" />
   </ItemGroup>
   <ItemGroup>

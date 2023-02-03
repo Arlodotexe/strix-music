@@ -19,7 +19,7 @@ When developers download the dependencies to their IPFS node, they temporarily h
 
 Finally, if you have a machine where you used this recently (even once), you can set up a brand new machine on your local network to do it again, without internet access, and even if the original links all 404.
 
-Not even an apocalypse could ruin our hard work. 
+Not even an apocalypse could ruin our hard work.
 
 # Snapshot scripts
 These are scripts which download as much of our dependency chain as possible, uploads it to IPFS, captures the CID, and records it in a `dependency.json` file for others to find later.
@@ -48,7 +48,7 @@ These are scripts which download as much of our dependency chain as possible, up
 # Restoring dependencies
 Download a dependency from a known source, and use ipfs as a fallback if the original sources fail.
 
-- **GatherDependencies.ps1**
+- **RestoreDependencies.ps1**
   - Handles downloading dependencies from known sources.
   - Most other scripts use this automatically, and only when needed.
   - Running this can take some time if downloading all dependencies
@@ -135,7 +135,7 @@ if (!$emptyAppChangelog) {
 # Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
 .\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
 .\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
-.\GatherDependencies.ps1 -outputPath build/dependencies/ -dependencyName docfx
+.\RestoreDependencies.ps1 -outputPath build/dependencies/ -dependencyName docfx
 
 #################
 # Commit changes

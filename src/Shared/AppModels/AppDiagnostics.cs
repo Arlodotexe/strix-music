@@ -28,7 +28,11 @@ namespace StrixMusic.AppModels
     public partial class AppDiagnostics : ObservableObject
     {
         private readonly SynchronizationContext _syncContext;
+
+#if !__WASM__
         private readonly DispatcherTimer _memoryWatchTimer;
+#endif
+
         private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
         private readonly IModifiableFolder _dataFolder;
 
@@ -120,9 +124,11 @@ namespace StrixMusic.AppModels
 
         private void DispatchTimer_Elapsed(object? sender, object e)
         {
+#if !__WASM__
             _memoryWatchTimer.Stop();
             UpdateMemoryUsage();
             _memoryWatchTimer.Start();
+#endif
         }
 
         private void MemoryManager_MemoryChanged(object? sender, object e) => UpdateMemoryUsage();
