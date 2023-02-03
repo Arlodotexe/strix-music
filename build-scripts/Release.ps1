@@ -61,8 +61,8 @@ Write-Output "Snapshotting dotnet binaries"
 Write-Output "Snapshotting nuget packages needed to build WebAssembly"
 .\SnapshotNugetPackages.ps1 -fallbackOnly
 
-Write-Output "Restoring all dependencies from IPFS"
-.\RestoreDependencies.ps1 -fallbackOnly
+Write-Output "Creating snapshot of docfx binaries"
+.\RestoreDependencies.ps1 -fallbackOnly -dependencyName "docfx"
 
 #################
 # Commit changes
