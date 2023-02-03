@@ -93,9 +93,7 @@ foreach ($variant in $variants) {
     }
     
     $result = ipfs add "$outputPath/$fileName" --recursive --progress --pin --fscache
-    
-    Write-Output "Getting new CID from output"
-    
+        
     $lines = $result.Split([Environment]::NewLine);
     $rootdirline = $lines[$lines.Length - 1]
     $match = select-string "added ([a-zA-Z0-9]+)" -inputobject $rootdirline
@@ -103,7 +101,7 @@ foreach ($variant in $variants) {
     
     ipfs pin add $cid;
     
-    Write-Output "Imported to IPFS as $cid";
+    Write-Output "Added and pinned $cid to IPFS";
     Write-Output ""
     
     $dependencyJsonPath = Resolve-Path -Relative -Path $dependencySourcesPath -ErrorAction Stop;
