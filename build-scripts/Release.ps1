@@ -30,6 +30,7 @@ Param (
 #################
 # Version bumps
 #################
+Write-Output "Bumping version and generating changelog for Strix Music SDK"
 $sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | Select-Object -Last 1
 $sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -forceTag $sdkTag | Select-Object -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
@@ -39,6 +40,8 @@ if (!$emptySdkChangelog) {
   &".\CreateSdkRelease.ps1" -variant alpha
 }
 
+
+Write-Output "Bumping version and generating changelog for Strix Music App"
 $appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | Select-Object -Last 1
 $appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -forceTag $appTag | Select-Object -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
@@ -52,8 +55,13 @@ if (!$emptyAppChangelog) {
 # Snapshot dependencies
 #################
 # Download build dependencies, upload to IPFS, and update the CIDs and URLs in dependencies.json.
+Write-Output "Snapshotting dotnet binaries"
 .\SnapshotDotnetSdk.ps1
+
+Write-Output "Snapshotting nuget packages needed to build WebAssembly"
 .\SnapshotNugetPackages.ps1 -fallbackOnly
+
+Write-Output "Restoring all dependencies from IPFS"
 .\RestoreDependencies.ps1 -fallbackOnly
 
 #################
@@ -65,10 +73,12 @@ if (!$emptyAppChangelog) { $commitMessages += " -m `"Release $appTag`""; }
 if (!$emptySdkChangelog) { $commitMessages += " -m `"Release $sdkTag`""; }
 
 if (($noPublish -eq $false) -and ($null -ne $gitOrigin) -and (!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -gt 0) {
+  Write-Output "Staging and committing files"
   # Stage files and create a new commit.
   git add .  -- "$PSScriptRoot/../"
   Invoke-Expression "git commit $commitMessages"
 
+  Write-Output "Changes committed"
   if (!$emptyAppChangelog) {
     # Move tags to new release commit
     Write-Output "$gitRemote - Deleting App tag $appTag from remote repo $gitRemote";
@@ -88,8 +98,10 @@ if (($noPublish -eq $false) -and ($null -ne $gitOrigin) -and (!$emptyAppChangelo
   }
 
   # Push the changes
-  Write-Output "Pushing changes and tags"
+  Write-Output "Pushing changes"
   git push $gitRemote
+  
+  Write-Output "Pushing tags"
   git push -f $gitRemote --tags
 }
 
@@ -97,33 +109,41 @@ if (($noPublish -eq $false) -and ($null -ne $gitOrigin) -and (!$emptyAppChangelo
 # Snapshot git repo
 #################
 # This should be done after everything is committed.
+Write-Output "Create snapshot of git repo"
 .\SnapshotGitRepo.ps1 -outputPath build/source
 
 #################
 # Compile
 #################
 # Build documentation website
-.\GenerateDocs.ps1
+Write-Output "Generating documentation"
+.\GenerateDocs.ps1 -fallbackOnly
 
 # Build WebAssembly
-.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="Release"'
+Write-Output "Building WebAssembly app in Release mode"
+.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="Release"' -fallbackOnly
 
 # Build UWP (Requires Windows with correct tooling installed)
+Write-Output "Building UWP app in Release mode"
 msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
 
 # Create SDK nuget package
-# Include -skipExtract -skipDownload if you've already successfully run dotnet.ps1 at least once to avoid unecessary operations
+Write-Output "Building the Strix Music SDK in Release mode"
 .\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release' -skipExtract -skipDownload
+
+Write-Output "Packing the Strix Music SDK in Release mode"
 .\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release --output build/sdk/$sdkTag' -skipExtract -skipDownload
 
 #################
 # Organize
 #################
 # The resulting folder can be uploaded anywhere (not just ipfs)
+Write-Output "Organizing generated release content"
 .\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net7.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
 
 if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
+  Write-Output "Importing CIDs of previous releases from $pastReleaseIpns/versions.json"
   .\ImportPreviousVersionedContent.ps1 -url $pastReleaseIpns -cid $pastReleaseCid -outputPath $outputPath
 }
 else {
@@ -137,6 +157,7 @@ if ($ipnsPublishKey.Length -le 0) {
   Write-Warning "No ipns publish key provided. Specify the name of an IPNS key with -ipnsPublishKey KeyName to publish generated content to IPFS."
 }
 elseif ($noPublish -eq $false) {
+  WRite-Output "Publishing to IPFS"
   .\PublishToIpfs.ps1 $outputPath -ipnsKey $ipnsPublishKey
 }
 

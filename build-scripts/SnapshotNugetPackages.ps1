@@ -1,8 +1,8 @@
 Param (
-    [Parameter(HelpMessage = "The path to the project to scan for nuget packages.", Mandatory = $true)]
+    [Parameter(HelpMessage = "The path to the project to scan for nuget packages.")]
     [string]$projectPath = "$PSScriptRoot/../src/Platforms/StrixMusic.Wasm/",
 
-    [Parameter(HelpMessage = "The path where nupkg files are saved.", Mandatory = $true)]
+    [Parameter(HelpMessage = "The path where nupkg files are saved.")]
     [string]$outputPath = "$PSScriptRoot/build/dependencies/nuget",
 
     [Parameter(HelpMessage = "The path where nupkg files are saved.")]
