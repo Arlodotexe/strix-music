@@ -121,7 +121,7 @@ Write-Output "Generating documentation"
 
 # Build WebAssembly
 Write-Output "Building WebAssembly app in Release mode"
-.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="Release"' -fallbackOnly
+.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="Release"' -skipDownload -skipExtract
 
 # Build UWP (Requires Windows with correct tooling installed)
 Write-Output "Building UWP app in Release mode"
