@@ -3,8 +3,8 @@ Param (
     [ValidateSet('all', 'win-x64', "win-x86", "win-arm", "win-arm64", 'osx-x64', 'linux-x64', 'linux-arm', 'linux-arm64')]
     [string[]]$variants = @("all"),
     
-    [Parameter(HelpMessage = "The path where binaries are downloaded to.", Mandatory = $true)]
-    [string]$outputPath,
+    [Parameter(HelpMessage = "The path where binaries are downloaded to.")]
+    [string]$outputPath = "$PSScriptRoot/build/dependencies/binaries/dotnet",
     
     [Parameter(HelpMessage = "The path to a dependencies.json file")]
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json"

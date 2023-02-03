@@ -113,7 +113,7 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <SingleThreadNUTC>true</SingleThreadNUTC>
+    <SingleThreadNUTC>false</SingleThreadNUTC>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
     <ShortcutGenericAnalysis>true</ShortcutGenericAnalysis>
@@ -191,9 +191,6 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <SingleThreadNUTC>true</SingleThreadNUTC>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />

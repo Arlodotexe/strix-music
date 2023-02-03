@@ -6,11 +6,11 @@ Param (
     [ValidateSet('sdk', 'app')]
     [string]$target,
 
-    [Parameter(HelpMessage = "The path where generated markdown file is placed", Mandatory = $true)]
-    [string]$outputPath,
+    [Parameter(HelpMessage = "The path where generated markdown file is placed")]
+    [string]$outputPath = "$PSScriptRoot/../docs/reference/changelogs/$target/alpha",
 
-    [Parameter(HelpMessage = "The path to a toc.yml where the generated changelog should be inserted", Mandatory = $true)]
-    [string]$tocYmlPath,
+    [Parameter(HelpMessage = "The path to a toc.yml where the generated changelog should be inserted")]
+    [string]$tocYmlPath = "$PSScriptRoot/../docs/reference/changelogs/$target/alpha/toc.yml",
 
     [Parameter(HelpMessage = "When a tag is provided, the script will treat the current commit as if it is tagged with it")]
     [string]$forceTag = ""

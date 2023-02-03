@@ -2,7 +2,7 @@
 
 Param (
     [Parameter(HelpMessage = "The path where dependencies are downloaded to on disk.")]
-    [string]$outputPath = "$PSScriptRoot/build",
+    [string]$outputPath = "$PSScriptRoot/build/",
 
     [Parameter(HelpMessage = "The path to a dependencies.json file")]
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json",
