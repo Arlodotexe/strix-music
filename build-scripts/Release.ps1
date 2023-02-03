@@ -8,8 +8,8 @@ Param (
   [Parameter(HelpMessage = "If true, no content will be pushed or published.")]
   [switch]$noPublish = $false,
   
-  [Parameter(HelpMessage = "The name of the IPNS key to publish this release under", Mandatory = $true)]
-  [string]$ipnsPublishKey,
+  [Parameter(HelpMessage = "The name of the IPNS key to publish this release under.")]
+  [string]$ipnsPublishKey = "",
   
   [Parameter(HelpMessage = "A cid pointing to an existing release.")]
   [string]$pastReleaseCid = "",
@@ -122,7 +122,7 @@ msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundl
 # The resulting folder can be uploaded anywhere (not just ipfs)
 .\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net7.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
 
-if ($pastReleaseCid.length -gt 0 -or $pastReleaseIpns.length -gt 0) {
+if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
   .\ImportPreviousVersionedContent.ps1 -url $pastReleaseIpns -cid $pastReleaseCid -outputPath $outputPath
 }
@@ -133,6 +133,11 @@ else {
 #################
 # Publish!
 #################
-if ($noPublish -eq $false) {
+if ($ipnsPublishKey.Length -le 0) {
+  Write-Warning "No ipns publish key provided. Specify the name of an IPNS key with -ipnsPublishKey KeyName to publish generated content to IPFS."
+}
+elseif ($noPublish -eq $false) {
   .\PublishToIpfs.ps1 $outputPath -ipnsKey $ipnsPublishKey
 }
+
+Write-Output "Release created in $outputPath"
