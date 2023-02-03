@@ -54,10 +54,6 @@ function GetDownloadUrl([string] $osTarget, [string] $arch) {
     
     if ($osTarget -eq "win") {
         $result = ./dotnet-install.ps1 -JSonFile ../global.json -Architecture $arch -DryRun 6>&1
-        
-        if ($arch -eq "arm") {
-            Write-Host $result;
-        }
 
         return GetUrlFromDryRun $result;
     }
