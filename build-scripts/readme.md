@@ -93,19 +93,19 @@ These are scripts which build, tag, and generate things.
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
 
-# All together now
+# All together
 
 - **Release.ps1**
   - An all-in-one script for preparing, building, organizing and publishing a new release.
   - Uses your working tree to make, commit and push changes (version bumps, changelogs, tags, etc)
+  - Use the `-noPublish` option to avoid committing, pushing or publishing.
   - Must be run from the `./build-scripts/` directory.
   - Requires Kubo to be installed and running, and the `ipfs` command to be accessible from the command line where invoked.
-  - Use the `-noPublish` option to avoid committing, pushing or publishing.
   - Use `-gitRemote remotename` to specify the remote that release tags and changelogs should be pushed to.
   - Specify the name of an imported IPNS key with `-ipnsPublishKey KeyName` to add generated content to IPFS and publish to IPNS.
-  - Specify `-pastReleaseIpns <addr>` or `-pastReleaseCid <cid>` to import past published releases into a `versions.json` file.
+  - Specify `-pastReleaseIpns <addr>` or `-pastReleaseCid <cid>` to import already published releases into a `versions.json` file.
 
 ```powershell
 # In the ./build-scripts directory
-.\Release.ps1 -outputPath ./build/release -ipnsPublishKey StrixMusicWebsite -gitRemote 
+.\Release.ps1 -outputPath ./build/release -ipnsPublishKey StrixMusicWebsite -gitRemote origin
 ```

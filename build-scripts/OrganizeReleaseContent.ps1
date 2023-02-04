@@ -33,45 +33,45 @@ $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
 
 Write-Host "Creating folder $outputPath"
-mkdir $outputPath
+mkdir -Force $outputPath
 
 Write-Host "Creating folder $docsdest"
-mkdir $docsdest
+mkdir -Force $docsdest
 
 Write-Host "Creating folder $wasmdest"
-mkdir $wasmdest
+mkdir -Force $wasmdest
 
 Write-Host "Creating folder $uwpdest"
-mkdir $uwpdest
+mkdir -Force $uwpdest
 
 Write-Host "Creating folder $sdkdest"
-mkdir $sdkdest
+mkdir -Force $sdkdest
 
 Write-Host "Creating folder $gitdest"
-mkdir $gitdest
+mkdir -Force $gitdest
 
 Write-Host "Creating folder $builddepdest"
-mkdir $builddepdest
+mkdir -Force $builddepdest
 
 Write-Host "Copying contents from $websitePath to $websitedest"
-Copy-Item -Force -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $docsPath to $docsdest"
-Copy-Item -Force -PassThru -Recurse -Path $docsPath -Destination $docsdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $docsPath -Destination $docsdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $uwpSideloadBuildPath to $uwpdest"
-Copy-Item -Force -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $wasmAppPath to $wasmdest"
-Copy-Item -Force -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $sdkNupkgFolder to $sdkdest"
-Copy-Item -Force -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $cleanRepoPath/* to $gitdest"
-Copy-Item -Force -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $buildDependenciesPath to $builddepdest"
-Copy-Item -Force -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop | Out-Null
 
 Write-Host "Done"

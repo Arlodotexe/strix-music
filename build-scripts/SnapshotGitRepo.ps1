@@ -7,6 +7,6 @@ New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
 $bundlePath = "$outputPath/repo.bundle"
 
 git bundle create $bundlePath HEAD --branches --tags
-git clone -b HEAD $bundlePath "$outputPath/repo/"
+git clone -b master $bundlePath "$outputPath/repo/"
 
 Invoke-Expression "git bundle verify $bundlePath" -ErrorAction Stop;
