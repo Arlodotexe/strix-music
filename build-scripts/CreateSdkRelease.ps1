@@ -74,7 +74,7 @@ function SaveVersion([string]$newVersion) {
 }
 
 # Check if the current SDK version matches the most recent release tag
-$versionAlreadyReleased = [bool]($tags -Match $sdkVersion)
+$versionAlreadyReleased = [bool]($tags[0] -Match $sdkVersion)
 
 $parts = $sdkVersion.Split(".");
     
