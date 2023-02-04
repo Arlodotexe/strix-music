@@ -41,10 +41,6 @@ if ($tags -isnot [array]) {
     $tags = @($tags);
 }
 
-if ($forceTag.Length -gt 0) {
-    $tags = @($forceTag) + $tags;
-}
-
 function IsTagCurrentHead ([string]$tag) {
     if ($forceTag.Length -gt 0 -and $forceTag -eq $tag) {
         return $true;
@@ -53,6 +49,10 @@ function IsTagCurrentHead ([string]$tag) {
     $tagCommitHash = Invoke-Expression "git rev-list -n 1 $tag";
     $res = (Invoke-Expression "git log $tagCommitHash...HEAD --pretty=format:'%h'")
     return $null -eq $res -or $res.length -eq 0;
+}
+
+if ($forceTag.Length -gt 0 -and !(IsTagCurrentHead $forceTag)) {
+    $tags = @($forceTag) + $tags;
 }
 
 function GetPreviousTag() {
@@ -101,10 +101,12 @@ else {
     $releaseMessage = (Invoke-Expression "git tag $($tags[0]) -n 999") -Replace $tags[0], "";
 }
 
-Write-Output "Generating $target changelog as $releaseLabel for commits since tag $previousTag"
+Write-Host "Generating $target changelog as $releaseLabel for commits since tag $previousTag"
 
 # Crawl all commits between previous tag commit and current HEAD. Merges should be squash commits.
-$log = Invoke-Expression -Command "git log $($previousTag)...HEAD --pretty=format:'%ci ||| %h ||| %cn ||| %ce ||| %s'$($commitLogSuffix)"
+$log = Invoke-Expression -Command "git log $($previousTag)...master --pretty=format:'%ci ||| %h ||| %cn ||| %ce ||| %s'$($commitLogSuffix)"
+
+Write-Host $log;
 $logItems = $log -Split "`n"
 
 if ($logItems.length -eq 0) {
@@ -218,7 +220,7 @@ Generated on $(Get-Date -AsUTC) UTC";
 # Not all lines are bullet points, so the lines with empty bullet points get removed manually
 $markdownBody = $changelogMarkdownLines -Join "`n - "
 
-$markdownBody = ($markdownBody -Split "`n" | Where-Object {$_.Trim() -ne "-"}) -Join "`n"
+$markdownBody = ($markdownBody -Split "`n" | Where-Object { $_.Trim() -ne "-" }) -Join "`n"
 
 $changelog = "$changelogMarkdownHeader`n$markdownBody";
 Write-Output "Markdown created"
