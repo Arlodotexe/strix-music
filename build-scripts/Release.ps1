@@ -40,7 +40,8 @@ Param (
 #################
 # Cleanup / Setup
 #################
-mkdir -Force "$PSScriptRoot/build";
+Write-Output "Cleaning up build directory"
+mkdir -Force "$PSScriptRoot/build" | Out-Null;
 Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction SilentlyContinue
 
 #################
