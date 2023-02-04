@@ -5,7 +5,7 @@ Param (
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json",
     
     [Parameter(HelpMessage = "The path where binaries are downloaded to, extracted and run")]
-    [string]$workingDirectory = "$PSScriptRoot/build/dependencies",
+    [string]$workingDirectory = "$PSScriptRoot/build",
     
     [Parameter(HelpMessage = "The comand to run, excluding the `"dotnet`"", Mandatory = $true)]
     [string]$command,
@@ -74,4 +74,4 @@ if ($skipExtract -eq $false) {
     }
 }
 
-Invoke-Expression -Command "$extractPath/dotnet $command" 
+Invoke-Expression -Command "$extractPath/dotnet $command"
