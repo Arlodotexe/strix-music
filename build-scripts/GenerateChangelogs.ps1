@@ -104,7 +104,7 @@ else {
 Write-Host "Generating $target changelog as $releaseLabel for commits since tag $previousTag"
 
 # Crawl all commits between previous tag commit and current HEAD. Merges should be squash commits.
-$logCmd = "git log $($previousTag)...master --pretty=format:'%ci ||| %h ||| %cn ||| %ce ||| %s'$($commitLogSuffix)";
+$logCmd = "git log $($previousTag)...HEAD --pretty=format:'%ci ||| %h ||| %cn ||| %ce ||| %s'$($commitLogSuffix)";
 Write-Host $logCmd;
 $log = Invoke-Expression -Command $logCmd;
 $logItems = $log -Split "`n"
