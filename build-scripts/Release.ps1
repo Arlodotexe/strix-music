@@ -5,6 +5,10 @@ Param (
   [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1).")]
   [string]$variant = "alpha",
 
+  [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1).")]
+  [ValidateSet('uwp', 'wasm', 'sdk', 'docs')]
+  [string[]]$build = @('uwp', 'wasm', 'sdk', 'docs'),
+
   [Parameter(HelpMessage = "The git remote to use for snapshotting the repo, pushing tags, version updates, snapshotted dependency data, and generated changelogs.")]
   [string]$gitRemote,
 
@@ -138,24 +142,31 @@ Write-Output "Create snapshot of git repo"
 # Compile
 #################
 # Build documentation website
-Write-Output "Generating documentation"
-.\GenerateDocs.ps1 -fallbackOnly
+if ($build.Contains("docs")) {
+  Write-Output "Generating documentation"
+  .\GenerateDocs.ps1 -fallbackOnly
+}
 
-# Create SDK nuget package
-Write-Output "Building the Strix Music SDK in $configuration mode"
-.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
+if ($build.Contains("sdk")) {
+  # Create SDK nuget package
+  Write-Output "Building the Strix Music SDK in $configuration mode"
+  .\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
 
-Write-Output "Packing the Strix Music SDK in $configuration mode"
-.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
+  Write-Output "Packing the Strix Music SDK in $configuration mode"
+  .\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
+}
 
-# Build WebAssembly
-Write-Output "Building WebAssembly app in $configuration mode"
-.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="$configuration"' -skipDownload -skipExtract
+if ($build.Contains("wasm")) {
+  # Build WebAssembly
+  Write-Output "Building WebAssembly app in $configuration mode"
+  .\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="$configuration"' -skipDownload -skipExtract
+}
 
-# Build UWP (Requires Windows with correct tooling installed)
-Write-Output "Building UWP app in $configuration mode"
-msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
-
+if ($build.Contains("uwp")) {
+  # Build UWP (Requires Windows with correct tooling installed)
+  Write-Output "Building UWP app in $configuration mode"
+  msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
+}
 
 #################
 # Organize
@@ -184,4 +195,4 @@ elseif ($noPublish -eq $false) {
   .\PublishToIpfs.ps1 $outputPath -ipnsKey $ipnsPublishKey
 }
 
-Write-Output "Release created in $outputPath"
+Write-Output "Release completed"

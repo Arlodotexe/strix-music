@@ -20,7 +20,6 @@ ipfs files mkdir /strixmusicapp/
 ##########
 Write-Host "Adding content in $releaseContentPath to IPFS"
 $result = Invoke-Expression "ipfs add -H --fscache -r $releaseContentPath";
-Write-Output "Done";
 
 Write-Host "Getting CID of added content"
 $lines = $result.Split([Environment]::NewLine);
@@ -32,10 +31,10 @@ Write-Host "CID is $cid"
 ##########
 # Publish IPNS
 ##########
-Write-Output "Publishing IPNS key $ipnsKey as /ipfs/$cid"
+Write-Host "Publishing IPNS key $ipnsKey as /ipfs/$cid"
 Invoke-Expression "ipfs name publish /ipfs/$cid --key=$ipnsKey"
 
-Write-Output "Pinning $cid to local node"
+Write-Host "Pinning $cid to local node"
 ipfs pin add $cid
 
-Write-Output "Published to IPFS"
+Write-Host "Published to IPFS"

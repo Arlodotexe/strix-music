@@ -32,26 +32,13 @@ $gitdest = "$outputPath/source"
 $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
 
-Write-Host "Creating folder $outputPath"
-mkdir -Force $outputPath
-
-Write-Host "Creating folder $docsdest"
-mkdir -Force $docsdest
-
-Write-Host "Creating folder $wasmdest"
-mkdir -Force $wasmdest
-
-Write-Host "Creating folder $uwpdest"
-mkdir -Force $uwpdest
-
-Write-Host "Creating folder $sdkdest"
-mkdir -Force $sdkdest
-
-Write-Host "Creating folder $gitdest"
-mkdir -Force $gitdest
-
-Write-Host "Creating folder $builddepdest"
-mkdir -Force $builddepdest
+mkdir -Force $outputPath | Out-Null
+mkdir -Force $docsdest | Out-Null
+mkdir -Force $wasmdest | Out-Null
+mkdir -Force $uwpdest | Out-Null
+mkdir -Force $sdkdest | Out-Null
+mkdir -Force $gitdest | Out-Null
+mkdir -Force $builddepdest | Out-Null
 
 Write-Host "Copying contents from $websitePath to $websitedest"
 Copy-Item -Force -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop | Out-Null
@@ -74,4 +61,4 @@ Copy-Item -Force -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest
 Write-Host "Copying contents from $buildDependenciesPath to $builddepdest"
 Copy-Item -Force -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop | Out-Null
 
-Write-Host "Done"
+Write-Host "Done organizing release content into $outputPath"
