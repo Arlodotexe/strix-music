@@ -164,6 +164,9 @@ if ($build.Contains("wasm")) {
 
 if ($build.Contains("uwp")) {
   # Build UWP (Requires Windows with correct tooling installed)
+  Write-Output "Cleaning up existing uwp AppPackages"
+  Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
+
   Write-Output "Building UWP app in $configuration mode"
   msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
 }
@@ -173,7 +176,7 @@ if ($build.Contains("uwp")) {
 #################
 # The resulting folder can be uploaded anywhere (not just ipfs)
 Write-Output "Organizing generated release content"
-.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
+.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag/* -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
 
 if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
