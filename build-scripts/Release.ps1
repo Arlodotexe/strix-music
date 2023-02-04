@@ -40,14 +40,6 @@ Param (
 #################
 # Cleanup / Setup
 #################
-if ($null -ne $gitRemote) {
-  Write-Output "Removing all local git tags"
-  git tag -d $(git tag -l)
-
-  Write-Output "Fetching remote tags from remote $gitRemote"
-  git fetch $gitRemote
-}
-
 mkdir -Force "$PSScriptRoot/build";
 Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction SilentlyContinue
 
