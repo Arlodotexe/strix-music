@@ -57,7 +57,7 @@ if (!$emptyAppChangelog) {
   # Excluding -dryRun allows creation of tags and writing to disk.
   &".\CreateAppRelease.ps1" -variant alpha
 }
-return;
+
 #################
 # Snapshot dependencies
 #################
