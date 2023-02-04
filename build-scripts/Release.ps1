@@ -40,7 +40,7 @@ if ($null -ne $gitRemote) {
   Write-Output "Removing all local git tags"
   git tag -d $(git tag -l)
 
-  Write-Output "Fetching remote tags from $gitRemote"
+  Write-Output "Fetching remote tags from remote $gitRemote"
   git fetch $gitRemote
 }
 
@@ -51,7 +51,7 @@ Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction
 #################
 Write-Output "Bumping version and generating changelog for Strix Music SDK"
 $sdkTag = &".\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -forceTag $sdkTag | Select-Object -Last 1
+$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptySdkChangelog) {
@@ -61,7 +61,7 @@ if (!$emptySdkChangelog) {
 
 Write-Output "Bumping version and generating changelog for Strix Music App"
 $appTag = &".\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -forceTag $appTag | Select-Object -Last 1
+$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptyAppChangelog) {
@@ -80,7 +80,7 @@ Write-Output "Snapshotting nuget packages needed to build WebAssembly"
 .\SnapshotNugetPackages.ps1 -fallbackOnly -skipDownload -skipExtract
 
 Write-Output "Creating snapshot of docfx binaries"
-.\RestoreDependencies.ps1 -fallbackOnly -dependencyName "docfx"
+.\RestoreDependencies.ps1 -dependencyName "docfx"
 
 #################
 # Commit changes
@@ -133,9 +133,19 @@ Write-Output "Create snapshot of git repo"
 #################
 # Compile
 #################
+Write-Output "Extracting and testing dotnet binary"
+.\dotnet.ps1 -Command "--version" -skipDownload
+
 # Build documentation website
 Write-Output "Generating documentation"
 .\GenerateDocs.ps1 -fallbackOnly
+
+# Create SDK nuget package
+Write-Output "Building the Strix Music SDK in $configuration mode"
+.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
+
+Write-Output "Packing the Strix Music SDK in $configuration mode"
+.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
 
 # Build WebAssembly
 Write-Output "Building WebAssembly app in $configuration mode"
@@ -145,19 +155,13 @@ Write-Output "Building WebAssembly app in $configuration mode"
 Write-Output "Building UWP app in $configuration mode"
 msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
 
-# Create SDK nuget package
-Write-Output "Building the Strix Music SDK in $configuration mode"
-.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
-
-Write-Output "Packing the Strix Music SDK in $configuration mode"
-.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
 
 #################
 # Organize
 #################
 # The resulting folder can be uploaded anywhere (not just ipfs)
 Write-Output "Organizing generated release content"
-.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
+.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
 
 if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
