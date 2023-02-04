@@ -24,7 +24,7 @@ if ($target -eq "sdk") {
     $commitLogSuffix = ' -- ":/src/Sdk/StrixMusic.Sdk/"';
 }
 else {
-    $commitLogSuffix = ' -- ":/src/Cores/**" -- ":/src/Platforms/**" -- ":/src/Shells/**" -- ":src/Libs/**" -- ":/Sdk/StrixMusic.Sdk.WinUI/**"'
+    $commitLogSuffix = ' -- ":/src/Cores/**" -- ":/src/Platforms/**" -- ":/src/Shells/**" -- ":src/Libs/**" -- ":/src/Sdk/StrixMusic.Sdk.WinUI/**"'
 }
 
 Write-Output "Getting tag data"
