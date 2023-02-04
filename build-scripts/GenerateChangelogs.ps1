@@ -51,7 +51,7 @@ function IsTagCurrentHead ([string]$tag) {
     return $null -eq $res -or $res.length -eq 0;
 }
 
-if ($forceTag.Length -gt 0 -and !(IsTagCurrentHead $forceTag)) {
+if ($forceTag.Length -gt 0 -and (IsTagCurrentHead $forceTag) -eq $false) {
     $tags = @($forceTag) + $tags;
 }
 
