@@ -44,6 +44,7 @@ if ($null -ne $gitRemote) {
   git fetch $gitRemote
 }
 
+mkdir -Force "$PSScriptRoot/build";
 Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction SilentlyContinue
 
 #################
@@ -76,8 +77,11 @@ if (!$emptyAppChangelog) {
 Write-Output "Snapshotting dotnet binaries"
 .\SnapshotDotnetSdk.ps1
 
+Write-Output "Extracting and testing dotnet binary"
+.\dotnet.ps1 -Command "--version" -skipDownload
+
 Write-Output "Snapshotting nuget packages needed to build WebAssembly"
-.\SnapshotNugetPackages.ps1 -fallbackOnly -skipDownload -skipExtract
+.\SnapshotNugetPackages.ps1 -skipDownload -skipExtract
 
 Write-Output "Creating snapshot of docfx binaries"
 .\RestoreDependencies.ps1 -dependencyName "docfx"
@@ -133,9 +137,6 @@ Write-Output "Create snapshot of git repo"
 #################
 # Compile
 #################
-Write-Output "Extracting and testing dotnet binary"
-.\dotnet.ps1 -Command "--version" -skipDownload
-
 # Build documentation website
 Write-Output "Generating documentation"
 .\GenerateDocs.ps1 -fallbackOnly
