@@ -1,16 +1,16 @@
 ﻿<sdkctrls:Shell
-	x:Class="StrixMusic.Shells.Groove.GrooveMusic"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
-	xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
-	xmlns:sdkctrls="using:StrixMusic.Sdk.WinUI.Controls"
-	xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
-	xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
-	mc:Ignorable="d">
+    x:Class="StrixMusic.Shells.Groove.GrooveMusic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
+    xmlns:controls="using:StrixMusic.Shells.Groove.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="using:StrixMusic.Shells.Groove.Controls.Pages"
+    xmlns:sdkctrls="using:StrixMusic.Sdk.WinUI.Controls"
+    xmlns:sdkvms="using:StrixMusic.Sdk.ViewModels"
+    xmlns:selectors="using:StrixMusic.Shells.Groove.TemplateSelectors"
+    mc:Ignorable="d">
 
     <sdkctrls:Shell.Resources>
         <ResourceDictionary>
@@ -47,10 +47,14 @@
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                   <SolidColorBrush x:Key="ToggleButtonCheckedForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="ToggleButtonCheckedForeground" Color="Black" />
+                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="Black" />
+                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="Black" />
                 </ResourceDictionary>
-                 <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="White"/>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ToggleButtonForegroundChecked" Color="White" />
+                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPointerOver" Color="White" />
+                    <SolidColorBrush x:Key="ToggleButtonForegroundCheckedPressed" Color="White" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -60,13 +64,13 @@
         <Border x:Name="CustomTitleBarBorder" Height="32" />
 
         <SplitView
-			x:Name="MainSplitView"
-			DisplayMode="CompactInline"
-			OpenPaneLength="320"
-			PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
-			PaneClosed="OnPaneStateChanged"
-			PaneClosing="OnPaneStateChanged"
-			PaneOpening="OnPaneStateChanged">
+            x:Name="MainSplitView"
+            DisplayMode="CompactInline"
+            OpenPaneLength="320"
+            PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
+            PaneClosed="OnPaneStateChanged"
+            PaneClosing="OnPaneStateChanged"
+            PaneOpening="OnPaneStateChanged">
             <SplitView.Content>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -75,10 +79,10 @@
                     </Grid.RowDefinitions>
 
                     <Grid
-						x:Name="SmallHeader"
-						Height="84"
-						Background="{ThemeResource PaneHostBackgroundBrush}"
-						Visibility="Collapsed">
+                        x:Name="SmallHeader"
+                        Height="84"
+                        Background="{ThemeResource PaneHostBackgroundBrush}"
+                        Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="36" />
                             <RowDefinition />
@@ -91,31 +95,31 @@
 
                         <!--  Hamburger Button  -->
                         <Button
-							Grid.Row="1"
-							Width="48"
-							Command="{x:Bind HamburgerPressedCommand}"
-							Style="{StaticResource GrooveButton}">
+                            Grid.Row="1"
+                            Width="48"
+                            Command="{x:Bind HamburgerPressedCommand}"
+                            Style="{StaticResource GrooveButton}">
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
                         </Button>
 
                         <!--  Small Header text  -->
                         <TextBlock
-							x:Name="SmallHeaderText"
-							Grid.Row="1"
-							Grid.Column="1"
-							Margin="8,0,0,0"
-							VerticalAlignment="Center"
-							FontSize="18"
-							FontWeight="SemiBold"
-							Text="{x:Bind Title, Mode=OneWay}" />
+                            x:Name="SmallHeaderText"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="{x:Bind Title, Mode=OneWay}" />
 
                         <!--  Search button  -->
                         <Button
-							Grid.Row="1"
-							Grid.Column="2"
-							Width="48"
-							HorizontalAlignment="Right"
-							Style="{StaticResource GrooveButton}">
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Width="48"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource GrooveButton}">
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
                         </Button>
                     </Grid>
@@ -123,18 +127,18 @@
                     <!--  Large Header  -->
                     <Grid x:Name="LargeHeaderWrapper" Visibility="{x:Bind ShowLargeHeader, Mode=OneWay}">
                         <TextBlock
-							x:Name="LargeHeaderText"
-							Margin="20,44,20,0"
-							FontSize="34"
-							FontWeight="Light"
-							Text="{x:Bind Title, Mode=OneWay}" />
+                            x:Name="LargeHeaderText"
+                            Margin="20,44,20,0"
+                            FontSize="34"
+                            FontWeight="Light"
+                            Text="{x:Bind Title, Mode=OneWay}" />
                     </Grid>
 
                     <ContentControl
-						x:Name="MainContent"
-						Grid.Row="1"
-						HorizontalContentAlignment="Stretch"
-						ContentTemplateSelector="{StaticResource MainContentTemplateSelector}" />
+                        x:Name="MainContent"
+                        Grid.Row="1"
+                        HorizontalContentAlignment="Stretch"
+                        ContentTemplateSelector="{StaticResource MainContentTemplateSelector}" />
                 </Grid>
             </SplitView.Content>
             <SplitView.Pane>
@@ -146,46 +150,46 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock
-						x:Uid="/Resources/AppNameTB"
-						Margin="48,0,0,0"
-						VerticalAlignment="Center"
-						FontSize="12"
-						FontWeight="SemiLight" />
+                        x:Uid="/Resources/AppNameTB"
+                        Margin="48,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        FontWeight="SemiLight" />
 
                     <StackPanel Grid.Row="1">
                         <!--  Hamburger Button  -->
                         <Button
-							Width="48"
-							Height="48"
-							Background="Transparent"
-							BorderThickness="0"
-							Command="{x:Bind HamburgerPressedCommand}">
+                            Width="48"
+                            Height="48"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{x:Bind HamburgerPressedCommand}">
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
                         </Button>
 
                         <!--  Search Box  -->
                         <Button
-							x:Name="SearchButton"
-							Width="48"
-							HorizontalAlignment="Left"
-							Style="{StaticResource GrooveButton}">
+                            x:Name="SearchButton"
+                            Width="48"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource GrooveButton}">
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
                         </Button>
                         <AutoSuggestBox
-							x:Name="SearchBox"
-							x:Uid="/Common/SearchTBox"
-							Margin="8"
-							BorderThickness="0"
-							PlaceholderText="Search..."
-							QueryIcon="Find"
-							Style="{StaticResource GrooveSearchAutoSuggestBox}" />
+                            x:Name="SearchBox"
+                            x:Uid="/Common/SearchTBox"
+                            Margin="8"
+                            BorderThickness="0"
+                            PlaceholderText="Search..."
+                            QueryIcon="Find"
+                            Style="{StaticResource GrooveSearchAutoSuggestBox}" />
 
                         <!--  Main Nav Buttons  -->
                         <ToggleButton
-							x:Name="MyMusicButton"
-							Click="NavigationButtonClicked"
-							Style="{StaticResource GrooveNavigationButton}"
-							Tag="MyMusic">
+                            x:Name="MyMusicButton"
+                            Click="NavigationButtonClicked"
+                            Style="{StaticResource GrooveNavigationButton}"
+                            Tag="MyMusic">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48" />
@@ -195,16 +199,16 @@
                                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEC4F;" />
 
                                 <TextBlock
-									x:Uid="/Music/MyMusicTB"
-									Grid.Column="1"
-									Text="My Music" />
+                                    x:Uid="/Music/MyMusicTB"
+                                    Grid.Column="1"
+                                    Text="My Music" />
                             </Grid>
                         </ToggleButton>
                         <ToggleButton
-							x:Name="RecentButton"
-							Click="NavigationButtonClicked"
-							Style="{StaticResource GrooveNavigationButton}"
-							Tag="Recent">
+                            x:Name="RecentButton"
+                            Click="NavigationButtonClicked"
+                            Style="{StaticResource GrooveNavigationButton}"
+                            Tag="Recent">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48" />
@@ -215,16 +219,16 @@
                                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE2AD;" />
 
                                 <TextBlock
-									x:Uid="/Music/RecentPlayedTB"
-									Grid.Column="1"
-									Text="Recently Played" />
+                                    x:Uid="/Music/RecentPlayedTB"
+                                    Grid.Column="1"
+                                    Text="Recently Played" />
                             </Grid>
                         </ToggleButton>
                         <ToggleButton
-							x:Name="NowPlayingButton"
-							Click="NavigationButtonClicked"
-							Style="{StaticResource GrooveNavigationButton}"
-							Tag="NowPlaying">
+                            x:Name="NowPlayingButton"
+                            Click="NavigationButtonClicked"
+                            Style="{StaticResource GrooveNavigationButton}"
+                            Tag="NowPlaying">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48" />
@@ -234,19 +238,19 @@
                                 <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF61F;" />
 
                                 <TextBlock
-									x:Uid="/Music/NowPlayingTB"
-									Grid.Column="1"
-									Text="Now Playing" />
+                                    x:Uid="/Music/NowPlayingTB"
+                                    Grid.Column="1"
+                                    Text="Now Playing" />
                             </Grid>
                         </ToggleButton>
 
                         <!--  Seperator  -->
                         <Rectangle
-							x:Name="Seperator"
-							Height="1"
-							Margin="12,0"
-							Fill="{ThemeResource SystemBaseHighColor}"
-							Opacity=".5" />
+                            x:Name="Seperator"
+                            Height="1"
+                            Margin="12,0"
+                            Fill="{ThemeResource SystemBaseHighColor}"
+                            Opacity=".5" />
 
                         <!--  Playlist button  -->
                         <Grid>
@@ -256,10 +260,10 @@
                             </Grid.ColumnDefinitions>
 
                             <ToggleButton
-								x:Name="PlaylistsButton"
-								Click="NavigationButtonClicked"
-								Style="{StaticResource GrooveNavigationButton}"
-								Tag="Playlists">
+                                x:Name="PlaylistsButton"
+                                Click="NavigationButtonClicked"
+                                Style="{StaticResource GrooveNavigationButton}"
+                                Tag="Playlists">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48" />
@@ -269,43 +273,43 @@
                                     <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE142;" />
 
                                     <TextBlock
-										x:Uid="/Music/PlaylistsTB"
-										Grid.Column="1"
-										Text="Playlists" />
+                                        x:Uid="/Music/PlaylistsTB"
+                                        Grid.Column="1"
+                                        Text="Playlists" />
                                 </Grid>
                             </ToggleButton>
 
                             <Button
-								Grid.Column="1"
-								Width="48"
-								Style="{StaticResource GrooveButton}">
+                                Grid.Column="1"
+                                Width="48"
+                                Style="{StaticResource GrooveButton}">
                                 <SymbolIcon Symbol="Add" />
                             </Button>
                         </Grid>
 
                         <Button
-							x:Name="CompactCreatePlaylistButton"
-							Width="48"
-							HorizontalAlignment="Left"
-							Style="{StaticResource GrooveButton}"
-							Visibility="Collapsed">
+                            x:Name="CompactCreatePlaylistButton"
+                            Width="48"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource GrooveButton}"
+                            Visibility="Collapsed">
                             <SymbolIcon Symbol="Add" />
                         </Button>
                     </StackPanel>
 
                     <collections:GroovePlaylistCollection
-						x:Name="PlaylistList"
-						Grid.Row="2"
-						Collection="{x:Bind Root.Library, Mode=OneWay}"
-						Style="{StaticResource PanePlaylistCollectionStyle}" />
+                        x:Name="PlaylistList"
+                        Grid.Row="2"
+                        Collection="{x:Bind Root.Library, Mode=OneWay}"
+                        Style="{StaticResource PanePlaylistCollectionStyle}" />
                 </Grid>
             </SplitView.Pane>
         </SplitView>
 
         <controls:GrooveNowPlayingBar
-			Height="96"
-			VerticalAlignment="Bottom"
-			Devices="{x:Bind Root.Devices, Mode=OneWay}" />
+            Height="96"
+            VerticalAlignment="Bottom"
+            Devices="{x:Bind Root.Devices, Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="Sizes">
