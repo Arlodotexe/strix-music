@@ -91,7 +91,7 @@ $commitMessages = "";
 if (!$emptyAppChangelog) { $commitMessages += " -m `"Release $appTag`""; }
 if (!$emptySdkChangelog) { $commitMessages += " -m `"Release $sdkTag`""; }
 
-if (($noPublish -eq $false) -and ("" -ne $gitOrigin) -and (!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -gt 0) {
+if (($noPublish -eq $false) -and ("" -ne $gitRemote) -and (!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -gt 0) {
   Write-Output "Staging and committing files"
   # Stage files and create a new commit.
   git add .  -- "$PSScriptRoot/../"
