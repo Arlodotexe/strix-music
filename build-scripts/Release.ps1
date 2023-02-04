@@ -82,7 +82,7 @@ Write-Output "Snapshotting dotnet binaries"
 .\SnapshotDotnetSdk.ps1
 
 Write-Output "Extracting and testing dotnet binary"
-.\dotnet.ps1 -Command "--version" -skipDownload
+.\dotnet.ps1 -Command "--version" -fallbackOnly
 
 Write-Output "Snapshotting nuget packages needed to build WebAssembly"
 .\SnapshotNugetPackages.ps1 -skipDownload -skipExtract
