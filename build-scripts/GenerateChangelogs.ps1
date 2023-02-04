@@ -6,11 +6,14 @@ Param (
     [ValidateSet('sdk', 'app')]
     [string]$target,
 
+    [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1).")]
+    [string]$variant = "alpha",
+
     [Parameter(HelpMessage = "The path where generated markdown file is placed")]
-    [string]$outputPath = "$PSScriptRoot/../docs/reference/changelogs/$target/alpha",
+    [string]$outputPath = "$PSScriptRoot/../docs/reference/changelogs/$target/$variant",
 
     [Parameter(HelpMessage = "The path to a toc.yml where the generated changelog should be inserted")]
-    [string]$tocYmlPath = "$PSScriptRoot/../docs/reference/changelogs/$target/alpha/toc.yml",
+    [string]$tocYmlPath = "$PSScriptRoot/../docs/reference/changelogs/$target/$variant/toc.yml",
 
     [Parameter(HelpMessage = "When a tag is provided, the script will treat the current commit as if it is tagged with it")]
     [string]$forceTag = ""
@@ -90,7 +93,7 @@ else {
 # If current latest commit is not tagged, set release label to "Unreleased"
 $releaseLabel = $tags[0]
 if ($releaseLabel -eq $previousTag) {
-    $releaseLabel = "Unreleased";
+    $releaseLabel = "unreleased-$target";
     $releaseMessage = "These changes are not yet released and haven't been assigned a version number."
 }
 else {

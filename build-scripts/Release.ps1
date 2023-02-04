@@ -2,6 +2,9 @@ Param (
   [Parameter(HelpMessage = "The path to a folder where release content will be placed.", Mandatory = $true)]
   [string]$outputPath,
 
+  [Parameter(HelpMessage = "The variant for this release (alpha, stable, rc.0, rc.1).")]
+  [string]$variant = "alpha",
+
   [Parameter(HelpMessage = "The git remote to use for snapshotting the repo, pushing tags, version updates, snapshotted dependency data, and generated changelogs.")]
   [string]$gitRemote,
 
@@ -33,29 +36,37 @@ Param (
 #################
 # Cleanup / Setup
 #################
+if ($null -ne $gitRemote) {
+  Write-Output "Removing all local git tags"
+  git tag -d $(git tag -l)
+
+  Write-Output "Fetching remote tags from $gitRemote"
+  git fetch $gitRemote
+}
+
 Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction SilentlyContinue
 
 #################
 # Version bumps
 #################
 Write-Output "Bumping version and generating changelog for Strix Music SDK"
-$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | Select-Object -Last 1
+$sdkTag = &".\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
 $sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -forceTag $sdkTag | Select-Object -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptySdkChangelog) {
   # Excluding -dryRun allows creation of tags and writing to disk.
-  &".\CreateSdkRelease.ps1" -variant alpha
+  &".\CreateSdkRelease.ps1" -variant $variant
 }
 
 Write-Output "Bumping version and generating changelog for Strix Music App"
-$appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | Select-Object -Last 1
+$appTag = &".\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
 $appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -forceTag $appTag | Select-Object -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptyAppChangelog) {
   # Excluding -dryRun allows creation of tags and writing to disk.
-  &".\CreateAppRelease.ps1" -variant alpha
+  &".\CreateAppRelease.ps1" -variant $variant
 }
 
 #################
