@@ -12,7 +12,7 @@ IPFS is self-described as:
 > by making the web upgradeable, resilient, and more open.
 
 # Making a release?
-Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your snapshotted dependencies on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
+Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your releases on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
 
 # Getting started
 When developers download the dependencies to their IPFS node, they temporarily host for the data to other nodes who want it to access it. The more devs holding onto the data, the faster and more available the dependencies will become.
@@ -37,10 +37,6 @@ These are scripts which download as much of our dependency chain as possible, up
   - Use the `-fallbackOnly` switch to only download from IPFS. This is the faster option if you've already done it once.
   - Use the `-skipDownload` switch to avoid downloading anything at all. Uses existing data on disk, if present.
   - Use the `-skipExtract` switch to avoid extracting anything at all. Uses existing data on disk, if present.
-
-- **SnapshotGoIpfsBinaries.ps1**
-  - Scrapes the go-ipfs release page, finds the latest version, and downloads the archived binaries to the given location.
-  - Downloaded dependencies are NOT imported to IPFS and recorded in [dependencies.json](dependencies.json).
 
 - **SnapshotGitRepo.ps1**
   - Creates a `repo.bundle` snapshot, then clones the bundle into a the provided output folder. The exact same as re-cloning the repo, but without contacting the remote to do it.
@@ -97,8 +93,19 @@ These are scripts which build, tag, and generate things.
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
 
-# Putting it all together
+# All together now
+
+- **Release.ps1**
+  - An all-in-one script for preparing, building, organizing and publishing a new release.
+  - Uses your working tree to make, commit and push changes (version bumps, changelogs, tags, etc)
+  - Must be run from the `./build-scripts/` directory.
+  - Requires Kubo to be installed and running, and the `ipfs` command to be accessible from the command line where invoked.
+  - Use the `-noPublish` option to avoid committing, pushing or publishing.
+  - Use `-gitRemote remotename` to specify the remote that release tags and changelogs should be pushed to.
+  - Specify the name of an imported IPNS key with `-ipnsPublishKey KeyName` to add generated content to IPFS and publish to IPNS.
+  - Specify `-pastReleaseIpns <addr>` or `-pastReleaseCid <cid>` to import past published releases into a `versions.json` file.
+
 ```powershell
 # In the ./build-scripts directory
-.\Release.ps1 -outputPath ./build/release -ipnsPublishKey StrixMusicWebsite
+.\Release.ps1 -outputPath ./build/release -ipnsPublishKey StrixMusicWebsite -gitRemote 
 ```

@@ -147,17 +147,17 @@ if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   .\ImportPreviousVersionedContent.ps1 -url $pastReleaseIpns -cid $pastReleaseCid -outputPath $outputPath
 }
 else {
-  Write-Warning "No past release was specified, so no past release CIDs will be added to versions.json. Specify -pastReleaseIpns <addr> or -pastReleaseCid <cid> to import past published releases ";
+  Write-Warning "No past release was specified, so no past release CIDs will be added to versions.json. Specify -pastReleaseIpns <addr> or -pastReleaseCid <cid> to import past published releases.";
 }
 
 #################
 # Publish!
 #################
 if ($ipnsPublishKey.Length -le 0) {
-  Write-Warning "No ipns publish key provided. Specify the name of an IPNS key with -ipnsPublishKey KeyName to publish generated content to IPFS."
+  Write-Warning "No ipns publish key provided, content will not be published. Specify the name of an IPNS key with -ipnsPublishKey KeyName to add generated content to IPFS and publish to IPNS."
 }
 elseif ($noPublish -eq $false) {
-  WRite-Output "Publishing to IPFS"
+  Write-Output "Publishing to IPFS"
   .\PublishToIpfs.ps1 $outputPath -ipnsKey $ipnsPublishKey
 }
 
