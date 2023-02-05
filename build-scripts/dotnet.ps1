@@ -63,7 +63,7 @@ $extractPath = "$workingDirectory/dotnet/$($dependency.name)";
 
 New-Item -ItemType Directory -Force $extractPath -ErrorAction Stop | Out-Null
 
-if ($skipExtract -eq $false) {
+if ($skipExtract -eq $false -and !(Test-Path "$extractPath/dotnet*")) {
     Write-Output "Extracting archive"
 
     if (($dependency.outputPath).Contains('.tar.gz')) {
