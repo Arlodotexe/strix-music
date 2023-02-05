@@ -48,18 +48,18 @@ Get-ChildItem "$PSScriptRoot/build" | Remove-Item –Recurse -Force -ErrorAction
 # Version bumps
 #################
 Write-Output "Bumping version and generating changelog for Strix Music SDK"
-$sdkTag = &".\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
+$sdkTag = &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+$sdkChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
 $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptySdkChangelog) {
   # Excluding -dryRun allows creation of tags and writing to disk.
-  &".\CreateSdkRelease.ps1" -variant $variant
+  &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant
 }
 
 Write-Output "Bumping version and generating changelog for Strix Music App"
-$appTag = &".\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
+$appTag = &"$PSScriptRoot\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+$appChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
 $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
 
 if (!$emptyAppChangelog) {
@@ -129,7 +129,7 @@ if (($noPublish -eq $false) -and ("" -ne $gitRemote) -and (!$emptyAppChangelog -
 #################
 # This should be done after everything is committed.
 Write-Output "Create snapshot of git repo"
-.\SnapshotGitRepo.ps1 -outputPath build/source
+.\SnapshotGitRepo.ps1 -outputPath $PSScriptRoot/build/source
 
 #################
 # Compile
@@ -143,16 +143,16 @@ if ($build.Contains("docs")) {
 if ($build.Contains("sdk")) {
   # Create SDK nuget package
   Write-Output "Building the Strix Music SDK in $configuration mode"
-  .\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
+  .\dotnet.ps1 -Command 'build "$PSScriptRoot/../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration' -skipExtract -skipDownload
 
   Write-Output "Packing the Strix Music SDK in $configuration mode"
-  .\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
+  .\dotnet.ps1 -Command 'pack "$PSScriptRoot/../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -skipExtract -skipDownload
 }
 
 if ($build.Contains("wasm")) {
   # Build WebAssembly
   Write-Output "Building WebAssembly app in $configuration mode"
-  .\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="$configuration"' -skipDownload -skipExtract
+  .\dotnet.ps1 -Command 'build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="$configuration"' -skipDownload -skipExtract
 }
 
 if ($build.Contains("uwp")) {
@@ -161,7 +161,7 @@ if ($build.Contains("uwp")) {
   Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
 
   Write-Output "Building UWP app in $configuration mode"
-  msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
+  msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
 }
 
 #################
@@ -169,7 +169,7 @@ if ($build.Contains("uwp")) {
 #################
 # The resulting folder can be uploaded anywhere (not just ipfs)
 Write-Output "Organizing generated release content"
-.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag/* -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath $outputPath
+.\OrganizeReleaseContent.ps1 -wasmAppPath "$PSScriptRoot/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath $PSScriptRoot/../www/* -docsPath $PSScriptRoot/../docs/wwwroot/* -sdkNupkgFolder $PSScriptRoot/build/sdk/$sdkTag/* -cleanRepoPath $PSScriptRoot/build/source -buildDependenciesPath $PSScriptRoot/build/dependencies/* -outputPath $outputPath
 
 if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
   # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
