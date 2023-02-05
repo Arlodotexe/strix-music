@@ -11,7 +11,7 @@
   <Identity
     Name="59553ArloG.StrixMusic"
     Publisher="CN=arlog"
-    Version="0.1.1.0" />
+    Version="0.0.18.0" />
 
   <mp:PhoneIdentity PhoneProductId="ddcee348-3333-4fa1-b07c-12e63be62c4a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
