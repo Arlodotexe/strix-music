@@ -75,8 +75,8 @@ public sealed partial class LandingPage : Page
             return;
         }
 
-        var token = pickedFolder.Path.HashMD5Fast();
         var folder = new WindowsStorageFolder(pickedFolder);
+        var token = folder.Id.HashMD5Fast();
         var instanceId = folder.Id; // Same way a StorageCore gets the InstanceId.
 
 #if __WASM__
@@ -93,7 +93,7 @@ public sealed partial class LandingPage : Page
 
         settings.InstanceId = instanceId;
         settings.FutureAccessToken = token;
-        settings.Path = pickedFolder.Path;
+        settings.ConfiguredFolderId = folder.Id;
 
         Frame.Navigate(typeof(ConfirmAndSave), (_param, settings));
     }
