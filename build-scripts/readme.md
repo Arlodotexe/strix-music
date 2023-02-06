@@ -107,5 +107,15 @@ These are scripts which build, tag, and generate things.
 
 ```powershell
 # In the ./build-scripts directory
-.\Release.ps1 -OutputPath ./build/release -PastReleaseIpns /ipns/latest.strixmusic.com -IpnsPublishKey StrixMusicWebsite.Staging
+
+# If needed, remove old tags
+git tag -d 0.1.0-sdk-alpha; git tag -d 0.1.0-app-alpha;
+
+# Create tags for new version. The script will bump app/sdk manifest versions and push for you.
+# If you don't create a release tag, one will be created for you and the minor version will be bumped automatically.
+git tag 0.1.0-app-alpha -m "This release is focused around clearing tech debt. The Strix Music SDK was made to build apps on, but our top-level app architecture was made long before the SDK was ready. We wiped it and rebuilt it from the ground up, in a way that can be multi-instanced, customized, extended, and easily maintained.";
+git tag 0.1.0-sdk-alpha -m "This release is focused around clearing tech debt. We've made a few breaking changes that you'll need to migrate. Most notable, AbstractUI has been completely removed from the SDK. See core documentation for more details.";
+
+# Build and release!
+.\Release.ps1 -OutputPath ./build/release -PastReleaseIpns /ipns/latest.strixmusic.com -IpnsPublishKey NameOfIpnsKey
 ```
