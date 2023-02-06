@@ -107,5 +107,5 @@ These are scripts which build, tag, and generate things.
 
 ```powershell
 # In the ./build-scripts directory
-.\Release.ps1 -OutputPath ./build/release -NoPublish -IpnsPublishKey StrixMusicWebsite.Staging -PastReleaseIpns /ipns/latest.strixmusic.com -GitRemote _ -Configuration Debug -variant dev
+.\Release.ps1 -OutputPath ./build/release -PastReleaseIpns /ipns/latest.strixmusic.com -IpnsPublishKey StrixMusicWebsite.Staging
 ```
