@@ -20,10 +20,14 @@
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDiagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundlePreloadHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IpfsAccess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TraverseRelativePathAsync.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
@@ -219,6 +223,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Assets\Fonts\" />
     <Folder Include="$(MSBuildThisFileDirectory)MediaPlayback\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />

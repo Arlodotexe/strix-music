@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
-using Ipfs.Http;
 using OwlCore.ComponentModel;
-using OwlCore.Extensions;
 using OwlCore.Storage;
+using StrixMusic.AppModels;
 using StrixMusic.Plugins;
 
 namespace StrixMusic.Settings;
@@ -81,6 +81,33 @@ public partial class IpfsSettings : SettingsBase
     public bool GlobalPlaybackStateCountPluginEnabled
     {
         get => GetSetting(() => false);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// An IPNS address where releases are published. Used to help rehost content, check for updates, and more.
+    /// </summary>
+    public string ReleaseIpns
+    {
+        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/latest.strixmusic.com");
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// An IPNS address where releases are published. Used to help rehost content, check for updates, and more.
+    /// </summary>
+    public string MfsAppDataPath
+    {
+        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(MfsAppDataPath)) ?? "/strixmusicapp/");
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// The app release content bundles that the user has chosen to store on their local node.
+    /// </summary>
+    public ObservableCollection<AppReleaseContentBundle> PreloadedReleaseContentBundles
+    {
+        get => GetSetting(() => new ObservableCollection<AppReleaseContentBundle>());
         set => SetSetting(value);
     }
 

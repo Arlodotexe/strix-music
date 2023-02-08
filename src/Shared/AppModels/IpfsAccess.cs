@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Ipfs;
 using Ipfs.Http;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
@@ -19,7 +17,6 @@ using OwlCore.Storage.SystemIO;
 using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using static System.Environment;
 
 namespace StrixMusic.AppModels;
 
@@ -35,6 +32,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     private bool _isRunningEmbeddedNode;
     private string _initStatus = "IPFS is not loaded";
     private KuboBootstrapper? _kuboBootstrapper;
+    private AppReleaseContentLoader? _appReleaseContentLoader;
     private PeerRoom? _everyone;
     private IpfsClient? _client;
     private Ipfs.Peer? _thisPeer;
@@ -46,7 +44,6 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     public IpfsAccess(IpfsSettings settings)
     {
         _settings = settings;
-
         _settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
@@ -84,6 +81,15 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     {
         get => _initStatus;
         set => SetProperty(ref _initStatus, value);
+    }
+
+    /// <summary>
+    /// The bootstrapper that was used to start an embedded node.
+    /// </summary>
+    public AppReleaseContentLoader? AppReleaseContentLoader
+    {
+        get => _appReleaseContentLoader;
+        set => SetProperty(ref _appReleaseContentLoader, value);
     }
 
     /// <summary>
@@ -136,6 +142,18 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// The message handler to use when accessing IPFS over any HTTP API.
     /// </summary>
     public HttpMessageHandler MessageHandler { get; set; } = new HttpClientHandler();
+
+    /// <summary>
+    /// Performs a garbage collection sweep on the IPFS repo.
+    /// </summary>
+    /// <param name="cancellationToken">A token that can be used to cancel the ongoing task.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
+    public Task ExecuteGarbageCollectionAsync(CancellationToken cancellationToken)
+    {
+        Guard.IsNotNull(Client);
+        return Client.BlockRepository.RemoveGarbageAsync(cancellationToken);
+    }
 
     /// <summary>
     /// Stops any running embedded IPFS nodes, removes the current peer, and disables access to IPFS.
@@ -195,7 +213,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 InitStatus = "No local Kubo daemon was found. IPFS cannot be initialized.";
                 return;
 #else
-InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping...";
+                InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping...";
 #endif
                 var kuboBin = await GetDownloadedKuboBinaryAsync(cancellationToken);
                 if (kuboBin is null)
@@ -270,12 +288,16 @@ InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping
 
             Guard.IsNotNull(Client);
             Guard.IsNotNull(ThisPeer);
+            Guard.IsNotNullOrWhiteSpace(Settings.ReleaseIpns);
 
-            Everyone = new PeerRoom(ThisPeer, Client.PubSub, "StrixMusicAppEveryoneRoom");
+            Everyone = new PeerRoom(ThisPeer, Client.PubSub, $"{Settings.ReleaseIpns}/app");
+            AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
 
-            InitStatus = "Kubo is running and ready to use";
-            IsInitialized = true;
+            _ = AppReleaseContentLoader.InitCommand.ExecuteAsync(cancellationToken);
         }
+
+        InitStatus = "Kubo is running and ready to use";
+        IsInitialized = true;
     }
 
     private void OnInitStatusChanged(string? value)
@@ -343,7 +365,7 @@ InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping
     /// <returns>A Task that represents the asynchronous operation.</returns>
     public async Task<IAddressableFile> StoreDownloadedKuboBinaryAsync(IFile binaryFile, CancellationToken cancellationToken)
     {
-        var appDataFolder = new SystemFolder(Environment.GetFolderPath(SpecialFolder.LocalApplicationData));
+        var appDataFolder = new SystemFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
         var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
 
         Settings.DownloadKuboBinaryFileId = binaryFile.Id;
@@ -357,7 +379,7 @@ InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping
     /// <returns>A Task that represents the asynchronous operation. The value is the downloaded file, if found.</returns>
     public async Task<IAddressableFile?> GetDownloadedKuboBinaryAsync(CancellationToken cancellationToken)
     {
-        var appDataFolder = new SystemFolder(Environment.GetFolderPath(SpecialFolder.LocalApplicationData));
+        var appDataFolder = new SystemFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
         var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(Settings.DownloadKuboBinaryFileId))

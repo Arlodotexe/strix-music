@@ -31,7 +31,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
     public IFolder RootFolder { get; }
 
     /// <inheritdoc/>
-    public async IAsyncEnumerable<IAddressableFile> ScanFolderAsync(CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<IAddressableFile> ScanFolderAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

@@ -2,6 +2,7 @@
 	x:Class="StrixMusic.Controls.Settings.Ipfs.IpfsSettings"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:appModels="using:StrixMusic.AppModels"
 	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
 	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
 	xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
@@ -163,10 +164,77 @@
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
+			Text="Release settings" />
+
+		<labs:SettingsCard
+			Description="In the future, changing this option will reinstall the app using the provided release source"
+			Header="Release source"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
+			<TextBox IsEnabled="False" Text="{x:Bind Ipfs.Settings.ReleaseIpns, Mode=TwoWay}" />
+		</labs:SettingsCard>
+
+		<labs:SettingsExpander
+			x:Name="AppReleaseContentPreload"
+			Description="Preloaded files load instantly on this device, are always available for new devices on your local network, and speed up content retrieval for new users on the internet"
+			Header="Pin &amp; preload release content"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
+			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}">
+			<labs:SettingsExpander.ItemTemplate>
+				<DataTemplate x:DataType="appModels:AppReleaseContentBundlePreloadHandler">
+					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description}" Header="{x:Bind ReleaseContentBundle.DisplayName}">
+						<StackPanel Spacing="8">
+							<ProgressRing IsActive="{x:Bind PreloadCommand.IsRunning, Mode=OneWay}" />
+
+							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{x:Bind IsPreloaded, Mode=OneWay}">
+								<interactivity:Interaction.Behaviors>
+									<core:DataTriggerBehavior
+										Binding="{Binding IsOn, ElementName=PreloadToggleSwitch}"
+										ComparisonCondition="Equal"
+										Value="true">
+										<core:InvokeCommandAction Command="{x:Bind PreloadCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+									</core:DataTriggerBehavior>
+
+									<core:DataTriggerBehavior
+										Binding="{Binding IsOn, ElementName=PreloadToggleSwitch}"
+										ComparisonCondition="Equal"
+										Value="false">
+										<core:InvokeCommandAction Command="{x:Bind PreloadCancelCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+									</core:DataTriggerBehavior>
+								</interactivity:Interaction.Behaviors>
+							</ToggleSwitch>
+						</StackPanel>
+					</labs:SettingsCard>
+				</DataTemplate>
+			</labs:SettingsExpander.ItemTemplate>
+		</labs:SettingsExpander>
+
+		<TextBlock
+			Margin="1,28,0,4"
+			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Additional features" />
 
 		<labs:SettingsCard
-			Description="The number of other people who have enabled IPFS in Strix Music and are online right now"
+			Description="Content on your local node that isn't pinned or stored in MFS will be cleaned up."
+			Header="Garbage collection"
+			HeaderIcon="{ui:FontIcon Glyph=&#xE107;}"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
+			<StackPanel>
+				<ProgressRing IsActive="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
+
+				<Button
+					Command="{x:Bind Ipfs.ExecuteGarbageCollectionCommand, Mode=OneWay}"
+					Content="Run GC"
+					Visibility="{x:Bind InvertBoolToVisibility(Ipfs.ExecuteGarbageCollectionCommand.IsRunning), Mode=OneWay}" />
+
+				<Button
+					Command="{x:Bind Ipfs.ExecuteGarbageCollectionCancelCommand, Mode=OneWay}"
+					Content="Cancel"
+					Visibility="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
+			</StackPanel>
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="The number of other people who have enabled IPFS in the Strix Music app and are online right now"
 			Header="Users online"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE95A;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
@@ -175,22 +243,25 @@
 			</TextBlock>
 		</labs:SettingsCard>
 
-		<labs:SettingsCard
+		<!--
+        <labs:SettingsCard
 			Description="Requires app restart. See how many people are listening to the same track, album, artist, playlist, etc., as you. Allows others to see when something is playing, paused, loading, or failing to load."
 			Header="Enable global playback state counters"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEBDA;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
-			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
-				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Toggled">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
-				</interactivity:Interaction.Behaviors>
-			</ToggleSwitch>
-		</labs:SettingsCard>
+            <ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Toggled">
+                        <core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </ToggleSwitch>
+        </labs:SettingsCard>
+		-->
 
-		<!--<labs:SettingsExpander
+		<!--
+        <labs:SettingsExpander
 			Header="Allow communication with:"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
@@ -245,7 +316,8 @@
 					</RadioButton>
 				</labs:SettingsCard>
 			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>-->
+		</labs:SettingsExpander>
+		-->
 
 		<ProgressBar IsIndeterminate="True" Visibility="{x:Bind Ipfs.Settings.SaveCommand.IsRunning, Mode=OneWay}" />
 	</StackPanel>
