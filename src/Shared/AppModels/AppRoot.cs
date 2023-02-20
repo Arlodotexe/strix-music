@@ -152,6 +152,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
+            MusicSourcesSettings.ConfiguredSoundCloudCores.CollectionChanged += ConfiguredSoundCloudCores_OnCollectionChanged;
 
             // Merge cores together and apply plugins
             var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken: cancellationToken);
@@ -168,7 +169,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             if (_mergedCore is not null)
             {
                 foreach (var newCore in allNewCores)
-                    _mergedCore.AddSource(newCore);
+                    if (!_mergedCore.Sources.Any(s => s.InstanceId == newCore.InstanceId))
+                        _mergedCore.AddSource(newCore);
             }
             else if (allNewCores.Any())
             {
@@ -212,6 +214,13 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             var core = await CoreFactory.CreateOneDriveCoreAsync(item, HttpMessageHandler);
             yield return core;
         }
+
+        foreach (var item in MusicSourcesSettings.ConfiguredSoundCloudCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            var core = await CoreFactory.CreateSoundCloudCoreAsync(item);
+            yield return core;
+        }
     }
 
     private async void ConfiguredLocalStorageCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -227,6 +236,14 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         Guard.IsNotNull(MusicSourcesSettings);
 
         await HandleCoreSettingsCollectionChangedAsync<OneDriveCoreSettings>(sender, e, async x => await CoreFactory.CreateOneDriveCoreAsync(x, HttpMessageHandler));
+        await MusicSourcesSettings.SaveAsync();
+    }
+
+    private async void ConfiguredSoundCloudCores_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+
+        await HandleCoreSettingsCollectionChangedAsync<SoundCloudCoreSettings>(sender, e, CoreFactory.CreateSoundCloudCoreAsync);
         await MusicSourcesSettings.SaveAsync();
     }
 

@@ -138,4 +138,17 @@ public static class CoreFactory
 
         return core;
     }
+
+    /// <summary>
+    /// Creates a new <see cref="Cores.SoundCloud.SoundCloudCore"/>
+    /// </summary>
+    /// <param name="settings">The settings used to create the client.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
+    public static Task<ICore> CreateSoundCloudCoreAsync(SoundCloudCoreSettings settings)
+    {
+        var instanceId = settings.InstanceId.HashMD5Fast();
+        string token = settings.Token;
+
+        return Task.FromResult<ICore>(new Cores.SoundCloud.SoundCloudCore(instanceId, token));
+    }
 }

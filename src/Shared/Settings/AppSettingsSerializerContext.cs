@@ -13,8 +13,10 @@ namespace StrixMusic.Settings
     [JsonSerializable(typeof(int))]
     [JsonSerializable(typeof(LocalStorageCoreSettings))]
     [JsonSerializable(typeof(OneDriveCoreSettings))]
+    [JsonSerializable(typeof(SoundCloudCoreSettings))]
     [JsonSerializable(typeof(ObservableCollection<LocalStorageCoreSettings>))]
     [JsonSerializable(typeof(ObservableCollection<OneDriveCoreSettings>))]
+    [JsonSerializable(typeof(ObservableCollection<SoundCloudCoreSettings>))]
     [JsonSerializable(typeof(StrixMusicShells))]
     [JsonSerializable(typeof(AdaptiveShells))]
     public partial class AppSettingsSerializerContext : JsonSerializerContext

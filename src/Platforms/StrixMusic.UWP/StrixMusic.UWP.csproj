@@ -264,6 +264,10 @@
       <Project>{58b8232f-c23e-46e4-a719-a244a9fd3d3b}</Project>
       <Name>StrixMusic.Cores.Storage</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.SoundCloud\StrixMusic.Cores.SoundCloud.csproj">
+      <Project>{6360219e-9641-477d-bcf0-93b377a0ed6c}</Project>
+      <Name>StrixMusic.Cores.SoundCloud</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
       <Name>OwlCore.WinUI</Name>

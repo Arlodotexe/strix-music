@@ -62,6 +62,7 @@ public sealed partial class ConnectNewMusicSource : Page
         {
             "Local Storage" => typeof(MusicSources.ConnectNew.LocalStorageCore.LandingPage),
             "OneDrive" => typeof(MusicSources.ConnectNew.OneDriveCore.LandingPage),
+            "SoundCloud" => typeof(MusicSources.ConnectNew.SoundCloudCore.LandingPage),
             _ => throw new ArgumentOutOfRangeException(),
         };
 

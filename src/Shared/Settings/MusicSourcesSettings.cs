@@ -53,6 +53,14 @@ public partial class MusicSourcesSettings : SettingsBase
             defaultSettingsFactory: async instanceId => new OneDriveCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
+        AvailableMusicSources.Add(new AvailableMusicSource
+        (
+            name: "SoundCloud",
+            description: "Stream music directly from SoundCloud.",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/SoundCloud/Logo.svg"),
+            defaultSettingsFactory: async instanceId => new SoundCloudCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
+        );
+
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)
         {
             var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(assetPath));
@@ -69,6 +77,11 @@ public partial class MusicSourcesSettings : SettingsBase
     /// Gets the list of all registered storage cores that interact with OneDrive.
     /// </summary>
     public ObservableCollection<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(defaultValue: () => new ObservableCollection<OneDriveCoreSettings>());
+
+    /// <summary>
+    /// Gets the list of all registered storage cores that interact with SoundCloud.
+    /// </summary>
+    public ObservableCollection<SoundCloudCoreSettings> ConfiguredSoundCloudCores => GetSetting(defaultValue: () => new ObservableCollection<SoundCloudCoreSettings>());
 
     /// <summary>
     /// The cores that are available to be created.
