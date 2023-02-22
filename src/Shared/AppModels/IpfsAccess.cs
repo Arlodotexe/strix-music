@@ -197,7 +197,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 InitStatus = "Starting Kubo";
                 Guard.IsNotNull(kuboBin);
 
-                KuboBootstrapper = new KuboBootstrapper(kuboBin, Path.Combine(Path.GetDirectoryName(kuboBin.Path), ".ipfs"))
+                KuboBootstrapper = new KuboBootstrapper(kuboBin, Path.Combine(Path.GetDirectoryName(((SystemFolder)kuboBin).Path), ".ipfs"))
                 {
                     ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
                 };
@@ -281,7 +281,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// <param name="binaryFile">The Kubo binary to store.</param>
     /// <param name="cancellationToken">The cancellation token to use.</param>
     /// <returns>A Task that represents the asynchronous operation.</returns>
-    public async Task<IAddressableFile> StoreDownloadedKuboBinaryAsync(IFile binaryFile, CancellationToken cancellationToken)
+    public async Task<IChildFile> StoreDownloadedKuboBinaryAsync(IFile binaryFile, CancellationToken cancellationToken)
     {
         var appDataFolder = new SystemFolder(Environment.GetFolderPath(SpecialFolder.LocalApplicationData));
         var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
@@ -295,7 +295,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// </summary>
     /// <param name="cancellationToken">The cancellation token to use.</param>
     /// <returns>A Task that represents the asynchronous operation. The value is the downloaded file, if found.</returns>
-    public async Task<IAddressableFile?> GetDownloadedKuboBinaryAsync(CancellationToken cancellationToken)
+    public async Task<IChildFile?> GetDownloadedKuboBinaryAsync(CancellationToken cancellationToken)
     {
         var appDataFolder = new SystemFolder(Environment.GetFolderPath(SpecialFolder.LocalApplicationData));
         var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
@@ -303,7 +303,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         if (!string.IsNullOrWhiteSpace(Settings.DownloadKuboBinaryFileId))
         {
             var item = await binariesFolder.GetItemAsync(Settings.DownloadKuboBinaryFileId, cancellationToken);
-            return item as IAddressableFile;
+            return item as IChildFile;
         }
 
         return null;

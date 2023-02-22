@@ -13,12 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.4.59" />
-    <PackageReference Include="OwlCore" Version="0.1.0" />
+    <PackageReference Include="OwlCore" Version="0.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
