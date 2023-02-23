@@ -135,7 +135,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 return null;
             }
 
-            var taskCompletionSource = new TaskCompletionSource<IAddressableFile>();
+            var taskCompletionSource = new TaskCompletionSource<IChildFile>();
 
             _folderScanner.KnownFiles.CollectionChanged += KnownFilesOnCollectionChanged;
             await Task.WhenAny(_inProgressScanTaskCompletionSource.Task, taskCompletionSource.Task);
@@ -153,7 +153,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
             void KnownFilesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems.Cast<IStorable>().FirstOrDefault(x => x is IFile file && file.Id == fileId) is IAddressableFile addedTargetFile)
+                if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems.Cast<IStorable>().FirstOrDefault(x => x is IFile file && file.Id == fileId) is IChildFile addedTargetFile)
                 {
                     targetFile = addedTargetFile;
                     taskCompletionSource.SetResult(addedTargetFile);

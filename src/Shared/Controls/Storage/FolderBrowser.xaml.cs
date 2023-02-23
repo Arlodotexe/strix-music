@@ -86,7 +86,7 @@ public sealed partial class FolderBrowser : UserControl
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
     private async Task GoToParentAsync(CancellationToken cancellationToken)
     {
-        if (CurrentFolder is not IAddressableStorable addressableStorable)
+        if (CurrentFolder is not IStorableChild addressableStorable)
         {
             ThrowHelper.ThrowArgumentException("Current folder is not addressable.");
             return;
@@ -96,9 +96,7 @@ public sealed partial class FolderBrowser : UserControl
         CurrentFolder = parent;
     }
 
-    private string? AsAddressableStorablePath(object obj) => (obj as IAddressableStorable)?.Path;
-
-    private bool IsAddressableStorable(object obj) => obj is IAddressableStorable;
+    private bool IsAddressableStorable(object obj) => obj is IStorableChild;
 
     private bool IsFolder(object obj) => obj is IFolder;
 

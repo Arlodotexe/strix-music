@@ -20,10 +20,10 @@ public interface IFolderScanner : IDisposable
     /// Scans a folder and all subfolders for files.
     /// </summary>
     /// <returns>All discovered files from the given folder and its subfolders.</returns>
-    IAsyncEnumerable<IAddressableFile> ScanFolderAsync(CancellationToken cancellationToken = default);
+    IAsyncEnumerable<IChildFile> ScanFolderAsync(CancellationToken cancellationToken = default);
         
     /// <summary>
     /// A collection of known files.
     /// </summary>
-    ObservableCollection<IAddressableFile> KnownFiles { get; }
+    ObservableCollection<IChildFile> KnownFiles { get; }
 }

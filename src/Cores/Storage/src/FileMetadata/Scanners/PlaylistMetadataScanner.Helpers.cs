@@ -41,7 +41,7 @@ internal partial class PlaylistMetadataScanner
         // Get parent directory.
         if (nextDirectoryName == "..")
         {
-            if (from is not IAddressableStorable addressableStorable)
+            if (from is not IStorableChild addressableStorable)
                 throw new ArgumentException($"A parent folder was requested, but the storable item named {from.Name} is not addressable.", nameof(relativePath));
 
             var parent = await addressableStorable.GetParentAsync(cancellationToken);
