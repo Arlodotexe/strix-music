@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Ipfs;
 using Ipfs.Http;
-using Newtonsoft.Json.Linq;
+using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Kubo;
 using OwlCore.Storage;
-using Uno.Extensions.Specialized;
 
 namespace StrixMusic.AppModels;
 
@@ -29,11 +24,16 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
     /// <summary>
     /// Creates a new instance of <see cref="AppReleaseContentBundlePreloadHandler"/>.
     /// </summary>
-    public AppReleaseContentBundlePreloadHandler(AppReleaseContentBundle releaseContentBundle, IpfsClient client, IpnsFolder releaseSourceFolder)
+    public AppReleaseContentBundlePreloadHandler(AppReleaseContentBundle releaseContentBundle, IpfsClient client, IFolder releaseSourceFolder)
     {
         _client = client;
-        _releaseSourceFolder = releaseSourceFolder;
         ReleaseContentBundle = releaseContentBundle;
+
+        // https://github.com/Arlodotexe/OwlCore.Storage/issues/18
+        // Since TraverseRelativePath is broken and we're waiting on OwlCore.Storage updates
+        // We won't use the interfaces to navigate to the folder.
+        // Instead, we'll manually feed the IPNS address + path into Kubo.
+        _releaseSourceFolder = (IpnsFolder)releaseSourceFolder;
     }
 
     /// <summary>
@@ -47,9 +47,10 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
     [RelayCommand(IncludeCancelCommand = true, FlowExceptionsToTaskScheduler = true)]
     public async Task PreloadAsync(CancellationToken cancellationToken)
     {
-        Guard.IsNotNull(ReleaseContentBundle.RelativePathsToRoot);
+        Guard.IsNotNull(ReleaseContentBundle.RootRelativePaths);
+        Logger.LogInformation($"Started preload for app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
 
-        await ReleaseContentBundle.RelativePathsToRoot.InParallel(async x =>
+        await ReleaseContentBundle.RootRelativePaths.InParallel(async x =>
         {
             var targetItem = await _releaseSourceFolder.GetItemByRelativePathAsync(x, cancellationToken);
 
@@ -57,5 +58,6 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
         });
 
         IsPreloaded = true;
+        Logger.LogInformation($"Preloaded app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
     }
 }

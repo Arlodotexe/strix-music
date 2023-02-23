@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -89,7 +90,16 @@ public partial class IpfsSettings : SettingsBase
     /// </summary>
     public string ReleaseIpns
     {
-        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/latest.strixmusic.com");
+        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/staging.strixmusic.com");
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// The last known resolved CID of <see cref="ReleaseIpns" />.
+    /// </summary>
+    public string ReleaseIpnsResolved
+    {
+        get => GetSetting(() => string.Empty);
         set => SetSetting(value);
     }
 
@@ -105,9 +115,9 @@ public partial class IpfsSettings : SettingsBase
     /// <summary>
     /// The app release content bundles that the user has chosen to store on their local node.
     /// </summary>
-    public ObservableCollection<AppReleaseContentBundle> PreloadedReleaseContentBundles
+    public List<AppReleaseContentBundle> PreloadedReleaseContentBundles
     {
-        get => GetSetting(() => new ObservableCollection<AppReleaseContentBundle>());
+        get => GetSetting(() => new List<AppReleaseContentBundle>());
         set => SetSetting(value);
     }
 

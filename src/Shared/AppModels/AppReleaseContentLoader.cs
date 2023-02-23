@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ipfs.Http;
 using OwlCore.ComponentModel;
+using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Kubo;
 using OwlCore.Storage;
@@ -80,20 +83,11 @@ public partial class AppReleaseContentLoader : ObservableObject, IAsyncInit
     /// <returns>The release content bundles configured by the publisher.</returns>
     public async Task<List<AppReleaseContentBundle>> GetAppReleaseContentBundlesAsync(CancellationToken cancellationToken)
     {
-        try
-        {
+        var content = await _releaseSourceFolder.GetFirstByNameAsync("release-content-bundles.json", cancellationToken);
+        var file = (IFile)content;
 
-            var content = await ReleaseSourceFolder.GetFirstByNameAsync("release-content-bundles.json", cancellationToken);
-            var file = (IFile)content;
-
-            using var stream = await file.OpenStreamAsync(cancellationToken: cancellationToken);
-            return await AppSettingsSerializer.Singleton.DeserializeAsync<List<AppReleaseContentBundle>>(stream, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            OwlCore.Diagnostics.Logger.LogError(ex.Message, ex);
-            throw ex;
-        }
+        using var stream = await file.OpenStreamAsync(cancellationToken: cancellationToken);
+        return await AppSettingsSerializer.Singleton.DeserializeAsync<List<AppReleaseContentBundle>>(stream, cancellationToken);
     }
 
     /// <inheritdoc />

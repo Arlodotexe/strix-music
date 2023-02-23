@@ -12,8 +12,8 @@
 	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:sys="using:System"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	x:Name="RootUserControl"
 	mc:Ignorable="d">
 
 	<StackPanel
@@ -168,41 +168,48 @@
 
 		<labs:SettingsCard
 			Description="In the future, changing this option will reinstall the app using the provided release source"
+			Header="App Updates"
+			HeaderIcon="{ui:FontIcon Glyph=&#xE835;}"
+			IsEnabled="False">
+			<Button Content="Check for updates" />
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="In the future, changing this option will reinstall the app using the provided release source"
 			Header="Release source"
+			HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
 			<TextBox IsEnabled="False" Text="{x:Bind Ipfs.Settings.ReleaseIpns, Mode=TwoWay}" />
 		</labs:SettingsCard>
 
 		<labs:SettingsExpander
 			x:Name="AppReleaseContentPreload"
-			Description="Preloaded files load instantly on this device, are always available for new devices on your local network, and speed up content retrieval for new users on the internet"
-			Header="Pin &amp; preload release content"
+			Description="Release content from the publisher is cached on your local IPFS node for faster access. We'll refresh the cache on each app startup."
+			Header="Cache release content"
+			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}">
 			<labs:SettingsExpander.ItemTemplate>
 				<DataTemplate x:DataType="appModels:AppReleaseContentBundlePreloadHandler">
-					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description}" Header="{x:Bind ReleaseContentBundle.DisplayName}">
-						<StackPanel Spacing="8">
+					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description, FallbackValue='Description'}" Header="{x:Bind ReleaseContentBundle.DisplayName, FallbackValue='Name'}">
+						<controls:WrapPanel HorizontalSpacing="8" VerticalSpacing="8">
 							<ProgressRing IsActive="{x:Bind PreloadCommand.IsRunning, Mode=OneWay}" />
 
 							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{x:Bind IsPreloaded, Mode=OneWay}">
 								<interactivity:Interaction.Behaviors>
+									<core:EventTriggerBehavior EventName="Toggled">
+										<core:InvokeCommandAction Command="{Binding Ipfs.Settings.SaveCommand, ElementName=RootUserControl}" CommandParameter="{x:Null}" />
+									</core:EventTriggerBehavior>
+
 									<core:DataTriggerBehavior
 										Binding="{Binding IsOn, ElementName=PreloadToggleSwitch}"
 										ComparisonCondition="Equal"
 										Value="true">
 										<core:InvokeCommandAction Command="{x:Bind PreloadCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
 									</core:DataTriggerBehavior>
-
-									<core:DataTriggerBehavior
-										Binding="{Binding IsOn, ElementName=PreloadToggleSwitch}"
-										ComparisonCondition="Equal"
-										Value="false">
-										<core:InvokeCommandAction Command="{x:Bind PreloadCancelCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-									</core:DataTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 							</ToggleSwitch>
-						</StackPanel>
+						</controls:WrapPanel>
 					</labs:SettingsCard>
 				</DataTemplate>
 			</labs:SettingsExpander.ItemTemplate>
@@ -218,7 +225,7 @@
 			Header="Garbage collection"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE107;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
-			<StackPanel>
+			<Grid>
 				<ProgressRing IsActive="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
 
 				<Button
@@ -230,13 +237,13 @@
 					Command="{x:Bind Ipfs.ExecuteGarbageCollectionCancelCommand, Mode=OneWay}"
 					Content="Cancel"
 					Visibility="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
-			</StackPanel>
+			</Grid>
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
 			Description="The number of other people who have enabled IPFS in the Strix Music app and are online right now"
 			Header="Users online"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE95A;}"
+			HeaderIcon="{ui:FontIcon Glyph=&#xEB44;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
 			<TextBlock>
 				<Run Text="{x:Bind Ipfs.Everyone.ConnectedPeers.Count, FallbackValue=?, Mode=OneWay}" />

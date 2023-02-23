@@ -17,6 +17,7 @@ using OwlCore.Storage.SystemIO;
 using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Ipfs;
 
 namespace StrixMusic.AppModels;
 
@@ -80,7 +81,13 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     public string InitStatus
     {
         get => _initStatus;
-        set => SetProperty(ref _initStatus, value);
+        set
+        {
+            SetProperty(ref _initStatus, value);
+
+            if (!string.IsNullOrWhiteSpace(value))
+                OwlCore.Diagnostics.Logger.LogInformation(value);
+        }
     }
 
     /// <summary>
@@ -280,6 +287,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 };
 
                 await KuboBootstrapper.StartAsync(cancellationToken);
+                InitStatus = "Kubo started, getting peer information";
 
                 Client = new IpfsClient($"{KuboBootstrapper.ApiUri}");
                 ThisPeer = await Client.IdAsync(cancel: cancellationToken);
@@ -290,20 +298,49 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
             Guard.IsNotNull(ThisPeer);
             Guard.IsNotNullOrWhiteSpace(Settings.ReleaseIpns);
 
+            InitStatus = $"Setting up {nameof(Everyone)} {nameof(PeerRoom)}";
             Everyone = new PeerRoom(ThisPeer, Client.PubSub, $"{Settings.ReleaseIpns}/app");
-            AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
 
-            _ = AppReleaseContentLoader.InitCommand.ExecuteAsync(cancellationToken);
+            try
+            {
+                InitStatus = $"Resolving release content from {Settings.ReleaseIpns}";
+                Settings.ReleaseIpnsResolved = await Client.ResolveAsync(Settings.ReleaseIpns, recursive: true, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                // ignored
+                Logger.LogError($"{Settings.ReleaseIpns} failed to resolve. Unable to retrieve latest content from publisher.", ex);
+            }
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(Settings.ReleaseIpnsResolved))
+                {
+                    InitStatus = $"Setting up release content loader";
+                    AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Failed to start {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
+            }
         }
 
         InitStatus = "Kubo is running and ready to use";
         IsInitialized = true;
-    }
 
-    private void OnInitStatusChanged(string? value)
-    {
-        if (value is not null)
-            OwlCore.Diagnostics.Logger.LogInformation(value);
+        if (AppReleaseContentLoader is not null)
+        {
+            try
+            {
+                await AppReleaseContentLoader.InitAsync(cancellationToken);
+                Logger.LogInformation($"Started {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Couldn't initialize {nameof(AppReleaseContentLoader)}", ex);
+            }
+        }
     }
 
     /// <summary>

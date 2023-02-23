@@ -14,6 +14,7 @@ namespace StrixMusic.Settings
     [JsonSerializable(typeof(int))]
     [JsonSerializable(typeof(LocalStorageCoreSettings))]
     [JsonSerializable(typeof(OneDriveCoreSettings))]
+    [JsonSerializable(typeof(AppReleaseContentBundle))]
     [JsonSerializable(typeof(List<AppReleaseContentBundle>))]
     [JsonSerializable(typeof(ObservableCollection<string>))]
     [JsonSerializable(typeof(ObservableCollection<LocalStorageCoreSettings>))]
