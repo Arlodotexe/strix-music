@@ -11,7 +11,7 @@ using Ipfs.Http;
 using Newtonsoft.Json.Linq;
 using OwlCore.Extensions;
 using OwlCore.Kubo;
-using StrixMusic.Extensions;
+using OwlCore.Storage;
 using Uno.Extensions.Specialized;
 
 namespace StrixMusic.AppModels;
@@ -51,7 +51,7 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
 
         await ReleaseContentBundle.RelativePathsToRoot.InParallel(async x =>
         {
-            var targetItem = await _releaseSourceFolder.TraverseRelativePathAsync(x, cancellationToken);
+            var targetItem = await _releaseSourceFolder.GetItemByRelativePathAsync(x, cancellationToken);
 
             await _client.DoCommandAsync("refs", cancellationToken, targetItem.Id, "recursive=true", "unique=true");
         });

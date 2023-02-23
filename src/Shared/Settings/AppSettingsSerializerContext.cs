@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using StrixMusic.AppModels;
 
@@ -13,6 +14,7 @@ namespace StrixMusic.Settings
     [JsonSerializable(typeof(int))]
     [JsonSerializable(typeof(LocalStorageCoreSettings))]
     [JsonSerializable(typeof(OneDriveCoreSettings))]
+    [JsonSerializable(typeof(List<AppReleaseContentBundle>))]
     [JsonSerializable(typeof(ObservableCollection<string>))]
     [JsonSerializable(typeof(ObservableCollection<LocalStorageCoreSettings>))]
     [JsonSerializable(typeof(ObservableCollection<OneDriveCoreSettings>))]

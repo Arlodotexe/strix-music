@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,11 +80,20 @@ public partial class AppReleaseContentLoader : ObservableObject, IAsyncInit
     /// <returns>The release content bundles configured by the publisher.</returns>
     public async Task<List<AppReleaseContentBundle>> GetAppReleaseContentBundlesAsync(CancellationToken cancellationToken)
     {
-        var content = await ReleaseSourceFolder.GetFirstItemByNameAsync($"{nameof(AppReleaseContentBundle)}.json", cancellationToken);
-        var file = (IFile)content;
+        try
+        {
 
-        using var stream = await file.OpenStreamAsync(cancellationToken: cancellationToken);
-        return await AppSettingsSerializer.Singleton.DeserializeAsync<List<AppReleaseContentBundle>>(stream, cancellationToken);
+            var content = await ReleaseSourceFolder.GetFirstByNameAsync("release-content-bundles.json", cancellationToken);
+            var file = (IFile)content;
+
+            using var stream = await file.OpenStreamAsync(cancellationToken: cancellationToken);
+            return await AppSettingsSerializer.Singleton.DeserializeAsync<List<AppReleaseContentBundle>>(stream, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            OwlCore.Diagnostics.Logger.LogError(ex.Message, ex);
+            throw ex;
+        }
     }
 
     /// <inheritdoc />

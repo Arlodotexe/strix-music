@@ -19,7 +19,7 @@
 				Command="{x:Bind GoToParentCommand}"
 				Content="&#xE110;"
 				FontFamily="{ThemeResource SymbolThemeFontFamily}"
-				IsEnabled="{x:Bind IsAddressableStorable(CurrentFolder), FallbackValue=false, Mode=OneWay}"
+				IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
 				ToolTipService.ToolTip="Navigate up"
 				Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
 
@@ -31,8 +31,6 @@
 				Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
 
 			<ProgressRing IsActive="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
-
-			<TextBlock Text="{x:Bind AsAddressableStorablePath(CurrentFolder), Mode=OneWay}" />
 		</StackPanel>
 
 		<TextBlock

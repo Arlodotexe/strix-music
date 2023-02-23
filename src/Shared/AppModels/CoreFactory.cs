@@ -127,6 +127,9 @@ public static class CoreFactory
         var folderToScan = new OneDriveFolder(graphClient, driveItem);
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"));
 
+        var root = await folderToScan.GetRootAsync();
+        var pathToRoot = root is null ? "/" : await root.GetRelativePathToAsync(folderToScan);
+
         var core = new StorageCore
         (
             folderToScan,
@@ -136,7 +139,7 @@ public static class CoreFactory
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             Logo = new CoreFileImage(new WindowsStorageFile(logoFile)),
-            InstanceDescriptor = authResult.Account.Username,
+            InstanceDescriptor = $"{authResult.Account.Username}: {pathToRoot}",
         };
 
         ((CoreFileImage)core.Logo).SourceCore = core;
