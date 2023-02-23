@@ -90,7 +90,9 @@ public sealed partial class FolderSelector : Page
         Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
         Guard.IsNotNull(Settings);
 
+        var relativePath = await RootFolder.GetRelativePathToAsync((IStorableChild)folder);
         Settings.FolderId = folder.Id;
+        Settings.RelativeFolderPath = relativePath;
         
         _param.AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores.Add(Settings);
 

@@ -44,9 +44,6 @@ public sealed class StorageCore : ICore
         InstanceId = folderToScan.Id;
         Devices = new List<ICoreDevice>();
         Library = new StorageCoreLibrary(this);
-
-        if (folderToScan is IStorableChild addressable)
-            InstanceDescriptor = folderPath;
     }
 
     /// <inheritdoc />
