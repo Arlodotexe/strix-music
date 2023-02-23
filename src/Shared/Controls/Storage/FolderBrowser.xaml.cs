@@ -96,8 +96,6 @@ public sealed partial class FolderBrowser : UserControl
         CurrentFolder = parent;
     }
 
-    private string? AsAddressableStorablePath(object obj) => (obj as IStorableChild)?.Path;
-
     private bool IsAddressableStorable(object obj) => obj is IStorableChild;
 
     private bool IsFolder(object obj) => obj is IFolder;
