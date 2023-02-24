@@ -139,7 +139,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
         {
             foreach (var newItem in e.NewItems)
             {
-                Guard.IsTrue(newItem is IChildFile);
+                Guard.IsTrue(newItem is IStorableChild);
                 var parentFolder = ((IFolderWatcher)sender).Folder;
 
                 // Parent folder must be in _knownSubFolders already.
@@ -147,7 +147,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 lock (_knownSubFolders)
                 {
                     if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
-                        subFolderData.Children.Add((IChildFile)newItem);
+                        subFolderData.Children.Add((IStorableChild)newItem);
                 }
 
                 if (newItem is IChildFile newFile)
