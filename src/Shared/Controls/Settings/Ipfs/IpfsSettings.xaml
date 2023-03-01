@@ -27,23 +27,52 @@
 			</core:EventTriggerBehavior>
 		</interactivity:Interaction.Behaviors>
 
+		<labs:SettingsExpander
+			Description="A distributed web protocol, the p2p equivalent of HTTP."
+			Header="What is this?"
+			IsExpanded="{x:Bind InvertBool(Ipfs.Settings.Enabled), Mode=OneWay}">
+			<labs:SettingsExpander.Items>
+				<labs:SettingsCard
+					Description="See the official basic concept docs."
+					Header="The InterPlanetary File System"
+					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
+					IsClickEnabled="True">
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="Click">
+							<behaviors:OpenUriAction Source="https://ipfs.io/ipfs/QmWzA1FerU3ecYPk7i3W8qLJJxFE6KKQgwKqEBKW9ryC5B/concepts/what-is-ipfs/#decentralization" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</labs:SettingsCard>
+
+				<labs:SettingsCard Description="HTTP retrieves content using a location (an IP address), while IPFS uses a unique content identifier generated from the content itself (the CID)." HeaderIcon="{ui:FontIcon Glyph=&#xE928;}" />
+				<labs:SettingsCard Description="Files can be accessed even if the original source is offline or censored, as long as someone has the data." HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
+				<labs:SettingsCard Description="IPFS enables real-time communication between devices, without the need for an internet connection or a server." HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}" />
+				<labs:SettingsCard Description="Like http, ipfs is a protocol with many implementations. This app uses Kubo, the original and most widely used IPFS implementation." HeaderIcon="{ui:FontIcon Glyph=&#xEEA3;}" />
+			</labs:SettingsExpander.Items>
+		</labs:SettingsExpander>
+
+		<labs:SettingsCard
+			Description="Review your communication preferences before enabling. "
+			Header="IPFS is a public network. "
+			HeaderIcon="{ui:FontIcon Glyph=&#xE946;}"
+			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.Enabled), Mode=OneWay}" />
+
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Basic settings" />
 
+		<ProgressBar IsIndeterminate="True" Visibility="{x:Bind Ipfs.Settings.SaveCommand.IsRunning, Mode=OneWay}" />
+
 		<labs:SettingsCard
-			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
-			Header="Enable IPFS"
-			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
+			Description="Used to power features that require advanced communication between devices."
+			Header="Enable IPFS (experimental)"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
 			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.Enabled), Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.Enabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
-					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
@@ -51,9 +80,8 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsExpander
-			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
-			Header="Enable IPFS"
-			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
+			Description="Used to power features that require advanced communication between devices."
+			Header="Enable IPFS (experimental)"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
 			IsExpanded="True"
 			Visibility="{x:Bind Ipfs.Settings.Enabled, Mode=OneWay}">
@@ -61,18 +89,13 @@
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
-					<core:EventTriggerBehavior EventName="Toggled">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 
 			<labs:SettingsExpander.Items>
-				<labs:SettingsCard
-					x:Name="IpfsStatusCard"
-					Description="{x:Bind Ipfs.InitStatus, Mode=OneWay}"
-					IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
+				<labs:SettingsCard Header="{x:Bind Ipfs.InitStatus, Mode=OneWay}" IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
 
 					<Grid>
 						<!--  If IPFS is not loaded  -->
@@ -148,11 +171,11 @@
 		</labs:SettingsExpander>
 
 		<labs:SettingsCard
-			Description="If a node is not already running on this port, we'll download Kubo and bootstrap it on this port for you."
-			Header="Kubo RPC Port"
+			Description="The port used to communicate with IPFS. If not already running on this port, we'll download Kubo and bootstrap it on this port for you."
+			Header="API Port"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
-			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
-			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeApiPort, Mode=TwoWay}">
+			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
+			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeApiPort, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
 					<core:EventTriggerBehavior EventName="LostFocus">
 						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
@@ -161,54 +184,113 @@
 			</controls1:NumberBox>
 		</labs:SettingsCard>
 
+		<labs:SettingsCard
+			Description="The port to use for the gateway. If you have a local node already running and don't want to use it, make sure this is different."
+			Header="Gateway Port"
+			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
+			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
+			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeGatewayPort, Mode=TwoWay}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="LostFocus">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</controls1:NumberBox>
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="{x:Bind RoutingModeToDescription(Ipfs.Settings.BootstrapNodeDhtRouting), Mode=OneWay}"
+			Header="Routing mode (Bootstrap only)"
+			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
+			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
+			<ComboBox
+				xmlns:ockubo="using:OwlCore.Kubo"
+				IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}"
+				ItemsSource="{ui:EnumValues Type=ockubo:DhtRoutingMode}"
+				SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="Enable or disable discovery of peers on your local network."
+			Header="Local network discovery (Bootstrap only)"
+			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
+			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.BootstrapNodeEnableLocalDiscovery, Mode=TwoWay}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Toggled">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</ToggleSwitch>
+		</labs:SettingsCard>
+
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
-			Text="Release settings" />
+			Text="Installation"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
 
 		<labs:SettingsCard
-			Description="In the future, changing this option will reinstall the app using the provided release source"
+			Description="{x:Bind IpnsPathToProtocolUrl(Ipfs.Settings.ReleaseIpns), FallbackValue=?, Mode=OneWay}"
+			Header="Installed from"
+			HeaderIcon="{ui:FontIcon Glyph=&#xF133;}"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
+			<Button Content="View latest" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpns), Mode=OneWay, FallbackValue=Collapsed}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Click">
+						<behaviors:OpenUriAction Source="{x:Bind IpnsPathToProtocolUrl(Ipfs.Settings.ReleaseIpns), Mode=OneWay, FallbackValue={x:Null}}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</Button>
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="{x:Bind IpfsPathToProtocolUrl(Ipfs.Settings.ReleaseIpnsResolved), FallbackValue=?, Mode=OneWay}"
+			Header="Last known release CID"
+			HeaderIcon="{ui:FontIcon Glyph=&#xE928;}"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
+			<Button Content="View snapshot" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpnsResolved), Mode=OneWay, FallbackValue=Collapsed}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Click">
+						<behaviors:OpenUriAction Source="{x:Bind IpfsPathToProtocolUrl(Ipfs.Settings.ReleaseIpnsResolved), Mode=OneWay, FallbackValue={x:Null}}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</Button>
+		</labs:SettingsCard>
+
+		<labs:SettingsCard
+			Description="Coming soon: sideload and update Strix Music over IPFS."
 			Header="App Updates"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE835;}"
-			IsEnabled="False">
+			IsEnabled="False"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="Check for updates" />
 		</labs:SettingsCard>
 
-		<labs:SettingsCard
-			Description="In the future, changing this option will reinstall the app using the provided release source"
-			Header="Release source"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}"
-			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
-			<TextBox IsEnabled="False" Text="{x:Bind Ipfs.Settings.ReleaseIpns, Mode=TwoWay}" />
-		</labs:SettingsCard>
+		<TextBlock
+			Margin="1,28,0,4"
+			Style="{StaticResource BodyStrongTextBlockStyle}"
+			Text="Release content"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
 
 		<labs:SettingsExpander
-			x:Name="AppReleaseContentPreload"
-			Description="Release content from the publisher is cached on your local IPFS node for faster access. We'll refresh the cache on each app startup."
-			Header="Cache release content"
+			Description="Preload and pin content from the installation source on your local IPFS node for quick and offline access. Refreshed on app startup."
+			Header="Save release content"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
-			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}">
+			IsExpanded="True"
+			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<labs:SettingsExpander.ItemTemplate>
 				<DataTemplate x:DataType="appModels:AppReleaseContentBundlePreloadHandler">
-					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description, FallbackValue='Description'}" Header="{x:Bind ReleaseContentBundle.DisplayName, FallbackValue='Name'}">
+					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description, FallbackValue='No description'}" Header="{x:Bind ReleaseContentBundle.DisplayName, FallbackValue='No display name'}">
 						<controls:WrapPanel HorizontalSpacing="8" VerticalSpacing="8">
-							<ProgressRing IsActive="{x:Bind PreloadCommand.IsRunning, Mode=OneWay}" />
+							<ProgressRing IsActive="{x:Bind PinCommand.IsRunning, Mode=OneWay}" />
+							<ProgressRing IsActive="{x:Bind UnpinCommand.IsRunning, Mode=OneWay}" />
 
-							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{x:Bind IsPreloaded, Mode=OneWay}">
-								<interactivity:Interaction.Behaviors>
-									<core:EventTriggerBehavior EventName="Toggled">
-										<core:InvokeCommandAction Command="{Binding Ipfs.Settings.SaveCommand, ElementName=RootUserControl}" CommandParameter="{x:Null}" />
-									</core:EventTriggerBehavior>
-
-									<core:DataTriggerBehavior
-										Binding="{Binding IsOn, ElementName=PreloadToggleSwitch}"
-										ComparisonCondition="Equal"
-										Value="true">
-										<core:InvokeCommandAction Command="{x:Bind PreloadCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-									</core:DataTriggerBehavior>
-								</interactivity:Interaction.Behaviors>
-							</ToggleSwitch>
+							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{x:Bind IsPinned, Mode=TwoWay}" />
 						</controls:WrapPanel>
 					</labs:SettingsCard>
 				</DataTemplate>
@@ -218,13 +300,26 @@
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
-			Text="Additional features" />
+			Text="Additional features"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
+
+		<labs:SettingsCard
+			Description="The number of users who have enabled IPFS in the Strix Music app and are reachable by your node."
+			Header="Users online"
+			HeaderIcon="{ui:FontIcon Glyph=&#xEB44;}"
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
+			<TextBlock>
+				<Run Text="{x:Bind Ipfs.Everyone.ConnectedPeers.Count, FallbackValue=?, Mode=OneWay}" />
+			</TextBlock>
+		</labs:SettingsCard>
 
 		<labs:SettingsCard
 			Description="Content on your local node that isn't pinned or stored in MFS will be cleaned up."
 			Header="Garbage collection"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE107;}"
-			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
+			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
+			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Grid>
 				<ProgressRing IsActive="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
 
@@ -241,91 +336,19 @@
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
-			Description="The number of other people who have enabled IPFS in the Strix Music app and are online right now"
-			Header="Users online"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEB44;}"
-			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}">
-			<TextBlock>
-				<Run Text="{x:Bind Ipfs.Everyone.ConnectedPeers.Count, FallbackValue=?, Mode=OneWay}" />
-			</TextBlock>
-		</labs:SettingsCard>
-
-		<!--
-        <labs:SettingsCard
 			Description="Requires app restart. See how many people are listening to the same track, album, artist, playlist, etc., as you. Allows others to see when something is playing, paused, loading, or failing to load."
 			Header="Enable global playback state counters"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEBDA;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
-			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
-            <ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Toggled">
-                        <core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </ToggleSwitch>
-        </labs:SettingsCard>
-		-->
+			Visibility="Collapsed">
+			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
+				<interactivity:Interaction.Behaviors>
+					<core:EventTriggerBehavior EventName="Toggled">
+						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</core:EventTriggerBehavior>
+				</interactivity:Interaction.Behaviors>
+			</ToggleSwitch>
+		</labs:SettingsCard>
 
-		<!--
-        <labs:SettingsExpander
-			Header="Allow communication with:"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}"
-			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
-			<labs:SettingsExpander.Items>
-				<labs:SettingsCard ContentAlignment="Left">
-					<RadioButton
-						x:Name="LanOnlyRadioButton"
-						Content="Devices on my local network"
-						IsChecked="{x:Bind Ipfs.Settings.EmbeddedNodeLanOnly, FallbackValue=false, Mode=TwoWay}">
-						<interactivity:Interaction.Behaviors>
-							<core:DataTriggerBehavior
-								Binding="{x:Bind LanOnlyRadioButton.IsChecked, Mode=OneWay}"
-								ComparisonCondition="Equal"
-								Value="True">
-								<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-							</core:DataTriggerBehavior>
-							<core:DataTriggerBehavior
-								Binding="{x:Bind LanOnlyRadioButton.IsChecked, Mode=OneWay}"
-								ComparisonCondition="Equal"
-								Value="True">
-								<core:ChangePropertyAction
-									PropertyName="EmbeddedNodeLanOnly"
-									TargetObject="{x:Bind Ipfs.Settings, Mode=OneWay}"
-									Value="True" />
-							</core:DataTriggerBehavior>
-						</interactivity:Interaction.Behaviors>
-					</RadioButton>
-				</labs:SettingsCard>
-
-				<labs:SettingsCard ContentAlignment="Left">
-					<RadioButton
-						x:Name="LanAndWanRadioButton"
-						Content="Devices on the internet and my local network"
-						IsChecked="{x:Bind InvertBool(Ipfs.Settings.EmbeddedNodeLanOnly), BindBack=InvertBool, FallbackValue=false, Mode=TwoWay}">
-						<interactivity:Interaction.Behaviors>
-							<core:DataTriggerBehavior
-								Binding="{x:Bind LanAndWanRadioButton.IsChecked, Mode=OneWay}"
-								ComparisonCondition="Equal"
-								Value="True">
-								<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-							</core:DataTriggerBehavior>
-							<core:DataTriggerBehavior
-								Binding="{x:Bind LanAndWanRadioButton.IsChecked, Mode=OneWay}"
-								ComparisonCondition="Equal"
-								Value="True">
-								<core:ChangePropertyAction
-									PropertyName="EmbeddedNodeLanOnly"
-									TargetObject="{x:Bind Ipfs.Settings, Mode=OneWay}"
-									Value="False" />
-							</core:DataTriggerBehavior>
-						</interactivity:Interaction.Behaviors>
-					</RadioButton>
-				</labs:SettingsCard>
-			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>
-		-->
-
-		<ProgressBar IsIndeterminate="True" Visibility="{x:Bind Ipfs.Settings.SaveCommand.IsRunning, Mode=OneWay}" />
 	</StackPanel>
 </UserControl>

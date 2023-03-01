@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -8,6 +11,8 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
+using NLog.Config;
+using NLog.Targets;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Storage;
@@ -50,9 +55,22 @@ namespace StrixMusic.AppModels
             _settings = new DiagnosticSettings(dataFolder);
             _dataFolder = dataFolder;
 
+            SetupNLog();
+            SetupUnhandledExceptionLogger();
+
+            // Setup default value
             if (_settings.IsLoggingEnabled)
+            {
+                // Event is connected for the lifetime of the application, unless disabled by user
                 Logger.MessageReceived += Logger_MessageReceived;
 
+                if (_settings.IsFirstChangeLoggingEnabled)
+                {
+                    AppDomain.CurrentDomain.FirstChanceException += OnCurrentDomainOnFirstChanceException;
+                }
+            }
+
+            // Listen for config change
             _settings.PropertyChanged += SettingsOnPropertyChanged;
 
 #if !__WASM__
@@ -69,6 +87,8 @@ namespace StrixMusic.AppModels
             _memoryWatchTimer.Tick += DispatchTimer_Elapsed;
             _memoryWatchTimer.Start();
 #endif
+
+            Logger.LogInformation($"Diagnostics initialized");
         }
 
         /// <summary>
@@ -103,21 +123,88 @@ namespace StrixMusic.AppModels
         /// </summary>
         public ObservableCollection<string>? Logs { get; } = new();
 
+        private void SetupNLog()
+        {
+            // For privacy, logs should not leave local storage unless the user explicitly moves them. 
+            var logPath = ApplicationData.Current.LocalCacheFolder.Path + @"\logs" + @"\${date:format=yyyy-MM-dd}.log";
+
+            NLog.LogManager.Configuration = CreateConfig(shouldArchive: true);
+
+            LoggingConfiguration CreateConfig(bool shouldArchive)
+            {
+                var config = new LoggingConfiguration();
+
+                var fileTarget = new FileTarget("filelog")
+                {
+                    FileName = logPath,
+                    EnableArchiveFileCompression = shouldArchive,
+                    MaxArchiveDays = 7,
+                    ArchiveNumbering = ArchiveNumberingMode.Sequence,
+                    ArchiveOldFileOnStartup = shouldArchive,
+                    KeepFileOpen = true,
+                    OpenFileCacheTimeout = 10,
+                    AutoFlush = false,
+                    OpenFileFlushTimeout = 10,
+                    ConcurrentWrites = false,
+                    CleanupFileName = false,
+                    Layout = "${message}",
+                };
+
+                config.AddTarget(fileTarget);
+                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
+
+                return config;
+            }
+        }
+
+        private void SetupUnhandledExceptionLogger()
+        {
+            App.Current.UnhandledException += (sender, args) =>
+            {
+                var stack = new StackTrace();
+                var stackFrames = stack.GetFrames();
+                Logger.LogError($"Unhandled exception {string.Join<StackFrame>("    ", stackFrames)}", args.Exception);
+            };
+        }
+
         private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_settings.IsLoggingEnabled))
             {
                 if (_settings.IsLoggingEnabled)
                 {
+                    Logger.MessageReceived -= Logger_MessageReceived;
                     Logger.MessageReceived += Logger_MessageReceived;
                     Logger.LogInformation("Logger enabled");
                 }
                 else
                 {
-                    Logger.LogInformation("Logger disabled");
                     Logger.MessageReceived -= Logger_MessageReceived;
+                    Logger.LogInformation("Logger disabled");
                 }
             }
+
+            if (e.PropertyName == nameof(_settings.IsFirstChangeLoggingEnabled))
+            {
+                if (Settings.IsFirstChangeLoggingEnabled)
+                {
+                    AppDomain.CurrentDomain.FirstChanceException -= OnCurrentDomainOnFirstChanceException;
+                    AppDomain.CurrentDomain.FirstChanceException += OnCurrentDomainOnFirstChanceException;
+                    Logger.LogInformation("First chance logging enabled");
+                }
+                else
+                {
+                    AppDomain.CurrentDomain.FirstChanceException -= OnCurrentDomainOnFirstChanceException;
+                    Logger.LogInformation("First chance logging disable");
+                }
+            }
+        }
+
+        private void OnCurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs args)
+        {
+            var stack = new StackTrace();
+            var stackFrames = stack.GetFrames();
+            Logger.LogError($"Unhandled exception {string.Join<StackFrame>("    ", stackFrames)}", args.Exception);
         }
 
         private void DispatchTimer_Elapsed(object? sender, object e)
@@ -142,16 +229,23 @@ namespace StrixMusic.AppModels
 
         private async void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
         {
+            var message = $"{DateTime.UtcNow:O} [{e.Level}] [Thread {Thread.CurrentThread.ManagedThreadId}] L{e.CallerLineNumber} {Path.GetFileName(e.CallerFilePath)} {e.CallerMemberName} {e.Exception} {e.Message}";
+
+            // Log to disk
+            NLog.LogManager.GetLogger(string.Empty).Log(NLog.LogLevel.Info, message);
+
+            // Re-emit for WebAssembly console output.
+            Console.WriteLine(message);
+
+            // Post to UI thread
             using (await _semaphoreSlim.DisposableWaitAsync())
             {
-                var formattedLogMessage = LogFormatter.GetFormattedLogMessage(e);
-
                 if (Logs == null)
                     return;
 
                 await _syncContext.PostAsync(() =>
                 {
-                    Logs.Add(formattedLogMessage);
+                    Logs.Add(message);
                     return Task.CompletedTask;
                 });
             }
@@ -160,7 +254,7 @@ namespace StrixMusic.AppModels
         [RelayCommand]
         private async Task OpenLogFolderAsync()
         {
-            var logsLocation = LogFormatter.LogFolderPath;
+            var logsLocation = ApplicationData.Current.LocalCacheFolder.Path + @"\logs";
             var folder = await StorageFolder.GetFolderFromPathAsync(logsLocation);
 
             await Launcher.LaunchFolderAsync(folder);

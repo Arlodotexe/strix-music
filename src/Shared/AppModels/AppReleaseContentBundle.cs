@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Ipfs;
 
 namespace StrixMusic.AppModels;
 
@@ -37,4 +38,16 @@ public class AppReleaseContentBundle
     /// </summary>
     [JsonPropertyName("rootRelativePaths")]
     public List<string>? RootRelativePaths { get; set; }
+
+    /// <summary>
+    /// The key is a <see cref="RootRelativePaths"/>, the value is an array of CIDs that were resolved while pinning the content.
+    /// </summary>
+    [JsonPropertyName("locallyPinnedCids")]
+    public Dictionary<string, List<string>>? LocallyPinnedCids { get; set; } = new();
+
+    /// <summary>
+    /// The key is a <see cref="RootRelativePaths"/>, the value is an array of CIDs that were resolved while pinning the content.
+    /// </summary>
+    [JsonPropertyName("isPinned")]
+    public bool IsPinned{ get; set; }
 }

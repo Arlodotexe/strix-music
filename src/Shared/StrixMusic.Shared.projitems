@@ -50,7 +50,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LogFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\DiagnosticSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />

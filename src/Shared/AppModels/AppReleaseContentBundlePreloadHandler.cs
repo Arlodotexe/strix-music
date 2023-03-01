@@ -1,8 +1,12 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Ipfs;
 using Ipfs.Http;
 using OwlCore.Diagnostics;
 using OwlCore.Extensions;
@@ -17,8 +21,7 @@ namespace StrixMusic.AppModels;
 public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
 {
     private readonly IpfsClient _client;
-    private readonly IpnsFolder _releaseSourceFolder;
-    [ObservableProperty] private bool _isPreloaded;
+    private readonly IFolder _releaseSourceFolder;
     [ObservableProperty] private bool _isPinned;
 
     /// <summary>
@@ -27,13 +30,9 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
     public AppReleaseContentBundlePreloadHandler(AppReleaseContentBundle releaseContentBundle, IpfsClient client, IFolder releaseSourceFolder)
     {
         _client = client;
+        _releaseSourceFolder = releaseSourceFolder;
         ReleaseContentBundle = releaseContentBundle;
-
-        // https://github.com/Arlodotexe/OwlCore.Storage/issues/18
-        // Since TraverseRelativePath is broken and we're waiting on OwlCore.Storage updates
-        // We won't use the interfaces to navigate to the folder.
-        // Instead, we'll manually feed the IPNS address + path into Kubo.
-        _releaseSourceFolder = (IpnsFolder)releaseSourceFolder;
+        _isPinned = releaseContentBundle.IsPinned;
     }
 
     /// <summary>
@@ -42,22 +41,73 @@ public partial class AppReleaseContentBundlePreloadHandler : ObservableObject
     public AppReleaseContentBundle ReleaseContentBundle { get; }
 
     /// <summary>
-    /// Preloads all content for this bundle.
+    /// Retrieves or removes the release content based on the value of <see cref="IsPinned"/>.
     /// </summary>
     [RelayCommand(IncludeCancelCommand = true, FlowExceptionsToTaskScheduler = true)]
-    public async Task PreloadAsync(CancellationToken cancellationToken)
+    public async Task PinAsync(CancellationToken cancellationToken)
     {
+        ReleaseContentBundle.LocallyPinnedCids ??= new Dictionary<string, List<string>>();
         Guard.IsNotNull(ReleaseContentBundle.RootRelativePaths);
-        Logger.LogInformation($"Started preload for app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
+        Logger.LogInformation($"Pinning app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
 
         await ReleaseContentBundle.RootRelativePaths.InParallel(async x =>
         {
             var targetItem = await _releaseSourceFolder.GetItemByRelativePathAsync(x, cancellationToken);
 
-            await _client.DoCommandAsync("refs", cancellationToken, targetItem.Id, "recursive=true", "unique=true");
+            if (targetItem is IpnsFile or IpnsFolder or IpfsFile or IpfsFolder)
+                await _client.DoCommandAsync("refs", cancellationToken, targetItem.Id, "recursive=true", "unique=true");
+            else
+                throw new System.NotSupportedException($"{targetItem.GetType()} isn't supported for release content preloading.");
+
+            var pinnedCids = await _client.Pin.AddAsync(targetItem.Id, recursive: true, cancellationToken);
+
+            lock (ReleaseContentBundle.LocallyPinnedCids)
+            {
+                if (ReleaseContentBundle.LocallyPinnedCids.TryGetValue(x, out var value))
+                {
+                    foreach (var item in pinnedCids)
+                    {
+                        if (!value.Contains(item))
+                            value.Add(item);
+                    }
+                }
+                else
+                {
+                    ReleaseContentBundle.LocallyPinnedCids.Add(x, new List<string>(pinnedCids.Select(cid => cid.ToString())));
+                }
+            }
         });
 
-        IsPreloaded = true;
-        Logger.LogInformation($"Preloaded app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
+        ReleaseContentBundle.IsPinned = true;
+        Logger.LogInformation($"Pinned app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
+    }
+
+    /// <summary>
+    /// Retrieves or removes the release content based on the value of <see cref="IsPinned"/>.
+    /// </summary>
+    [RelayCommand(IncludeCancelCommand = true, FlowExceptionsToTaskScheduler = true)]
+    public async Task UnpinAsync(CancellationToken cancellationToken)
+    {
+        ReleaseContentBundle.LocallyPinnedCids ??= new Dictionary<string, List<string>>();
+        Guard.IsNotNull(ReleaseContentBundle.RootRelativePaths);
+        Logger.LogInformation($"Unpinning app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
+
+        await ReleaseContentBundle.RootRelativePaths.InParallel(async x =>
+        {
+            foreach (var item in ReleaseContentBundle.LocallyPinnedCids)
+            {
+                var removedCids = await item.Value.InParallel(cid => _client.Pin.RemoveAsync(cid, recursive: true, cancellationToken));
+
+                if (!removedCids.Select(cid => cid.ToString()).SequenceEqual(item.Value))
+                {
+                    Logger.LogWarning("The list of unpinned CIDs didn't match the list of known ID pins. This may indicate manual clean up of data (not performed by this application), a mismatch in the data format agreed upon between the publisher and client, or a generic application bug. Inspect the logs to see if this is undesirable behavior.");
+                }
+
+                ReleaseContentBundle.LocallyPinnedCids.Remove(x);
+            }
+        });
+
+        ReleaseContentBundle.IsPinned = false;
+        Logger.LogInformation($"Unpinned app release content bundle {ReleaseContentBundle.Id} ({ReleaseContentBundle.DisplayName})");
     }
 }

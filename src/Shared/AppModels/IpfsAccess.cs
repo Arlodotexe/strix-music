@@ -17,7 +17,6 @@ using OwlCore.Storage.SystemIO;
 using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Ipfs;
 
 namespace StrixMusic.AppModels;
 
@@ -30,7 +29,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
     private IpfsSettings _settings;
     private bool _isInitialized;
-    private bool _isRunningEmbeddedNode;
+    private bool _isRunningBootstrapNode;
     private string _initStatus = "IPFS is not loaded";
     private KuboBootstrapper? _kuboBootstrapper;
     private AppReleaseContentLoader? _appReleaseContentLoader;
@@ -67,12 +66,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     }
 
     /// <summary>
-    /// Gets a boolean that indicates if a node was downloaded and boostrapped by the application.
+    /// Gets a boolean that indicates if a node was downloaded and bootstrapped by the application.
     /// </summary>
-    public bool IsRunningEmbeddedNode
+    public bool IsRunningBootstrapNode
     {
-        get => _isRunningEmbeddedNode;
-        set => SetProperty(ref _isRunningEmbeddedNode, value);
+        get => _isRunningBootstrapNode;
+        set => SetProperty(ref _isRunningBootstrapNode, value);
     }
 
     /// <summary>
@@ -148,7 +147,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// <summary>
     /// The message handler to use when accessing IPFS over any HTTP API.
     /// </summary>
-    public HttpMessageHandler MessageHandler { get; set; } = new HttpClientHandler();
+    public HttpMessageHandler HttpMessageHandler { get; set; } = new HttpClientHandler();
 
     /// <summary>
     /// Performs a garbage collection sweep on the IPFS repo.
@@ -156,10 +155,15 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// <param name="cancellationToken">A token that can be used to cancel the ongoing task.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
-    public Task ExecuteGarbageCollectionAsync(CancellationToken cancellationToken)
+    public async Task ExecuteGarbageCollectionAsync(CancellationToken cancellationToken)
     {
         Guard.IsNotNull(Client);
-        return Client.BlockRepository.RemoveGarbageAsync(cancellationToken);
+        var originalStatus = InitStatus;
+
+        InitStatus = "Performing garbage collection...";
+        await Client.BlockRepository.RemoveGarbageAsync(cancellationToken);
+
+        InitStatus = originalStatus;
     }
 
     /// <summary>
@@ -184,10 +188,10 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
         IsInitialized = false;
 
-        if (IsRunningEmbeddedNode)
+        if (IsRunningBootstrapNode)
         {
             InitStatus = "The embedded IPFS node has been stopped.";
-            IsRunningEmbeddedNode = false;
+            IsRunningBootstrapNode = false;
         }
         else
         {
@@ -226,7 +230,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 if (kuboBin is null)
                 {
                     InitStatus = "Downloading and extracting latest version of Kubo";
-                    var downloader = new KuboDownloader { HttpMessageHandler = MessageHandler };
+                    var downloader = new KuboDownloader { HttpMessageHandler = HttpMessageHandler };
                     var downloadedBinary = await downloader.DownloadLatestBinaryAsync(cancellationToken);
 
                     kuboBin = await StoreDownloadedKuboBinaryAsync(downloadedBinary, cancellationToken);
@@ -276,14 +280,20 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 InitStatus = "Starting Kubo";
                 Guard.IsNotNull(kuboBin);
 
-                var kuboBinParentFolder = await kuboBin.GetParentAsync(cancellationToken);
+                var kuboBinParentFolder = (SystemFolder?)await kuboBin.GetParentAsync(cancellationToken);
                 Guard.IsNotNull(kuboBinParentFolder);
 
-                var ipfsFolder = await ((IModifiableFolder)kuboBinParentFolder).CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
+                var repoFolder = (SystemFolder)await kuboBinParentFolder.CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
 
-                KuboBootstrapper = new KuboBootstrapper(kuboBin, ((SystemFolder)ipfsFolder).Path)
+                KuboBootstrapper = new KuboBootstrapper(kuboBin, repoFolder.Path)
                 {
                     ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
+                    GatewayUri = new Uri($"http://127.0.0.1:{Settings.NodeGatewayPort}"),
+                    RoutingMode = Settings.BootstrapNodeDhtRouting,
+                    StartupProfiles =
+                    {
+                        Settings.BootstrapNodeEnableLocalDiscovery ? "local-discovery" : "server",
+                    }
                 };
 
                 await KuboBootstrapper.StartAsync(cancellationToken);
@@ -291,7 +301,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
                 Client = new IpfsClient($"{KuboBootstrapper.ApiUri}");
                 ThisPeer = await Client.IdAsync(cancel: cancellationToken);
-                IsRunningEmbeddedNode = true;
+                IsRunningBootstrapNode = true;
             }
 
             Guard.IsNotNull(Client);
@@ -311,36 +321,29 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
                 // ignored
                 Logger.LogError($"{Settings.ReleaseIpns} failed to resolve. Unable to retrieve latest content from publisher.", ex);
             }
-
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(Settings.ReleaseIpnsResolved))
-                {
-                    InitStatus = $"Setting up release content loader";
-                    AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Failed to start {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
-            }
         }
 
         InitStatus = "Kubo is running and ready to use";
         IsInitialized = true;
 
+        if (!string.IsNullOrWhiteSpace(Settings.ReleaseIpnsResolved))
+        {
+            AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
+        }
+
         if (AppReleaseContentLoader is not null)
         {
-            try
+            Logger.LogInformation($"Starting {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
+            _ = AppReleaseContentLoader.InitCommand.ExecuteAsync(CancellationToken.None).ContinueWith(x =>
             {
-                await AppReleaseContentLoader.InitAsync(cancellationToken);
-                Logger.LogInformation($"Started {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Couldn't initialize {nameof(AppReleaseContentLoader)}", ex);
-            }
+                if (x.IsFaulted)
+                {
+                    Logger.LogError($"Couldn't initialize release content loader", x.Exception.GetBaseException());
+                }
+            }, CancellationToken.None);
         }
+
+        InitStatus = "Kubo is running and ready to use";
     }
 
     /// <summary>
@@ -405,8 +408,10 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         var appDataFolder = new SystemFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
         var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
 
-        Settings.DownloadKuboBinaryFileId = binaryFile.Id;
-        return await binariesFolder.CreateCopyOfAsync(binaryFile, overwrite: true, cancellationToken);
+        var copy = await binariesFolder.CreateCopyOfAsync(binaryFile, overwrite: true, cancellationToken);
+        Settings.DownloadKuboBinaryFileId = copy.Id;
+
+        return copy;
     }
 
     /// <summary>

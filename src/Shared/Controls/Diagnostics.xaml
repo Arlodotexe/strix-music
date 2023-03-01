@@ -44,8 +44,18 @@
 				<TextBlock Text="{x:Bind DiagnosticData.MemoryUsage, Mode=OneWay}" />
 			</labs:SettingsCard>
 
-			<labs:SettingsCard Description="When enabled, log files will be saved to disk" Header="Enable logging">
+			<labs:SettingsCard Description="Logs are printed below and saved to local application storage when enabled." Header="Enable logging">
 				<ToggleSwitch IsEnabled="{x:Bind InvertBool(DiagnosticData.Settings.SaveCommand.IsRunning), Mode=OneWay}" IsOn="{x:Bind DiagnosticData.Settings.IsLoggingEnabled, Mode=TwoWay}">
+					<interactivity:Interaction.Behaviors>
+						<core:EventTriggerBehavior EventName="Toggled">
+							<core:InvokeCommandAction Command="{x:Bind DiagnosticData.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</core:EventTriggerBehavior>
+					</interactivity:Interaction.Behaviors>
+				</ToggleSwitch>
+			</labs:SettingsCard>
+
+			<labs:SettingsCard Description="Log handled or ignored exceptions. Keep this disabled if you're unsure." Header="First chance exceptions">
+				<ToggleSwitch IsEnabled="{x:Bind InvertBool(DiagnosticData.Settings.SaveCommand.IsRunning), Mode=OneWay}" IsOn="{x:Bind DiagnosticData.Settings.IsFirstChangeLoggingEnabled, Mode=TwoWay}">
 					<interactivity:Interaction.Behaviors>
 						<core:EventTriggerBehavior EventName="Toggled">
 							<core:InvokeCommandAction Command="{x:Bind DiagnosticData.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
@@ -56,7 +66,6 @@
 
 			<labs:SettingsCard
 				ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
-				Description="Show the folder where all past logs are saved"
 				Header="Open logs folder"
 				HeaderIcon="{ui:SymbolIcon Symbol=Folder}"
 				IsClickEnabled="True">

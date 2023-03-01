@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
+using OwlCore.Kubo;
 using StrixMusic.AppModels;
 
 namespace StrixMusic.Settings
@@ -19,8 +20,10 @@ namespace StrixMusic.Settings
     [JsonSerializable(typeof(ObservableCollection<string>))]
     [JsonSerializable(typeof(ObservableCollection<LocalStorageCoreSettings>))]
     [JsonSerializable(typeof(ObservableCollection<OneDriveCoreSettings>))]
+    [JsonSerializable(typeof(Dictionary<string, Ipfs.Cid[]>))]
     [JsonSerializable(typeof(StrixMusicShells))]
     [JsonSerializable(typeof(AdaptiveShells))]
+    [JsonSerializable(typeof(DhtRoutingMode))]
     public partial class AppSettingsSerializerContext : JsonSerializerContext
     {
     }

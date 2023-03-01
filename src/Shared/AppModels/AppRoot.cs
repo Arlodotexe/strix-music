@@ -149,17 +149,42 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             if (IsInitialized)
                 return;
 
-            Logger.LogInformation($"Initializing app root using folder {_dataFolder.Id}");
-            cancellationToken.ThrowIfCancellationRequested();
-
             if (Diagnostics is null)
             {
-                Logger.LogInformation($"Initializing {nameof(DebugSettings)}");
-
                 var debugSettingsFolder = await GetOrCreateSettingsFolder(nameof(DebugSettings));
                 Diagnostics = new AppDiagnostics(debugSettingsFolder);
 
                 await Diagnostics.Settings.LoadCommand.ExecuteAsync(cancellationToken);
+            }
+
+            Logger.LogInformation($"Initializing using folder ID {_dataFolder.Id}");
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (Ipfs is null)
+            {
+                Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
+
+                var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
+                var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
+
+                Ipfs = new IpfsAccess(ipfsSettings)
+                {
+                    HttpMessageHandler = HttpMessageHandler,
+                };
+
+                try
+                {
+                    await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
+                    if (ipfsSettings.Enabled)
+                    {
+                        Logger.LogInformation($"Initializing {nameof(Ipfs)}");
+                        await Ipfs.InitCommand.ExecuteAsync(null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("Ipfs failed to initialized", ex);
+                }
             }
 
             if (MusicSourcesSettings is null)
@@ -180,26 +205,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 ShellSettings = new ShellSettings(folder: shellSettingsFolder);
 
                 await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
-            }
-
-            if (Ipfs is null)
-            {
-                Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
-
-                var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
-                var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
-
-                Ipfs = new IpfsAccess(ipfsSettings)
-                {
-                    MessageHandler = HttpMessageHandler,
-                };
-
-                await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
-                if (ipfsSettings.Enabled)
-                {
-                    Logger.LogInformation($"Initializing {nameof(Ipfs)}");
-                    await Ipfs.InitCommand.ExecuteAsync(null);
-                }
             }
 
             // Create/Remove cores when settings are added/removed.
