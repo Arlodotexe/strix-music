@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\Ipfs\LandingPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\FolderSelector.xaml.cs" />
@@ -110,6 +111,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\Ipfs\LandingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,6 +161,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\Ipfs\logo.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Bonkers.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>

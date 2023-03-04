@@ -53,6 +53,14 @@ public partial class MusicSourcesSettings : SettingsBase
             defaultSettingsFactory: async instanceId => new OneDriveCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
+        AvailableMusicSources.Add(new AvailableMusicSource
+            (
+            name: "IPFS",
+            description: "Stream music directly from ipfs folder",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/Ipfs/logo.png"),
+            defaultSettingsFactory: async instanceId => new IpfsSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
+        );
+
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)
         {
             var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(assetPath));
