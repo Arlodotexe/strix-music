@@ -40,5 +40,5 @@ public class LibraryPluginWrapper : PlayableCollectionGroupPluginWrapperBase, IL
     public IReadOnlyList<ICoreLibrary> Sources => ((IMerged<ICoreLibrary>)_library).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreLibrary other) => _library.Equals(other);
+    public bool Equals(ICoreLibrary? other) => _library.Equals(other!);
 }

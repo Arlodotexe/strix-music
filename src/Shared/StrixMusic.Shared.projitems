@@ -20,6 +20,9 @@
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDiagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundlePreloadHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
@@ -47,7 +50,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LogFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\DiagnosticSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
@@ -72,7 +74,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
-    <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MediaPlayback\MediaPlayerElementAudioService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\LocalStorageCoreSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\OneDriveCoreSettings.cs" />

@@ -83,13 +83,13 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
             AttachEvents(TrackCollection.Tracks);
         }
 
-        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Tracks_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
 
-                    if (TrackCollection is null)
+                    if (TrackCollection is null || e.NewItems is null)
                         return;
 
                     foreach (var track in e.NewItems)
@@ -97,6 +97,9 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
 
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems is null)
+                        return;
+
                     for (int i = e.OldStartingIndex; i < e.OldItems.Count; i++)
                         Tracks.RemoveAt(i);
 

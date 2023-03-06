@@ -171,7 +171,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         /// <param name="modelPlugin">The plugin collection to import into this instance.</param>
         public void Import(SdkModelPlugin modelPlugin)
         {
-            var currentSdkVersion = typeof(SdkModelPlugin).Assembly.GetName().Version;
+            var currentSdkVersion = typeof(SdkModelPlugin).Assembly.GetName().Version ?? throw new System.Exception("Could not location version of current assembly");
 
             if (modelPlugin.Metadata.SdkVersion.Major != currentSdkVersion.Major)
             {

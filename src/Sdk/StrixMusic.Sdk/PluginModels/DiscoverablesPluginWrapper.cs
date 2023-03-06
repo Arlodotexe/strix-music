@@ -40,5 +40,5 @@ public class DiscoverablesPluginWrapper : PlayableCollectionGroupPluginWrapperBa
     public IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)_discoverables).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreDiscoverables other) => _discoverables.Equals(other);
+    public bool Equals(ICoreDiscoverables? other) => _discoverables.Equals(other!);
 }

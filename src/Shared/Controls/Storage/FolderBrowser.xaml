@@ -13,15 +13,15 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <StackPanel HorizontalAlignment="Center" Spacing="8">
-        <StackPanel Orientation="Horizontal" Spacing="4">
-            <Button
-                Command="{x:Bind GoToParentCommand}"
-                Content="&#xE110;"
-                FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                IsEnabled="{x:Bind IsAddressableStorable(CurrentFolder), FallbackValue=false, Mode=OneWay}"
-                ToolTipService.ToolTip="Navigate up"
-                Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
+	<StackPanel HorizontalAlignment="Center" Spacing="8">
+		<StackPanel Orientation="Horizontal" Spacing="4">
+			<Button
+				Command="{x:Bind GoToParentCommand}"
+				Content="&#xE110;"
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
+				ToolTipService.ToolTip="Navigate up"
+				Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
 
             <Button
                 Command="{x:Bind GoToParentCancelCommand}"

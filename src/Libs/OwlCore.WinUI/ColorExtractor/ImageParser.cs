@@ -60,16 +60,5 @@ namespace OwlCore.WinUI.ColorExtractor
 
             return colors;
         }
-
-        private static async Task<Stream> GetImageStreamAsync(string url)
-        {
-            var uri = new Uri(url);
-
-            if (uri.IsFile)
-                return File.Open(uri.LocalPath, FileMode.Open, FileAccess.Read);
-
-            var response = await WebRequest.CreateHttp(url).GetResponseAsync();
-            return response.GetResponseStream();
-        }
     }
 }

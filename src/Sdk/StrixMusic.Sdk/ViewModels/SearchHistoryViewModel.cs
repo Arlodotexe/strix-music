@@ -35,6 +35,6 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreSearchHistory> IMerged<ICoreSearchHistory>.Sources => this.GetSources<ICoreSearchHistory>();
 
         /// <inheritdoc />
-        public bool Equals(ICoreSearchHistory other) => _searchHistory.Equals(other);
+        public bool Equals(ICoreSearchHistory? other) => _searchHistory.Equals(other!);
     }
 }

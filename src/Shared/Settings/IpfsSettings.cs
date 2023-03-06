@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
-using Ipfs.Http;
 using OwlCore.ComponentModel;
-using OwlCore.Extensions;
+using OwlCore.Kubo;
 using OwlCore.Storage;
+using StrixMusic.AppModels;
 using StrixMusic.Plugins;
 
 namespace StrixMusic.Settings;
@@ -47,21 +49,20 @@ public partial class IpfsSettings : SettingsBase
     }
 
     /// <summary>
-    /// Gets or sets a value that indicates if the embedded functionality should be restricted to the current subnet.
+    /// Gets or sets a custom Kubo RPC API url set by the user.
     /// </summary>
-    /// <remarks>This option is not currently used. Needs further research.</remarks>
-    public bool EmbeddedNodeLanOnly
+    public int NodeApiPort
     {
-        get => GetSetting(() => true);
+        get => GetSetting(() => 5001);
         set => SetSetting(value);
     }
 
     /// <summary>
     /// Gets or sets a custom Kubo RPC API url set by the user.
     /// </summary>
-    public int NodeApiPort
+    public int NodeGatewayPort
     {
-        get => GetSetting(() => 5001);
+        get => GetSetting(() => 8080);
         set => SetSetting(value);
     }
 
@@ -81,6 +82,56 @@ public partial class IpfsSettings : SettingsBase
     public bool GlobalPlaybackStateCountPluginEnabled
     {
         get => GetSetting(() => false);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// An IPNS address where releases are published. Used to help rehost content, check for updates, and more.
+    /// </summary>
+    public string ReleaseIpns
+    {
+        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/latest.strixmusic.com");
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// The last known resolved CID of <see cref="ReleaseIpns" />.
+    /// </summary>
+    public string ReleaseIpnsResolved
+    {
+        get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// The app release content bundles that the user has chosen to store on their local node.
+    /// </summary>
+    public List<AppReleaseContentBundle> ReleaseContentBundles
+    {
+        get => GetSetting(() => new List<AppReleaseContentBundle>());
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Specified a routing mode for the Kubo DHT.
+    /// </summary>
+    public DhtRoutingMode BootstrapNodeDhtRouting
+    {
+        get => GetSetting(() => DhtRoutingMode.Dht);
+        set
+        {
+            // Two-way binding this to a ComboBox.SelectedItem causes a StackOverflow without this check.
+            if (value != BootstrapNodeDhtRouting)
+                SetSetting(value);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value that indicates if the bootstrapped node should enable discovery of devices on the local network.
+    /// </summary>
+    public bool BootstrapNodeEnableLocalDiscovery
+    {
+        get => GetSetting(() => true);
         set => SetSetting(value);
     }
 

@@ -17,7 +17,8 @@
 	xmlns:strixMusic="using:StrixMusic"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	xmlns:winUi="using:OwlCore.WinUI"
-	x:Name="RootControl">
+	x:Name="RootControl"
+	MaxWidth="1000">
 
 	<UserControl.Resources>
 		<converters:ShellEnumToDisplayNameConverter x:Key="ShellEnumToDisplayNameConverter" />

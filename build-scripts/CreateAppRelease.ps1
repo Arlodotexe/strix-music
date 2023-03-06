@@ -47,12 +47,12 @@ function SaveVersion([string]$newVersion) {
 
     $manifestContent = $manifestContent -Replace "[^A-Za-z1-9]Version=`"[0-9]+?\.[0-9]+?\.[0-9]+?(\.[0-9]+?)`"", " Version=`"$newVersion.0`""
 
-    Write-Output "Saving $pathToManifest";
+    Write-Host "Saving $pathToManifest";
     Set-Content -Path $pathToManifest -Value $manifestContent.TrimEnd();
 }
 
-# Check if the current App version matches the most recent release tag
-$versionAlreadyReleased = [bool]($tags -Match $appVersion)
+# Check if the the most recent release tag matches the current App version
+$versionAlreadyReleased = [bool]($tags[0] -Match $appVersion)
 
 $parts = $appVersion.Split(".");
     
@@ -63,7 +63,7 @@ $build = $parts[2];
 # If yes, bump the build number and save to disk
 if ($versionAlreadyReleased) {
     $newVersion = "$major.$minor.$([int]$build + 1)";
-    Write-Output "App version $appVersion already released. Selecting $newVersion";
+    Write-Host "App version $appVersion already released. Selecting $newVersion";
 
     SaveVersion $newVersion;
 
@@ -74,7 +74,7 @@ if ($versionAlreadyReleased) {
 }
 # If no, use the new version number instead of bumping automatically
 else {
-    Write-Output "Updating project with existing tag $($tags[0])"
+    Write-Host "Updating project with existing tag $($tags[0])"
     $taggedVersion = $tags[0].Split("-")[0]
 
     # Ensure this version is an increment over previous releases.
@@ -91,7 +91,7 @@ else {
     }
 
     $newVersion = $taggedVersion;
-    SaveVersion $taggedVersion
+    SaveVersion $newVersion
 }
 
 Write-Host "Changes complete. Please review your working tree before pushing."

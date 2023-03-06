@@ -4,13 +4,13 @@
 	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
 	-->
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>uap10.0.19041;net7.0</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<AssemblyName>StrixMusic.Shells.Groove</AssemblyName>
 		<RootNamespace>StrixMusic.Shells.Groove</RootNamespace>
 		<Nullable>enable</Nullable>
-		<LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 	<ItemGroup>
@@ -20,7 +20,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Text.Json" Version="7.0.1" />
+		<PackageReference Include="System.Text.Json" Version="7.0.2" />
+		<PackageReference Include="Uno.UI" Version="4.7.44" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -108,14 +109,11 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.1.11" />
-		<PackageReference Include="Uno.UI" Version="4.5.14" />
+		<PackageReference Include="Uno.UI" Version="4.7.30" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Styles\NowPlaying\" />
 		<Folder Include="ViewModels\Pages\Interfaces\" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="..\..\..\stylecop.json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PRIResource Include="Strings\en\GrooveResources.resw" />

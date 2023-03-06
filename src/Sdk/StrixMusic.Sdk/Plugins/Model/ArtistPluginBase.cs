@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => InnerImageCollection.Equals(other!);
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreArtist> Sources => ((IMerged<ICoreArtist>)Inner).Sources;
@@ -175,7 +175,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection? other) => InnerUrlCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
@@ -210,7 +210,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreGenreCollection other) => InnerGenreCollection.Equals(other);
+        public virtual bool Equals(ICoreGenreCollection? other) => InnerGenreCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerGenreCollection.GetGenresAsync(limit, offset, cancellationToken);
@@ -373,7 +373,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreTrackCollection other) => InnerTrackCollection.Equals(other);
+        public virtual bool Equals(ICoreTrackCollection? other) => InnerTrackCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => InnerTrackCollection.PlayTrackCollectionAsync(track, cancellationToken);
@@ -437,10 +437,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreAlbumCollectionItem other) => InnerAlbumCollection.Equals(other);
+        public virtual bool Equals(ICoreAlbumCollectionItem? other) => InnerAlbumCollection.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreAlbumCollection other) => InnerAlbumCollection.Equals(other);
+        public virtual bool Equals(ICoreAlbumCollection? other) => InnerAlbumCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem, CancellationToken cancellationToken = default) => InnerAlbumCollection.PlayAlbumCollectionAsync(albumItem, cancellationToken);
@@ -459,10 +459,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreArtistCollectionItem other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreArtistCollectionItem? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreArtist other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreArtist? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IPlayableCollectionGroup? RelatedItems => Inner.RelatedItems;

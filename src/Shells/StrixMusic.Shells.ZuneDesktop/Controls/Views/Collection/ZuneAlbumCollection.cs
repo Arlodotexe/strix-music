@@ -243,12 +243,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private async void Album_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Album_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             using (await _collectionModifyMutex.DisposableWaitAsync())
             {
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
                 {
+                    if (e.NewItems is null)
+                        return;
+
                     _albumItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
                     {
                         var newItem = new ZuneAlbumCollectionItem
@@ -263,6 +266,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
                 {
+                    if (e.OldItems is null)
+                        return;
+
                     foreach (var item in e.OldItems)
                     {
                         var target = AlbumItems.FirstOrDefault(x => x.Album == item);
@@ -275,6 +281,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                 if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
                 {
+                    if (e.OldItems is null)
+                        return;
+
                     for (var i = 0; i < e.OldItems.Count; i++)
                         _albumItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
                 }

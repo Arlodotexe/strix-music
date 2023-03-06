@@ -47,13 +47,13 @@ public class GenrePluginWrapper : IGenre, IPluginWrapper
         genre.SourcesChanged -= OnSourcesChanged;
     }
     
-    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
     
     /// <inheritdoc cref="IMerged.SourcesChanged"/>
     public event EventHandler? SourcesChanged;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreGenre other) => _genre.Equals(other);
+    public bool Equals(ICoreGenre? other) => _genre.Equals(other!);
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreGenre> Sources => _genre.Sources;

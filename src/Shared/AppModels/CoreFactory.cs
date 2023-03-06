@@ -45,8 +45,13 @@ public static class CoreFactory
             throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
+
+#if __WASM__
+        var folderToScan = AppRoot.KnownFolders.First(x => settings.ConfiguredFolderId == x.Id);
+#else
         var storageFolderToScan = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
         var folderToScan = new WindowsStorageFolder(storageFolderToScan);
+#endif
 
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
@@ -123,6 +128,8 @@ public static class CoreFactory
         var folderToScan = new OneDriveFolder(graphClient, driveItem);
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"));
 
+        var root = await folderToScan.GetRootAsync();
+
         var core = new StorageCore
         (
             folderToScan,
@@ -132,7 +139,7 @@ public static class CoreFactory
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             Logo = new CoreFileImage(new WindowsStorageFile(logoFile)),
-            InstanceDescriptor = settings.RelativeFolderPath,
+            InstanceDescriptor = $"{authResult.Account.Username}: {settings.RelativeFolderPath}",
         };
 
         ((CoreFileImage)core.Logo).SourceCore = core;

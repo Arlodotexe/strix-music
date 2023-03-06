@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         public CoreViewModel(ICore core)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _core = core;
             
@@ -50,18 +50,18 @@ namespace StrixMusic.Sdk.ViewModels
             _core.DisplayNameChanged -= OnDisplayNameChanged;
         }
 
-        private void OnDisplayNameChanged(object sender, string e) => _syncContext.Post(_ =>
+        private void OnDisplayNameChanged(object? sender, string e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(DisplayName));
         }, null);
 
-        private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
+        private void Core_InstanceDescriptorChanged(object? sender, string e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(InstanceDescriptor));
             InstanceDescriptorChanged?.Invoke(sender, e);
         }, null);
 
-        private void OnLogoChanged(object sender, ICoreImage? e) => _syncContext.Post(_ =>
+        private void OnLogoChanged(object? sender, ICoreImage? e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(Logo));
         }, null);

@@ -233,7 +233,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => InnerImageCollection.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => InnerImageCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
@@ -242,6 +242,6 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddUrlAsync(IUrl url, int index, CancellationToken cancellationToken = default) => InnerUrlCollection.AddUrlAsync(url, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection? other) => InnerUrlCollection.Equals(other!);
     }
 }

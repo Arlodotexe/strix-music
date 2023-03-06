@@ -53,7 +53,7 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
     /// <inheritdoc/>
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
     
-    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
     
     /// <inheritdoc cref="IMerged.SourcesChanged"/>
     public event EventHandler? SourcesChanged;
@@ -62,7 +62,7 @@ public class SearchPluginWrapper : ISearch, IPluginWrapper
     public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchAutoCompleteAsync(query, cancellationToken);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreSearch other) => _search.Equals(other);
+    public bool Equals(ICoreSearch? other) => _search.Equals(other!);
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreSearch> Sources => _search.Sources;

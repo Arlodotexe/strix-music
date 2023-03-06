@@ -168,7 +168,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection? other) => InnerUrlCollection.Equals(other!);
 
         /// <inheritdoc />
         public virtual IAsyncEnumerable<IUrl> GetUrlsAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerUrlCollection.GetUrlsAsync(limit, offset, cancellationToken);
@@ -295,7 +295,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreGenreCollection other) => InnerGenreCollection.Equals(other);
+        public virtual bool Equals(ICoreGenreCollection? other) => InnerGenreCollection.Equals(other!);
 
         /// <inheritdoc />
         public virtual IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerGenreCollection.GetGenresAsync(limit, offset, cancellationToken);
@@ -359,10 +359,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreArtistCollectionItem other) => InnerArtistCollection.Equals(other);
+        public virtual bool Equals(ICoreArtistCollectionItem? other) => InnerArtistCollection.Equals(other!);
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreArtistCollection other) => InnerArtistCollection.Equals(other);
+        public virtual bool Equals(ICoreArtistCollection? other) => InnerArtistCollection.Equals(other!);
 
         /// <inheritdoc />
         public virtual Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem, CancellationToken cancellationToken = default) => InnerArtistCollection.PlayArtistCollectionAsync(artistItem, cancellationToken);
@@ -441,10 +441,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => InnerImageCollection.Equals(other!);
 
         /// <inheritdoc />
-        public virtual bool Equals(ICoreTrack other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreTrack? other) => Inner.Equals(other!);
 
         /// <inheritdoc />
         public virtual IAlbum? Album => Inner.Album;

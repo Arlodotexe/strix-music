@@ -33,7 +33,7 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
     public MusicSourcesSettingsEditor()
     {
         InitializeComponent();
-        _syncContext = SynchronizationContext.Current;
+        _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
     }
 
     /// <summary>

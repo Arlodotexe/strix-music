@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
 	<PropertyGroup>
-		<TargetFrameworks>uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>uap10.0.19041;net7.0</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>StrixMusic.Shells.ZuneDesktop</RootNamespace>
 		<AssemblyName>StrixMusic.Shells.ZuneDesktop</AssemblyName>
 		<Nullable>enable</Nullable>
-		<LangVersion>9</LangVersion>
+		<LangVersion>10</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -114,8 +114,9 @@
 		<UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="7.0.1" />
+		<PackageReference Include="System.Text.Json" Version="7.0.2" />
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0-dev.1" />
+		<PackageReference Include="Uno.UI" Version="4.7.44" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
@@ -184,6 +185,6 @@
 	  <SourceGeneratorInput Remove="Controls\NowPlaying\ZuneNowPlayingView.cs" />
 	</ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-        <PackageReference Include="Uno.UI" Version="4.5.14" />
+        <PackageReference Include="Uno.UI" Version="4.7.30" />
     </ItemGroup>
 </Project>

@@ -55,7 +55,7 @@ $runtime += "-$arch";
 $dependencies = Get-Content -Path $dependencySourcesPath | ConvertFrom-Json -ErrorAction Stop;
 
 if ($skipDownload -eq $false) {
-    Invoke-Expression -Command './GatherDependencies.ps1 -dependencyName "dotnet-sdk-$runtime" -outputPath $workingDirectory -dependencySourcesPath $dependencySourcesPath -fallbackOnly:$fallbackOnly -ErrorAction Stop'
+    Invoke-Expression -Command './RestoreDependencies.ps1 -dependencyName "dotnet-sdk-$runtime" -outputPath $workingDirectory -dependencySourcesPath $dependencySourcesPath -fallbackOnly:$fallbackOnly -ErrorAction Stop'
 }
 
 $dependency = $dependencies | Where-Object { $_.name -eq "dotnet-sdk-$runtime" };
@@ -63,7 +63,7 @@ $extractPath = "$workingDirectory/dotnet/$($dependency.name)";
 
 New-Item -ItemType Directory -Force $extractPath -ErrorAction Stop | Out-Null
 
-if ($skipExtract -eq $false) {
+if ($skipExtract -eq $false -and !(Test-Path "$extractPath/dotnet*")) {
     Write-Output "Extracting archive"
 
     if (($dependency.outputPath).Contains('.tar.gz')) {
@@ -74,4 +74,4 @@ if ($skipExtract -eq $false) {
     }
 }
 
-Invoke-Expression -Command "$extractPath/dotnet $command" 
+Invoke-Expression -Command "$extractPath/dotnet $command"

@@ -22,8 +22,7 @@ namespace StrixMusic.Settings;
 /// </summary>
 public partial class DiagnosticSettings : SettingsBase
 {
-    [JsonIgnore]
-    private readonly SemaphoreSlim _saveLoadMutex = new(1, 1);
+    [JsonIgnore] private readonly SemaphoreSlim _saveLoadMutex = new(1, 1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MusicSourcesSettings"/> class.
@@ -45,12 +44,21 @@ public partial class DiagnosticSettings : SettingsBase
     {
         get => GetSetting(() =>
         {
-            #if DEBUG
+#if DEBUG
             return true;
-            #else
+#else
             return false;
-            #endif
+#endif
         });
+        set => SetSetting(value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value that indicates if the app should log exceptions raised by AppDomain.CurrentDomain.FirstChanceException.
+    /// </summary>
+    public bool IsFirstChangeLoggingEnabled
+    {
+        get => GetSetting(() => false);
         set => SetSetting(value);
     }
 
@@ -94,11 +102,7 @@ public partial class DiagnosticSettings : SettingsBase
         using (await _saveLoadMutex.DisposableWaitAsync())
         {
             if (!wasLoadingOnEntry)
-            {
-                
-                Logger.LogInformation($"Loading {nameof(MusicSourcesSettings)}");
                 await base.LoadAsync(cancellationToken);
-            }
         }
     }
 }
