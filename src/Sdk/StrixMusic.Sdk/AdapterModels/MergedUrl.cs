@@ -64,7 +64,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICoreUrl other)
+        public bool Equals(ICoreUrl? other)
         {
             return other?.Url == Url && 
                    other?.Type == Type &&

@@ -128,7 +128,7 @@ The constructor for a core should be _very_ lightweight, only doing enough to sa
 
 Cores should also always be multi-instantiable, using the [`InstanceId`](../reference/api/StrixMusic.Sdk.CoreModels.ICore.html#StrixMusic_Sdk_CoreModels_ICore_InstanceId) to identify each instance.
 
-Start by assigning all the non-nullable properties. Replace the values with your own as needed. Leave out `Library` for now.
+Start by assigning all the non-nullable properties. Replace the values with your own as needed. `Library` is required to be assigned in the constructor, but we haven't implemented it yet. Leave it out for now, and circle back to instantiate it once implemented.  
 
 ![](./assets/core-unimplemented-constructor-requiredvalues.png)
 

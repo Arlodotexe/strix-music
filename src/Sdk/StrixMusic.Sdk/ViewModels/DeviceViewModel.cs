@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="device">The <see cref="IDevice"/> to wrap around.</param>
         public DeviceViewModel(IDevice device)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _model = device;
 
@@ -85,31 +85,31 @@ namespace StrixMusic.Sdk.ViewModels
             _model.VolumeChanged -= Device_VolumeChanged;
         }
 
-        private void Device_VolumeChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Volume)), null);
+        private void Device_VolumeChanged(object? sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Volume)), null);
 
-        private void Device_ShuffleStateChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(ShuffleState)), null);
+        private void Device_ShuffleStateChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(ShuffleState)), null);
 
-        private void Device_RepeatStateChanged(object sender, RepeatState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(RepeatState)), null);
+        private void Device_RepeatStateChanged(object? sender, RepeatState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(RepeatState)), null);
 
-        private void Device_PositionChanged(object sender, TimeSpan e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Position)), null);
+        private void Device_PositionChanged(object? sender, TimeSpan e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Position)), null);
 
-        private void Device_PlaybackSpeedChanged(object sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackSpeed)), null);
+        private void Device_PlaybackSpeedChanged(object? sender, double e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackSpeed)), null);
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableBase? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
+        private void Device_PlaybackContextChanged(object? sender, IPlayableBase? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackContext)), null);
 
-        private void Device_IsActiveChanged(object sender, bool e)
+        private void Device_IsActiveChanged(object? sender, bool e)
         {
             _syncContext.Post(_ => OnPropertyChanged(nameof(IsActive)), null);
             IsActiveChanged?.Invoke(this, e);
         }
 
-        private void Device_StateChanged(object sender, PlaybackState e) => _syncContext.Post(_ =>
+        private void Device_StateChanged(object? sender, PlaybackState e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(PlaybackState));
             OnPropertyChanged(nameof(IsPlaying));
         }, null);
 
-        private void Device_NowPlayingChanged(object sender, PlaybackItem e) => _syncContext.Post(_ =>
+        private void Device_NowPlayingChanged(object? sender, PlaybackItem e) => _syncContext.Post(_ =>
         {
             Guard.IsNotNull(e.Track, nameof(e.Track));
 

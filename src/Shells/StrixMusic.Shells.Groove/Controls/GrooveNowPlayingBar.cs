@@ -52,7 +52,7 @@ namespace StrixMusic.Shells.Groove.Controls
             device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
-        private async void ActiveDevice_NowPlayingChanged(object sender, PlaybackItem e)
+        private async void ActiveDevice_NowPlayingChanged(object? sender, PlaybackItem e)
         {
             // Load images if there aren't images loaded.
             // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.

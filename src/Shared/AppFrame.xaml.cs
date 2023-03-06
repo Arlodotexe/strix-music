@@ -17,6 +17,8 @@ namespace StrixMusic;
 /// </summary>
 public sealed partial class AppFrame : UserControl
 {
+    private Shell? _currentShell;
+
     /// <summary>
     /// Creates a new instance of <see cref="AppFrame"/>.
     /// </summary>
@@ -24,7 +26,12 @@ public sealed partial class AppFrame : UserControl
     {
         InitializeComponent();
 
-        AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder));
+        AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder))
+        {
+#if __WASM__
+            HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
+#endif
+        };
     }
 
     /// <summary>
@@ -42,46 +49,40 @@ public sealed partial class AppFrame : UserControl
     /// </summary>
     public AppRoot AppRoot { get; }
 
-    private void ShellPresenter_OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void ShellPresenter_CurrentShellChanged(object? sender, Shell? e)
     {
-        var shellPresenter = (ShellPresenter)sender;
+        var shellPresenter = sender as ShellPresenter;
 
-        if (e.PropertyName == nameof(ShellPresenter.CurrentShell) && shellPresenter.CurrentShell is not null)
+        if (_currentShell is not null)
+            _currentShell.WindowHostOptions.PropertyChanged -= ShellOnPropertyChanged;
+
+        _currentShell = shellPresenter?.CurrentShell;
+
+        if (_currentShell?.WindowHostOptions is not null)
         {
-            SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, shellPresenter.CurrentShell.WindowHostOptions);
-
-            shellPresenter.CurrentShell.WindowHostOptions.PropertyChanged += ShellOnPropertyChanged;
+            SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, _currentShell.WindowHostOptions);
+            _currentShell.WindowHostOptions.PropertyChanged += ShellOnPropertyChanged;
         }
     }
 
-    private void ShellPresenter_OnPropertyChanging(object sender, PropertyChangingEventArgs e)
+    private void SetupShellWindowHostOptions(ApplicationView applicationView, CoreApplicationView coreApplicationView, ShellWindowHostOptions? hostOptions)
     {
-        var shellPresenter = (ShellPresenter)sender;
+        applicationView.TitleBar.BackgroundColor = hostOptions?.BackgroundColor;
+        applicationView.TitleBar.ButtonBackgroundColor = hostOptions?.ButtonBackgroundColor;
+        applicationView.TitleBar.ButtonForegroundColor = hostOptions?.ButtonForegroundColor;
+        applicationView.TitleBar.ButtonHoverBackgroundColor = hostOptions?.ButtonHoverBackgroundColor;
+        applicationView.TitleBar.ButtonHoverForegroundColor = hostOptions?.ButtonHoverForegroundColor;
+        applicationView.TitleBar.ButtonInactiveBackgroundColor = hostOptions?.ButtonInactiveBackgroundColor;
+        applicationView.TitleBar.ButtonInactiveForegroundColor = hostOptions?.ButtonInactiveForegroundColor;
+        applicationView.TitleBar.ButtonInactiveForegroundColor = hostOptions?.ButtonInactiveForegroundColor;
+        applicationView.TitleBar.ButtonPressedForegroundColor = hostOptions?.ButtonPressedForegroundColor;
+        applicationView.TitleBar.ForegroundColor = hostOptions?.ForegroundColor;
+        applicationView.TitleBar.InactiveBackgroundColor = hostOptions?.InactiveBackgroundColor;
+        applicationView.TitleBar.InactiveForegroundColor = hostOptions?.InactiveForegroundColor;
 
-        if (e.PropertyName == nameof(ShellPresenter.CurrentShell) && shellPresenter.CurrentShell is not null)
-        {
-            shellPresenter.CurrentShell.WindowHostOptions.PropertyChanged -= ShellOnPropertyChanged;
-        }
+        coreApplicationView.TitleBar.ExtendViewIntoTitleBar = hostOptions?.ExtendViewIntoTitleBar ?? true;
+        Window.Current.SetTitleBar(hostOptions?.CustomTitleBar);
     }
 
-    private void SetupShellWindowHostOptions(ApplicationView applicationView, CoreApplicationView coreApplicationView, ShellWindowHostOptions hostOptions)
-    {
-        applicationView.TitleBar.BackgroundColor = hostOptions.BackgroundColor;
-        applicationView.TitleBar.ButtonBackgroundColor = hostOptions.ButtonBackgroundColor;
-        applicationView.TitleBar.ButtonForegroundColor = hostOptions.ButtonForegroundColor;
-        applicationView.TitleBar.ButtonHoverBackgroundColor = hostOptions.ButtonHoverBackgroundColor;
-        applicationView.TitleBar.ButtonHoverForegroundColor = hostOptions.ButtonHoverForegroundColor;
-        applicationView.TitleBar.ButtonInactiveBackgroundColor = hostOptions.ButtonInactiveBackgroundColor;
-        applicationView.TitleBar.ButtonInactiveForegroundColor = hostOptions.ButtonInactiveForegroundColor;
-        applicationView.TitleBar.ButtonInactiveForegroundColor = hostOptions.ButtonInactiveForegroundColor;
-        applicationView.TitleBar.ButtonPressedForegroundColor = hostOptions.ButtonPressedForegroundColor;
-        applicationView.TitleBar.ForegroundColor = hostOptions.ForegroundColor;
-        applicationView.TitleBar.InactiveBackgroundColor = hostOptions.InactiveBackgroundColor;
-        applicationView.TitleBar.InactiveForegroundColor = hostOptions.InactiveForegroundColor;
-
-        coreApplicationView.TitleBar.ExtendViewIntoTitleBar = hostOptions.ExtendViewIntoTitleBar;
-        Window.Current.SetTitleBar(hostOptions.CustomTitleBar);
-    }
-
-    private void ShellOnPropertyChanged(object sender, PropertyChangedEventArgs e) => SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, (ShellWindowHostOptions)sender);
+    private void ShellOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, sender as ShellWindowHostOptions);
 }

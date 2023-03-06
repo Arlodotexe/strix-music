@@ -18,18 +18,23 @@ ipfs files mkdir /strixmusicapp/
 ##########
 # Import content
 ##########
-Write-Host "Adding content to IPFS"
-$result = iex "ipfs add -H --fscache -r $releaseContentPath";
+Write-Host "Adding content in $releaseContentPath to IPFS"
+$result = Invoke-Expression "ipfs add -H --fscache -r $releaseContentPath";
 
-Write-Host "Getting new CID from output"
+Write-Host "Getting CID of added content"
 $lines = $result.Split([Environment]::NewLine);
 $rootdirline = $lines[$lines.Length - 1]
 $match = select-string "added ([a-zA-Z0-9]+)" -inputobject $rootdirline
 $cid = $match.matches.groups[1].value;
+Write-Host "CID is $cid"
 
 ##########
 # Publish IPNS
 ##########
-Write-Output "Publishing IPNS to /ipfs/$cid"
+Write-Host "Publishing IPNS key $ipnsKey as /ipfs/$cid"
 Invoke-Expression "ipfs name publish /ipfs/$cid --key=$ipnsKey"
+
+Write-Host "Pinning $cid to local node"
 ipfs pin add $cid
+
+Write-Host "Published to IPFS"

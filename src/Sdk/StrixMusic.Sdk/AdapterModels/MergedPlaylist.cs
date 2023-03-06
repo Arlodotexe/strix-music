@@ -183,13 +183,13 @@ namespace StrixMusic.Sdk.AdapterModels
             TracksChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void TrackCollectionMap_ItemsCountChanged(object sender, int e)
+        private void TrackCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalTrackCount = e;
             TracksCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
@@ -200,7 +200,7 @@ namespace StrixMusic.Sdk.AdapterModels
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
@@ -393,13 +393,13 @@ namespace StrixMusic.Sdk.AdapterModels
         public IReadOnlyList<ICorePlaylist> Sources => _sources;
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICorePlaylistCollectionItem);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICorePlaylistCollectionItem);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICorePlaylistCollectionItem);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICorePlaylistCollectionItem);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => Equals(other as ICorePlaylistCollectionItem);
+        public bool Equals(ICoreTrackCollection? other) => Equals(other as ICorePlaylistCollectionItem);
 
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICorePlaylist? other)

@@ -31,7 +31,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
     public IFolder RootFolder { get; }
 
     /// <inheritdoc/>
-    public async IAsyncEnumerable<IAddressableFile> ScanFolderAsync(CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<IChildFile> ScanFolderAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -42,11 +42,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
             yield return item;
     }
 
-    private async IAsyncEnumerable<IAddressableFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    private async IAsyncEnumerable<IChildFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         lock (_knownSubFolders)
         {
-            _knownSubFolders[folderToScan.Id] = new SubFolderData((IAddressableFolder)folderToScan, children: new List<IAddressableStorable>(), folderWatcher: null);
+            _knownSubFolders[folderToScan.Id] = new SubFolderData((IChildFolder)folderToScan, children: new List<IStorableChild>(), folderWatcher: null);
         }
 
         if (folderToScan is IMutableFolder mutableFolder)
@@ -59,13 +59,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
             if (RootFolder.Id != item.Id)
                 _knownSubFolders[folderToScan.Id].Children.Add(item);
 
-            if (item is IAddressableFile file)
+            if (item is IChildFile file)
             {
                 KnownFiles.Add(file);
                 yield return file;
             }
 
-            if (item is IAddressableFolder folder)
+            if (item is IChildFolder folder)
             {
                 await foreach (var subFile in RecursiveScanForFilesAsync(folder))
                 {
@@ -77,47 +77,60 @@ internal class DepthFirstFolderScanner : IFolderScanner
     }
 
     /// <inheritdoc/>
-    public ObservableCollection<IAddressableFile> KnownFiles { get; } = new();
+    public ObservableCollection<IChildFile> KnownFiles { get; } = new();
 
     private async Task EnableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        lock (_knownSubFolders)
+        try
         {
-            if (folder.Id == RootFolder.Id)
-                _rootFolderWatcher = folderWatcher;
-            else
-                _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
-        }
+            var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
 
-        folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            lock (_knownSubFolders)
+            {
+                if (folder.Id == RootFolder.Id)
+                    _rootFolderWatcher = folderWatcher;
+                else
+                    _knownSubFolders[folder.Id].FolderWatcher = folderWatcher;
+            }
+
+            folderWatcher.CollectionChanged += FolderWatcherOnCollectionChanged;
+        }
+        catch (System.Exception ex)
+        {
+            OwlCore.Diagnostics.Logger.LogError("Couldn't get folder watcher", ex);
+        }
     }
 
     private async Task DisableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        var folderWatcher = folder.Id == RootFolder.Id ? _rootFolderWatcher : _knownSubFolders[folder.Id].FolderWatcher;
-        Guard.IsNotNull(folderWatcher);
-
-        folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
-
-        if (folder.Id == RootFolder.Id)
-            _rootFolderWatcher = null;
-        else
+        try
         {
-            lock (_knownSubFolders)
-            {
-                _knownSubFolders[folder.Id].FolderWatcher = null;
-            }
-        }
+            var folderWatcher = folder.Id == RootFolder.Id ? _rootFolderWatcher : _knownSubFolders[folder.Id].FolderWatcher;
+            Guard.IsNotNull(folderWatcher);
 
-        await folderWatcher.DisposeAsync();
-        cancellationToken.ThrowIfCancellationRequested();
+            folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
+
+            if (folder.Id == RootFolder.Id)
+                _rootFolderWatcher = null;
+            else
+            {
+                lock (_knownSubFolders)
+                {
+                    _knownSubFolders[folder.Id].FolderWatcher = null;
+                }
+            }
+
+            await folderWatcher.DisposeAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+        catch (System.Exception ex)
+        {
+            OwlCore.Diagnostics.Logger.LogError("Couldn't get folder watcher", ex);
+        }
     }
 
     private async void FolderWatcherOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -126,7 +139,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
         {
             foreach (var newItem in e.NewItems)
             {
-                Guard.IsTrue(newItem is IAddressableStorable);
+                Guard.IsTrue(newItem is IStorableChild);
                 var parentFolder = ((IFolderWatcher)sender).Folder;
 
                 // Parent folder must be in _knownSubFolders already.
@@ -134,13 +147,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 lock (_knownSubFolders)
                 {
                     if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
-                        subFolderData.Children.Add((IAddressableStorable)newItem);
+                        subFolderData.Children.Add((IStorableChild)newItem);
                 }
 
-                if (newItem is IAddressableFile newFile)
+                if (newItem is IChildFile newFile)
                     KnownFiles.Add(newFile);
 
-                if (newItem is IAddressableFolder newFolder)
+                if (newItem is IChildFolder newFolder)
                 {
                     await RecursiveScanForFilesAsync(newFolder).ToListAsync();
                 }
@@ -203,11 +216,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
         }
     }
 
-    private record SubFolderData(IAddressableFolder folder, List<IAddressableStorable> children, IFolderWatcher? folderWatcher)
+    private record SubFolderData(IChildFolder folder, List<IStorableChild> children, IFolderWatcher? folderWatcher)
     {
-        public List<IAddressableStorable> Children { get; init; } = children;
+        public List<IStorableChild> Children { get; init; } = children;
 
-        public IAddressableFolder Folder { get; init; } = folder;
+        public IChildFolder Folder { get; init; } = folder;
 
         public IFolderWatcher? FolderWatcher { get; set; } = folderWatcher;
     }

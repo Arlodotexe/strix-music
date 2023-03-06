@@ -32,44 +32,138 @@ $gitdest = "$outputPath/source"
 $builddepdest = "$outputPath/dependencies"
 $websitedest = $outputPath
 
-Write-Host "Creating folder $outputPath"
-mkdir $outputPath
-
-Write-Host "Creating folder $docsdest"
-mkdir $docsdest
-
-Write-Host "Creating folder $wasmdest"
-mkdir $wasmdest
-
-Write-Host "Creating folder $uwpdest"
-mkdir $uwpdest
-
-Write-Host "Creating folder $sdkdest"
-mkdir $sdkdest
-
-Write-Host "Creating folder $gitdest"
-mkdir $gitdest
-
-Write-Host "Creating folder $builddepdest"
-mkdir $builddepdest
+mkdir -Force $outputPath | Out-Null
+mkdir -Force $docsdest | Out-Null
+mkdir -Force $wasmdest | Out-Null
+mkdir -Force $uwpdest | Out-Null
+mkdir -Force $sdkdest | Out-Null
+mkdir -Force $gitdest | Out-Null
+mkdir -Force $builddepdest | Out-Null
 
 Write-Host "Copying contents from $websitePath to $websitedest"
-Copy-Item -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $websitePath -Destination $websitedest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $docsPath to $docsdest"
-Copy-Item -PassThru -Recurse -Path $docsPath -Destination $docsdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $docsPath -Destination $docsdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $uwpSideloadBuildPath to $uwpdest"
-Copy-Item -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $uwpSideloadBuildPath -Destination $uwpdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $wasmAppPath to $wasmdest"
-Copy-Item -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $wasmAppPath -Destination $wasmdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $sdkNupkgFolder to $sdkdest"
-Copy-Item -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $sdkNupkgFolder -Destination $sdkdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $cleanRepoPath/* to $gitdest"
-Copy-Item -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest -ErrorAction Stop | Out-Null
 
 Write-Host "Copying contents from $buildDependenciesPath to $builddepdest"
-Copy-Item -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop
+Copy-Item -Force -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop | Out-Null
+
+Write-Host "Creating release content bundles"
+
+$contentBundles = @();
+
+$contentBundles += [PSCustomObject]@{
+    id = 'website'
+    description = 'The files needed for a basic functional copy of the website'
+    displayName = 'Website files'
+    rootRelativePaths = @(
+        '/index.html',
+        '/assets/',
+        '/versions.json',
+        '/favicon.ico',
+        '/strix.png',
+        '/Wide_HighRes.png',
+        '/services.webp',
+        '/sdk/index.html',
+        '/sdk/README.md',
+        '/sdk/Sdk.svg'
+        )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'app-wasm'
+    description = 'The web version of the Strix Music App'
+    displayName = 'Web App'
+    rootRelativePaths = @(
+        '/app/web/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'app-windows'
+    description = 'The installers for this version of the Strix Music App for Windows'
+    displayName = 'Windows App (Installers)'
+    rootRelativePaths = @(
+        '/app/windows/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'docs'
+    description = 'App and SDK developer docs, API reference docs, changelogs'
+    displayName = 'Documentation'
+    rootRelativePaths = @(
+        '/docs/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'source'
+    description = 'The bare github repository for Strix Music, and a git bundle that can be cloned.'
+    displayName = 'Source code'
+    rootRelativePaths = @(
+        '/source/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'strixmusic-sdk-nupkgs'
+    description = 'The published nuget packages for the Strix Music Sdk.'
+    displayName = 'StrixMusic.Sdk Packages'
+    rootRelativePaths = @(
+        '/sdk/nupkg'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies'
+    description = 'All dependencies needed to build the Strix Music app for WebAssembly on various platforms'
+    displayName = 'All Dependencies'
+    rootRelativePaths = @(
+        '/dependencies/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-binaries-dotnet'
+    description = 'The binaries for the .NET runtime that can be used to compile and run the app.'
+    displayName = 'Runtime binaries'
+    rootRelativePaths = @(
+        '/dependencies/binaries/dotnet'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-binaries-docfx'
+    description = 'The binaries used to build our documentation website.'
+    displayName = 'Documentation binaries'
+    rootRelativePaths = @(
+        '/dependencies/binaries/docfx.zip'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-nuget'
+    description = 'The nuget dependencies needed to build the Strix Music app for WebAssembly.'
+    displayName = 'Package dependencies'
+    rootRelativePaths = @(
+        '/dependencies/nuget'
+    )
+}
+
+ConvertTo-Json $contentBundles | Set-Content "$outputPath/release-content-bundles.json"
+
+Write-Host "Done organizing release content into $outputPath"

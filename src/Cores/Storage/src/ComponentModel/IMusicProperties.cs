@@ -20,5 +20,5 @@ public interface IMusicProperties
     /// Gets the music properties for this file.
     /// </summary>
     /// <returns>A task that represents that asynchronous operation. Value is an storage property class containing data for music properties, with change support.</returns>
-    public Task<IStorageProperties<MusicFileProperties>> GetMusicPropertiesAsync(CancellationToken cancellationToken = default);
+    public Task<IStorageProperty<MusicFileProperties>> GetMusicPropertiesAsync(CancellationToken cancellationToken = default);
 }

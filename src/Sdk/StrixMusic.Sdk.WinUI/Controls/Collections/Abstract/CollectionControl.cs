@@ -200,7 +200,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
             DetachHandlers();
         }
 
-        private void CollectionControl_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void CollectionControl_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
         {
             CheckScrollPosition();
         }

@@ -22,9 +22,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
         }
 
         /// <inheritdoc/>
-        public override int Compare(TPlayableBase x, TPlayableBase y)
+        public override int Compare(TPlayableBase? x, TPlayableBase? y)
         {
-            int value = TimeSpan.Compare(x.Duration, y.Duration);
+            int value = TimeSpan.Compare(x?.Duration ?? TimeSpan.Zero, y?.Duration ?? TimeSpan.Zero);
             return IsDescending ? -value : value;
         }
     }

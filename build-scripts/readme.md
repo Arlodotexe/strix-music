@@ -12,14 +12,14 @@ IPFS is self-described as:
 > by making the web upgradeable, resilient, and more open.
 
 # Making a release?
-Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your snapshotted dependencies on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
+Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your releases on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
 
 # Getting started
 When developers download the dependencies to their IPFS node, they temporarily host for the data to other nodes who want it to access it. The more devs holding onto the data, the faster and more available the dependencies will become.
 
 Finally, if you have a machine where you used this recently (even once), you can set up a brand new machine on your local network to do it again, without internet access, and even if the original links all 404.
 
-Not even an apocalypse could ruin our hard work. 
+Not even an apocalypse could ruin our hard work.
 
 # Snapshot scripts
 These are scripts which download as much of our dependency chain as possible, uploads it to IPFS, captures the CID, and records it in a `dependency.json` file for others to find later.
@@ -38,17 +38,13 @@ These are scripts which download as much of our dependency chain as possible, up
   - Use the `-skipDownload` switch to avoid downloading anything at all. Uses existing data on disk, if present.
   - Use the `-skipExtract` switch to avoid extracting anything at all. Uses existing data on disk, if present.
 
-- **SnapshotGoIpfsBinaries.ps1**
-  - Scrapes the go-ipfs release page, finds the latest version, and downloads the archived binaries to the given location.
-  - Downloaded dependencies are NOT imported to IPFS and recorded in [dependencies.json](dependencies.json).
-
 - **SnapshotGitRepo.ps1**
   - Creates a `repo.bundle` snapshot, then clones the bundle into a the provided output folder. The exact same as re-cloning the repo, but without contacting the remote to do it.
 
 # Restoring dependencies
 Download a dependency from a known source, and use ipfs as a fallback if the original sources fail.
 
-- **GatherDependencies.ps1**
+- **RestoreDependencies.ps1**
   - Handles downloading dependencies from known sources.
   - Most other scripts use this automatically, and only when needed.
   - Running this can take some time if downloading all dependencies
@@ -97,116 +93,29 @@ These are scripts which build, tag, and generate things.
 - **PublishToIpfs.ps1**
   - When given a path to ready-to-publish release content, this script imports the files into ipfs, grabs the CID, and publishes it to IPNS under the provided `-ipnsKey MyKey`
 
-# Putting it all together
+# All together
+
+- **Release.ps1**
+  - An all-in-one script for preparing, building, organizing and publishing a new release.
+  - Uses your working tree to make, commit and push changes (version bumps, changelogs, tags, etc)
+  - Use the `-noPublish` option to avoid committing, pushing or publishing.
+  - Must be run from the `./build-scripts/` directory.
+  - Requires Kubo to be installed and running, and the `ipfs` command to be accessible from the command line where invoked.
+  - Use `-gitRemote remotename` to specify the remote that release tags and changelogs should be pushed to.
+  - Specify the name of an imported IPNS key with `-ipnsPublishKey KeyName` to add generated content to IPFS and publish to IPNS.
+  - Specify `-pastReleaseIpns <addr>` or `-pastReleaseCid <cid>` to import already published releases into a `versions.json` file.
+
 ```powershell
-# The following combines all the above commands in the correct order, with the correct parameters, to create a release.
-# You can use the script in full, or pick it apart and use them in a CI agent.
+# In the ./build-scripts directory
 
-#  NOTICE: This script will
-# - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
-# - Automatically push generated changes.
-# - Need to be run from the build-scripts directory
-# - Require an installation of IPFS for most of it.
+# If needed, remove old tags
+git tag -d 0.1.0-sdk-alpha; git tag -d 0.1.0-app-alpha;
 
-#################
-# Version bumps
-#################
-$sdkTag = &".\CreateSdkRelease.ps1" -variant alpha -dryRun | select -Last 1
-$sdkChangelogLastOutput = &".\GenerateChangelogs.ps1" -target sdk -forceTag $sdkTag -outputPath ../docs/reference/changelogs/sdk/alpha -tocYmlPath ../docs/reference/changelogs/sdk/alpha/toc.yml | select -Last 1
-$emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
+# Create tags for new version. The script will bump app/sdk manifest versions and push for you.
+# If you don't create a release tag, one will be created for you and the minor version will be bumped automatically.
+git tag 0.1.0-app-alpha -m "This release is focused around clearing tech debt. The Strix Music SDK was made to build apps on, but our top-level app architecture was made long before the SDK was ready. We wiped it and rebuilt it from the ground up, in a way that can be multi-instanced, customized, extended, and easily maintained.";
+git tag 0.1.0-sdk-alpha -m "This release is focused around clearing tech debt. We've made a few breaking changes that you'll need to migrate. Most notable, AbstractUI has been completely removed from the SDK. See core documentation for more details.";
 
-if (!$emptySdkChangelog) {
-  # Excluding -dryRun allows creation of tags and writing to disk.
-  &".\CreateSdkRelease.ps1" -variant alpha
-}
-
-$appTag = &".\CreateAppRelease.ps1" -variant alpha -dryRun | select -Last 1
-$appChangelogLastOutput = &".\GenerateChangelogs.ps1" -target app -forceTag $appTag -outputPath ../docs/reference/changelogs/app/alpha -tocYmlPath ../docs/reference/changelogs/app/alpha/toc.yml | select -Last 1
-$emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
-
-if (!$emptyAppChangelog) {
-  # Excluding -dryRun allows creation of tags and writing to disk.
-  &".\CreateAppRelease.ps1" -variant alpha
-}
-
-#################
-# Snapshot dependencies
-#################
-# Download build dependencies, upload to IPFS, and update the CIDs and URLs in depependencies.json.
-.\SnapshotNugetPackages.ps1 -outputPath build/dependencies/nuget -projectPath ../src/Platforms/StrixMusic.Wasm/
-.\SnapshotDotnetSdk.ps1 -outputPath build/dependencies/binaries/dotnet
-.\GatherDependencies.ps1 -outputPath build/dependencies/ -dependencyName docfx
-
-#################
-# Commit changes
-#################
-# This should be done after versions are bumped, changelogs are generated and dependencies.json is updated.
-$commitMessages = "";
-if (!$emptyAppChangelog) { $commitMessages += " -m `"Release $appTag`""; }
-if (!$emptySdkChangelog) { $commitMessages += " -m `"Release $sdkTag`""; }
-
-if ((!$emptyAppChangelog -or !$emptySdkChangelog) -and $commitMessages.length -gt 0) {
-  # Stage files and create a new commit.
-  git add .  -- "$(Get-Location)/../"
-  Invoke-Expression "git commit $commitMessages"
-
-  if (!$emptyAppChangelog) {
-    # Move tags to new release commit
-    Write-Output "Creating app release tag $appTag";
-    git push origin :refs/tags/$appTag
-    git tag -fa $appTag -m "Release $appTag";
-  }
-
-  if (!$emptySdkChangelog) {
-    # Move tags to new release commit
-    Write-Output "Creating sdk release tag $sdkTag";
-    git push origin :refs/tags/$sdkTag
-    git tag -fa $sdkTag -m "Release $sdkTag";
-  }
-
-  # Push the changes
-  git push
-  git push -f origin --tags
-}
-
-#################
-# Snapshot git repo
-#################
-# This should be done after everything is committed.
-.\SnapshotGitRepo.ps1 -outputPath build/source
-
-#################
-# Compile
-#################
-# Before compiling the apps, make sure you've added the appropriate "Secrets.Release.cs" file to /src/Shared/.
-# This should match the existing "/src/Shared/Secrets.cs" file, but with an inverse compilation conditional and valid strings for Release mode.
-
-# Build documentation website
-.\GenerateDocs.ps1
-
-# Build WebAssembly
-.\dotnet.ps1 -Command 'build ../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Platform="Any CPU" /p:Configuration="Release"'
-
-# Build UWP (Requires Windows with correct tooling installed)
-msbuild ../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="Release" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
-
-# Create SDK nuget package
-# Include -skipExtract -skipDownload if you've already successfully run dotnet.ps1 at least once to avoid unecessary operations
-.\dotnet.ps1 -Command 'build "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release' -skipExtract -skipDownload
-.\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c Release --output build/sdk/$sdkTag' -skipExtract -skipDownload
-
-#################
-# Organize
-#################
-# The resulting folder can be uploaded anywhere (not just ipfs)
-.\OrganizeReleaseContent.ps1 -wasmAppPath "$(Get-Location)/../src/Platforms/StrixMusic.Wasm/bin/Any CPU/Release/net5.0/dist/*" -uwpSideloadBuildPath "$(Get-Location)/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath ../www/* -docsPath ../docs/wwwroot/* -sdkNupkgFolder build/sdk/$sdkTag -cleanRepoPath build/source -buildDependenciesPath build/dependencies/* -outputPath build/StrixMusicRelease
-
-# Grab previous versioned content such as nuget packages and app installers (requires ipfs)
-.\ImportPreviousVersionedContent.ps1 -url latest.strixmusic.com -outputPath build/StrixMusicRelease
-
-#################
-# Publish!
-#################
-# Change "YourKeyName" to the name of an imported IPNS key.
-.\PublishToIpfs.ps1 build/StrixMusicRelease -ipnsKey YourKeyName
+# Build and release!
+.\Release.ps1 -OutputPath ./build/release -PastReleaseIpns /ipns/latest.strixmusic.com -IpnsPublishKey NameOfIpnsKey
 ```

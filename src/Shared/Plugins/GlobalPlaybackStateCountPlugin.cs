@@ -16,7 +16,7 @@ namespace StrixMusic.Plugins
     public class GlobalPlaybackStateCountPlugin : SdkModelPlugin
     {
         private static readonly ModelPluginMetadata _metadata = new(
-            id: typeof(GlobalPlaybackStateCountPlugin).FullName,
+            id: typeof(GlobalPlaybackStateCountPlugin).FullName ?? nameof(GlobalPlaybackStateCountPlugin),
             displayName: "Playback handler",
             description: "Uses IPFS to check how many users are listening to a playable item.",
             new Version(0, 0, 0));
@@ -57,7 +57,7 @@ namespace StrixMusic.Plugins
             Inner.PlaybackStateChanged += InnerOnPlaybackStateChanged;
         }
 
-        private async void InnerOnPlaybackStateChanged(object sender, PlaybackState e)
+        private async void InnerOnPlaybackStateChanged(object? sender, PlaybackState e)
         {
             PlayingRoom?.Dispose();
             PlayingRoom = null;

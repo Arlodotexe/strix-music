@@ -66,7 +66,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddImageAsync(IImage image, int index, CancellationToken cancellationToken = default) => Inner.AddImageAsync(image, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetImagesAsync(limit, offset, cancellationToken);

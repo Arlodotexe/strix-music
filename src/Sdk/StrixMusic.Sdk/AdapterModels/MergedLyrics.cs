@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public ITrack Track { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreLyrics other)
+        public bool Equals(ICoreLyrics? other)
         {
             return false;
         }

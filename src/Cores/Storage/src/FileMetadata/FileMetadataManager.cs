@@ -135,7 +135,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 return null;
             }
 
-            var taskCompletionSource = new TaskCompletionSource<IAddressableFile>();
+            var taskCompletionSource = new TaskCompletionSource<IChildFile>();
 
             _folderScanner.KnownFiles.CollectionChanged += KnownFilesOnCollectionChanged;
             await Task.WhenAny(_inProgressScanTaskCompletionSource.Task, taskCompletionSource.Task);
@@ -153,7 +153,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
 
             void KnownFilesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems.Cast<IStorable>().FirstOrDefault(x => x is IFile file && file.Id == fileId) is IAddressableFile addedTargetFile)
+                if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems.Cast<IStorable>().FirstOrDefault(x => x is IFile file && file.Id == fileId) is IChildFile addedTargetFile)
                 {
                     targetFile = addedTargetFile;
                     taskCompletionSource.SetResult(addedTargetFile);
@@ -209,6 +209,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
             var discoveredUncachedFiles = new List<IFile>();
             await foreach (var files in _folderScanner.ScanFolderAsync(cancellationToken).Batch(ScanBatchSize, cancellationToken))
             {
+                Logger.LogInformation($"{files.Count} files found");
                 cancellationToken.ThrowIfCancellationRequested();
 
                 seenFiles.AddRange(files);
@@ -221,25 +222,30 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 // If no discovered files have cached data, scan the files now.
                 if (cachedFiles.Length == 0)
                 {
-                    await ScanUncachedFilesAsync(files.Except(cachedFiles));
+                    Logger.LogInformation($"No files this batch are cached, scanning and caching batch now.");
+                    await ScanUncachedFilesAsync(files.Except(cachedFiles).ToList<IFile>());
                 }
                 else
                 {
                     // Otherwise, save discovered files to scan later.
+                    Logger.LogInformation($"Cached data was found for {cachedFiles.Length} files. {ScanBatchSize - cachedFiles.Length} files have no cached data. Queuing for later scanning.");
                     discoveredUncachedFiles.AddRange(files.Except(cachedFiles));
                 }
 
                 // Process data
+                Logger.LogInformation($"Garbage collecting usable cached metadata");
                 allValidItems.AddRange(cachedMetadataWithKnownFile);
                 GarbageCollectMetadataReferences(allValidItems);
 
                 // Emit existing metadata
+                Logger.LogInformation($"Emitting usable cached metadata");
                 ScanState = new FileScanState(ScanState.Stage, allValidItems.Count, seenFiles.Count);
                 await DigestFileMetadataAsync(cachedMetadataWithKnownFile);
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
             // Scan remaining files in manual batches.
+            Logger.LogInformation($"Scanning remaning known files without metadata");
             var filesToScan = new Queue<IFile>(discoveredUncachedFiles);
             while (filesToScan.Count > 0)
             {
@@ -255,8 +261,9 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 await ScanUncachedFilesAsync(batch);
             }
 
-            async Task ScanUncachedFilesAsync(IEnumerable<IFile> files)
+            async Task ScanUncachedFilesAsync(List<IFile> files)
             {
+                Logger.LogInformation($"Scanning {files.Count} files without metadata");
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // Scan uncached audio files
@@ -290,7 +297,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
                 }
             }
         }
-        
+
         cancellationToken.ThrowIfCancellationRequested();
 
         // Playlists must be scanned after all files have been seen, so removed files can have metadata omitted.
@@ -317,6 +324,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
         _inProgressScanTaskCompletionSource.SetResult(null);
         _inProgressScanCancellationTokenSource = null;
         _inProgressScanTaskCompletionSource = null;
+        Logger.LogInformation($"Scan completed");
     }
 
     private static void GarbageCollectMetadataReferences(IList<Models.FileMetadata> allKnownItems)

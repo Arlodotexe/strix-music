@@ -163,35 +163,35 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc cref="IMerged.SourcesChanged" />
         public event EventHandler? SourcesChanged;
 
-        private void AlbumMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+        private void AlbumMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
         {
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void AlbumMap_ItemsCountChanged(object sender, int e)
+        private void AlbumMap_ItemsCountChanged(object? sender, int e)
         {
             TotalAlbumItemsCount = e;
             AlbumItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ImageMap_ItemsCountChanged(object sender, int e)
+        private void ImageMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void ImageMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void UrlMap_ItemsCountChanged(object sender, int e)
+        private void UrlMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
         }
 
-        private void UrlMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void UrlMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
         {
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -382,12 +382,12 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollectionItem other) => Equals(other as ICoreAlbumCollection);
+        public bool Equals(ICoreAlbumCollectionItem? other) => Equals(other as ICoreAlbumCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreAlbumCollection);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICoreAlbumCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreAlbumCollection);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICoreAlbumCollection);
     }
 }

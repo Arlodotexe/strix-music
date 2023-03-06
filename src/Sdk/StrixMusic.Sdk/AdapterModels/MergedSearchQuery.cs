@@ -51,7 +51,7 @@ namespace StrixMusic.Sdk.AdapterModels
         public DateTime CreatedAt { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreSearchQuery other) => other.Query == Query && other.CreatedAt == CreatedAt;
+        public bool Equals(ICoreSearchQuery? other) => other?.Query == Query && other.CreatedAt == CreatedAt;
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearchQuery> Sources => _sources;

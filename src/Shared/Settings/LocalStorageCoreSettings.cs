@@ -42,7 +42,7 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     public static void CopyFrom(LocalStorageCoreSettings from, LocalStorageCoreSettings to)
     {
         to.InstanceId = from.InstanceId;
-        to.Path = from.Path;
+        to.ConfiguredFolderId = from.ConfiguredFolderId;
         to.FutureAccessToken = from.FutureAccessToken;
     }
 
@@ -66,16 +66,16 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     }
 
     /// <summary>
-    /// Gets or sets an ID 
+    /// Gets or sets the ID of the configured folder for this core.
     /// </summary>
-    public string Path
+    public string ConfiguredFolderId
     {
         get => GetSetting(() => string.Empty);
         set => SetSetting(value);
     }
 
     /// <summary>
-    /// Gets or sets an ID that 
+    /// Gets or sets an ID that allows for access to the configured folder across app restarts.
     /// </summary>
     public string FutureAccessToken
     {
@@ -86,7 +86,7 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     /// <inheritdoc />
     public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
     {
-        nameof(FutureAccessToken) or nameof(Path) or nameof(InstanceId) => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
+        nameof(FutureAccessToken) or nameof(ConfiguredFolderId) or nameof(InstanceId) => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
         _ => true,
     };
 
@@ -95,7 +95,7 @@ public sealed class LocalStorageCoreSettings : CoreSettingsBase, IInstanceId
     {
         nameof(InstanceId) => InstanceId,
         nameof(FutureAccessToken) => FutureAccessToken,
-        nameof(Path) => Path,
+        nameof(ConfiguredFolderId) => ConfiguredFolderId,
         _ => throw new ArgumentOutOfRangeException(nameof(settingName), settingName, @"Unknown setting name specified.")
     };
 }
