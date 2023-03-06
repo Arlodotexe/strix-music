@@ -1,8 +1,7 @@
-<img src="docs/assets/logos/Wide.svg" />
+# <a href="https://strixmusic.com/" target="_blank"><img align="left" src="www/favicon.ico" height="100" /></a> Strix Music
+The Strix Music App is the music player that adapts to you. Combine your libraries from multiple sources and services, and reskin the app to your taste. Or, try building with the Strix Music SDK. Seamlessly integrate any music source or Strix plugin into your app.
 
-### Break down the digital walls between your music libraries
-
-## Welcome to the open source alpha
+## Open source alpha
 
 We spent the last 2 years designing and refining the SDK, making sure it could cleanly handle anything we threw at it.
 
@@ -27,7 +26,7 @@ The foundation has been laid, and we've entered the next stage in development: *
    - Bring new music services to the Strix ecosystem.
 
 ## **The Strix Music App**
-  - Our incubation and demo app for the Strix Music SDK.
+  - Our incubation and demo app for the Strix SDK.
   - You rely on the SDK for your apps, so we built our own app to catch bugs, test new features, and push boundaries. Dogfooding ftw!
   - Much like how Surface is Microsoft's vision for making the most of Windows, this app is _our_ vision for making the most of the SDK.
   - Multi-service, thanks to the Strix Music SDK.
