@@ -5,6 +5,7 @@ using System.Text;
 using OwlCore.ComponentModel;
 using OwlCore.Kubo;
 using OwlCore.Storage;
+using OwlCore.Storage.Memory;
 
 namespace StrixMusic.Settings
 {
@@ -18,7 +19,15 @@ namespace StrixMusic.Settings
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="settingSerializer"></param>
-        public IpfsCoreSettings(IModifiableFolder folder, IAsyncSerializer<Stream> settingSerializer) : base(folder, settingSerializer)
+        public IpfsCoreSettings(IModifiableFolder folder) : base(folder, AppSettingsSerializer.Singleton)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MusicSourcesSettings"/> class.
+        /// </summary>
+        public IpfsCoreSettings()
+            : this(new MemoryFolder(Guid.NewGuid().ToString(), nameof(IpfsCoreSettings)))
         {
         }
 
@@ -30,12 +39,11 @@ namespace StrixMusic.Settings
             get => GetSetting(() => string.Empty);
             set => SetSetting(value);
         }
-        IpnsFolder
 
         /// <summary>
         /// Gets or sets an ID 
         /// </summary>
-        public string IpfsCidPath
+        public string? IpfsCidPath
         {
             get => GetSetting(() => string.Empty);
             set => SetSetting(value);
@@ -45,6 +53,6 @@ namespace StrixMusic.Settings
         public override object GetSettingByName(string settingName) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public override bool IsSettingValidForCoreCreation(string propertyName, object value) => throw new NotImplementedException();
+        public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => throw new NotImplementedException();
     }
 }

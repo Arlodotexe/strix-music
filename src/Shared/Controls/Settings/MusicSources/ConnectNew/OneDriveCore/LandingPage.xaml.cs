@@ -30,7 +30,6 @@ public sealed partial class LandingPage : Page
     private ConnectNewMusicSourceNavigationParams? _param;
     [ObservableProperty] private OneDriveCoreSettings? _settings = null;
 
-
     /// <summary>
     /// Creates a new instance of <see cref="LandingPage"/>.
     /// </summary>
@@ -59,7 +58,7 @@ public sealed partial class LandingPage : Page
     }
 
     /// <inheritdoc />
-    override protected async void OnNavigatedTo(NavigationEventArgs e)
+    protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         var param = (ConnectNewMusicSourceNavigationParams)e.Parameter;
         Guard.IsNotNull(param.SelectedSourceToConnect);

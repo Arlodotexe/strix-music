@@ -51,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LogFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\DiagnosticSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsCoreSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">

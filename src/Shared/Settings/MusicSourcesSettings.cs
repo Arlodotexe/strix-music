@@ -58,7 +58,7 @@ public partial class MusicSourcesSettings : SettingsBase
             name: "IPFS",
             description: "Stream music directly from ipfs folder",
             imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/Ipfs/logo.png"),
-            defaultSettingsFactory: async instanceId => new IpfsSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
+            defaultSettingsFactory: async instanceId => new IpfsCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)
