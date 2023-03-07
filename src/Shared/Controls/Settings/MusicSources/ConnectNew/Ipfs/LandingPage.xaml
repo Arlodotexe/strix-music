@@ -15,8 +15,8 @@
         Spacing="15">
 
         <labs:SettingsExpander
-            Description="Authenticate your Microsoft account against your own trusted app identity"
-            Header="Configure application identity"
+            Description="Provide the root directory Cid."
+            Header="Configure IPFS folder"
             IsEnabled="{x:Bind IsNotNull(Settings), Mode=OneWay}"
             IsExpanded="True">
             <labs:SettingsExpander.Items>
@@ -28,7 +28,7 @@
 
                         <TextBox
                             Width="300"
-                            Header="Ipfs Folder Path (Cid)"
+                            Header="IPFS Folder Path (Cid)"
                             PlaceholderText="Enter path"
                             Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
 
