@@ -53,7 +53,7 @@ namespace OwlCore.WinUI.Threading
         /// <param name="eventArgs">Event arguments.</param>
         public void OnEvent(TSource source, TEventArgs eventArgs)
         {
-            var target = (TInstance)_weakInstance.Target;
+            var target = _weakInstance.Target as TInstance;
             if (target != null)
             {
                 // Call registered action

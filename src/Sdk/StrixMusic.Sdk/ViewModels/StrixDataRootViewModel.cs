@@ -75,7 +75,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegat
         dataRoot.SourcesChanged -= DataRootOnSourcesChanged;
     }
 
-    private void DataRootOnSourcesChanged(object sender, EventArgs e)
+    private void DataRootOnSourcesChanged(object? sender, EventArgs e)
     {
         var previousSources = _knownSources;
         var newSources = _dataRoot.Sources;
@@ -101,25 +101,25 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegat
         DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
     }
 
-    private void OnDiscoverablesChanged(object sender, IDiscoverables e)
+    private void OnDiscoverablesChanged(object? sender, IDiscoverables e)
     {
         Discoverables = new DiscoverablesViewModel(e);
         DiscoverablesChanged?.Invoke(this, Discoverables);
     }
 
-    private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
+    private void OnRecentlyPlayedChanged(object? sender, IRecentlyPlayed e)
     {
         RecentlyPlayed = new RecentlyPlayedViewModel(e);
         RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
     }
 
-    private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
+    private void OnPinsChanged(object? sender, IPlayableCollectionGroup e)
     {
         Pins = new PlayableCollectionGroupViewModel(e);
         PinsChanged?.Invoke(this, Pins);
     }
 
-    private void OnSearchChanged(object sender, ISearch e)
+    private void OnSearchChanged(object? sender, ISearch e)
     {
         Search = new SearchViewModel(e);
         SearchChanged?.Invoke(this, Search);
@@ -191,7 +191,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegat
     public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
 
     /// <inheritdoc/>
-    public bool Equals(ICore other) => _dataRoot.Equals(other);
+    public bool Equals(ICore? other) => _dataRoot.Equals(other!);
 
     /// <inheritdoc/>
     public ValueTask DisposeAsync()

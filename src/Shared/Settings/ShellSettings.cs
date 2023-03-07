@@ -24,7 +24,7 @@ public partial class ShellSettings : SettingsBase, IInstanceId
     private readonly SemaphoreSlim _saveLoadMutex = new(1, 1);
 
     [JsonIgnore]
-    private readonly ApplicationDataContainer _localSettings;
+    private readonly ApplicationDataContainer? _localSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ShellSettings"/> class.
@@ -37,7 +37,9 @@ public partial class ShellSettings : SettingsBase, IInstanceId
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
 
+#if !__WASM__
         _localSettings = ApplicationData.Current.LocalSettings.CreateContainer(nameof(ShellSettings), ApplicationDataCreateDisposition.Always);
+# endif
     }
 
     /// <summary>
@@ -135,11 +137,14 @@ public partial class ShellSettings : SettingsBase, IInstanceId
 
     private T GetSettingEx<T>(Func<T> getDefaultValue, [CallerMemberName] string key = "")
     {
+        if (_localSettings is null)
+            return GetSetting(getDefaultValue, key);
+
         if (_localSettings.Values.TryGetValue(key, out var value))
         {
             try
             {
-                var savedValue = AppSettingsSerializer.Singleton.Deserialize<T>(new MemoryStream(System.Text.Encoding.UTF8.GetBytes(value.ToString())));
+                var savedValue = AppSettingsSerializer.Singleton.Deserialize<T>(new MemoryStream(System.Text.Encoding.UTF8.GetBytes($"{value}")));
                 return savedValue;
             }
             catch
@@ -155,6 +160,12 @@ public partial class ShellSettings : SettingsBase, IInstanceId
     {
         if (Equals(value, currentValue))
             return;
+
+        if (_localSettings is null)
+        {
+            SetSetting(value, key);
+            return;
+        }
 
         var localSettingsValue = System.Text.Encoding.UTF8.GetString(AppSettingsSerializer.Singleton.Serialize(value).ToBytes());
 

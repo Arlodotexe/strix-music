@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Plugins.Model
             Id = id;
             DisplayName = displayName;
             Description = description;
-            SdkVersion = typeof(ModelPluginMetadata).Assembly.GetName().Version;
+            SdkVersion = typeof(ModelPluginMetadata).Assembly.GetName().Version ?? throw new Exception("Could not location current assembly version.");
             PluginVersion = pluginVersion;
         }
 

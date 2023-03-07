@@ -76,31 +76,31 @@ namespace StrixMusic.Sdk.PluginModels
             strixDataRoot.SearchChanged -= OnSearchChanged;
         }
 
-        private void OnDiscoverablesChanged(object sender, IDiscoverables e)
+        private void OnDiscoverablesChanged(object? sender, IDiscoverables e)
         {
             Discoverables = new DiscoverablesPluginWrapper(e, AppliedPlugins);
             DiscoverablesChanged?.Invoke(this, Discoverables);
         }
 
-        private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
+        private void OnRecentlyPlayedChanged(object? sender, IRecentlyPlayed e)
         {
             RecentlyPlayed = new RecentlyPlayedPluginWrapper(e, AppliedPlugins);
             RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
         }
 
-        private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
+        private void OnPinsChanged(object? sender, IPlayableCollectionGroup e)
         {
             Pins = new PlayableCollectionGroupPluginWrapper(e, AppliedPlugins);
             PinsChanged?.Invoke(this, Pins);
         }
 
-        private void OnSearchChanged(object sender, ISearch e)
+        private void OnSearchChanged(object? sender, ISearch e)
         {
             Search = new SearchPluginWrapper(e, AppliedPlugins);
             SearchChanged?.Invoke(this, Search);
         }
         
-        private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+        private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
         private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems) => DevicesChanged?.Invoke(this, addedItems, removedItems);
 
@@ -158,7 +158,7 @@ namespace StrixMusic.Sdk.PluginModels
         public SdkModelPlugin[] AppliedPlugins => _plugins;
 
         /// <inheritdoc/>
-        public bool Equals(ICore other) => _strixDataRoot.Equals(other);
+        public bool Equals(ICore? other) => _strixDataRoot.Equals(other!);
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default) => _strixDataRoot.InitAsync(cancellationToken);

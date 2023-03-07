@@ -9,16 +9,16 @@ namespace OwlCore.WinUI.Behaviors
     /// <summary>
     /// A behavior action that opens the provided parameter as a Uri.
     /// </summary>
-    public class OpenUriAction : DependencyObject, IAction
+    public partial class OpenUriAction : DependencyObject, IAction
     {
-        public Uri? Source { get; set; }
+        public string? Source { get; set; }
 
         /// <inheritdoc />
         public object? Execute(object sender, object parameter)
         {
             Guard.IsNotNull(Source);
 
-            _ = Launcher.LaunchUriAsync(Source);
+            _ = Launcher.LaunchUriAsync(new Uri(Source));
 
             return null;
         }

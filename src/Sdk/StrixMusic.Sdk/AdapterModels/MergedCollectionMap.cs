@@ -359,7 +359,7 @@ namespace StrixMusic.Sdk.AdapterModels
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
+        private void MergedCollectionMap_ItemsChanged<T>(object? sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreModel
         {
             Guard.IsGreaterThan(addedItems.Count + removedItems.Count, 0, "Total changed items count");
@@ -374,7 +374,7 @@ namespace StrixMusic.Sdk.AdapterModels
             }
         }
 
-        private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object sender)
+        private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object? sender)
             where T : class, ICollectionItemBase, ICoreModel
         {
             var added = new List<CollectionChangedItem<TCollectionItem>>();
@@ -386,6 +386,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 if (!(item.Data is TCoreCollectionItem collectionItemData))
                     return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
+
+                Guard.IsNotNull(sender);
 
                 // TODO: Sorting is not handled.
                 var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
@@ -457,7 +459,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// We emit CountChanged (for the MergedCollectionMap) when items are changed.
         /// TODO: Maybe we can use it this event verify the size of the collection is correct?
         /// </remarks>
-        private void MergedCollectionMap_CountChanged(object sender, int e)
+        private void MergedCollectionMap_CountChanged(object? sender, int e)
         {
             // If we haven't evaluated item count ourselves by merging items together yet
             if (_mergedMappedData.Count == 0)
@@ -787,7 +789,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _config);
 
-                bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
+                bool exists = mergedItemMaps.TryGetValue(mergedInto, out var mergedMapItems);
 
                 mergedMapItems ??= new List<MappedData>();
                 mergedMapItems.Add(item);
@@ -926,7 +928,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <remarks>
         /// <typeparamref name="TCoreCollection"/> and <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/> have no overlap and never equal each other, this method always returns false.
         /// </remarks>
-        public bool Equals(TCoreCollection other) => false;
+        public bool Equals(TCoreCollection? other) => false;
 
         private class MappedData
         {

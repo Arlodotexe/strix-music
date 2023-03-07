@@ -10,14 +10,50 @@ namespace StrixMusic.AppModels;
 /// <summary>
 /// Represents an individual music source that can be created.
 /// </summary>
-[ObservableObject]
-public partial class AvailableMusicSource
+public partial class AvailableMusicSource : ObservableObject
 {
     private readonly Func<Task<ICoreImage>> _imageFactory;
-    [ObservableProperty] private string _name;
-    [ObservableProperty] private string _description;
-    [ObservableProperty] private ICoreImage? _coreImage;
-    [ObservableProperty] private Func<string, Task<SettingsBase>> _defaultSettingsFactory;
+    private string _name;
+    private string _description;
+    private ICoreImage? _coreImage;
+
+    private Func<string, Task<SettingsBase>> _defaultSettingsFactory;
+
+    /// <summary>
+    /// Provided an instance id, this returns a new settings instance for this music source.
+    /// </summary>
+    public Func<string, Task<SettingsBase>> DefaultSettingsFactory
+    {
+        get => _defaultSettingsFactory;
+        set => SetProperty(ref _defaultSettingsFactory, value);
+    }
+
+    /// <summary>
+    /// An image that represents this music source.
+    /// </summary>
+    public ICoreImage? CoreImage
+    {
+        get => _coreImage;
+        set => SetProperty(ref _coreImage, value);
+    }
+
+    /// <summary>
+    /// A description of this music source.
+    /// </summary>
+    public string Description
+    {
+        get => _description;
+        set => SetProperty(ref _description, value);
+    }
+
+    /// <summary>
+    /// The displayed name of this music source.
+    /// </summary>
+    public string Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value);
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="AvailableMusicSource"/>.

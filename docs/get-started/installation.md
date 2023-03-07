@@ -59,6 +59,6 @@ To do this, you must meet these requirements:
 
 If you meet the above requirements, simply:
 1. Download the SDK as usual by following the "Manual via .nupkg" instructions above.
-2. To get all dependencies, from the `build-script` folder, run `.\GatherDependencies.ps1 -dependencyName nupkg -outputPath /temp/download/path/`.
+2. To get all dependencies, from the `build-script` folder, run `.\RestoreDependencies.ps1 -dependencyName nupkg -outputPath /temp/download/path/`.
 3. Copy the downloaded `.nupkg` files into your global package folder.
 

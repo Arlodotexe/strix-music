@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.AppModels
         public DownloadState State { get; }
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is DownloadInfo status && Equals(status);
+        public override bool Equals(object? obj) => obj is DownloadInfo status && Equals(status);
 
         /// <inheritdoc />
         public override int GetHashCode() => State.GetHashCode() + Progress.GetHashCode();

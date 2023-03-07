@@ -172,7 +172,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
             }
         }
 
-        private void AnyItemCountChanged(object sender, int e)=> _synchronizationContext.Post(_ => ToggleAnyEmptyPivotItems(), null);
+        private void AnyItemCountChanged(object? sender, int e)=> _synchronizationContext.Post(_ => ToggleAnyEmptyPivotItems(), null);
 
         private void DetachEvents()
         {

@@ -29,7 +29,7 @@
 					HorizontalAlignment="Center"
 					FontSize="12"
 					Opacity="0.5"
-					Text="{x:Bind Settings.Path}"
+					Text="{x:Bind Settings.ConfiguredFolderId}"
 					TextAlignment="Center"
 					TextWrapping="WrapWholeWords" />
 			</StackPanel>

@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
             }
         }
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e)
+        private void OnPlaybackStateChanged(object? sender, PlaybackState e)
         {
             PlaybackState = e;
         }

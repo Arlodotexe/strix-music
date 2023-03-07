@@ -40,5 +40,5 @@ public class RecentlyPlayedPluginWrapper : PlayableCollectionGroupPluginWrapperB
     public IReadOnlyList<ICoreRecentlyPlayed> Sources => ((IMerged<ICoreRecentlyPlayed>)_recentlyPlayed).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreRecentlyPlayed other) => _recentlyPlayed.Equals(other);
+    public bool Equals(ICoreRecentlyPlayed? other) => _recentlyPlayed.Equals(other!);
 }

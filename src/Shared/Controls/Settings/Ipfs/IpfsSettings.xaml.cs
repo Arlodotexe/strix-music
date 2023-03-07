@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
+using OwlCore.Kubo;
 using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Diagnostics;
+using Uno.Extensions;
 
 namespace StrixMusic.Controls.Settings.Ipfs;
 
@@ -44,7 +48,38 @@ public sealed partial class IpfsSettings : UserControl
 
     private string IsNull(object? obj) => obj is null ? "true" : "false";
 
+    private Visibility IsNotNullOrWhiteSpaceToVisibility(string obj) => BoolToVisibility(!string.IsNullOrWhiteSpace(obj));
+
     private bool And(bool a, bool b) => a && b;
 
-    private Visibility And_InvertSecondAndThirdBool_ToVisibility(bool a, bool b, bool c) => BoolToVisibility(a && !b && c);
+    private string IpfsPathToProtocolUrl(string path)
+    {
+        if (path.IsNullOrWhiteSpace())
+            return path;
+
+        Guard.IsTrue(path.StartsWith("/ipfs/"), nameof(path), "Path must start with /ipfs/");
+
+        path = path.Split("/ipfs/")[1];
+
+        return $"ipfs://{path}";
+    }
+
+    private string IpnsPathToProtocolUrl(string path)
+    {
+        if (path.IsNullOrWhiteSpace())
+            return path;
+
+        Guard.IsTrue(path.StartsWith("/ipns/"), nameof(path), "Path must start with /ipns/");
+
+        path = path.Split("/ipns/")[1];
+
+        return $"ipns://{path}";
+    }
+
+    private string RoutingModeToDescription(DhtRoutingMode mode) => mode switch
+    {
+        DhtRoutingMode.Dht => "This is the default routing mode. In the normal DHT mode, IPFS can retrieve content from any peer and seed content to other peers outside your local network.",
+        DhtRoutingMode.DhtClient => "Ideal for devices with constrained resources. In the \"dhtclient\" mode, IPFS can ask other peers for content, but it will not seed content to peers outside of your local network.",
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+    };
 }

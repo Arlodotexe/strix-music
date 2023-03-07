@@ -99,7 +99,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public event EventHandler<IDiscoverables>? DiscoverablesChanged;
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
+        private void Core_DevicesChanged(object? sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
             var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
             var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
@@ -154,7 +154,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <remarks>
         /// Cores can be merged, but are never matched conditionally.
         /// </remarks>
-        public bool Equals(ICore other) => false;
+        public bool Equals(ICore? other) => false;
 
         /// <inheritdoc />
         public void AddSource(ICore itemToMerge)

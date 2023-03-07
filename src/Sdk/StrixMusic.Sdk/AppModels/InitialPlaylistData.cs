@@ -300,18 +300,18 @@ namespace StrixMusic.Sdk.AppModels
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default) => Tracks.Skip(offset).Take(limit).ToAsyncEnumerable();
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => false;
+        public bool Equals(ICoreImageCollection? other) => false;
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => false;
+        public bool Equals(ICoreTrackCollection? other) => false;
 
         /// <inheritdoc/>
-        public bool Equals(ICoreUrlCollection other) => false;
+        public bool Equals(ICoreUrlCollection? other) => false;
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollectionItem other) => false;
+        public bool Equals(ICorePlaylistCollectionItem? other) => false;
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylist other) => false;
+        public bool Equals(ICorePlaylist? other) => false;
     }
 }

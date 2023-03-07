@@ -112,7 +112,7 @@ namespace StrixMusic.Sdk.AdapterModels
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
@@ -123,7 +123,7 @@ namespace StrixMusic.Sdk.AdapterModels
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
@@ -134,13 +134,13 @@ namespace StrixMusic.Sdk.AdapterModels
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void ArtistMap_ItemsCountChanged(object sender, int e)
+        private void ArtistMap_ItemsCountChanged(object? sender, int e)
         {
             TotalArtistItemsCount = e;
             ArtistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ArtistMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private void ArtistMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -387,12 +387,12 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreArtistCollection);
+        public bool Equals(ICoreArtistCollectionItem? other) => Equals(other as ICoreArtistCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreArtistCollection);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICoreArtistCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreArtistCollection);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICoreArtistCollection);
     }
 }

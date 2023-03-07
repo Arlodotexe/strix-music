@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public UserProfileViewModel(IUserProfile userProfile)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
@@ -267,9 +267,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _userProfile.Equals(other);
+        public bool Equals(ICoreImageCollection? other) => _userProfile.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => _userProfile.Equals(other);
+        public bool Equals(ICoreUrlCollection? other) => _userProfile.Equals(other!);
     }
 }

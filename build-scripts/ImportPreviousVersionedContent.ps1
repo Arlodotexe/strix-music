@@ -49,6 +49,7 @@ try { ipfs get --output $outputPath/sdk/nupkg/ $ipfsCid/sdk/nupkg/ } catch { }
 try { ipfs get --output $outputPath/versions.json $ipfsCid/versions.json } catch { }
 
 Write-Output "Updating versions.json";
+
 if (Test-Path $versionsJsonPath) {
     $versions = Get-Content -Path $versionsJsonPath -Force | ConvertFrom-Json;
 } else {
@@ -72,4 +73,5 @@ $versions += [PSCustomObject]@{
 
 Set-Content -Path $versionsJsonPath -Value ($versions | ConvertTo-Json);
 Write-Output "Archived CID of previous version under $versionsJsonPath"
+
 exit 0

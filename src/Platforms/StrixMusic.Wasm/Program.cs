@@ -1,6 +1,9 @@
+using System;
+using Windows.UI.Xaml;
+
 namespace StrixMusic.Wasm
 {
-	public class Program
+	public sealed class Program
 	{
 		private static App? _app;
 

@@ -2,21 +2,17 @@
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Core;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
+using OwlCore.Storage;
+using OwlCore.Storage.OneDrive;
+using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.Settings;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Diagnostics;
-using Microsoft.Identity.Client;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Extensions;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Graph;
-using OwlCore.Storage.OneDrive;
-using Google.Protobuf.WellKnownTypes;
-using OwlCore.Storage;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 

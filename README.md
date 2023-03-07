@@ -1,7 +1,7 @@
 # <a href="https://strixmusic.com/" target="_blank"><img align="left" src="www/favicon.ico" height="100" /></a> Strix Music
-Music is scattered across the digital landscape. Strix Music brings it all together again, by defining a common and flexible standard for all music sources.
+The Strix Music App is the music player that adapts to you. Combine your libraries from multiple sources and services, and reskin the app to your taste. Or, try building with the Strix Music SDK. Seamlessly integrate any music source or Strix plugin into your app.
 
-# Welcome to the open source alpha
+## Open source alpha
 
 We spent the last 2 years designing and refining the SDK, making sure it could cleanly handle anything we threw at it.
 

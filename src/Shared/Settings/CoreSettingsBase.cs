@@ -69,7 +69,11 @@ public abstract class CoreSettingsBase : SettingsBase
     /// <inheritdoc />
     public override async Task LoadAsync(CancellationToken? cancellationToken = null)
     {
-        void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => TryUpdateSettingValidity(e.PropertyName, GetSettingByName(e.PropertyName));
+        void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is not null)
+                TryUpdateSettingValidity(e.PropertyName, GetSettingByName(e.PropertyName));
+        }
 
         PropertyChanged += OnPropertyChanged;
 

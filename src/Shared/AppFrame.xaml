@@ -15,6 +15,7 @@
 	xmlns:media="using:Microsoft.UI.Xaml.Media"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	d:DesignHeight="300"
 	d:DesignWidth="400"
 	mc:Ignorable="d">
@@ -53,10 +54,9 @@
 		<controls:ShellPresenter
 			xmlns="using:StrixMusic"
 			x:Name="ShellPresenter"
+			CurrentShellChanged="ShellPresenter_CurrentShellChanged"
 			FallbackShell="{x:Bind AppRoot.ShellSettings.FallbackShell, Mode=OneWay}"
 			PreferredShell="{x:Bind AppRoot.ShellSettings.PreferredShell, Mode=OneWay}"
-			PropertyChanged="ShellPresenter_OnPropertyChanged"
-			PropertyChanging="ShellPresenter_OnPropertyChanging"
 			Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
 
 		<Border x:Name="ShadowTarget" Visibility="Collapsed" />
@@ -69,15 +69,6 @@
 			CornerRadius="0,0,5,5"
 			Spacing="0"
 			Visibility="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}">
-			<ui:Effects.Shadow>
-				<ui:AttachedDropShadow
-					BlurRadius="25"
-					CastTo="{x:Bind ShadowTarget}"
-					CornerRadius="6"
-					IsMasked="True"
-					Opacity="5" />
-			</ui:Effects.Shadow>
-
 			<ItemsControl HorizontalAlignment="Center" ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate x:DataType="viewModels:CoreViewModel">
@@ -107,29 +98,6 @@
 			CornerRadius="6"
 			Visibility="Collapsed">
 			<Grid Background="{ThemeResource LowBackgroundBrush}">
-				<animations:Implicit.ShowAnimations>
-					<animations:OpacityAnimation
-						From="0"
-						To="1.0"
-						Duration="0:0:0.25" />
-				</animations:Implicit.ShowAnimations>
-
-				<animations:Implicit.HideAnimations>
-					<animations:OpacityAnimation
-						From="1.0"
-						To="0"
-						Duration="0:0:0.25" />
-				</animations:Implicit.HideAnimations>
-
-				<ui:Effects.Shadow>
-					<ui:AttachedDropShadow
-						BlurRadius="25"
-						CastTo="{x:Bind ShadowTarget}"
-						CornerRadius="6"
-						IsMasked="True"
-						Opacity="0.40" />
-				</ui:Effects.Shadow>
-
 				<Rectangle
 					Width="1000"
 					Height="400"

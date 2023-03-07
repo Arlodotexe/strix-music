@@ -152,7 +152,7 @@ namespace StrixMusic.Shells.Groove
             set => SetValue(HamburgerPressedCommandProperty, value);
         }
 
-        private void CurrentView_BackRequested(object sender, BackRequestedEventArgs e)
+        private void CurrentView_BackRequested(object? sender, BackRequestedEventArgs e)
         {
             _navigationTracker.NavigateBackwards();
         }
@@ -172,6 +172,15 @@ namespace StrixMusic.Shells.Groove
                     WeakReferenceMessenger.Default.Send(new PlaylistsViewNavigationRequestMessage((LibraryViewModel)Root.Library));
                     break;
             }
+
+            UpdateCheckedState(button.Tag.ToString());
+        }
+
+        private void UpdateCheckedState(string checkedItem)
+        {
+            MyMusicButton.IsChecked = checkedItem == "MyMusic";
+            RecentButton.IsChecked = checkedItem == "Recent";
+            NowPlayingButton.IsChecked = checkedItem == "NowPlaying";
         }
 
         private void HamburgerToggled()

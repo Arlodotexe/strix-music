@@ -1,13 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System;
 using Windows.UI.Xaml.Input;
 
 namespace StrixMusic.Controls.Storage;
@@ -15,11 +14,8 @@ namespace StrixMusic.Controls.Storage;
 /// <summary>
 /// Provided an <see cref="IFolder"/>, allows the user to browse the contents.
 /// </summary>
-[ObservableObject]
 public sealed partial class FolderBrowser : UserControl
 {
-    [ObservableProperty] private IStorable? _selectedItem;
-
     /// <summary>
     /// The backing dependency property for <see cref="InitialFolder"/>.
     /// </summary>
@@ -31,6 +27,12 @@ public sealed partial class FolderBrowser : UserControl
     /// </summary>
     public static readonly DependencyProperty CurrentFolderProperty =
         DependencyProperty.Register(nameof(CurrentFolder), typeof(IFolder), typeof(FolderBrowser), new PropertyMetadata(null, (d, e) => _ = ((FolderBrowser)d).OnCurrentFolderChanged(e.OldValue as IFolder, e.NewValue as IFolder)));
+
+    /// <summary>
+    /// The backing dependency property for <see cref="CurrentFolder"/>.
+    /// </summary>
+    public static readonly DependencyProperty SelectedItemProperty =
+        DependencyProperty.Register(nameof(SelectedItem), typeof(IStorable), typeof(FolderBrowser), new PropertyMetadata(null, (d, e) => ((FolderBrowser)d).OnSelectedItemChanged(e.OldValue as IFolder, e.NewValue as IFolder)));
 
     /// <summary>
     /// Creates a new instance of <see cref="FolderBrowser"/>.
@@ -71,6 +73,19 @@ public sealed partial class FolderBrowser : UserControl
         }
     }
 
+    /// <summary>
+    /// The folder that the user is currently viewing.
+    /// </summary>
+    public IStorable? SelectedItem
+    {
+        get => (IFolder?)GetValue(SelectedItemProperty);
+        set => SetValue(SelectedItemProperty, value);
+    }
+
+    private void OnSelectedItemChanged(IFolder? oldValue, IFolder? newValue)
+    {
+    }
+
     private async Task OnCurrentFolderChanged(IFolder? oldValue, IFolder? newValue)
     {
         if (oldValue is not null)
@@ -86,17 +101,17 @@ public sealed partial class FolderBrowser : UserControl
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
     private async Task GoToParentAsync(CancellationToken cancellationToken)
     {
-        if (CurrentFolder is not IStorableChild addressableStorable)
+        if (CurrentFolder is not IStorableChild storableChild)
         {
             ThrowHelper.ThrowArgumentException("Current folder is not addressable.");
             return;
         }
 
-        var parent = await addressableStorable.GetParentAsync(cancellationToken);
+        var parent = await storableChild.GetParentAsync(cancellationToken);
         CurrentFolder = parent;
     }
 
-    private bool IsAddressableStorable(object obj) => obj is IStorableChild;
+    private bool IStorableChild(object obj) => obj is IStorableChild;
 
     private bool IsFolder(object obj) => obj is IFolder;
 

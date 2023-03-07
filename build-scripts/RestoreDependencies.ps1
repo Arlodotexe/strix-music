@@ -2,7 +2,7 @@
 
 Param (
     [Parameter(HelpMessage = "The path where dependencies are downloaded to on disk.")]
-    [string]$outputPath = "$PSScriptRoot/build",
+    [string]$outputPath = "$PSScriptRoot/build/",
 
     [Parameter(HelpMessage = "The path to a dependencies.json file")]
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json",
@@ -65,11 +65,14 @@ function DownloadFromIpfs() {
 }
 
 foreach ($dependency in $dependencies) {
-    if (!($dependency.name -eq $dependencyName) -and !($dependencyName -eq "all")) {
+    if ($dependency.name -ne $dependencyName -and $dependencyName -ne "all") {
         continue;
     }
 
-    if (!(Test-Path "$outputFolder/$($dependency.outputPath)")) {
+    if (Test-Path "$outputFolder/$($dependency.outputPath)") {
+        continue;
+    }
+    else {
         New-Item -ItemType File -Force -Path "$outputFolder/$($dependency.outputPath)" | Out-Null;
     }
     
@@ -89,7 +92,7 @@ foreach ($dependency in $dependencies) {
             exit -1;
         }
 
-        Write-Output "Failed to download from GitHub, using fallback from IPFS"
+        Write-Output "Failed to download $($dependency.originalUrl), using fallback from IPFS"
         DownloadFromIpfs
     }    
 }

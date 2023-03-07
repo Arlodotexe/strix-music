@@ -109,7 +109,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection? other) => InnerUrlCollection.Equals(other!);
 
         /// <inheritdoc/>
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => ((IMerged<ICorePlaylist>)Inner).Sources;
@@ -160,7 +160,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => InnerImageCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);
@@ -316,7 +316,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreTrackCollection other) => InnerTrackCollection.Equals(other);
+        public virtual bool Equals(ICoreTrackCollection? other) => InnerTrackCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual Task PlayTrackCollectionAsync(ITrack track, CancellationToken cancellationToken = default) => InnerTrackCollection.PlayTrackCollectionAsync(track, cancellationToken);
@@ -335,10 +335,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylistCollectionItem other) => Inner.Equals(other);
+        public virtual bool Equals(ICorePlaylistCollectionItem? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylist other) => Inner.Equals(other);
+        public virtual bool Equals(ICorePlaylist? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IUserProfile? Owner => Inner.Owner;

@@ -50,7 +50,7 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
         image.SourcesChanged -= OnSourcesChanged;
     }
     
-    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
     
     /// <inheritdoc cref="IMerged.SourcesChanged"/>
     public event EventHandler? SourcesChanged;
@@ -68,7 +68,7 @@ public class ImagePluginWrapper : IImage, IPluginWrapper
     public double? Width => _image.Width;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreImage other) => _image.Equals(other);
+    public bool Equals(ICoreImage? other) => _image.Equals(other!);
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreImage> Sources => _image.Sources;

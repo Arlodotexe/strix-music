@@ -21,7 +21,7 @@ $dependencies = Get-Content -Path $dependencySourcesPath | ConvertFrom-Json -Err
 $dependency = $dependencies | Where-Object { $_.name -eq "docfx" };
 
 if ($skipDownload -eq $false) {
-    & $PSScriptRoot/GatherDependencies.ps1 -outputPath $workingDirectory -dependencyName docfx -fallbackOnly:$fallbackOnly
+    & $PSScriptRoot/RestoreDependencies.ps1 -outputPath $workingDirectory -dependencyName docfx -fallbackOnly:$fallbackOnly
 }
 
 $archivePath = Resolve-Path -Relative -Path "$workingDirectory/$($dependency.outputPath)" -ErrorAction Stop;
