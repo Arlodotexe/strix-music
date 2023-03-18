@@ -48,8 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Labs.Uwp.SizerBase" Version="0.0.3" />
-    <PackageReference Include="OwlCore.Kubo" Version="0.10.2" />
-    <PackageReference Include="OwlCore.Storage" Version="0.8.2" />
+    <PackageReference Include="OwlCore.Kubo" Version="0.11.1" />
+    <PackageReference Include="OwlCore.Storage" Version="0.8.3" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.1.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0" />
