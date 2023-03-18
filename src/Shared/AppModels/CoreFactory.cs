@@ -64,6 +64,7 @@ public static class CoreFactory
             fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
+            InstanceDescriptor = folderToScan.Path,
             Logo = logo,
         };
 
@@ -127,6 +128,8 @@ public static class CoreFactory
         var folderToScan = new OneDriveFolder(graphClient, driveItem);
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"));
 
+        var root = await folderToScan.GetRootAsync();
+
         var core = new StorageCore
         (
             folderToScan,
@@ -136,7 +139,7 @@ public static class CoreFactory
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             Logo = new CoreFileImage(new WindowsStorageFile(logoFile)),
-            InstanceDescriptor = authResult.Account.Username,
+            InstanceDescriptor = $"{authResult.Account.Username}: {settings.RelativeFolderPath}",
         };
 
         ((CoreFileImage)core.Logo).SourceCore = core;

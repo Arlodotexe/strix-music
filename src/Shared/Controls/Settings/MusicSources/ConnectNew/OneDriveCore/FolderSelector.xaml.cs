@@ -2,21 +2,17 @@
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Core;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
+using OwlCore.Storage;
+using OwlCore.Storage.OneDrive;
+using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.Settings;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Diagnostics;
-using Microsoft.Identity.Client;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Extensions;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Graph;
-using OwlCore.Storage.OneDrive;
-using Google.Protobuf.WellKnownTypes;
-using OwlCore.Storage;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 
@@ -89,8 +85,11 @@ public sealed partial class FolderSelector : Page
 
         Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
         Guard.IsNotNull(Settings);
+        Guard.IsNotNull(RootFolder);
 
+        var relativePath = await RootFolder.GetRelativePathToAsync((IStorableChild)folder);
         Settings.FolderId = folder.Id;
+        Settings.RelativeFolderPath = relativePath;
         
         _param.AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores.Add(Settings);
 

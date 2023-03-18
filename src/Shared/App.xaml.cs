@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using NLog.Config;
 using NLog.Targets;
@@ -49,8 +50,11 @@ namespace StrixMusic
             {
                 DebugSettings.EnableFrameRateCounter = true;
             }
+#endif
 
-            SetupLogger();
+#if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
+            MainWindow = new Window();
+            MainWindow.Activate();
 #endif
 
 #if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
@@ -180,60 +184,6 @@ namespace StrixMusic
             global::Uno.UI.Adapter.Microsoft.Extensions.Logging.LoggingAdapter.Initialize();
 #endif
 #endif
-        }
-
-        private void SetupLogger()
-        {
-            var logPath = LogFormatter.LogFolderPath + @"\${date:format=yyyy-MM-dd}.log";
-
-            NLog.LogManager.Configuration = CreateConfig(shouldArchive: true);
-
-            // Event is connected for the lifetime of the application
-            Logger.MessageReceived += Logger_MessageReceived;
-
-            Logger.LogInformation("Logger initialized");
-
-            LoggingConfiguration CreateConfig(bool shouldArchive)
-            {
-                var config = new LoggingConfiguration();
-
-                var fileTarget = new FileTarget("filelog")
-                {
-                    FileName = logPath,
-                    EnableArchiveFileCompression = shouldArchive,
-                    MaxArchiveDays = 7,
-                    ArchiveNumbering = ArchiveNumberingMode.Sequence,
-                    ArchiveOldFileOnStartup = shouldArchive,
-                    KeepFileOpen = true,
-                    OpenFileCacheTimeout = 10,
-                    AutoFlush = false,
-                    OpenFileFlushTimeout = 10,
-                    ConcurrentWrites = false,
-                    CleanupFileName = false,
-                    Layout = "${message}",
-                };
-
-                config.AddTarget(fileTarget);
-                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, "filelog");
-
-                var debuggerTarget = new DebuggerTarget("debuggerTarget")
-                {
-                    Layout = "${message}",
-                };
-
-                config.AddRule(NLog.LogLevel.Debug, NLog.LogLevel.Fatal, debuggerTarget);
-                config.AddTarget(debuggerTarget);
-
-                return config;
-            }
-        }
-
-        private void Logger_MessageReceived(object? sender, LoggerMessageEventArgs e)
-        {
-            var message = LogFormatter.GetFormattedLogMessage(e);
-
-            NLog.LogManager.GetLogger(string.Empty).Log(NLog.LogLevel.Info, message);
-            Console.WriteLine(message);
         }
     }
 }

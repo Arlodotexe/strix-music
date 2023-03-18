@@ -61,4 +61,109 @@ Copy-Item -Force -PassThru -Recurse -Path $cleanRepoPath/* -Destination $gitdest
 Write-Host "Copying contents from $buildDependenciesPath to $builddepdest"
 Copy-Item -Force -PassThru -Recurse -Path $buildDependenciesPath -Destination $builddepdest -ErrorAction Stop | Out-Null
 
+Write-Host "Creating release content bundles"
+
+$contentBundles = @();
+
+$contentBundles += [PSCustomObject]@{
+    id = 'website'
+    description = 'The files needed for a basic functional copy of the website'
+    displayName = 'Website files'
+    rootRelativePaths = @(
+        '/index.html',
+        '/assets/',
+        '/versions.json',
+        '/favicon.ico',
+        '/strix.png',
+        '/Wide_HighRes.png',
+        '/services.webp',
+        '/sdk/index.html',
+        '/sdk/README.md',
+        '/sdk/Sdk.svg'
+        )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'app-wasm'
+    description = 'The web version of the Strix Music App'
+    displayName = 'Web App'
+    rootRelativePaths = @(
+        '/app/web/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'app-windows'
+    description = 'The installers for this version of the Strix Music App for Windows'
+    displayName = 'Windows App (Installers)'
+    rootRelativePaths = @(
+        '/app/windows/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'docs'
+    description = 'App and SDK developer docs, API reference docs, changelogs'
+    displayName = 'Documentation'
+    rootRelativePaths = @(
+        '/docs/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'source'
+    description = 'The bare github repository for Strix Music, and a git bundle that can be cloned.'
+    displayName = 'Source code'
+    rootRelativePaths = @(
+        '/source/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'strixmusic-sdk-nupkgs'
+    description = 'The published nuget packages for the Strix Music Sdk.'
+    displayName = 'StrixMusic.Sdk Packages'
+    rootRelativePaths = @(
+        '/sdk/nupkg'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies'
+    description = 'All dependencies needed to build the Strix Music app for WebAssembly on various platforms'
+    displayName = 'All Dependencies'
+    rootRelativePaths = @(
+        '/dependencies/'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-binaries-dotnet'
+    description = 'The binaries for the .NET runtime that can be used to compile and run the app.'
+    displayName = 'Runtime binaries'
+    rootRelativePaths = @(
+        '/dependencies/binaries/dotnet'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-binaries-docfx'
+    description = 'The binaries used to build our documentation website.'
+    displayName = 'Documentation binaries'
+    rootRelativePaths = @(
+        '/dependencies/binaries/docfx.zip'
+    )
+}
+
+$contentBundles += [PSCustomObject]@{
+    id = 'dependencies-nuget'
+    description = 'The nuget dependencies needed to build the Strix Music app for WebAssembly.'
+    displayName = 'Package dependencies'
+    rootRelativePaths = @(
+        '/dependencies/nuget'
+    )
+}
+
+ConvertTo-Json $contentBundles | Set-Content "$outputPath/release-content-bundles.json"
+
 Write-Host "Done organizing release content into $outputPath"

@@ -56,7 +56,7 @@
 				<NavigationViewItem
 					x:Name="IpfsNavigationViewItem"
 					Content="IPFS"
-					Icon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}" />
+					Icon="{ui:FontIcon Glyph=&#xEBD2;}" />
 				<NavigationViewItem
 					x:Name="AboutNavigationViewItem"
 					Content="About"

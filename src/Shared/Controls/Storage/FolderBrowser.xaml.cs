@@ -101,19 +101,17 @@ public sealed partial class FolderBrowser : UserControl
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
     private async Task GoToParentAsync(CancellationToken cancellationToken)
     {
-        if (CurrentFolder is not IAddressableStorable addressableStorable)
+        if (CurrentFolder is not IStorableChild storableChild)
         {
             ThrowHelper.ThrowArgumentException("Current folder is not addressable.");
             return;
         }
 
-        var parent = await addressableStorable.GetParentAsync(cancellationToken);
+        var parent = await storableChild.GetParentAsync(cancellationToken);
         CurrentFolder = parent;
     }
 
-    private string? AsAddressableStorablePath(object obj) => (obj as IAddressableStorable)?.Path;
-
-    private bool IsAddressableStorable(object obj) => obj is IAddressableStorable;
+    private bool IStorableChild(object obj) => obj is IStorableChild;
 
     private bool IsFolder(object obj) => obj is IFolder;
 

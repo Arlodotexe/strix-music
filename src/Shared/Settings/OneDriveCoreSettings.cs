@@ -78,6 +78,15 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     }
 
     /// <summary>
+    /// Gets or sets the RelativePath of the OneDrive folder.
+    /// </summary>
+    public string RelativeFolderPath
+    {
+        get => GetSetting(() => string.Empty);
+        set => SetSetting(value);
+    }
+
+    /// <summary>
     /// Gets or sets the client ID of the registered Azure application. 
     /// </summary>
     public string ClientId
