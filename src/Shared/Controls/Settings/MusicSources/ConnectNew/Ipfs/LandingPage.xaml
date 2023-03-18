@@ -25,6 +25,17 @@
                         Margin="0,10"
                         Padding="0,10"
                         Spacing="17">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Visibility="{x:Bind _param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
+                            <TextBlock FontWeight="Bold" Text="Preparing to run the daemon..." />
+                            <ProgressRing
+                                Width="10"
+                                Height="10"
+                                Background="Black"
+                                IsActive="{x:Bind _param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
+                        </StackPanel>
 
                         <TextBox
                             Width="300"

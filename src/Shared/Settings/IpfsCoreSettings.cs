@@ -53,6 +53,9 @@ namespace StrixMusic.Settings
         public override object GetSettingByName(string settingName) => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => throw new NotImplementedException();
+        public override bool IsSettingValidForCoreCreation(string propertyName, object? value)
+        {
+            return !string.IsNullOrWhiteSpace((string?)value ?? string.Empty);
+        }
     }
 }

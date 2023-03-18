@@ -90,7 +90,7 @@ public partial class IpfsSettings : SettingsBase
     /// </summary>
     public string ReleaseIpns
     {
-        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/latest.strixmusic.com");
+        get => GetSetting(() => Environment.GetEnvironmentVariable(nameof(ReleaseIpns)) ?? "/ipns/staging.strixmusic.com");
         set => SetSetting(value);
     }
 

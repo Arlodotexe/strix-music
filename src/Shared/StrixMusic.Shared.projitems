@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\Ipfs\FolderSelector.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\Ipfs\LandingPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml.cs" />
@@ -110,6 +111,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\Ipfs\FolderSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
