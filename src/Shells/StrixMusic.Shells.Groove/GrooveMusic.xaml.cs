@@ -39,7 +39,7 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveMusic), new PropertyMetadata(null));
-        
+
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
         /// </summary>
@@ -56,7 +56,7 @@ namespace StrixMusic.Shells.Groove
             WindowHostOptions.IsSystemBackButtonVisible = true;
             WindowHostOptions.BackgroundColor = Colors.Black;
             WindowHostOptions.ForegroundColor = Colors.White;
-            
+
             WindowHostOptions.IsSystemBackButtonVisible = true;
             WindowHostOptions.ExtendViewIntoTitleBar = true;
             WindowHostOptions.CustomTitleBar = CustomTitleBarBorder;
@@ -173,7 +173,10 @@ namespace StrixMusic.Shells.Groove
                     break;
             }
 
-            UpdateCheckedState(button.Tag.ToString());
+            if (button == null || button.Tag == null || button.Tag.ToString() == null)
+                return;
+
+            // UpdateCheckedState(button?.Tag?.ToString());
         }
 
         private void UpdateCheckedState(string checkedItem)
@@ -207,7 +210,7 @@ namespace StrixMusic.Shells.Groove
                 if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
                     MainContent.ContentTemplate = (DataTemplate)dataTemplate;
             }
-            
+
             Title = LocalizationResources.Music?.GetString(viewModel.PageTitleResource) ?? viewModel.PageTitleResource;
             ShowLargeHeader = viewModel.ShowLargeHeader;
 

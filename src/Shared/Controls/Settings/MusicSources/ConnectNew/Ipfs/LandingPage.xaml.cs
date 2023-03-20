@@ -47,6 +47,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
             Guard.IsNotNull(Settings);
             Guard.IsNotNullOrWhiteSpace(Settings.IpfsCidPath);
+            Frame.Navigate(typeof(FolderSelector), (_param, Settings));
         }
 
         [RelayCommand]

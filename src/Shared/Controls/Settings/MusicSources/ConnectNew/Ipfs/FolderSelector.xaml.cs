@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Graph;
+using OwlCore.Kubo;
 using OwlCore.Storage;
+using OwlCore.Storage.OneDrive;
 using StrixMusic.Settings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -33,6 +36,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         private SynchronizationContext _synchronizationContext;
         private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
+        [ObservableProperty] private IpfsFolder? _rootFolder;
 
         /// <summary>
         /// Creates a new instance of <see cref="FolderSelector"/>.
@@ -51,6 +55,8 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
             _param = param.NavParams;
             Settings = param.Settings;
+
+            await GetRootFolderCommand.ExecuteAsync(null);
         }
 
         [RelayCommand]
@@ -66,6 +72,12 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         private async Task GetRootFolderAsync(CancellationToken cancellationToken)
         {
             Guard.IsNotNull(_param);
+            Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
+
+            var folder = new IpfsFolder(Settings?.IpfsCidPath, _param.AppRoot.Ipfs.Client);
+
+            // Create storage abstraction and core.
+            RootFolder = folder;
         }
 
         [RelayCommand]

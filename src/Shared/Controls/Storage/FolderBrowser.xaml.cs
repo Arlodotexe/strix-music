@@ -94,7 +94,7 @@ public sealed partial class FolderBrowser : UserControl
         if (newValue is null)
             return;
 
-        await foreach (var item in newValue.GetItemsAsync())
+        await foreach (var item in newValue.GetItemsAsync(StorableType.All))
             CurrentFolderItems.Add(item);
     }
 
