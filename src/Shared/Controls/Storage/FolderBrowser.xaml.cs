@@ -35,12 +35,34 @@ public sealed partial class FolderBrowser : UserControl
         DependencyProperty.Register(nameof(SelectedItem), typeof(IStorable), typeof(FolderBrowser), new PropertyMetadata(null, (d, e) => ((FolderBrowser)d).OnSelectedItemChanged(e.OldValue as IFolder, e.NewValue as IFolder)));
 
     /// <summary>
+    /// The backing dependency property for <see cref="IsFolderEmpty"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsFolderEmptyProperty =
+        DependencyProperty.Register(nameof(IsFolderEmpty), typeof(bool), typeof(FolderBrowser), new PropertyMetadata(false));
+
+    /// <summary>
+    /// The backing dependency property for <see cref="IsFo"/>.
+    /// </summary>
+    public static readonly DependencyProperty FetchingItemsProperty =
+        DependencyProperty.Register(nameof(FetchingItems), typeof(bool), typeof(FolderBrowser), new PropertyMetadata(false));
+
+    /// <summary>
     /// Creates a new instance of <see cref="FolderBrowser"/>.
     /// </summary>
     public FolderBrowser()
     {
         this.InitializeComponent();
     }
+
+    /// <summary>
+    /// Tells the current empty state of the folder.
+    /// </summary>
+    internal bool IsFolderEmpty { get; set; }
+
+    /// <summary>
+    /// Flag to determine whether folder fetching is in progress or not.
+    /// </summary>
+    internal bool FetchingItems { get; set; }
 
     /// <summary>
     /// The items that are in the <see cref="CurrentFolder"/>.
@@ -94,8 +116,15 @@ public sealed partial class FolderBrowser : UserControl
         if (newValue is null)
             return;
 
+        FetchingItems = true;
+        IsFolderEmpty = false;
+
         await foreach (var item in newValue.GetItemsAsync(StorableType.All))
             CurrentFolderItems.Add(item);
+
+       IsFolderEmpty = CurrentFolderItems.Count == 0;
+
+        FetchingItems = false;
     }
 
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
@@ -140,6 +169,8 @@ public sealed partial class FolderBrowser : UserControl
     private bool IsZero(int value) => value == 0;
 
     private Visibility IsZeroToVisibility(int value) => BoolToVisibility(IsZero(value));
+
+    private bool IsZeroToBoolean(int value) => value != 0;
 
     private void FolderGrid_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
