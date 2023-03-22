@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Ipfs;
 using Ipfs.Http;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
@@ -344,6 +345,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         }
 
         InitStatus = "Kubo is running and ready to use";
+    }
+
+    private void OnInitStatusChanged(string? value)
+    {
+        if (value is not null)
+            OwlCore.Diagnostics.Logger.LogInformation(value);
     }
 
     /// <summary>

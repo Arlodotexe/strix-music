@@ -115,7 +115,9 @@ internal class DepthFirstFolderScanner : IFolderScanner
             folderWatcher.CollectionChanged -= FolderWatcherOnCollectionChanged;
 
             if (folder.Id == RootFolder.Id)
+            {
                 _rootFolderWatcher = null;
+            }
             else
             {
                 lock (_knownSubFolders)

@@ -157,7 +157,7 @@ namespace StrixMusic.Shells.Groove
             _navigationTracker.NavigateBackwards();
         }
 
-        private void NavigationButtonClicked(object sender, RoutedEventArgs e)
+        private void NavigationButtonClicked(object? sender, RoutedEventArgs e)
         {
             if (sender is not ToggleButton button || Root is null)
                 return;
@@ -173,7 +173,7 @@ namespace StrixMusic.Shells.Groove
                     break;
             }
 
-            UpdateCheckedState(button.Tag.ToString());
+            UpdateCheckedState(button.Tag?.ToString() ?? string.Empty);
         }
 
         private void UpdateCheckedState(string checkedItem)
