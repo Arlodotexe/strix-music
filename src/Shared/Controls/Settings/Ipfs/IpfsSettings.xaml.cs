@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Kubo;
 using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Diagnostics;
-using Uno.Extensions;
 
 namespace StrixMusic.Controls.Settings.Ipfs;
 
@@ -54,7 +49,7 @@ public sealed partial class IpfsSettings : UserControl
 
     private string IpfsPathToProtocolUrl(string path)
     {
-        if (path.IsNullOrWhiteSpace())
+        if (string.IsNullOrWhiteSpace(path))
             return path;
 
         Guard.IsTrue(path.StartsWith("/ipfs/"), nameof(path), "Path must start with /ipfs/");
@@ -66,7 +61,7 @@ public sealed partial class IpfsSettings : UserControl
 
     private string IpnsPathToProtocolUrl(string path)
     {
-        if (path.IsNullOrWhiteSpace())
+        if (string.IsNullOrWhiteSpace(path))
             return path;
 
         Guard.IsTrue(path.StartsWith("/ipns/"), nameof(path), "Path must start with /ipns/");
