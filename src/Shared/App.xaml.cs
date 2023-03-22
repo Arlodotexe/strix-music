@@ -57,6 +57,11 @@ public sealed partial class App : Application
         MainWindow.Activate();
 #endif
 
+#if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
+            MainWindow = new Window();
+            MainWindow.Activate();
+#endif
+
 #if __WASM__
         MainWindow = Window.Current;
 #endif

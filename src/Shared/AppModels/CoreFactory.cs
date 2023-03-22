@@ -47,7 +47,7 @@ public static class CoreFactory
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
 
 #if __WASM__
-        var folderToScan = AppRoot.KnownFolders.First(x => settings.ConfiguredFolderId == x.Id);
+        var folderToScan = (WindowsStorageFolder)AppRoot.KnownFolders.First(x => settings.ConfiguredFolderId == x.Id);
 #else
         var storageFolderToScan = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
         var folderToScan = new WindowsStorageFolder(storageFolderToScan);
