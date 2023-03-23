@@ -57,12 +57,26 @@ public sealed partial class FolderBrowser : UserControl
     /// <summary>
     /// Tells the current empty state of the folder.
     /// </summary>
-    internal bool IsFolderEmpty { get; set; }
+    internal bool IsFolderEmpty
+    {
+        get => (bool)GetValue(IsFolderEmptyProperty);
+        set
+        {
+            SetValue(IsFolderEmptyProperty, value);
+        }
+    }
 
     /// <summary>
     /// Flag to determine whether folder fetching is in progress or not.
     /// </summary>
-    internal bool FetchingItems { get; set; }
+    internal bool FetchingItems
+    {
+        get => (bool)GetValue(FetchingItemsProperty);
+        set
+        {
+            SetValue(FetchingItemsProperty, value);
+        }
+    }
 
     /// <summary>
     /// The items that are in the <see cref="CurrentFolder"/>.
@@ -122,7 +136,7 @@ public sealed partial class FolderBrowser : UserControl
         await foreach (var item in newValue.GetItemsAsync(StorableType.All))
             CurrentFolderItems.Add(item);
 
-       IsFolderEmpty = CurrentFolderItems.Count == 0;
+        IsFolderEmpty = CurrentFolderItems.Count == 0;
 
         FetchingItems = false;
     }

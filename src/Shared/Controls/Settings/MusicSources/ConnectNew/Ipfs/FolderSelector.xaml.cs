@@ -60,16 +60,24 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         }
 
         [RelayCommand]
-        private async Task PickFolderAsync(IFolder? folder)
+        private Task PickFolderAsync(IFolder? folder)
         {
             if (folder is null)
-                return;
+                return Task.CompletedTask;
 
             Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
+
+            Guard.IsNotNull(Settings);
+            Settings.IpfsCidPath = folder.Id;
+            _param.AppRoot.MusicSourcesSettings.ConfiguredIpfsCores.Add(Settings);
+
+            _param.SetupCompleteTaskCompletionSource.SetResult(null);
+
+            return Task.CompletedTask;
         }
 
         [RelayCommand]
-        private async Task GetRootFolderAsync(CancellationToken cancellationToken)
+        private Task GetRootFolderAsync(CancellationToken cancellationToken)
         {
             Guard.IsNotNull(_param);
             Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
@@ -78,6 +86,8 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
             // Create storage abstraction and core.
             RootFolder = folder;
+
+            return Task.CompletedTask;
         }
 
         [RelayCommand]

@@ -30,9 +30,9 @@
                 ToolTipService.ToolTip="Navigate up"
                 Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
 
-            <ProgressRing IsActive="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
-
             <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+
+            <ProgressRing IsActive="{x:Bind FetchingItems, Mode=OneWay}" />
         </StackPanel>
 
 
@@ -42,58 +42,55 @@
             FontWeight="Bold"
             Text="This folder is empty"
             Visibility="{x:Bind IsFolderEmpty, Mode=OneWay}" />
-        <Grid>
-            <ProgressRing IsActive="{x:Bind FetchingItems, Converter={StaticResource InverseBoolConverter}, Mode=OneWay}" />
-            <GridView
-                x:Name="FolderGrid"
-                MaxHeight="300"
-                DoubleTapped="FolderGrid_OnDoubleTapped"
-                ItemsSource="{x:Bind CurrentFolderItems}"
-                SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
-                SelectionMode="Single">
-                <GridView.Resources>
-                    <Style x:Name="FolderPickerGridItemBorderStyle" TargetType="Border">
-                        <Style.Setters>
-                            <Setter Property="Margin" Value="10" />
-                            <Setter Property="Width" Value="175" />
-                        </Style.Setters>
-                    </Style>
+        <GridView
+            x:Name="FolderGrid"
+            Height="300"
+            DoubleTapped="FolderGrid_OnDoubleTapped"
+            ItemsSource="{x:Bind CurrentFolderItems}"
+            SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+            SelectionMode="Single">
+            <GridView.Resources>
+                <Style x:Name="FolderPickerGridItemBorderStyle" TargetType="Border">
+                    <Style.Setters>
+                        <Setter Property="Margin" Value="10" />
+                        <Setter Property="Width" Value="175" />
+                    </Style.Setters>
+                </Style>
 
-                    <Style x:Name="FolderPickerGridItemTextStyle" TargetType="TextBlock">
-                        <Style.Setters>
-                            <Setter Property="TextWrapping" Value="WrapWholeWords" />
-                            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                            <Setter Property="Width" Value="150" />
-                        </Style.Setters>
-                    </Style>
-                </GridView.Resources>
+                <Style x:Name="FolderPickerGridItemTextStyle" TargetType="TextBlock">
+                    <Style.Setters>
+                        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                        <Setter Property="Width" Value="150" />
+                    </Style.Setters>
+                </Style>
+            </GridView.Resources>
 
-                <GridView.ItemTemplateSelector>
-                    <local:StorableItemTemplateSelector>
-                        <local:StorableItemTemplateSelector.FileTemplate>
-                            <DataTemplate x:DataType="storage:IFile">
-                                <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <SymbolIcon Symbol="Document" />
-                                        <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </local:StorableItemTemplateSelector.FileTemplate>
+            <GridView.ItemTemplateSelector>
+                <local:StorableItemTemplateSelector>
+                    <local:StorableItemTemplateSelector.FileTemplate>
+                        <DataTemplate x:DataType="storage:IFile">
+                            <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <SymbolIcon Symbol="Document" />
+                                    <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </local:StorableItemTemplateSelector.FileTemplate>
 
-                        <local:StorableItemTemplateSelector.FolderTemplate>
-                            <DataTemplate x:DataType="storage:IFolder">
-                                <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
-                                        <SymbolIcon Symbol="Folder" />
-                                        <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </local:StorableItemTemplateSelector.FolderTemplate>
-                    </local:StorableItemTemplateSelector>
-                </GridView.ItemTemplateSelector>
-            </GridView>
-        </Grid>
+                    <local:StorableItemTemplateSelector.FolderTemplate>
+                        <DataTemplate x:DataType="storage:IFolder">
+                            <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <SymbolIcon Symbol="Folder" />
+                                    <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </local:StorableItemTemplateSelector.FolderTemplate>
+                </local:StorableItemTemplateSelector>
+            </GridView.ItemTemplateSelector>
+        </GridView>
     </StackPanel>
 </UserControl>

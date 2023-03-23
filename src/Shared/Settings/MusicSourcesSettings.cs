@@ -78,6 +78,11 @@ public partial class MusicSourcesSettings : SettingsBase
     /// </summary>
     public ObservableCollection<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(defaultValue: () => new ObservableCollection<OneDriveCoreSettings>());
 
+       /// <summary>
+    /// Gets the list of all registered storage cores that interact with OneDrive.
+    /// </summary>
+    public ObservableCollection<IpfsCoreSettings> ConfiguredIpfsCores => GetSetting(defaultValue: () => new ObservableCollection<IpfsCoreSettings>());
+
     /// <summary>
     /// The cores that are available to be created.
     /// </summary>
