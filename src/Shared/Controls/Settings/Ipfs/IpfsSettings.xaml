@@ -290,7 +290,7 @@
 							<ProgressRing IsActive="{x:Bind PinCommand.IsRunning, Mode=OneWay}" />
 							<ProgressRing IsActive="{x:Bind UnpinCommand.IsRunning, Mode=OneWay}" />
 
-							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{x:Bind IsPinned, Mode=TwoWay}" />
+							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{Binding IsPinned, Mode=TwoWay}" />
 						</controls:WrapPanel>
 					</labs:SettingsCard>
 				</DataTemplate>

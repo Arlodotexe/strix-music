@@ -39,7 +39,7 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public static readonly DependencyProperty PlaylistCollectionViewModelProperty =
             DependencyProperty.Register(nameof(PlaylistCollectionViewModel), typeof(GroovePlaylistCollectionViewModel), typeof(GrooveMusic), new PropertyMetadata(null));
-
+        
         /// <summary>
         /// A backing <see cref="DependencyProperty"/> for the <see cref="Title"/> property.
         /// </summary>
@@ -56,7 +56,7 @@ namespace StrixMusic.Shells.Groove
             WindowHostOptions.IsSystemBackButtonVisible = true;
             WindowHostOptions.BackgroundColor = Colors.Black;
             WindowHostOptions.ForegroundColor = Colors.White;
-
+            
             WindowHostOptions.IsSystemBackButtonVisible = true;
             WindowHostOptions.ExtendViewIntoTitleBar = true;
             WindowHostOptions.CustomTitleBar = CustomTitleBarBorder;
@@ -157,7 +157,7 @@ namespace StrixMusic.Shells.Groove
             _navigationTracker.NavigateBackwards();
         }
 
-        private void NavigationButtonClicked(object sender, RoutedEventArgs e)
+        private void NavigationButtonClicked(object? sender, RoutedEventArgs e)
         {
             if (sender is not ToggleButton button || Root is null)
                 return;
@@ -173,10 +173,7 @@ namespace StrixMusic.Shells.Groove
                     break;
             }
 
-            if (button == null || button.Tag == null || button.Tag.ToString() == null)
-                return;
-
-            // UpdateCheckedState(button?.Tag?.ToString());
+            UpdateCheckedState(button.Tag?.ToString() ?? string.Empty);
         }
 
         private void UpdateCheckedState(string checkedItem)
@@ -210,7 +207,7 @@ namespace StrixMusic.Shells.Groove
                 if (Resources.TryGetValue("GroovePlaylistsPageDataTemplate", out var dataTemplate))
                     MainContent.ContentTemplate = (DataTemplate)dataTemplate;
             }
-
+            
             Title = LocalizationResources.Music?.GetString(viewModel.PageTitleResource) ?? viewModel.PageTitleResource;
             ShowLargeHeader = viewModel.ShowLargeHeader;
 
