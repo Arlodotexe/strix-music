@@ -6,19 +6,19 @@ using OwlCore.ComponentModel;
 using OwlCore.Kubo;
 using OwlCore.Storage;
 using OwlCore.Storage.Memory;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Settings
 {
     /// <summary>
     /// A container for the settings needed to instantiate a Ipfs media source.
     /// </summary>
-    public class IpfsCoreSettings : CoreSettingsBase
+    public class IpfsCoreSettings : CoreSettingsBase, IInstanceId
     {
         /// <summary>
         /// Creates a new instance of <see cref="IpfsCoreSettings"/>.
         /// </summary>
         /// <param name="folder"></param>
-        /// <param name="settingSerializer"></param>
         public IpfsCoreSettings(IModifiableFolder folder) : base(folder, AppSettingsSerializer.Singleton)
         {
         }

@@ -60,6 +60,9 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
 
         if (TryRemoveFrom(AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores, core.InstanceId))
             return;
+
+        if (TryRemoveFrom(AppRoot.MusicSourcesSettings.ConfiguredIpfsCores, core.InstanceId))
+            return;
     }
 
     private static bool TryRemoveFrom<T>(ObservableCollection<T> collection, string instanceId)

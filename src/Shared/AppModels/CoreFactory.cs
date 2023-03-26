@@ -19,6 +19,8 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using OwlCore.Storage.OneDrive;
 using Logger = OwlCore.Diagnostics.Logger;
+using OwlCore.Kubo;
+using Ipfs.Http;
 
 namespace StrixMusic.AppModels;
 
@@ -144,6 +146,45 @@ public static class CoreFactory
 
         ((CoreFileImage)core.Logo).SourceCore = core;
 
+        return core;
+    }
+
+    /// <summary>
+    /// Creates a <see cref="StorageCore"/> from the provided <see cref="IpfsCoreSettings"/>.
+    /// </summary>
+    /// <param name="settings">The settings used to create the folder abstraction.</param>
+    /// <param name="client">The configured ipfs client.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is the new core instance.</returns>
+    /// <exception cref="InvalidOperationException">A new folder was created in the data folder, but it's not modifiable.</exception>
+    public static async Task<ICore> CreateIpfsCoreAsync(IpfsCoreSettings settings, IpfsClient client)
+    {
+        var instanceId = settings.InstanceId.HashMD5Fast();
+
+        var coreDataFolder = await settings.Folder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == instanceId) ??
+                             await settings.Folder.CreateFolderAsync(instanceId);
+
+        if (coreDataFolder is not IModifiableFolder modifiableCoreDataFolder)
+            throw new InvalidOperationException($"A new folder was created in the data folder, but it's not modifiable.");
+
+        var folderToScan = new IpfsFolder(settings.IpfsCidPath, client);
+
+        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
+        var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
+
+        var core = new StorageCore
+        (
+            folderToScan,
+            metadataCacheFolder: modifiableCoreDataFolder,
+            "Ipfs Storage",
+            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
+        {
+            ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
+            InstanceDescriptor = instanceId,
+            Logo = logo,
+        };
+
+        logo.SourceCore = core;
+        core.Logo = logo;
         return core;
     }
 }
