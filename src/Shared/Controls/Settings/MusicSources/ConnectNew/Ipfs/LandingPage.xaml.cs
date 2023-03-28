@@ -40,14 +40,18 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             this.InitializeComponent();
         }
 
+
         [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task TryContinueAsync()
         {
             await Task.Yield();
 
             Guard.IsNotNull(Settings);
-            Guard.IsNotNullOrWhiteSpace(Settings.IpfsCidPath);
-            Frame.Navigate(typeof(FolderSelector), (_param, Settings));
+
+            if (Settings.IpfsCidPath != null || Settings.IpnsAddress != null)
+            {
+                Frame.Navigate(typeof(FolderSelector), (_param, Settings));
+            }
         }
 
         [RelayCommand]
@@ -71,12 +75,15 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Settings = (IpfsCoreSettings)await _param.SelectedSourceToConnect.DefaultSettingsFactory(string.Empty);
         }
 
-        private bool AllNotNullOrWhiteSpace(string value) => !string.IsNullOrWhiteSpace(value);
+        private bool AllNotNullOrWhiteSpace(string value, string value2) => !string.IsNullOrWhiteSpace(value) || !string.IsNullOrWhiteSpace(value2);
 
         private bool IsNull(object? obj) => obj is null;
 
         private bool IsNotNull(object? obj) => obj is not null;
 
         private bool InvertBool(bool val) => !val;
+
+        private Visibility NullToVisibility(object? val) => val == null ? Visibility.Collapsed : Visibility.Visible;
+        private Visibility NullToInveerseVisibility(object? val) => val == null ? Visibility.Visible : Visibility.Collapsed;
     }
 }

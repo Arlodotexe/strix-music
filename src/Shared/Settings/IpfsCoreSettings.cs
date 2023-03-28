@@ -49,6 +49,15 @@ namespace StrixMusic.Settings
             set => SetSetting(value);
         }
 
+        /// <summary>
+        /// Gets or sets an ID 
+        /// </summary>
+        public string? IpnsAddress
+        {
+            get => GetSetting(() => string.Empty);
+            set => SetSetting(value);
+        }
+
         /// <inheritdoc />
         public override object GetSettingByName(string settingName) => throw new NotImplementedException();
 

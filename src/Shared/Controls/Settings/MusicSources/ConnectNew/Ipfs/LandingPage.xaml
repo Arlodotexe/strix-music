@@ -18,7 +18,8 @@
             Description="Provide the root directory Cid."
             Header="Configure IPFS folder"
             IsEnabled="{x:Bind IsNotNull(Settings), Mode=OneWay}"
-            IsExpanded="True">
+            IsExpanded="True"
+            Visibility="{x:Bind NullToVisibility(_param.AppRoot.Ipfs.Client)}">
             <labs:SettingsExpander.Items>
                 <labs:SettingsCard ContentAlignment="Left">
                     <StackPanel
@@ -43,16 +44,30 @@
                             PlaceholderText="Enter path"
                             Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
 
+                        <TextBox
+                            Width="300"
+                            Header="IPNS Address (Not supported yet)"
+                            IsEnabled="False"
+                            PlaceholderText="Enter address"
+                            Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Button Command="{x:Bind CancelCommand}" Content="Cancel" />
                             <Button
                                 Command="{x:Bind TryContinueCommand}"
                                 Content="Continue"
-                                IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.IpfsCidPath), FallbackValue=false, Mode=OneWay}" />
+                                IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.IpfsCidPath, Settings.IpfsCidPath), FallbackValue=false, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                 </labs:SettingsCard>
             </labs:SettingsExpander.Items>
         </labs:SettingsExpander>
+        <StackPanel Spacing="10" Visibility="{x:Bind NullToInveerseVisibility(_param.AppRoot.Ipfs.Client)}">
+            <TextBlock FontWeight="Bold" Text="No IPFS Access. Please turn on IPFS from the settings to add ipfs music source." />
+            <Button
+                HorizontalAlignment="Right"
+                Command="{x:Bind CancelCommand}"
+                Content="Close" />
+        </StackPanel>
     </StackPanel>
 </Page>
