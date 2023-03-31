@@ -42,7 +42,6 @@ namespace StrixMusic.AppModels;
 /// </summary>
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
-    private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
 
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
@@ -237,7 +236,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
-            await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
+           await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
             allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
@@ -453,10 +452,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
         catch (Exception ex)
         {
-            using (await _dialogMutex.DisposableWaitAsync(cancellationToken))
-            {
-                await HandleFailureAsync(ex);
-            }
+            await HandleFailureAsync(ex);
 
             async Task HandleFailureAsync(Exception? ex)
             {
