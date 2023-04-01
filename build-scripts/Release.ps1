@@ -28,9 +28,6 @@ Param (
   [string]$pastReleaseIpns = ""
 )
 
-# The following combines all the above commands in the correct order, with the correct parameters, to create a release.
-# You can use the script in full, or pick it apart and use them in a CI agent.
-
 #  NOTICE: This script will
 # - Use your working tree to make and commit changes (version bumps, changelogs, tags, etc)
 # - Automatically push generated changes.
