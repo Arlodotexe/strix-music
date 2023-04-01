@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -44,7 +45,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
-
+    
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -151,7 +152,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             if (Diagnostics is null)
             {
-                var debugSettingsFolder = await GetOrCreateSettingsFolder(nameof(DebugSettings));
+                var debugSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(DebugSettings));
                 Diagnostics = new AppDiagnostics(debugSettingsFolder);
 
                 await Diagnostics.Settings.LoadCommand.ExecuteAsync(cancellationToken);
@@ -164,7 +165,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             {
                 Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
 
-                var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
+                var ipfsSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(IpfsSettings));
                 var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
 
                 Ipfs = new IpfsAccess(ipfsSettings)
@@ -191,7 +192,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             {
                 Logger.LogInformation($"Initializing {nameof(MusicSourcesSettings)}");
 
-                var musicSourceSettingsFolder = await GetOrCreateSettingsFolder(nameof(MusicSourcesSettings));
+                var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
                 MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
 
                 await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
@@ -201,7 +202,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             {
                 Logger.LogInformation($"Initializing {nameof(ShellSettings)}");
 
-                var shellSettingsFolder = await GetOrCreateSettingsFolder(nameof(ShellSettings));
+                var shellSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(ShellSettings));
                 ShellSettings = new ShellSettings(folder: shellSettingsFolder);
 
                 await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
@@ -594,9 +595,22 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         MediaPlayerElements.Add(mediaPlayerElement);
     }
 
-    private async Task<IModifiableFolder> GetOrCreateSettingsFolder(string folderName)
+    /// <summary>
+    /// Given the nameof() a settings type, return the folder that this <see cref="AppRoot"/> should use for storing data.
+    /// </summary>
+    /// <param name="settingsName">The name of the settings type to retrieve the folder for.</param>
+    public async Task<IModifiableFolder> GetOrCreateSettingsFolderAsync(string settingsName)
     {
-        var folder = await _dataFolder.GetFoldersAsync().FirstOrDefaultAsync(x => x.Name == folderName) ?? await _dataFolder.CreateFolderAsync(folderName);
+        IStorable? folder = null;
+
+        try
+        {
+            folder = await _dataFolder.GetFirstByNameAsync(settingsName);
+        }
+        catch (FileNotFoundException)
+        {
+            folder = await _dataFolder.CreateFolderAsync(settingsName);
+        }
 
         if (folder is not IModifiableFolder modifiableFolder)
             return ThrowHelper.ThrowArgumentException<IModifiableFolder>($"The modifiable folder {_dataFolder.Id} returned a non-modifiable folder. The settings folder for music sources must be modifiable.");
@@ -604,5 +618,5 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         return modifiableFolder;
     }
 
-    bool NeedsToBeCreated<TSettings>(TSettings settings) where TSettings : SettingsBase, IInstanceId => _mergedCore?.Sources.All(y => settings.InstanceId != y.InstanceId) ?? true;
+    private bool NeedsToBeCreated<TSettings>(TSettings settings) where TSettings : SettingsBase, IInstanceId => _mergedCore?.Sources.All(y => settings.InstanceId != y.InstanceId) ?? true;
 }

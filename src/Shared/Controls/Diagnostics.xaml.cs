@@ -59,5 +59,7 @@ namespace StrixMusic.Controls
         private Visibility InvertBoolToVisibility(bool val) => !val ? Visibility.Visible : Visibility.Collapsed;
 
         private Uri StringToUri(string value) => new Uri(value);
+
+        private void ManualCrash(object sender, RoutedEventArgs e) => throw new Exception("User manually invoked a crash via diagnostic settings.");
     }
 }

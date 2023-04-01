@@ -280,16 +280,17 @@ namespace StrixMusic.AppModels
         {
             try
             {
-                await foreach (var item in _dataFolder.GetItemsAsync())
+                var parent = (IModifiableFolder?)await ((IChildFolder)_dataFolder).GetParentAsync();
+                Guard.IsNotNull(parent);
+
+                await foreach (var item in parent.GetItemsAsync())
                 {
-                    await _dataFolder.DeleteAsync(item);
+                    await parent.DeleteAsync(item);
                 }
 
                 var result = await CoreApplication.RequestRestartAsync(launchArguments: string.Empty);
 
-                if (result == AppRestartFailureReason.NotInForeground ||
-                   result == AppRestartFailureReason.RestartPending ||
-                   result == AppRestartFailureReason.Other)
+                if (result is AppRestartFailureReason.NotInForeground or AppRestartFailureReason.RestartPending or AppRestartFailureReason.Other)
                 {
                     await ShowRetryContentDialogAsync($"Restart Failed. Please restart the app manually.", RestartAppCommand, null);
                 }
@@ -313,17 +314,17 @@ namespace StrixMusic.AppModels
                 Title = error,
                 Content = new StackPanel
                 {
-                    Width = 275,
+                    Width = 300,
                     Spacing = 15,
                     Children =
                         {
                             new Expander
                             {
-                                Width = 275,
+                                Width = 300,
                                 Header = "View error",
                                 ExpandDirection = ExpandDirection.Down,
                                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                                Content = new TextBlock { Text = $"Reason: {ex}", FontSize = 11, IsTextSelectionEnabled = true },
+                                Content = new TextBlock { Text = $"Reason: {ex}", FontSize = 11, IsTextSelectionEnabled = true, TextWrapping = TextWrapping.WrapWholeWords },
                             },
                         },
                 },
