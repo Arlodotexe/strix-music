@@ -605,7 +605,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
         try
         {
-
             folder = await _dataFolder.GetFirstByNameAsync(settingsName);
         }
         catch (FileNotFoundException)
