@@ -212,7 +212,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             {
                 Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
 
-                var ipfsSettingsFolder = await GetOrCreateSettingsFolder(nameof(IpfsSettings));
+                var ipfsSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(IpfsSettings));
                 var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
 
                 Ipfs = new IpfsAccess(ipfsSettings)
