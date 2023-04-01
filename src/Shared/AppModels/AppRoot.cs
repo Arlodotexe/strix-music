@@ -392,6 +392,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         Logger.LogInformation($"Adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore.AddSource(newCore);
                     }
+                    return;
                 }
             }
 
