@@ -61,7 +61,7 @@ public static class CoreFactory
             folderToScan,
             metadataCacheFolder: modifiableCoreDataFolder,
             "Local Storage",
-            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
+            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Music files found: {x.FilesProcessed}")))
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             InstanceDescriptor = folderToScan.Path,
@@ -135,7 +135,7 @@ public static class CoreFactory
             folderToScan,
             metadataCacheFolder: modifiableCoreDataFolder,
             "OneDrive",
-            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
+            fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Music files found: {x.FilesProcessed}")))
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
             Logo = new CoreFileImage(new WindowsStorageFile(logoFile)),
