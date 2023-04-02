@@ -208,26 +208,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
-            if (Ipfs is null)
-            {
-                Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
-
-                var ipfsSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(IpfsSettings));
-                var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
-
-                Ipfs = new IpfsAccess(ipfsSettings)
-                {
-                    HttpMessageHandler = HttpMessageHandler,
-                };
-
-                await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
-                if (ipfsSettings.Enabled)
-                {
-                    Logger.LogInformation($"Initializing {nameof(Ipfs)}");
-                    await Ipfs.InitCommand.ExecuteAsync(null);
-                }
-            }
-
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
