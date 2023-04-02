@@ -15,6 +15,7 @@ using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -33,6 +34,31 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         private readonly ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
 
         /// <summary>
+        /// Holds the instance of the sort textblock.
+        /// </summary>
+        public TextBlock? PART_SortLbl { get; private set; }
+
+        /// <summary>
+        /// Holds the instance of the listview.
+        /// </summary>
+        public ListView? PART_Selector { get; private set; }
+
+        /// <summary>
+        /// Holds the current sort state of the zune <see cref="TrackCollection"/>.
+        /// </summary>
+        public ZuneSortState SortState
+        {
+            get { return (ZuneSortState)GetValue(SortStateProperty); }
+            set { SetValue(SortStateProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property for <ses cref="SortState" />.
+        /// </summary>
+        public static readonly DependencyProperty SortStateProperty =
+            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ, null));
+
+        /// <summary>
         /// Creates a new instance for <see cref="ZuneTrackCollection"/>.
         /// </summary>
         public ZuneTrackCollection()
@@ -42,6 +68,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             // Some events are always attached (even if the control is never loaded in XAML)
             // Using the unloaded event gives us a chance to detach events manually in case the GC doesn't
             Unloaded += ZuneTrackCollection_Unloaded;
+        }
+
+        /// <inheritdoc />
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            PART_SortLbl = GetTemplateChild(nameof(PART_SortLbl)) as TextBlock;
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+
+            PART_SortLbl.Tapped += PART_SortLbl_Tapped;
+
+            PART_Selector = GetTemplateChild(nameof(PART_Selector)) as ListView;
+
+            SortState = ZuneSortState.ZA;
+            PART_SortLbl.Text = "A-Z";
         }
 
         private void AttachEvents(ZuneTrackCollectionItem item)
@@ -61,6 +103,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             {
                 item.Track.ArtistItemsChanged -= Track_ArtistItemsChanged;
             }
+        }
+
+        private async void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Guard.IsNotNull(Collection);
+            Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
+
+            await SortTrackAccordingToCurrentStateAsync();
+
+            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            if (PART_Selector.Items.Count > 0)
+                PART_Selector.ScrollIntoView(PART_Selector.Items[0]);
         }
 
         /// <summary>
@@ -91,11 +145,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (Collection is null)
-                return;
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                if (Collection is null)
+                    return;
 
-            if (!Collection.PopulateMoreTracksCommand.IsRunning)
-                await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
+                if (!Collection.PopulateMoreTracksCommand.IsRunning)
+                    await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
+            }
         }
 
         /// <inheritdoc/>
@@ -152,18 +209,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             using (await _collectionModifyMutex.DisposableWaitAsync())
             {
-                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems is not null)
                 {
-                    if (e.NewItems is null)
-                        return;
-
                     var tracks = e.NewItems.Cast<TrackViewModel>();
+
                     foreach (var item in tracks)
                     {
                         await item.InitArtistCollectionAsync();
                     }
 
-                    var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
+                    var data = tracks.Select(x =>
                     {
                         var newItem = new ZuneTrackCollectionItem
                         {
@@ -178,11 +233,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
                 }
 
-                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove && e.OldItems is not null)
                 {
-                    if (e.OldItems is null)
-                        return;
-
                     foreach (var item in e.OldItems)
                     {
                         var target = TrackItems.FirstOrDefault(x => x.Track == item);
@@ -194,11 +246,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     }
                 }
 
-                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move && e.OldItems is not null)
                 {
-                    if (e.OldItems is null)
-                        return;
-
                     for (var i = 0; i < e.OldItems.Count; i++)
                         _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
                 }
@@ -210,15 +259,47 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
                     _trackItems.Clear();
                 }
-
-                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
-                    throw new NotImplementedException();
             }
+
+            _ = SortTrackAccordingToCurrentStateAsync();
+        }
+
+        private async Task SortTrackAccordingToCurrentStateAsync()
+        {
+            if (Collection is null || PART_SortLbl is null)
+                return;
+
+            if (!await OwlCore.Flow.Debounce($"{nameof(SortTrackAccordingToCurrentStateAsync)}.{GetHashCode()}", TimeSpan.FromSeconds(500)))
+                return;
+
+            Collection.Tracks.CollectionChanged -= Tracks_CollectionChanged;
+
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                switch (SortState)
+                {
+                    case ZuneSortState.AZ:
+                        Collection.SortTrackCollection(TrackSortingType.Alphanumerical, SortDirection.Descending);
+                        SortState = ZuneSortState.ZA;
+                        PART_SortLbl.Text = "Z-A";
+                        break;
+                    case ZuneSortState.ZA:
+                        Collection.SortTrackCollection(TrackSortingType.Alphanumerical, SortDirection.Ascending);
+                        SortState = ZuneSortState.AZ;
+                        PART_SortLbl.Text = "A-Z";
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+
+            Collection.Tracks.CollectionChanged += Tracks_CollectionChanged;
         }
 
         private async void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             await _collectionModifyMutex.WaitAsync();
+
             // If any track in the parent collection has more than 2 artists,
             // ALL track items should display their artist list, including this instance.
             var track = (ITrack)sender;
