@@ -15,7 +15,7 @@ IPFS is self-described as:
 Before getting started, if you plan on using these scripts to publish your own release, you'll need to take responsibility for hosting your releases on your own IPFS node (or use a third party like Pinata) to make sure your developers can access them.
 
 # Getting started
-When developers download the dependencies to their IPFS node, they temporarily host for the data to other nodes who want it to access it. The more devs holding onto the data, the faster and more available the dependencies will become.
+When developers download the dependencies to their IPFS node, they temporarily host for the data to other nodes who want it to access it. The more devs and users holding onto the data, the faster and more available the dependencies will become.
 
 Finally, if you have a machine where you used this recently (even once), you can set up a brand new machine on your local network to do it again, without internet access, and even if the original links all 404.
 
@@ -97,13 +97,13 @@ These are scripts which build, tag, and generate things.
 
 - **Release.ps1**
   - An all-in-one script for preparing, building, organizing and publishing a new release.
-  - Uses your working tree to make, commit and push changes (version bumps, changelogs, tags, etc)
-  - Use the `-noPublish` option to avoid committing, pushing or publishing.
   - Must be run from the `./build-scripts/` directory.
+  - Uses your working tree to make, commit and push changes (version bumps, changelogs, tags, etc)
   - Requires Kubo to be installed and running, and the `ipfs` command to be accessible from the command line where invoked.
-  - Use `-gitRemote remotename` to specify the remote that release tags and changelogs should be pushed to.
-  - Specify the name of an imported IPNS key with `-ipnsPublishKey KeyName` to add generated content to IPFS and publish to IPNS.
-  - Specify `-pastReleaseIpns <addr>` or `-pastReleaseCid <cid>` to import already published releases into a `versions.json` file.
+  - Use the `-NoPublish` option to avoid committing, pushing or publishing.
+  - Use `-GitRemote remotename` to specify the remote that release tags and changelogs should be pushed to.
+  - Specify the name of an imported IPNS key with `-IpnsPublishKey KeyName` to add generated content to IPFS and publish to IPNS.
+  - Specify `-PastReleaseIpns <addr>` or `-PastReleaseCid <cid>` to import already published releases into a `versions.json` file.
 
 ```powershell
 # In the ./build-scripts directory

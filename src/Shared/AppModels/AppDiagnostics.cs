@@ -200,7 +200,7 @@ namespace StrixMusic.AppModels
             }
         }
 
-        private void OnCurrentDomainOnFirstChanceException(object sender, FirstChanceExceptionEventArgs args)
+        private void OnCurrentDomainOnFirstChanceException(object? sender, FirstChanceExceptionEventArgs args)
         {
             var stack = new StackTrace();
             var stackFrames = stack.GetFrames();

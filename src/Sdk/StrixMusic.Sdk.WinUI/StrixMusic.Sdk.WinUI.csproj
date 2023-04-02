@@ -12,7 +12,6 @@
   <ItemGroup>
     <PackageReference Include="OwlCore" Version="0.2.1" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
-    <PackageReference Include="Uno.UI" Version="4.8.15" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -159,7 +158,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-    <PackageReference Include="Uno.UI" Version="4.7.30" />
+    <PackageReference Include="Uno.UI" Version="4.8.15" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.11" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.1-uno.2" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.1-uno.2" />

@@ -157,7 +157,7 @@ if ($steps.Contains("sdk")) {
 if ($steps.Contains("wasm")) {
   # Build WebAssembly
   Write-Output "Building WebAssembly app in $configuration mode"
-  .\dotnet.ps1 -Command 'build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration="$configuration"' -fallbackOnly
+  .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly
 }
 
 if ($steps.Contains("uwp")) {
@@ -175,7 +175,7 @@ if ($steps.Contains("uwp")) {
 if ($steps.Contains("organize")) {
   # The resulting folder can be uploaded anywhere (not just ipfs)
   Write-Output "Organizing generated release content"
-  .\OrganizeReleaseContent.ps1 -wasmAppPath "$PSScriptRoot/../src/Platforms/StrixMusic.Wasm/bin/x64/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath $PSScriptRoot/../www/* -docsPath $PSScriptRoot/../docs/wwwroot/* -sdkNupkgFolder $PSScriptRoot/build/sdk/$sdkTag/* -cleanRepoPath $PSScriptRoot/build/source -buildDependenciesPath $PSScriptRoot/build/dependencies/* -outputPath $outputPath
+  .\OrganizeReleaseContent.ps1 -wasmAppPath "$PSScriptRoot/../src/Platforms/StrixMusic.Wasm/bin/$configuration/net7.0/dist/*" -uwpSideloadBuildPath "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/*" -websitePath $PSScriptRoot/../www/* -docsPath $PSScriptRoot/../docs/wwwroot/* -sdkNupkgFolder $PSScriptRoot/build/sdk/$sdkTag/* -cleanRepoPath $PSScriptRoot/build/source -buildDependenciesPath $PSScriptRoot/build/dependencies/* -outputPath $outputPath
 
   if ($pastReleaseCid.Length -gt 0 -or $pastReleaseIpns.Length -gt 0) {
     # Grab previous versioned content such as nuget packages and app installers (requires ipfs)
