@@ -88,6 +88,13 @@
 				</interactivity:Interaction.Behaviors>
 			</labs:SettingsCard>
 
+			<labs:SettingsCard
+				Click="ManualCrash"
+				Description="Manually crash the app, for debug purposes."
+				Header="Crash the app"
+				HeaderIcon="{ui:FontIcon Glyph=&#xE98F;}"
+				IsClickEnabled="True" />
+
 			<ListView
 				Height="600"
 				Margin="10,40"

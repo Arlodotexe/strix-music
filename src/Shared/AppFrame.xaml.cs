@@ -22,16 +22,11 @@ public sealed partial class AppFrame : UserControl
     /// <summary>
     /// Creates a new instance of <see cref="AppFrame"/>.
     /// </summary>
-    public AppFrame()
+    public AppFrame(AppRoot root)
     {
         InitializeComponent();
 
-        AppRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder))
-        {
-#if __WASM__
-            HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
-#endif
-        };
+        AppRoot = root;
     }
 
     /// <summary>

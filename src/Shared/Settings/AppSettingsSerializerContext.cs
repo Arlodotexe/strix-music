@@ -25,6 +25,7 @@ namespace StrixMusic.Settings
     [JsonSerializable(typeof(StrixMusicShells))]
     [JsonSerializable(typeof(AdaptiveShells))]
     [JsonSerializable(typeof(DhtRoutingMode))]
+    [JsonSerializable(typeof(ApplicationHealthState))]
     public partial class AppSettingsSerializerContext : JsonSerializerContext
     {
     }

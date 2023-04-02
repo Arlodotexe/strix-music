@@ -128,12 +128,10 @@ public partial class AppReleaseContentLoader : ObservableObject, IAsyncInit
         Logger.LogInformation("Initialized");
     }
 
-    private async void HandlerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private async void HandlerOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(AppReleaseContentBundlePreloadHandler.IsPinned))
+        if (e.PropertyName == nameof(AppReleaseContentBundlePreloadHandler.IsPinned) && sender is AppReleaseContentBundlePreloadHandler handler)
         {
-            var handler = (AppReleaseContentBundlePreloadHandler)sender;
-
             var cancellationToken = CancellationToken.None;
 
             if (handler.IsPinned)

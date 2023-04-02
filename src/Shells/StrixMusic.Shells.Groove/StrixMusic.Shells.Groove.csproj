@@ -21,7 +21,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Text.Json" Version="7.0.2" />
-		<PackageReference Include="Uno.UI" Version="4.7.44" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -109,7 +108,7 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.1.11" />
-		<PackageReference Include="Uno.UI" Version="4.7.30" />
+		<PackageReference Include="Uno.UI" Version="4.8.15" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Styles\NowPlaying\" />

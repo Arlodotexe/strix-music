@@ -226,9 +226,6 @@ namespace StrixMusic.MediaPlayback
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            DetachEvents();
-        }
+        public void Dispose() => DetachEvents();
     }
 }

@@ -50,7 +50,7 @@ public sealed partial class IpfsSettings : UserControl
     private string IpfsPathToProtocolUrl(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-            return path;
+            return "?";
 
         Guard.IsTrue(path.StartsWith("/ipfs/"), nameof(path), "Path must start with /ipfs/");
 
@@ -62,7 +62,7 @@ public sealed partial class IpfsSettings : UserControl
     private string IpnsPathToProtocolUrl(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-            return path;
+            return "?";
 
         Guard.IsTrue(path.StartsWith("/ipns/"), nameof(path), "Path must start with /ipns/");
 

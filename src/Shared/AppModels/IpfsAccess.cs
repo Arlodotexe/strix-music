@@ -145,6 +145,12 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         }
     }
 
+    private void OnInitStatusChanged(string? value)
+    {
+        if (value is not null)
+            OwlCore.Diagnostics.Logger.LogInformation(value);
+    }
+
     /// <summary>
     /// The message handler to use when accessing IPFS over any HTTP API.
     /// </summary>
@@ -214,143 +220,177 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
             if (IsInitialized)
                 return;
 
-            cancellationToken.ThrowIfCancellationRequested();
+            Client ??= await ScanLocalhostForRunningKuboCompliantRpcApi(cancellationToken);
 
-            InitStatus = "Checking if IPFS is already running";
-            Client = await ScanLocalhostForRunningKuboCompliantRpcApi(cancellationToken);
-
-            if (Client is null)
-            {
 #if __WASM__
-                InitStatus = "No local Kubo daemon was found. IPFS cannot be initialized.";
-                return;
-#else
-                InitStatus = "No local Kubo daemon was found. Downloading Kubo for bootstrapping...";
+            InitStatus = "Local Kubo node not found. IPFS cannot be initialized.";
+            return;
 #endif
-                var kuboBin = await GetDownloadedKuboBinaryAsync(cancellationToken);
-                if (kuboBin is null)
-                {
-                    InitStatus = "Downloading and extracting latest version of Kubo";
-                    var downloader = new KuboDownloader { HttpMessageHandler = HttpMessageHandler };
-                    var downloadedBinary = await downloader.DownloadLatestBinaryAsync(cancellationToken);
 
-                    kuboBin = await StoreDownloadedKuboBinaryAsync(downloadedBinary, cancellationToken);
-                }
+            await BootstrapAndStartKuboAsync(cancellationToken);
 
-                // Starting a Kubo binary for the first time will prompt Windows show a firewall exception dialog to the user.
-                // Warn the user of this and guide them through it.
-                if (!Settings.FirewallWarningDisplayed)
-                {
-                    InitStatus = "Showing Kubo firewall warning";
-                    Settings.FirewallWarningDisplayed = true;
-
-                    await new ContentDialog
-                    {
-                        Title = "Add IPFS to Windows Firewall",
-                        Content = new StackPanel
-                        {
-                            Spacing = 20,
-                            Children =
-                            {
-                                new StackPanel
-                                {
-                                    Spacing = 7,
-                                    Children =
-                                    {
-                                        new TextBlock { Text = "To enable IPFS functionality, we'll need to bootstrap Kubo.", TextWrapping = TextWrapping.WrapWholeWords },
-                                        new TextBlock { Text = "Windows may prompt you to add Kubo as a firewall exception.", TextWrapping = TextWrapping.WrapWholeWords },
-                                    }
-                                },
-                                new StackPanel
-                                {
-                                    Spacing = 7,
-                                    Children =
-                                    {
-                                        new TextBlock { Text = "For the best experience it's recommended to allow Kubo on both public and private networks.", TextWrapping = TextWrapping.WrapWholeWords },
-                                        new TextBlock { Text = "This will not effect your existing communication preferences.", TextWrapping = TextWrapping.WrapWholeWords },
-                                    }
-                                },
-                            },
-                        },
-                        CloseButtonText = "Continue"
-                    }.ShowAsync(ShowType.Interrupt);
-
-                    await Settings.SaveAsync(cancellationToken);
-                }
-
-                InitStatus = "Starting Kubo";
-                Guard.IsNotNull(kuboBin);
-
-                var kuboBinParentFolder = (SystemFolder?)await kuboBin.GetParentAsync(cancellationToken);
-                Guard.IsNotNull(kuboBinParentFolder);
-
-                var repoFolder = (SystemFolder)await kuboBinParentFolder.CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
-
-                KuboBootstrapper = new KuboBootstrapper(kuboBin, repoFolder.Path)
-                {
-                    ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
-                    GatewayUri = new Uri($"http://127.0.0.1:{Settings.NodeGatewayPort}"),
-                    RoutingMode = Settings.BootstrapNodeDhtRouting,
-                    StartupProfiles =
-                    {
-                        Settings.BootstrapNodeEnableLocalDiscovery ? "local-discovery" : "server",
-                    }
-                };
-
-                await KuboBootstrapper.StartAsync(cancellationToken);
-                InitStatus = "Kubo started, getting peer information";
-
-                Client = new IpfsClient($"{KuboBootstrapper.ApiUri}");
-                ThisPeer = await Client.IdAsync(cancel: cancellationToken);
-                IsRunningBootstrapNode = true;
-            }
-
-            Guard.IsNotNull(Client);
-            Guard.IsNotNull(ThisPeer);
-            Guard.IsNotNullOrWhiteSpace(Settings.ReleaseIpns);
-
-            InitStatus = $"Setting up {nameof(Everyone)} {nameof(PeerRoom)}";
-            Everyone = new PeerRoom(ThisPeer, Client.PubSub, $"{Settings.ReleaseIpns}/app");
-
-            try
-            {
-                InitStatus = $"Resolving release content from {Settings.ReleaseIpns}";
-                Settings.ReleaseIpnsResolved = await Client.ResolveAsync(Settings.ReleaseIpns, recursive: true, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                // ignored
-                Logger.LogError($"{Settings.ReleaseIpns} failed to resolve. Unable to retrieve latest content from publisher.", ex);
-            }
+            IsInitialized = true;
+            InitStatus = "Kubo is running and ready to use";
         }
 
-        InitStatus = "Kubo is running and ready to use";
-        IsInitialized = true;
+        // At this point, IPFS is set up and ready to use.
+        // Additional features require async to setup, which we don't wait for.
+        _ = PostSetupAsync();
+    }
+
+    private async Task PostSetupAsync()
+    {
+        Guard.IsNotNull(Client);
+        Guard.IsNotNull(ThisPeer);
+        Guard.IsNotNullOrWhiteSpace(Settings.ReleaseIpns);
+
+        Everyone = new PeerRoom(ThisPeer, Client.PubSub, $"{Settings.ReleaseIpns}/app");
+
+        Settings.ReleaseIpnsResolved = await ResolveReleaseIpnsAsync(default);
 
         if (!string.IsNullOrWhiteSpace(Settings.ReleaseIpnsResolved))
         {
-            AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
+            InitializeAppReleaseContentLoader();
         }
-
-        if (AppReleaseContentLoader is not null)
-        {
-            Logger.LogInformation($"Starting {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
-            _ = AppReleaseContentLoader.InitCommand.ExecuteAsync(CancellationToken.None).ContinueWith(x =>
-            {
-                if (x.IsFaulted)
-                {
-                    Logger.LogError($"Couldn't initialize release content loader", x.Exception.GetBaseException());
-                }
-            }, CancellationToken.None);
-        }
-
-        InitStatus = "Kubo is running and ready to use";
     }
 
-    private void OnInitStatusChanged(string? value)
+    private void InitializeAppReleaseContentLoader()
     {
-        if (value is not null)
-            OwlCore.Diagnostics.Logger.LogInformation(value);
+        Guard.IsNotNull(Client);
+        AppReleaseContentLoader = new AppReleaseContentLoader(Settings, Client, new IpnsFolder(Settings.ReleaseIpns, Client));
+
+        Logger.LogInformation($"Starting {nameof(AppReleaseContentLoader)} using {Settings.ReleaseIpnsResolved}");
+        _ = AppReleaseContentLoader.InitCommand.ExecuteAsync(CancellationToken.None).ContinueWith(x =>
+        {
+            if (x.IsFaulted)
+            {
+                Logger.LogError($"Couldn't initialize release content loader", x.Exception?.GetBaseException());
+            }
+        }, CancellationToken.None);
+    }
+
+    private async Task<string> ResolveReleaseIpnsAsync(CancellationToken cancellationToken)
+    {
+        Guard.IsNotNull(Client);
+
+        try
+        {
+            Logger.LogInformation($"Resolving release content from {Settings.ReleaseIpns}");
+            return await Client.ResolveAsync(Settings.ReleaseIpns, recursive: true, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            // ignored
+            Logger.LogError($"{Settings.ReleaseIpns} failed to resolve. Unable to retrieve latest content from publisher.", ex);
+            return string.Empty;
+        }
+    }
+
+    private async Task<IpfsClient?> BootstrapAndStartKuboAsync(CancellationToken cancellationToken)
+    {
+        var kuboBin = await GetOrDownloadKuboBinaryAsync(cancellationToken);
+        await ShowFirewallWarningIfNeeded(cancellationToken);
+
+        KuboBootstrapper = await BootstrapKuboAsync(kuboBin, cancellationToken);
+
+        await KuboBootstrapper.StartAsync(cancellationToken);
+        IsRunningBootstrapNode = true;
+
+        InitStatus = "Kubo started, getting peer information";
+        Client = new IpfsClient($"{KuboBootstrapper.ApiUri}");
+        ThisPeer = await Client.IdAsync(cancel: cancellationToken);
+
+        return Client;
+    }
+
+    private async Task ShowFirewallWarningIfNeeded(CancellationToken cancellationToken)
+    {
+        // Starting a Kubo binary for the first time will prompt Windows show a firewall exception dialog to the user.
+        // Warn the user of this and guide them through it.
+        if (!Settings.FirewallWarningDisplayed)
+        {
+            InitStatus = "Showing Kubo firewall warning";
+            await ShowFirewallWarningAsync(cancellationToken);
+        }
+    }
+
+    private async Task<KuboBootstrapper> BootstrapKuboAsync(IChildFile kuboBin, CancellationToken cancellationToken)
+    {
+        InitStatus = "Bootstrapping Kubo";
+        Guard.IsNotNull(kuboBin);
+
+        var kuboBinParentFolder = (SystemFolder?)await kuboBin.GetParentAsync(cancellationToken);
+        Guard.IsNotNull(kuboBinParentFolder);
+
+        var repoFolder = (SystemFolder)await kuboBinParentFolder.CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
+
+        var bootstrapper = new KuboBootstrapper(kuboBin, repoFolder.Path)
+        {
+            ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
+            GatewayUri = new Uri($"http://127.0.0.1:{Settings.NodeGatewayPort}"),
+            RoutingMode = Settings.BootstrapNodeDhtRouting,
+            StartupProfiles =
+            {
+                Settings.BootstrapNodeEnableLocalDiscovery ? "local-discovery" : "server",
+            }
+        };
+
+        return bootstrapper;
+    }
+
+    private async Task<IChildFile> GetOrDownloadKuboBinaryAsync(CancellationToken cancellationToken)
+    {
+        InitStatus = "Getting Kubo binary";
+
+        var kuboBin = await GetDownloadedKuboBinaryAsync(cancellationToken);
+        if (kuboBin is null)
+        {
+            InitStatus = "Downloading and extracting Kubo";
+            var downloader = new KuboDownloader { HttpMessageHandler = HttpMessageHandler };
+            var downloadedBinary = await downloader.DownloadBinaryAsync(new Version(0, 19, 0), cancellationToken);
+
+            kuboBin = await StoreDownloadedKuboBinaryAsync(downloadedBinary, cancellationToken);
+        }
+
+        return kuboBin;
+    }
+
+    private async Task ShowFirewallWarningAsync(CancellationToken cancellationToken)
+    {
+        Settings.FirewallWarningDisplayed = true;
+
+        await new ContentDialog
+        {
+            Title = "Add IPFS to Windows Firewall",
+            Content = new StackPanel
+            {
+                Spacing = 20,
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Spacing = 7,
+                        Children =
+                        {
+                            new TextBlock { Text = "To enable IPFS functionality, we'll need to bootstrap Kubo.", TextWrapping = TextWrapping.WrapWholeWords },
+                            new TextBlock { Text = "Windows may prompt you to add Kubo as a firewall exception.", TextWrapping = TextWrapping.WrapWholeWords },
+                        }
+                    },
+                    new StackPanel
+                    {
+                        Spacing = 7,
+                        Children =
+                        {
+                            new TextBlock { Text = "For the best experience it's recommended to allow Kubo on both public and private networks.", TextWrapping = TextWrapping.WrapWholeWords },
+                            new TextBlock { Text = "This will not effect your existing communication preferences.", TextWrapping = TextWrapping.WrapWholeWords },
+                        }
+                    },
+                },
+            },
+            CloseButtonText = "Continue"
+        }.ShowAsync(ShowType.Interrupt);
+
+        await Settings.SaveAsync(cancellationToken);
     }
 
     /// <summary>
@@ -358,6 +398,9 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     /// </summary>
     public async Task<IpfsClient?> ScanLocalhostForRunningKuboCompliantRpcApi(CancellationToken cancellationToken)
     {
+        InitStatus = "Checking if Kubo is already running";
+        cancellationToken.ThrowIfCancellationRequested();
+
         var innerCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var mutex = new SemaphoreSlim(20, 20);
         var checkedPorts = new HashSet<int>();
