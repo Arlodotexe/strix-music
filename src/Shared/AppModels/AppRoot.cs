@@ -44,7 +44,7 @@ namespace StrixMusic.AppModels;
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
-    
+
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -160,52 +160,11 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             Logger.LogInformation($"Initializing using folder ID {_dataFolder.Id}");
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (Ipfs is null)
-            {
-                Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
+            await InitIpfsIfNeededAsync(cancellationToken);
+            await InitMusicSourcesIfNeededAsync(cancellationToken);
+            await InitShellsSettingsIfNeededAsync(cancellationToken);
 
-                var ipfsSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(IpfsSettings));
-                var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
-
-                Ipfs = new IpfsAccess(ipfsSettings)
-                {
-                    HttpMessageHandler = HttpMessageHandler,
-                };
-
-                try
-                {
-                    await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
-                    if (ipfsSettings.Enabled)
-                    {
-                        Logger.LogInformation($"Initializing {nameof(Ipfs)}");
-                        await Ipfs.InitCommand.ExecuteAsync(null);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError("Ipfs failed to initialized", ex);
-                }
-            }
-
-            if (MusicSourcesSettings is null)
-            {
-                Logger.LogInformation($"Initializing {nameof(MusicSourcesSettings)}");
-
-                var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
-                MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
-
-                await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
-            }
-
-            if (ShellSettings is null)
-            {
-                Logger.LogInformation($"Initializing {nameof(ShellSettings)}");
-
-                var shellSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(ShellSettings));
-                ShellSettings = new ShellSettings(folder: shellSettingsFolder);
-
-                await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
-            }
+            Guard.IsNotNull(MusicSourcesSettings);
 
             // Create/Remove cores when settings are added/removed.
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
@@ -217,7 +176,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
-           await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
+            await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
             allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
@@ -245,11 +204,68 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 return;
             }
 
+            Guard.IsNotNull(Ipfs);
             var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore, Ipfs);
             StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
 
             IsInitialized = true;
             Logger.LogInformation($"{nameof(AppRoot)} is initialized and ready to use.");
+        }
+    }
+
+    private async Task InitShellsSettingsIfNeededAsync(CancellationToken cancellationToken)
+    {
+        if (ShellSettings is null)
+        {
+            Logger.LogInformation($"Initializing {nameof(ShellSettings)}");
+
+            var shellSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(ShellSettings));
+            ShellSettings = new ShellSettings(folder: shellSettingsFolder);
+
+            await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
+        }
+    }
+
+    private async Task InitMusicSourcesIfNeededAsync(CancellationToken cancellationToken)
+    {
+        if (MusicSourcesSettings is null)
+        {
+            Logger.LogInformation($"Initializing {nameof(MusicSourcesSettings)}");
+
+            var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
+            MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
+
+            await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
+        }
+    }
+
+    private async Task InitIpfsIfNeededAsync(CancellationToken cancellationToken)
+    {
+        if (Ipfs is null)
+        {
+            Logger.LogInformation($"Initializing {nameof(IpfsSettings)}");
+
+            var ipfsSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(IpfsSettings));
+            var ipfsSettings = new IpfsSettings(ipfsSettingsFolder);
+
+            Ipfs = new IpfsAccess(ipfsSettings)
+            {
+                HttpMessageHandler = HttpMessageHandler,
+            };
+
+            try
+            {
+                await ipfsSettings.LoadCommand.ExecuteAsync(cancellationToken);
+                if (ipfsSettings.Enabled)
+                {
+                    Logger.LogInformation($"Initializing {nameof(Ipfs)}");
+                    await Ipfs.InitCommand.ExecuteAsync(null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Ipfs failed to initialized", ex);
+            }
         }
     }
 
@@ -373,6 +389,15 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         Logger.LogInformation($"Adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore.AddSource(newCore);
                     }
+
+                    Guard.IsNotNull(Ipfs);
+                    var mergedCoreWithPlugins = CreatePluginLayer(_mergedCore, Ipfs);
+                    StrixDataRoot = new StrixDataRootViewModel(mergedCoreWithPlugins);
+
+                    if (!IsInitialized)
+                        IsInitialized = true;
+
+                    Logger.LogInformation($"{nameof(AppRoot)} is initialized and ready to use.");
                     return;
                 }
             }
@@ -405,7 +430,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             }
         }
 
-        await InitAsync();
+        await InitAsync(CancellationToken.None);
     }
 
     /// <inheritdoc />
