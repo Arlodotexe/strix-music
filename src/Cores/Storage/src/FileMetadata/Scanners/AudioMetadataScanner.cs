@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
@@ -331,7 +332,9 @@ internal static class AudioMetadataScanner
             {
                 using var fileStream = await file.OpenStreamAsync();
 
-                using var tagFile = File.Create(new FileAbstraction(file.Name, fileStream), ReadStyle.Average);
+                using var memoryStream = new LazyStream(fileStream);
+
+                using var tagFile = File.Create(new FileAbstraction(file.Name, memoryStream), ReadStyle.Average);
                 var tag = tagFile.Tag;
 
                 // If there's no metadata to read, return null
@@ -473,19 +476,22 @@ internal static class AudioMetadataScanner
 
         try
         {
-            using var stream = await file.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
+            using var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
+
+            //   using var lazyLoadStream = new LazyLoadStream(stream);
+            using var memoryStream = new LazyStream(stream);
 
             TagLibHelper.TryAddManualFileTypeResolver();
 
-            if (stream.CanSeek)
-                stream.Seek(0, SeekOrigin.Begin);
+            if (memoryStream.CanSeek)
+                memoryStream.Seek(0, SeekOrigin.Begin);
 
             Logger.LogInformation($"Loading {file.Name} with TagLib");
 
             try
             {
-                using var tagFile = File.Create(new FileAbstraction(file.Name, stream), ReadStyle.Average);
+                using var tagFile = File.Create(new FileAbstraction(file.Name, memoryStream), ReadStyle.Average);
                 var tag = tagFile.Tag;
 
                 cancellationToken.ThrowIfCancellationRequested();
