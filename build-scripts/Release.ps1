@@ -157,7 +157,7 @@ if ($steps.Contains("sdk")) {
 if ($steps.Contains("wasm")) {
   # Build WebAssembly
   Write-Output "Building WebAssembly app in $configuration mode"
-  .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly
+  .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly -ErrorAction Stop
 }
 
 if ($steps.Contains("uwp")) {
@@ -166,7 +166,7 @@ if ($steps.Contains("uwp")) {
   Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
 
   Write-Output "Building UWP app in $configuration mode"
-  msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
+  msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload -ErrorAction Stop
 }
 
 #################

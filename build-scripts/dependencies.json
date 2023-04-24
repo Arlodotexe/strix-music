@@ -2,12 +2,12 @@
   {
     "name": "docfx",
     "outputPath": "dependencies/binaries/docfx.zip",
-    "originalUrl": "https://github.com/dotnet/docfx/releases/latest/download/docfx.zip",
+    "originalUrl": "https://github.com/dotnet/docfx/releases/download/v2.65.3/docfx-win-x64-v2.65.3.zip",
     "cid": "QmUXothUyJRHfCCpB2VHxB1u7HY9tdboxnjR5Estz9SAvj"
   },
   {
     "name": "nupkg",
-    "cid": "QmbsBEbe8VtrTbFcXVSdDnX9NFnwwjxj4DJetjLPgHMina"
+    "cid": "QmcNZzbBitQJPnxTrbEUk4vyursYTj2tgM6U6HB3djnVpX"
   },
   {
     "name": "dotnet-sdk-win-x64",

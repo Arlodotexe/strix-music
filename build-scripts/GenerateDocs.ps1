@@ -44,9 +44,7 @@ if ($skipExtract -eq $false) {
 
     try {
         mono $workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json
-        mono $workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json
         
-        & $PSScriptRoot/../docs/build-scripts/unflatten-namespaces.ps1 $PSScriptRoot/../docs/reference/api/toc.yml
         mono $workingDirectory/docfx/docfx.exe build $PSScriptRoot/../docs/docfx.json
     }
     catch {
@@ -59,9 +57,7 @@ if ($PSVersionTable.Platform -eq "Win32NT" -or $PSVersionTable.PSEdition -eq "De
     Write-Output "Building docs"
 
     Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json"
-    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json"
     
-    & $PSScriptRoot/../docs/build-scripts/unflatten-namespaces.ps1 $PSScriptRoot/../docs/reference/api/toc.yml
     Invoke-Expression "$workingDirectory/docfx/docfx.exe build $PSScriptRoot/../docs/docfx.json"
 }
 
