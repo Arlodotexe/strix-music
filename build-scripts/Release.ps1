@@ -166,7 +166,7 @@ if ($steps.Contains("uwp")) {
   Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
 
   Write-Output "Building UWP app in $configuration mode"
-  msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload -ErrorAction Stop
+  Invoke-Expression "msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms=""x86|x64|ARM"" /p:Configuration=""$configuration"" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload" -ErrorAction Stop
 }
 
 #################
