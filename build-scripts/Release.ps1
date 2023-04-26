@@ -164,13 +164,24 @@ if ($steps.Contains("sdk")) {
   .\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -fallbackOnly
 }
 
+function CheckReleaseConfigurationRequirements {
+  if ($configuration.ToLower() -eq "release" -and !(Test-Path "$PSScriptRoot\..\src\Shared\Secrets.Release.cs")) {
+    Write-Error ".\src\Shared\Secrets.Release.cs is missing. Please create this file by making a copy of .\src\Shared\Secrets.cs and providing secret values if you have them."
+    exit -1;
+  }
+}
+
 if ($steps.Contains("wasm")) {
+  CheckReleaseConfigurationRequirements
+
   # Build WebAssembly
   Write-Output "Building WebAssembly app in $configuration mode"
   .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly -ErrorAction Stop
 }
 
 if ($steps.Contains("uwp")) {
+  CheckReleaseConfigurationRequirements
+  
   # Build UWP (Requires Windows with correct tooling installed)
   Write-Output "Cleaning up existing uwp AppPackages"
   Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
