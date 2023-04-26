@@ -6,7 +6,7 @@ Param (
   [string]$variant = "alpha",
 
   [Parameter(HelpMessage = "If supplied, only the release steps supplied will be performed.")]
-  [ValidateSet('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps',  'organize', 'publish')]
+  [ValidateSet('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps', 'organize', 'publish')]
   [string[]]$steps = @('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps', 'organize', 'publish'),
 
   [Parameter(HelpMessage = "The git remote to use for snapshotting the repo, pushing tags, version updates, snapshotted dependency data, and generated changelogs.")]
@@ -25,7 +25,10 @@ Param (
   [string]$pastReleaseCid = "",
 
   [Parameter(HelpMessage = 'A web url to an existing release. Must be resolvable with "ipfs name resolve example.com"')]
-  [string]$pastReleaseIpns = ""
+  [string]$pastReleaseIpns = "",
+  
+  [Parameter(HelpMessage = "The repository to 'git clone' for this snapshot.")]
+  [string]$repository
 )
 
 #  NOTICE: This script will
@@ -47,23 +50,23 @@ if ($steps.Contains("clean")) {
 # Version bumps
 #################
 if ($steps.Contains("versionbumps")) {
-    Write-Output "Bumping version and generating changelog for Strix Music SDK"
-    $sdkTag = &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-    $sdkChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
-    $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
+  Write-Output "Bumping version and generating changelog for Strix Music SDK"
+  $sdkTag = &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+  $sdkChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
+  $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
     
-    if (!$emptySdkChangelog) {
-      # Excluding -dryRun allows creation of tags and writing to disk.
-      &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant
-    }
+  if (!$emptySdkChangelog) {
+    # Excluding -dryRun allows creation of tags and writing to disk.
+    &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant
+  }
     
-    Write-Output "Bumping version and generating changelog for Strix Music App"
-    $appTag = &"$PSScriptRoot\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-    $appChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
-    $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
+  Write-Output "Bumping version and generating changelog for Strix Music App"
+  $appTag = &"$PSScriptRoot\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+  $appChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
+  $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
     
-    if (!$emptyAppChangelog) {
-      # Excluding -dryRun allows creation of tags and writing to disk.
+  if (!$emptyAppChangelog) {
+    # Excluding -dryRun allows creation of tags and writing to disk.
     &".\CreateAppRelease.ps1" -variant $variant
   }
 }
@@ -133,7 +136,14 @@ if (($noPublish -eq $false) -and ("" -ne $gitRemote) -and (!$emptyAppChangelog -
 if ($steps.Contains("snapshotrepo")) {
   # This should be done after everything is committed.
   Write-Output "Create snapshot of git repo"
-  .\SnapshotGitRepo.ps1 -outputPath $PSScriptRoot/build/source
+
+
+  if ($null -eq $repository -or $repository.Length -eq 0) {
+    # Use the cloned directory by default.
+    $repository = (Get-Item $PSScriptRoot).Parent.FullName;
+  }
+
+  .\SnapshotGitRepo.ps1 -outputPath $PSScriptRoot/build/source -gitRemote $gitRemote -repository $repository
 }
 
 #################
