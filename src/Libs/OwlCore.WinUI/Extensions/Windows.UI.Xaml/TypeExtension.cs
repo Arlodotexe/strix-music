@@ -9,5 +9,5 @@ public sealed class TypeExtension : MarkupExtension
     public string? Fullname { get; set; }
 
     /// <inheritdoc/>
-    protected override object ProvideValue() => Type.GetType(Fullname);
+    protected override object? ProvideValue() => Fullname is null ? null : Type.GetType(Fullname);
 }

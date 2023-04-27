@@ -13,6 +13,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ocext="using:OwlCore.Extensions"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	x:Name="RootUserControl"
 	mc:Ignorable="d">
 
@@ -203,7 +204,7 @@
 			Header="Routing mode (Bootstrap only)"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
-			<ComboBox ItemsSource="{ui:EnumValues Type={ocext:Type Fullname='OwlCore.Kubo.DhtRoutingMode, OwlCore.Kubo'}}" SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
+			<ComboBox win:ItemsSource="{ui:EnumValues Type={ocext:Type Fullname='OwlCore.Kubo.DhtRoutingMode, OwlCore.Kubo'}}" win:SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
 		</labs:SettingsCard>
 
 		<labs:SettingsCard
