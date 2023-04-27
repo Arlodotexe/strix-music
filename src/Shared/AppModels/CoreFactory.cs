@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
 using OwlCore.Extensions;
 using OwlCore.Storage;
+using OwlCore.Storage.OneDrive;
 using OwlCore.Storage.Uwp;
 using StrixMusic.CoreModels;
 using StrixMusic.Cores.Storage;
@@ -14,10 +16,6 @@ using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Graph;
-using Microsoft.Identity.Client;
-using OwlCore.Storage.OneDrive;
 using Logger = OwlCore.Diagnostics.Logger;
 
 namespace StrixMusic.AppModels;

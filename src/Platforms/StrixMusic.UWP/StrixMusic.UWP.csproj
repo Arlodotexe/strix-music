@@ -14,7 +14,6 @@
     <PackageReference Include="OwlCore.Storage">
       <Version>0.8.3</Version>
     </PackageReference>
-    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
     <PackageReference Include="CommunityToolkit.Common">
       <Version>8.1.0</Version>
     </PackageReference>

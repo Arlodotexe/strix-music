@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.ComponentModel;
 using OwlCore.Diagnostics;
+using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.Uwp;
 using StrixMusic.AppModels;
 using StrixMusic.CoreModels;
 using StrixMusic.Sdk.CoreModels;
 using Windows.Storage;
-using OwlCore.Extensions;
-using CommunityToolkit.Mvvm.Input;
 
 namespace StrixMusic.Settings;
 
@@ -32,7 +32,6 @@ public partial class MusicSourcesSettings : SettingsBase
     public MusicSourcesSettings(IModifiableFolder folder)
         : base(folder, AppSettingsSerializer.Singleton)
     {
-
         FlushDefaultValues = false;
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;

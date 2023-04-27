@@ -120,7 +120,6 @@ public partial class IpfsSettings : SettingsBase
         get => GetSetting(() => DhtRoutingMode.Dht);
         set
         {
-            // Two-way binding this to a ComboBox.SelectedItem causes a StackOverflow without this check.
             if (value != BootstrapNodeDhtRouting)
                 SetSetting(value);
         }

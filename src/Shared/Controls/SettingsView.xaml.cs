@@ -1,7 +1,6 @@
 ﻿using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace StrixMusic.Controls;
 

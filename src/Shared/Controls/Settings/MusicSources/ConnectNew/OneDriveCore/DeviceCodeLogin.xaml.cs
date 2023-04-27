@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Core;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Identity.Client;
+using OwlCore.Extensions;
+using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using StrixMusic.Settings;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Diagnostics;
-using Microsoft.Identity.Client;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Extensions;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 
@@ -36,7 +35,7 @@ public sealed partial class DeviceCodeLogin : Page
     }
 
     /// <inheritdoc />
-    override protected async void OnNavigatedTo(NavigationEventArgs e)
+    override protected void OnNavigatedTo(NavigationEventArgs e)
     {
         var param = ((ConnectNewMusicSourceNavigationParams NavParams, OneDriveCoreSettings Settings))e.Parameter;
         Guard.IsNotNull(param.NavParams);
@@ -79,7 +78,7 @@ public sealed partial class DeviceCodeLogin : Page
         Settings.UserDisplayName = authResult.Account.Username;
 
         Status = "Authenticated, proceeding to folder picker";
-        
+
         Frame.Navigate(typeof(FolderSelector), (_param, Settings));
     }
 

@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Extensions;
-using StrixMusic.AppModels;
 using OwlCore.Storage;
+using StrixMusic.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Settings;
-using StrixMusic.Sdk.Extensions;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Controls.Settings.MusicSources;
 

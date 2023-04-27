@@ -45,7 +45,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
-    
+
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -346,7 +346,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     {
                         Logger.LogInformation($"Creating {nameof(MergedCore)} and adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore = new MergedCore(newCore.IntoList());
-
                     }
                     else
                     {
