@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Kiota.Abstractions.Authentication;
 using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.OneDrive;
@@ -79,8 +81,6 @@ public static class CoreFactory
     /// <exception cref="InvalidOperationException">A new folder was created in the data folder, but it's not modifiable.</exception>
     public static async Task<StorageCore> CreateOneDriveCoreAsync(OneDriveCoreSettings settings, HttpMessageHandler messageHandler)
     {
-        Logger.LogInformation($"Creating new {nameof(StorageCore)} using a {nameof(OneDriveFolder)}.");
-
         var instanceId = settings.InstanceId.HashMD5Fast();
         var coreData = await settings.Folder.CreateFolderAsync(instanceId, overwrite: false);
 
@@ -95,7 +95,6 @@ public static class CoreFactory
         var scopes = new[] { "Files.Read.All", "User.Read", "Files.ReadWrite" };
         var authorityUri = "https://login.microsoftonline.com/consumers";
 
-        // Check for cached token
         var clientAppBuilder = PublicClientApplicationBuilder.Create(settings.ClientId).WithAuthority(authorityUri, false);
 
         if (!string.IsNullOrWhiteSpace(settings.RedirectUri))
@@ -108,25 +107,20 @@ public static class CoreFactory
         var account = await clientApp.GetAccountAsync(settings.UserId);
         var authResult = await clientApp.AcquireTokenSilent(scopes, account).ExecuteAsync();
 
-        var authProvider = new DelegateAuthenticationProvider(requestMessage =>
-        {
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", authResult.AccessToken);
-            return Task.CompletedTask;
-        });
+        var authProvider = new BaseBearerTokenAuthenticationProvider(new OneDriveAccessTokenProvider(authResult.AccessToken));
 
         // Create graph client
-        var handlers = GraphClientFactory.CreateDefaultHandlers(authProvider);
+        var handlers = GraphClientFactory.CreateDefaultHandlers();
         var httpClient = GraphClientFactory.Create(handlers, finalHandler: messageHandler);
-        var graphClient = new GraphServiceClient(httpClient);
+        var graphClient = new GraphServiceClient(httpClient, authProvider);
 
         // Get selected OneDrive folder.
-        var driveItem = await graphClient.Drive.Items[settings.FolderId].Request().GetAsync();
+        var driveItem = await graphClient.Me.Drive.GetAsync();
+        var targetDriveItem = await graphClient.Drives[driveItem.Id].Items["itemId"].GetAsync();
 
         // Create storage abstraction and core.
-        var folderToScan = new OneDriveFolder(graphClient, driveItem);
+        var folderToScan = new OneDriveFolder(graphClient, targetDriveItem);
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/OneDrive/Logo.svg"));
-
-        var root = await folderToScan.GetRootAsync();
 
         var core = new StorageCore
         (

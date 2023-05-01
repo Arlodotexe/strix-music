@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IpfsAccess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\OneDriveAccessTokenProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\AppRecovery.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml.cs" />
