@@ -36,14 +36,9 @@ namespace StrixMusic.Shells.Groove.Helper
         }
 
         /// <summary>
-        /// Gets the singleton instance of this class.
-        /// </summary>
-        public static NavigationTracker Instance { get; } = new NavigationTracker();
-
-        /// <summary>
         /// Gets whether or not the navigation can go backwards.
         /// </summary>
-        public bool CanGoBack => _navigationStack != null ? _navigationStack.Count > 1 : false;
+        public bool CanGoBack => _navigationStack is { Count: > 1 };
 
         /// <summary>
         /// Navigates backwards.
@@ -54,7 +49,7 @@ namespace StrixMusic.Shells.Groove.Helper
                 return;
 
             _navigationStack.Pop();
-            PageNavigationRequestMessage previous = _navigationStack.Peek();
+            var previous = _navigationStack.Peek();
             previous.RecordNavigation = false;
 
             switch (previous)

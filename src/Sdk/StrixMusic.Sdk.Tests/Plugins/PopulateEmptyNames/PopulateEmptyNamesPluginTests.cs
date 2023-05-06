@@ -1,11 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.Plugins.Model;
 using StrixMusic.Sdk.Plugins.PopulateEmptyNames;
-using StrixMusic.Sdk.Tests.Mock;
 using StrixMusic.Sdk.Tests.Mock.AppModels;
-using StrixMusic.Sdk.Tests.Mock.Core;
 
 namespace StrixMusic.Sdk.Tests.Plugins.PopulateEmptyNames
 {

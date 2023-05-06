@@ -8,8 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
-using OwlCore.Extensions;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
@@ -106,25 +105,25 @@ namespace StrixMusic.Sdk.AdapterModels
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void TrackMap_ItemsCountChanged(object sender, int e)
+        private void TrackMap_ItemsCountChanged(object? sender, int e)
         {
             TotalTrackCount = e;
             TracksCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
         }
 
-        private void TrackMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        private void TrackMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
             TracksChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -360,9 +359,9 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrackCollection);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICoreTrackCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreTrackCollection);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICoreTrackCollection);
     }
 }

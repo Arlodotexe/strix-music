@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {

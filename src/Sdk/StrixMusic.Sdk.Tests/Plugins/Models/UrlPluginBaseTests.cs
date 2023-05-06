@@ -3,9 +3,9 @@ using StrixMusic.Sdk.Plugins.Model;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -110,6 +110,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public UrlType Type => throw AccessedException;
             public bool Equals(ICoreUrl? other) => throw AccessedException;
             public IReadOnlyList<ICoreUrl> Sources => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

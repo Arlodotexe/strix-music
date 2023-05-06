@@ -5,6 +5,8 @@
     xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Views.NowPlayingViewStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -12,21 +14,27 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="ZuneNowPlayingViewStyle" TargetType="views:NowPlayingView">
+    <Style x:Key="ZuneNowPlayingViewStyle" TargetType="nowplayingview:ZuneNowPlayingView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="views:NowPlayingView">
+                    <ControlTemplate TargetType="nowplayingview:ZuneNowPlayingView">
                         <Grid>
                             <nowplayingview:AlbumWall HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                             <!--Back Button-->
                             <Button Style="{StaticResource ZuneButton}" Width="32" Margin="20,-16,0,0"
                                 VerticalAlignment="Top" HorizontalAlignment="Left"
-                                Click="GoBack">
+>
                                 <Button.RenderTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </Button.RenderTransform>
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Click">
+                                        <core:InvokeCommandAction Command="{Binding BackNavigationRelayCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                                
                                 <FontIcon Glyph="&#xE0A6;" FontSize="16" FontWeight="Black"/>
                             </Button>
                         </Grid>
@@ -36,6 +44,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneNowPlayingViewStyle}" TargetType="views:NowPlayingView"/>
+    <Style BasedOn="{StaticResource ZuneNowPlayingViewStyle}" TargetType="nowplayingview:ZuneNowPlayingView"/>
 
 </ResourceDictionary>

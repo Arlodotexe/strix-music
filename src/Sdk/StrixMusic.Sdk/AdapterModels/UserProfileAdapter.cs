@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -111,23 +111,23 @@ namespace StrixMusic.Sdk.AdapterModels
             _urlMap.ItemsCountChanged -= UrlMap_ItemsCountChanged;
         }
 
-        private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void ImageMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void UrlMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        private void UrlMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
         {
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void UrlMap_ItemsCountChanged(object sender, int e)
+        private void UrlMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, TotalUrlCount);
         }
 
-        private void ImageMap_ItemsCountChanged(object sender, int e)
+        private void ImageMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, TotalImageCount);
@@ -282,11 +282,11 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>false. User profiles are never merged.</returns>
-        public bool Equals(ICoreImageCollection other) => false;
+        public bool Equals(ICoreImageCollection? other) => false;
 
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>false. User profiles are never merged.</returns>
-        public bool Equals(ICoreUrlCollection other) => false;
+        public bool Equals(ICoreUrlCollection? other) => false;
     }
 }

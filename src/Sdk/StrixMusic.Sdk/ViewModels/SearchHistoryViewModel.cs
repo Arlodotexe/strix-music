@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ISearchHistory"/>.
     /// </summary>
-    public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory
+    public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory, IDelegatable<ISearchHistory>
     {
         private readonly ISearchHistory _searchHistory;
 
@@ -27,10 +28,13 @@ namespace StrixMusic.Sdk.ViewModels
             _searchHistory = searchHistory;
         }
 
+        /// <inheritdoc/>
+        ISearchHistory IDelegatable<ISearchHistory>.Inner => _searchHistory;
+
         /// <inheritdoc />
         IReadOnlyList<ICoreSearchHistory> IMerged<ICoreSearchHistory>.Sources => this.GetSources<ICoreSearchHistory>();
 
         /// <inheritdoc />
-        public bool Equals(ICoreSearchHistory other) => _searchHistory.Equals(other);
+        public bool Equals(ICoreSearchHistory? other) => _searchHistory.Equals(other!);
     }
 }

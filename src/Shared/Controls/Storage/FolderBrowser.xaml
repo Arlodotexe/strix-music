@@ -1,0 +1,95 @@
+﻿<UserControl
+    x:Class="StrixMusic.Controls.Storage.FolderBrowser"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:StrixMusic.Controls.Storage"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:storage="using:OwlCore.Storage"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+	<StackPanel HorizontalAlignment="Center" Spacing="8">
+		<StackPanel Orientation="Horizontal" Spacing="4">
+			<Button
+				Command="{x:Bind GoToParentCommand}"
+				Content="&#xE110;"
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
+				ToolTipService.ToolTip="Navigate up"
+				Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
+
+            <Button
+                Command="{x:Bind GoToParentCancelCommand}"
+                Content="&#xE10A;"
+                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                ToolTipService.ToolTip="Navigate up"
+                Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
+
+            <ProgressRing IsActive="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
+
+            <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+        </StackPanel>
+
+        <TextBlock
+            Margin="5,15"
+            HorizontalAlignment="Center"
+            FontWeight="Bold"
+            Text="This folder is empty"
+            Visibility="{x:Bind IsZeroToVisibility(CurrentFolderItems.Count), Mode=OneWay}" />
+
+        <GridView
+            x:Name="FolderGrid"
+            DoubleTapped="FolderGrid_OnDoubleTapped"
+            ItemsSource="{x:Bind CurrentFolderItems}"
+            SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+            SelectionMode="Single">
+            <GridView.Resources>
+                <Style x:Name="FolderPickerGridItemBorderStyle" TargetType="Border">
+                    <Style.Setters>
+                        <Setter Property="Margin" Value="10" />
+                        <Setter Property="Width" Value="175" />
+                    </Style.Setters>
+                </Style>
+
+                <Style x:Name="FolderPickerGridItemTextStyle" TargetType="TextBlock">
+                    <Style.Setters>
+                        <Setter Property="TextWrapping" Value="WrapWholeWords" />
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                        <Setter Property="Width" Value="150" />
+                    </Style.Setters>
+                </Style>
+            </GridView.Resources>
+
+            <GridView.ItemTemplateSelector>
+                <local:StorableItemTemplateSelector>
+                    <local:StorableItemTemplateSelector.FileTemplate>
+                        <DataTemplate x:DataType="storage:IFile">
+                            <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <SymbolIcon Symbol="Document" />
+                                    <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </local:StorableItemTemplateSelector.FileTemplate>
+
+                    <local:StorableItemTemplateSelector.FolderTemplate>
+                        <DataTemplate x:DataType="storage:IFolder">
+                            <Border Style="{StaticResource FolderPickerGridItemBorderStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <SymbolIcon Symbol="Folder" />
+                                    <TextBlock Style="{StaticResource FolderPickerGridItemTextStyle}" Text="{x:Bind Name}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </local:StorableItemTemplateSelector.FolderTemplate>
+                </local:StorableItemTemplateSelector>
+            </GridView.ItemTemplateSelector>
+        </GridView>
+    </StackPanel>
+</UserControl>

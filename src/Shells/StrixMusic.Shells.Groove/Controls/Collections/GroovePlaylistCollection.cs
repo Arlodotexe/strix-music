@@ -1,5 +1,4 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.AppModels;
+﻿using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
@@ -25,7 +24,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency property for <see cref="Collection"/>.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollection), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GroovePlaylistCollection>().OnPlaylistCollectionChanged()));
+            DependencyProperty.Register(nameof(Collection), typeof(IPlaylistCollection), typeof(GroovePlaylistCollection), new PropertyMetadata(null, (d, e) => ((GroovePlaylistCollection)d).OnPlaylistCollectionChanged()));
 
         /// <summary>
         /// A view model for this control.

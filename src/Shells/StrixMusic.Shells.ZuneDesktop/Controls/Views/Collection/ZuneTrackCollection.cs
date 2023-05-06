@@ -1,39 +1,37 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels.Helpers;
-using System.Collections.Concurrent;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
     /// <summary>
-    /// Zune implmenation for the <see cref="ZuneTrackCollection"/>.
+    /// Zune implementation of a track collection.
     /// </summary>
     [INotifyPropertyChanged]
     public partial class ZuneTrackCollection : CollectionControl<ZuneTrackCollectionItem, ZuneTrackItem>
     {
-        private bool _sortInitiated = false;
-
-        private ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
+        private readonly SemaphoreSlim _collectionModifyMutex = new(1, 1);
+        private readonly ObservableCollection<ZuneTrackCollectionItem> _trackItems = new();
 
         // Cache artist item values
         // Keeping a minimum cache that updates with events allows us to
         // avoid checking all items when a single item updates.
-        private ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
+        private readonly ConcurrentDictionary<string, int> _lastKnownTrackArtistsCount = new();
 
         /// <summary>
         /// Holds the instance of the sort textblock.
@@ -107,12 +105,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void PART_SortLbl_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Guard.IsNotNull(Collection);
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
-            SortTrackAccordingToCurrentState();
+            await SortTrackAccordingToCurrentStateAsync();
 
             Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
             if (PART_Selector.Items.Count > 0)
@@ -147,11 +145,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (Collection is null)
-                return;
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                if (Collection is null)
+                    return;
 
-            if (!Collection.PopulateMoreTracksCommand.IsRunning)
-                await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
+                if (!Collection.PopulateMoreTracksCommand.IsRunning)
+                    await Collection.PopulateMoreTracksCommand.ExecuteAsync(25);
+            }
         }
 
         /// <inheritdoc/>
@@ -161,143 +162,153 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
 
             if (!Collection.PopulateMoreTracksCommand.IsRunning && Collection.TotalTrackCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private async Task OnCollectionChangedAsync(ITrackCollectionViewModel? oldValue, ITrackCollectionViewModel? newValue)
         {
-            foreach (var item in TrackItems)
-                DetachEvents(item);
-
-            _trackItems.Clear();
-            OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
-
-            if (newValue is not null)
-            {
-                if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
-                    await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
-                else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
-                    await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
-
-                foreach (var item in newValue.Tracks)
-                {
-                    var newItems = new ZuneTrackCollectionItem
-                    {
-                        ParentCollection = newValue,
-                        Track = item,
-                    };
-
-                    _trackItems.Add(newItems);
-                    AttachEvents(newItems);
-                }
-
-                newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
-                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
-            }
-
             if (oldValue is not null)
             {
                 oldValue.Tracks.CollectionChanged -= Tracks_CollectionChanged;
             }
 
-            SortTrackAccordingToCurrentState();
-
-            PART_Selector?.ScrollIntoView(Collection?.Tracks[0]);
-        }
-
-        private async void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                var tracks = e.NewItems.Cast<TrackViewModel>();
-                foreach (var item in tracks)
-                {
-                    await item.InitArtistCollectionAsync();
-                }
-
-                var data = e.NewItems.Cast<TrackViewModel>().Select(x =>
-                {
-                    var newItem = new ZuneTrackCollectionItem
-                    {
-                        Track = x,
-                        ParentCollection = Collection,
-                        ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
-                    };
-
-                    AttachEvents(newItem);
-                    return newItem;
-                });
-                _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
-
-                SortTrackAccordingToCurrentState();
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    var target = TrackItems.FirstOrDefault(x => x.Track == item);
-                    if (target is not null)
-                    {
-                        _trackItems.Remove(target);
-                        DetachEvents(target);
-                    }
-
-                    SortTrackAccordingToCurrentState();
-                }
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
-            {
-                for (var i = 0; i < e.OldItems.Count; i++)
-                    _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
-            }
-
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            using (await _collectionModifyMutex.DisposableWaitAsync())
             {
                 foreach (var item in TrackItems)
                     DetachEvents(item);
 
                 _trackItems.Clear();
-            }
+                OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
-                throw new NotImplementedException();
+                if (newValue is not null)
+                {
+                    if (newValue.InitTrackCollectionAsyncCommand.IsRunning && newValue.InitTrackCollectionAsyncCommand.ExecutionTask is not null)
+                        await newValue.InitTrackCollectionAsyncCommand.ExecutionTask;
+                    else if (newValue.InitTrackCollectionAsyncCommand.CanExecute(null))
+                        await newValue.InitTrackCollectionAsyncCommand.ExecuteAsync(null);
+
+                    foreach (var item in newValue.Tracks)
+                    {
+                        var newItems = new ZuneTrackCollectionItem
+                        {
+                            ParentCollection = newValue,
+                            Track = item,
+                        };
+
+                        _trackItems.Add(newItems);
+                        AttachEvents(newItems);
+                    }
+
+                    newValue.Tracks.CollectionChanged += Tracks_CollectionChanged;
+                    OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));
+                }
+            }
         }
 
-        private void SortTrackAccordingToCurrentState()
+        private async void Tracks_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems is not null)
+                {
+                    var tracks = e.NewItems.Cast<TrackViewModel>();
+
+                    foreach (var item in tracks)
+                    {
+                        await item.InitArtistCollectionAsync();
+                    }
+
+                    var data = tracks.Select(x =>
+                    {
+                        var newItem = new ZuneTrackCollectionItem
+                        {
+                            Track = x,
+                            ParentCollection = Collection,
+                            ShouldShowArtistList = x.Artists.Count > 1 && (Collection is IArtist or IAlbum)
+                        };
+
+                        AttachEvents(newItem);
+                        return newItem;
+                    });
+                    _trackItems.InsertOrAddRange(e.NewStartingIndex, data);
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove && e.OldItems is not null)
+                {
+                    foreach (var item in e.OldItems)
+                    {
+                        var target = TrackItems.FirstOrDefault(x => x.Track == item);
+                        if (target is not null)
+                        {
+                            _trackItems.Remove(target);
+                            DetachEvents(target);
+                        }
+                    }
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move && e.OldItems is not null)
+                {
+                    for (var i = 0; i < e.OldItems.Count; i++)
+                        _trackItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+                {
+                    foreach (var item in TrackItems)
+                        DetachEvents(item);
+
+                    _trackItems.Clear();
+                }
+            }
+
+            _ = SortTrackAccordingToCurrentStateAsync();
+        }
+
+        private async Task SortTrackAccordingToCurrentStateAsync()
         {
             if (Collection is null || PART_SortLbl is null)
-            {
                 return;
+
+            if (!await OwlCore.Flow.Debounce($"{nameof(SortTrackAccordingToCurrentStateAsync)}.{GetHashCode()}", TimeSpan.FromSeconds(500)))
+                return;
+
+            Collection.Tracks.CollectionChanged -= Tracks_CollectionChanged;
+
+            using (await _collectionModifyMutex.DisposableWaitAsync())
+            {
+                switch (SortState)
+                {
+                    case ZuneSortState.AZ:
+                        Collection.SortTrackCollection(TrackSortingType.Alphanumerical, SortDirection.Descending);
+                        SortState = ZuneSortState.ZA;
+                        PART_SortLbl.Text = "Z-A";
+                        break;
+                    case ZuneSortState.ZA:
+                        Collection.SortTrackCollection(TrackSortingType.Alphanumerical, SortDirection.Ascending);
+                        SortState = ZuneSortState.AZ;
+                        PART_SortLbl.Text = "A-Z";
+                        break;
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
 
-            switch (SortState)
-            {
-                case ZuneSortState.AZ:
-                    Collection.SortTrackCollection(Sdk.ViewModels.TrackSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Descending);
-                    SortState = ZuneSortState.ZA;
-                    PART_SortLbl.Text = "Z-A";
-                    break;
-                case ZuneSortState.ZA:
-                    Collection.SortTrackCollection(Sdk.ViewModels.TrackSortingType.Alphanumerical, Sdk.ViewModels.SortDirection.Ascending);
-                    SortState = ZuneSortState.AZ;
-                    PART_SortLbl.Text = "A-Z";
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
+            Collection.Tracks.CollectionChanged += Tracks_CollectionChanged;
         }
 
-        private void Track_ArtistItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> addedItems,
-                                             IReadOnlyList<OwlCore.Events.CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private async void Track_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
+            await _collectionModifyMutex.WaitAsync();
+
             // If any track in the parent collection has more than 2 artists,
             // ALL track items should display their artist list, including this instance.
             var track = (ITrack)sender;
 
-            _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
-            Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+            lock (_lastKnownTrackArtistsCount)
+            {
+                _lastKnownTrackArtistsCount[track.Id] += addedItems.Count - removedItems.Count;
+                Guard.IsGreaterThanOrEqualTo(_lastKnownTrackArtistsCount[track.Id], 0);
+            }
 
             foreach (var item in _trackItems)
             {
@@ -307,7 +318,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 }
             }
 
-            bool showArtists = false;
+            bool showArtists;
 
             // Fast path
             if (track.TotalArtistItemsCount > 2)
@@ -327,6 +338,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         MAKE_ARTIST_DECISION:
             if (showArtists)
                 _trackItems.All(x => x.ShouldShowArtistList = true);
+
+            _collectionModifyMutex.Release();
         }
 
         private void ZuneTrackCollection_Unloaded(object sender, RoutedEventArgs e)
@@ -337,7 +350,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 DetachEvents(item);
         }
 
-        private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Item_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ZuneTrackCollectionItem.ShouldShowArtistList))
                 OnPropertyChanged(nameof(AllTrackArtistsAreTheSame));

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Collections;
@@ -11,7 +11,6 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
@@ -29,6 +28,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
     public partial class ZuneAlbumCollection : CollectionControl<ZuneAlbumCollectionItem, ZuneAlbumItem>
     {
         private ResourceLoader _loacalizationService;
+        private readonly SemaphoreSlim _collectionModifyMutex = new(1, 1);
 
         private ObservableCollection<ZuneAlbumCollectionItem> _albumItems = new();
 
@@ -148,7 +148,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 return;
 
             if (!Collection.PopulateMoreAlbumsCommand.IsRunning && Collection.TotalAlbumItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         /// <inheritdoc/>
@@ -207,36 +207,39 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// <inheritdoc/>
         protected async Task OnCollectionChangedAsync(IAlbumCollectionViewModel? oldValue, IAlbumCollectionViewModel? newValue)
         {
-            _albumItems.Clear();
-            if (newValue is not null)
+            using (await _collectionModifyMutex.DisposableWaitAsync())
             {
-                if (newValue.InitAlbumCollectionAsyncCommand.IsRunning && newValue.InitAlbumCollectionAsyncCommand.ExecutionTask is not null)
-                    await newValue.InitAlbumCollectionAsyncCommand.ExecutionTask;
-                else if (newValue.InitAlbumCollectionAsyncCommand.CanExecute(null))
-                    await newValue.InitAlbumCollectionAsyncCommand.ExecuteAsync(null);
-
-                if (oldValue is IAlbumCollectionViewModel oldCollection)
+                _albumItems.Clear();
+                if (newValue is not null)
                 {
-                    oldCollection.Albums.CollectionChanged -= Album_CollectionChanged;
-                }
-
-                foreach (var item in newValue.Albums)
-                {
-                    var newItems = new ZuneAlbumCollectionItem
+                    if (oldValue is IAlbumCollectionViewModel oldCollection)
                     {
-                        ParentCollection = newValue,
-                        Album = (AlbumViewModel)item,
-                    };
+                        oldCollection.Albums.CollectionChanged -= Album_CollectionChanged;
+                    }
 
-                    _albumItems.Add(newItems);
+                    if (newValue.InitAlbumCollectionAsyncCommand.IsRunning && newValue.InitAlbumCollectionAsyncCommand.ExecutionTask is not null)
+                        await newValue.InitAlbumCollectionAsyncCommand.ExecutionTask;
+                    else if (newValue.InitAlbumCollectionAsyncCommand.CanExecute(null))
+                        await newValue.InitAlbumCollectionAsyncCommand.ExecuteAsync(null);
+
+                    foreach (var item in newValue.Albums)
+                    {
+                        var newItems = new ZuneAlbumCollectionItem
+                        {
+                            ParentCollection = newValue,
+                            Album = (AlbumViewModel)item,
+                        };
+
+                        _albumItems.Add(newItems);
+                    }
+
+                    newValue.Albums.CollectionChanged += Album_CollectionChanged;
                 }
 
-                newValue.Albums.CollectionChanged += Album_CollectionChanged;
-            }
-
-            if (oldValue is not null)
-            {
-                oldValue.Albums.CollectionChanged -= Album_CollectionChanged;
+                if (oldValue is not null)
+                {
+                    oldValue.Albums.CollectionChanged -= Album_CollectionChanged;
+                }
             }
 
             if (Collection?.Albums.Count == 1)
@@ -250,47 +253,59 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private void Album_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Album_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            using (await _collectionModifyMutex.DisposableWaitAsync())
             {
-                _albumItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
                 {
-                    var newItem = new ZuneAlbumCollectionItem
+                    if (e.NewItems is null)
+                        return;
+
+                    _albumItems.InsertOrAddRange(e.NewStartingIndex, e.NewItems.Cast<object>().Select(x =>
                     {
-                        Album = (AlbumViewModel)x,
-                        ParentCollection = Collection
-                    };
+                        var newItem = new ZuneAlbumCollectionItem
+                        {
+                            Album = (AlbumViewModel)x,
+                            ParentCollection = Collection
+                        };
 
-                    return newItem;
-                }));
-            }
+                        return newItem;
+                    }));
+                }
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
                 {
-                    var target = AlbumItems.FirstOrDefault(x => x.Album == item);
-                    if (target is not null)
+                    if (e.OldItems is null)
+                        return;
+
+                    foreach (var item in e.OldItems)
                     {
-                        _albumItems.Remove(target);
+                        var target = AlbumItems.FirstOrDefault(x => x.Album == item);
+                        if (target is not null)
+                        {
+                            _albumItems.Remove(target);
+                        }
                     }
                 }
-            }
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
-            {
-                for (var i = 0; i < e.OldItems.Count; i++)
-                    _albumItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
-            }
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
+                {
+                    if (e.OldItems is null)
+                        return;
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
-            {
-                _albumItems.Clear();
-            }
+                    for (var i = 0; i < e.OldItems.Count; i++)
+                        _albumItems.Move(i + e.OldStartingIndex, i + e.NewStartingIndex);
+                }
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
-                throw new NotImplementedException();
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+                {
+                    _albumItems.Clear();
+                }
+
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
+                    throw new NotImplementedException();
+            }
         }
 
         private void ZuneAlbumCollection_Unloaded(object sender, RoutedEventArgs e)

@@ -206,24 +206,24 @@
             </Grid.ColumnDefinitions>
 
             <zuneCollections:ZuneArtistCollection x:Name="ArtistCollection" Collection="{Binding DataRoot.Library}"
-                                          Margin="8,0,-3,0" Grid.Column="0"
-                                          SelectionChanged="ArtistSelected"/>
+                                                  Margin="8,0,-3,0" Grid.Column="0"
+                                                  SelectionChanged="ArtistSelected"/>
 
             <zuneCollections:ZuneAlbumCollection x:Name="ZuneAlbumCollection" Collection="{Binding DataRoot.Library}"
-                                                   Margin="8,0" Grid.Column="1"
-                                                   SelectionChanged="AlbumSelected"/>
+                                                 Margin="8,0" Grid.Column="1"
+                                                 SelectionChanged="AlbumSelected"/>
 
             <collections:PlaylistCollection x:Name="PlaylistCollection" Collection="{Binding DataRoot.Library}"
                                             Margin="8,0" Grid.Column="3" Visibility="Collapsed"
                                             SelectionChanged="PlaylistSelected"/>
 
             <zuneCollections:ZuneTrackCollection x:Name="TrackCollection" Collection="{Binding DataRoot.Library}"
-                                         Style="{StaticResource ZuneDesktopTrackListControlStyle}"
-                                         Margin="0,0,8,0" Grid.Column="2"/>
+                                                 Style="{StaticResource ZuneDesktopTrackListControlStyle}"
+                                                 Margin="0,0,8,0" Grid.Column="2"/>
 
             <zuneCollections:ZuneTrackCollection x:Name="TrackTable" Collection="{Binding DataRoot.Library}"
-                                         Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
-                                         Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
+                                                 Style="{StaticResource ZuneDesktopTrackTableControlStyle}"
+                                                 Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
 
             <local:PlaylistDetailsPane x:Name="DetailsPane" Margin="8,0" Grid.Column="3" Visibility="Collapsed"/>
 

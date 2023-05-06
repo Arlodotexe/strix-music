@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
@@ -137,31 +137,31 @@ namespace StrixMusic.Sdk.AdapterModels
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void AlbumCollectionMap_ItemsCountChanged(object sender, int e)
+        private void AlbumCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalAlbumItemsCount = e;
             AlbumItemsCountChanged?.Invoke(this, e);
         }
 
-        private void TrackCollectionMap_ItemsCountChanged(object sender, int e)
+        private void TrackCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalTrackCount = e;
             TracksCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void GenreCollectionMap_ItemsCountChanged(object sender, int e)
+        private void GenreCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalGenreCount = e;
             GenresCountChanged?.Invoke(this, e);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
@@ -537,25 +537,25 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreArtistCollectionItem? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollectionItem other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreAlbumCollectionItem? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollection other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreAlbumCollection? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreTrackCollection? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreGenreCollection? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreArtist);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICoreArtist);
 
         /// <inheritdoc />
         public override bool Equals(object? obj)

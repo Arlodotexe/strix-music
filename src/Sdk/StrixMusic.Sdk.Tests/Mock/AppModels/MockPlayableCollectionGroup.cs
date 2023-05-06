@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -838,4 +838,5 @@ public class MockPlayableCollectionGroup : IPlayableCollectionGroup
     public bool Equals(ICorePlayableCollectionGroup? other) => false;
 
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

@@ -1,8 +1,5 @@
 ﻿using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
-using StrixMusic.Shells.Groove.Messages.Navigation.Pages.Abstract;
 using StrixMusic.Shells.Groove.ViewModels.Pages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -10,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shells.Groove.TemplateSelectors
 {
     /// <summary>
-    /// A <see cref="DataTemplateSelector"/> for the <see cref="GrooveShell"/> based on the ViewModel.
+    /// A <see cref="DataTemplateSelector"/> for the <see cref="GrooveMusic"/> based on the ViewModel.
     /// </summary>
     public class MainContentTemplateSelector : DataTemplateSelector
     {

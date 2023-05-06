@@ -1,5 +1,5 @@
-﻿using StrixMusic.Sdk.WinUI.Controls;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
+using StrixMusic.Sdk.WinUI.Controls.Items;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Items
 {

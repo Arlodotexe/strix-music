@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LICENSE" />
+    <None Remove="LICENSE.LESSER" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack" Version="2.5.108" />
+    <PackageReference Include="OwlCore" Version="0.2.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+  </ItemGroup>
+
+</Project>

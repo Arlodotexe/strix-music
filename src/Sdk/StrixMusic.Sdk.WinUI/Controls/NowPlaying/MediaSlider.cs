@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading;
-using Windows.System.Threading;
-using Windows.UI.Xaml;
-
-namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
+﻿namespace StrixMusic.Sdk.WinUI.Controls.NowPlaying
 {
     /// <summary>
     /// A slider meant to be used for media playback.

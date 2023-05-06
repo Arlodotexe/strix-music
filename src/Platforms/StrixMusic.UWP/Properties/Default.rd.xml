@@ -16,22 +16,29 @@
 -->
 
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
-	<Application>
-		<!--
+  <Application>
+    <!--
       An Assembly element with Name="*Application*" applies to all assemblies in
       the application package. The asterisks are not wildcards.
     -->
-    <Assembly Name="NLog" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-		<Assembly Name="Microsoft.Extensions.Logging.Abstractions" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-    <Assembly Name="Microsoft.Extensions.Logging" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-		<Assembly Name="Microsoft.Extensions.Options" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-		<Namespace Name="Microsoft.Graph" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-		<Assembly Name="Microsoft.Graph.Core" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
-	</Application>
+    <Assembly Name="*Application*" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
 
-	<Library Name="Microsoft.Extensions.DependencyInjection">
-		<Type Name="Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope">
-			<Property Name="ResolvedServices" Dynamic="Required" />
-		</Type>
-	</Library>
+    <Assembly Name="NLog" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Assembly Name="Microsoft.Extensions.Logging.Abstractions" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Assembly Name="Microsoft.Extensions.Logging" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Assembly Name="Microsoft.Extensions.Options" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Namespace Name="Microsoft.Graph" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Assembly Name="Microsoft.Graph.Core" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Assembly Name="OwlCore.Kubo" Dynamic="Required PublicAndInternal"  Serialize="Required PublicAndInternal"/>
+  </Application>
+
+  <Library Name="Microsoft.Extensions.DependencyInjection">
+    <Type Name="Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope">
+      <Property Name="ResolvedServices" Dynamic="Required" />
+    </Type>
+  </Library>
+
+  <Library Name="OwlCore.Kubo">
+    <Type Name="OwlCore.Kubo.DhtRoutingMode" Dynamic="Required All" />
+  </Library>
 </Directives>

@@ -1,0 +1,4 @@
+- name: Introduction
+  href: index.md
+- name: Add a new music source
+  href: add-music-source.md

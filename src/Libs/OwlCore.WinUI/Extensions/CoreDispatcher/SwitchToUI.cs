@@ -1,68 +1,68 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Markup;
 
-namespace OwlCore.WinUI.Extensions
+namespace OwlCore.Extensions;
+
+/// <summary>
+/// Provides extensions for <see cref="CoreDispatcher"/>
+/// </summary>
+public static class CoreDispatcherExtensions
 {
     /// <summary>
-    /// Provides extensions for <see cref="CoreDispatcher"/>
+    /// Continues the current async method on the UI thread.
     /// </summary>
-    public static class CoreDispatcherExtensions
+    /// <param name="dispatcher">The CoreDispatcher to use for dispatching.</param>
+    /// <returns></returns>
+    public static SwitchToUIAwaitable SwitchToAsync(this CoreDispatcher dispatcher)
     {
+        return new SwitchToUIAwaitable(dispatcher);
+    }
+
+    /// <summary>
+    /// An extension to switch to the UI thread.
+    /// </summary>
+    public readonly struct SwitchToUIAwaitable : INotifyCompletion
+    {
+        private readonly CoreDispatcher _dispatcher;
+
         /// <summary>
-        /// Continues the current async method on the UI thread.
+        /// Creates a new instance of <see cref="SwitchToUIAwaitable"/>.
         /// </summary>
-        /// <param name="dispatcher">The CoreDispatcher to use for dispatching.</param>
-        /// <returns></returns>
-        public static SwitchToUIAwaitable SwitchToUI(this CoreDispatcher dispatcher)
+        /// <param name="dispatcher"></param>
+        public SwitchToUIAwaitable(CoreDispatcher dispatcher)
         {
-            return new SwitchToUIAwaitable(dispatcher);
+            _dispatcher = dispatcher;
         }
 
         /// <summary>
-        /// An extension to switch to the UI thread.
+        /// Gets the current awaiter.
         /// </summary>
-        public readonly struct SwitchToUIAwaitable : INotifyCompletion
+        public SwitchToUIAwaitable GetAwaiter()
         {
-            private readonly CoreDispatcher _dispatcher;
+            return this;
+        }
 
-            /// <summary>
-            /// Creates a new instance of <see cref="SwitchToUIAwaitable"/>.
-            /// </summary>
-            /// <param name="dispatcher"></param>
-            public SwitchToUIAwaitable(CoreDispatcher dispatcher)
-            {
-                _dispatcher = dispatcher;
-            }
+        /// <summary>
+        /// Gets the result of the task.
+        /// </summary>
+        public void GetResult()
+        {
+        }
 
-            /// <summary>
-            /// Gets the current awaiter.
-            /// </summary>
-            public SwitchToUIAwaitable GetAwaiter()
-            {
-                return this;
-            }
+        /// <summary>
+        /// Gets the current completion state.
+        /// </summary>
+        public bool IsCompleted => _dispatcher.HasThreadAccess;
 
-            /// <summary>
-            /// Gets the result of the task.
-            /// </summary>
-            public void GetResult()
-            {
-            } 
-
-            /// <summary>
-            /// Gets the current completion state.
-            /// </summary>
-            public bool IsCompleted => _dispatcher.HasThreadAccess;
-
-            /// <summary>
-            /// Fires when the task is completed.
-            /// </summary>
-            /// <param name="continuation">The action to perform when continuing.</param>
-            public void OnCompleted(Action continuation)
-            {
-                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => continuation());
-            }
+        /// <summary>
+        /// Fires when the task is completed.
+        /// </summary>
+        /// <param name="continuation">The action to perform when continuing.</param>
+        public void OnCompleted(Action continuation)
+        {
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => continuation());
         }
     }
 }

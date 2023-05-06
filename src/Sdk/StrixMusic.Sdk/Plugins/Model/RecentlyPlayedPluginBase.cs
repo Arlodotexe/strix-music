@@ -28,7 +28,7 @@ public class RecentlyPlayedPluginBase : PlayableCollectionGroupPluginBase, IMode
     }
 
     /// <inheritdoc />
-    public virtual bool Equals(ICoreRecentlyPlayed other) => Inner.Equals(other);
+    public virtual bool Equals(ICoreRecentlyPlayed? other) => Inner.Equals(other!);
 
     /// <inheritdoc/>
     public new IReadOnlyList<ICoreRecentlyPlayed> Sources => ((IMerged<ICoreRecentlyPlayed>)Inner).Sources;

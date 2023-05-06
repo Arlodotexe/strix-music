@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Messages.Navigation.Pages;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -27,7 +25,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency property for <see cref="ArtistCollection"/>.F
         /// </summary>
         public static readonly DependencyProperty ArtistCollectionProperty =
-            DependencyProperty.Register(nameof(ArtistCollection), typeof(IArtistCollectionViewModel), typeof(GrooveArtistCollection), new PropertyMetadata(null, (d, e) => d.Cast<GrooveArtistCollection>().OnArtistCollectionChanged()));
+            DependencyProperty.Register(nameof(ArtistCollection), typeof(IArtistCollectionViewModel), typeof(GrooveArtistCollection), new PropertyMetadata(null, (d, e) => ((GrooveArtistCollection)d).OnArtistCollectionChanged()));
 
         /// <summary>
         /// The artist collection to display.

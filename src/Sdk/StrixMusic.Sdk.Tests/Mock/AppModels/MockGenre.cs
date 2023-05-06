@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -14,4 +13,5 @@ public class MockGenre : IGenre
 
     public IReadOnlyList<ICoreGenre> Sources { get; } = new List<ICoreGenre>();
     public event EventHandler? SourcesChanged;
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

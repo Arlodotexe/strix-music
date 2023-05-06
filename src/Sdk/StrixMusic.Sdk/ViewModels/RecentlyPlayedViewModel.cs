@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IRecentlyPlayed"/>.
     /// </summary>
-    public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed
+    public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed, IDelegatable<IRecentlyPlayed>
     {
         private readonly IRecentlyPlayed _recentlyPlayed;
 
@@ -27,10 +28,13 @@ namespace StrixMusic.Sdk.ViewModels
             _recentlyPlayed = recentlyPlayed;
         }
 
+        /// <inheritdoc/>
+        IRecentlyPlayed IDelegatable<IRecentlyPlayed>.Inner => _recentlyPlayed;
+
         /// <inheritdoc />
         IReadOnlyList<ICoreRecentlyPlayed> IMerged<ICoreRecentlyPlayed>.Sources => this.GetSources<ICoreRecentlyPlayed>();
 
         /// <inheritdoc />
-        public bool Equals(ICoreRecentlyPlayed other) => _recentlyPlayed.Equals(other);
+        public bool Equals(ICoreRecentlyPlayed? other) => _recentlyPlayed.Equals(other!);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
@@ -7,9 +6,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -300,6 +301,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public Task StartDownloadOperationAsync(DownloadOperation operation, CancellationToken cancellationToken = default) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

@@ -9,9 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
-using OwlCore.Provisos;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
@@ -61,7 +60,12 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             _collection = collection;
             _config = config;
-            Guard.IsGreaterThan(config.CoreRanking.Count, 0);
+
+            if (config.CoreRanking.Count == 0 && config.MergedCollectionSorting == MergedCollectionSorting.Ranked)
+            {
+                config.CoreRanking = collection.Sources.Select(x => x.SourceCore.InstanceId).ToList();
+            }
+            
             AttachEvents();
         }
 
@@ -173,11 +177,6 @@ namespace StrixMusic.Sdk.AdapterModels
             }
 
             _initCompletionSource = new TaskCompletionSource<bool>();
-
-            _config.CoreRankingChanged += ConfigOnCoreRankingChanged;
-            _config.MergedCollectionSortingChanged += ConfigOnMergedCollectionSortingChanged;
-
-            Guard.HasSizeGreaterThan(_config.CoreRanking, 0, nameof(_config.CoreRanking));
 
             _initCompletionSource.SetResult(true);
             IsInitialized = true;
@@ -360,7 +359,7 @@ namespace StrixMusic.Sdk.AdapterModels
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
+        private void MergedCollectionMap_ItemsChanged<T>(object? sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreModel
         {
             Guard.IsGreaterThan(addedItems.Count + removedItems.Count, 0, "Total changed items count");
@@ -375,7 +374,7 @@ namespace StrixMusic.Sdk.AdapterModels
             }
         }
 
-        private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object sender)
+        private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object? sender)
             where T : class, ICollectionItemBase, ICoreModel
         {
             var added = new List<CollectionChangedItem<TCollectionItem>>();
@@ -387,6 +386,8 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 if (!(item.Data is TCoreCollectionItem collectionItemData))
                     return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
+
+                Guard.IsNotNull(sender);
 
                 // TODO: Sorting is not handled.
                 var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
@@ -423,7 +424,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 foreach (var mergedData in _mergedMappedData)
                 {
-                    foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
+                    foreach (var mergedSource in ((IMerged<TCoreCollectionItem>)mergedData.CollectionItem).Sources)
                     {
                         if (mappedData.CollectionItem != mergedSource)
                             continue;
@@ -434,7 +435,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                         mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
 
-                        if (mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources.Count == 0)
+                        if (((IMerged<TCoreCollectionItem>)mergedData.CollectionItem).Sources.Count == 0)
                         {
                             var index = _mergedMappedData.IndexOf(mergedData);
                             _mergedMappedData.Remove(mergedData);
@@ -458,7 +459,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// We emit CountChanged (for the MergedCollectionMap) when items are changed.
         /// TODO: Maybe we can use it this event verify the size of the collection is correct?
         /// </remarks>
-        private void MergedCollectionMap_CountChanged(object sender, int e)
+        private void MergedCollectionMap_CountChanged(object? sender, int e)
         {
             // If we haven't evaluated item count ourselves by merging items together yet
             if (_mergedMappedData.Count == 0)
@@ -695,7 +696,6 @@ namespace StrixMusic.Sdk.AdapterModels
 
         private async IAsyncEnumerable<TCollectionItem> GetItemsByRank(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Guard.IsGreaterThan(_config.CoreRanking.Count, 0, nameof(_config.CoreRanking.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
             var mappedData = BuildSortedMapRanked(_sortedMap.Count);
@@ -733,7 +733,7 @@ namespace StrixMusic.Sdk.AdapterModels
                     itemLimitForSource = itemsCountForSource - currentSource.OriginalIndex;
                 }
 
-                var remainingItemsForSource = await OwlCore.APIs.GetAllItemsAsync<TCoreCollectionItem>(
+                var remainingItemsForSource = await OwlCore.Flow.GetPaginatedItemsAsync<TCoreCollectionItem>(
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
                     async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync(cancellationToken).AsTask());
@@ -789,7 +789,7 @@ namespace StrixMusic.Sdk.AdapterModels
 
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem, _config);
 
-                bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
+                bool exists = mergedItemMaps.TryGetValue(mergedInto, out var mergedMapItems);
 
                 mergedMapItems ??= new List<MappedData>();
                 mergedMapItems.Add(item);
@@ -814,7 +814,7 @@ namespace StrixMusic.Sdk.AdapterModels
         {
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
-            foreach (var instanceId in _config.CoreRanking)
+            foreach (var instanceId in _collection.Sources.Select(x => x.SourceCore.InstanceId))
             {
                 // Find source by instance id.
                 var source = Sources.FirstOrDefault(x => x.SourceCore.InstanceId == instanceId);
@@ -840,22 +840,6 @@ namespace StrixMusic.Sdk.AdapterModels
             }
 
             return itemsMap;
-        }
-
-        private Task<MergedCollectionSorting> GetSortingMethod()
-        {
-            return Task.FromResult(MergedCollectionSorting.Ranked);
-
-            //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
-        }
-
-        private void ConfigOnMergedCollectionSortingChanged(object sender, MergedCollectionSorting e)
-        {
-        }
-
-        private void ConfigOnCoreRankingChanged(object sender, IReadOnlyList<string> e)
-        {
-            Guard.IsGreaterThan(e.Count, 0);
         }
 
         private async Task ResetDataRanked()
@@ -944,7 +928,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <remarks>
         /// <typeparamref name="TCoreCollection"/> and <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/> have no overlap and never equal each other, this method always returns false.
         /// </remarks>
-        public bool Equals(TCoreCollection other) => false;
+        public bool Equals(TCoreCollection? other) => false;
 
         private class MappedData
         {

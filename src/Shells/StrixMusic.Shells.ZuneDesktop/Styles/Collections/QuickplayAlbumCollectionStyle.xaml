@@ -1,47 +1,50 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
-    xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:a="using:OwlCore.WinUI.Attached"
-    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
-    xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.QuickplayAlbumCollectionStyle">
+	x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.QuickplayAlbumCollectionStyle"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:a="using:OwlCore.WinUI.Attached"
+	xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
+	xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
+	xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+	xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
+	xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
+	xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
-    <ResourceDictionary.MergedDictionaries>
-        <itemstyles:AlbumItemStyle/>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
-    </ResourceDictionary.MergedDictionaries>
+	<ResourceDictionary.MergedDictionaries>
+		<itemstyles:AlbumItemStyle />
+		<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml" />
+	</ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">
-        <!--<Rectangle Fill="#353535"/>-->
-        <strix:SafeImage ImageCollection="{x:Bind}"/>
-    </DataTemplate>
+	<DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">
+		<!--<Rectangle Fill="#353535"/>-->
+		<strix:SafeImage ImageCollection="{x:Bind}" />
+	</DataTemplate>
 
-    <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-        <ItemsControl ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
-                      ItemsSource="{x:Bind Albums}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <quickplay:QuickplayPanel BaseTileHeight="48" VerticalAlignment="Top"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-    </DataTemplate>
+	<DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="collections:AlbumCollection">
+		<Grid>
+			<ItemsControl ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}" ItemsSource="{x:Bind Collection.Albums, Mode=OneWay}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<quickplay:QuickplayPanel VerticalAlignment="Top" BaseTileHeight="48" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+		</Grid>
+	</DataTemplate>
 
-    <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="collections:AlbumCollection">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="collections:AlbumCollection">
-                        <ContentControl ContentTemplate="{StaticResource QuickplayAlbumCollectionDataTemplate}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
+	<Style x:Key="QuickplayAlbumCollectionStyle" TargetType="collections:AlbumCollection">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="collections:AlbumCollection">
+						<ContentControl
+							HorizontalContentAlignment="Stretch"
+							VerticalContentAlignment="Stretch"
+							ContentTemplate="{StaticResource QuickplayAlbumCollectionDataTemplate}" />
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
 </ResourceDictionary>

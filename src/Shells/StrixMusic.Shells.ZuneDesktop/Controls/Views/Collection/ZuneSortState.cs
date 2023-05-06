@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
+﻿namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
     /// <summary>
     /// Available sorting states for Zune Collection View.

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -45,13 +44,13 @@ public class UrlPluginWrapper : IUrl, IPluginWrapper
         url.SourcesChanged -= OnSourcesChanged;
     }
 
-    private void OnSourcesChanged(object sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
+    private void OnSourcesChanged(object? sender, EventArgs e) => SourcesChanged?.Invoke(sender, e);
 
     /// <inheritdoc/>
     public SdkModelPlugin ActivePlugins { get; } = new(PluginModelWrapperInfo.Metadata);
 
     /// <inheritdoc/>
-    public bool Equals(ICoreUrl other) => _url.Equals(other);
+    public bool Equals(ICoreUrl? other) => _url.Equals(other!);
 
     /// <inheritdoc/>
     public IReadOnlyList<ICoreUrl> Sources => _url.Sources;

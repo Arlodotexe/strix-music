@@ -12,7 +12,7 @@ namespace OwlCore.WinUI.Converters
     public sealed class DataTriggerBehaviorEnumConverter : IValueConverter
     {
         /// <inheritdoc/>
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object? Convert(object value, Type targetType, object parameter, string language)
         {
             return value.ToString();
         }

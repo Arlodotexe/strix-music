@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace System.Collections.Generic
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// A collection of extension methods.

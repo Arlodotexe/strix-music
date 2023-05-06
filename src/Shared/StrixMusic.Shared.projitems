@@ -15,67 +15,92 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ApplicationHealthManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApplicationHealthState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AdaptiveShells.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\AdvancedAppSettingsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppDiagnostics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentBundlePreloadHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppReleaseContentLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AppRoot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\AvailableMusicSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\CoreFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\IpfsAccess.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\About.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\AppRecovery.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\IntentionalCrashException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSourceNavigationParams.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\FolderSelector.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\DeviceCodeLogin.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\LandingPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\MusicSourcesSettingsEditor.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml.cs">
+      <DependentUpon>ShellSettingsEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Storage\FolderBrowser.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Storage\StorableItemTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\DiagnosticSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\IpfsSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\ShellSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml.cs">
+      <DependentUpon>ShellPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\StrixMusicShells.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CoreImage.xaml.cs">
       <DependentUpon>CoreImage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\LoggingSettingsPanel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\RecoverySettingsPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml.cs">
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
-      <DependentUpon>AppLoadingView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CoreModels\FileImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\QuipLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\AnnualRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Secrets.cs" />
-    <Compile Condition="'$(Configuration)' == 'Release'" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreManagementService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreInstanceEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\CoreRegistry.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreManagement\ICoreManagementService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettingsSerializerContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\CoreMetadata.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\FileSystemService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\AppSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\SystemMediaTransportControlsHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml.cs">
-      <DependentUpon>ShellSelector.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
-      <DependentUpon>SuperShell.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)TemplateSelectors\ServicesItemTemplateSelector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AvailableServicesItemViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoadedServicesItemViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellInfoViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellSelectorViewModel.cs" />
+    <Compile Condition="Exists('$(MSBuildThisFileDirectory)Secrets.Release.cs')" Include="$(MSBuildThisFileDirectory)Secrets.Release.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MediaPlayback\MediaPlayerElementAudioService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\LocalStorageCoreSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\OneDriveCoreSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\AppSettingsSerializerContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\MusicSourcesSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\InputMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\ShellMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppModels\ShellInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MediaPlayback\SystemMediaTransportControlsHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Settings\CoreSettingsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\AppRecovery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -83,21 +108,59 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Diagnostics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\Ipfs\IpfsSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\ConnectNewMusicSource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\ConfirmAndSave.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\LocalStorageCore\LandingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\FolderSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\DeviceCodeLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\ConnectNew\OneDriveCore\LandingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\MusicSources\MusicSourcesSettingsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Settings\ShellSettingsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Storage\FolderBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\StrixIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SuperShell.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\ShellPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,8 +169,22 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Bonkers.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\SegoeMDL2.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\adamdernis.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\amaidniazi.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\arlogodfrey.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\discord.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-dark.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\github.theme-light.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\ipfs.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\linkedin.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\mastodon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\matthew.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\patreon.theme-dark.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\patreon.theme-light.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\default.sandbox\1.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\GrooveMusic.10.21061.10121.0\1.png" />
@@ -131,23 +208,19 @@
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-us\Quips.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Common.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Time.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Startup.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\SuperShell.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Music.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Common.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Startup.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\SuperShell.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Music.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Time.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalFiles\Logo.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\Logo.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\logo-badge-white.png" />
   </ItemGroup>
@@ -156,8 +229,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Assets\Fonts\" />
+    <Folder Include="$(MSBuildThisFileDirectory)MediaPlayback\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\login.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\void.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
       <SubType>Designer</SubType>

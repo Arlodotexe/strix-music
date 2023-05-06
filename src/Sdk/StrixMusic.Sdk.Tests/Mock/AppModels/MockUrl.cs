@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -19,4 +18,6 @@ public class MockUrl : IUrl
     public IReadOnlyList<ICoreUrl> Sources => new List<ICoreUrl>();
 
     public event EventHandler? SourcesChanged;
+    
+    public IStrixDataRoot Root => new MockStrixDataRoot();
 }

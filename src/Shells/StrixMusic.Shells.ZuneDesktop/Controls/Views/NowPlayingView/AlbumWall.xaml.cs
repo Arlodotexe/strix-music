@@ -1,5 +1,4 @@
-﻿using System;
-using StrixMusic.Shells.ZuneDesktop.Helpers;
+﻿using StrixMusic.Shells.ZuneDesktop.Helpers;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

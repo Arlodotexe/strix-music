@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -123,6 +124,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public IReadOnlyList<ICoreImage> Sources => throw AccessedException;
 
             public bool Equals(ICoreImage? other) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

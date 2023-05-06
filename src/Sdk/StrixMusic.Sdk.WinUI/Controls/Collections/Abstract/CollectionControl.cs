@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using CommunityToolkit.Mvvm.Input;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
 {
@@ -28,20 +30,42 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
                 nameof(EmptyContent),
                 typeof(FrameworkElement),
                 typeof(CollectionControl<TData, TItem>),
-                new PropertyMetadata(null, (d, e) => ((CollectionControl<TData, TItem>)d).SetNoContentTemplate((FrameworkElement)e.NewValue)));
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// The backing <see cref="DependencyProperty"/> for the <see cref="ItemClickCommand"/> property.
+        /// </summary>
+        public static readonly DependencyProperty ItemClickCommandProperty =
+            DependencyProperty.Register(
+                nameof(ItemClickCommand),
+                typeof(FrameworkElement),
+                typeof(CollectionControl<TData, TItem>),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// The backing <see cref="DependencyProperty"/> for the <see cref="IsItemClickEnabled"/> property.
+        /// </summary>
+        public static readonly DependencyProperty IsItemClickEnabledProperty =
+            DependencyProperty.Register(
+                nameof(IsItemClickEnabled),
+                typeof(bool),
+                typeof(CollectionControl<TData, TItem>),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// The backing <see cref="DependencyProperty"/> for the <see cref="EmptyContentVisibility"/> property.
+        /// </summary>
+        public static readonly DependencyProperty EmptyContentVisibilityProperty =
+            DependencyProperty.Register(
+                nameof(EmptyContentVisibility),
+                typeof(Visibility),
+                typeof(CollectionControl<TData, TItem>),
+                new PropertyMetadata(Visibility.Collapsed));
 
         /// <summary>
         /// Fired when the selected item changes
         /// </summary>
         public event EventHandler<Events.SelectionChangedEventArgs<TData>>? SelectionChanged;
-
-        /// <inheritdoc/>
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            Loaded += CollectionControl_Loaded;
-        }
 
         /// <summary>
         /// The content to show when this <see cref="TData"/> is empty.
@@ -52,25 +76,44 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
             set => SetValue(EmptyContentProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the ItemClick command to invoke when an item is clicked.
+        /// </summary>
+        public ICommand ItemClickCommand
+        {
+            get => (ICommand)GetValue(ItemClickCommandProperty);
+            set => SetValue(ItemClickCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating if ItemClick should be enabled.
+        /// </summary>
+        public bool IsItemClickEnabled
+        {
+            get => (bool)GetValue(IsItemClickEnabledProperty);
+            set => SetValue(IsItemClickEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating if the <see cref="EmptyContent"/> should be shown.
+        /// </summary>
+        public Visibility EmptyContentVisibility
+        {
+            get => (Visibility)GetValue(EmptyContentVisibilityProperty);
+            set => SetValue(EmptyContentVisibilityProperty, value);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            Loaded += CollectionControl_Loaded;
+        }
+
         private Control? PART_Selector { get; set; }
 
         private ScrollViewer? PART_Scroller { get; set; }
-
-        private ContentPresenter? PART_EmptyContentPresenter { get; set; }
-
-        /// <summary>
-        /// Clears all selected items.
-        /// </summary>
-        public void ClearSelected()
-        {
-            if (PART_Selector == null)
-                return;
-
-            if (PART_Selector is Selector selector)
-                selector.SelectedItem = null;
-            else if (PART_Selector is DataGrid dataGrid)
-                dataGrid.SelectedItem = null;
-        }
 
         /// <summary>
         /// Perform incremental loading.
@@ -82,16 +125,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
         /// Checks if the collection has no content.
         /// </summary>
         protected abstract void CheckAndToggleEmpty();
-
-        /// <summary>
-        /// Sets the visibility of the empty content.
-        /// </summary>
-        protected void SetEmptyVisibility(Visibility visibility)
-        {
-            Guard.IsNotNull(PART_EmptyContentPresenter, nameof(PART_EmptyContentPresenter));
-
-            PART_EmptyContentPresenter.Visibility = visibility;
-        }
 
         private void AttachHandlers()
         {
@@ -116,13 +149,33 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
             if (PART_Selector == null || PART_Scroller == null)
                 return;
 
-            if (PART_Selector is Selector selector)
-                selector.SelectionChanged -= SelectedItemChanged;
-            else if (PART_Selector is DataGrid dataGrid)
-                dataGrid.SelectionChanged -= SelectedItemChanged;
-            else return;
+            switch (PART_Selector)
+            {
+                case Selector selector:
+                    selector.SelectionChanged -= SelectedItemChanged;
+                    break;
+                case DataGrid dataGrid:
+                    dataGrid.SelectionChanged -= SelectedItemChanged;
+                    break;
+                default:
+                    return;
+            }
 
             PART_Scroller.ViewChanged -= CollectionControl_ViewChanged;
+        }
+
+        /// <summary>
+        /// Clears all selected items.
+        /// </summary>
+        public void ClearSelected()
+        {
+            if (PART_Selector == null)
+                return;
+
+            if (PART_Selector is Selector selector)
+                selector.SelectedItem = null;
+            else if (PART_Selector is DataGrid dataGrid)
+                dataGrid.SelectedItem = null;
         }
 
         private void CollectionControl_Loaded(object sender, RoutedEventArgs e)
@@ -147,7 +200,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
             DetachHandlers();
         }
 
-        private void CollectionControl_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void CollectionControl_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
         {
             CheckScrollPosition();
         }
@@ -209,14 +262,6 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
                 return VisualTreeHelpers.FindVisualChildren<TItem>(selector.ContainerFromItem(data)).FirstOrDefault();
 
             return null;
-        }
-
-        private void SetNoContentTemplate(FrameworkElement frameworkElement)
-        {
-            if (PART_EmptyContentPresenter != null)
-            {
-                PART_EmptyContentPresenter.Content = frameworkElement;
-            }
         }
     }
 }

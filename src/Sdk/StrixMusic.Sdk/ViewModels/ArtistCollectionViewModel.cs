@@ -12,7 +12,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A wrapper for <see cref="IArtistCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class ArtistCollectionViewModel : ObservableObject, ISdkViewModel, IArtistCollectionViewModel, IImageCollectionViewModel
+    public class ArtistCollectionViewModel : ObservableObject, ISdkViewModel, IArtistCollectionViewModel, IImageCollectionViewModel, IDelegatable<IArtistCollection>
     {
         private readonly IArtistCollection _collection;
 
@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="collection">The <see cref="IArtistCollection"/> to wrap around.</param>
         public ArtistCollectionViewModel(IArtistCollection collection)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _collection = collection;
             
@@ -127,31 +127,31 @@ namespace StrixMusic.Sdk.ViewModels
             UrlsChanged -= ArtistCollectionViewModel_UrlsChanged;
         }
 
-        private void OnNameChanged(object sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
+        private void OnNameChanged(object? sender, string e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Name)), null);
 
-        private void OnDescriptionChanged(object sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
+        private void OnDescriptionChanged(object? sender, string? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(Description)), null);
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
+        private void OnPlaybackStateChanged(object? sender, PlaybackState e) => _syncContext.Post(_ => OnPropertyChanged(nameof(PlaybackState)), null);
 
-        private void OnDownloadInfoChanged(object sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
+        private void OnDownloadInfoChanged(object? sender, DownloadInfo e) => _syncContext.Post(_ => OnPropertyChanged(nameof(DownloadInfo)), null);
 
-        private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
+        private void ArtistCollectionViewModel_ImagesCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalImageCount)), null);
 
-        private void ArtistCollectionViewModel_UrlsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
+        private void ArtistCollectionViewModel_UrlsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalUrlCount)), null);
 
-        private void OnArtistItemsCountChanged(object sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
+        private void OnArtistItemsCountChanged(object? sender, int e) => _syncContext.Post(_ => OnPropertyChanged(nameof(TotalArtistItemsCount)), null);
 
-        private void OnLastPlayedChanged(object sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
+        private void OnLastPlayedChanged(object? sender, DateTime? e) => _syncContext.Post(_ => OnPropertyChanged(nameof(LastPlayed)), null);
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)), null);
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
+        private void OnIsChangeDurationAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)), null);
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
+        private void OnIsChangeNameAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)), null);
 
-        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)), null);
 
-        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object? sender, bool e) => _syncContext.Post(_ => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)), null);
 
         private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems) => _syncContext.Post(_ =>
         {
@@ -201,6 +201,9 @@ namespace StrixMusic.Sdk.ViewModels
                 SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
             }
         }, null);
+
+        /// <inheritdoc/>
+        IArtistCollection IDelegatable<IArtistCollection>.Inner => _collection;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged
@@ -492,7 +495,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateArtistsMutex))
+            using (await _populateArtistsMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateArtistsMutex.Release());
 
@@ -521,7 +524,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateImagesMutex))
+            using (await _populateImagesMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateImagesMutex.Release());
                 
@@ -536,7 +539,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreUrlsAsync(int limit, CancellationToken cancellationToken = default)
         {
-            using (await Flow.EasySemaphore(_populateUrlsMutex))
+            using (await _populateUrlsMutex.DisposableWaitAsync(cancellationToken))
             {
                 using var releaseReg = cancellationToken.Register(() => _populateUrlsMutex.Release());
                 
@@ -600,16 +603,16 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand InitImageCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);
+        public bool Equals(ICoreArtistCollectionItem? other) => _collection.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
+        public bool Equals(ICoreImageCollection? other) => _collection.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => _collection.Equals(other);
+        public bool Equals(ICoreUrlCollection? other) => _collection.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => _collection.Equals(other);
+        public bool Equals(ICoreArtistCollection? other) => _collection.Equals(other!);
 
         private Task ChangeNameInternalAsync(string? name, CancellationToken cancellationToken = default)
         {

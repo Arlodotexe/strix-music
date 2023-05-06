@@ -3,30 +3,34 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <LangVersion>10.0</LangVersion>
+    <PackageCertificateThumbprint>828E42B157F3BFACA11AE265A50B17A4FC07EDD2</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="OwlCore.Kubo">
+      <Version>0.11.2</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore.Storage">
+      <Version>0.8.3</Version>
+    </PackageReference>
     <PackageReference Include="CommunityToolkit.Common">
-      <Version>8.0.0</Version>
+      <Version>8.1.0</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Diagnostics">
-      <Version>8.0.0</Version>
+      <Version>8.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls">
+      <Version>0.0.17</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Labs.Uwp.SizerBase">
+      <Version>0.0.4</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.0.0</Version>
+      <Version>8.1.0</Version>
     </PackageReference>
-    <PackageReference Include="GitInfo">
-      <Version>2.2.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>4.5.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>4.5.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions">
-      <Version>6.0.0</Version>
+    <PackageReference Include="Microsoft.Graph.Core">
+      <Version>2.0.15</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <!-- 
@@ -34,28 +38,34 @@
 			you need to make sure that the version provided here matches https://github.com/onovotny/MSBuildSdkExtras/blob/master/Source/MSBuild.Sdk.Extras/DefaultItems/ImplicitPackages.targets#L11.
 			This is not an issue when libraries are referenced through nuget packages. See https://github.com/unoplatform/uno/issues/446 for more details.
 			-->
-      <Version>6.2.10</Version>
+      <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="NLog">
-      <Version>4.7.13</Version>
-    </PackageReference>
-    <PackageReference Include="NLog.Config">
-      <Version>4.7.15</Version>
+      <Version>5.1.3</Version>
     </PackageReference>
     <PackageReference Include="NLog.Extensions.Logging">
-      <Version>1.7.4</Version>
+      <Version>5.2.3</Version>
     </PackageReference>
     <PackageReference Include="OwlCore">
-      <Version>0.0.71</Version>
+      <Version>0.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore.ComponentModel">
+      <Version>0.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore.Storage.OneDrive">
+      <Version>0.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore.Storage.Uwp">
+      <Version>0.1.0</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
@@ -66,13 +76,7 @@
       <Version>6.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>6.0.5</Version>
-    </PackageReference>
-    <PackageReference Include="Uno.Diagnostics.Eventing">
-      <Version>2.1.0-dev.1</Version>
-    </PackageReference>
-    <PackageReference Include="Uno.UI.MSAL">
-      <Version>4.5.0-dev.509</Version>
+      <Version>7.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup>
@@ -113,10 +117,9 @@
     <SingleThreadNUTC>true</SingleThreadNUTC>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
-    <ShortcutGenericAnalysis>true</ShortcutGenericAnalysis>
     <!-- Can help stop runaway analysis of generic types and reduce overall generation requirements. -->
+    <ShortcutGenericAnalysis>true</ShortcutGenericAnalysis>
     <OutOfProcPDB>true</OutOfProcPDB>
-    <!-- Opt-in to generate PDB's out of process -->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -167,7 +170,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <OutputPath>bin\ARM64\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
@@ -184,13 +187,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <SingleThreadNUTC>true</SingleThreadNUTC>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
@@ -204,7 +204,6 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="StrixMusic.UWP_TemporaryKey.pfx" />
-    <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />
@@ -262,17 +261,9 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.OneDrive\StrixMusic.Cores.OneDrive.csproj">
-      <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
-      <Name>StrixMusic.Cores.OneDrive</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
-      <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
-      <Name>StrixMusic.Cores.Files</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cores\Files\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
-      <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
-      <Name>StrixMusic.Cores.LocalFiles</Name>
+    <ProjectReference Include="..\..\Cores\Storage\src\StrixMusic.Cores.Storage.csproj">
+      <Project>{58b8232f-c23e-46e4-a719-a244a9fd3d3b}</Project>
+      <Name>StrixMusic.Cores.Storage</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
@@ -297,6 +288,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Graph.Core">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.graph.core\2.0.14\lib\netstandard2.0\Microsoft.Graph.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

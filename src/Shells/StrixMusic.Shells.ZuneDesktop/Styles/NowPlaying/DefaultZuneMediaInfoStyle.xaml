@@ -8,7 +8,6 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:sdkShellControls="using:StrixMusic.Sdk.WinUI.Controls.Shells"
     xmlns:vm="using:StrixMusic.Sdk.ViewModels"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"

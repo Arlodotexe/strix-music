@@ -8,8 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
-using OwlCore.Extensions;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
@@ -113,19 +112,19 @@ namespace StrixMusic.Sdk.AdapterModels
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void PlaylistMap_ItemsCountChanged(object sender, int e)
+        private void PlaylistMap_ItemsCountChanged(object? sender, int e)
         {
             TotalPlaylistItemsCount = e;
             PlaylistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
@@ -141,7 +140,7 @@ namespace StrixMusic.Sdk.AdapterModels
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void PlaylistMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
+        private void PlaylistMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
         {
             PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -387,12 +386,12 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollectionItem other) => Equals(other as ICorePlaylistCollection);
+        public bool Equals(ICorePlaylistCollectionItem? other) => Equals(other as ICorePlaylistCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICorePlaylistCollection);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICorePlaylistCollection);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICorePlaylistCollection);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICorePlaylistCollection);
     }
 }

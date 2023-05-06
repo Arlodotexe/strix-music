@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
@@ -7,10 +6,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -785,6 +786,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public bool Equals(ICoreArtist? other) => throw AccessedException;
 
             public IPlayableCollectionGroup? RelatedItems => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

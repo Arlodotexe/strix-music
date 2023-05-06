@@ -3,6 +3,7 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ILibrary"/>.
     /// </summary>
-    public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary
+    public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary, IDelegatable<ILibrary>
     {
         private readonly ILibrary _library;
 
@@ -27,10 +28,13 @@ namespace StrixMusic.Sdk.ViewModels
             _library = library;
         }
 
+        /// <inheritdoc/>
+        ILibrary IDelegatable<ILibrary>.Inner => _library;
+
         /// <inheritdoc />
         IReadOnlyList<ICoreLibrary> IMerged<ICoreLibrary>.Sources => this.GetSources<ICoreLibrary>();
 
         /// <inheritdoc />
-        public bool Equals(ICoreLibrary other) => _library.Equals(other);
+        public bool Equals(ICoreLibrary? other) => _library.Equals(other!);
     }
 }

@@ -21,7 +21,7 @@ $dependencies = Get-Content -Path $dependencySourcesPath | ConvertFrom-Json -Err
 $dependency = $dependencies | Where-Object { $_.name -eq "docfx" };
 
 if ($skipDownload -eq $false) {
-    ./GatherDependencies.ps1 -outputPath $workingDirectory -dependencyName docfx -fallbackOnly:$fallbackOnly
+    & $PSScriptRoot/RestoreDependencies.ps1 -outputPath $workingDirectory -dependencyName docfx -fallbackOnly:$fallbackOnly
 }
 
 $archivePath = Resolve-Path -Relative -Path "$workingDirectory/$($dependency.outputPath)" -ErrorAction Stop;
@@ -43,11 +43,9 @@ if ($skipExtract -eq $false) {
     Write-Output "Building docs"
 
     try {
-        mono $workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json
-        mono $workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json
+        mono $workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json
         
-        ./../docs/build-scripts/unflatten-namespaces.ps1 ../docs/reference/api/toc.yml
-        mono $workingDirectory/docfx/docfx.exe build ../docs/docfx.json
+        mono $workingDirectory/docfx/docfx.exe build $PSScriptRoot/../docs/docfx.json
     }
     catch {
         Write-Warning "Errors detected with build. Ensure you've installed mono-devel from mono directly, not from your vendor. This dependency does not yet have a fallback source on IPFS."
@@ -58,11 +56,9 @@ if ($PSVersionTable.Platform -eq "Win32NT" -or $PSVersionTable.PSEdition -eq "De
     Write-Output "Windows detected"
     Write-Output "Building docs"
 
-    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json"
-    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata ../docs/docfx.json"
+    Invoke-Expression "$workingDirectory/docfx/docfx.exe metadata $PSScriptRoot/../docs/docfx.json"
     
-    ./../docs/build-scripts/unflatten-namespaces.ps1 ../docs/reference/api/toc.yml
-    Invoke-Expression "$workingDirectory/docfx/docfx.exe build ../docs/docfx.json"
+    Invoke-Expression "$workingDirectory/docfx/docfx.exe build $PSScriptRoot/../docs/docfx.json"
 }
 
 

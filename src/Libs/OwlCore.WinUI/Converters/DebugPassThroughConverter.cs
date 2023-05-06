@@ -1,6 +1,5 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace OwlCore.WinUI.Converters
 {

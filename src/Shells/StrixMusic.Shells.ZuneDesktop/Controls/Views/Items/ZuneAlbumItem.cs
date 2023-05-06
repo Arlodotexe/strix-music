@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 {
@@ -159,7 +156,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
 
         private void PART_PlayIcon_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            AlbumPlaybackTriggered?.Invoke(this, Album);
+            if (Album is not null)
+            {
+                AlbumPlaybackTriggered?.Invoke(this, Album as AlbumViewModel ?? new AlbumViewModel(Album));
+            }
         }
     }
 }

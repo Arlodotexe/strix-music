@@ -7,7 +7,6 @@
     xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
     xmlns:pagestyles="using:StrixMusic.Shells.Groove.Styles.Pages"
     xmlns:shellstyles="using:StrixMusic.Sdk.WinUI.Styles.Shells"
-    xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
     xmlns:dcollectionstyles="using:StrixMusic.Sdk.WinUI.Styles.Collections"
     xmlns:ditemstyles="using:StrixMusic.Sdk.WinUI.Styles.Items"
     xmlns:dviewstyles="using:StrixMusic.Sdk.WinUI.Styles.Views"
@@ -40,7 +39,6 @@
         <nowplayingstyles:MediaTransportStyle/>
 
         <!--Shell related styles-->
-        <shellstyles:NotificationAbstractUICollectionStyle/>
         <styles:GrooveNowPlayingBarStyle/>
 
         <!--Page related styles-->

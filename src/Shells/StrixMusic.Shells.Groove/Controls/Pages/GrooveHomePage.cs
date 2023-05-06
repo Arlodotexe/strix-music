@@ -1,5 +1,4 @@
-﻿using OwlCore.Extensions;
-using StrixMusic.Sdk.ViewModels;
+﻿using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -22,7 +21,7 @@ namespace StrixMusic.Shells.Groove.Controls.Pages
         /// The backing property for <see cref="Library"/>.
         /// </summary>
         public static readonly DependencyProperty LibraryProperty =
-            DependencyProperty.Register(nameof(Library), typeof(LibraryViewModel), typeof(GrooveHomePage), new PropertyMetadata(null, (d, e) => d.Cast<GrooveHomePage>().OnLibraryChanged()));
+            DependencyProperty.Register(nameof(Library), typeof(LibraryViewModel), typeof(GrooveHomePage), new PropertyMetadata(null, (d, e) => ((GrooveHomePage)d).OnLibraryChanged()));
 
         /// <summary>
         /// The library displayed in this view.

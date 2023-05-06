@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;

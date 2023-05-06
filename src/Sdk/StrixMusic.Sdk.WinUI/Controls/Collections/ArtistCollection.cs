@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -22,6 +21,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public ArtistCollection()
         {
             this.DefaultStyleKey = typeof(ArtistCollection);
+            DataContext = this;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         protected override void CheckAndToggleEmpty()
         {
             if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning && Collection.TotalArtistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private void ArtistCollection_Unloaded(object sender, RoutedEventArgs e)

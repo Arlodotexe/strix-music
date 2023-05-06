@@ -4,8 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using OwlCore.Events;
-using OwlCore.Provisos;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.CoreModels;
 

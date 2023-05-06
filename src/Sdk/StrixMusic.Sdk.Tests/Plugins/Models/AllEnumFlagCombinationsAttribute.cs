@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             return GetAllValues(_type).Select(x => new[] { x });
         }
 
-        public string GetDisplayName(MethodInfo methodInfo, object[] data)
+        public string GetDisplayName(MethodInfo methodInfo, object?[]? data)
         {
             CollectionAssert.AllItemsAreInstancesOfType(data, _type);
 

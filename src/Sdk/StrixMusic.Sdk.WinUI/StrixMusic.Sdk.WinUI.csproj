@@ -1,46 +1,47 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;uap10.0.19041</TargetFrameworks>
+    <TargetFrameworks>uap10.0.19041;net7.0</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <AssemblyName>StrixMusic.Sdk.WinUI</AssemblyName>
     <RootNamespace>StrixMusic.Sdk.WinUI</RootNamespace>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <LangVersion>9.0</LangVersion>
-	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="OwlCore" Version="0.0.71" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
-    <PackageReference Include="Uno.UI" Version="4.5.0-dev.509" />
+    <PackageReference Include="OwlCore" Version="0.2.1" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Controls\Shell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\NowPlayingBar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\PlayableCollectionGroupPivot.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Services\MediaPlayback\**" />
-    <EmbeddedResource Remove="Services\MediaPlayback\**" />
-    <None Remove="Services\MediaPlayback\**" />
-    <Page Remove="Services\MediaPlayback\**" />
-    <UpToDateCheckInput Remove="Services\MediaPlayback\**" />
-  </ItemGroup>
+  
   <ItemGroup>
     <None Remove="DefaultShell.xaml" />
     <None Remove="LICENSE.txt" />
     <None Remove="Resources.xaml" />
+    <None Remove="Strings\en\Common.resw" />
+    <None Remove="Strings\en\Music.resw" />
+    <None Remove="Strings\en\Time.resw" />
+    <None Remove="Strings\he\Common.resw" />
+    <None Remove="Strings\he\Music.resw" />
+    <None Remove="Strings\he\Time.resw" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
@@ -92,6 +93,14 @@
     <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en\Common.resw" />
+    <PRIResource Include="Strings\en\Music.resw" />
+    <PRIResource Include="Strings\en\Time.resw" />
+    <PRIResource Include="Strings\he\Common.resw" />
+    <PRIResource Include="Strings\he\Music.resw" />
+    <PRIResource Include="Strings\he\Time.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
     <ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
@@ -99,7 +108,7 @@
     <Compile Update="Styles\NowPlaying\MediaInfoStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="DefaultShell.xaml.cs">
+    <Compile Update="SandboxShell.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\Shells\NotificationAbstractUICollectionStyle.xaml.cs">
@@ -141,13 +150,15 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
+    <PackageReference Include="Uno.UI" Version="4.8.15" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.11" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.1-uno.2" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.1-uno.2" />

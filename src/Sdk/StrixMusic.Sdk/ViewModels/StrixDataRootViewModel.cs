@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -20,10 +20,11 @@ namespace StrixMusic.Sdk.ViewModels;
 /// <summary>
 /// A ViewModel wrapper for an instance of <see cref="IStrixDataRoot"/>.
 /// </summary>
-public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
+public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegatable<IStrixDataRoot>
 {
     private readonly IStrixDataRoot _dataRoot;
     private readonly ObservableCollection<IDevice> _devices;
+    private IReadOnlyList<ICore> _knownSources;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StrixDataRootViewModel"/> class.
@@ -31,6 +32,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public StrixDataRootViewModel(IStrixDataRoot dataRoot)
     {
         _dataRoot = dataRoot;
+        _knownSources = dataRoot.Sources.ToList();
 
         Library = new LibraryViewModel(dataRoot.Library);
 
@@ -48,6 +50,8 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
 
         _devices = new ObservableCollection<IDevice>(dataRoot.Devices.Select(x => new DeviceViewModel(x)));
 
+        Sources = new ObservableCollection<CoreViewModel>(dataRoot.Sources.Select(x => new CoreViewModel(x)));
+
         AttachEvents(dataRoot);
     }
 
@@ -58,6 +62,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         dataRoot.RecentlyPlayedChanged += OnRecentlyPlayedChanged;
         dataRoot.DiscoverablesChanged += OnDiscoverablesChanged;
         dataRoot.SearchChanged += OnSearchChanged;
+        dataRoot.SourcesChanged += DataRootOnSourcesChanged;
     }
 
     private void DetachEvents(IStrixDataRoot dataRoot)
@@ -67,40 +72,61 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
         dataRoot.RecentlyPlayedChanged -= OnRecentlyPlayedChanged;
         dataRoot.DiscoverablesChanged -= OnDiscoverablesChanged;
         dataRoot.SearchChanged -= OnSearchChanged;
+        dataRoot.SourcesChanged -= DataRootOnSourcesChanged;
+    }
+
+    private void DataRootOnSourcesChanged(object? sender, EventArgs e)
+    {
+        var previousSources = _knownSources;
+        var newSources = _dataRoot.Sources;
+
+        var addedSources = newSources.Except(previousSources).ToArray();
+        var removedSources = previousSources.Except(newSources);
+
+        foreach (var item in removedSources)
+            Sources.Remove(Sources.First(x => x.InstanceId == item.InstanceId));
+
+        foreach (var item in addedSources)
+            Sources.Add(new CoreViewModel(item));
+
+        _knownSources = newSources;
     }
 
     private void OnDevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<IDevice>> addedItems, IReadOnlyList<CollectionChangedItem<IDevice>> removedItems)
     {
         var wrappedAdded = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
         var wrappedRemoved = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceViewModel(x.Data), x.Index)).ToList();
-        
+
         _devices.ChangeCollection(wrappedAdded, wrappedRemoved);
         DevicesChanged?.Invoke(this, wrappedAdded, wrappedRemoved);
     }
 
-    private void OnDiscoverablesChanged(object sender, IDiscoverables e)
+    private void OnDiscoverablesChanged(object? sender, IDiscoverables e)
     {
         Discoverables = new DiscoverablesViewModel(e);
         DiscoverablesChanged?.Invoke(this, Discoverables);
     }
 
-    private void OnRecentlyPlayedChanged(object sender, IRecentlyPlayed e)
+    private void OnRecentlyPlayedChanged(object? sender, IRecentlyPlayed e)
     {
         RecentlyPlayed = new RecentlyPlayedViewModel(e);
         RecentlyPlayedChanged?.Invoke(this, RecentlyPlayed);
     }
 
-    private void OnPinsChanged(object sender, IPlayableCollectionGroup e)
+    private void OnPinsChanged(object? sender, IPlayableCollectionGroup e)
     {
         Pins = new PlayableCollectionGroupViewModel(e);
         PinsChanged?.Invoke(this, Pins);
     }
 
-    private void OnSearchChanged(object sender, ISearch e)
+    private void OnSearchChanged(object? sender, ISearch e)
     {
         Search = new SearchViewModel(e);
         SearchChanged?.Invoke(this, Search);
     }
+
+    /// <inheritdoc/>
+    IStrixDataRoot IDelegatable<IStrixDataRoot>.Inner => _dataRoot;
 
     /// <inheritdoc/>
     public event EventHandler? SourcesChanged
@@ -113,7 +139,12 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
 
     /// <inheritdoc/>
-    public IReadOnlyList<ICore> Sources => _dataRoot.Sources;
+    IReadOnlyList<ICore> IMerged<ICore>.Sources => _dataRoot.Sources;
+
+    /// <summary>
+    /// The sources used to create this data root.
+    /// </summary>
+    public ObservableCollection<CoreViewModel> Sources { get; }
 
     /// <inheritdoc/>
     public Task InitAsync(CancellationToken cancellationToken = new CancellationToken()) => _dataRoot.InitAsync(cancellationToken);
@@ -128,7 +159,12 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public IReadOnlyList<IDevice> Devices => _devices;
 
     /// <inheritdoc/>
-    public ILibrary Library { get; }
+    ILibrary IStrixDataRoot.Library => Library;
+
+    /// <summary>
+    /// A ViewModel wrapper for <see cref="IStrixDataRoot.Library"/>.
+    /// </summary>
+    public LibraryViewModel Library { get; }
 
     /// <inheritdoc/>
     public IPlayableCollectionGroup? Pins { get; private set; }
@@ -155,7 +191,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot
     public event EventHandler<IRecentlyPlayed>? RecentlyPlayedChanged;
 
     /// <inheritdoc/>
-    public bool Equals(ICore other) => _dataRoot.Equals(other);
+    public bool Equals(ICore? other) => _dataRoot.Equals(other!);
 
     /// <inheritdoc/>
     public ValueTask DisposeAsync()

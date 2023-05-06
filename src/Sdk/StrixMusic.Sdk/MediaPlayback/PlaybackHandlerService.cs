@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
@@ -60,13 +60,13 @@ namespace StrixMusic.Sdk.MediaPlayback
             audioPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
-        private void CurrentPlayerService_CurrentSourceChanged(object sender, PlaybackItem? e)
+        private void CurrentPlayerService_CurrentSourceChanged(object? sender, PlaybackItem? e)
         {
             CurrentItem = e;
             CurrentItemChanged?.Invoke(this, e);
         }
 
-        private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
+        private async void CurrentPlayerService_PlaybackStateChanged(object? sender, PlaybackState e)
         {
             // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
             if (e == PlaybackState.Loaded)

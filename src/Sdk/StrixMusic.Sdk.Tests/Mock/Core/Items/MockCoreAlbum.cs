@@ -1,11 +1,11 @@
-﻿using OwlCore.Events;
-using StrixMusic.Sdk.MediaPlayback;
+﻿using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.CoreModels;
 
 namespace StrixMusic.Sdk.Tests.Mock.Core.Items
@@ -151,7 +151,7 @@ namespace StrixMusic.Sdk.Tests.Mock.Core.Items
             return AsyncEnumerable.Empty<ICoreImage>();
         }
 
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
             yield return MockCoreItemFactory.CreateTrack(SourceCore);

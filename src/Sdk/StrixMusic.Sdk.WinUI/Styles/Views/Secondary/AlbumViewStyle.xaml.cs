@@ -1,11 +1,5 @@
-﻿using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
-using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
+﻿using StrixMusic.Sdk.WinUI.Controls.Views.Secondary;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.WinUI.Styles.Views.Secondary
 {
@@ -20,16 +14,6 @@ namespace StrixMusic.Sdk.WinUI.Styles.Views.Secondary
         public AlbumViewStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void GoToArtist(object sender, RoutedEventArgs e)
-        {
-            if ((sender as Control)?.DataContext is ArtistViewModel viewModel)
-            {
-                var navigationService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-
-                navigationService.NavigateTo(typeof(ArtistView), false, viewModel);
-            }
         }
     }
 }

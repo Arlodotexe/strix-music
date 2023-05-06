@@ -21,6 +21,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public PlaylistCollection()
         {
             this.DefaultStyleKey = typeof(PlaylistCollection);
+            DataContext = this;
         }
 
         /// <summary>
@@ -28,8 +29,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// </summary>
         public IPlaylistCollectionViewModel Collection
         {
-            get { return (IPlaylistCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (IPlaylistCollectionViewModel)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>
@@ -60,24 +61,14 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
-            if (!Collection.PopulateMorePlaylistsCommand.IsRunning &&
-                Collection.TotalPlaylistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+            if (!Collection.PopulateMorePlaylistsCommand.IsRunning && Collection.TotalPlaylistItemsCount == 0)
+                EmptyContentVisibility = Visibility.Visible;
         }
 
-        private void AttachHandlers()
-        {
-            Unloaded += PlaylistCollection_Unloaded;
-        }
+        private void AttachHandlers() => Unloaded += PlaylistCollection_Unloaded;
 
-        private void PlaylistCollection_Unloaded(object sender, RoutedEventArgs e)
-        {
-            DetachHandlers();
-        }
+        private void PlaylistCollection_Unloaded(object sender, RoutedEventArgs e) => DetachHandlers();
 
-        private void DetachHandlers()
-        {
-            Unloaded -= PlaylistCollection_Unloaded;
-        }
+        private void DetachHandlers() => Unloaded -= PlaylistCollection_Unloaded;
     }
 }

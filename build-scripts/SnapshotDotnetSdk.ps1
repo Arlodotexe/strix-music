@@ -3,8 +3,8 @@ Param (
     [ValidateSet('all', 'win-x64', "win-x86", "win-arm", "win-arm64", 'osx-x64', 'linux-x64', 'linux-arm', 'linux-arm64')]
     [string[]]$variants = @("all"),
     
-    [Parameter(HelpMessage = "The path where binaries are downloaded to.", Mandatory = $true)]
-    [string]$outputPath,
+    [Parameter(HelpMessage = "The path where binaries are downloaded to.")]
+    [string]$outputPath = "$PSScriptRoot/build/dependencies/binaries/dotnet",
     
     [Parameter(HelpMessage = "The path to a dependencies.json file")]
     [string]$dependencySourcesPath = "$PSScriptRoot/dependencies.json"
@@ -13,15 +13,6 @@ Param (
 Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.sh -OutFile dotnet-install.sh
 Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
 
-function Get-UrlStatusCode([string] $Url) {
-    try {
-        (Invoke-WebRequest -Uri $Url -UseBasicParsing -DisableKeepAlive -Method head).StatusCode
-    }
-    catch [Net.WebException] {
-        [int]$_.Exception.Response.StatusCode
-    }
-}
-
 function GetUrlFromDryRun([string] $result) {
     $match = select-string "primary: (.+?) " -inputobject $result
 
@@ -29,7 +20,16 @@ function GetUrlFromDryRun([string] $result) {
         $url = $captureGroup.value -Replace "primary: ", "";
         
         Write-Verbose "Testing url at $url";
-        if (Get-UrlStatusCode $url -eq 200) {
+        $req = [system.Net.WebRequest]::Create($url)
+
+        try {
+            $res = $req.GetResponse()
+        }
+        catch [System.Net.WebException] {
+            $res = $_.Exception.Response
+        }
+            
+        if ($res.StatusCode -eq "OK") {
             Write-Verbose "Success"
             return $url.Trim();
         }
@@ -38,8 +38,8 @@ function GetUrlFromDryRun([string] $result) {
         }
     }
 
-    Write-Error "No valid URLs were found."
-    exit -1;
+    Write-Verbose "No valid URLs were found."
+    return "";
 }
 
 function GetDownloadUrl([string] $osTarget, [string] $arch) {
@@ -54,7 +54,7 @@ function GetDownloadUrl([string] $osTarget, [string] $arch) {
     
     if ($osTarget -eq "win") {
         $result = ./dotnet-install.ps1 -JSonFile ../global.json -Architecture $arch -DryRun 6>&1
-        
+
         return GetUrlFromDryRun $result;
     }
 }
@@ -73,6 +73,11 @@ foreach ($variant in $variants) {
     
     $url = GetDownloadUrl $os $arch
 
+    if ($url -eq "") {
+        Write-Warning "No accessible URLs found for $variant. Skipping.";
+        continue;
+    }
+
     $fileName = ([uri]$url).Segments[-1]
 
     Write-Output "Downloading $url";
@@ -88,9 +93,7 @@ foreach ($variant in $variants) {
     }
     
     $result = ipfs add "$outputPath/$fileName" --recursive --progress --pin --fscache
-    
-    Write-Output "Getting new CID from output"
-    
+        
     $lines = $result.Split([Environment]::NewLine);
     $rootdirline = $lines[$lines.Length - 1]
     $match = select-string "added ([a-zA-Z0-9]+)" -inputobject $rootdirline
@@ -98,7 +101,7 @@ foreach ($variant in $variants) {
     
     ipfs pin add $cid;
     
-    Write-Output "Imported to IPFS as $cid";
+    Write-Output "Added and pinned $cid to IPFS";
     Write-Output ""
     
     $dependencyJsonPath = Resolve-Path -Relative -Path $dependencySourcesPath -ErrorAction Stop;
@@ -110,7 +113,7 @@ foreach ($variant in $variants) {
         if ($dependency.name -eq "dotnet-sdk-$variant") {
             $dependency.cid = $cid;
             $dependency.originalUrl = $url;
-            $dependency.outputPath = "dotnet/$fileName";
+            $dependency.outputPath = "dependencies/binaries/dotnet/$fileName";
 
             $found = $true;
         }
@@ -118,10 +121,10 @@ foreach ($variant in $variants) {
 
     if (!$found) {
         $dependencies += [PSCustomObject]@{
-            name = "dotnet-sdk-$variant"
+            name        = "dotnet-sdk-$variant"
             originalUrl = $url
-            cid = $cid
-            outputPath = "dotnet/$fileName"
+            cid         = $cid
+            outputPath  = "dependencies/binaries/dotnet/$fileName"
         }
     }
     

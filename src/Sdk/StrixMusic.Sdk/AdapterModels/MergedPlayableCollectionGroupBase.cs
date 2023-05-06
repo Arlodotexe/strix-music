@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
@@ -253,43 +253,43 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc/>
         public event EventHandler<DownloadInfo>? DownloadInfoChanged;
 
-        private void ImagesCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImagesCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void UrlsCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlsCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
         }
 
-        private void PlayableCollectionGroupMap_ItemsCountChanged(object sender, int e)
+        private void PlayableCollectionGroupMap_ItemsCountChanged(object? sender, int e)
         {
             TotalChildrenCount = e;
             ChildrenCountChanged?.Invoke(this, e);
         }
 
-        private void PlaylistCollectionMap_ItemsCountChanged(object sender, int e)
+        private void PlaylistCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalPlaylistItemsCount = e;
             PlaylistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ArtistCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ArtistCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalArtistItemsCount = e;
             ArtistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void AlbumCollectionMap_ItemsCountChanged(object sender, int e)
+        private void AlbumCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalAlbumItemsCount = e;
             AlbumItemsCountChanged?.Invoke(this, e);
         }
 
-        private void TrackCollectionMap_ItemsCountChanged(object sender, int e)
+        private void TrackCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalTrackCount = e;
             TracksCountChanged?.Invoke(this, e);
@@ -785,34 +785,34 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICorePlaylistCollectionItem? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICorePlaylistCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreTrackCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreAlbumCollectionItem? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreAlbumCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreArtistCollectionItem? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreArtistCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICorePlayableCollectionGroupChildren other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICorePlayableCollectionGroupChildren? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICorePlayableCollectionGroup);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICorePlayableCollectionGroup);
 
         /// <inheritdoc />
         public bool Equals(ICorePlayableCollectionGroup? other)

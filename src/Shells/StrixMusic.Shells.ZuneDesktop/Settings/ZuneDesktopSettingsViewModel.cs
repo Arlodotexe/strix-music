@@ -2,10 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.WinUI.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 using Windows.ApplicationModel.Resources;
 
@@ -43,9 +40,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneDesktopSettingsViewModel"/> class.
         /// </summary>
-        public ZuneDesktopSettingsViewModel()
+        public ZuneDesktopSettingsViewModel(ZuneDesktopSettings settings)
         {
-            _settings = ZuneShell.Ioc.GetRequiredService<ZuneDesktopSettings>();
+            _settings = settings;
             _localizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
 
             _displayNameMap = _zuneBackgroundImages.Keys

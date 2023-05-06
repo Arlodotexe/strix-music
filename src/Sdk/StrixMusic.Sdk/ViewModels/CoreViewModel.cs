@@ -7,9 +7,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using OwlCore.AbstractUI.Models;
-using OwlCore.AbstractUI.ViewModels;
-using OwlCore.Events;
+using CommunityToolkit.Mvvm.Input;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Sdk.MediaPlayback;
@@ -19,7 +18,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ICore"/>.
     /// </summary>
-    public sealed class CoreViewModel : ObservableObject, ISdkViewModel, ICore
+    public sealed partial class CoreViewModel : ObservableObject, ISdkViewModel, ICore, IDelegatable<ICore>
     {
         private readonly ICore _core;
         private readonly SynchronizationContext _syncContext;
@@ -30,73 +29,45 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="core">The <see cref="ICore"/> to wrap around.</param>
         public CoreViewModel(ICore core)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _core = core;
-
-            CoreState = _core.CoreState;
-
-            AbstractConfigPanel = new AbstractUICollectionViewModel(_core.AbstractConfigPanel);
-
+            
             AttachEvents();
         }
 
         private void AttachEvents()
         {
-            _core.CoreStateChanged += Core_CoreStateChanged;
             _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
-            _core.AbstractConfigPanelChanged += OnAbstractConfigPanelChanged;
             _core.LogoChanged += OnLogoChanged;
             _core.DisplayNameChanged += OnDisplayNameChanged;
         }
 
         private void DetachEvents()
         {
-            _core.CoreStateChanged -= Core_CoreStateChanged;
             _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
-            _core.AbstractConfigPanelChanged -= OnAbstractConfigPanelChanged;
             _core.LogoChanged -= OnLogoChanged;
             _core.DisplayNameChanged -= OnDisplayNameChanged;
         }
 
-        private void OnDisplayNameChanged(object sender, string e) => _syncContext.Post(_ =>
+        private void OnDisplayNameChanged(object? sender, string e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(DisplayName));
         }, null);
 
-        private void Core_InstanceDescriptorChanged(object sender, string e) => _syncContext.Post(_ =>
+        private void Core_InstanceDescriptorChanged(object? sender, string e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(InstanceDescriptor));
             InstanceDescriptorChanged?.Invoke(sender, e);
         }, null);
 
-        private void OnAbstractConfigPanelChanged(object sender, EventArgs e) => _syncContext.Post(_ =>
-        {
-            AbstractConfigPanel = new AbstractUICollectionViewModel(_core.AbstractConfigPanel);
-            OnPropertyChanged(nameof(AbstractConfigPanel));
-        }, null);
-
-        private void OnLogoChanged(object sender, ICoreImage? e) => _syncContext.Post(_ =>
+        private void OnLogoChanged(object? sender, ICoreImage? e) => _syncContext.Post(_ =>
         {
             OnPropertyChanged(nameof(Logo));
         }, null);
 
-        /// <inheritdoc cref="ICore.CoreState" />
-        private void Core_CoreStateChanged(object sender, CoreState e)
-        {
-            CoreState = e;
-
-            _syncContext.Post(_ =>
-            {
-                OnPropertyChanged(nameof(CoreState));
-                
-                OnPropertyChanged(nameof(IsCoreStateUnloaded));
-                OnPropertyChanged(nameof(IsCoreStateConfiguring));
-                OnPropertyChanged(nameof(IsCoreStateConfigured));
-                OnPropertyChanged(nameof(IsCoreStateLoading));
-                OnPropertyChanged(nameof(IsCoreStateLoaded));
-            }, null);
-        }
+        /// <inheritdoc/>
+        ICore IDelegatable<ICore>.Inner => _core;
 
         /// <inheritdoc />
         public string Id => _core.Id;
@@ -111,12 +82,6 @@ namespace StrixMusic.Sdk.ViewModels
         public string InstanceDescriptor => _core.InstanceDescriptor;
 
         /// <inheritdoc />
-        AbstractUICollection ICore.AbstractConfigPanel => _core.AbstractConfigPanel;
-
-        /// <inheritdoc cref="ICore.AbstractConfigPanel"/>
-        public AbstractUICollectionViewModel AbstractConfigPanel { get; private set; }
-
-        /// <inheritdoc />
         public MediaPlayerType PlaybackType => _core.PlaybackType;
 
         /// <summary>
@@ -127,49 +92,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
 
-        /// <inheritdoc cref="ICore.CoreState" />
-        public CoreState CoreState { get; internal set; }
-
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Unloaded"/>.
-        /// </summary>
-        public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.NeedsConfiguration"/>.
-        /// </summary>
-        public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsConfiguration;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Configured"/>.
-        /// </summary>
-        public bool IsCoreStateConfigured => CoreState == CoreState.Configured;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loading"/>.
-        /// </summary>
-        public bool IsCoreStateLoading => CoreState == CoreState.Loading;
-
-        /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="AppModels.CoreState.Loaded"/>.
-        /// </summary>
-        public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
 
         /// <inheritdoc />
         public event EventHandler<string>? DisplayNameChanged
         {
             add => _core.DisplayNameChanged += value;
             remove => _core.DisplayNameChanged -= value;
-        }
-
-        /// <inheritdoc cref="ICore.CoreStateChanged" />
-        public event EventHandler<CoreState>? CoreStateChanged
-        {
-            add => _core.CoreStateChanged += value;
-            remove => _core.CoreStateChanged -= value;
         }
 
         /// <inheritdoc />
@@ -183,9 +113,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <inheritdoc />
-        public event EventHandler? AbstractConfigPanelChanged;
-
-        /// <inheritdoc />
         public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc />
@@ -195,18 +122,18 @@ namespace StrixMusic.Sdk.ViewModels
         ICoreLibrary ICore.Library => _core.Library;
 
         /// <inheritdoc />
-        ICoreSearch? ICore.Search { get; }
+        ICoreSearch? ICore.Search => _core.Search;
 
-        /// <inheritdoc cref="ICore.RecentlyPlayed" />
+        /// <inheritdoc />
         ICoreRecentlyPlayed? ICore.RecentlyPlayed => _core.RecentlyPlayed;
 
-        /// <inheritdoc cref="ICore.Discoverables" />
+        /// <inheritdoc />
         ICoreDiscoverables? ICore.Discoverables => _core.Discoverables;
 
-        /// <inheritdoc cref="ICore.Pins" />
+        /// <inheritdoc />
         ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;
 
-        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
+        /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
             DetachEvents();
@@ -220,6 +147,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IMediaSourceConfig?> GetMediaSourceAsync(ICoreTrack track, CancellationToken cancellationToken = default) => _core.GetMediaSourceAsync(track, cancellationToken);
 
         /// <inheritdoc />
+        [RelayCommand(IncludeCancelCommand = true)]
         public Task InitAsync(CancellationToken cancellationToken = default) => _core.InitAsync(cancellationToken);
 
         /// <inheritdoc />

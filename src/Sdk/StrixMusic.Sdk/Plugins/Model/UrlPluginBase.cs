@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -44,7 +43,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual UrlType Type => Inner.Type;
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrl other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreUrl? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreUrl> Sources => Inner.Sources;

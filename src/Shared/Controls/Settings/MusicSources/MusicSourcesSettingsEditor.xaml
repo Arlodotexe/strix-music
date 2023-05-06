@@ -1,0 +1,130 @@
+﻿<UserControl
+	x:Class="StrixMusic.Controls.Settings.MusicSources.MusicSourcesSettingsEditor"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:appModels="using:StrixMusic.AppModels"
+	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:converters="using:OwlCore.WinUI.Converters"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:local="using:StrixMusic.Controls"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:musicSources="using:StrixMusic.Controls.Settings.MusicSources"
+	xmlns:settings="using:StrixMusic.Settings"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+	d:DesignHeight="300"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+
+	<Border Margin="20">
+		<Grid>
+			<Grid
+				MaxWidth="1000"
+				Margin="20"
+				RowSpacing="20">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+
+				<StackPanel Spacing="15" Visibility="{x:Bind IsZeroToVisibility(AppRoot.StrixDataRoot.Sources.Count), FallbackValue=Visible, Mode=OneWay}">
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="20"
+						Text="It's quiet here"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<TextBlock
+						HorizontalAlignment="Center"
+						FontSize="12"
+						Opacity="0.5"
+						Text="Add a new music source to start listening"
+						TextAlignment="Center"
+						TextWrapping="WrapWholeWords" />
+
+					<Image MaxWidth="250" Source="ms-appx:///Assets/Settings/void.svg" />
+				</StackPanel>
+
+				<StackPanel
+					Grid.Row="0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					Orientation="Horizontal"
+					Spacing="12">
+					<ProgressRing IsActive="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind AddNewMusicSourceCommand.IsRunning, Mode=OneWay}" />
+
+					<Button
+						Command="{x:Bind AddNewMusicSourceCommand}"
+						Content="Connect new source"
+						IsEnabled="{x:Bind InvertBool(AddNewMusicSourceCommand.IsRunning), Mode=OneWay}" />
+				</StackPanel>
+
+				<GridView
+					Grid.Row="1"
+					IsEnabled="{x:Bind InvertBool(AddNewMusicSourceCommand.IsRunning), Mode=OneWay}"
+					ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+					<GridView.ItemTemplate>
+						<DataTemplate x:DataType="viewModels:CoreViewModel">
+							<Grid Margin="5">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+
+								<local:CoreImage
+									Width="100"
+									Height="100"
+									Margin="20,5"
+									Image="{x:Bind Logo, Mode=OneWay}" />
+
+								<TextBlock
+									Grid.Row="1"
+									Text="{x:Bind DisplayName, Mode=OneWay}"
+									TextAlignment="Center"
+									TextTrimming="CharacterEllipsis" />
+
+								<TextBlock
+									Grid.Row="2"
+									FontSize="11"
+									Text="{x:Bind InstanceDescriptor, Mode=OneWay}"
+									TextAlignment="Center"
+									TextTrimming="CharacterEllipsis" />
+
+								<Grid.ContextFlyout>
+									<MenuFlyout>
+										<MenuFlyoutItem
+											Click="DeleteMenuFlyoutItem_OnClick"
+											Icon="Delete"
+											Text="Remove source" />
+									</MenuFlyout>
+								</Grid.ContextFlyout>
+							</Grid>
+						</DataTemplate>
+					</GridView.ItemTemplate>
+				</GridView>
+			</Grid>
+
+			<Border x:Name="ShadowTarget" Visibility="Visible" />
+
+			<Frame
+				x:Name="ConnectNewSourceFrame"
+				MaxWidth="600"
+				VerticalAlignment="Center"
+				BorderBrush="{ThemeResource SliderBorderThemeBrush}"
+				CornerRadius="5">
+				<ui:Effects.Shadow>
+					<ui:AttachedDropShadow
+						BlurRadius="15"
+						CastTo="{x:Bind ShadowTarget}"
+						CornerRadius="5"
+						IsMasked="True"
+						Opacity="0.75" />
+				</ui:Effects.Shadow>
+			</Frame>
+		</Grid>
+	</Border>
+</UserControl>

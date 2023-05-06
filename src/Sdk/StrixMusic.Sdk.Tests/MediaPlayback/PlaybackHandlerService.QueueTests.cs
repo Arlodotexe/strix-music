@@ -1,14 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Tests.Mock.Core;
-using StrixMusic.Sdk.Tests.Mock.Core.Items;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
+using StrixMusic.Sdk.Tests.Mock.Core;
+using StrixMusic.Sdk.Tests.Mock.Core.Items;
+using StrixMusic.Sdk.Tests.Services.MediaPlayback;
 
-namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
+namespace StrixMusic.Sdk.Tests.MediaPlayback
 {
     [TestClass]
     public class PlaybackHandlerServiceQueueTests
@@ -110,9 +112,28 @@ namespace StrixMusic.Sdk.Tests.Services.MediaPlayback
             // Make sure previous items are emptied.
             Assert.AreEqual(_handlerService.PreviousItems.Count, 0);
 
-            // Make sure no items end up at the same place.
-            for (int o = 0; o < _nextItems.Count; o++)
-                Assert.AreNotEqual(o, _handlerService.NextItems[o]);
+            var unshuffledList = new List<PlaybackItem>();
+
+            unshuffledList.AddRange(_previousItems);
+            if (_currentItem != null)
+                unshuffledList.Add(_currentItem);
+            unshuffledList.AddRange(_nextItems);
+
+            var shuffledList = new List<PlaybackItem>();
+            shuffledList.AddRange(_handlerService.PreviousItems);
+
+            if (_handlerService.CurrentItem != null)
+                shuffledList.Add(_handlerService.CurrentItem);
+            shuffledList.AddRange(_handlerService.NextItems);
+
+            //// Only 1 item can potentially come back to its original position because we swap it with currentItem.
+            var count = 0;
+            for (int o = 0; o < unshuffledList.Count; o++)
+            {
+                if (unshuffledList[o] == shuffledList[0])
+                    count++;
+            }
+            Assert.IsTrue(count <= 1);
 
             // Make sure all items from previous and next exist in next after shuffle.
             CollectionAssert.IsSubsetOf(_nextItems, _handlerService.NextItems.ToList());

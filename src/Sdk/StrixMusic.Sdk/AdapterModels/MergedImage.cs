@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -72,7 +71,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICoreImage other)
+        public bool Equals(ICoreImage? other)
         {
             // We can't know for sure if 2 images are the same until we open the streams and compare them,
             // which is an asynchronous operation and can't be done here.

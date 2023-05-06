@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
@@ -135,31 +135,31 @@ namespace StrixMusic.Sdk.AdapterModels
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void ArtistMap_ItemsCountChanged(object sender, int e)
+        private void ArtistMap_ItemsCountChanged(object? sender, int e)
         {
             TotalArtistItemsCount = e;
             ArtistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalImageCount = e;
             ImagesCountChanged?.Invoke(this, e);
         }
 
-        private void GenreCollectionMap_ItemsCountChanged(object sender, int e)
+        private void GenreCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalGenreCount = e;
             GenresCountChanged?.Invoke(this, e);
         }
 
-        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        private void UrlCollectionMap_ItemsCountChanged(object? sender, int e)
         {
             TotalUrlCount = e;
             UrlsCountChanged?.Invoke(this, e);
         }
 
-        private void ArtistMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        private void ArtistMap_ItemsChanged(object? sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -179,7 +179,7 @@ namespace StrixMusic.Sdk.AdapterModels
             UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void Source_LyricsChanged(object sender, ICoreLyrics? e)
+        private void Source_LyricsChanged(object? sender, ICoreLyrics? e)
         {
             if (e is null)
                 return;
@@ -188,7 +188,7 @@ namespace StrixMusic.Sdk.AdapterModels
             LyricsChanged?.Invoke(this, merged);
         }
 
-        private void Source_AlbumChanged(object sender, ICoreAlbum? e)
+        private void Source_AlbumChanged(object? sender, ICoreAlbum? e)
         {
             if (e is null)
                 return;
@@ -520,19 +520,19 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreTrack);
+        public bool Equals(ICoreArtistCollectionItem? other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrack);
+        public bool Equals(ICoreImageCollection? other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreTrack);
+        public bool Equals(ICoreUrlCollection? other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other) => Equals(other as ICoreTrack);
+        public bool Equals(ICoreArtistCollection? other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => Equals(other as ICoreTrack);
+        public bool Equals(ICoreGenreCollection? other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => Equals(obj as ICoreTrack);

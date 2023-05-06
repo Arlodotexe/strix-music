@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Tests.ViewModels

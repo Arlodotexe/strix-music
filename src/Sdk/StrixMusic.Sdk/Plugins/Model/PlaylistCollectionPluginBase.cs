@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
-using OwlCore.Events;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -270,16 +268,16 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task ChangeNameAsync(string name, CancellationToken cancellationToken = default) => InnerPlayable.ChangeNameAsync(name, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylistCollectionItem other) => Inner.Equals(other);
+        public virtual bool Equals(ICorePlaylistCollectionItem? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICorePlaylistCollection other) => Inner.Equals(other);
+        public virtual bool Equals(ICorePlaylistCollection? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImageCollection other) => InnerImageCollection.Equals(other);
+        public virtual bool Equals(ICoreImageCollection? other) => InnerImageCollection.Equals(other!);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreUrlCollection other) => InnerUrlCollection.Equals(other);
+        public virtual bool Equals(ICoreUrlCollection? other) => InnerUrlCollection.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IImage> GetImagesAsync(int limit, int offset, CancellationToken cancellationToken = default) => InnerImageCollection.GetImagesAsync(limit, offset, cancellationToken);

@@ -5,9 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -66,7 +64,7 @@ namespace StrixMusic.Sdk.AdapterModels
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICoreUrl other)
+        public bool Equals(ICoreUrl? other)
         {
             return other?.Url == Url && 
                    other?.Type == Type &&

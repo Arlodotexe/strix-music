@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,7 +27,7 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
         /// The backing dependency propery for <see cref="TrackCollection"/>.
         /// </summary>
         public static readonly DependencyProperty TrackCollectionProperty =
-            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => _ = d.Cast<GrooveTrackCollection>().OnTrackCollectionChangedAsync()));
+            DependencyProperty.Register(nameof(TrackCollection), typeof(ITrackCollectionViewModel), typeof(GrooveTrackCollection), new PropertyMetadata(null, (d, e) => _ = ((GrooveTrackCollection)d).OnTrackCollectionChangedAsync()));
 
         /// <summary>
         /// The track collection to display.
@@ -84,13 +83,13 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
             AttachEvents(TrackCollection.Tracks);
         }
 
-        private void Tracks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Tracks_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
 
-                    if (TrackCollection is null)
+                    if (TrackCollection is null || e.NewItems is null)
                         return;
 
                     foreach (var track in e.NewItems)
@@ -98,6 +97,9 @@ namespace StrixMusic.Shells.Groove.Controls.Collections
 
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems is null)
+                        return;
+
                     for (int i = e.OldStartingIndex; i < e.OldItems.Count; i++)
                         Tracks.RemoveAt(i);
 

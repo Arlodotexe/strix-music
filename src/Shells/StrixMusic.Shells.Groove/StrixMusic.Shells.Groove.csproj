@@ -4,23 +4,23 @@
 	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
 	-->
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;uap10.0.19041</TargetFrameworks>
+		<TargetFrameworks>uap10.0.19041;net7.0</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<AssemblyName>StrixMusic.Shells.Groove</AssemblyName>
 		<RootNamespace>StrixMusic.Shells.Groove</RootNamespace>
 		<Nullable>enable</Nullable>
-		<LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
-		<PackageReference Include="OwlCore" Version="0.0.71" />
+		<PackageReference Include="OwlCore" Version="0.2.1" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Text.Json" Version="6.0.5" />
+		<PackageReference Include="System.Text.Json" Version="7.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -32,9 +32,10 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="GrooveShell.xaml" />
+		<None Remove="GrooveMusic.xaml" />
 		<None Remove="LICENSE.txt" />
 		<None Remove="Preview.xaml" />
+		<None Remove="Strings\en\GrooveResources.resw" />
 		<None Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\Pages\GrooveAlbumPageStyle.xaml" />
 		<None Remove="Styles\Pages\GrooveArtistPageStyle.xaml" />
@@ -48,7 +49,7 @@
 		<None Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<UpToDateCheckInput Remove="GrooveShell.xaml" />
+		<UpToDateCheckInput Remove="GrooveMusic.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Styles\Collections\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\GrooveNowPlayingBarStyle.xaml" />
@@ -69,6 +70,9 @@
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="GrooveMusic.xaml.cs">
+		  <DependentUpon>GrooveMusic.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
@@ -93,7 +97,7 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
 		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Behaviors">
-			<Version>7.1.2</Version>
+			<Version>7.1.3</Version>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
 			<Version>2.0.1</Version>
@@ -104,13 +108,13 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Behaviors" Version="7.1.11" />
-		<PackageReference Include="Uno.UI" Version="4.5.0-dev.509" />
+		<PackageReference Include="Uno.UI" Version="4.8.15" />
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Styles\NowPlaying\" />
 		<Folder Include="ViewModels\Pages\Interfaces\" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\..\stylecop.json" />
+	  <PRIResource Include="Strings\en\GrooveResources.resw" />
 	</ItemGroup>
 </Project>

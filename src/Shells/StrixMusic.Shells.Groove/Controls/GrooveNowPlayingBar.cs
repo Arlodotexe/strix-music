@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Shells;
+using StrixMusic.Sdk.WinUI.Controls;
 using StrixMusic.Shells.Groove.Helper;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -54,7 +52,7 @@ namespace StrixMusic.Shells.Groove.Controls
             device.NowPlayingChanged -= ActiveDevice_NowPlayingChanged;
         }
 
-        private async void ActiveDevice_NowPlayingChanged(object sender, PlaybackItem e)
+        private async void ActiveDevice_NowPlayingChanged(object? sender, PlaybackItem e)
         {
             // Load images if there aren't images loaded.
             // Uncommenting this will cause NowPlaying album art to break randomly while skipping tracks.

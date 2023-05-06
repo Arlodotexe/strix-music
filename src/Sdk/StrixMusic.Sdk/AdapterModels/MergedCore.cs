@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using OwlCore;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -34,10 +34,18 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
         /// </summary>
+        public MergedCore(IEnumerable<ICore> cores)
+            : this(cores, new MergedCollectionConfig())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="MergedCore"/>.
+        /// </summary>
         public MergedCore(IEnumerable<ICore> cores, MergedCollectionConfig config)
         {
             _sources = cores.ToList();
-            Guard.HasSizeGreaterThan(_sources, 0, nameof(_sources));
+            Guard.IsGreaterThan(_sources.Count, 0);
 
             MergeConfig = config;
 
@@ -91,7 +99,7 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public event EventHandler<IDiscoverables>? DiscoverablesChanged;
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
+        private void Core_DevicesChanged(object? sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
             var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
             var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new DeviceAdapter(x.Data), x.Index)).ToList();
@@ -131,58 +139,22 @@ namespace StrixMusic.Sdk.AdapterModels
         public IDiscoverables? Discoverables => _discoverables;
 
         /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
+        public bool IsInitialized => _sources.TrueForAll(x => x.IsInitialized);
 
         /// <inheritdoc />
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var core in _sources)
-                await InitCore(core, cancellationToken);
-
-            IsInitialized = true;
-        }
-
-        private async Task InitCore(ICore core, CancellationToken cancellationToken)
-        {
-        Begin:
-            var setupCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-
-            if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsConfiguration)
-            {
-                try
-                {
-                    await core.InitAsync(setupCancellationTokenSource.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    if (!setupCancellationTokenSource.IsCancellationRequested)
-                        setupCancellationTokenSource.Cancel();
-                }
-            }
-
-            if (setupCancellationTokenSource.IsCancellationRequested || core.CoreState == CoreState.Unloaded)
-            {
-                setupCancellationTokenSource.Dispose();
-                RemoveSource(core);
+            if (IsInitialized)
                 return;
-            }
 
-            if (core.CoreState == CoreState.NeedsConfiguration)
-            {
-                // If the user needs to provide information for setup to continue, wait for another state change.
-                // Display of the core's AbstractConfigPanel handled by the host application.
-                await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, TimeSpan.FromMinutes(10));
-                goto Begin;
-            }
-
-            setupCancellationTokenSource.Dispose();
+            await _sources.InParallel(x => !x.IsInitialized ? x.InitAsync(cancellationToken) : Task.CompletedTask);
         }
 
         /// <inheritdoc />
         /// <remarks>
         /// Cores can be merged, but are never matched conditionally.
         /// </remarks>
-        public bool Equals(ICore other) => false;
+        public bool Equals(ICore? other) => false;
 
         /// <inheritdoc />
         public void AddSource(ICore itemToMerge)
@@ -292,16 +264,13 @@ namespace StrixMusic.Sdk.AdapterModels
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            if (IsInitialized)
-                return;
-
             foreach (var source in _sources)
             {
                 DetachEvents(source);
-                await source.DisposeAsync();
-            }
 
-            IsInitialized = false;
+                if (source.IsInitialized)
+                    await source.DisposeAsync();
+            }
         }
     }
 }

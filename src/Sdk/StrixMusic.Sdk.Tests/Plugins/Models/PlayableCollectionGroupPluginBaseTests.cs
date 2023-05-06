@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OwlCore.Events;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Plugins.Model;
 using System;
@@ -7,10 +6,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.BaseModels;
 using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.Tests.Mock.AppModels;
 
 namespace StrixMusic.Sdk.Tests.Plugins.Models
 {
@@ -512,6 +513,7 @@ namespace StrixMusic.Sdk.Tests.Plugins.Models
             public Task AddChildAsync(IPlayableCollectionGroup child, int index, CancellationToken cancellationToken = default) => throw AccessedException;
             public event CollectionChangedEventHandler<IPlayableCollectionGroup>? ChildItemsChanged { add => throw AccessedException; remove => throw AccessedException; }
             public bool Equals(ICorePlayableCollectionGroup? other) => throw AccessedException;
+            public IStrixDataRoot Root  => throw AccessedException;
         }
     }
 }

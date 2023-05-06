@@ -20,7 +20,7 @@
   "build": {
     "resource": {
       "files": [
-        "assets/**"
+        "**/assets/**"
       ]
     },
     "content": [
@@ -41,6 +41,12 @@
         "files": [
           "cores/**.md",
           "cores/**.yml"
+        ]
+      },
+      {
+        "files": [
+          "app/**.md",
+          "app/**.yml"
         ]
       },
       {

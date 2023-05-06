@@ -122,8 +122,14 @@
 
                             </StackPanel>
 
-                            <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
+                            <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0">
                                 <shellcontrols:NowPlayingButtonContent Foreground="#DB0D94" Height="12" Width="20"/>
+                                
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Click">
+                                        <core:InvokeCommandAction Command="{Binding NowPlayingViewCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
                             </Button>
                         </StackPanel>
 

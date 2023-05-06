@@ -74,7 +74,7 @@ function SaveVersion([string]$newVersion) {
 }
 
 # Check if the current SDK version matches the most recent release tag
-$versionAlreadyReleased = [bool]($tags -Match $sdkVersion)
+$sdkVersionIsLatestRelease = [bool]($tags[0] -Match $sdkVersion)
 
 $parts = $sdkVersion.Split(".");
     
@@ -83,9 +83,9 @@ $minor = $parts[1];
 $build = $parts[2];
 
 # If yes, bump the build number and save to disk
-if ($versionAlreadyReleased) {
+if ($sdkVersionIsLatestRelease) {
     $newVersion = "$major.$minor.$([int]$build + 1)";
-    Write-Output "Sdk version $sdkVersion already released. Selecting $newVersion";
+    Write-Output "Sdk version $sdkVersion already released. This will be bumped to $newVersion";
 
     SaveVersion $newVersion;
 
@@ -94,7 +94,9 @@ if ($versionAlreadyReleased) {
         Invoke-Expression 'git tag -a $newVersion-sdk-$variant -m "No extended description was provided. Changes are listed below."' -ErrorAction Stop
     }
 }
-# If no, use the new version number instead of bumping automatically
+# If no, use the new tag version instead of bumping automatically.
+# Allows creating release tags before the build process is run.
+# We use this for all minor and major updates.
 else {
     Write-Output "Updating project with existing tag $($tags[0])"
     $taggedVersion = $tags[0].Split("-")[0]
@@ -116,5 +118,5 @@ else {
     SaveVersion $taggedVersion
 }
 
-Write-Host "Changes complete. Please review your working tree before pushing."
+Write-Host "Please review your working tree for changes"
 return "$newVersion-sdk-$variant"

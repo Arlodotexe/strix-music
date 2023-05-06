@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
-using OwlCore.Events;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -67,7 +66,7 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual Task AddGenreAsync(IGenre gene, int index, CancellationToken cancellationToken = default) => Inner.AddGenreAsync(gene, index, cancellationToken);
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreGenreCollection other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreGenreCollection? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public virtual IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset, CancellationToken cancellationToken = default) => Inner.GetGenresAsync(limit, offset, cancellationToken);

@@ -1,53 +1,255 @@
-﻿    <UserControl
-    x:Class="StrixMusic.Shared.AppFrame"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
-    xmlns:controls="using:OwlCore.WinUI.Controls"
-    xmlns:abstractUIControls="using:OwlCore.WinUI.AbstractUI.Controls"
-    xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
-    xmlns:shells="using:StrixMusic.Sdk.WinUI.Styles.Shells"
-    mc:Ignorable="d"
-    Loaded="AppFrame_OnLoaded">
-    
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <shells:NotificationAbstractUICollectionStyle/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+﻿<UserControl
+	x:Class="StrixMusic.AppFrame"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+	xmlns:color="using:OwlCore.WinUI.Converters.Color"
+	xmlns:controls="using:StrixMusic.Controls"
+	xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:media="using:Microsoft.UI.Xaml.Media"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	d:DesignHeight="300"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
 
-    <Grid>
-        <ContentPresenter x:Name="PART_ContentPresenter" />
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Name="Dark">
+					<Color x:Key="LowBackgroundBrushColor">#1E1E23</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+				<ResourceDictionary x:Name="Light">
+					<Color x:Key="LowBackgroundBrushColor">#D5D5DC</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+				<ResourceDictionary x:Name="HighContrast">
+					<Color x:Key="LowBackgroundBrushColor">#D6D6DF</Color>
+					<SolidColorBrush x:Key="LowBackgroundBrush" Color="{ThemeResource LowBackgroundBrushColor}" />
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary>
+					<color:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
 
-        <controls:ContentOverlay x:Name="OverlayPresenter" />
+	<Grid x:Name="RootGrid">
+		<interactivity:Interaction.Behaviors>
+			<core:EventTriggerBehavior EventName="Loaded">
+				<core:InvokeCommandAction Command="{x:Bind AppRoot.InitCommand}" />
+			</core:EventTriggerBehavior>
+		</interactivity:Interaction.Behaviors>
 
-        <ItemsControl x:Name="NotificationItems" ItemsSource="{x:Bind Notifications.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top"
-                      Visibility="{x:Bind convertvis:InverseBoolToVisibilityConverter.Convert(Notifications.IsHandled), Mode=OneWay}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">
-                    <Grid Margin="15" Width="300"
-                          Background="{ThemeResource SystemChromeMediumHighColor}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+		<controls:ShellPresenter
+			xmlns="using:StrixMusic"
+			x:Name="ShellPresenter"
+			CurrentShellChanged="ShellPresenter_CurrentShellChanged"
+			FallbackShell="{x:Bind AppRoot.ShellSettings.FallbackShell, Mode=OneWay}"
+			PreferredShell="{x:Bind AppRoot.ShellSettings.PreferredShell, Mode=OneWay}"
+			Root="{x:Bind AppRoot.StrixDataRoot, Mode=OneWay}" />
 
-                        <abstractUIControls:AbstractUICollectionPresenter DataContext="{x:Bind AbstractUINotificationViewModel, Mode=OneWay}" Style="{StaticResource DefaultNotificationAbstractUICollectionStyle}"/>
+		<Border x:Name="ShadowTarget" Visibility="Collapsed" />
 
-                        <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
-                                Grid.Column="1" Width="48" Background="Transparent" Padding="0"
-                                BorderThickness="0"
-                                Command="{x:Bind DismissCommand}">
-                            <FontIcon FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10A;"/>
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+		<StackPanel
+			Padding="15,7"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Top"
+			Background="{ThemeResource OobePageBackgroundColor}"
+			CornerRadius="0,0,5,5"
+			Spacing="0"
+			Visibility="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}">
+			<ItemsControl HorizontalAlignment="Center" ItemsSource="{x:Bind AppRoot.StrixDataRoot.Sources, Mode=OneWay}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="viewModels:CoreViewModel">
+						<StackPanel Spacing="5">
+							<CoreImage
+								xmlns="using:StrixMusic.Controls"
+								Height="35"
+								Image="{x:Bind Logo, Mode=OneWay}" />
+							<TextBlock FontSize="12" Text="{x:Bind DisplayName, Mode=OneWay}" />
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<controls1:WrapPanel HorizontalSpacing="15" VerticalSpacing="15" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+			</ItemsControl>
+
+			<ProgressBar IsEnabled="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}" IsIndeterminate="True" />
+		</StackPanel>
+
+		<ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Visibility="Collapsed" />
+
+		<Border
+			x:Name="SettingsBorder"
+			CornerRadius="6"
+			Visibility="Collapsed">
+			<Grid Background="{ThemeResource LowBackgroundBrush}">
+				<Rectangle
+					Width="1000"
+					Height="400"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Top"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.6,0.4"
+							GradientOrigin="0.75,0.3"
+							Opacity="0.3"
+							RadiusX="0.6"
+							RadiusY="0.4">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<Rectangle
+					Width="1500"
+					Height="800"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Top"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.3,0.3"
+							GradientOrigin="0.1,0.1"
+							Opacity="0.2"
+							RadiusX="0.5"
+							RadiusY="0.7">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<Rectangle
+					Width="1400"
+					Height="800"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Bottom"
+					Visibility="Visible">
+					<Rectangle.Fill>
+						<media:RadialGradientBrush
+							Center="0.4,0.6"
+							GradientOrigin="0.3,0.75"
+							Opacity="0.25"
+							RadiusX="0.3"
+							RadiusY="0.8">
+							<GradientStop Offset="0" Color="#FF6D157D" />
+							<GradientStop Offset="1" Color="{ThemeResource LowBackgroundBrushColor}" />
+						</media:RadialGradientBrush>
+					</Rectangle.Fill>
+				</Rectangle>
+
+				<controls:SettingsView AppRoot="{x:Bind AppRoot}" Visibility="Visible" />
+
+				<!--
+					For resizing the settings window.
+					Not needed if control takes up full window.
+				-->
+				<labs:PropertySizer
+					Width="{Binding ElementName=SettingsBorder, Path=Width}"
+					VerticalAlignment="Bottom"
+					Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"
+					Maximum="3000"
+					Minimum="350"
+					Opacity="0"
+					Orientation="Horizontal" />
+
+				<labs:PropertySizer
+					Height="{Binding ElementName=SettingsBorder, Path=Height}"
+					HorizontalAlignment="Right"
+					Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"
+					Maximum="5000"
+					Minimum="350"
+					Opacity="0" />
+			</Grid>
+		</Border>
+
+		<Button
+			Width="50"
+			Height="32"
+			Margin="0,0,138,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			BorderThickness="0"
+			CornerRadius="0"
+			IsHitTestVisible="False"
+			Opacity="0.9">
+
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="18"
+				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+				Glyph="&#xE7C2;" />
+		</Button>
+
+		<ToggleButton
+			x:Name="OpenSettingsUIToggleButton"
+			Width="50"
+			Height="32"
+			Margin="0,0,188,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonBackgroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			BorderThickness="0"
+			CornerRadius="0"
+			Opacity="0.9"
+			ToolTipService.ToolTip="Open app settings">
+
+			<FontIcon
+				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontSize="16"
+				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+				Glyph="&#xE115;" />
+
+			<interactivity:Interaction.Behaviors>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="True">
+					<core:GoToStateAction StateName="SettingsDialogVisible" />
+				</core:DataTriggerBehavior>
+				<core:DataTriggerBehavior
+					Binding="{x:Bind OpenSettingsUIToggleButton.IsChecked, Mode=OneWay}"
+					ComparisonCondition="Equal"
+					Value="False">
+					<core:GoToStateAction StateName="SettingsDialogHidden" />
+				</core:DataTriggerBehavior>
+			</interactivity:Interaction.Behaviors>
+		</ToggleButton>
+
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="ShellSettingsVisualStateGroup">
+				<VisualState x:Name="SettingsDialogVisible">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Visible" />
+					</VisualState.Setters>
+				</VisualState>
+
+				<VisualState x:Name="SettingsDialogHidden">
+					<VisualState.Setters>
+						<Setter Target="SettingsBorder.Visibility" Value="Collapsed" />
+					</VisualState.Setters>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+	</Grid>
 </UserControl>

@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
         /// Dependency property for <see cref="ImageCollection"/>.
         /// </summary>
         public static readonly DependencyProperty ImageCollectionProperty =
-            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => inst.Cast<SafeImage>().ResetAndLoadImage()));
+            DependencyProperty.Register(nameof(ImageCollection), typeof(IImageCollectionViewModel), typeof(SafeImage), new PropertyMetadata(null, (inst, d) => ((SafeImage)inst).ResetAndLoadImageAsync()));
 
         /// <summary>
         /// The image collection to load and display.
@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.WinUI.Controls
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
             if (ImageCollection is not null)
-                ResetAndLoadImage();
+                _ = ResetAndLoadImageAsync();
 
             base.OnApplyTemplate();
         }
@@ -70,11 +70,18 @@ namespace StrixMusic.Sdk.WinUI.Controls
 
         private ImageBrush? PART_ImageBrush { get; set; }
 
-        private void ResetAndLoadImage()
+        private async Task ResetAndLoadImageAsync()
         {
+            // Cancel pending operation, if any
             _cancellationTokenSource?.Cancel();
+
+            // Create token source for new operation
             _cancellationTokenSource = new CancellationTokenSource();
-            RequestImages(_cancellationTokenSource.Token).Forget();
+            
+            await RequestImages(_cancellationTokenSource.Token);
+            
+            // Clean up token source for pending operation
+            _cancellationTokenSource = null;
         }
 
         private async Task RequestImages(CancellationToken cancellationToken)

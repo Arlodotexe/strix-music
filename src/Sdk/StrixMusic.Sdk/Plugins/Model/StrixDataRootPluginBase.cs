@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
-using OwlCore.Events;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -110,10 +109,10 @@ namespace StrixMusic.Sdk.Plugins.Model
         public virtual ValueTask DisposeAsync() => Inner.DisposeAsync();
 
         /// <inheritdoc/>
-        public virtual bool Equals(ICoreImage other) => Inner.Equals(other);
+        public virtual bool Equals(ICoreImage? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
-        public bool Equals(ICore other) => Inner.Equals(other);
+        public bool Equals(ICore? other) => Inner.Equals(other!);
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default) => Inner.InitAsync(cancellationToken);

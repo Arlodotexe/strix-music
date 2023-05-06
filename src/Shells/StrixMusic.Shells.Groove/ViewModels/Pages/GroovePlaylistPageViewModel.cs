@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Shells.Groove.ViewModels.Collections;
 using Windows.UI;
 
 namespace StrixMusic.Shells.Groove.ViewModels.Pages

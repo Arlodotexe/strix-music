@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
@@ -22,6 +21,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         public AlbumCollection()
         {
             this.DefaultStyleKey = typeof(AlbumCollection);
+            DataContext = this;
         }
 
         /// <inheritdoc />
@@ -48,10 +48,8 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// <inheritdoc/>
         protected override void CheckAndToggleEmpty()
         {
-            if (Collection is not null &&
-                !Collection.PopulateMoreAlbumsCommand.IsRunning &&
-                Collection.TotalAlbumItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+            if (Collection is not null && !Collection.PopulateMoreAlbumsCommand.IsRunning && Collection.TotalAlbumItemsCount == 0)
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         private void AttachHandlers()
@@ -74,15 +72,15 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections
         /// </summary>
         public IAlbumCollectionViewModel? Collection
         {
-            get { return (IAlbumCollectionViewModel)GetValue(CollectionProperty); }
-            set { SetValue(CollectionProperty, value); }
+            get => (IAlbumCollectionViewModel)GetValue(CollectionProperty);
+            set => SetValue(CollectionProperty, value);
         }
 
         /// <summary>
         /// Dependency property for <ses cref="IAlbumCollectionViewModel" />.
         /// </summary>
         public static readonly DependencyProperty CollectionProperty =
-            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => s.Cast<AlbumCollection>().OnCollectionChanged((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
+            DependencyProperty.Register(nameof(Collection), typeof(IAlbumCollectionViewModel), typeof(AlbumCollection), new PropertyMetadata(null, (s, e) => ((AlbumCollection)s).OnCollectionChanged((IAlbumCollectionViewModel?)e.OldValue, (IAlbumCollectionViewModel?)e.NewValue)));
 
         /// <summary>
         /// Fires when the <see cref="Collection"/> property changes.

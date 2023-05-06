@@ -1,11 +1,12 @@
 ﻿using StrixMusic.Sdk.MediaPlayback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Items.Abstract
 {
     /// <summary>
-    /// Represents a container item in the <see cref="CollectionControl{TData, TItem}"/>.
+    /// Represents a container item in the <see cref="CollectionControl{TData,TItem}"/>.
     /// </summary>
     public abstract partial class ItemControl : Control
     {

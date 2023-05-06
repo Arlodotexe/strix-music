@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using OwlCore.ComponentModel;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
 
@@ -15,7 +16,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ISearch"/>.
     /// </summary>
-    public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch
+    public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch, IDelegatable<ISearch>
     {
         private readonly ISearch _search;
 
@@ -42,7 +43,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query, CancellationToken cancellationToken = default) => _search.GetSearchAutoCompleteAsync(query, cancellationToken);
 
         /// <inheritdoc />
-        public bool Equals(ICoreSearch other) => _search.Equals(other);
+        public bool Equals(ICoreSearch? other) => _search.Equals(other!);
 
         /// <inheritdoc />
         public IReadOnlyList<ICoreSearch> Sources => _search.Sources;
@@ -52,6 +53,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries(CancellationToken cancellationToken = default) => _search.GetRecentSearchQueries(cancellationToken);
+
+        /// <inheritdoc/>
+        ISearch IDelegatable<ISearch>.Inner => _search;
 
         /// <inheritdoc />
         ISearchHistory? ISearch.SearchHistory => _search.SearchHistory;

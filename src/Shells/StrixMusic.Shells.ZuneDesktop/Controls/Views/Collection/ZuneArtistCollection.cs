@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
-using OwlCore;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections;
-using StrixMusic.Shells.ZuneDesktop.Converters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -45,7 +41,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// Dependency property for <ses cref="SortState" />.
         /// </summary>
         public static readonly DependencyProperty SortStateProperty =
-            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ, null));
+            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ));
 
         /// <summary>
         /// Backing dependency property for <see cref="ArtistCollection" />.
@@ -132,7 +128,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             }
         }
 
-        private async void Artists_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void Artists_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (Collection is null)
                 return;

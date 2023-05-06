@@ -1,60 +1,54 @@
 [
   {
     "name": "docfx",
-    "outputPath": "docfx.zip",
-    "originalUrl": "https://github.com/dotnet/docfx/releases/latest/download/docfx.zip",
+    "outputPath": "dependencies/binaries/docfx.zip",
+    "originalUrl": "https://github.com/dotnet/docfx/releases/download/v2.65.3/docfx-win-x64-v2.65.3.zip",
     "cid": "QmUXothUyJRHfCCpB2VHxB1u7HY9tdboxnjR5Estz9SAvj"
   },
   {
     "name": "nupkg",
-    "cid": "QmesyKRFtEWkqP739sgn7Egc1hw1er76HRueTXCsQV9AM8"
+    "cid": "QmZNkr8ABaPyLBChgX1BAKaoYnoD4VqT6e6oSZSawvyutC"
   },
   {
     "name": "dotnet-sdk-win-x64",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-win-x64.zip",
-    "cid": "QmVDhNqPus8fBgWGHcXdC2GPKuKyubLJnLgXyUkdRzrCQa",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-win-x64.zip"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-win-x64.zip",
+    "cid": "QmQuCswUjpoADiwkRgbTnCAs8bLRXmZdkE1AXmNwuyMphg",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-win-x64.zip"
   },
   {
     "name": "dotnet-sdk-win-x86",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-win-x86.zip",
-    "cid": "QmdtxNx187dCzAwe5Gdgxtit4hKQMKBbHiFykJsfsoT9ah",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-win-x86.zip"
-  },
-  {
-    "name": "dotnet-sdk-win-arm",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-win-arm.zip",
-    "cid": "QmXesshmjp9CBFxUgoZ5sYLH8Vz4hCSBZ8SP8DQoAnyNbr",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-win-arm.zip"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-win-x86.zip",
+    "cid": "QmV1qGWeuH8ScdDrn143aZQ9ZgZJ3qk6fM3pA4wPz9t3VC",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-win-x86.zip"
   },
   {
     "name": "dotnet-sdk-win-arm64",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-win-arm64.zip",
-    "cid": "QmNkGT4Ps2kDbb8PjRPcdse8Jt1aWbydwGibm9eLnR3LUT",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-win-arm64.zip"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-win-arm64.zip",
+    "cid": "QmdFoAEonpSopGu3JuNy9yamjmHA4KXRra5SYCxtU8i2KE",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-win-arm64.zip"
   },
   {
     "name": "dotnet-sdk-osx-x64",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-osx-x64.tar.gz",
-    "cid": "QmQ5834ZeaDXsrWfzcLcUAe2C1xgneeqWbpHSg1afUpuYB",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-osx-x64.tar.gz"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-osx-x64.tar.gz",
+    "cid": "QmVvyN9AhPWhYsKPA8xNFVXZCRxCodQxyTX9BWELpvpVF2",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-osx-x64.tar.gz"
   },
   {
     "name": "dotnet-sdk-linux-x64",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-linux-x64.tar.gz",
-    "cid": "QmXzLxAFMb6JfyneufPUg9bPaceF2xWBcqDiNg7ohr1o54",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-linux-x64.tar.gz"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-linux-x64.tar.gz",
+    "cid": "QmVUkHxXgqB1BYQX3qLydVKG6jPVbUAdoSMje5ix2pA4bK",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-linux-x64.tar.gz"
   },
   {
     "name": "dotnet-sdk-linux-arm",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-linux-arm.tar.gz",
-    "cid": "QmeFBGpe517z9gVvZG6ztJ3Avei5uPhgybgPUvR5vh3MWT",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-linux-arm.tar.gz"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-linux-arm.tar.gz",
+    "cid": "QmVGgQhrgjn4rfu2A65VxLHJ68BHCVoKR6EBavs33ifCk6",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-linux-arm.tar.gz"
   },
   {
     "name": "dotnet-sdk-linux-arm64",
-    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100-preview.5.22307.18/dotnet-sdk-7.0.100-preview.5.22307.18-linux-arm64.tar.gz",
-    "cid": "QmWAsbnx6M21ZAzHhgzcUCH6zRwCJ9Wt5zDLLEDqNvFbFQ",
-    "outputPath": "dotnet/dotnet-sdk-7.0.100-preview.5.22307.18-linux-arm64.tar.gz"
+    "originalUrl": "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.100/dotnet-sdk-7.0.100-linux-arm64.tar.gz",
+    "cid": "QmagkyhDmyKCBodHLNuHRtgwo8KWyg76qwgwPwH77EfCeo",
+    "outputPath": "dependencies/binaries/dotnet/dotnet-sdk-7.0.100-linux-arm64.tar.gz"
   }
 ]

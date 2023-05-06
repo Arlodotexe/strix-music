@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using OwlCore.AbstractUI.Models;
 using OwlCore.AbstractUI.ViewModels;
 using CommunityToolkit.Diagnostics;
-using OwlCore.WinUI.AbstractUI.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace OwlCore.WinUI.AbstractUI.Themes

@@ -3,7 +3,6 @@
 // See the LICENSE, LICENSE.LESSER and LICENSE.ADDITIONAL files in the project root for more information.
 
 using System.Collections.Generic;
-using System.Linq;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.CoreModels;
@@ -41,5 +40,5 @@ public class DiscoverablesPluginWrapper : PlayableCollectionGroupPluginWrapperBa
     public IReadOnlyList<ICoreDiscoverables> Sources => ((IMerged<ICoreDiscoverables>)_discoverables).Sources;
 
     /// <inheritdoc/>
-    public bool Equals(ICoreDiscoverables other) => _discoverables.Equals(other);
+    public bool Equals(ICoreDiscoverables? other) => _discoverables.Equals(other!);
 }

@@ -1,0 +1,595 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using OwlCore.ComponentModel;
+using StrixMusic.Cores.Storage.FileMetadata;
+using StrixMusic.Cores.Storage.FileMetadata.Models;
+using StrixMusic.Sdk.CoreModels;
+using StrixMusic.Sdk.MediaPlayback;
+
+namespace StrixMusic.Cores.Storage.Models;
+
+/// <summary>
+/// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
+/// </summary>
+public sealed class StorageCoreAlbum : ICoreAlbum
+{
+    private readonly FileMetadataManager? _fileMetadataManager;
+    private AlbumMetadata _albumMetadata;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StorageCoreAlbum"/> class.
+    /// </summary>
+    /// <param name="sourceCore">The core that created this object.</param>
+    /// <param name="albumMetadata">The source album metadata to wrap around.</param>
+    public StorageCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata)
+    {
+        Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
+
+        Id = albumMetadata.Id;
+        _fileMetadataManager = ((StorageCore)sourceCore).FileMetadataManager;
+        SourceCore = sourceCore;
+        _albumMetadata = albumMetadata;
+
+        Guard.IsNotNull(albumMetadata.ArtistIds, nameof(albumMetadata.ArtistIds));
+        Guard.IsNotNull(albumMetadata.TrackIds, nameof(albumMetadata.TrackIds));
+
+        AttachEvents();
+    }
+
+    private void AttachEvents()
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        _fileMetadataManager.Albums.MetadataUpdated += Albums_MetadataUpdated;
+    }
+
+    private void DetachEvents()
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        _fileMetadataManager.Albums.MetadataUpdated -= Albums_MetadataUpdated;
+    }
+
+    private void Albums_MetadataUpdated(object sender, IEnumerable<AlbumMetadata> e)
+    {
+        foreach (var metadata in e)
+        {
+            if (metadata.Id != Id)
+                return;
+
+            Guard.IsNotNull(metadata.ArtistIds, nameof(metadata.ArtistIds));
+            Guard.IsNotNull(metadata.ImageIds, nameof(metadata.ImageIds));
+            Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+            Guard.IsNotNull(metadata.Genres, nameof(metadata.Genres));
+
+            var previousData = _albumMetadata;
+            _albumMetadata = metadata;
+
+            Guard.IsNotNull(previousData.TrackIds, nameof(previousData.TrackIds));
+            Guard.IsNotNull(previousData.ArtistIds, nameof(previousData.ArtistIds));
+            Guard.IsNotNull(previousData.ImageIds, nameof(previousData.ImageIds));
+            Guard.IsNotNull(previousData.Genres, nameof(previousData.Genres));
+
+            if (metadata.Title != previousData.Title)
+                NameChanged?.Invoke(this, Name);
+
+            if (metadata.DatePublished != previousData.DatePublished)
+                DatePublishedChanged?.Invoke(this, DatePublished);
+
+            if (metadata.Description != previousData.Description)
+                DescriptionChanged?.Invoke(this, Description);
+
+            if (metadata.Duration != previousData.Duration)
+                DurationChanged?.Invoke(this, Duration);
+
+            if (metadata.Genres.Count != previousData.Genres.Count)
+                GenresCountChanged?.Invoke(this, metadata.Genres.Count);
+
+            if (metadata.TrackIds.Count != previousData.TrackIds.Count)
+                TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
+
+            if (metadata.ArtistIds.Count != previousData.ArtistIds.Count)
+                ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
+
+            _ = HandleImagesChangedAsync(previousData.ImageIds, metadata.ImageIds);
+            _ = HandleArtistsChangedAsync(previousData.ArtistIds, metadata.ArtistIds);
+            _ = HandleTracksChangedAsync(previousData.TrackIds, metadata.TrackIds);
+        }
+    }
+
+    private async Task HandleTracksChangedAsync(HashSet<string> oldTrackIds, HashSet<string> newTrackIds)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
+        if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
+        {
+            // Lists have identical content, so no images have changed.
+            return;
+        }
+
+        var addedImages = newTrackIds.Except(oldTrackIds);
+        var removedImages = oldTrackIds.Except(newTrackIds);
+
+        if (oldTrackIds.Count != newTrackIds.Count)
+        {
+            TracksChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+            TracksCountChanged?.Invoke(this, newTrackIds.Count);
+        }
+
+        async Task<IReadOnlyList<CollectionChangedItem<ICoreTrack>>> TransformAsync(IEnumerable<string> ids)
+        {
+            var idArray = ids as string[] ?? ids.ToArray();
+            var collectionChangedItems = new List<CollectionChangedItem<ICoreTrack>>(idArray.Length);
+
+            foreach (var id in idArray)
+            {
+                var track = await _fileMetadataManager.Tracks.GetByIdAsync(id);
+
+                Guard.IsNotNullOrWhiteSpace(track?.Id, nameof(track.Id));
+                collectionChangedItems.Add(new CollectionChangedItem<ICoreTrack>(new StorageCoreTrack(SourceCore, track), collectionChangedItems.Count));
+            }
+
+            return collectionChangedItems;
+        }
+    }
+
+    private async Task HandleArtistsChangedAsync(HashSet<string> newArtistIds, HashSet<string> oldArtistIds)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
+        if (oldArtistIds.OrderBy(s => s).SequenceEqual(newArtistIds.OrderBy(s => s)))
+        {
+            // Lists have identical content, so no images have changed.
+            return;
+        }
+
+        var addedImages = newArtistIds.Except(oldArtistIds);
+        var removedImages = oldArtistIds.Except(newArtistIds);
+
+        if (oldArtistIds.Count != newArtistIds.Count)
+        {
+            ArtistItemsChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+            ArtistItemsCountChanged?.Invoke(this, newArtistIds.Count);
+        }
+
+        async Task<IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>>> TransformAsync(IEnumerable<string> ids)
+        {
+            var idArray = ids as string[] ?? ids.ToArray();
+            var collectionChangedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>(idArray.Length);
+
+            foreach (var id in idArray)
+            {
+                var artist = await _fileMetadataManager.AlbumArtists.GetByIdAsync(id);
+
+                Guard.IsNotNullOrWhiteSpace(artist?.Id, nameof(artist.Id));
+                collectionChangedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(new StorageCoreArtist(SourceCore, artist), collectionChangedItems.Count));
+            }
+
+            return collectionChangedItems;
+        }
+    }
+
+    private async Task HandleImagesChangedAsync(HashSet<string> oldImageIds, HashSet<string> newImageIds)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            
+        if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
+        {
+            // Lists have identical content, so no images have changed.
+            return;
+        }
+
+        var addedImages = newImageIds.Except(oldImageIds);
+        var removedImages = oldImageIds.Except(newImageIds);
+
+        if (oldImageIds.Count != newImageIds.Count)
+        {
+            ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+            ImagesCountChanged?.Invoke(this, newImageIds.Count);
+        }
+
+        async Task<IReadOnlyList<CollectionChangedItem<ICoreImage>>> TransformAsync(IEnumerable<string> ids)
+        {
+            var idArray = ids as string[] ?? ids.ToArray();
+            var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(idArray.Length);
+
+            foreach (var id in idArray)
+            {
+                var image = await _fileMetadataManager.Images.GetByIdAsync(id);
+
+                Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
+                collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(new StorageCoreImage(SourceCore, image), collectionChangedItems.Count));
+            }
+
+            return collectionChangedItems;
+        }
+    }
+
+    /// <inheritdoc/>
+    public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<string>? NameChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<string?>? DescriptionChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<DateTime?>? DatePublishedChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<TimeSpan>? DurationChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<DateTime?>? LastPlayedChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<int>? ArtistItemsCountChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<int>? TracksCountChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<int>? ImagesCountChanged;
+
+    /// <inheritdoc />
+    public event EventHandler<int>? UrlsCountChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler<int>? GenresCountChanged;
+
+    /// <inheritdoc />
+    public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
+    /// <inheritdoc />
+    public event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
+
+    /// <inheritdoc />
+    public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+    /// <inheritdoc />
+    public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+
+    /// <inheritdoc/>
+    public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
+
+    /// <inheritdoc/>
+    public ICore SourceCore { get; }
+
+    /// <inheritdoc/>
+    public string Id { get; }
+
+    /// <inheritdoc/>
+    public string Name => _albumMetadata.Title ?? string.Empty;
+
+    /// <inheritdoc/>
+    public DateTime? DatePublished => _albumMetadata.DatePublished;
+
+    /// <inheritdoc/>
+    public string? Description => _albumMetadata.Description;
+
+    /// <inheritdoc/>
+    public PlaybackState PlaybackState { get; }
+
+    /// <inheritdoc/>
+    public TimeSpan Duration => _albumMetadata.Duration ?? new TimeSpan(0, 0, 0);
+
+    /// <inheritdoc />
+    public DateTime? LastPlayed { get; }
+
+    /// <inheritdoc />
+    public DateTime? AddedAt { get; }
+
+    /// <inheritdoc />
+    public int TotalImageCount => _albumMetadata.ImageIds?.Count ?? 0;
+
+    /// <inheritdoc />
+    public int TotalArtistItemsCount => _albumMetadata.ArtistIds?.Count ?? 0;
+
+    /// <inheritdoc/>
+    public int TotalTrackCount => _albumMetadata.TrackIds?.Count ?? 0;
+
+    /// <inheritdoc/>
+    public int TotalGenreCount => _albumMetadata.Genres?.Count ?? 0;
+
+    /// <inheritdoc/>
+    public int TotalUrlCount => 0;
+
+    /// <inheritdoc/>
+    public ICorePlayableCollectionGroup? RelatedItems { get; }
+
+    /// <inheritdoc/>
+    public bool IsPlayTrackCollectionAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsPauseTrackCollectionAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsPlayArtistCollectionAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsPauseArtistCollectionAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsChangeNameAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsChangeDatePublishedAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsChangeDescriptionAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public bool IsChangeDurationAsyncAvailable => false;
+
+    /// <inheritdoc/>
+    public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
+
+    /// <inheritdoc/>
+    public Task<bool> IsAddGenreAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<bool> IsAddTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<bool> IsAddImageAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<bool> IsAddUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsRemoveTrackAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsRemoveImageAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(false);
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsRemoveUrlAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(false);
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsRemoveGenreAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsAddArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task<bool> IsRemoveArtistItemAvailableAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task ChangeDescriptionAsync(string? description, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task ChangeDurationAsync(TimeSpan duration, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task ChangeDatePublishedAsync(DateTime datePublished, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task ChangeNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+    /// <inheritdoc/>
+    public Task PauseArtistCollectionAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+    /// <inheritdoc/>
+    public Task PlayArtistCollectionAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+    /// <inheritdoc/>
+    public Task PauseTrackCollectionAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
+    /// <inheritdoc/>
+    public Task PlayTrackCollectionAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task PlayTrackCollectionAsync(ICoreTrack track, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task AddTrackAsync(ICoreTrack track, int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task AddImageAsync(ICoreImage image, int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task AddUrlAsync(ICoreUrl image, int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task RemoveArtistItemAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task RemoveTrackAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task RemoveImageAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc />
+    public Task RemoveUrlAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task AddGenreAsync(ICoreGenre genre, int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public Task RemoveGenreAsync(int index, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(Id, offset, limit);
+
+        foreach (var track in tracks)
+        {
+            Guard.IsNotNullOrWhiteSpace(track.Id, nameof(track.Id));
+            yield return new StorageCoreTrack(SourceCore, track);
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        var artists = await _fileMetadataManager.AlbumArtists.GetArtistsByAlbumId(Id, offset, limit);
+
+        foreach (var artist in artists)
+        {
+            Guard.IsNotNullOrWhiteSpace(artist.Id);
+            yield return new StorageCoreArtist(SourceCore, artist);
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+        if (_albumMetadata.ImageIds == null)
+            yield break;
+
+        foreach (var imageId in _albumMetadata.ImageIds.Skip(offset).Take(limit))
+        {
+            var image = await _fileMetadataManager.Images.GetByIdAsync(imageId);
+            Guard.IsNotNullOrWhiteSpace(image?.Id);
+
+            yield return new StorageCoreImage(SourceCore, image);
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await Task.CompletedTask;
+        yield break;
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        foreach (var genre in _albumMetadata.Genres ?? Enumerable.Empty<string>())
+        {
+            yield return new StorageCoreGenre(SourceCore, genre);
+        }
+
+        await Task.CompletedTask;
+    }
+}

@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore.Events;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AdapterModels;
 using StrixMusic.Sdk.AppModels;
@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IUserProfile"/>.
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel
+    public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IUserProfile>
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
@@ -34,11 +34,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public UserProfileViewModel(IUserProfile userProfile)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
 
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            var userProfileImpl = userProfile.Cast<UserProfileAdapter>();
+            var userProfileImpl = (UserProfileAdapter)userProfile;
 
             _sources = userProfileImpl.Sources;
 
@@ -61,6 +61,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             return InitImageCollectionAsync(cancellationToken);
         }
+
+        /// <inheritdoc/>
+        IUserProfile IDelegatable<IUserProfile>.Inner => _userProfile;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged
@@ -264,9 +267,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _userProfile.Equals(other);
+        public bool Equals(ICoreImageCollection? other) => _userProfile.Equals(other!);
 
         /// <inheritdoc />
-        public bool Equals(ICoreUrlCollection other) => _userProfile.Equals(other);
+        public bool Equals(ICoreUrlCollection? other) => _userProfile.Equals(other!);
     }
 }
