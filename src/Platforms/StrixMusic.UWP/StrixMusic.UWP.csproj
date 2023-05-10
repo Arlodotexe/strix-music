@@ -119,7 +119,18 @@
     <SingleThreadNUTC>true</SingleThreadNUTC>
     <Use64BitCompiler>true</Use64BitCompiler>
     <OutOfProcPDB>true</OutOfProcPDB>
-    <NoLinkerSymbols>true</NoLinkerSymbols>
+    <NoLinkerSymbols>false</NoLinkerSymbols>
+
+    <!-- Can help stop runaway analysis of generic types and reduce overall generation requirements. -->
+    <ShortcutGenericAnalysis>true</ShortcutGenericAnalysis>
+
+    <!--
+    Eliminates one of the linking boundaries the compiler has to fight with.
+    I actually suspect turning this off will make things worse not better but whole program optimizers are hard to reason about.'
+    Fortunately, rebuilds are cheap enough to try.
+    -->
+    <UseDotNetNativeSharedAssemblyFrameworkPackage>false</UseDotNetNativeSharedAssemblyFrameworkPackage>
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
