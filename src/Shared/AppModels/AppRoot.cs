@@ -193,7 +193,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 Logger.LogInformation($"Initializing {nameof(MusicSourcesSettings)}");
 
                 var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
-                MusicSourcesSettings = new MusicSourcesSettings(folder: musicSourceSettingsFolder);
+                MusicSourcesSettings = new MusicSourcesSettings(musicSourceSettingsFolder);
 
                 await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
@@ -203,17 +203,20 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 Logger.LogInformation($"Initializing {nameof(ShellSettings)}");
 
                 var shellSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(ShellSettings));
-                ShellSettings = new ShellSettings(folder: shellSettingsFolder);
+                ShellSettings = new ShellSettings(shellSettingsFolder);
 
                 await ShellSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
 
             // Create/Remove cores when settings are added/removed.
+            MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged -= ConfiguredLocalStorageCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredLocalStorageCores.CollectionChanged += ConfiguredLocalStorageCores_OnCollectionChanged;
+
+            MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged -= ConfiguredOneDriveCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
 
             // Merge cores together and apply plugins
-            var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken: cancellationToken);
+            var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken);
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
@@ -306,7 +309,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                     else
                         await settings.LoadAsync();
 
-                    if (!settings.CanCreateCore)
+                    if (!settings.CanCreateCore || string.IsNullOrWhiteSpace(settings.InstanceId))
                     {
                         Logger.LogInformation($"Core settings for {settings.GetType()} ({nameof(settings.InstanceId)} {settings.InstanceId}) are invalid. Core cannot be created.");
                         return;
@@ -409,6 +412,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             _ongoingCoreInitCancellationTokens.TryAdd(core.InstanceId, cancellationTokenSource);
 
             await core.InitAsync(cancellationTokenSource.Token);
+
+            _ongoingCoreInitCancellationTokens.TryRemove(core.InstanceId, out _);
         }
         catch (Exception ex)
         {
@@ -564,8 +569,12 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 #if __WASM__
         return;
 #endif
+
+        if (MediaPlayerElements.Any(x => (string)x.Tag == core.InstanceId))
+            return;
+
         var mediaPlayer = new MediaPlayer();
-        var mediaPlayerElement = new MediaPlayerElement();
+        var mediaPlayerElement = new MediaPlayerElement { Tag = core.InstanceId };
 
         mediaPlayer.CommandManager.IsEnabled = false;
         mediaPlayerElement.SetMediaPlayer(mediaPlayer);

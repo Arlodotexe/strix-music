@@ -92,6 +92,8 @@ public sealed partial class FolderSelector : Page
         var relativePath = await RootFolder.GetRelativePathToAsync((IStorableChild)folder);
         Settings.FolderId = folder.Id;
         Settings.RelativeFolderPath = relativePath;
+        Settings.InstanceId = folder.Id; // Same way a StorageCore gets the InstanceId.
+
 
         _param.AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores.Add(Settings);
 

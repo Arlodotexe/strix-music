@@ -23,6 +23,8 @@
     -->
     <Assembly Name="NLog" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
     <Assembly Name="Microsoft.Graph" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Namespace Name="Microsoft.Graph.Models" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
+    <Namespace Name="Microsoft.Kiota" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
     <Assembly Name="OwlCore.Kubo" Dynamic="Required PublicAndInternal"  Serialize="Required PublicAndInternal"/>
   </Application>
 </Directives>
