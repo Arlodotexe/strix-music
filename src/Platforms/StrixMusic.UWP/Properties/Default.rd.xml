@@ -26,5 +26,6 @@
     <Namespace Name="Microsoft.Graph.Models" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
     <Namespace Name="Microsoft.Kiota" Dynamic="Required PublicAndInternal" Serialize="Required PublicAndInternal" />
     <Assembly Name="OwlCore.Kubo" Dynamic="Required PublicAndInternal"  Serialize="Required PublicAndInternal"/>
+    <Assembly Name="System.Text.Json" Dynamic="Required PublicAndInternal"  Serialize="Required PublicAndInternal"/>
   </Application>
 </Directives>
