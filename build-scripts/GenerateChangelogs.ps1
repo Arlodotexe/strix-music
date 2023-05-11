@@ -189,7 +189,7 @@ if ((GetGroupByName "new").length -gt 0) {
 }
 
 if ((GetGroupByName "refactor").length -gt 0 -or (GetGroupByName "cleanup").length -gt 0) {
-    $changelogMarkdownLines += "`n## Maintenance"
+    $changelogMarkdownLines += "`n## Maintainence"
     foreach ($commit in GetGroupByName "refactor") {
         $changelogMarkdownLines += TransformCommitToMarkdown $commit
     }
