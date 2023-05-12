@@ -113,7 +113,10 @@ public sealed partial class FolderSelector : Page
         var graphClient = new GraphServiceClient(httpClient, authenticationProvider);
 
         var drive = await graphClient.Me.Drive.GetAsync(cancellationToken: cancellationToken);
+        Guard.IsNotNull(drive);
+
         var driveItem = await graphClient.Drives[drive.Id].Root.GetAsync(cancellationToken: cancellationToken);
+        Guard.IsNotNull(driveItem);
 
         // Create storage abstraction and core.
         RootFolder = new OneDriveFolder(graphClient, driveItem);

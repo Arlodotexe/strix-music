@@ -116,7 +116,10 @@ public static class CoreFactory
 
         // Get selected OneDrive folder.
         var driveItem = await graphClient.Me.Drive.GetAsync();
+        Guard.IsNotNull(driveItem);
+
         var targetDriveItem = await graphClient.Drives[driveItem.Id].Items[settings.FolderId].GetAsync();
+        Guard.IsNotNull(targetDriveItem);
 
         // Create storage abstraction and core.
         var folderToScan = new OneDriveFolder(graphClient, targetDriveItem);
