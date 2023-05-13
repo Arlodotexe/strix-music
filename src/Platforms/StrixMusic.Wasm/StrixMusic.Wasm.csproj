@@ -55,7 +55,7 @@
     <PackageReference Include="CommunityToolkit.Common" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.0.2" />
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls" Version="0.0.17" />
+    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls" Version="0.0.18" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="OwlCore" Version="0.4.0" />
     <PackageReference Include="OwlCore.ComponentModel" Version="0.3.0" />
