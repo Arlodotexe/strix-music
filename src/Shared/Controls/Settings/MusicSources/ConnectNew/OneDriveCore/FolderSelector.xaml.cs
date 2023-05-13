@@ -7,12 +7,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Kiota.Abstractions.Authentication;
 using OwlCore.Storage;
 using OwlCore.Storage.OneDrive;
 using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using StrixMusic.AppModels;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 
@@ -90,7 +92,9 @@ public sealed partial class FolderSelector : Page
         var relativePath = await RootFolder.GetRelativePathToAsync((IStorableChild)folder);
         Settings.FolderId = folder.Id;
         Settings.RelativeFolderPath = relativePath;
-        
+        Settings.InstanceId = folder.Id; // Same way a StorageCore gets the InstanceId.
+
+
         _param.AppRoot.MusicSourcesSettings.ConfiguredOneDriveCores.Add(Settings);
 
         _param.SetupCompleteTaskCompletionSource.SetResult(null);
@@ -102,18 +106,17 @@ public sealed partial class FolderSelector : Page
         Guard.IsNotNull(_param);
         Guard.IsNotNull(_authResult);
 
-        var authProvider = new DelegateAuthenticationProvider(requestMessage =>
-        {
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", _authResult.AccessToken);
-            return Task.CompletedTask;
-        });
+        var authenticationProvider = new BaseBearerTokenAuthenticationProvider(new OneDriveAccessTokenProvider(_authResult.AccessToken));
 
         // Create graph client
-        var httpClient = GraphClientFactory.Create(GraphClientFactory.CreateDefaultHandlers(authProvider), finalHandler: _param.HttpMessageHandler);
-        var graphClient = new GraphServiceClient(httpClient);
+        var httpClient = GraphClientFactory.Create(GraphClientFactory.CreateDefaultHandlers(), finalHandler: _param.HttpMessageHandler);
+        var graphClient = new GraphServiceClient(httpClient, authenticationProvider);
 
-        // Get selected OneDrive folder.
-        var driveItem = await graphClient.Drive.Root.Request().Expand("children").GetAsync(cancellationToken);
+        var drive = await graphClient.Me.Drive.GetAsync(cancellationToken: cancellationToken);
+        Guard.IsNotNull(drive);
+
+        var driveItem = await graphClient.Drives[drive.Id].Root.GetAsync(cancellationToken: cancellationToken);
+        Guard.IsNotNull(driveItem);
 
         // Create storage abstraction and core.
         RootFolder = new OneDriveFolder(graphClient, driveItem);
