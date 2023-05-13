@@ -174,6 +174,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
 
             if (PART_Selector is Selector selector)
                 selector.SelectedItem = null;
+
             else if (PART_Selector is DataGrid dataGrid)
                 dataGrid.SelectedItem = null;
         }
