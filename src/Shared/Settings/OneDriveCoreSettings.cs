@@ -91,7 +91,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string ClientId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => Secrets.OneDriveClientId);
         set => SetSetting(value);
     }
 
@@ -100,7 +100,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string TenantId
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => Secrets.OneDriveTenantId);
         set => SetSetting(value);
     }
 
@@ -109,7 +109,7 @@ public class OneDriveCoreSettings : CoreSettingsBase, IInstanceId
     /// </summary>
     public string RedirectUri
     {
-        get => GetSetting(() => string.Empty);
+        get => GetSetting(() => Secrets.OneDriveRedirectUri);
         set => SetSetting(value);
     }
 

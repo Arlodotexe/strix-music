@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using OwlCore.Storage.Uwp;
 using StrixMusic.AppModels;
+using StrixMusic.Controls;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using StrixMusic.Controls;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace StrixMusic;

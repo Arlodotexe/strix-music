@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.AppModels;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Settings;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 
@@ -45,7 +45,7 @@ public sealed partial class ConfirmAndSave : Page
     }
 
     /// <inheritdoc />
-    override protected async void OnNavigatedTo(NavigationEventArgs e)
+    override protected void OnNavigatedTo(NavigationEventArgs e)
     {
         var param = ((ConnectNewMusicSourceNavigationParams NavParams, LocalStorageCoreSettings Settings))e.Parameter;
         _param = param;
@@ -59,11 +59,11 @@ public sealed partial class ConfirmAndSave : Page
     {
         Guard.IsNotNull(_appRoot?.MusicSourcesSettings);
         Guard.IsNotNull(Settings);
-        
+
         await Settings.SaveAsync();
-        
+
         _appRoot.MusicSourcesSettings.ConfiguredLocalStorageCores.Add(Settings);
-        
+
         _param.Item1.SetupCompleteTaskCompletionSource.SetResult(null);
     }
 

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using OwlCore.Extensions;
+using OwlCore.Storage.Uwp;
+using StrixMusic.AppModels;
+using StrixMusic.Settings;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using OwlCore.Extensions;
-using OwlCore.Storage.Uwp;
-using StrixMusic.Helpers;
-using StrixMusic.Settings;
-using StrixMusic.AppModels;
 
 namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.LocalStorageCore;
 

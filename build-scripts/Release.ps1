@@ -6,7 +6,7 @@ Param (
   [string]$variant = "alpha",
 
   [Parameter(HelpMessage = "If supplied, only the release steps supplied will be performed.")]
-  [ValidateSet('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps',  'organize', 'publish')]
+  [ValidateSet('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps', 'organize', 'publish')]
   [string[]]$steps = @('clean', 'uwp', 'wasm', 'sdk', 'docs', 'snapshotrepo', 'snapshotdeps', 'versionbumps', 'organize', 'publish'),
 
   [Parameter(HelpMessage = "The git remote to use for snapshotting the repo, pushing tags, version updates, snapshotted dependency data, and generated changelogs.")]
@@ -25,7 +25,10 @@ Param (
   [string]$pastReleaseCid = "",
 
   [Parameter(HelpMessage = 'A web url to an existing release. Must be resolvable with "ipfs name resolve example.com"')]
-  [string]$pastReleaseIpns = ""
+  [string]$pastReleaseIpns = "",
+  
+  [Parameter(HelpMessage = "The repository to 'git clone' for this snapshot.")]
+  [string]$repository
 )
 
 #  NOTICE: This script will
@@ -47,23 +50,23 @@ if ($steps.Contains("clean")) {
 # Version bumps
 #################
 if ($steps.Contains("versionbumps")) {
-    Write-Output "Bumping version and generating changelog for Strix Music SDK"
-    $sdkTag = &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-    $sdkChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
-    $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
+  Write-Output "Bumping version and generating changelog for Strix Music SDK"
+  $sdkTag = &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+  $sdkChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target sdk -forceTag $sdkTag | Select-Object -Last 1
+  $emptySdkChangelog = $sdkChangelogLastOutput.ToLower().Contains("no changes");
     
-    if (!$emptySdkChangelog) {
-      # Excluding -dryRun allows creation of tags and writing to disk.
-      &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant
-    }
+  if (!$emptySdkChangelog) {
+    # Excluding -dryRun allows creation of tags and writing to disk.
+    &"$PSScriptRoot\CreateSdkRelease.ps1" -variant $variant
+  }
     
-    Write-Output "Bumping version and generating changelog for Strix Music App"
-    $appTag = &"$PSScriptRoot\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
-    $appChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
-    $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
+  Write-Output "Bumping version and generating changelog for Strix Music App"
+  $appTag = &"$PSScriptRoot\CreateAppRelease.ps1" -variant $variant -dryRun | Select-Object -Last 1
+  $appChangelogLastOutput = &"$PSScriptRoot\GenerateChangelogs.ps1" -variant $variant -target app -forceTag $appTag | Select-Object -Last 1
+  $emptyAppChangelog = $appChangelogLastOutput.ToLower().Contains("no changes");
     
-    if (!$emptyAppChangelog) {
-      # Excluding -dryRun allows creation of tags and writing to disk.
+  if (!$emptyAppChangelog) {
+    # Excluding -dryRun allows creation of tags and writing to disk.
     &".\CreateAppRelease.ps1" -variant $variant
   }
 }
@@ -133,7 +136,14 @@ if (($noPublish -eq $false) -and ("" -ne $gitRemote) -and (!$emptyAppChangelog -
 if ($steps.Contains("snapshotrepo")) {
   # This should be done after everything is committed.
   Write-Output "Create snapshot of git repo"
-  .\SnapshotGitRepo.ps1 -outputPath $PSScriptRoot/build/source
+
+
+  if ($null -eq $repository -or $repository.Length -eq 0) {
+    # Use the cloned directory by default.
+    $repository = (Get-Item $PSScriptRoot).Parent.FullName;
+  }
+
+  .\SnapshotGitRepo.ps1 -outputPath $PSScriptRoot/build/source -gitRemote $gitRemote -repository $repository
 }
 
 #################
@@ -154,19 +164,30 @@ if ($steps.Contains("sdk")) {
   .\dotnet.ps1 -Command 'pack "../src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj" -c $configuration --output build/sdk/$sdkTag' -fallbackOnly
 }
 
+function CheckReleaseConfigurationRequirements {
+  if ($configuration.ToLower() -eq "release" -and !(Test-Path "$PSScriptRoot\..\src\Shared\Secrets.Release.cs")) {
+    Write-Error ".\src\Shared\Secrets.Release.cs is missing. Please create this file by making a copy of .\src\Shared\Secrets.cs and providing secret values if you have them."
+    exit -1;
+  }
+}
+
 if ($steps.Contains("wasm")) {
+  CheckReleaseConfigurationRequirements
+
   # Build WebAssembly
   Write-Output "Building WebAssembly app in $configuration mode"
-  .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly
+  .\dotnet.ps1 -Command "build $PSScriptRoot/../src/Platforms/StrixMusic.Wasm/StrixMusic.Wasm.csproj /r /p:Configuration=`"$configuration`"" -fallbackOnly -ErrorAction Stop
 }
 
 if ($steps.Contains("uwp")) {
+  CheckReleaseConfigurationRequirements
+  
   # Build UWP (Requires Windows with correct tooling installed)
   Write-Output "Cleaning up existing uwp AppPackages"
   Get-ChildItem "$PSScriptRoot/../src/Platforms/StrixMusic.UWP/AppPackages/" | Remove-Item -Recurse -Force
 
   Write-Output "Building UWP app in $configuration mode"
-  msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms="x86|x64|ARM" /p:Configuration="$configuration" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload
+  Invoke-Expression "msbuild $PSScriptRoot/../src/Platforms/StrixMusic.UWP/StrixMusic.UWP.csproj /r /m /p:AppxBundlePlatforms=""x86|x64|ARM"" /p:Configuration=""$configuration"" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload" -ErrorAction Stop
 }
 
 #################

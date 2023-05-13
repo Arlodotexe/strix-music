@@ -10,9 +10,10 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ocext="using:OwlCore.Extensions"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	x:Name="RootUserControl"
 	mc:Ignorable="d">
 
@@ -203,11 +204,7 @@
 			Header="Routing mode (Bootstrap only)"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
-			<ComboBox
-				xmlns:ockubo="using:OwlCore.Kubo"
-				IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}"
-				ItemsSource="{ui:EnumValues Type=ockubo:DhtRoutingMode}"
-				SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
+			<ComboBox win:ItemsSource="{ui:EnumValues Type={ocext:Type Fullname='OwlCore.Kubo.DhtRoutingMode, OwlCore.Kubo'}}" win:SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
 		</labs:SettingsCard>
 
 		<labs:SettingsCard

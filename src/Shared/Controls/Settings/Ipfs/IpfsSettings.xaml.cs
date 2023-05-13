@@ -4,6 +4,7 @@ using OwlCore.Kubo;
 using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 
 namespace StrixMusic.Controls.Settings.Ipfs;
 

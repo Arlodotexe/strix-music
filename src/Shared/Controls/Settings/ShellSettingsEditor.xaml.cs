@@ -1,8 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using StrixMusic.AppModels;
 using StrixMusic.Sdk.AppModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using ShellSettings = StrixMusic.Settings.ShellSettings;
 
 namespace StrixMusic.Controls.Settings;

@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel;
-using Windows.ApplicationModel.Core;
-using OwlCore.Storage.Uwp;
 using StrixMusic.AppModels;
-using Windows.Storage;
+using StrixMusic.Controls;
+using StrixMusic.Sdk.WinUI.Controls;
+using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using StrixMusic.Controls;
-using StrixMusic.Sdk.WinUI.Controls;
 
 namespace StrixMusic;
 

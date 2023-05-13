@@ -139,7 +139,6 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     {
         if (e.PropertyName == nameof(_settings.Enabled))
         {
-            // Shut down the node if IPFS is turned off.
             if (IsInitialized && !_settings.Enabled)
                 await StopCommand.ExecuteAsync(null);
         }
@@ -328,7 +327,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         {
             ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
             GatewayUri = new Uri($"http://127.0.0.1:{Settings.NodeGatewayPort}"),
-            RoutingMode = Settings.BootstrapNodeDhtRouting,
+            RoutingMode = (OwlCore.Kubo.DhtRoutingMode)Settings.BootstrapNodeDhtRouting,
             StartupProfiles =
             {
                 Settings.BootstrapNodeEnableLocalDiscovery ? "local-discovery" : "server",

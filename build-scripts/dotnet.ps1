@@ -75,3 +75,5 @@ if ($skipExtract -eq $false -and !(Test-Path "$extractPath/dotnet*")) {
 }
 
 Invoke-Expression -Command "$extractPath/dotnet $command"
+
+Stop-Process -n "dotnet" -ErrorAction SilentlyContinue;

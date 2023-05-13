@@ -1,8 +1,8 @@
 ﻿using System;
+using OwlCore.Storage;
 using StrixMusic.AppModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Storage;
 
 namespace StrixMusic.Controls
 {

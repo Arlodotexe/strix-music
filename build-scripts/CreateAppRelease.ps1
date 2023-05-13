@@ -63,7 +63,7 @@ $build = $parts[2];
 # If yes, bump the build number and save to disk
 if ($versionAlreadyReleased) {
     $newVersion = "$major.$minor.$([int]$build + 1)";
-    Write-Host "App version $appVersion already released. Selecting $newVersion";
+    Write-Host "App version $appVersion already released. This will be bumped to $newVersion";
 
     SaveVersion $newVersion;
 
@@ -94,5 +94,5 @@ else {
     SaveVersion $newVersion
 }
 
-Write-Host "Changes complete. Please review your working tree before pushing."
+Write-Host "Please review your working tree for changes"
 return "$newVersion-app-$variant"
