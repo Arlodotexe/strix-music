@@ -10,8 +10,9 @@
     <LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OwlCore" Version="0.2.1" />
+    <PackageReference Include="OwlCore" Version="0.4.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
+    <PackageReference Include="Uno.UI" Version="4.8.33" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -31,7 +32,7 @@
   <ItemGroup>
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Remove="DefaultShell.xaml" />
     <None Remove="LICENSE.txt" />
@@ -155,7 +156,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
     <PackageReference Include="Uno.UI" Version="4.8.15" />
