@@ -321,10 +321,14 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         var kuboBinParentFolder = (SystemFolder?)await kuboBin.GetParentAsync(cancellationToken);
         Guard.IsNotNull(kuboBinParentFolder);
 
+        var kuboBinParentFolderParent = (SystemFolder?)await kuboBinParentFolder.GetParentAsync(cancellationToken);
+        Guard.IsNotNull(kuboBinParentFolderParent);
+
         var repoFolder = (SystemFolder)await kuboBinParentFolder.CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
 
         var bootstrapper = new KuboBootstrapper(kuboBin, repoFolder.Path)
         {
+            BinaryWorkingFolder = kuboBinParentFolderParent,
             ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
             GatewayUri = new Uri($"http://127.0.0.1:{Settings.NodeGatewayPort}"),
             RoutingMode = (OwlCore.Kubo.DhtRoutingMode)Settings.BootstrapNodeDhtRouting,
@@ -455,7 +459,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     public async Task<IChildFile> StoreDownloadedKuboBinaryAsync(IFile binaryFile, CancellationToken cancellationToken)
     {
         var appDataFolder = new SystemFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-        var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
+        var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync(nameof(KuboBootstrapper), overwrite: false, cancellationToken);
 
         var copy = await binariesFolder.CreateCopyOfAsync(binaryFile, overwrite: true, cancellationToken);
         Settings.DownloadKuboBinaryFileId = copy.Id;
@@ -471,7 +475,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
     public async Task<IChildFile?> GetDownloadedKuboBinaryAsync(CancellationToken cancellationToken)
     {
         var appDataFolder = new SystemFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
-        var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync("bin", overwrite: false, cancellationToken);
+        var binariesFolder = (SystemFolder)await appDataFolder.CreateFolderAsync(nameof(KuboBootstrapper), overwrite: false, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(Settings.DownloadKuboBinaryFileId))
         {

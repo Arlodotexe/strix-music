@@ -50,7 +50,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Labs.Uwp.SizerBase" Version="0.0.4" />
     <PackageReference Include="OwlCore.Kubo" Version="0.12.4" />
-    <PackageReference Include="OwlCore.Storage" Version="0.8.4" />
+    <PackageReference Include="OwlCore.Storage" Version="0.8.5" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />

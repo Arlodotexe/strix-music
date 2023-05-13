@@ -12,7 +12,7 @@
       <Version>0.12.4</Version>
     </PackageReference>
     <PackageReference Include="OwlCore.Storage">
-      <Version>0.8.4</Version>
+      <Version>0.8.5</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Common">
       <Version>8.2.0</Version>
