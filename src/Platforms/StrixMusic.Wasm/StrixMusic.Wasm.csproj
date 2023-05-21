@@ -49,15 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Labs.Uwp.SizerBase" Version="0.0.4" />
-    <PackageReference Include="OwlCore.Kubo" Version="0.12.4" />
-    <PackageReference Include="OwlCore.Storage" Version="0.8.4" />
+    <PackageReference Include="OwlCore.Kubo" Version="0.12.5" />
+    <PackageReference Include="OwlCore.Storage" Version="0.8.5" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.0.2" />
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls" Version="0.0.17" />
+    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls" Version="0.0.18" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-    <PackageReference Include="OwlCore" Version="0.2.1" />
+    <PackageReference Include="OwlCore" Version="0.4.0" />
     <PackageReference Include="OwlCore.ComponentModel" Version="0.3.0" />
     <PackageReference Include="OwlCore.Storage.Uwp" Version="0.1.0" />
     <PackageReference Include="OwlCore.Storage.OneDrive" Version="0.2.0" />
@@ -79,8 +79,8 @@
     <PackageReference Include="Uno.UI.WebAssembly" Version="4.8.33" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="4.8.33" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.33" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.23" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.23" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.24" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.24" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\Storage\src\StrixMusic.Cores.Storage.csproj" />
