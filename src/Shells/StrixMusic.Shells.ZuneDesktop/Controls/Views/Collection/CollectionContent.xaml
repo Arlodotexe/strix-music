@@ -51,51 +51,6 @@
     </UserControl.Resources>
 
     <Grid Padding="32,-16,32,16">
-        <Grid.Resources>
-            <Storyboard x:Name="PageTransition">
-                <DoubleAnimation
-                    Storyboard.TargetName="Artists_ContentTransform"
-                    Storyboard.TargetProperty="X"
-                    From="-20"
-                    To="0"
-                    Duration="0:0:0.5">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase EasingMode="EaseOut" />
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-                <DoubleAnimation
-                    Storyboard.TargetName="Albums_ContentTransform"
-                    Storyboard.TargetProperty="X"
-                    From="-20"
-                    To="0"
-                    Duration="0:0:0.5">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase EasingMode="EaseOut" />
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-                <DoubleAnimation
-                    Storyboard.TargetName="Songs_ContentTransform"
-                    Storyboard.TargetProperty="X"
-                    From="-20"
-                    To="0"
-                    Duration="0:0:0.5">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase EasingMode="EaseOut" />
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-                <DoubleAnimation
-                    Storyboard.TargetName="Playlists_ContentTransform"
-                    Storyboard.TargetProperty="X"
-                    From="-20"
-                    To="0"
-                    Duration="0:0:0.5">
-                    <DoubleAnimation.EasingFunction>
-                        <ExponentialEase EasingMode="EaseOut" />
-                    </DoubleAnimation.EasingFunction>
-                </DoubleAnimation>
-            </Storyboard>
-        </Grid.Resources>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />

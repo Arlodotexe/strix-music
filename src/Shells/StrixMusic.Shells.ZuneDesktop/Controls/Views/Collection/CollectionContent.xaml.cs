@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
@@ -71,13 +72,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             }
         }
 
-        private void SwapPage(string pageName)
+        private async void SwapPage(string pageName)
         {
             _currentSelectedPage = pageName;
             AnimateAlbumCollection();
 
             CollectionSwitch.Value = pageName;
-            PageTransition.Begin();
             ClearSelections();
         }
 
