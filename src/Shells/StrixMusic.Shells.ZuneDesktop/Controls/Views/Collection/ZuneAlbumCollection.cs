@@ -248,7 +248,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 {
                     PART_Selector.SelectedItem = Collection.Albums[0];
                     var album = _albumItems.FirstOrDefault();
-                    album.DefaultSelectionState = true;
+
+                    if (album != null)
+                        album.DefaultSelectionState = true;
                 }
             }
         }
