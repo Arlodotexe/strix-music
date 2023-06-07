@@ -103,7 +103,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
-            // Songs_ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Tracks;
+          //  Songs_TrackTable.Coll = CollectionContentType.Tracks;
 
             if (DataRoot?.Library.InitTrackCollectionAsyncCommand.CanExecute(null) ?? false)
                 DataRoot.Library.InitTrackCollectionAsyncCommand.Execute(null);

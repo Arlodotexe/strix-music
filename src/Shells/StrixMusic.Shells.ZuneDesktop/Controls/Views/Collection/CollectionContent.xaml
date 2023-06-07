@@ -232,9 +232,9 @@
                         <zuneCollections:ZuneTrackCollection
                             x:Name="Songs_TrackTable"
                             Grid.Column="0"
-                            Margin="8,0"
+                            Margin="0,0,8,0"
                             Collection="{Binding DataRoot.Library}"
-                            Style="{StaticResource ZuneDesktopTrackTableControlStyle}" />
+                            Style="{StaticResource ZuneDesktopTrackListControlStyle}" />
                     </Grid>
                 </tkcontrols:Case>
                 <tkcontrols:Case Value="Playlists">
@@ -255,10 +255,10 @@
                             SelectionChanged="PlaylistSelected" />
                         <zuneCollections:ZuneTrackCollection
                             x:Name="Playlists_TrackTable"
-                            Grid.Column="1"
-                            Margin="8,0"
+                            Grid.Column="0"
+                            Margin="0,0,8,0"
                             Collection="{Binding DataRoot.Library}"
-                            Style="{StaticResource ZuneDesktopTrackTableControlStyle}" />
+                            Style="{StaticResource ZuneDesktopTrackListControlStyle}" />
                         <local:PlaylistDetailsPane
                             x:Name="Playlists_DetailsPane"
                             Grid.Column="2"
