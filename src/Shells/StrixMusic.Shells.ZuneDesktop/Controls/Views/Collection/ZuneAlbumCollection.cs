@@ -253,6 +253,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         album.DefaultSelectionState = true;
                 }
             }
+            else
+            {
+                if (PART_Selector != null)
+                {
+                    foreach (var item in _albumItems)
+                    {
+                        item.DefaultSelectionState = false;
+                    }
+                }
+            }
         }
 
         private async void Album_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

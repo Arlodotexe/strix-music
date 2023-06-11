@@ -114,6 +114,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
                     var zuneAlbumItem = s as ZuneAlbumItem;
                     VisualStateManager.GoToState(zuneAlbumItem, "Selected", true);
                 }
+                else
+                {
+                    var zuneAlbumItem = s as ZuneAlbumItem;
+                    VisualStateManager.GoToState(zuneAlbumItem, "Unselected", true);
+                }
             }
         }
 
