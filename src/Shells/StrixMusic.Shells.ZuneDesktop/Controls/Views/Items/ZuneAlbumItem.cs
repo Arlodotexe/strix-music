@@ -38,7 +38,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// </summary>
         public bool DefaultSelectionState
         {
-            get => (bool)GetValue(ZuneCollectionTypeProperty);
+            get => (bool)GetValue(DefaultSelectionStateProperty);
             set => SetValue(DefaultSelectionStateProperty, value);
         }
 
