@@ -31,7 +31,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         /// Dependency property for <ses cref="CollectionContent" />.
         /// </summary>
         public static readonly DependencyProperty ZuneCollectionTypeProperty =
-            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumItem), new PropertyMetadata(CollectionContentType.Tracks, (s, e) => OnZuneCollectionTypeChanged(s, e)));
+            DependencyProperty.Register(nameof(ZuneCollectionType), typeof(CollectionContent), typeof(ZuneAlbumItem), new PropertyMetadata(CollectionContentType.Albums, (s, e) => OnZuneCollectionTypeChanged(s, e)));
 
         /// <summary>
         /// Flag to determine if the collection item should be selected by default or not.
