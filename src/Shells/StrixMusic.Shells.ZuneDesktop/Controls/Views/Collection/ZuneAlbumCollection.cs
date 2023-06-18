@@ -228,6 +228,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         {
                             ParentCollection = newValue,
                             Album = (AlbumViewModel)item,
+                            ZuneCollectionType = ZuneCollectionType,
                         };
 
                         _albumItems.Add(newItems);
@@ -279,7 +280,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         var newItem = new ZuneAlbumCollectionItem
                         {
                             Album = (AlbumViewModel)x,
-                            ParentCollection = Collection
+                            ParentCollection = Collection,
+                            DefaultSelectionState = false,
+                            ZuneCollectionType = ZuneCollectionType
                         };
 
                         return newItem;
@@ -357,11 +360,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     break;
 
                 var uiElement = gridViewItem.ContentTemplateRoot;
-
-                if (uiElement is ZuneAlbumItem zuneAlbumItem)
-                {
-                    zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
-                }
 
                 // This needs to be explicitly casted to UIElement to avoid a compiler error specific to android in uno.
                 uiElments.Add((UIElement)uiElement);
