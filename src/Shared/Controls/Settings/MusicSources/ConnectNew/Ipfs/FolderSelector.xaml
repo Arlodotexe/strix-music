@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        >-->
+
         <StackPanel Grid.Row="1" Spacing="12">
             <Image MaxWidth="250" Source="ms-appx:///Assets/Cores/OneDrive/login.svg" />
         </StackPanel>
