@@ -23,42 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <!--<StackPanel Visibility="{x:Bind InvertBoolToVisibility(AuthenticateCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Visible}">
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="20"
-                Text="Select a folder"
-                TextAlignment="Center"
-                TextWrapping="WrapWholeWords" />
-
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="12"
-                Opacity="0.5"
-                Text="{x:Bind Settings.UserDisplayName, Mode=OneWay}"
-                TextAlignment="Center"
-                TextWrapping="WrapWholeWords" />
-        </StackPanel>-->
-
-        <!--<StackPanel Visibility="{x:Bind BoolToVisibility(AuthenticateCommand.ExecutionTask.IsFaulted), Mode=OneWay, FallbackValue=Collapsed}">
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="20"
-                Text="Something went wrong"
-                TextAlignment="Center"
-                TextWrapping="WrapWholeWords" />
-
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="12"
-                Foreground="Red"
-                Opacity="0.5"
-                Text="{x:Bind AuthenticateCommand.ExecutionTask.Exception.Message, FallbackValue='', Mode=OneWay}"
-                TextAlignment="Center"
-                TextWrapping="WrapWholeWords" />
-        </StackPanel>-->
-
+        >-->
         <StackPanel Grid.Row="1" Spacing="12">
             <Image MaxWidth="250" Source="ms-appx:///Assets/Cores/OneDrive/login.svg" />
         </StackPanel>
@@ -67,13 +32,6 @@
             <StackPanel Visibility="{x:Bind IsNotNullToVisibility(RootFolder), Mode=OneWay}">
                 <storage:FolderBrowser x:Name="FolderBrowser" InitialFolder="{x:Bind RootFolder, Mode=OneWay}" />
             </StackPanel>
-
-            <!--<controls:Loading IsLoading="{x:Bind AuthenticateCommand.IsRunning, Mode=OneWay}">
-                <StackPanel Padding="12" Orientation="Horizontal">
-                    <ProgressRing Margin="0,0,12,0" IsActive="True" />
-                    <TextBlock VerticalAlignment="Center" Text="Authenticating" />
-                </StackPanel>
-            </controls:Loading>-->
 
             <controls:Loading IsLoading="{x:Bind GetRootFolderCommand.IsRunning, Mode=OneWay}">
                 <StackPanel Padding="12" Orientation="Horizontal">
