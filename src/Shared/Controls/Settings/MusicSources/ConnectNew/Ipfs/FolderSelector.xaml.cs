@@ -79,10 +79,11 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         [RelayCommand]
         private Task GetRootFolderAsync(CancellationToken cancellationToken)
         {
+            Guard.IsNotNull(Settings);
             Guard.IsNotNull(_param);
             Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
 
-            var folder = new IpfsFolder(Settings?.IpfsCidPath, _param.AppRoot.Ipfs.Client);
+            var folder = new IpfsFolder(Settings.IpfsCidPath, _param.AppRoot.Ipfs.Client);
 
             // Create storage abstraction and core.
             RootFolder = folder;

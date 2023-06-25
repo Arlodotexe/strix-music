@@ -25,7 +25,10 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="1" Spacing="12">
-            <Image MaxWidth="250" Source="ms-appx:///Assets/Cores/OneDrive/login.svg" />
+            <Image
+                MaxWidth="250"
+                MaxHeight="250"
+                Source="ms-appx:///Assets/Cores/ipfs/access.svg" />
         </StackPanel>
 
         <StackPanel Grid.Row="2" Spacing="12">

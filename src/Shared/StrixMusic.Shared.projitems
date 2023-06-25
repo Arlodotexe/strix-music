@@ -248,6 +248,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\LocalStorage\browse.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\login.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Settings\void.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\Ipfs\access.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\Backgrounds\RobotOwlTransparent.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Shells\Zune.Desktop.4.8\svg\Next.xaml">
       <SubType>Designer</SubType>
