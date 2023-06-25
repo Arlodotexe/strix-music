@@ -70,7 +70,7 @@ namespace StrixMusic.Settings
         /// <inheritdoc />
         public override object GetSettingByName(string settingName)
         {
-            Guard.ArgNotNull(settingName, nameof(settingName));
+            Guard.IsNotNull(settingName);
 
             return settingName switch
             {
