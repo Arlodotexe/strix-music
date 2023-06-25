@@ -133,7 +133,7 @@ public sealed partial class FolderBrowser : UserControl
         FetchingItems = true;
         IsFolderEmpty = false;
 
-        await foreach (var item in newValue.GetItemsAsync(StorableType.All))
+        await foreach (var item in newValue.GetItemsAsync())
             CurrentFolderItems.Add(item);
 
         IsFolderEmpty = CurrentFolderItems.Count == 0;
