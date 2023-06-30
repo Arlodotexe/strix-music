@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using ColorCode.Common;
+using CommunityToolkit.Diagnostics;
 using OwlCore.ComponentModel;
 using OwlCore.Kubo;
 using OwlCore.Storage;
@@ -62,7 +62,7 @@ namespace StrixMusic.Settings
         /// <inheritdoc />
         public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
         {
-            nameof(InstanceId) or nameof(InstanceId) or nameof(IpfsCidPath) or nameof(IpfsCidPath)
+            nameof(InstanceId) or nameof(IpfsCidPath) or nameof(IpnsAddress)
                 => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
             _ => true,
         };
@@ -70,7 +70,7 @@ namespace StrixMusic.Settings
         /// <inheritdoc />
         public override object GetSettingByName(string settingName)
         {
-            Guard.ArgNotNull(settingName, nameof(settingName));
+            Guard.IsNotNull(settingName);
 
             return settingName switch
             {
