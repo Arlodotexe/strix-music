@@ -29,7 +29,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
     [ObservableObject]
     public sealed partial class LandingPage : Page
     {
-        private ConnectNewMusicSourceNavigationParams? _param;
+        [ObservableProperty] private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
 
         /// <summary>

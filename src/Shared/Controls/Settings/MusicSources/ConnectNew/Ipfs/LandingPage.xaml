@@ -19,7 +19,7 @@
             Header="Configure IPFS folder"
             IsEnabled="{x:Bind IsNotNull(Settings), Mode=OneWay}"
             IsExpanded="True"
-            Visibility="{x:Bind NullToVisibility(_param.AppRoot.Ipfs.Client)}">
+            Visibility="{x:Bind NullToVisibility(Param.AppRoot.Ipfs.Client)}">
             <labs:SettingsExpander.Items>
                 <labs:SettingsCard ContentAlignment="Left">
                     <StackPanel
@@ -29,13 +29,13 @@
                         <StackPanel
                             HorizontalAlignment="Center"
                             Orientation="Horizontal"
-                            Visibility="{x:Bind _param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
+                            Visibility="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
                             <TextBlock FontWeight="Bold" Text="Preparing to run the daemon..." />
                             <ProgressRing
                                 Width="10"
                                 Height="10"
                                 Background="Black"
-                                IsActive="{x:Bind _param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
+                                IsActive="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
                         </StackPanel>
 
                         <TextBox
