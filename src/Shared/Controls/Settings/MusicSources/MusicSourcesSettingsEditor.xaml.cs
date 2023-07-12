@@ -73,6 +73,12 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
 
     private async void DeleteMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
     {
+        var menuFlyoutItem = (MenuFlyoutItem)sender;
+        var core = (CoreViewModel)menuFlyoutItem.DataContext;
+
+        Guard.IsNotNull(AppRoot?.MergedCore);
+        Guard.IsNotNull(AppRoot?.MusicSourcesSettings);
+
         // At least one core must stay present in MergedCore.
         // AppRoot is not yet set up to safely deconstruct MergedCore, ViewModels, plugins, etc.
         if (AppRoot?.StrixDataRoot?.Sources.Count == 1)
@@ -88,9 +94,9 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
                 {
                     Guard.IsNotNull(AppRoot.MusicSourcesSettings);
 
-                    AppRoot.MusicSourcesSettings.ResetAllSettings();
+                    RemoveMusicSource(core);
                     await AppRoot.MusicSourcesSettings.SaveAsync();
-                    await AppRoot.Diagnostics.RestartAppCommand.ExecuteAsync(null);
+                    var failureReason = await AppRoot.Diagnostics.RestartAppAsync();
                 }),
                 CloseButtonText = "Cancel",
             }
@@ -98,12 +104,6 @@ public sealed partial class MusicSourcesSettingsEditor : UserControl
 
             return;
         }
-
-        var menuFlyoutItem = (MenuFlyoutItem)sender;
-        var core = (CoreViewModel)menuFlyoutItem.DataContext;
-
-        Guard.IsNotNull(AppRoot?.MergedCore);
-        Guard.IsNotNull(AppRoot?.MusicSourcesSettings);
 
         await new ContentDialog
         {
