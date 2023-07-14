@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.ZuneDesktop.Controls.Views.Items;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -20,5 +21,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 
         [ObservableProperty]
         private AlbumViewModel? _album;
+
+        [ObservableProperty]
+        private bool _defaultSelectionState;
+
+        [ObservableProperty]
+        private CollectionContentType _zuneCollectionType;
     }
 }

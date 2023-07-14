@@ -228,6 +228,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         {
                             ParentCollection = newValue,
                             Album = (AlbumViewModel)item,
+                            ZuneCollectionType = ZuneCollectionType,
                         };
 
                         _albumItems.Add(newItems);
@@ -239,6 +240,28 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                 if (oldValue is not null)
                 {
                     oldValue.Albums.CollectionChanged -= Album_CollectionChanged;
+                }
+            }
+
+            if (Collection?.Albums.Count == 1)
+            {
+                if (PART_Selector != null)
+                {
+                    PART_Selector.SelectedItem = Collection.Albums[0];
+                    var album = _albumItems.FirstOrDefault();
+
+                    if (album != null)
+                        album.DefaultSelectionState = true;
+                }
+            }
+            else
+            {
+                if (PART_Selector != null)
+                {
+                    foreach (var item in _albumItems)
+                    {
+                        item.DefaultSelectionState = false;
+                    }
                 }
             }
         }
@@ -257,7 +280,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                         var newItem = new ZuneAlbumCollectionItem
                         {
                             Album = (AlbumViewModel)x,
-                            ParentCollection = Collection
+                            ParentCollection = Collection,
+                            DefaultSelectionState = false,
+                            ZuneCollectionType = ZuneCollectionType
                         };
 
                         return newItem;
@@ -335,11 +360,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
                     break;
 
                 var uiElement = gridViewItem.ContentTemplateRoot;
-
-                if (uiElement is ZuneAlbumItem zuneAlbumItem)
-                {
-                    zuneAlbumItem.ZuneCollectionType = ZuneCollectionType;
-                }
 
                 // This needs to be explicitly casted to UIElement to avoid a compiler error specific to android in uno.
                 uiElments.Add((UIElement)uiElement);
