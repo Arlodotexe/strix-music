@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Events;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
@@ -15,6 +16,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
     /// </summary>
     public sealed partial class CollectionContent : UserControl
     {
+        private string _currentSelectedPage = string.Empty;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionContent"/> class.
         /// </summary>
@@ -29,7 +32,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         {
             Loaded -= CollectionContent_Loaded;
 
-            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
+            Artists_ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
             SwapPage("Artists");
         }
 
@@ -53,24 +56,34 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         /// </summary>
         public void AnimateAlbumCollection()
         {
-            if (ZuneAlbumCollection.Visibility == Visibility.Visible && ZuneAlbumCollection.AlbumsLoaded)
+            if (_currentSelectedPage == "Artists")
             {
-                ZuneAlbumCollection.AnimateCollection();
+                if (Artists_ZuneAlbumCollection.Visibility == Visibility.Visible && Artists_ZuneAlbumCollection.AlbumsLoaded)
+                {
+                    Artists_ZuneAlbumCollection.AnimateCollection();
+                }
+            }
+            else if (_currentSelectedPage == "Albums")
+            {
+                if (Albums_ZuneAlbumCollection.Visibility == Visibility.Visible && Albums_ZuneAlbumCollection.AlbumsLoaded)
+                {
+                    Albums_ZuneAlbumCollection.AnimateCollection();
+                }
             }
         }
 
-        private void SwapPage(string pageVisualStateName)
+        private async void SwapPage(string pageName)
         {
+            _currentSelectedPage = pageName;
             AnimateAlbumCollection();
 
-            VisualStateManager.GoToState(this, pageVisualStateName, true);
-            PageTransition.Begin();
+            CollectionSwitch.Value = pageName;
             ClearSelections();
         }
 
         private void ArtistsPageSelected(object sender, RoutedEventArgs e)
         {
-            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
+            Artists_ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Artist;
 
             if (DataRoot?.Library.InitArtistCollectionAsyncCommand.CanExecute(null) ?? false)
                 DataRoot.Library.InitArtistCollectionAsyncCommand.Execute(null);
@@ -80,7 +93,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)
         {
-            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Albums;
+            Albums_ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Albums;
 
             if (DataRoot?.Library.InitAlbumCollectionAsyncCommand.CanExecute(null) ?? false)
                 DataRoot.Library.InitAlbumCollectionAsyncCommand.Execute(null);
@@ -90,7 +103,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
-            ZuneAlbumCollection.ZuneCollectionType = CollectionContentType.Tracks;
+          //  Songs_TrackTable.Coll = CollectionContentType.Tracks;
 
             if (DataRoot?.Library.InitTrackCollectionAsyncCommand.CanExecute(null) ?? false)
                 DataRoot.Library.InitTrackCollectionAsyncCommand.Execute(null);
@@ -109,10 +122,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
                 return;
 
             e.SelectedItem.PopulateMoreAlbumsCommand.Execute(e.SelectedItem.TotalAlbumItemsCount);
-            ZuneAlbumCollection.Collection = e.SelectedItem;
+
+            Artists_ZuneAlbumCollection.Collection = e.SelectedItem;
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackCollection.Collection = e.SelectedItem;
+            Artists_TrackCollection.Collection = e.SelectedItem;
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<ZuneAlbumCollectionItem> e)
@@ -124,7 +138,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
                 return;
 
             e.SelectedItem.Album.PopulateMoreTracksCommand.Execute(e.SelectedItem.Album.TotalTrackCount);
-            TrackCollection.Collection = e.SelectedItem.Album;
+            Albums_TrackCollection.Collection = e.SelectedItem.Album;
         }
 
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
@@ -133,8 +147,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
                 return;
 
             e.SelectedItem.PopulateMoreTracksCommand.Execute(e.SelectedItem.TotalTrackCount);
-            TrackTable.Collection = e.SelectedItem;
-            DetailsPane.DataContext = e.SelectedItem;
+            Playlists_TrackTable.Collection = e.SelectedItem;
+            Playlists_DetailsPane.DataContext = e.SelectedItem;
         }
 
         private void ClearSelections()
@@ -142,24 +156,29 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             if (DataRoot == null)
                 return;
 
-            ArtistCollection.ClearSelected();
-            ZuneAlbumCollection.ClearSelected();
-            TrackTable.ClearSelected();
-            TrackCollection.ClearSelected();
-            PlaylistCollection.ClearSelected();
+            Artists_ArtistCollection.ClearSelected();
+            Artists_ZuneAlbumCollection.ClearSelected();
+            Albums_ZuneAlbumCollection.ClearSelected();
+            Songs_TrackTable.ClearSelected();
+            Artists_TrackCollection.ClearSelected();
+            Albums_TrackCollection.ClearSelected();
+            Playlists_PlaylistCollection.ClearSelected();
 
             // Clears by rebinding
-            TrackTable.DataContext = null;
+            Songs_TrackTable.DataContext = null;
 
             Guard.IsNotNull(DataRoot?.Library, nameof(DataRoot.Library));
 
-            ArtistCollection.Collection = (LibraryViewModel)DataRoot.Library;
-            ZuneAlbumCollection.Collection = (LibraryViewModel)DataRoot.Library;
-            TrackCollection.Collection = (LibraryViewModel)DataRoot.Library;
-            TrackTable.Collection = (LibraryViewModel)DataRoot.Library;
-            PlaylistCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Artists_ArtistCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Artists_ZuneAlbumCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Albums_ZuneAlbumCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Artists_TrackCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Albums_TrackCollection.Collection = (LibraryViewModel)DataRoot.Library;
+            Songs_TrackTable.Collection = (LibraryViewModel)DataRoot.Library;
+            Playlists_PlaylistCollection.Collection = (LibraryViewModel)DataRoot.Library;
 
-            DetailsPane.DataContext = null;
+            Playlists_DetailsPane.DataContext = null;
+            Playlists_DetailsPane.DataContext = null;
         }
 
         private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)

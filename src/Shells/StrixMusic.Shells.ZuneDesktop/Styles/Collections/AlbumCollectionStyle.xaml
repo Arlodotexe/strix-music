@@ -1,58 +1,79 @@
 ﻿<ResourceDictionary
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
-    xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
-    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
-    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
-    xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:a="using:OwlCore.WinUI.Attached"
-    xmlns:mvvmCollections="using:CommunityToolkit.Mvvm.Collections"
-    xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle"
+    xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
+    xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
+    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    xmlns:mvvmCollections="using:CommunityToolkit.Mvvm.Collections"
+    xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
+    xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items">
 
     <ResourceDictionary.MergedDictionaries>
-        <itemstyles:AlbumItemStyle/>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
+        <itemstyles:AlbumItemStyle />
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <unitconvert:CountToAlbumsConverter x:Key="CountToAlbumsConverter"/>
-    <zuneConverters:ZuneSortStateToStringConverter x:Key="ZuneSortStateToStringConverter"/>
+    <unitconvert:CountToAlbumsConverter x:Key="CountToAlbumsConverter" />
+    <zuneConverters:ZuneSortStateToStringConverter x:Key="ZuneSortStateToStringConverter" />
 
     <Style x:Key="ZuneDesktopAlbumCollectionStyle" TargetType="collections:ZuneAlbumCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="collections:ZuneAlbumCollection">
-                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
                             <!--  SemanticZoom grouped source  -->
 
-                            <StackPanel Margin="24,0,0,0" Spacing="5" Orientation="Horizontal">
-                                <TextBlock Text="{Binding Collection.TotalAlbumItemsCount, RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}"
-                                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+                            <StackPanel
+                                Margin="24,0,0,0"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <TextBlock
+                                    Margin="4,0,0,0"
+                                    a:TextHelpers.CharacterCasing="Upper"
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Text="{Binding Collection.TotalAlbumItemsCount, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource CountToAlbumsConverter}, Mode=OneWay}" />
 
-                                <TextBlock x:Name="PART_SortLbl" Width="100"
-                                           Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}"
-                                           Foreground="#C8CACB" FontSize="12" FontWeight="Bold" a:TextHelpers.CharacterCasing="Upper" />
+                                <TextBlock
+                                    x:Name="PART_SortLbl"
+                                    Width="100"
+                                    a:TextHelpers.CharacterCasing="Upper"
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Foreground="#C8CACB"
+                                    Text="{Binding SortState, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource ZuneSortStateToStringConverter}, Mode=OneWay}" />
 
-                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                <ProgressBar IsIndeterminate="True" Visibility="{Binding Collection.PopulateMoreAlbumsCommand.IsRunning, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
                             </StackPanel>
 
-                            <GridView x:Name="PART_Selector" ItemsSource="{Binding AlbumItems, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                        ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
-                                        Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
+                            <GridView
+                                x:Name="PART_Selector"
+                                Grid.Row="1"
+                                Padding="10,6"
+                                HorizontalAlignment="Stretch"
+                                IsItemClickEnabled="True"
+                                ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}"
+                                ItemsSource="{Binding AlbumItems, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                SelectionMode="Extended">
                                 <GridView.GroupStyle>
                                     <GroupStyle HidesIfEmpty="True">
                                         <GroupStyle.HeaderTemplate>
                                             <DataTemplate>
-                                                <TextBlock FontSize="20" Foreground="Black" Text="{Binding Key}" />
+                                                <TextBlock
+                                                    FontSize="20"
+                                                    Foreground="Black"
+                                                    Text="{Binding Key}" />
                                             </DataTemplate>
                                         </GroupStyle.HeaderTemplate>
                                     </GroupStyle>
@@ -60,7 +81,11 @@
 
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle" x:DataType="collections:ZuneAlbumCollectionItem">
-                                        <zuneItems:ZuneAlbumItem Album="{x:Bind Album}" Opacity="1">
+                                        <zuneItems:ZuneAlbumItem
+                                            Album="{x:Bind Album}"
+                                            DefaultSelectionState="{Binding DefaultSelectionState, Mode=OneWay}"
+                                            Opacity="1"
+                                            ZuneCollectionType="{Binding ZuneCollectionType, Mode=OneWay}">
                                             <interactivity:Interaction.Behaviors>
                                                 <core:EventTriggerBehavior EventName="DoubleTapped">
                                                     <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
@@ -80,6 +105,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneDesktopAlbumCollectionStyle}" TargetType="collections:ZuneAlbumCollection"/>
+    <Style BasedOn="{StaticResource ZuneDesktopAlbumCollectionStyle}" TargetType="collections:ZuneAlbumCollection" />
 
 </ResourceDictionary>
