@@ -46,8 +46,8 @@
 
                         <TextBox
                             Width="300"
-                            Header="IPNS Address (Not supported yet)"
-                            IsEnabled="False"
+                            Header="IPNS Address"
+                            IsEnabled="True"
                             PlaceholderText="Enter address"
                             Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
 
@@ -56,7 +56,7 @@
                             <Button
                                 Command="{x:Bind TryContinueCommand}"
                                 Content="Continue"
-                                IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.IpfsCidPath, Settings.IpfsCidPath), FallbackValue=false, Mode=OneWay}" />
+                                IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                 </labs:SettingsCard>

@@ -36,7 +36,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         private SynchronizationContext _synchronizationContext;
         private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
-        [ObservableProperty] private IpfsFolder? _rootFolder;
+        [ObservableProperty] private IFolder? _rootFolder;
 
         /// <summary>
         /// Creates a new instance of <see cref="FolderSelector"/>.
@@ -82,8 +82,18 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Guard.IsNotNull(Settings);
             Guard.IsNotNull(_param);
             Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
+            IFolder folder;
 
-            var folder = new IpfsFolder(Settings.IpfsCidPath, _param.AppRoot.Ipfs.Client);
+            if (!string.IsNullOrWhiteSpace(Settings.IpfsCidPath))
+            {
+                folder = new IpfsFolder(Settings.IpfsCidPath, _param.AppRoot.Ipfs.Client);
+            }
+            else
+            {
+                folder = new IpnsFolder(Settings.IpnsAddress, _param.AppRoot.Ipfs.Client);
+            }
+
+            Guard.IsNotNull(Settings.IpnsAddress);
 
             // Create storage abstraction and core.
             RootFolder = folder;

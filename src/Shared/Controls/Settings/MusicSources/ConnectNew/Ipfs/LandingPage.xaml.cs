@@ -40,7 +40,6 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             this.InitializeComponent();
         }
 
-
         [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task TryContinueAsync()
         {
