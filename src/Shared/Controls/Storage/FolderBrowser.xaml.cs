@@ -35,12 +35,6 @@ public sealed partial class FolderBrowser : UserControl
         DependencyProperty.Register(nameof(SelectedItem), typeof(IStorable), typeof(FolderBrowser), new PropertyMetadata(null, (d, e) => ((FolderBrowser)d).OnSelectedItemChanged(e.OldValue as IFolder, e.NewValue as IFolder)));
 
     /// <summary>
-    /// The backing dependency property for <see cref="IsFolderEmpty"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsFolderEmptyProperty =
-        DependencyProperty.Register(nameof(IsFolderEmpty), typeof(bool), typeof(FolderBrowser), new PropertyMetadata(false));
-
-    /// <summary>
     /// The backing dependency property for <see cref="IsFo"/>.
     /// </summary>
     public static readonly DependencyProperty FetchingItemsProperty =
@@ -52,18 +46,6 @@ public sealed partial class FolderBrowser : UserControl
     public FolderBrowser()
     {
         this.InitializeComponent();
-    }
-
-    /// <summary>
-    /// Tells the current empty state of the folder.
-    /// </summary>
-    internal bool IsFolderEmpty
-    {
-        get => (bool)GetValue(IsFolderEmptyProperty);
-        set
-        {
-            SetValue(IsFolderEmptyProperty, value);
-        }
     }
 
     /// <summary>
@@ -131,12 +113,9 @@ public sealed partial class FolderBrowser : UserControl
             return;
 
         FetchingItems = true;
-        IsFolderEmpty = false;
 
         await foreach (var item in newValue.GetItemsAsync())
             CurrentFolderItems.Add(item);
-
-        IsFolderEmpty = CurrentFolderItems.Count == 0;
 
         FetchingItems = false;
     }
@@ -174,7 +153,7 @@ public sealed partial class FolderBrowser : UserControl
 
     private bool InvertBool(bool val) => !val;
 
-    private Visibility BoolToVisibility(bool val) => val ? Visibility.Visible : Visibility.Collapsed;
+    private Visibility BoolToVisibility(bool val) =>  val ? Visibility.Visible : Visibility.Collapsed;
 
     private Visibility InvertBoolToVisibility(bool val) => !val ? Visibility.Visible : Visibility.Collapsed;
 
@@ -182,9 +161,9 @@ public sealed partial class FolderBrowser : UserControl
 
     private bool IsZero(int value) => value == 0;
 
-    private Visibility IsZeroToVisibility(int value) => BoolToVisibility(IsZero(value));
+    private Visibility IsZeroToVisibility(int value) =>  BoolToVisibility(IsZero(value));
 
-    private bool IsZeroToBoolean(int value) => value != 0;
+    private bool IsZeroToBoolean(int value) => !FetchingItems && value != 0;
 
     private void FolderGrid_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {

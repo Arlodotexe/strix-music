@@ -41,7 +41,7 @@
             HorizontalAlignment="Center"
             FontWeight="Bold"
             Text="This folder is empty"
-            Visibility="{x:Bind IsFolderEmpty, Mode=OneWay}" />
+            Visibility="{x:Bind InvertBoolToVisibility(FetchingItems), Mode=OneWay}" />
         <GridView
             x:Name="FolderGrid"
             Height="300"

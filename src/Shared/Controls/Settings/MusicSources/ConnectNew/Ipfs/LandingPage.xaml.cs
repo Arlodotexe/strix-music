@@ -8,6 +8,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
+using StrixMusic.Helpers;
 using StrixMusic.Settings;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -74,7 +75,8 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Settings = (IpfsCoreSettings)await _param.SelectedSourceToConnect.DefaultSettingsFactory(string.Empty);
         }
 
-        private bool AllNotNullOrWhiteSpace(string value, string value2) => !string.IsNullOrWhiteSpace(value) || !string.IsNullOrWhiteSpace(value2);
+        private bool IsAnyValidAddress(string value, string value2) => (!string.IsNullOrWhiteSpace(value) && IpfsAddressValidator.IsValidCID(value))
+                                                                            || (!string.IsNullOrWhiteSpace(value2) && IpfsAddressValidator.IsValidIPNS(value2.TrimEnd('/')));
 
         private bool IsNull(object? obj) => obj is null;
 

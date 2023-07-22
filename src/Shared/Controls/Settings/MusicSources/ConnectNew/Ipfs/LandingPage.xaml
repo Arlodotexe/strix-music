@@ -56,7 +56,7 @@
                             <Button
                                 Command="{x:Bind TryContinueCommand}"
                                 Content="Continue"
-                                IsEnabled="{x:Bind AllNotNullOrWhiteSpace(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
+                                IsEnabled="{x:Bind IsAnyValidAddress(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
                         </StackPanel>
                     </StackPanel>
                 </labs:SettingsCard>
