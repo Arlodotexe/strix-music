@@ -163,7 +163,7 @@ public sealed partial class FolderBrowser : UserControl
 
     private Visibility IsZeroToVisibility(int value) =>  BoolToVisibility(IsZero(value));
 
-    private bool IsZeroToBoolean(int value) => !FetchingItems && value != 0;
+    private bool IsZeroToBoolean(int value) => value != 0;
 
     private void FolderGrid_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
