@@ -73,6 +73,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             // The instance ID here is a temporary placeholder.
             // We need to log in and get a folder ID before we can create the final instance ID.
             Settings = (IpfsCoreSettings)await _param.SelectedSourceToConnect.DefaultSettingsFactory(string.Empty);
+            Settings.InstanceId = Settings.Folder.Id;
         }
 
         private bool IsAnyValidAddress(string value, string value2) => (!string.IsNullOrWhiteSpace(value) && IpfsAddressValidator.IsValidCID(value))

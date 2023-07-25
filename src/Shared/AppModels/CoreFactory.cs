@@ -163,7 +163,7 @@ public static class CoreFactory
 
         var folderToScan = new IpfsFolder(settings.IpfsCidPath, client);
 
-        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/Ipfs/Logo.svg"));
+        var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/Ipfs/logo.png"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
 
         var core = new StorageCore
