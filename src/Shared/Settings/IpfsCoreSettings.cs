@@ -62,7 +62,7 @@ namespace StrixMusic.Settings
         /// <inheritdoc />
         public override bool IsSettingValidForCoreCreation(string propertyName, object? value) => propertyName switch
         {
-            nameof(InstanceId) or nameof(IpfsCidPath) or nameof(IpnsAddress)
+            nameof(InstanceId)
                 => !string.IsNullOrWhiteSpace((string?)value ?? string.Empty),
             _ => true,
         };

@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Ipfs.Http;
+using Microsoft.Graph.Models;
+using OwlCore.Kubo;
+using OwlCore.Storage;
 using StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 using StrixMusic.Helpers;
 using StrixMusic.Settings;
@@ -19,6 +23,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -47,10 +52,52 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             await Task.Yield();
 
             Guard.IsNotNull(Settings);
-
-            if (Settings.IpfsCidPath != null || Settings.IpnsAddress != null)
+            Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
+            Guard.IsNotNull(Settings);
+            try
             {
-                Frame.Navigate(typeof(FolderSelector), (_param, Settings));
+                if (!string.IsNullOrWhiteSpace(Settings.IpfsCidPath))
+                {
+                    var cid = Settings.IpfsCidPath.Replace("/ipfs/", string.Empty).Split('/')[0];
+                    var path = Settings.IpfsCidPath.Replace(cid, string.Empty);
+                    var rootFolder = new IpfsFolder(cid, new IpfsClient());
+
+                    try
+                    {
+                        var targetFolder = await rootFolder.GetItemByRelativePathAsync(path);
+                        ConfigureCore(targetFolder.Id);
+                    }
+                    catch
+                    {
+                        // Ignore
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(Settings.IpnsAddress))
+                {
+                    var folder = new IpnsFolder(Settings.IpnsAddress, new IpfsClient());
+
+                    try
+                    {
+                        // validating the folder
+                        var root = await folder.GetRootAsync();
+                        ConfigureCore(folder.Id);
+                    }
+                    catch
+                    {
+                        // Ignore
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            void ConfigureCore(string id)
+            {
+                Guard.IsNotNull(Settings);
+                Settings.IpfsCidPath = id;
+                _param.AppRoot.MusicSourcesSettings.ConfiguredIpfsCores.Add(Settings);
             }
         }
 
