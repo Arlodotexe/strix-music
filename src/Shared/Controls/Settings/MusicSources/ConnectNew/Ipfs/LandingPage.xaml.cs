@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ipfs.Http;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Graph.Models;
 using OwlCore.Kubo;
 using OwlCore.Storage;
@@ -54,18 +56,20 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Guard.IsNotNull(Settings);
             Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
             Guard.IsNotNull(Settings);
+            Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
             try
             {
                 if (!string.IsNullOrWhiteSpace(Settings.IpfsCidPath))
                 {
                     var cid = Settings.IpfsCidPath.Replace("/ipfs/", string.Empty).Split('/')[0];
+                    cid = cid.Replace("ipfs://", string.Empty).Split('/')[0];
                     var path = Settings.IpfsCidPath.Replace(cid, string.Empty);
-                    var rootFolder = new IpfsFolder(cid, new IpfsClient());
+                    var rootFolder = new IpfsFolder(cid, _param.AppRoot.Ipfs.Client);
 
                     try
                     {
-                        var targetFolder = await rootFolder.GetItemByRelativePathAsync(path);
-                        ConfigureCore(targetFolder.Id);
+                        Guard.IsNotNull(rootFolder);
+                        ConfigureCore(rootFolder.Id);
                     }
                     catch
                     {
@@ -74,7 +78,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                 }
                 else if (!string.IsNullOrWhiteSpace(Settings.IpnsAddress))
                 {
-                    var folder = new IpnsFolder(Settings.IpnsAddress, new IpfsClient());
+                    var folder = new IpnsFolder(Settings.IpnsAddress, _param.AppRoot.Ipfs.Client);
 
                     try
                     {
@@ -98,6 +102,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                 Guard.IsNotNull(Settings);
                 Settings.IpfsCidPath = id;
                 _param.AppRoot.MusicSourcesSettings.ConfiguredIpfsCores.Add(Settings);
+                _param.SetupCompleteTaskCompletionSource.SetResult(null);
             }
         }
 
@@ -123,8 +128,8 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Settings.InstanceId = Settings.Folder.Id;
         }
 
-        private bool IsAnyValidAddress(string value, string value2) => (!string.IsNullOrWhiteSpace(value) && IpfsAddressValidator.IsValidCID(value))
-                                                                            || (!string.IsNullOrWhiteSpace(value2) && IpfsAddressValidator.IsValidIPNS(value2.TrimEnd('/')));
+        private bool IsAnyValidAddress(string value, string value2) => !string.IsNullOrWhiteSpace(value)
+                                                                            || !string.IsNullOrWhiteSpace(value2);
 
         private bool IsNull(object? obj) => obj is null;
 

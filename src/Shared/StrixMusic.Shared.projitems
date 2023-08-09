@@ -54,7 +54,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Storage\StorableItemTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDescriptionConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ShellEnumToDisplayNameConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IpfsAddressValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationResources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppModels\IInstanceId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugins\GlobalPlaybackStateCountPlugin.cs" />
