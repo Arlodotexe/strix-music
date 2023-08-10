@@ -16,6 +16,7 @@ using OwlCore.Storage;
 using StrixMusic.Controls.Settings.MusicSources.ConnectNew.OneDriveCore;
 using StrixMusic.Helpers;
 using StrixMusic.Settings;
+using Tavis.UriTemplates;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -39,6 +40,8 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
     {
         [ObservableProperty] private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
+        [ObservableProperty] private string? _errorMessage = null;
+        private TimeSpan _ipfsMaxResponseTime = TimeSpan.FromSeconds(5);
 
         /// <summary>
         /// Creates a new instance of <see cref="LandingPage"/>.
@@ -57,6 +60,9 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
             Guard.IsNotNull(Settings);
             Guard.IsNotNull(_param?.AppRoot?.Ipfs?.Client);
+
+            var cancellationTokenSrc = new CancellationTokenSource();
+            cancellationTokenSrc.CancelAfter(_ipfsMaxResponseTime);
             try
             {
                 if (!string.IsNullOrWhiteSpace(Settings.IpfsCidPath))
@@ -68,12 +74,53 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
                     try
                     {
-                        Guard.IsNotNull(rootFolder);
-                        ConfigureCore(rootFolder.Id);
+                        var targetFolderId = string.Empty;
+                        if (!string.IsNullOrWhiteSpace(path))
+                        {
+                            var result = await rootFolder.GetItemByRelativePathAsync(path);
+                            if (result == null || string.IsNullOrEmpty(result.Id))
+                            {
+                                ErrorMessage = "Cannot retreive the contents from the path provided.";
+                                return;
+                            }
+
+                            var ipfsRelativeFolder = new IpfsFolder(result.Id, _param.AppRoot.Ipfs.Client);
+
+                            var anyItemFound = false;
+                            await foreach (var item in ipfsRelativeFolder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
+                            {
+                                anyItemFound = true;
+                            }
+
+                            if (!anyItemFound)
+                            {
+                                ErrorMessage = "The folder is empty.";
+                            }
+
+                            targetFolderId = result.Id;
+                        }
+                        else
+                        {
+                            var anyItemFound = false;
+                            await foreach (var item in rootFolder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
+                            {
+                                anyItemFound = true;
+                            }
+
+                            if (!anyItemFound)
+                            {
+                                ErrorMessage = "The folder is empty.";
+                            }
+
+                            targetFolderId = rootFolder.Id;
+                        }
+
+                        Guard.IsNullOrEmpty(targetFolderId);
+                        ConfigureCore(targetFolderId);
                     }
-                    catch
+                    catch(OperationCanceledException)
                     {
-                        // Ignore
+                        ErrorMessage = "Request timed out. Make sure the folder address is valid";
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(Settings.IpnsAddress))
@@ -82,19 +129,32 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
                     try
                     {
-                        // validating the folder
-                        var root = await folder.GetRootAsync();
+                        bool anyItemFound = false;
+                        await foreach (var item in folder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
+                        {
+                            anyItemFound = true;
+                        }
+
+                        if (!anyItemFound)
+                        {
+                            ErrorMessage = "The folder is empty.";
+                        }
+
                         ConfigureCore(folder.Id);
                     }
-                    catch
+                    catch(OperationCanceledException)
                     {
-                        // Ignore
+                         ErrorMessage = "Request timed out. Make sure the folder address is valid";
                     }
                 }
             }
             catch
             {
-                // Ignore
+                ErrorMessage = "Something went wrong while fetching items from the path. Make sure the address is correct.";
+            }
+            finally
+            {
+                cancellationTokenSrc.Dispose();
             }
 
             void ConfigureCore(string id)
