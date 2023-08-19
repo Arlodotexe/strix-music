@@ -22,9 +22,10 @@
         </StackPanel>
         <labs:SettingsCard ContentAlignment="Left">
             <StackPanel>
-                <TextBlock FontWeight="Bold" Text="Configure folder" />
-
-
+                <Grid>
+                    <TextBlock FontWeight="Bold" Text="Configure folder" />
+                    <ProgressRing IsActive="{x:Bind InProgress, Mode=OneWay}" />
+                </Grid>
                 <!--<StackPanel
                     HorizontalAlignment="Center"
                     Orientation="Horizontal"

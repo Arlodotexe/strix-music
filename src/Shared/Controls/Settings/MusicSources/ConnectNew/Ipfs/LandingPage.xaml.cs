@@ -41,6 +41,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         [ObservableProperty] private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
         [ObservableProperty] private string? _errorMessage = null;
+        [ObservableProperty] private bool _inProgress = false;
         private TimeSpan _ipfsMaxResponseTime = TimeSpan.FromSeconds(30);
 
         /// <summary>
@@ -87,10 +88,14 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                             var ipfsRelativeFolder = new IpfsFolder(result.Id, _param.AppRoot.Ipfs.Client);
 
                             var anyItemFound = false;
+
+                            InProgress = true;
                             await foreach (var item in ipfsRelativeFolder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
                             {
                                 anyItemFound = true;
                             }
+
+                            InProgress = false;
 
                             if (!anyItemFound)
                             {
@@ -102,10 +107,13 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                         else
                         {
                             var anyItemFound = false;
+                            InProgress = true;
                             await foreach (var item in rootFolder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
                             {
                                 anyItemFound = true;
                             }
+
+                            InProgress = false;
 
                             if (!anyItemFound)
                             {
