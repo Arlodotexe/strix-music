@@ -41,7 +41,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
         [ObservableProperty] private ConnectNewMusicSourceNavigationParams? _param;
         [ObservableProperty] private IpfsCoreSettings? _settings = null;
         [ObservableProperty] private string? _errorMessage = null;
-        private TimeSpan _ipfsMaxResponseTime = TimeSpan.FromSeconds(5);
+        private TimeSpan _ipfsMaxResponseTime = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// Creates a new instance of <see cref="LandingPage"/>.
@@ -115,10 +115,10 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                             targetFolderId = rootFolder.Id;
                         }
 
-                        Guard.IsNullOrEmpty(targetFolderId);
+                        Guard.IsNotNullOrEmpty(targetFolderId);
                         ConfigureCore(targetFolderId);
                     }
-                    catch(OperationCanceledException)
+                    catch (OperationCanceledException)
                     {
                         ErrorMessage = "Request timed out. Make sure the folder address is valid";
                     }
@@ -142,9 +142,9 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
                         ConfigureCore(folder.Id);
                     }
-                    catch(OperationCanceledException)
+                    catch (OperationCanceledException)
                     {
-                         ErrorMessage = "Request timed out. Make sure the folder address is valid";
+                        ErrorMessage = "Request timed out. Make sure the folder address is valid";
                     }
                 }
             }
