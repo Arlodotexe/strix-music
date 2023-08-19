@@ -44,7 +44,7 @@ namespace StrixMusic.AppModels;
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
-
+    private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -213,6 +213,8 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged -= ConfiguredOneDriveCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
+
+            MusicSourcesSettings.ConfiguredIpfsCores.CollectionChanged -= ConfiguredIpfsCores_CollectionChanged;
             MusicSourcesSettings.ConfiguredIpfsCores.CollectionChanged += ConfiguredIpfsCores_CollectionChanged;
 
             // Merge cores together and apply plugins
@@ -220,10 +222,10 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
             // Initialize all cores.
             // Task will not complete until all cores are either loaded, or the user has given up on retrying to load them.
-           await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
+            await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
-            allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
+            allNewCores = allNewCores.Where(x => !x.IsInitialized).Where(x => _mergedCore?.Sources.Contains(x) == false).ToList();
 
             // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
             // If _mergedCore exists, set it up as the data root.
@@ -375,7 +377,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                         Logger.LogInformation($"Adding new core {newCore.DisplayName}, {nameof(newCore.InstanceId)} {newCore.InstanceId}");
                         _mergedCore.AddSource(newCore);
                     }
-                    return;
                 }
             }
 
@@ -438,7 +439,10 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         }
         catch (Exception ex)
         {
-            await HandleFailureAsync(ex);
+            using (await _dialogMutex.DisposableWaitAsync(cancellationToken))
+            {
+                await HandleFailureAsync(ex);
+            }
 
             async Task HandleFailureAsync(Exception? ex)
             {
