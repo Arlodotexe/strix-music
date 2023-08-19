@@ -12,70 +12,63 @@
     <StackPanel
         MaxWidth="550"
         Margin="20"
-        Spacing="15">
+        Spacing="0">
 
-        <labs:SettingsExpander
-            Description="Provide the root directory Cid."
-            Header="Configure IPFS folder"
-            IsEnabled="{x:Bind IsNotNull(Settings), Mode=OneWay}"
-            IsExpanded="True"
-            Visibility="{x:Bind NullToVisibility(Param.AppRoot.Ipfs.Client)}">
-            <labs:SettingsExpander.Items>
-                <StackPanel Grid.Row="1" Spacing="12">
-                    <Image
-                        MaxWidth="250"
-                        MaxHeight="250"
-                        Source="ms-appx:///Assets/Cores/ipfs/access.svg" />
-                </StackPanel>
-                <labs:SettingsCard ContentAlignment="Left">
-                    <StackPanel
-                        Margin="0,10"
-                        Padding="0,10"
-                        Spacing="17">
+        <StackPanel Grid.Row="1" Spacing="12">
+            <Image
+                MaxWidth="250"
+                MaxHeight="250"
+                Source="ms-appx:///Assets/Cores/ipfs/access.svg" />
+        </StackPanel>
+        <labs:SettingsCard ContentAlignment="Left">
+            <StackPanel>
+                <TextBlock FontWeight="Bold" Text="Configure folder" />
 
 
-                        <StackPanel
-                            HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            Visibility="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
-                            <TextBlock FontWeight="Bold" Text="Preparing to run the daemon..." />
-                            <ProgressRing
-                                Width="10"
-                                Height="10"
-                                Background="Black"
-                                IsActive="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
-                        </StackPanel>
-                        <TextBlock
-                            Width="300"
-                            FontWeight="Bold"
-                            Foreground="Red"
-                            Text="{x:Bind ErrorMessage, Mode=OneWay}"
-                            TextWrapping="WrapWholeWords" />
+                <!--<StackPanel
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Visibility="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
+                    <TextBlock FontWeight="Bold" Text="Preparing to run the daemon..." />
+                    <ProgressRing
+                        Width="10"
+                        Height="10"
+                        Background="Black"
+                        IsActive="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
+                </StackPanel>-->
 
-                        <TextBox
-                            Width="300"
-                            Header="IPFS Folder Path (Cid)"
-                            PlaceholderText="Enter path"
-                            Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+                <StackPanel Margin="0,-20,0,0" Spacing="17">
 
-                        <TextBox
-                            Width="300"
-                            Header="IPNS Address"
-                            IsEnabled="True"
-                            PlaceholderText="Enter address"
-                            Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+                    <TextBlock
+                        Width="300"
+                        FontWeight="Bold"
+                        Foreground="Red"
+                        Text="{x:Bind ErrorMessage, Mode=OneWay}"
+                        TextWrapping="WrapWholeWords" />
 
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button Command="{x:Bind CancelCommand}" Content="Cancel" />
-                            <Button
-                                Command="{x:Bind TryContinueCommand}"
-                                Content="Continue"
-                                IsEnabled="{x:Bind IsAnyValidAddress(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
-                        </StackPanel>
+                    <TextBox
+                        Width="300"
+                        Header="IPFS Folder Path (Cid)"
+                        PlaceholderText="Enter path"
+                        Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+
+                    <TextBox
+                        Width="300"
+                        Header="IPNS Address"
+                        IsEnabled="True"
+                        PlaceholderText="Enter address"
+                        Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Command="{x:Bind CancelCommand}" Content="Cancel" />
+                        <Button
+                            Command="{x:Bind TryContinueCommand}"
+                            Content="Continue"
+                            IsEnabled="{x:Bind IsAnyValidAddress(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
                     </StackPanel>
-                </labs:SettingsCard>
-            </labs:SettingsExpander.Items>
-        </labs:SettingsExpander>
+                </StackPanel>
+            </StackPanel>
+        </labs:SettingsCard>
         <StackPanel Spacing="10" Visibility="{x:Bind NullToInveerseVisibility(_param.AppRoot.Ipfs.Client)}">
             <TextBlock FontWeight="Bold" Text="No IPFS Access. Please turn on IPFS from the settings to add ipfs music source." />
             <Button
