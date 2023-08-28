@@ -174,7 +174,7 @@ public static class CoreFactory
             fileScanProgress: new Progress<FileScanState>(x => Logger.LogInformation($"Scan progress for {folderToScan.Id}: Stage {x.Stage}, Files Found: {x.FilesFound}: Files Scanned: {x.FilesProcessed}")))
         {
             ScannerWaitBehavior = ScannerWaitBehavior.NeverWait,
-            InstanceDescriptor = instanceId,
+            InstanceDescriptor = folderToScan.Id,
             Logo = logo,
         };
 
