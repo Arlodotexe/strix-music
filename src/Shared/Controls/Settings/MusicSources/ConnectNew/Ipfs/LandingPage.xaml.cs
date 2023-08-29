@@ -205,6 +205,10 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
 
         private bool InvertBool(bool val) => !val;
 
+        private Visibility BoolToVisibility(bool val) => val ? Visibility.Visible : Visibility.Collapsed;
+
+        private Visibility InverseIsNullOrWhiteSpaceToVisibility(string val) => BoolToVisibility(!string.IsNullOrWhiteSpace(val));
+
         private Visibility NullToVisibility(object? val) => val == null ? Visibility.Collapsed : Visibility.Visible;
         private Visibility NullToInveerseVisibility(object? val) => val == null ? Visibility.Visible : Visibility.Collapsed;
     }
