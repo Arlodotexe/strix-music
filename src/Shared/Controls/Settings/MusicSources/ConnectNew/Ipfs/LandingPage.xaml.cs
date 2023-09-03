@@ -138,9 +138,11 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
                     try
                     {
                         bool anyItemFound = false;
+                        InProgress = true;
                         await foreach (var item in folder.GetItemsAsync(StorableType.All, cancellationTokenSrc.Token))
                         {
                             anyItemFound = true;
+                            InProgress = false;
                         }
 
                         if (!anyItemFound)
@@ -163,6 +165,7 @@ namespace StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs
             finally
             {
                 cancellationTokenSrc.Dispose();
+                InProgress = false;
             }
 
             void ConfigureCore(string id)
