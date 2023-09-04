@@ -2,10 +2,12 @@
 	x:Class="StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs.LandingPage"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources.ConnectNew.Ipfs"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
 	mc:Ignorable="d">
 
@@ -22,61 +24,48 @@
 
 		<labs:SettingsCard ContentAlignment="Left">
 			<StackPanel>
-				<Grid>
-					<TextBlock FontWeight="Bold" Text="Configure folder" />
-					<ProgressRing IsActive="{x:Bind InProgress, Mode=OneWay}" />
-				</Grid>
-				<!--<StackPanel
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal"
-                    Visibility="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}">
-                    <TextBlock FontWeight="Bold" Text="Preparing to run the daemon..." />
-                    <ProgressRing
-                        Width="10"
-                        Height="10"
-                        Background="Black"
-                        IsActive="{x:Bind Param.AppRoot.Ipfs.InitCommand.IsRunning, Mode=OneWay}" />
-                </StackPanel>-->
 
 				<StackPanel Spacing="17">
-
-					<TextBlock
-						Width="300"
-						FontWeight="Bold"
-						Foreground="Red"
-						Text="{x:Bind ErrorMessage, Mode=OneWay}"
-						TextWrapping="WrapWholeWords"
-						Visibility="{x:Bind InverseIsNullOrWhiteSpaceToVisibility(ErrorMessage), Mode=OneWay}" />
 
 					<TextBox
 						Width="300"
 						Header="IPFS Folder Path (Cid)"
 						PlaceholderText="Enter path"
-						Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+						Text="{x:Bind Settings.IpfsCidPath, Mode=TwoWay, FallbackValue=''}" />
 
 					<TextBox
 						Width="300"
 						Header="IPNS Address"
-						IsEnabled="True"
 						PlaceholderText="Enter address"
-						Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue='', UpdateSourceTrigger='LostFocus'}" />
+						Text="{x:Bind Settings.IpnsAddress, Mode=TwoWay, FallbackValue=''}" />
 
 					<StackPanel Orientation="Horizontal" Spacing="8">
-						<Button Command="{x:Bind CancelCommand}" Content="Cancel" />
+						<Button Command="{x:Bind CancelCoreSetupCommand}" Content="Cancel" />
+
 						<Button
 							Command="{x:Bind TryContinueCommand}"
 							Content="Continue"
 							IsEnabled="{x:Bind IsAnyValidAddress(Settings.IpfsCidPath, Settings.IpnsAddress), FallbackValue=false, Mode=OneWay}" />
+
+						<ProgressRing IsActive="{x:Bind TryContinueCommand.IsRunning, Mode=OneWay}" />
 					</StackPanel>
+
+					<TextBlock
+						Width="300"
+						FontWeight="Bold"
+						Foreground="Red"
+						Text="{x:Bind TryContinueCommand.ExecutionTask.Exception.Message, Mode=OneWay}"
+						TextWrapping="WrapWholeWords"
+						Visibility="{x:Bind TryContinueCommand.ExecutionTask.IsFaulted, Mode=OneWay}" />
 				</StackPanel>
 			</StackPanel>
 		</labs:SettingsCard>
 
-		<StackPanel Spacing="10" Visibility="{x:Bind NullToInveerseVisibility(_param.AppRoot.Ipfs.Client)}">
+		<StackPanel Spacing="10" Visibility="{x:Bind NullToInveerseVisibility(Param.AppRoot.Ipfs.Client)}">
 			<TextBlock FontWeight="Bold" Text="No IPFS Access. Please turn on IPFS from the settings to add ipfs music source." />
 			<Button
 				HorizontalAlignment="Right"
-				Command="{x:Bind CancelCommand}"
+				Command="{x:Bind CancelCoreSetupCommand}"
 				Content="Close" />
 		</StackPanel>
 	</StackPanel>
