@@ -37,11 +37,19 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Scanners
         /// <inheritdoc />
         public override long Position
         {
-
             get => _memoryStream.Position;
             set
             {
-                // todo load more data into memory stream, if needed
+                if (value >= _memoryStream.Length)
+                {
+                    // Load more data into memory stream, if needed.
+                    var buffer = new byte[value - _memoryStream.Length];
+                    var bytesRead = _originalStream.Read(buffer, 0, buffer.Length);
+
+                    _memoryStream.Seek(0, SeekOrigin.End);
+                    _memoryStream.Write(buffer, 0, bytesRead);
+                }
+
                 _memoryStream.Position = value;
             }
         }
@@ -73,4 +81,3 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Scanners
         public override void Write(byte[] buffer, int offset, int count) => _memoryStream.Write(buffer, offset, count);
     }
 }
-
