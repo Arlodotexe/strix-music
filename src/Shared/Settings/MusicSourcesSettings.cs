@@ -52,6 +52,14 @@ public partial class MusicSourcesSettings : SettingsBase
             defaultSettingsFactory: async instanceId => new OneDriveCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
         );
 
+        AvailableMusicSources.Add(new AvailableMusicSource
+            (
+            name: "IPFS",
+            description: "Play music stored on ipfs",
+            imageFactory: () => CoreImageFromApplicationPathAsync("ms-appx:///Assets/Cores/Ipfs/logo.png"),
+            defaultSettingsFactory: async instanceId => new IpfsCoreSettings(await GetDataFolderByName(instanceId.HashMD5Fast())))
+        );
+
         async Task<ICoreImage> CoreImageFromApplicationPathAsync(string assetPath)
         {
             var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(assetPath));
@@ -68,6 +76,11 @@ public partial class MusicSourcesSettings : SettingsBase
     /// Gets the list of all registered storage cores that interact with OneDrive.
     /// </summary>
     public ObservableCollection<OneDriveCoreSettings> ConfiguredOneDriveCores => GetSetting(defaultValue: () => new ObservableCollection<OneDriveCoreSettings>());
+
+       /// <summary>
+    /// Gets the list of all registered storage cores that interact with OneDrive.
+    /// </summary>
+    public ObservableCollection<IpfsCoreSettings> ConfiguredIpfsCores => GetSetting(defaultValue: () => new ObservableCollection<IpfsCoreSettings>());
 
     /// <summary>
     /// The cores that are available to be created.

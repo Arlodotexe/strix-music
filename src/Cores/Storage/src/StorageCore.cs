@@ -227,6 +227,19 @@ public sealed class StorageCore : ICore
 
         var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
 
+        if (!stream.CanSeek)
+        {
+            // For playback we'll have to copy the whole stream before playing because it needs to support seek and provide length BEFOREHAND which lazystream doesn't support.
+            // LazyStream is ideal for metadata.
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+
+            // Dispose the orginal stream as its no longer needed.
+            stream.Dispose();
+
+            return new MediaSourceConfig(track, track.Id, memoryStream, mimeType);
+        }
+
         return new MediaSourceConfig(track, track.Id, stream, mimeType);
     }
 }

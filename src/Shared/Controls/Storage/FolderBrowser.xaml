@@ -13,15 +13,15 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-	<StackPanel HorizontalAlignment="Center" Spacing="8">
-		<StackPanel Orientation="Horizontal" Spacing="4">
-			<Button
-				Command="{x:Bind GoToParentCommand}"
-				Content="&#xE110;"
-				FontFamily="{ThemeResource SymbolThemeFontFamily}"
-				IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
-				ToolTipService.ToolTip="Navigate up"
-				Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
+    <StackPanel HorizontalAlignment="Center" Spacing="8">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button
+                Command="{x:Bind GoToParentCommand}"
+                Content="&#xE110;"
+                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
+                ToolTipService.ToolTip="Navigate up"
+                Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
 
             <Button
                 Command="{x:Bind GoToParentCancelCommand}"
@@ -30,20 +30,21 @@
                 ToolTipService.ToolTip="Navigate up"
                 Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
 
-            <ProgressRing IsActive="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
-
             <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+
+            <ProgressRing IsActive="{x:Bind FetchingItems, Mode=OneWay}" />
         </StackPanel>
+
 
         <TextBlock
             Margin="5,15"
             HorizontalAlignment="Center"
             FontWeight="Bold"
             Text="This folder is empty"
-            Visibility="{x:Bind IsZeroToVisibility(CurrentFolderItems.Count), Mode=OneWay}" />
-
+            Visibility="{x:Bind InvertBoolToVisibility(FetchingItems), Mode=OneWay}" />
         <GridView
             x:Name="FolderGrid"
+            Height="300"
             DoubleTapped="FolderGrid_OnDoubleTapped"
             ItemsSource="{x:Bind CurrentFolderItems}"
             SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"

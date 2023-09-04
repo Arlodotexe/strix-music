@@ -303,6 +303,9 @@ namespace StrixMusic.AppModels
             }
         }
 
+        /// <summary>
+        /// Restarts the application.
+        /// </summary>
         [RelayCommand]
         public async Task<AppRestartFailureReason> RestartAppAsync() => await CoreApplication.RequestRestartAsync("Application Restart Programmatically.");
 

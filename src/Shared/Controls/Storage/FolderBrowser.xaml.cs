@@ -35,11 +35,29 @@ public sealed partial class FolderBrowser : UserControl
         DependencyProperty.Register(nameof(SelectedItem), typeof(IStorable), typeof(FolderBrowser), new PropertyMetadata(null, (d, e) => ((FolderBrowser)d).OnSelectedItemChanged(e.OldValue as IFolder, e.NewValue as IFolder)));
 
     /// <summary>
+    /// The backing dependency property for <see cref="IsFo"/>.
+    /// </summary>
+    public static readonly DependencyProperty FetchingItemsProperty =
+        DependencyProperty.Register(nameof(FetchingItems), typeof(bool), typeof(FolderBrowser), new PropertyMetadata(false));
+
+    /// <summary>
     /// Creates a new instance of <see cref="FolderBrowser"/>.
     /// </summary>
     public FolderBrowser()
     {
         this.InitializeComponent();
+    }
+
+    /// <summary>
+    /// Flag to determine whether folder fetching is in progress or not.
+    /// </summary>
+    internal bool FetchingItems
+    {
+        get => (bool)GetValue(FetchingItemsProperty);
+        set
+        {
+            SetValue(FetchingItemsProperty, value);
+        }
     }
 
     /// <summary>
@@ -94,8 +112,12 @@ public sealed partial class FolderBrowser : UserControl
         if (newValue is null)
             return;
 
+        FetchingItems = true;
+
         await foreach (var item in newValue.GetItemsAsync())
             CurrentFolderItems.Add(item);
+
+        FetchingItems = false;
     }
 
     [RelayCommand(FlowExceptionsToTaskScheduler = true, IncludeCancelCommand = true)]
@@ -131,7 +153,7 @@ public sealed partial class FolderBrowser : UserControl
 
     private bool InvertBool(bool val) => !val;
 
-    private Visibility BoolToVisibility(bool val) => val ? Visibility.Visible : Visibility.Collapsed;
+    private Visibility BoolToVisibility(bool val) =>  val ? Visibility.Visible : Visibility.Collapsed;
 
     private Visibility InvertBoolToVisibility(bool val) => !val ? Visibility.Visible : Visibility.Collapsed;
 
@@ -139,7 +161,9 @@ public sealed partial class FolderBrowser : UserControl
 
     private bool IsZero(int value) => value == 0;
 
-    private Visibility IsZeroToVisibility(int value) => BoolToVisibility(IsZero(value));
+    private Visibility IsZeroToVisibility(int value) =>  BoolToVisibility(IsZero(value));
+
+    private bool IsZeroToBoolean(int value) => value != 0;
 
     private void FolderGrid_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {

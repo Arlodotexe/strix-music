@@ -43,9 +43,8 @@ namespace StrixMusic.AppModels;
 /// </summary>
 public partial class AppRoot : ObservableObject, IAsyncInit
 {
-    private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private static readonly ConcurrentDictionary<string, CancellationTokenSource> _ongoingCoreInitCancellationTokens = new();
-
+    private static readonly SemaphoreSlim _dialogMutex = new(1, 1);
     private readonly SystemMediaTransportControlsHandler? _smtcHandler;
     private readonly PlaybackHandlerService _playbackHandler = new();
     private readonly SemaphoreSlim _initMutex = new(1, 1);
@@ -215,6 +214,9 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged -= ConfiguredOneDriveCores_OnCollectionChanged;
             MusicSourcesSettings.ConfiguredOneDriveCores.CollectionChanged += ConfiguredOneDriveCores_OnCollectionChanged;
 
+            MusicSourcesSettings.ConfiguredIpfsCores.CollectionChanged -= ConfiguredIpfsCores_CollectionChanged;
+            MusicSourcesSettings.ConfiguredIpfsCores.CollectionChanged += ConfiguredIpfsCores_CollectionChanged;
+
             // Merge cores together and apply plugins
             var allNewCores = await CreateConfiguredCoresAsync().ToListAsync(cancellationToken);
 
@@ -223,7 +225,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
-            allNewCores = allNewCores.Where(x => x.IsInitialized).ToList();
+            allNewCores = allNewCores.Where(x => !x.IsInitialized).Where(x => _mergedCore?.Sources.Contains(x) == false).ToList();
 
             // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
             // If _mergedCore exists, set it up as the data root.
@@ -274,6 +276,16 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             var core = await CoreFactory.CreateOneDriveCoreAsync(item, HttpMessageHandler);
             yield return core;
         }
+
+        foreach (var item in MusicSourcesSettings.ConfiguredIpfsCores.Where(NeedsToBeCreated).Where(x => x.CanCreateCore))
+        {
+            Logger.LogInformation($"Creating core {item.InstanceId}");
+            Guard.IsNotNull(_ipfs);
+            Guard.IsNotNull(_ipfs.Client);
+
+            var core = await CoreFactory.CreateIpfsCoreAsync(item, _ipfs.Client);
+            yield return core;
+        }
     }
 
     private async void ConfiguredLocalStorageCores_OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -289,6 +301,16 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         Guard.IsNotNull(MusicSourcesSettings);
 
         await HandleCoreSettingsCollectionChangedAsync<OneDriveCoreSettings>(sender, e, async x => await CoreFactory.CreateOneDriveCoreAsync(x, HttpMessageHandler));
+        await MusicSourcesSettings.SaveAsync();
+    }
+
+    private async void ConfiguredIpfsCores_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Guard.IsNotNull(MusicSourcesSettings);
+        Guard.IsNotNull(_ipfs);
+        Guard.IsNotNull(_ipfs.Client);
+
+        await HandleCoreSettingsCollectionChangedAsync<IpfsCoreSettings>(sender, e, async x => await CoreFactory.CreateIpfsCoreAsync(x, _ipfs.Client));
         await MusicSourcesSettings.SaveAsync();
     }
 
