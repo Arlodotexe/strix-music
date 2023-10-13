@@ -225,8 +225,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
             await allNewCores.InParallel(x => TryInitCore(x, cancellationToken));
 
             // Prune cores that didn't load successfully
-            allNewCores = allNewCores.Where(x => !x.IsInitialized)
-                .Where(x => _mergedCore?.Sources.Contains(x) == false).ToList();
+            var initializedCores = allNewCores.Where(x => x.IsInitialized).Where(x => MergedCore == null || _mergedCore?.Sources.Contains(x) == false).ToList();
 
             // Even if no new cores need to be created, as settings are changed, _mergedCore can be assigned and sources can be added/removed.
             // If _mergedCore exists, set it up as the data root.
