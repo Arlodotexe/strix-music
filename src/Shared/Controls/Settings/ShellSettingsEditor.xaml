@@ -11,7 +11,8 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:toolkit="using:CommunityToolkit.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:strixMusic="using:StrixMusic"
@@ -239,7 +240,7 @@
 								PreferredShell="{x:Bind ShellSettings.PreferredShell, Mode=OneWay}"
 								Root="{x:Bind Root, Mode=OneWay}" />
 
-							<labs:PropertySizer
+							<tkcontrols:PropertySizer
 								Width="35"
 								Height="{Binding ElementName=ShellPresenterContainer, Path=Height}"
 								Margin="0,0,-45,0"
@@ -249,7 +250,7 @@
 								Maximum="4000"
 								Minimum="500" />
 
-							<labs:PropertySizer
+							<tkcontrols:PropertySizer
 								Width="{Binding ElementName=ShellPresenterContainer, Path=Width}"
 								Height="35"
 								Margin="0,0,0,-45"
@@ -266,7 +267,7 @@
 		</Border>
 
 		<StackPanel Grid.Row="1" Spacing="8">
-			<labs:SettingsCard Header="Preferred Skin" HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
+			<tkcontrols:SettingsCard Header="Preferred Skin" HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
 				<ComboBox ItemsSource="{ui:EnumValues Type=appModels:StrixMusicShells}" SelectedItem="{x:Bind ShellSettings.PreferredShell, Mode=TwoWay}">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
@@ -280,9 +281,9 @@
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ComboBox>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard
+			<tkcontrols:SettingsCard
 				Description="The skin to use when the window size is unsupported by the Preferred Skin."
 				Header="Fallback Skin"
 				HeaderIcon="{ui:FontIcon Glyph=&#xE61F;}"
@@ -300,9 +301,9 @@
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ComboBox>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard Header="Restore appearance defaults" HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
+			<tkcontrols:SettingsCard Header="Restore appearance defaults" HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
 				<Button
 					Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}"
 					CommandParameter="{x:Null}"
@@ -313,7 +314,7 @@
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
 			<ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.SaveCommand.IsRunning, Mode=OneWay}" />
 			<ProgressBar IsIndeterminate="True" Visibility="{x:Bind ShellSettings.LoadCommand.IsRunning, Mode=OneWay}" />
@@ -324,7 +325,7 @@
 
 				<VisualState x:Name="ShortState">
 					<VisualState.StateTriggers>
-						<labs:ControlSizeTrigger MaxWidth="600" TargetElement="{x:Bind RootControl}" />
+						<toolkit:ControlSizeTrigger MaxWidth="600" TargetElement="{x:Bind RootControl}" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<!--  Hide shell size indicator  -->
@@ -370,7 +371,7 @@
 
 				<VisualState x:Name="NarrowState">
 					<VisualState.StateTriggers>
-						<labs:ControlSizeTrigger MaxWidth="700" TargetElement="{x:Bind RootControl}" />
+						<toolkit:ControlSizeTrigger MaxWidth="700" TargetElement="{x:Bind RootControl}" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<!--  Move size buttons to bottom  -->

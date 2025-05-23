@@ -9,7 +9,7 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ocext="using:OwlCore.Extensions"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -28,12 +28,12 @@
 			</core:EventTriggerBehavior>
 		</interactivity:Interaction.Behaviors>
 
-		<labs:SettingsExpander
+		<tkcontrols:SettingsExpander
 			Description="A distributed web protocol, the p2p equivalent of HTTP."
 			Header="What is this?"
 			IsExpanded="{x:Bind InvertBool(Ipfs.Settings.Enabled), Mode=OneWay}">
-			<labs:SettingsExpander.Items>
-				<labs:SettingsCard
+			<tkcontrols:SettingsExpander.Items>
+				<tkcontrols:SettingsCard
 					Description="See the official basic concept docs."
 					Header="The InterPlanetary File System"
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
@@ -43,16 +43,16 @@
 							<behaviors:OpenUriAction Source="https://ipfs.io/ipfs/QmWzA1FerU3ecYPk7i3W8qLJJxFE6KKQgwKqEBKW9ryC5B/concepts/what-is-ipfs/#decentralization" />
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
-				</labs:SettingsCard>
+				</tkcontrols:SettingsCard>
 
-				<labs:SettingsCard Description="HTTP retrieves content using a location (an IP address), while IPFS uses a unique content identifier generated from the content itself (the CID)." HeaderIcon="{ui:FontIcon Glyph=&#xE928;}" />
-				<labs:SettingsCard Description="Files can be accessed even if the original source is offline or censored, as long as someone has the data." HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
-				<labs:SettingsCard Description="IPFS enables real-time communication between devices, without the need for an internet connection or a server." HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}" />
-				<labs:SettingsCard Description="Like http, ipfs is a protocol with many implementations. This app uses Kubo, the original and most widely used IPFS implementation." HeaderIcon="{ui:FontIcon Glyph=&#xEEA3;}" />
-			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>
+				<tkcontrols:SettingsCard Description="HTTP retrieves content using a location (an IP address), while IPFS uses a unique content identifier generated from the content itself (the CID)." HeaderIcon="{ui:FontIcon Glyph=&#xE928;}" />
+				<tkcontrols:SettingsCard Description="Files can be accessed even if the original source is offline or censored, as long as someone has the data." HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
+				<tkcontrols:SettingsCard Description="IPFS enables real-time communication between devices, without the need for an internet connection or a server." HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}" />
+				<tkcontrols:SettingsCard Description="Like http, ipfs is a protocol with many implementations. This app uses Kubo, the original and most widely used IPFS implementation." HeaderIcon="{ui:FontIcon Glyph=&#xEEA3;}" />
+			</tkcontrols:SettingsExpander.Items>
+		</tkcontrols:SettingsExpander>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Review your communication preferences before enabling. "
 			Header="IPFS is a public network. "
 			HeaderIcon="{ui:FontIcon Glyph=&#xE946;}"
@@ -65,7 +65,7 @@
 
 		<ProgressBar IsIndeterminate="True" Visibility="{x:Bind Ipfs.Settings.SaveCommand.IsRunning, Mode=OneWay}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Used to power features that require advanced communication between devices."
 			Header="Enable IPFS (experimental)"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
@@ -78,9 +78,9 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsExpander
+		<tkcontrols:SettingsExpander
 			Description="Used to power features that require advanced communication between devices."
 			Header="Enable IPFS (experimental)"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
@@ -95,8 +95,8 @@
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 
-			<labs:SettingsExpander.Items>
-				<labs:SettingsCard Header="{x:Bind Ipfs.InitStatus, Mode=OneWay}" IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
+			<tkcontrols:SettingsExpander.Items>
+				<tkcontrols:SettingsCard Header="{x:Bind Ipfs.InitStatus, Mode=OneWay}" IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=false, Mode=OneWay}">
 
 					<Grid>
 						<!--  If IPFS is not loaded  -->
@@ -167,11 +167,11 @@
 								Fill="DarkOrange" />
 						</controls:WrapPanel>
 					</Grid>
-				</labs:SettingsCard>
-			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>
+				</tkcontrols:SettingsCard>
+			</tkcontrols:SettingsExpander.Items>
+		</tkcontrols:SettingsExpander>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="The port used to communicate with IPFS. If not already running on this port, we'll download Kubo and bootstrap it on this port for you."
 			Header="API Port"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
@@ -183,9 +183,9 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</controls1:NumberBox>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="The port to use for the gateway. If you have a local node already running and don't want to use it, make sure this is different."
 			Header="Gateway Port"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
@@ -197,17 +197,17 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</controls1:NumberBox>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="{x:Bind RoutingModeToDescription(Ipfs.Settings.BootstrapNodeDhtRouting), Mode=OneWay}"
 			Header="Routing mode (Bootstrap only)"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<ComboBox win:ItemsSource="{ui:EnumValues Type={ocext:Type Fullname='OwlCore.Kubo.DhtRoutingMode, OwlCore.Kubo'}}" win:SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Enable or disable discovery of peers on your local network."
 			Header="Local network discovery (Bootstrap only)"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
@@ -219,7 +219,7 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 		<TextBlock
 			Margin="1,28,0,4"
@@ -227,7 +227,7 @@
 			Text="Installation"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="{x:Bind IpnsPathToProtocolUrl(Ipfs.Settings.ReleaseIpns), FallbackValue=?, Mode=OneWay}"
 			Header="Installed from"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF133;}"
@@ -240,9 +240,9 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</Button>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="{x:Bind IpfsPathToProtocolUrl(Ipfs.Settings.ReleaseIpnsResolved), FallbackValue=?, Mode=OneWay}"
 			Header="Last known release CID"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE928;}"
@@ -255,16 +255,16 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</Button>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Coming soon: sideload and update Strix Music over IPFS."
 			Header="App Updates"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE835;}"
 			IsEnabled="False"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="Check for updates" />
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 		<TextBlock
 			Margin="1,28,0,4"
@@ -272,7 +272,7 @@
 			Text="Release content"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
 
-		<labs:SettingsExpander
+		<tkcontrols:SettingsExpander
 			Description="Preload and pin content from the installation source on your local IPFS node for quick and offline access. Refreshed on app startup."
 			Header="Save release content"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}"
@@ -280,19 +280,19 @@
 			IsExpanded="True"
 			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
-			<labs:SettingsExpander.ItemTemplate>
+			<tkcontrols:SettingsExpander.ItemTemplate>
 				<DataTemplate x:DataType="appModels:AppReleaseContentBundlePreloadHandler">
-					<labs:SettingsCard Description="{x:Bind ReleaseContentBundle.Description, FallbackValue='No description'}" Header="{x:Bind ReleaseContentBundle.DisplayName, FallbackValue='No display name'}">
+					<tkcontrols:SettingsCard Description="{x:Bind ReleaseContentBundle.Description, FallbackValue='No description'}" Header="{x:Bind ReleaseContentBundle.DisplayName, FallbackValue='No display name'}">
 						<controls:WrapPanel HorizontalSpacing="8" VerticalSpacing="8">
 							<ProgressRing IsActive="{x:Bind PinCommand.IsRunning, Mode=OneWay}" />
 							<ProgressRing IsActive="{x:Bind UnpinCommand.IsRunning, Mode=OneWay}" />
 
 							<ToggleSwitch x:Name="PreloadToggleSwitch" IsOn="{Binding IsPinned, Mode=TwoWay}" />
 						</controls:WrapPanel>
-					</labs:SettingsCard>
+					</tkcontrols:SettingsCard>
 				</DataTemplate>
-			</labs:SettingsExpander.ItemTemplate>
-		</labs:SettingsExpander>
+			</tkcontrols:SettingsExpander.ItemTemplate>
+		</tkcontrols:SettingsExpander>
 
 		<TextBlock
 			Margin="1,28,0,4"
@@ -300,7 +300,7 @@
 			Text="Additional features"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="The number of users who have enabled IPFS in the Strix Music app and are reachable by your node."
 			Header="Users online"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEB44;}"
@@ -309,9 +309,9 @@
 			<TextBlock>
 				<Run Text="{x:Bind Ipfs.Everyone.ConnectedPeers.Count, FallbackValue=?, Mode=OneWay}" />
 			</TextBlock>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Content on your local node that isn't pinned or stored in MFS will be cleaned up."
 			Header="Garbage collection"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE107;}"
@@ -330,9 +330,9 @@
 					Content="Cancel"
 					Visibility="{x:Bind Ipfs.ExecuteGarbageCollectionCommand.IsRunning, Mode=OneWay}" />
 			</Grid>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Requires app restart. See how many people are listening to the same track, album, artist, playlist, etc., as you. Allows others to see when something is playing, paused, loading, or failing to load."
 			Header="Enable global playback state counters"
 			HeaderIcon="{ui:FontIcon Glyph=&#xEBDA;}"
@@ -345,7 +345,7 @@
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 	</StackPanel>
 </UserControl>

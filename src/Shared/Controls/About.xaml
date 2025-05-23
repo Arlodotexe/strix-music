@@ -7,7 +7,7 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -25,7 +25,7 @@
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Quick access" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			Header="Visit strixmusic.com"
 			HeaderIcon="{ui:SymbolIcon Symbol=Link}"
@@ -35,9 +35,9 @@
 					<behaviors:OpenUriAction Source="https://strixmusic.com/" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			Header="Report a bug"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
@@ -47,9 +47,9 @@
 					<behaviors:OpenUriAction Source="https://github.com/Arlodotexe/strix-music/issues/new?labels=bug&amp;template=bug_report.yml" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			Header="Request a feature"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
@@ -59,64 +59,64 @@
 					<behaviors:OpenUriAction Source="https://github.com/Arlodotexe/strix-music/issues/new?assignees=&amp;labels=enhancement&amp;template=feature_request.yml&amp;title=%5BFeature%5D" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="Why Strix Music?" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Local storage, cloud storage, streaming services, home servers - nothing is impossible."
 			Header="Any music"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE955;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Refresh your experience by changing skins in the Appearance settings."
 			Header="Any look"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF4C3;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Strix Music uses Uno Platform to enable support Windows, Android, iOS, Linux, MacOS and web browsers."
 			Header="Any device"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE975;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="The app will stay working when the internet goes down."
 			Header="Offline first"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF384;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="No logs are generated and no servers are contacted, unless you say so."
 			Header="Private by design"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF439;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
 			Header="Distributed and permanent"
 			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Strix Music is distributed to users at no cost. It will never have ads, paywalls or in app purchases. We're funded by donations from our supporters and code contributions from the community."
 			Header="Free of charge"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE1CB;}" />
 
-		<labs:SettingsExpander
+		<tkcontrols:SettingsExpander
 			Description="You have the freedom to inspect, run, copy, distribute, change and improve this software as licensed."
 			Header="Open source software"
 			HeaderIcon="{ui:FontIcon Glyph=&#xE943;}">
-			<labs:SettingsExpander.Items>
-				<labs:SettingsCard Header="The Strix Music SDK is licensed under a modified LGPL." />
-				<labs:SettingsCard Header="The Strix Music App and UI libraries are licensed under GPLv3." />
-			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>
+			<tkcontrols:SettingsExpander.Items>
+				<tkcontrols:SettingsCard Header="The Strix Music SDK is licensed under a modified LGPL." />
+				<tkcontrols:SettingsCard Header="The Strix Music App and UI libraries are licensed under GPLv3." />
+			</tkcontrols:SettingsExpander.Items>
+		</tkcontrols:SettingsExpander>
 
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="For developers" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			ActionIconToolTip="Open getting started docs"
 			Description="Use any music source or plugin from our ecosystem in your own app."
@@ -128,9 +128,9 @@
 					<behaviors:OpenUriAction Source="https://strixmusic.com/docs/get-started/" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			ActionIconToolTip="Open core creation docs"
 			Description="Implement a new music source or plugin, and use it in any app that uses the Strix Music SDK."
@@ -142,14 +142,14 @@
 					<behaviors:OpenUriAction Source="https://strixmusic.com/docs/cores/" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 		<TextBlock
 			Margin="1,28,0,4"
 			Style="{StaticResource BodyStrongTextBlockStyle}"
 			Text="The team" />
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 			Description="Ask questions, get real-time updates and give us your feedback."
 			Header="Find us on Discord"
@@ -160,9 +160,9 @@
 					<behaviors:OpenUriAction Source="https://discord.gg/bVQCKj476n" />
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Project owner, Founding developer"
 			Header="Arlo Godfrey"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/arlogodfrey.png}">
@@ -194,9 +194,9 @@
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Developer, Maintainer"
 			Header="Amaid Niazi"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/amaidniazi.png}">
@@ -219,9 +219,9 @@
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Founding developer, Asset designer"
 			Header="Adam Dernis"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/adamdernis.png}">
@@ -245,20 +245,20 @@
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
-		<labs:SettingsCard
+		<tkcontrols:SettingsCard
 			Description="Founding developer (inactive)"
 			Header="Matthew"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/matthew.png}" />
 
-		<labs:SettingsExpander
+		<tkcontrols:SettingsExpander
 			Description="Donations are used to keep things operational, and the remaining funds are split among our most active contributors."
 			Header="Support our efforts"
 			HeaderIcon="{ui:FontIcon Glyph=&#xECAD;}"
 			IsExpanded="True">
-			<labs:SettingsExpander.Items>
-				<labs:SettingsCard
+			<tkcontrols:SettingsExpander.Items>
+				<tkcontrols:SettingsCard
 					ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 					Header="Support us on Patreon"
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/patreon.png}"
@@ -268,9 +268,9 @@
 							<behaviors:OpenUriAction Source="https://patreon.com/Arlodotexe" />
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
-				</labs:SettingsCard>
+				</tkcontrols:SettingsCard>
 
-				<labs:SettingsCard
+				<tkcontrols:SettingsCard
 					ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 					Header="Support us on GitHub Sponsors"
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
@@ -280,8 +280,8 @@
 							<behaviors:OpenUriAction Source="https://github.com/sponsors/Arlodotexe" />
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
-				</labs:SettingsCard>
-			</labs:SettingsExpander.Items>
-		</labs:SettingsExpander>
+				</tkcontrols:SettingsCard>
+			</tkcontrols:SettingsExpander.Items>
+		</tkcontrols:SettingsExpander>
 	</StackPanel>
 </UserControl>

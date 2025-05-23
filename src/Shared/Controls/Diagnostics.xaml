@@ -10,7 +10,7 @@
 	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -33,18 +33,18 @@
 			VerticalAlignment="Top"
 			Spacing="4">
 
-			<labs:SettingsCard Header="Memory Usage">
-				<labs:SettingsCard.Description>
+			<tkcontrols:SettingsCard Header="Memory Usage">
+				<tkcontrols:SettingsCard.Description>
 					<TextBlock>
 						<Run Text="System memory limit:" />
 						<Run Text="{x:Bind DiagnosticData.TotalMemory, Mode=OneWay}" />
 					</TextBlock>
-				</labs:SettingsCard.Description>
+				</tkcontrols:SettingsCard.Description>
 
 				<TextBlock Text="{x:Bind DiagnosticData.MemoryUsage, Mode=OneWay}" />
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard Description="Logs are printed below and saved to local application storage when enabled." Header="Enable logging">
+			<tkcontrols:SettingsCard Description="Logs are printed below and saved to local application storage when enabled." Header="Enable logging">
 				<ToggleSwitch IsEnabled="{x:Bind InvertBool(DiagnosticData.Settings.SaveCommand.IsRunning), Mode=OneWay}" IsOn="{x:Bind DiagnosticData.Settings.IsLoggingEnabled, Mode=TwoWay}">
 					<interactivity:Interaction.Behaviors>
 						<core:EventTriggerBehavior EventName="Toggled">
@@ -52,9 +52,9 @@
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ToggleSwitch>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard Description="Log handled or ignored exceptions. Keep this disabled if you're unsure." Header="First chance exceptions">
+			<tkcontrols:SettingsCard Description="Log handled or ignored exceptions. Keep this disabled if you're unsure." Header="First chance exceptions">
 				<ToggleSwitch IsEnabled="{x:Bind InvertBool(DiagnosticData.Settings.SaveCommand.IsRunning), Mode=OneWay}" IsOn="{x:Bind DiagnosticData.Settings.IsFirstChangeLoggingEnabled, Mode=TwoWay}">
 					<interactivity:Interaction.Behaviors>
 						<core:EventTriggerBehavior EventName="Toggled">
@@ -62,9 +62,9 @@
 						</core:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ToggleSwitch>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard
+			<tkcontrols:SettingsCard
 				ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
 				Header="Open logs folder"
 				HeaderIcon="{ui:SymbolIcon Symbol=Folder}"
@@ -74,9 +74,9 @@
 						<core:InvokeCommandAction Command="{x:Bind DiagnosticData.OpenLogFolderCommand, Mode=OneWay}" />
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard
+			<tkcontrols:SettingsCard
 				Description="An app restart will be required. All cores will be deleted and your preferences will be reset."
 				Header="Erase all data"
 				HeaderIcon="{ui:FontIcon Glyph=&#xE75C;}"
@@ -86,9 +86,9 @@
 						<core:InvokeCommandAction Command="{x:Bind DiagnosticData.DeleteUserDataCommand, Mode=OneWay}" />
 					</core:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
-			</labs:SettingsCard>
+			</tkcontrols:SettingsCard>
 
-			<labs:SettingsCard
+			<tkcontrols:SettingsCard
 				Click="ManualCrash"
 				Description="Manually crash the app, for debug purposes."
 				Header="Crash the app"
