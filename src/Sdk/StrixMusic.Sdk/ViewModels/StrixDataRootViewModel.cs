@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.ViewModels;
 /// <summary>
 /// A ViewModel wrapper for an instance of <see cref="IStrixDataRoot"/>.
 /// </summary>
-public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegatable<IStrixDataRoot>
+public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegable<IStrixDataRoot>
 {
     private readonly IStrixDataRoot _dataRoot;
     private readonly ObservableCollection<IDevice> _devices;
@@ -126,7 +126,7 @@ public class StrixDataRootViewModel : ObservableObject, IStrixDataRoot, IDelegat
     }
 
     /// <inheritdoc/>
-    IStrixDataRoot IDelegatable<IStrixDataRoot>.Inner => _dataRoot;
+    IStrixDataRoot IDelegable<IStrixDataRoot>.Inner => _dataRoot;
 
     /// <inheritdoc/>
     public event EventHandler? SourcesChanged

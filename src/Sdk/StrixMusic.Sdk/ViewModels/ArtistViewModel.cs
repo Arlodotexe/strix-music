@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IArtist"/>.
     /// </summary>
-    public sealed class ArtistViewModel : ObservableObject, IArtist, ISdkViewModel, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IArtist>
+    public sealed class ArtistViewModel : ObservableObject, IArtist, ISdkViewModel, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel, IUrlCollectionViewModel, IDelegable<IArtist>
     {
         private readonly IArtist _artist;
 
@@ -150,7 +150,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IArtist IDelegatable<IArtist>.Inner => _artist;
+        IArtist IDelegable<IArtist>.Inner => _artist;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

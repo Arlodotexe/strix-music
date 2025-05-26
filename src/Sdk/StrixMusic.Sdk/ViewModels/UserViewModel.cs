@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IUser"/>
     /// </summary>
-    public class UserViewModel : UserProfileViewModel, ISdkViewModel, IDelegatable<IUser>
+    public class UserViewModel : UserProfileViewModel, ISdkViewModel, IDelegable<IUser>
     {
         private readonly IUser _user;
 
@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IUser IDelegatable<IUser>.Inner => _user;
+        IUser IDelegable<IUser>.Inner => _user;
 
         /// <inheritdoc cref="ILibraryBase"/>
         public LibraryViewModel Library { get; }

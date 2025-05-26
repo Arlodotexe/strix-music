@@ -21,7 +21,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings
 
             var localizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
 
-            _displayPages = _displayPages.Select(x => localizationService.GetString(x).ToUpper()).ToList();
+            _displayPages = _displayPages.Select(x => localizationService.GetString(x)?.ToUpper() ?? string.Empty).ToList();
         }
 
         private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;

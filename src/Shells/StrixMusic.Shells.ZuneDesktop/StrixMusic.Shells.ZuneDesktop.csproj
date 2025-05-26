@@ -1,12 +1,12 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.19041;net7.0</TargetFrameworks>
+    <TargetFrameworks>uap10.0.19041;net9.0</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <RootNamespace>StrixMusic.Shells.ZuneDesktop</RootNamespace>
     <AssemblyName>StrixMusic.Shells.ZuneDesktop</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -20,9 +20,9 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="OwlCore" Version="0.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="OwlCore" Version="0.6.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -114,9 +114,9 @@
     <UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
-    <PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0-dev.1" />
-    <PackageReference Include="Uno.UI" Version="4.8.33" />
+    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0" />
+    <PackageReference Include="Uno.UI" Version="5.6.99" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />

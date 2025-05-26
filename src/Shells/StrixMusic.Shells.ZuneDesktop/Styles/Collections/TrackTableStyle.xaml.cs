@@ -21,7 +21,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
             this.InitializeComponent();
         }
 
-        private void DataGrid_Loaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Handles the <see cref="DataGrid.Loaded"/> event to initialize the DataGrid reference.
+        /// </summary>
+        public void DataGrid_Loaded(object sender, RoutedEventArgs e)
         {
             _grid = (DataGrid)sender;
         }
@@ -34,13 +37,19 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
             }
         }
 
-        private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
+        /// <summary>
+        /// Handles the <see cref="DataGrid.Sorting"/> event to sort the tracks based on the clicked column.
+        /// </summary>
+        public void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
         {
             DataGrid grid = (DataGrid)sender;
             SortColumn(grid, e.Column);
         }
 
-        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        /// <summary>
+        /// Handles the <see cref="DataGrid.LoadingRow"/> event to add a double-tap event handler to each row.
+        /// </summary>
+        public void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.DoubleTapped += Row_DoubleTapped;
         }

@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IAlbum"/>.
     /// </summary>
-    public sealed class AlbumViewModel : ObservableObject, ISdkViewModel, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IGenreCollectionViewModel, IDelegatable<IAlbum>
+    public sealed class AlbumViewModel : ObservableObject, ISdkViewModel, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IGenreCollectionViewModel, IDelegable<IAlbum>
     {
         private readonly IAlbum _album;
 
@@ -149,7 +149,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IAlbum IDelegatable<IAlbum>.Inner => _album;
+        IAlbum IDelegable<IAlbum>.Inner => _album;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

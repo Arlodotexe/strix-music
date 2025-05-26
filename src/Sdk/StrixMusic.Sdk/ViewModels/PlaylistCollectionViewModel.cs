@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IPlaylistCollection"/>.
     /// </summary>
-    public sealed class PlaylistCollectionViewModel : ObservableObject, ISdkViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IPlaylistCollection>
+    public sealed class PlaylistCollectionViewModel : ObservableObject, ISdkViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegable<IPlaylistCollection>
     {
         private readonly IPlaylistCollection _collection;
 
@@ -184,7 +184,7 @@ namespace StrixMusic.Sdk.ViewModels
         }, null);
 
         /// <inheritdoc/>
-        IPlaylistCollection IDelegatable<IPlaylistCollection>.Inner => _collection;
+        IPlaylistCollection IDelegable<IPlaylistCollection>.Inner => _collection;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

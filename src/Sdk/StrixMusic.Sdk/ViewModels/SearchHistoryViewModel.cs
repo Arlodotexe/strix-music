@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ISearchHistory"/>.
     /// </summary>
-    public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory, IDelegatable<ISearchHistory>
+    public sealed class SearchHistoryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ISearchHistory, IDelegable<ISearchHistory>
     {
         private readonly ISearchHistory _searchHistory;
 
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        ISearchHistory IDelegatable<ISearchHistory>.Inner => _searchHistory;
+        ISearchHistory IDelegable<ISearchHistory>.Inner => _searchHistory;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreSearchHistory> IMerged<ICoreSearchHistory>.Sources => this.GetSources<ICoreSearchHistory>();

@@ -54,7 +54,7 @@ Open up the `.csproj` for your new core and add the following lines before the c
 ```xml
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>12</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 ```

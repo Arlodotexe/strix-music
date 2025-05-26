@@ -225,6 +225,8 @@ public sealed class StorageCore : ICore
             return null;
         }
 
+        Guard.IsNotNull(mimeType);
+
         var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
 
         if (!stream.CanSeek)

@@ -478,7 +478,7 @@ internal sealed class FileMetadataManager : IAsyncInit, IAsyncDisposable
     internal async Task<ConcurrentDictionary<string, Models.FileMetadata>?> TryGetFileMetadataCacheAsync(CancellationToken cancellationToken)
     {
         var cachedFile = await GetMetadataCacheFile(cancellationToken);
-        using var fileCacheStream = await cachedFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var fileCacheStream = await cachedFile.OpenReadAsync(cancellationToken: cancellationToken);
 
         if (fileCacheStream.Length == 0)
             return null;

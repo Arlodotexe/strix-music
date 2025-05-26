@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Diagnostics;
+using Microsoft.Extensions.Logging;
 using OwlCore.Storage.Uwp;
 using StrixMusic.AppModels;
 using StrixMusic.Controls;
@@ -72,6 +73,7 @@ public sealed partial class App : Application
 
         // Do not repeat app initialization when the Window already has content,
         // just ensure that the window is active
+        Guard.IsNotNull(MainWindow);
         MainWindow.Content ??= CreateMainWindowContent();
 
 #if !(NET6_0_OR_GREATER && WINDOWS)
@@ -96,7 +98,8 @@ public sealed partial class App : Application
             var appRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder))
             {
 #if __WASM__
-        HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
+        // TODO: Not needed anymore?
+        // HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
 #endif
             };
             return appRoot;

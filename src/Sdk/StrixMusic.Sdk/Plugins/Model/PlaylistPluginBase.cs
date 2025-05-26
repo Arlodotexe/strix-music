@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IPlaylist"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class PlaylistPluginBase : IModelPlugin, IPlaylist, IDelegatable<IPlaylist>
+    public class PlaylistPluginBase : IModelPlugin, IPlaylist, IDelegable<IPlaylist>
     {
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistPluginBase"/>.

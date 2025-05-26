@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ILibrary"/>.
     /// </summary>
-    public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary, IDelegatable<ILibrary>
+    public sealed class LibraryViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, ILibrary, IDelegable<ILibrary>
     {
         private readonly ILibrary _library;
 
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        ILibrary IDelegatable<ILibrary>.Inner => _library;
+        ILibrary IDelegable<ILibrary>.Inner => _library;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreLibrary> IMerged<ICoreLibrary>.Sources => this.GetSources<ICoreLibrary>();

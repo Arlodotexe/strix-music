@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IImageCollection"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class ImageCollectionPluginBase : IModelPlugin, IImageCollection, IDelegatable<IImageCollection>
+    public class ImageCollectionPluginBase : IModelPlugin, IImageCollection, IDelegable<IImageCollection>
     {
         /// <summary>
         /// Creates a new instance of <see cref="ImageCollectionPluginBase"/>.

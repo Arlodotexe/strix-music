@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Plugins.Model;
 /// An implementation of <see cref="IDiscoverables"/> which delegates all member access to the <see cref="Inner"/> implementation,
 /// unless the member is overridden in a derived class which changes the behavior.
 /// </summary>
-public class DiscoverablesPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin, IDiscoverables, IDelegatable<IDiscoverables>
+public class DiscoverablesPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin, IDiscoverables, IDelegable<IDiscoverables>
 {
     /// <summary>
     /// Creates a new instance of <see cref="PlayableCollectionGroupPluginBase"/>.

@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IStrixDataRoot"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class StrixDataRootPluginBase : IModelPlugin, IStrixDataRoot, IDelegatable<IStrixDataRoot>
+    public class StrixDataRootPluginBase : IModelPlugin, IStrixDataRoot, IDelegable<IStrixDataRoot>
     {
         /// <summary>
         /// Creates a new instance of <see cref="ImagePluginBase"/>.

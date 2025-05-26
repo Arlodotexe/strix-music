@@ -14,7 +14,7 @@ using OwlCore.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Kubo;
 using OwlCore.Storage;
-using OwlCore.Storage.SystemIO;
+using OwlCore.Storage.System.IO;
 using StrixMusic.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -326,7 +326,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
         var repoFolder = (SystemFolder)await kuboBinParentFolder.CreateFolderAsync(".ipfs", overwrite: false, cancellationToken);
 
-        var bootstrapper = new KuboBootstrapper(kuboBin, repoFolder.Path)
+        var bootstrapper = new KuboBootstrapper(repoFolder.Path, ctx => Task.FromResult<IFile>(kuboBin))
         {
             BinaryWorkingFolder = kuboBinParentFolderParent,
             ApiUri = new Uri($"http://127.0.0.1:{Settings.NodeApiPort}"),
@@ -349,8 +349,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
         if (kuboBin is null)
         {
             InitStatus = "Downloading and extracting Kubo";
-            var downloader = new KuboDownloader { HttpMessageHandler = HttpMessageHandler };
-            var downloadedBinary = await downloader.DownloadBinaryAsync(new Version(0, 19, 0), cancellationToken);
+            var downloadedBinary = await KuboDownloader.GetBinaryVersionAsync(new Version(0, 19, 0), cancellationToken);
 
             kuboBin = await StoreDownloadedKuboBinaryAsync(downloadedBinary, cancellationToken);
         }
