@@ -157,7 +157,7 @@ public partial class AppReleaseContentLoader : ObservableObject, IAsyncInit
         var content = await _releaseSourceFolder.GetFirstByNameAsync("release-content-bundles.json", cancellationToken);
         var file = (IFile)content;
 
-        using var stream = await file.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await file.OpenReadAsync(cancellationToken: cancellationToken);
         return await AppSettingsSerializer.Singleton.DeserializeAsync<List<AppReleaseContentBundle>>(stream, cancellationToken);
     }
 

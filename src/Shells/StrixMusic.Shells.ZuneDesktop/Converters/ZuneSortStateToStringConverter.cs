@@ -1,4 +1,5 @@
 ﻿using System;
+using CommunityToolkit.Diagnostics;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Data;
@@ -19,11 +20,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Converters
 
                 return zss switch
                 {
-                    ZuneSortState.AZ => loacalizationService.GetString("A-Z"),
-                    ZuneSortState.ZA => loacalizationService.GetString("Z-A"),
-                    ZuneSortState.Artists => loacalizationService.GetString("By Artists"),
-                    ZuneSortState.ReleaseYear => loacalizationService.GetString("By Release Year"),
-                    ZuneSortState.DateAdded => loacalizationService.GetString("By Date Added"),
+                    ZuneSortState.AZ => loacalizationService.GetString("A-Z") ?? ThrowHelper.ThrowArgumentNullException<string>(),
+                    ZuneSortState.ZA => loacalizationService.GetString("Z-A") ?? ThrowHelper.ThrowArgumentNullException<string>(),
+                    ZuneSortState.Artists => loacalizationService.GetString("By Artists") ?? ThrowHelper.ThrowArgumentNullException<string>(),
+                    ZuneSortState.ReleaseYear => loacalizationService.GetString("By Release Year") ?? ThrowHelper.ThrowArgumentNullException<string>(),
+                    ZuneSortState.DateAdded => loacalizationService.GetString("By Date Added") ?? ThrowHelper.ThrowArgumentNullException<string>(),
                     _ => throw new NotImplementedException(),
                 };
             }

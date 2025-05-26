@@ -73,7 +73,9 @@ public sealed partial class AppFrame : UserControl
         applicationView.TitleBar.InactiveForegroundColor = hostOptions?.InactiveForegroundColor;
 
         coreApplicationView.TitleBar.ExtendViewIntoTitleBar = hostOptions?.ExtendViewIntoTitleBar ?? true;
-        Window.Current.SetTitleBar(hostOptions?.CustomTitleBar);
+
+        if (Window.Current is not null)
+            Window.Current.SetTitleBar(hostOptions?.CustomTitleBar);
     }
 
     private void ShellOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, sender as ShellWindowHostOptions);

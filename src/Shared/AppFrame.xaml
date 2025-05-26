@@ -10,7 +10,7 @@
 	xmlns:coremodels="using:StrixMusic.Sdk.CoreModels"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:media="using:Microsoft.UI.Xaml.Media"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -161,7 +161,7 @@
 					For resizing the settings window.
 					Not needed if control takes up full window.
 				-->
-				<labs:PropertySizer
+				<tkcontrols:PropertySizer
 					Width="{Binding ElementName=SettingsBorder, Path=Width}"
 					VerticalAlignment="Bottom"
 					Binding="{x:Bind SettingsBorder.Height, Mode=TwoWay}"
@@ -170,7 +170,7 @@
 					Opacity="0"
 					Orientation="Horizontal" />
 
-				<labs:PropertySizer
+				<tkcontrols:PropertySizer
 					Height="{Binding ElementName=SettingsBorder, Path=Height}"
 					HorizontalAlignment="Right"
 					Binding="{x:Bind SettingsBorder.Width, Mode=TwoWay}"

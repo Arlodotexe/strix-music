@@ -330,7 +330,7 @@ internal static class AudioMetadataScanner
         {
             try
             {
-                using var fileStream = await file.OpenStreamAsync();
+                using var fileStream = await file.OpenReadAsync();
 
                 using var memoryStream = new LazyStream(fileStream);
 
@@ -469,7 +469,7 @@ internal static class AudioMetadataScanner
     {
         // Only scan files supported by taglib
         var mimeType = file.Name.GetMimeType();
-        if (!TagLibHelper.TagLibFileFactory.ContainsKey(mimeType))
+        if (mimeType is null || !TagLibHelper.TagLibFileFactory.ContainsKey(mimeType))
             return null;
 
         Logger.LogInformation($"{nameof(GetTagLibMetadata)} entered for file {file.Id}");

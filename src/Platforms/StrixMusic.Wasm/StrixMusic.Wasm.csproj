@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>
     <WasmPWAManifestFile>manifest.webmanifest</WasmPWAManifestFile>
     <WasmShellMonoRuntimeExecutionMode>Interpreter</WasmShellMonoRuntimeExecutionMode>
@@ -28,6 +28,13 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="manifest.webmanifest" />
     <Content Include="Assets\AppIcon-*.png" />
+    
+    <!--
+    Excluded until conflicting asset errors can be fixed
+    Only needed for SharedArrayBuffer (multithreading) service worker support.
+    See also https://platform.uno/docs/articles/external/uno.wasm.bootstrap/doc/features-additional-files.html
+    -->
+    <Content Remove="wwwroot\index.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,39 +55,39 @@
     <None Include="wwwroot\web.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.SizerBase" Version="0.0.4" />
-    <PackageReference Include="OwlCore.Kubo" Version="0.12.5" />
-    <PackageReference Include="OwlCore.Storage" Version="0.8.5" />
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
-    <PackageReference Include="CommunityToolkit.Common" Version="8.2.0" />
-    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.0.2" />
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls" Version="0.0.18" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-    <PackageReference Include="OwlCore" Version="0.4.0" />
-    <PackageReference Include="OwlCore.ComponentModel" Version="0.3.0" />
-    <PackageReference Include="OwlCore.Storage.Uwp" Version="0.1.0" />
-    <PackageReference Include="OwlCore.Storage.OneDrive" Version="0.2.0" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402" />
+    <PackageReference Include="OwlCore.Kubo" Version="0.20.2" />
+    <PackageReference Include="OwlCore.Storage" Version="0.12.2" />
+    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.1.250319-build.2093" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="OwlCore" Version="0.6.1" />
+    <PackageReference Include="OwlCore.ComponentModel" Version="0.9.1" />
+    <PackageReference Include="OwlCore.Storage.Uwp" Version="0.2.0" />
+    <PackageReference Include="OwlCore.Storage.OneDrive" Version="0.2.1" />
 
-    <PackageReference Include="NLog" Version="5.1.4" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.3" />
+    <PackageReference Include="NLog" Version="5.4.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.4.0" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.11" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.11" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.11" />
 
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.3.1-uno.2" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.3.1-uno.2" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="3.0.3" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.4.2" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
+    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
     <PackageReference Include="Uno.SourceGeneration" Version="4.2.0" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="4.8.33" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="4.8.33" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.8.33" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.24" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.24" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="5.6.99" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="5.6.99" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="6.0.611" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.19" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.19" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\Storage\src\StrixMusic.Cores.Storage.csproj" />

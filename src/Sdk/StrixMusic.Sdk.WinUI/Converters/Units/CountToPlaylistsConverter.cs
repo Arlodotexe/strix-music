@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.WinUI.Converters.Units
         {
             return LocalizationResources.Music is null ?
                 value.ToString() :
-                string.Format(LocalizationResources.Music.GetString("PlaylistsCount"), value);
+                string.Format(LocalizationResources.Music.GetString("PlaylistsCount") ?? string.Empty, value);
         }
 
         /// <inheritdoc/>

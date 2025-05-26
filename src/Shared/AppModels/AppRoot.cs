@@ -304,7 +304,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         await MusicSourcesSettings.SaveAsync();
     }
 
-    private async void ConfiguredIpfsCores_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private async void ConfiguredIpfsCores_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Guard.IsNotNull(MusicSourcesSettings);
         Guard.IsNotNull(_ipfs);

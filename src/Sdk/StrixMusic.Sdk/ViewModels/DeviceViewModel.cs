@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IDevice"/>.
     /// </summary>
-    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice, IDelegatable<IDevice>
+    public sealed class DeviceViewModel : ObservableObject, ISdkViewModel, IDevice, IDelegable<IDevice>
     {
         private readonly SynchronizationContext _syncContext;
         private readonly IDevice _model;
@@ -122,7 +122,7 @@ namespace StrixMusic.Sdk.ViewModels
         }, null);
 
         /// <inheritdoc/>
-        IDevice IDelegatable<IDevice>.Inner => _model;
+        IDevice IDelegable<IDevice>.Inner => _model;
 
         /// <inheritdoc />
         public ICore? SourceCore { get; set; }

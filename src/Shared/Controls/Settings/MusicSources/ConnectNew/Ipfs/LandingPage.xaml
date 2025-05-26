@@ -5,7 +5,7 @@
 	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -22,7 +22,7 @@
 				Source="ms-appx:///Assets/Cores/ipfs/access.svg" />
 		</StackPanel>
 
-		<labs:SettingsCard ContentAlignment="Left">
+		<tkcontrols:SettingsCard ContentAlignment="Left">
 			<StackPanel>
 
 				<StackPanel Spacing="17">
@@ -59,7 +59,7 @@
 						Visibility="{x:Bind TryContinueCommand.ExecutionTask.IsFaulted, Mode=OneWay}" />
 				</StackPanel>
 			</StackPanel>
-		</labs:SettingsCard>
+		</tkcontrols:SettingsCard>
 
 		<StackPanel Spacing="10" Visibility="{x:Bind NullToInveerseVisibility(Param.AppRoot.Ipfs.Client)}">
 			<TextBlock FontWeight="Bold" Text="No IPFS Access. Please turn on IPFS from the settings to add ipfs music source." />

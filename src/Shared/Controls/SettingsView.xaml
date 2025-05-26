@@ -9,7 +9,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:ipfs="using:StrixMusic.Controls.Settings.Ipfs"
-	xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+	xmlns:toolkit="using:CommunityToolkit.WinUI"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:musicSources1="using:StrixMusic.Controls.Settings.MusicSources"
@@ -106,7 +106,7 @@
 			<VisualStateGroup x:Name="NavigationViewVisualStateGroup">
 				<VisualState x:Name="Nav_WideState">
 					<VisualState.StateTriggers>
-						<labs:ControlSizeTrigger MinWidth="{x:Bind PartNavigationView.CompactModeThresholdWidth, Mode=OneWay}" TargetElement="{x:Bind ControlRoot}" />
+						<toolkit:ControlSizeTrigger MinWidth="{x:Bind PartNavigationView.CompactModeThresholdWidth, Mode=OneWay}" TargetElement="{x:Bind ControlRoot}" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<Setter Target="PartNavigationView.PaneDisplayMode" Value="Auto" />
@@ -117,7 +117,7 @@
 			<VisualStateGroup x:Name="StrixIconWindowStates">
 				<VisualState x:Name="StrixIconTallState">
 					<VisualState.StateTriggers>
-						<labs:ControlSizeTrigger MaxHeight="500" TargetElement="{x:Bind ControlRoot}" />
+						<toolkit:ControlSizeTrigger MaxHeight="500" TargetElement="{x:Bind ControlRoot}" />
 					</VisualState.StateTriggers>
 					<VisualState.Setters>
 						<Setter Target="TopStrixIcon.Visibility" Value="Collapsed" />

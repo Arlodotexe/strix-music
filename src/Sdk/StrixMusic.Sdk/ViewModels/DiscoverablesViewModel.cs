@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IDiscoverables"/>.
     /// </summary>
-    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables, IDelegatable<IDiscoverables>
+    public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IDiscoverables, IDelegable<IDiscoverables>
     {
         private readonly IDiscoverables _discoverables;
 
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IDiscoverables IDelegatable<IDiscoverables>.Inner => _discoverables;
+        IDiscoverables IDelegable<IDiscoverables>.Inner => _discoverables;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreDiscoverables> IMerged<ICoreDiscoverables>.Sources => this.GetSources<ICoreDiscoverables>();
