@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IRecentlyPlayed"/>.
     /// </summary>
-    public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed, IDelegatable<IRecentlyPlayed>
+    public sealed class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, ISdkViewModel, IRecentlyPlayed, IDelegable<IRecentlyPlayed>
     {
         private readonly IRecentlyPlayed _recentlyPlayed;
 
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IRecentlyPlayed IDelegatable<IRecentlyPlayed>.Inner => _recentlyPlayed;
+        IRecentlyPlayed IDelegable<IRecentlyPlayed>.Inner => _recentlyPlayed;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreRecentlyPlayed> IMerged<ICoreRecentlyPlayed>.Sources => this.GetSources<ICoreRecentlyPlayed>();

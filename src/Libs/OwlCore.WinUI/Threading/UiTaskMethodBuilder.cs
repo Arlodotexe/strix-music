@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
@@ -45,6 +46,7 @@ namespace OwlCore.WinUI.Threading
         /// <returns></returns>
         public static UiTaskMethodBuilder Create()
         {
+            Guard.IsNotNull(Window.Current);
             return new UiTaskMethodBuilder(Window.Current.Dispatcher);
         }
 

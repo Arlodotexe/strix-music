@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="ITrack"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class TrackPluginBase : IModelPlugin, ITrack, IDelegatable<ITrack>
+    public class TrackPluginBase : IModelPlugin, ITrack, IDelegable<ITrack>
     {
         /// <summary>
         /// Creates a new instance of <see cref="TrackPluginBase"/>.

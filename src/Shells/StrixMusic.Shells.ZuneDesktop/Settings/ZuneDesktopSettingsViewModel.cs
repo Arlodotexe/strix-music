@@ -46,7 +46,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
             _localizationService = ResourceLoader.GetForCurrentView("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
 
             _displayNameMap = _zuneBackgroundImages.Keys
-                .ToDictionary(_localizationService.GetString);
+                .ToDictionary((x) => _localizationService.GetString(x) ?? string.Empty);
 
             LoadInitialValues().Forget();
         }
@@ -79,7 +79,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         {
             await _settings.LoadAsync();
 
-            string displayName = _localizationService.GetString(_settings.BackgroundImage.Name);
+            string displayName = _localizationService.GetString(_settings.BackgroundImage.Name) ?? string.Empty;
             SetProperty(ref _selectedBackgroundImage, displayName);
         }
     }

@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IUserProfile"/>.
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegatable<IUserProfile>
+    public class UserProfileViewModel : ObservableObject, ISdkViewModel, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel, IDelegable<IUserProfile>
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        IUserProfile IDelegatable<IUserProfile>.Inner => _userProfile;
+        IUserProfile IDelegable<IUserProfile>.Inner => _userProfile;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Plugins.Model;
 /// An implementation of <see cref="ISearchHistory"/> which delegates all member access to the <see cref="Inner"/> implementation,
 /// unless the member is overridden in a derived class which changes the behavior.
 /// </summary>
-public class SearchHistoryPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin, ISearchHistory, IDelegatable<ISearchHistory>
+public class SearchHistoryPluginBase : PlayableCollectionGroupPluginBase, IModelPlugin, ISearchHistory, IDelegable<ISearchHistory>
 {
     /// <summary>
     /// Creates a new instance of <see cref="PlayableCollectionGroupPluginBase"/>.

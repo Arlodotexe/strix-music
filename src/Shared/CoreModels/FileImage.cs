@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Extensions;
 using OwlCore.Storage;
 using StrixMusic.Sdk.CoreModels;
@@ -23,7 +24,7 @@ namespace StrixMusic.CoreModels
         }
 
         /// <inheritdoc/>
-        public string MimeType => Path.GetExtension(_file.Name).GetMimeType();
+        public string MimeType => Path.GetExtension(_file.Name).GetMimeType() ?? ThrowHelper.ThrowArgumentNullException<string>();
 
         /// <inheritdoc/>
         public double? Height { get; set; }
@@ -35,6 +36,6 @@ namespace StrixMusic.CoreModels
         public ICore SourceCore { get; set; } = null!;
 
         /// <inheritdoc/>
-        public Task<Stream> OpenStreamAsync() => _file.OpenStreamAsync();
+        public Task<Stream> OpenStreamAsync() => _file.OpenReadAsync();
     }
 }

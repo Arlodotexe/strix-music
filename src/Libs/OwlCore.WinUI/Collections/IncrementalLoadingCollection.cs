@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using OwlCore.Collections.ObjectModel;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -67,6 +68,7 @@ namespace OwlCore.WinUI.Collections
         /// <returns>An asynchronous operation that results in the <see cref="LoadMoreItemsResult"/>.</returns>
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
+            Guard.IsNotNull(Window.Current);
             CoreDispatcher dispatcher = Window.Current.Dispatcher;
             _onBatchStart?.Invoke(); // This is the UI thread
 

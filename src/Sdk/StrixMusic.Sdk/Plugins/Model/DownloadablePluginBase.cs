@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Plugins.Model
     /// An implementation of <see cref="IDownloadable"/> which delegates all member access to the <see cref="Inner"/> implementation,
     /// unless the member is overridden in a derived class which changes the behavior.
     /// </summary>
-    public class DownloadablePluginBase : IModelPlugin, IDownloadable, IDelegatable<IDownloadable>
+    public class DownloadablePluginBase : IModelPlugin, IDownloadable, IDelegable<IDownloadable>
     {
         /// <summary>
         /// Creates a new instance of <see cref="DownloadablePluginBase"/>.

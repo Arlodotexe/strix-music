@@ -30,7 +30,7 @@ internal partial class PlaylistMetadataScanner
     {
         var ser = new XmlSerializer(typeof(Smil));
 
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
         using var xmlReader = new XmlTextReader(stream);
 
         var smil = ser.Deserialize(xmlReader) as Smil;
@@ -68,7 +68,7 @@ internal partial class PlaylistMetadataScanner
     /// <remarks>Recognizes both M3U (default encoding) and M3U8 (UTF-8 encoding).</remarks>
     private static async Task<PlaylistMetadata?> GetM3UMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
 
         using var content = Path.GetExtension(playlistFile.Name) == ".m3u8" ? new StreamReader(stream, Encoding.UTF8) : new StreamReader(stream);
 
@@ -114,7 +114,7 @@ internal partial class PlaylistMetadataScanner
     /// <param name="knownFiles">A list of all known files. If a scanned playlist references a file, it must be traversable and must exist this list.</param>
     private static async Task<PlaylistMetadata?> GetXspfMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
 
         var doc = XDocument.Load(stream);
         var xmlRoot = doc.Root;
@@ -156,7 +156,7 @@ internal partial class PlaylistMetadataScanner
     /// <remarks>Does not support ENTRYREF.</remarks>
     private static async Task<PlaylistMetadata?> GetAsxMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
 
         var doc = XDocument.Load(stream);
         var asx = doc.Root;
@@ -190,7 +190,7 @@ internal partial class PlaylistMetadataScanner
     /// <param name="knownFiles">A list of all known files. If a scanned playlist references a file, it must be traversable and must exist this list.</param>
     private static async Task<PlaylistMetadata?> GetMpcplMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
         using var content = new StreamReader(stream);
 
         var playlist = new PlaylistMetadata();
@@ -244,7 +244,7 @@ internal partial class PlaylistMetadataScanner
                 0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2
             };
 
-            using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+            using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
             using var content = new BinaryReader(stream);
 
             var playlist = new PlaylistMetadata()
@@ -394,7 +394,7 @@ internal partial class PlaylistMetadataScanner
     /// <param name="knownFiles">A list of all known files. If a scanned playlist references a file, it must be traversable and must exist this list.</param>
     private static async Task<PlaylistMetadata?> GetPlsMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
         using var content = new StreamReader(stream);
 
         var playlist = new PlaylistMetadata()
@@ -447,7 +447,7 @@ internal partial class PlaylistMetadataScanner
     private static async Task<PlaylistMetadata?> GetAimpplMetadata(IFile playlistFile, IList<IFile> knownFiles, CancellationToken cancellationToken)
     {
         // Adapted from https://github.com/ApexWeed/aimppl-copy/
-        using var stream = await playlistFile.OpenStreamAsync(cancellationToken: cancellationToken);
+        using var stream = await playlistFile.OpenReadAsync(cancellationToken: cancellationToken);
         using var content = new StreamReader(stream);
 
         var playlist = new PlaylistMetadata()

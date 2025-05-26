@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A wrapper for <see cref="IArtistCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class ArtistCollectionViewModel : ObservableObject, ISdkViewModel, IArtistCollectionViewModel, IImageCollectionViewModel, IDelegatable<IArtistCollection>
+    public class ArtistCollectionViewModel : ObservableObject, ISdkViewModel, IArtistCollectionViewModel, IImageCollectionViewModel, IDelegable<IArtistCollection>
     {
         private readonly IArtistCollection _collection;
 
@@ -203,7 +203,7 @@ namespace StrixMusic.Sdk.ViewModels
         }, null);
 
         /// <inheritdoc/>
-        IArtistCollection IDelegatable<IArtistCollection>.Inner => _collection;
+        IArtistCollection IDelegable<IArtistCollection>.Inner => _collection;
 
         /// <inheritdoc/>
         public event EventHandler? SourcesChanged

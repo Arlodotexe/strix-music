@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="ISearch"/>.
     /// </summary>
-    public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch, IDelegatable<ISearch>
+    public sealed class SearchViewModel : ObservableObject, ISdkViewModel, ISearch, IDelegable<ISearch>
     {
         private readonly ISearch _search;
 
@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncEnumerable<ISearchQuery> GetRecentSearchQueries(CancellationToken cancellationToken = default) => _search.GetRecentSearchQueries(cancellationToken);
 
         /// <inheritdoc/>
-        ISearch IDelegatable<ISearch>.Inner => _search;
+        ISearch IDelegable<ISearch>.Inner => _search;
 
         /// <inheritdoc />
         ISearchHistory? ISearch.SearchHistory => _search.SearchHistory;
