@@ -113,6 +113,10 @@ namespace StrixMusic.Sdk.WinUI.Controls
 
             var imageSource = new BitmapImage();
 
+            // Connect the bitmap to the tree before we set the source to prevent bad aliasing.
+            // See https://learn.microsoft.com/en-us/windows/uwp/debug-test-perf/optimize-animations-and-media#right-sized-decoding
+            PART_ImageBrush.ImageSource = imageSource;
+
             if (image.Height is not null)
                 imageSource.DecodePixelHeight = (int)image.Height;
 
@@ -122,11 +126,9 @@ namespace StrixMusic.Sdk.WinUI.Controls
             if (!stream.CanSeek)
                 return;
 
-            await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            PART_ImageBrush.ImageSource = imageSource;
+            await imageSource.SetSourceAsync(stream.AsRandomAccessStream());
         }
     }
 }
