@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using OwlCore.Extensions;
 using OwlCore.Storage;
 
 namespace StrixMusic.Cores.Storage.FileMetadata.Scanners;
@@ -15,6 +16,7 @@ namespace StrixMusic.Cores.Storage.FileMetadata.Scanners;
 /// </summary>
 internal class DepthFirstFolderScanner : IFolderScanner
 {
+    private readonly SemaphoreSlim _updateMutex = new(1, 1);
     private readonly Dictionary<string, SubFolderData> _knownSubFolders = new();
     private IFolderWatcher? _rootFolderWatcher;
 
@@ -34,7 +36,6 @@ internal class DepthFirstFolderScanner : IFolderScanner
     public async IAsyncEnumerable<IChildFile> ScanFolderAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
         _knownSubFolders.Clear();
         KnownFiles.Clear();
 
@@ -44,7 +45,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
     private async IAsyncEnumerable<IChildFile> RecursiveScanForFilesAsync(IFolder folderToScan, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        lock (_knownSubFolders)
+        using (await _updateMutex.DisposableWaitAsync())
         {
             _knownSubFolders[folderToScan.Id] = new SubFolderData((IChildFolder)folderToScan, children: new List<IStorableChild>(), folderWatcher: null);
         }
@@ -61,7 +62,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
             if (item is IChildFile file)
             {
-                KnownFiles.Add(file);
+                using (await _updateMutex.DisposableWaitAsync())
+                {
+                    KnownFiles.Add(file);
+                }
+                
                 yield return file;
             }
 
@@ -69,7 +74,11 @@ internal class DepthFirstFolderScanner : IFolderScanner
             {
                 await foreach (var subFile in RecursiveScanForFilesAsync(folder))
                 {
-                    KnownFiles.Add(subFile);
+                    using (await _updateMutex.DisposableWaitAsync())
+                    {
+                        KnownFiles.Add(subFile);
+                    }
+
                     yield return subFile;
                 }
             }
@@ -79,16 +88,25 @@ internal class DepthFirstFolderScanner : IFolderScanner
     /// <inheritdoc/>
     public ObservableCollection<IChildFile> KnownFiles { get; } = new();
 
+    /// <inheritdoc/>
+    public async Task<IChildFile> GetKnownFileByIdAsync(string fileId, CancellationToken cancellationToken = default)
+    {
+        using (await _updateMutex.DisposableWaitAsync())
+        {
+            return KnownFiles.FirstOrDefault(x => x.Id == fileId)
+                   ?? throw new System.IO.FileNotFoundException($"File with ID '{fileId}' not found in known files.", fileId);
+        }
+    }
+
     private async Task EnableFolderWatcherAsync(IMutableFolder folder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         try
         {
             var folderWatcher = await folder.GetFolderWatcherAsync(cancellationToken);
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            lock (_knownSubFolders)
+            using (await _updateMutex.DisposableWaitAsync())
             {
                 if (folder.Id == RootFolder.Id)
                     _rootFolderWatcher = folderWatcher;
@@ -120,7 +138,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
             }
             else
             {
-                lock (_knownSubFolders)
+                using (await _updateMutex.DisposableWaitAsync())
                 {
                     _knownSubFolders[folder.Id].FolderWatcher = null;
                 }
@@ -146,14 +164,14 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
                 // Parent folder must be in _knownSubFolders already.
                 // Record this new item as a child of the parent folder.
-                lock (_knownSubFolders)
+                using (await _updateMutex.DisposableWaitAsync())
                 {
                     if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
                         subFolderData.Children.Add((IStorableChild)newItem);
-                }
 
-                if (newItem is IChildFile newFile)
-                    KnownFiles.Add(newFile);
+                    if (newItem is IChildFile newFile)
+                        KnownFiles.Add(newFile);
+                }
 
                 if (newItem is IChildFolder newFolder)
                 {
@@ -169,14 +187,14 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 if (oldItem is not IStorable removedStorable)
                     continue;
 
-                // Remove known file.
-                if (KnownFiles.FirstOrDefault(x => x.Id == removedStorable.Id) is { } knownFile)
-                    KnownFiles.Remove(knownFile);
-
                 SubFolderData? targetSubFolderData;
 
-                lock (_knownSubFolders)
+                using (await _updateMutex.DisposableWaitAsync())
                 {
+                    // Remove known file.
+                    if (KnownFiles.FirstOrDefault(x => x.Id == removedStorable.Id) is { } knownFile)
+                        KnownFiles.Remove(knownFile);
+
                     targetSubFolderData = _knownSubFolders.FirstOrDefault(x => x.Key == removedStorable.Id).Value;
                 }
 
@@ -189,7 +207,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
     private async Task RemoveSubFolderRecursiveAsync(SubFolderData subFolderToRemove)
     {
-        lock (_knownSubFolders)
+        using (await _updateMutex.DisposableWaitAsync())
         {
             _knownSubFolders.Remove(subFolderToRemove.Folder.Id);
         }
@@ -199,13 +217,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
         foreach (var childItem in subFolderToRemove.Children)
         {
-            if (childItem is IFile childFile && KnownFiles.FirstOrDefault(x => x.Id == childFile.Id) is { } knownChildFile)
-                KnownFiles.Remove(knownChildFile);
-
             SubFolderData? targetSubFolderData;
 
-            lock (_knownSubFolders)
+            using (await _updateMutex.DisposableWaitAsync())
             {
+                if (childItem is IFile childFile && KnownFiles.FirstOrDefault(x => x.Id == childFile.Id) is { } knownChildFile)
+                    KnownFiles.Remove(knownChildFile);
+
                 if (childItem is not IFolder childFolder)
                     continue;
 
@@ -214,7 +232,6 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
             if (targetSubFolderData is not null)
                 await RemoveSubFolderRecursiveAsync(targetSubFolderData);
-
         }
     }
 
