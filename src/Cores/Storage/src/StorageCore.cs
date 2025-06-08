@@ -215,9 +215,15 @@ public sealed class StorageCore : ICore
     {
         Guard.IsTrue(IsInitialized);
 
-        var file = await FolderScanner.GetKnownFileByIdAsync(track.Id, cancellationToken);
-        if (file is null)
+        IFile? file;
+        try
+        {
+            file = await FolderScanner.GetKnownFileByIdAsync(track.Id, cancellationToken);
+        }
+        catch (FileNotFoundException)
+        {
             return null;
+        }
 
         if (!Path.GetExtension(file.Name).TryGetMimeType(out var mimeType))
         {
