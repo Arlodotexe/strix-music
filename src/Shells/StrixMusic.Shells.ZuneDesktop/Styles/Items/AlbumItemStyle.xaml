@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="using:System"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
@@ -12,6 +11,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:text="using:Windows.UI.Text"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
     <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>
@@ -34,18 +34,18 @@
                                 <VisualStateGroup x:Name="Selection">
                                     <VisualState x:Name="Unselected">
                                         <VisualState.Setters>
-                                            <Setter Target="PART_AlbumGrid.Padding" Value="6"/>
                                             <Setter Target="SelectedImageOutline.Opacity" Value="0"/>
-                                            <Setter Target="ShadowPanel.BlurRadius" Value="0"/>
-                                            <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0.8"/>
+                                            <Setter Target="SelectionShadowTarget.Opacity" Value="0"/>
+                                            <Setter Target="HoverShadowTarget.Visibility" Value="Visible"/>
+                                            <Setter Target="ImageOutline.Visibility" Value="Visible"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Selected">
                                         <VisualState.Setters>
-                                            <Setter Target="PART_AlbumGrid.Padding" Value="0"/>
                                             <Setter Target="SelectedImageOutline.Opacity" Value="1"/>
-                                            <Setter Target="ShadowPanel.BlurRadius" Value="8"/>
-                                            <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0"/>
+                                            <Setter Target="SelectionShadowTarget.Opacity" Value="1"/>
+                                            <Setter Target="HoverShadowTarget.Visibility" Value="Collapsed"/>
+                                            <Setter Target="ImageOutline.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -55,7 +55,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="#919497"/>
                                             <Setter Target="AlbumName.Foreground" Value="#242628"/>
                                             <Setter Target="ImageOutline.Opacity" Value="0"/>
-                                            <Setter Target="HoverShadowPanel.BlurRadius" Value="0"/>
+                                            <Setter Target="HoverShadow.Opacity" Value="0"/>
                                             <Setter Target="PART_PlayIcon.Opacity" Value="0"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
@@ -74,7 +74,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="Black"/>
                                             <Setter Target="AlbumName.Foreground" Value="Black"/>
                                             <Setter Target="ImageOutline.Opacity" Value="1"/>
-                                            <Setter Target="HoverShadowPanel.BlurRadius" Value="6"/>
+                                            <Setter Target="HoverShadow.Opacity" Value="1"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
@@ -102,60 +102,64 @@
                             </Grid.RowDefinitions>
 
                             <!--Image-->
-                            <Grid x:Name="PART_AlbumGrid" Height="98" Width="99" Padding="6" >
-                                <!-- TODO: Restore-->
-                                <!--<controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="0.8"
-                                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                                    <controls:DropShadowPanel x:Name="HoverShadowPanel" BlurRadius="0" Color="Black" ShadowOpacity="0.8"
-                                                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">-->
-                                        <Grid Background="#F4F4F4">
-                                            <Grid>
-                                                <strix:SafeImage ImageCollection="{Binding Album}" />
-                                                <Rectangle x:Name="ImageHover" Opacity="0">
-                                                    <Rectangle.Fill>
-                                                        <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Hover.png"/>
-                                                    </Rectangle.Fill>
-                                                </Rectangle>
-
-                                                <Button x:Name="PART_PlayIcon"
-                                                        HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="Transparent" Opacity="0">
-                                                    <Button.Resources>
-                                                        <ResourceDictionary>
-                                                            <ResourceDictionary.ThemeDictionaries>
-                                                                <ResourceDictionary x:Key="Light">
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerPressed" Color="Transparent"/>
-                                                                </ResourceDictionary>
-                                                                <ResourceDictionary x:Key="Dark">
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerPressed" Color="Transparent"/>
-                                                                </ResourceDictionary>
-                                                            </ResourceDictionary.ThemeDictionaries>
-                                                        </ResourceDictionary>
-                                                    </Button.Resources>
-                                                    <animations:Implicit.ShowAnimations>
-                                                        <animations:OpacityAnimation Duration="0:0:0.5" From="0" To="1.0"/>
-                                                    </animations:Implicit.ShowAnimations>
-                                                    <animations:Implicit.HideAnimations>
-                                                        <animations:OpacityAnimation Duration="0:0:0.5" From="1.0" To="0"/>
-                                                    </animations:Implicit.HideAnimations>
-                                                    <Button.Content>
-                                                        <Path Fill="White" Data="M4526.2,5008.1c-1477.3-151.4-2791.8-942.7-3625.3-2186.3C594.3,2362,306.9,1678,197.7,1139.5C115.3,733.3,100,574.3,100,124c0-450.3,15.3-605.5,97.7-1015.5C305-1422.3,592.4-2108.3,900.9-2573.9c921.6-1377.7,2458.4-2207.3,4094.7-2207.3c1850.9,0,3556.3,1059.6,4386,2722.8c831.6,1668.9,653.4,3631-467.5,5123.7c-776,1034.7-1921.8,1714.9-3228.6,1916.1C5445.9,5017.7,4771.4,5035,4526.2,5008.1z M5380.8,4243.6c310.4-30.7,595.9-92,906.3-193.5c1247.4-408.1,2230.3-1393,2638.5-2642.3c484.8-1485,97.7-3100.3-1007.9-4205.8c-873.7-873.7-2100-1316.4-3316.8-1195.7C2627.3-3798.3,1073.4-2242.4,876-261.1c-130.3,1316.4,425.4,2682.6,1437.1,3533.3C3175.3,3996.5,4294.3,4350.9,5380.8,4243.6z M3754,2203c-42.2-19.2-74.7-53.7-99.6-109.2C3618,2013.3,3616,1952,3616,124c0-1829.9,1.9-1889.3,38.3-1969.7c49.8-109.2,143.7-153.3,260.6-122.6c113,30.7,3199.9,1831.8,3293.8,1923.8c69,67.1,76.7,82.4,76.7,168.6c0,86.2-7.7,101.6-76.7,168.6c-78.5,76.7-3140.5,1872-3265,1916.1C3861.3,2237.5,3832.6,2237.5,3754,2203z"  
-                                                              Height="24" Width="24" Stretch="Fill" UseLayoutRounding="False"/>
-
-                                                    </Button.Content>
-                                                </Button>
-                                            </Grid>
-
-                                            <Border x:Name="ImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
-                                            <Border x:Name="SelectedImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
-                                        </Grid>
-                                    <!--</controls:DropShadowPanel>
-                                </controls:DropShadowPanel>-->
+                            <Grid x:Name="PART_AlbumGrid" Height="98" Width="99" Padding="6">
+                                <Border x:Name="SelectionShadowTarget" Opacity="0">
+                                    <ui:Effects.Shadow>
+                                        <ui:AttachedDropShadow BlurRadius="4" Color="Black" CastTo="{Binding ElementName=SelectionShadowTarget}"/>
+                                    </ui:Effects.Shadow>
+                                </Border>
+                                <Grid Background="White">
+                                    <Grid Margin="6">
+                                        <Border x:Name="HoverShadowTarget">
+                                            <ui:Effects.Shadow>
+                                                <ui:AttachedDropShadow x:Name="HoverShadow" BlurRadius="6" Color="#191919" Opacity="0" CastTo="{Binding ElementName=HoverShadowTarget}"/>
+                                            </ui:Effects.Shadow>
+                                        </Border>
+                                        <Border Background="#F4F4F4"/>
+                                        <strix:SafeImage ImageCollection="{Binding Album}" />
+                                        <Rectangle x:Name="ImageHover" Opacity="0">
+                                            <Rectangle.Fill>
+                                                <ImageBrush ImageSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/Hover.png"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                
+                                        <Button x:Name="PART_PlayIcon"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Background="Transparent" Opacity="0">
+                                                <Button.Resources>
+                                                    <ResourceDictionary>
+                                                        <ResourceDictionary.ThemeDictionaries>
+                                                            <ResourceDictionary x:Key="Light">
+                                                                <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerPressed" Color="Transparent"/>
+                                                            </ResourceDictionary>
+                                                            <ResourceDictionary x:Key="Dark">
+                                                                <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBorderBrushPointerPressed" Color="Transparent"/>
+                                                                <SolidColorBrush x:Key="ButtonBackgroundPointerPressed" Color="Transparent"/>
+                                                            </ResourceDictionary>
+                                                        </ResourceDictionary.ThemeDictionaries>
+                                                    </ResourceDictionary>
+                                                </Button.Resources>
+                                                <animations:Implicit.ShowAnimations>
+                                                    <animations:OpacityAnimation Duration="0:0:0.5" From="0" To="1.0"/>
+                                                </animations:Implicit.ShowAnimations>
+                                                <animations:Implicit.HideAnimations>
+                                                    <animations:OpacityAnimation Duration="0:0:0.5" From="1.0" To="0"/>
+                                                </animations:Implicit.HideAnimations>
+                                                <Button.Content>
+                                                    <Path Fill="White" Data="M4526.2,5008.1c-1477.3-151.4-2791.8-942.7-3625.3-2186.3C594.3,2362,306.9,1678,197.7,1139.5C115.3,733.3,100,574.3,100,124c0-450.3,15.3-605.5,97.7-1015.5C305-1422.3,592.4-2108.3,900.9-2573.9c921.6-1377.7,2458.4-2207.3,4094.7-2207.3c1850.9,0,3556.3,1059.6,4386,2722.8c831.6,1668.9,653.4,3631-467.5,5123.7c-776,1034.7-1921.8,1714.9-3228.6,1916.1C5445.9,5017.7,4771.4,5035,4526.2,5008.1z M5380.8,4243.6c310.4-30.7,595.9-92,906.3-193.5c1247.4-408.1,2230.3-1393,2638.5-2642.3c484.8-1485,97.7-3100.3-1007.9-4205.8c-873.7-873.7-2100-1316.4-3316.8-1195.7C2627.3-3798.3,1073.4-2242.4,876-261.1c-130.3,1316.4,425.4,2682.6,1437.1,3533.3C3175.3,3996.5,4294.3,4350.9,5380.8,4243.6z M3754,2203c-42.2-19.2-74.7-53.7-99.6-109.2C3618,2013.3,3616,1952,3616,124c0-1829.9,1.9-1889.3,38.3-1969.7c49.8-109.2,143.7-153.3,260.6-122.6c113,30.7,3199.9,1831.8,3293.8,1923.8c69,67.1,76.7,82.4,76.7,168.6c0,86.2-7.7,101.6-76.7,168.6c-78.5,76.7-3140.5,1872-3265,1916.1C3861.3,2237.5,3832.6,2237.5,3754,2203z"  
+                                                          Height="24" Width="24" Stretch="Fill" UseLayoutRounding="False"/>
+                                                </Button.Content>
+                                            </Button>
+                                        
+                                        <Border x:Name="ImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
+                                    </Grid>
+                                    
+                                    <Border x:Name="SelectedImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
+                                </Grid>
                             </Grid>
 
                             <!--Text-->

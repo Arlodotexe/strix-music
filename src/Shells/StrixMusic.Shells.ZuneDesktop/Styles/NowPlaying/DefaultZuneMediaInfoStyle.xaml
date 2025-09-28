@@ -11,6 +11,7 @@
     xmlns:vm="using:StrixMusic.Sdk.ViewModels"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.DefaultZuneMediaInfoStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -33,10 +34,15 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <!-- TODO: Restore -->
             <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">-->
-                <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
-            <!--</controls:DropShadowPanel>-->
+            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center">
+                <ui:Effects.Shadow>
+                    <ui:AttachedDropShadow BlurRadius="8" Color="{ThemeResource ForegroundColor}" CastTo="{Binding ElementName=TrackCover}"/>
+                </ui:Effects.Shadow>
+            </Rectangle>
+            
+            <Rectangle Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center"/>
+
 
             <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
 
