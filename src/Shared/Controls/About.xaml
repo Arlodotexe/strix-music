@@ -3,14 +3,13 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
-	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+	xmlns:controls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:ui="using:CommunityToolkit.WinUI"
 	d:DesignHeight="300"
 	d:DesignWidth="400"
 	mc:Ignorable="d">
@@ -31,9 +30,9 @@
 			HeaderIcon="{ui:SymbolIcon Symbol=Link}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://strixmusic.com/" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -43,9 +42,9 @@
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://github.com/Arlodotexe/strix-music/issues/new?labels=bug&amp;template=bug_report.yml" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -55,9 +54,9 @@
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://github.com/Arlodotexe/strix-music/issues/new?assignees=&amp;labels=enhancement&amp;template=feature_request.yml&amp;title=%5BFeature%5D" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -124,9 +123,9 @@
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/StoreLogo.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://strixmusic.com/docs/get-started/" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -138,9 +137,9 @@
 			HeaderIcon="{ui:FontIcon Glyph=&#xE81E;}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://strixmusic.com/docs/cores/" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -156,9 +155,9 @@
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/discord.png}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Click">
+				<interactivity:EventTriggerBehavior EventName="Click">
 					<behaviors:OpenUriAction Source="https://discord.gg/bVQCKj476n" />
-				</core:EventTriggerBehavior>
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</tkcontrols:SettingsCard>
 
@@ -170,27 +169,27 @@
 				<Button Width="50" Height="35">
 					<BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Settings/mastodon.png" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://mastodon.lol/@Arlodottxt" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 
 				<Button Width="50" Height="35">
 					<BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Settings/github.png" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://github.com/Arlodotexe" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 
 				<Button Width="50" Height="35">
 					<SymbolIcon Symbol="Mail" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="mailto:arlo.godfrey@outlook.com" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
@@ -204,18 +203,18 @@
 				<Button Width="50" Height="35">
 					<BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Settings/github.png" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://github.com/amaid" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 
 				<Button Width="50" Height="35">
 					<SymbolIcon Symbol="Mail" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="mailto:amaidniazi@gmail.com" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
@@ -230,18 +229,18 @@
 				<Button Width="50" Height="35">
 					<BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Settings/github.png" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://github.com/Avid29" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 
 				<Button Width="50" Height="35">
 					<BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Settings/linkedin.png" />
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://www.linkedin.com/in/adam-dernis/" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</controls:WrapPanel>
@@ -264,9 +263,9 @@
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/patreon.png}"
 					IsClickEnabled="True">
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://patreon.com/Arlodotexe" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</tkcontrols:SettingsCard>
 
@@ -276,9 +275,9 @@
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 					IsClickEnabled="True">
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://github.com/sponsors/Arlodotexe" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</tkcontrols:SettingsCard>
 			</tkcontrols:SettingsExpander.Items>

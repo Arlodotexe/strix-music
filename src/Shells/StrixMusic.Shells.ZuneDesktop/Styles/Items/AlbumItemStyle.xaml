@@ -8,9 +8,9 @@
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:zuneItems="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:text="using:Windows.UI.Text"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
@@ -23,12 +23,12 @@
                     <ControlTemplate TargetType="zuneItems:ZuneAlbumItem">
                         <Grid x:Name="PART_RootGrid" Width="99" Margin="5,0,5,12">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="PointerEntered">
-                                    <core:GoToStateAction StateName="PointerOver"/>
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="PointerExited">
-                                    <core:GoToStateAction StateName="Normal"/>
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                                    <interactivity:GoToStateAction StateName="PointerOver"/>
+                                </interactivity:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="PointerExited">
+                                    <interactivity:GoToStateAction StateName="Normal"/>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="Selection">
@@ -103,10 +103,11 @@
 
                             <!--Image-->
                             <Grid x:Name="PART_AlbumGrid" Height="98" Width="99" Padding="6" >
-                                <controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="0.8"
+                                <!-- TODO: Restore-->
+                                <!--<controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="0.8"
                                                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <controls:DropShadowPanel x:Name="HoverShadowPanel" BlurRadius="0" Color="Black" ShadowOpacity="0.8"
-                                                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">-->
                                         <Grid Background="#F4F4F4">
                                             <Grid>
                                                 <strix:SafeImage ImageCollection="{Binding Album}" />
@@ -153,16 +154,16 @@
                                             <Border x:Name="ImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
                                             <Border x:Name="SelectedImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
                                         </Grid>
-                                    </controls:DropShadowPanel>
-                                </controls:DropShadowPanel>
+                                    <!--</controls:DropShadowPanel>
+                                </controls:DropShadowPanel>-->
                             </Grid>
 
                             <!--Text-->
                             <StackPanel x:Name="PART_LabelPnl" Grid.Row="1" Width="86">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Loaded">
-                                        <core:InvokeCommandAction Command="{Binding Album.PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Loaded">
+                                        <interactivity:InvokeCommandAction Command="{Binding Album.PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
 
                                 <TextBlock x:Name="AlbumName" Text="{Binding Album.Name}" FontSize="11" TextTrimming="Clip" Foreground="#242628" />

@@ -2,12 +2,12 @@
 	x:Class="StrixMusic.Sdk.WinUI.SandboxShell"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:controls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
 	xmlns:strxwinui="using:StrixMusic.Sdk.WinUI.Controls"
-	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:ui="using:CommunityToolkit.WinUI"
 	xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
 	mc:Ignorable="d">
 

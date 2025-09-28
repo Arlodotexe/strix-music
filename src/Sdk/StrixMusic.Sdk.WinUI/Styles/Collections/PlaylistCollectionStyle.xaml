@@ -29,9 +29,9 @@
 							ItemsSource="{Binding Collection.Playlists, RelativeSource={RelativeSource TemplatedParent}}"
 							SelectionMode="None">
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="ItemClick">
-									<core:InvokeCommandAction Command="{Binding ItemClickCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-								</core:EventTriggerBehavior>
+								<interactivity:EventTriggerBehavior EventName="ItemClick">
+									<interactivity:InvokeCommandAction Command="{Binding ItemClickCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 
 							<GridView.Header>

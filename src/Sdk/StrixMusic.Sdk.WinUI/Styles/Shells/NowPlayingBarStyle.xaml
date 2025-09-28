@@ -46,9 +46,9 @@
 					Minimum="0"
 					Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}">
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-							<core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-						</core:EventTriggerBehavior>
+						<interactivity:EventTriggerBehavior EventName="SliderManipulationCompleted">
+							<interactivity:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</nowplaying:MediaSlider>
 

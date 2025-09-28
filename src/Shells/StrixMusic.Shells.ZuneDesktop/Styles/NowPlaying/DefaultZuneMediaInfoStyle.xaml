@@ -4,14 +4,13 @@
     xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:vm="using:StrixMusic.Sdk.ViewModels"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.DefaultZuneMediaInfoStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -34,9 +33,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+            <!-- TODO: Restore -->
+            <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">-->
                 <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
-            </controls:DropShadowPanel>
+            <!--</controls:DropShadowPanel>-->
 
             <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
 
@@ -49,14 +49,13 @@
                                     Maximum="{x:Bind Device.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
                                     FlowDirection="LeftToRight">
                 <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                        <core:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                    </core:EventTriggerBehavior>
+                    <interactivity:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                        <interactivity:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                    </interactivity:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </nowplaying:MediaSlider>
         </Grid>
     </DataTemplate>
-
 
     <Style x:Key="DefaultZuneMediaInfoStyle" TargetType="nowplaying:MediaInfo">
         <Style.Setters>

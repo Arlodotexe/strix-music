@@ -9,7 +9,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
     xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
     xmlns:zuneCollections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     KeyDown="Grid_KeyDown">

@@ -50,9 +50,9 @@
 				Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="TextChanging">
-						<core:InvokeCommandAction Command="{x:Bind ValueChangedCommand}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="TextChanging">
+						<interactivity:InvokeCommandAction Command="{x:Bind ValueChangedCommand}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</TextBox>
 		</StackPanel>

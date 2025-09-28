@@ -5,7 +5,7 @@
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
     xmlns:dstyles="using:StrixMusic.Sdk.WinUI.Styles"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">
 

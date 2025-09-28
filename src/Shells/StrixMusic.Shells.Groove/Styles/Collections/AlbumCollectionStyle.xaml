@@ -4,7 +4,6 @@
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     xmlns:converter="using:OwlCore.WinUI.Converters"
@@ -22,12 +21,12 @@
                     <ControlTemplate TargetType="collections:GrooveAlbumCollection">
                         <GridView x:Name="PART_Selector" ItemsSource="{Binding AlbumCollection.Albums, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"  Padding="16,16,16,112" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Loaded">
-                                    <core:InvokeCommandAction Command="{Binding AlbumCollection.InitAlbumCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
-                                </core:EventTriggerBehavior>
-                                <core:EventTriggerBehavior EventName="ItemClick">
-                                    <core:InvokeCommandAction Command="{Binding NavigateToAlbumCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="Loaded">
+                                    <interactivity:InvokeCommandAction Command="{Binding AlbumCollection.InitAlbumCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </interactivity:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="ItemClick">
+                                    <interactivity:InvokeCommandAction Command="{Binding NavigateToAlbumCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <GridView.Header>
                                 <Grid>
