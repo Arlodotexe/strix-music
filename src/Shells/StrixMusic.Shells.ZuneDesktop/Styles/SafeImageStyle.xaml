@@ -17,7 +17,7 @@
                             <!--Fallback SVG-->
                             <Rectangle Margin="8">
                                 <Rectangle.Fill>
-                                    <ImageBrush Stretch="UniformToFill">
+                                    <ImageBrush Stretch="Uniform">
                                         <ImageBrush.ImageSource>
                                             <SvgImageSource UriSource="ms-appx:///Assets/Shells/Zune.Desktop.4.8/ZuneStrixLogo-gray.svg"
                                                             RasterizePixelHeight="150" RasterizePixelWidth="150"/>
