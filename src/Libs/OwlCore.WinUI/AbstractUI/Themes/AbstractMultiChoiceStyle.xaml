@@ -5,7 +5,6 @@
 	xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
 	xmlns:controls="using:OwlCore.WinUI.AbstractUI.Controls"
 	xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:themes="using:OwlCore.WinUI.AbstractUI.Themes">
 
@@ -36,9 +35,9 @@
 				</DataTemplate>
 			</ComboBox.ItemTemplate>
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="SelectionChanged">
-					<core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
-				</core:EventTriggerBehavior>
+				<interactivity:EventTriggerBehavior EventName="SelectionChanged">
+					<interactivity:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 		</ComboBox>
 	</DataTemplate>

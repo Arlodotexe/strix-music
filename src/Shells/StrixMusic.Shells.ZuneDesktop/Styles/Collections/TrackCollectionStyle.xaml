@@ -7,8 +7,7 @@
     xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:tkcontrol="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkcontrol="using:CommunityToolkit.WinUI.Controls"
     xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
     xmlns:a="using:OwlCore.WinUI.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackCollectionStyle">
@@ -91,13 +90,13 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="*">
                                                         <interactivity:Interaction.Behaviors>
-                                                            <core:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
-                                                                <core:ChangePropertyAction PropertyName="Width" Value="*" />
-                                                            </core:DataTriggerBehavior>
+                                                            <interactivity:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="True">
+                                                                <interactivity:ChangePropertyAction PropertyName="Width" Value="*" />
+                                                            </interactivity:DataTriggerBehavior>
 
-                                                            <core:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
-                                                                <core:ChangePropertyAction PropertyName="Width" Value="0" />
-                                                            </core:DataTriggerBehavior>
+                                                            <interactivity:DataTriggerBehavior Binding="{x:Bind ShouldShowArtistList, Mode=OneWay}" ComparisonCondition="Equal" Value="False">
+                                                                <interactivity:ChangePropertyAction PropertyName="Width" Value="0" />
+                                                            </interactivity:DataTriggerBehavior>
                                                         </interactivity:Interaction.Behaviors>
                                                     </ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
@@ -112,9 +111,9 @@
                                                 </Grid.Resources>
 
                                                 <interactivity:Interaction.Behaviors>
-                                                    <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                        <core:InvokeCommandAction Command="{x:Bind ParentCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind Track}" />
-                                                    </core:EventTriggerBehavior>
+                                                    <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                                                        <interactivity:InvokeCommandAction Command="{x:Bind ParentCollection.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind Track}" />
+                                                    </interactivity:EventTriggerBehavior>
                                                 </interactivity:Interaction.Behaviors>
 
                                                 <items:ZuneTrackItem Track="{x:Bind Track}" x:Phase="1" Foreground="{StaticResource ItemTextFadeBrush}"/>

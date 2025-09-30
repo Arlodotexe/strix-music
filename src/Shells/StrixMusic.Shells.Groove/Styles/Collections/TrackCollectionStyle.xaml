@@ -5,9 +5,8 @@
     xmlns:collections="using:StrixMusic.Shells.Groove.Controls.Collections"
     xmlns:ditems="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:items="using:StrixMusic.Shells.Groove.Controls.Items"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.TrackCollectionStyle">
 
     <Style x:Key="GrooveTrackListControlStyle" TargetType="collections:GrooveTrackCollection">
@@ -20,9 +19,9 @@
                                   Padding="16,16,16,112" HorizontalAlignment="Stretch"
                                   SelectionMode="None" IsItemClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Loaded">
-                                    <core:InvokeCommandAction Command="{Binding TrackCollection.InitTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="Loaded">
+                                    <interactivity:InvokeCommandAction Command="{Binding TrackCollection.InitTrackCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                             <ListView.Header>
                                 <Grid>
@@ -34,9 +33,9 @@
                                 <DataTemplate>
                                     <ditems:TrackItem Track="{Binding Track}">
                                         <interactivity:Interaction.Behaviors>
-                                            <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                <core:InvokeCommandAction Command="{Binding Context.PlayTrackAsyncCommand}" CommandParameter="{Binding Track}" />
-                                            </core:EventTriggerBehavior>
+                                            <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                                                <interactivity:InvokeCommandAction Command="{Binding Context.PlayTrackAsyncCommand}" CommandParameter="{Binding Track}" />
+                                            </interactivity:EventTriggerBehavior>
                                         </interactivity:Interaction.Behaviors>
                                     </ditems:TrackItem>
                                 </DataTemplate>

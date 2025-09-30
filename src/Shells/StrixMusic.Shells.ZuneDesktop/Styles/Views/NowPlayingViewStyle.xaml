@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:nowplayingview="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.NowPlayingView"
     xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -30,9 +30,9 @@
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </Button.RenderTransform>
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding BackNavigationRelayCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding BackNavigationRelayCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 
                                 <FontIcon Glyph="&#xE0A6;" FontSize="16" FontWeight="Black"/>

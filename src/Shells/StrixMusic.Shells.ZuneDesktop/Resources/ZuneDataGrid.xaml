@@ -4,8 +4,8 @@
     xmlns:UI="using:Windows.UI"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
-    xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:controlprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
+    xmlns:tkdg="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkdgp="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
     xmlns:a="using:OwlCore.WinUI.Attached">
 
     <ResourceDictionary.ThemeDictionaries>
@@ -99,7 +99,7 @@
     <StaticResource x:Key="DataGridCellFocusVisualSecondaryBrush" ResourceKey="SystemControlFocusVisualSecondaryBrush"/>
     <StaticResource x:Key="DataGridCellInvalidBrush" ResourceKey="InvalidBrush"/>
 
-    <Style TargetType="control:DataGrid">
+    <Style TargetType="tkdg:DataGrid">
         <Setter Property="DragIndicatorStyle">
             <Setter.Value>
                 <Style TargetType="ContentControl">
@@ -168,7 +168,7 @@
         <Setter Property="VerticalGridLinesBrush" Value="{ThemeResource GridLinesBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="control:DataGrid">
+                <ControlTemplate TargetType="tkdg:DataGrid">
                     <Grid x:Name="Root" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -362,7 +362,7 @@
                         <Grid Background="{TemplateBinding Background}">
                             <Grid.Resources>
                                 <!--Start: TopLeftHeaderTemplate-->
-                                <ControlTemplate x:Key="TopLeftHeaderTemplate" TargetType="controlprimitives:DataGridColumnHeader">
+                                <ControlTemplate x:Key="TopLeftHeaderTemplate" TargetType="tkdgp:DataGridColumnHeader">
                                     <Grid x:Name="TopLeftHeaderRoot">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
@@ -376,7 +376,7 @@
                                 <!--End: TopLeftHeaderTemplate-->
 
                                 <!--Start: TopRightHeaderTemplate-->
-                                <ControlTemplate x:Key="TopRightHeaderTemplate" TargetType="controlprimitives:DataGridColumnHeader">
+                                <ControlTemplate x:Key="TopRightHeaderTemplate" TargetType="tkdgp:DataGridColumnHeader">
                                     <Grid x:Name="RootElement"/>
                                 </ControlTemplate>
                                 <!--End: TopRightHeaderTemplate-->
@@ -397,14 +397,14 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <controlprimitives:DataGridColumnHeader x:Name="TopLeftCornerHeader" Template="{StaticResource TopLeftHeaderTemplate}"/>
-                            <controlprimitives:DataGridColumnHeadersPresenter x:Name="ColumnHeadersPresenter" Grid.Column="1" Grid.ColumnSpan="2"
+                            <tkdgp:DataGridColumnHeader x:Name="TopLeftCornerHeader" Template="{StaticResource TopLeftHeaderTemplate}"/>
+                            <tkdgp:DataGridColumnHeadersPresenter x:Name="ColumnHeadersPresenter" Grid.Column="1" Grid.ColumnSpan="2"
                                                                                     AutomationProperties.AccessibilityView="Raw"/>
                             <!-- Use TopRightCornerHeader when ColumnHeadersPresenter's Grid.ColumnSpan is 1 and the vertical ScrollBar does not paint on top of the cells -->
                             <!--<localprimitives:DataGridColumnHeader x:Name="TopRightCornerHeader" Grid.Column="2" Template="{StaticResource TopRightHeaderTemplate}"/>-->
                             <Rectangle x:Name="ColumnHeadersAndRowsSeparator" Grid.ColumnSpan="3" Grid.Row="1" VerticalAlignment="Bottom" Width="Auto" StrokeThickness="1" Height="16" Fill="Transparent"/>
 
-                            <controlprimitives:DataGridRowsPresenter x:Name="RowsPresenter" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2"
+                            <tkdgp:DataGridRowsPresenter x:Name="RowsPresenter" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2"
                                                                            AutomationProperties.AccessibilityView="Raw"/>
                             <Rectangle x:Name="BottomRightCorner" Fill="{ThemeResource ScrollBarsSeparatorBackground}" Opacity="0" Grid.Row="2" Grid.Column="2"/>
                             <!-- Use BottomLeftCorner when RowsPresenter's Grid.RowSpan is 1 and the horizontal ScrollBar does not paint on top of the cells -->
@@ -429,7 +429,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="TextColumnHeaderStyle" TargetType="controlprimitives:DataGridColumnHeader">
+    <Style x:Key="TextColumnHeaderStyle" TargetType="tkdgp:DataGridColumnHeader">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -440,7 +440,7 @@
         <Setter Property="MinHeight" Value="16"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controlprimitives:DataGridColumnHeader">
+                <ControlTemplate TargetType="tkdgp:DataGridColumnHeader">
                     <Grid x:Name="ColumnHeaderRoot">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -517,7 +517,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IconColumnHeaderStyle" TargetType="controlprimitives:DataGridColumnHeader">
+    <Style x:Key="IconColumnHeaderStyle" TargetType="tkdgp:DataGridColumnHeader">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
@@ -525,7 +525,7 @@
         <Setter Target="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controlprimitives:DataGridColumnHeader">
+                <ControlTemplate TargetType="tkdgp:DataGridColumnHeader">
                     <Grid x:Name="ColumnHeaderRoot">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -582,13 +582,13 @@
         </Setter>
     </Style>
 
-    <Style TargetType="control:DataGridRow">
+    <Style TargetType="tkdg:DataGridRow">
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="MinHeight" Value="28"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="control:DataGridRow">
-                    <controlprimitives:DataGridFrozenGrid x:Name="RowRoot">
+                <ControlTemplate TargetType="tkdg:DataGridRow">
+                    <tkdgp:DataGridFrozenGrid x:Name="RowRoot">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
@@ -644,21 +644,21 @@
                         <Rectangle x:Name="BackgroundRectangle" Grid.ColumnSpan="2" Fill="{ThemeResource ZuneListViewItemBackground}" Margin="0,0.5"/>
                         <Rectangle x:Name="InvalidVisualElement" Grid.ColumnSpan="2" Opacity="0" Fill="{ThemeResource DataGridRowInvalidBrush}"/>
 
-                        <controlprimitives:DataGridRowHeader x:Name="RowHeader" Grid.RowSpan="3" controlprimitives:DataGridFrozenGrid.IsFrozen="True"/>
-                        <controlprimitives:DataGridCellsPresenter x:Name="CellsPresenter" Grid.Column="1"
-                                                                        controlprimitives:DataGridFrozenGrid.IsFrozen="True" MinHeight="{TemplateBinding MinHeight}"
+                        <tkdgp:DataGridRowHeader x:Name="RowHeader" Grid.RowSpan="3" tkdgp:DataGridFrozenGrid.IsFrozen="True"/>
+                        <tkdgp:DataGridCellsPresenter x:Name="CellsPresenter" Grid.Column="1"
+                                                                        tkdgp:DataGridFrozenGrid.IsFrozen="True" MinHeight="{TemplateBinding MinHeight}"
                                                                         AutomationProperties.AccessibilityView="Raw"/>
-                        <controlprimitives:DataGridDetailsPresenter x:Name="DetailsPresenter" Grid.Row="1" Grid.Column="1"
+                        <tkdgp:DataGridDetailsPresenter x:Name="DetailsPresenter" Grid.Row="1" Grid.Column="1"
                                                                           Background="{ThemeResource DataGridDetailsPresenterBackgroundBrush}"
                                                                           AutomationProperties.AccessibilityView="Raw"/>
                         <Rectangle x:Name="BottomGridLine" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Height="1"/>
-                    </controlprimitives:DataGridFrozenGrid>
+                    </tkdgp:DataGridFrozenGrid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="control:DataGridCell">
+    <Style TargetType="tkdg:DataGridCell">
         <Setter Property="Background" Value="{ThemeResource DataGridCellBackgroundBrush}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
@@ -672,7 +672,7 @@
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="control:DataGridCell">
+                <ControlTemplate TargetType="tkdg:DataGridCell">
                     <Grid x:Name="CellRoot" Background="{TemplateBinding Background}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CurrentStates">
@@ -706,4 +706,3 @@
     </Style>
 
 </ResourceDictionary>
-    

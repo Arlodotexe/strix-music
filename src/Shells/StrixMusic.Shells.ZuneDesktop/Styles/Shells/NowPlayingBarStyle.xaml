@@ -6,7 +6,7 @@
     xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:nowplaying="using:StrixMusic.Sdk.WinUI.Controls.NowPlaying"
     xmlns:zunenowplaying="using:StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical">

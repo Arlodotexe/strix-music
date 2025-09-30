@@ -8,7 +8,6 @@
     xmlns:owlcoreuno="using:OwlCore.WinUI.Controls"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:colorconvert="using:OwlCore.WinUI.Converters.Color"
     x:Class="StrixMusic.Shells.Groove.Styles.GrooveNowPlayingBarStyle">
@@ -80,10 +79,10 @@
                                                                     Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
                                                                     Maximum="{x:Bind ActiveDevice.NowPlaying.Track.Duration.TotalMilliseconds, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
+                        <interactivity:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                            <interactivity:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand, Mode=OneWay}"
                                                       CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                        </core:EventTriggerBehavior>
+                        </interactivity:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                 </nowplaying:MediaSlider>
             </Grid>

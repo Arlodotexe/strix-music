@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:items="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.TrackItemStyle">
 
     <ResourceDictionary.MergedDictionaries>

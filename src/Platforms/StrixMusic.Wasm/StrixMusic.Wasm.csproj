@@ -58,7 +58,7 @@
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402" />
     <PackageReference Include="OwlCore.Kubo" Version="0.20.2" />
     <PackageReference Include="OwlCore.Storage" Version="0.12.2" />
-    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="System.Text.Json" Version="9.0.9" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.1.250319-build.2093" />

@@ -55,11 +55,11 @@
                                     <DataTemplate>
                                         <items:ArtistItem Artist="{Binding}">
                                             <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction
+                                                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <interactivity:InvokeCommandAction
                                                         Command="{Binding ElementName=RelativeSourceRelay, Path=Content.PlayArtistAsyncCommand, Mode=OneWay}"
                                                         CommandParameter="{Binding}" />
-                                                </core:EventTriggerBehavior>
+                                                </interactivity:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </items:ArtistItem>
                                     </DataTemplate>

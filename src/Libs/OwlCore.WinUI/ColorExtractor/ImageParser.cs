@@ -1,11 +1,9 @@
-﻿using OwlCore.WinUI.ColorExtractor.ColorSpaces;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.IO;
-using System.Net;
+﻿using System.IO;
 using System.Threading.Tasks;
+using OwlCore.WinUI.ColorExtractor.ColorSpaces;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace OwlCore.WinUI.ColorExtractor
 {

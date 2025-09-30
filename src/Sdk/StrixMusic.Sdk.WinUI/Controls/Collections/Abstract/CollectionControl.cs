@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.WinUI.Controls.Items.Abstract;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace StrixMusic.Sdk.WinUI.Controls.Collections.Abstract
 {

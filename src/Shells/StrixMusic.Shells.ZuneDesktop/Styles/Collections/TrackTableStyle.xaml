@@ -1,15 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
+    xmlns:tkdg="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:collections="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:convert="using:StrixMusic.Shells.ZuneDesktop.Converters.TrackTable"
     xmlns:unitconvert="using:StrixMusic.Sdk.WinUI.Converters.Units"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:tkprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
     xmlns:timeconvert="using:OwlCore.WinUI.Converters.Time"
     xmlns:numericaltime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:a="using:OwlCore.WinUI.Attached"
@@ -42,7 +41,7 @@
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
-            <tkcontrols:DataGrid x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}"
+            <tkdg:DataGrid x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}"
                                  AutoGenerateColumns="False" CanUserReorderColumns="True"
                                  FrozenColumnCount="1" GridLinesVisibility="Vertical"
                                  HorizontalAlignment="Stretch" SelectionMode="Extended" IsReadOnly="True"
@@ -50,67 +49,67 @@
                                  Loaded="DataGrid_Loaded"
                                  LoadingRow="DataGrid_LoadingRow"
                                  Sorting="DataGrid_Sorting">
-                <tkcontrols:DataGrid.Columns>
-                    <tkcontrols:DataGridTemplateColumn x:Uid="/Music/SongCOL" Header="SONG" Tag="Song"
+                <tkdg:DataGrid.Columns>
+                    <tkdg:DataGridTemplateColumn x:Uid="/Music/SongCOL" Header="SONG" Tag="Song"
                                                        HeaderStyle="{StaticResource TextColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}" Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                            Style="{StaticResource DataGridTextBlockStyle}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
 
-                    <tkcontrols:DataGridTemplateColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Tag="Album" HeaderStyle="{StaticResource TextColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                    <tkdg:DataGridTemplateColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Tag="Album" HeaderStyle="{StaticResource TextColumnHeaderStyle}">
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Album.Name}" Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                            Style="{StaticResource DataGridTextBlockStyle}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
 
-                    <tkcontrols:DataGridTemplateColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"
+                    <tkdg:DataGridTemplateColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"
                                                        HeaderStyle="{StaticResource TextColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                            Style="{StaticResource DataGridTextBlockStyle}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
 
-                    <tkcontrols:DataGridTemplateColumn x:Uid="/Music/LengthCOL" Header="LENGTH" Tag="Length"
+                    <tkdg:DataGridTemplateColumn x:Uid="/Music/LengthCOL" Header="LENGTH" Tag="Length"
                                                        HeaderStyle="{StaticResource TextColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToTextConverter}}" Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                            Style="{StaticResource DataGridTextBlockStyle}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
                     
-                    <tkcontrols:DataGridTemplateColumn Header="&#xECAD;" Width="20" CanUserResize="False" Tag="Explicit"
+                    <tkdg:DataGridTemplateColumn Header="&#xECAD;" Width="20" CanUserResize="False" Tag="Explicit"
                                                        HeaderStyle="{StaticResource IconColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <FontIcon x:Name="Icon" Glyph="&#xECAD;" FontSize="12" Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                           VerticalAlignment="Center" Visibility="{Binding IsExplicit}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
                     
-                    <tkcontrols:DataGridTemplateColumn x:Uid="/Music/DateAddedCOL" Header="Date Added" Tag="DateAdded"
+                    <tkdg:DataGridTemplateColumn x:Uid="/Music/DateAddedCOL" Header="Date Added" Tag="DateAdded"
                                                    HeaderStyle="{StaticResource TextColumnHeaderStyle}">
-                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                        <tkdg:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding AddedAt, Converter={StaticResource DateTimeToShortTextConverter}}" Foreground="{Binding PlaybackState, Converter={StaticResource PlaybackStateToForegroundConverter}}"
                                            Style="{StaticResource DataGridTextBlockStyle}"/>
                             </DataTemplate>
-                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
-                    </tkcontrols:DataGridTemplateColumn>
-                </tkcontrols:DataGrid.Columns>
-            </tkcontrols:DataGrid>
+                        </tkdg:DataGridTemplateColumn.CellTemplate>
+                    </tkdg:DataGridTemplateColumn>
+                </tkdg:DataGrid.Columns>
+            </tkdg:DataGrid>
         </Grid>
     </DataTemplate>
 

@@ -4,10 +4,9 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:collections="using:StrixMusic.Sdk.WinUI.Controls.Collections"
 	xmlns:converters="using:OwlCore.WinUI.Converters"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:items="using:StrixMusic.Sdk.WinUI.Controls.Items"
-	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:ui="using:CommunityToolkit.WinUI"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
 	<converters:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
@@ -32,9 +31,9 @@
 								ItemsSource="{Binding Collection.Tracks, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
 								SelectionMode="None">
 								<interactivity:Interaction.Behaviors>
-									<core:EventTriggerBehavior EventName="ItemClick">
-										<core:InvokeCommandAction Command="{Binding ItemClickCommand, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-									</core:EventTriggerBehavior>
+									<interactivity:EventTriggerBehavior EventName="ItemClick">
+										<interactivity:InvokeCommandAction Command="{Binding ItemClickCommand, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+									</interactivity:EventTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 								<ListView.Header>
 									<Grid>
@@ -47,9 +46,9 @@
 									<DataTemplate x:DataType="viewModels:TrackViewModel">
 										<items:TrackItem Track="{Binding}">
 											<interactivity:Interaction.Behaviors>
-												<core:EventTriggerBehavior EventName="DoubleTapped">
-													<core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-												</core:EventTriggerBehavior>
+												<interactivity:EventTriggerBehavior EventName="DoubleTapped">
+													<interactivity:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=Content.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+												</interactivity:EventTriggerBehavior>
 											</interactivity:Interaction.Behaviors>
 										</items:TrackItem>
 									</DataTemplate>

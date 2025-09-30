@@ -87,12 +87,12 @@
                                             Opacity="1"
                                             ZuneCollectionType="{Binding ZuneCollectionType, Mode=OneWay}">
                                             <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
-                                                </core:EventTriggerBehavior>
-                                                <core:EventTriggerBehavior EventName="AlbumPlaybackTriggered">
-                                                    <core:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
-                                                </core:EventTriggerBehavior>
+                                                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <interactivity:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
+                                                </interactivity:EventTriggerBehavior>
+                                                <interactivity:EventTriggerBehavior EventName="AlbumPlaybackTriggered">
+                                                    <interactivity:InvokeCommandAction Command="{Binding ParentCollection.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Album}" />
+                                                </interactivity:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </zuneItems:ZuneAlbumItem>
                                     </DataTemplate>

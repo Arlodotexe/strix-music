@@ -8,7 +8,6 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:convertnum="using:OwlCore.WinUI.Converters.Numerical"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaInfoStyle">
@@ -21,13 +20,13 @@
                 <ControlTemplate TargetType="nowplaying:MediaInfo">
                     <Grid>
                         <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                <core:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                            </core:EventTriggerBehavior>
+                            <interactivity:EventTriggerBehavior EventName="NowPlayingChanged" SourceObject="{Binding Device, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                <interactivity:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </interactivity:EventTriggerBehavior>
 
-                            <core:EventTriggerBehavior EventName="Loaded">
-                                <core:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
-                            </core:EventTriggerBehavior>
+                            <interactivity:EventTriggerBehavior EventName="Loaded">
+                                <interactivity:InvokeCommandAction Command="{Binding Device.NowPlaying.Track.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </interactivity:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
 
                         <Grid.ColumnDefinitions>

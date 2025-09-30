@@ -7,7 +7,6 @@
     xmlns:convertbool="using:OwlCore.WinUI.Converters.Bools"
     xmlns:converters="using:OwlCore.WinUI.Converters"
     xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -51,9 +50,9 @@
             ItemsSource="{x:Bind Items}"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="ItemClick">
+                    <interactivity:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.ItemContainerTransitions>
                 <TransitionCollection />
@@ -100,9 +99,9 @@
                                 FontSize="16"
                                 Visibility="{Binding IsAddItem, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>
 
@@ -117,9 +116,9 @@
                                 FontSize="18"
                                 Visibility="{Binding IsAddItem, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding RequestAddCommand}" CommandParameter="{Binding}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding RequestAddCommand}" CommandParameter="{Binding}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>
                         </Grid>
@@ -177,9 +176,9 @@
             ItemsSource="{x:Bind Items}"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="ItemClick">
+                    <interactivity:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
@@ -237,9 +236,9 @@
                                 FontSize="14"
                                 Visibility="{Binding IsAddItem, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                             </Button>
                         </Border>

@@ -4,7 +4,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:appModels="using:StrixMusic.AppModels"
 	xmlns:controls="using:StrixMusic.Controls"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:local="using:StrixMusic.Controls.Settings.MusicSources"
@@ -26,9 +25,9 @@
 			ItemsSource="{x:Bind MusicSourcesSettings.AvailableMusicSources, Mode=OneWay}"
 			SelectionMode="None">
 			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="ItemClick">
-					<core:InvokeCommandAction Command="{x:Bind SelectMusicSourceCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-				</core:EventTriggerBehavior>
+				<interactivity:EventTriggerBehavior EventName="ItemClick">
+					<interactivity:InvokeCommandAction Command="{x:Bind SelectMusicSourceCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+				</interactivity:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 
 			<GridView.ItemTemplate>
@@ -47,9 +46,9 @@
 						</Grid.RowDefinitions>
 
 						<interactivity:Interaction.Behaviors>
-							<core:EventTriggerBehavior EventName="Loaded">
-								<core:InvokeCommandAction Command="{x:Bind LoadImageCommand}" />
-							</core:EventTriggerBehavior>
+							<interactivity:EventTriggerBehavior EventName="Loaded">
+								<interactivity:InvokeCommandAction Command="{x:Bind LoadImageCommand}" />
+							</interactivity:EventTriggerBehavior>
 						</interactivity:Interaction.Behaviors>
 
 						<controls:CoreImage Margin="20,0" Image="{x:Bind CoreImage, Mode=OneWay}" />

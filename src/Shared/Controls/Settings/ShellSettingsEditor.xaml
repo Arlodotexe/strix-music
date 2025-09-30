@@ -6,9 +6,8 @@
 	xmlns:appModels="using:StrixMusic.AppModels"
 	xmlns:attached="using:OwlCore.WinUI.Attached"
 	xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-	xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:controls1="using:CommunityToolkit.WinUI.Controls"
 	xmlns:converters="using:StrixMusic.Converters"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:toolkit="using:CommunityToolkit.WinUI"
@@ -16,7 +15,7 @@
 	xmlns:local="using:StrixMusic.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:strixMusic="using:StrixMusic"
-	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:ui="using:CommunityToolkit.WinUI"
 	xmlns:winUi="using:OwlCore.WinUI"
 	x:Name="RootControl"
 	MaxWidth="1000">
@@ -128,16 +127,16 @@
 							</Button.Content>
 
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Click">
-									<core:ChangePropertyAction
+								<interactivity:EventTriggerBehavior EventName="Click">
+									<interactivity:ChangePropertyAction
 										PropertyName="Height"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="500" />
-									<core:ChangePropertyAction
+									<interactivity:ChangePropertyAction
 										PropertyName="Width"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="500" />
-								</core:EventTriggerBehavior>
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
@@ -147,16 +146,16 @@
 							</Button.Content>
 
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Click">
-									<core:ChangePropertyAction
+								<interactivity:EventTriggerBehavior EventName="Click">
+									<interactivity:ChangePropertyAction
 										PropertyName="Height"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="750" />
-									<core:ChangePropertyAction
+									<interactivity:ChangePropertyAction
 										PropertyName="Width"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="500" />
-								</core:EventTriggerBehavior>
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
@@ -166,16 +165,16 @@
 							</Button.Content>
 
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Click">
-									<core:ChangePropertyAction
+								<interactivity:EventTriggerBehavior EventName="Click">
+									<interactivity:ChangePropertyAction
 										PropertyName="Height"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="800" />
-									<core:ChangePropertyAction
+									<interactivity:ChangePropertyAction
 										PropertyName="Width"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="1280" />
-								</core:EventTriggerBehavior>
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
@@ -189,16 +188,16 @@
 							</Button.Content>
 
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Click">
-									<core:ChangePropertyAction
+								<interactivity:EventTriggerBehavior EventName="Click">
+									<interactivity:ChangePropertyAction
 										PropertyName="Height"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="1080" />
-									<core:ChangePropertyAction
+									<interactivity:ChangePropertyAction
 										PropertyName="Width"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="1920" />
-								</core:EventTriggerBehavior>
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 						</Button>
 
@@ -207,16 +206,16 @@
 							FontSize="15"
 							ToolTipService.ToolTip="4K (2160 x 3840)">
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Click">
-									<core:ChangePropertyAction
+								<interactivity:EventTriggerBehavior EventName="Click">
+									<interactivity:ChangePropertyAction
 										PropertyName="Height"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="2160" />
-									<core:ChangePropertyAction
+									<interactivity:ChangePropertyAction
 										PropertyName="Width"
 										TargetObject="{x:Bind ShellPresenterContainer}"
 										Value="3840" />
-								</core:EventTriggerBehavior>
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 						</Button>
 					</controls1:WrapPanel>
@@ -276,9 +275,9 @@
 					</ComboBox.ItemTemplate>
 
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="SelectionChanged">
-							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-						</core:EventTriggerBehavior>
+						<interactivity:EventTriggerBehavior EventName="SelectionChanged">
+							<interactivity:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ComboBox>
 			</tkcontrols:SettingsCard>
@@ -296,9 +295,9 @@
 					</ComboBox.ItemTemplate>
 
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="SelectionChanged">
-							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-						</core:EventTriggerBehavior>
+						<interactivity:EventTriggerBehavior EventName="SelectionChanged">
+							<interactivity:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</ComboBox>
 			</tkcontrols:SettingsCard>
@@ -309,9 +308,9 @@
 					CommandParameter="{x:Null}"
 					Content="Restore defaults">
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
-							<core:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-						</core:EventTriggerBehavior>
+						<interactivity:EventTriggerBehavior EventName="Click">
+							<interactivity:InvokeCommandAction Command="{x:Bind ShellSettings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</Button>
 			</tkcontrols:SettingsCard>
