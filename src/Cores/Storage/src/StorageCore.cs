@@ -220,8 +220,9 @@ public sealed class StorageCore : ICore
         {
             file = await FolderScanner.GetKnownFileByIdAsync(track.Id, cancellationToken);
         }
-        catch (FileNotFoundException)
+        catch (FileNotFoundException ex)
         {
+            Logger.LogError($"File not found for track {track.Id}", ex);
             return null;
         }
 
