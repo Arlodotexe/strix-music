@@ -215,9 +215,16 @@ public sealed class StorageCore : ICore
     {
         Guard.IsTrue(IsInitialized);
 
-        var file = FolderScanner.KnownFiles.ToArray().FirstOrDefault(x => x.Id == track.Id);
-        if (file is null)
+        IFile? file;
+        try
+        {
+            file = await FolderScanner.GetKnownFileByIdAsync(track.Id, cancellationToken);
+        }
+        catch (FileNotFoundException ex)
+        {
+            Logger.LogError($"File not found for track {track.Id}", ex);
             return null;
+        }
 
         if (!Path.GetExtension(file.Name).TryGetMimeType(out var mimeType))
         {
@@ -228,7 +235,6 @@ public sealed class StorageCore : ICore
         Guard.IsNotNull(mimeType);
 
         var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
-
         if (!stream.CanSeek)
         {
             // For playback we'll have to copy the whole stream before playing because it needs to support seek and provide length BEFOREHAND which lazystream doesn't support.
