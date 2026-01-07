@@ -183,7 +183,10 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
                 if (newItem is IChildFolder newFolder)
                 {
-                    await RecursiveScanForFilesAsync(newFolder).ToListAsync();
+                    await foreach (var _ in RecursiveScanForFilesAsync(newFolder))
+                    {
+                        // Consume the enumerable to trigger recursive scanning
+                    }
                 }
             }
         }
