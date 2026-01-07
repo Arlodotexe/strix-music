@@ -269,7 +269,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             if (Collection is null || PART_SortLbl is null)
                 return;
 
-            if (!await OwlCore.Flow.Debounce($"{nameof(SortTrackAccordingToCurrentStateAsync)}.{GetHashCode()}", TimeSpan.FromSeconds(500)))
+            if (!await OwlCore.Flow.Debounce($"{nameof(SortTrackAccordingToCurrentStateAsync)}.{GetHashCode()}", TimeSpan.FromMilliseconds(500)))
                 return;
 
             Collection.Tracks.CollectionChanged -= Tracks_CollectionChanged;
