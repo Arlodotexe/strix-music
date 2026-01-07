@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +17,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
 {
     private readonly SemaphoreSlim _updateMutex = new(1, 1);
     private readonly Dictionary<string, SubFolderData> _knownSubFolders = new();
+    private readonly Dictionary<string, IChildFile> _knownFilesById = new();
     private IFolderWatcher? _rootFolderWatcher;
 
     /// <summary>
@@ -38,6 +38,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
         cancellationToken.ThrowIfCancellationRequested();
         _knownSubFolders.Clear();
         KnownFiles.Clear();
+        _knownFilesById.Clear();
 
         await foreach (var item in RecursiveScanForFilesAsync(RootFolder, cancellationToken))
             yield return item;
@@ -65,6 +66,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 using (await _updateMutex.DisposableWaitAsync())
                 {
                     KnownFiles.Add(file);
+                    _knownFilesById[file.Id] = file;
                 }
                 
                 yield return file;
@@ -77,6 +79,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
                     using (await _updateMutex.DisposableWaitAsync())
                     {
                         KnownFiles.Add(subFile);
+                        _knownFilesById[subFile.Id] = subFile;
                     }
 
                     yield return subFile;
@@ -93,8 +96,10 @@ internal class DepthFirstFolderScanner : IFolderScanner
     {
         using (await _updateMutex.DisposableWaitAsync())
         {
-            return KnownFiles.FirstOrDefault(x => x.Id == fileId)
-                   ?? throw new System.IO.FileNotFoundException($"File with ID '{fileId}' not found in known files.", fileId);
+            if (_knownFilesById.TryGetValue(fileId, out var file))
+                return file;
+            
+            throw new System.IO.FileNotFoundException($"File with ID '{fileId}' not found in known files.", fileId);
         }
     }
 
@@ -166,11 +171,14 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 // Record this new item as a child of the parent folder.
                 using (await _updateMutex.DisposableWaitAsync())
                 {
-                    if (_knownSubFolders.First(x => x.Key == parentFolder.Id).Value is { } subFolderData)
+                    if (_knownSubFolders.TryGetValue(parentFolder.Id, out var subFolderData))
                         subFolderData.Children.Add((IStorableChild)newItem);
 
                     if (newItem is IChildFile newFile)
+                    {
                         KnownFiles.Add(newFile);
+                        _knownFilesById[newFile.Id] = newFile;
+                    }
                 }
 
                 if (newItem is IChildFolder newFolder)
@@ -192,10 +200,13 @@ internal class DepthFirstFolderScanner : IFolderScanner
                 using (await _updateMutex.DisposableWaitAsync())
                 {
                     // Remove known file.
-                    if (KnownFiles.FirstOrDefault(x => x.Id == removedStorable.Id) is { } knownFile)
+                    if (_knownFilesById.TryGetValue(removedStorable.Id, out var knownFile))
+                    {
                         KnownFiles.Remove(knownFile);
+                        _knownFilesById.Remove(removedStorable.Id);
+                    }
 
-                    targetSubFolderData = _knownSubFolders.FirstOrDefault(x => x.Key == removedStorable.Id).Value;
+                    _knownSubFolders.TryGetValue(removedStorable.Id, out targetSubFolderData);
                 }
 
                 // Remove known folder and all children, recursively.
@@ -221,13 +232,16 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
             using (await _updateMutex.DisposableWaitAsync())
             {
-                if (childItem is IFile childFile && KnownFiles.FirstOrDefault(x => x.Id == childFile.Id) is { } knownChildFile)
+                if (childItem is IFile childFile && _knownFilesById.TryGetValue(childFile.Id, out var knownChildFile))
+                {
                     KnownFiles.Remove(knownChildFile);
+                    _knownFilesById.Remove(childFile.Id);
+                }
 
                 if (childItem is not IFolder childFolder)
                     continue;
 
-                targetSubFolderData = _knownSubFolders.FirstOrDefault(x => x.Key == childFolder.Id).Value;
+                _knownSubFolders.TryGetValue(childFolder.Id, out targetSubFolderData);
             }
 
             if (targetSubFolderData is not null)
