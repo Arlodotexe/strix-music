@@ -8,7 +8,7 @@
 	xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
 	xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
 	xmlns:strix="using:StrixMusic.Sdk.WinUI.Controls"
-	xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:viewModels="using:StrixMusic.Sdk.ViewModels">
 
 	<ResourceDictionary.MergedDictionaries>

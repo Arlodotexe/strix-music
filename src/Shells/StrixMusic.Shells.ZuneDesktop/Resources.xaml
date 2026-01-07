@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.WinUI.Controls"
     xmlns:converters="using:StrixMusic.Sdk.WinUI.Converters"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
     xmlns:dstyles="using:StrixMusic.Sdk.WinUI.Styles">
 
     <Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">

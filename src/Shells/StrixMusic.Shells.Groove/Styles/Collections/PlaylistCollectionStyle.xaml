@@ -17,14 +17,14 @@
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind ViewModel.PlaylistCollection.Playlists, Mode=OneWay}" Padding="16,16,16,112"
                   HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
             <!--<interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="ItemClicked">
-                                 <core:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="ItemClicked">
+                                 <interactivity:InvokeCommandAction Command="{x:Bind NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                                </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>-->
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.PlaylistCollection.InitPlaylistCollectionAsyncCommand, Mode=OneWay}" />
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="Loaded">
+                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.PlaylistCollection.InitPlaylistCollectionAsyncCommand, Mode=OneWay}" />
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <GridView.Header>
                 <Grid>

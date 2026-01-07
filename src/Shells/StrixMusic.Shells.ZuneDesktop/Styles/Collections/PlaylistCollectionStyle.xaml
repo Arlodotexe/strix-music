@@ -43,9 +43,9 @@
                                     <DataTemplate x:DataType="viewModels:PlaylistViewModel">
                                         <items:PlaylistItem Playlist="{Binding}">
                                             <interactivity:Interaction.Behaviors>
-                                                <core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=Collection.PlayPlaylistCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                                                </core:EventTriggerBehavior>
+                                                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                                                    <interactivity:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=Collection.PlayPlaylistCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                                </interactivity:EventTriggerBehavior>
                                             </interactivity:Interaction.Behaviors>
                                         </items:PlaylistItem>
                                     </DataTemplate>
