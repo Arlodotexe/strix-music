@@ -228,7 +228,7 @@ internal class DepthFirstFolderScanner : IFolderScanner
 
         foreach (var childItem in subFolderToRemove.Children)
         {
-            SubFolderData? targetSubFolderData;
+            SubFolderData? targetSubFolderData = null;
 
             using (await _updateMutex.DisposableWaitAsync())
             {
@@ -238,10 +238,8 @@ internal class DepthFirstFolderScanner : IFolderScanner
                     _knownFilesById.Remove(childFile.Id);
                 }
 
-                if (childItem is not IFolder childFolder)
-                    continue;
-
-                _knownSubFolders.TryGetValue(childFolder.Id, out targetSubFolderData);
+                if (childItem is IFolder childFolder)
+                    _knownSubFolders.TryGetValue(childFolder.Id, out targetSubFolderData);
             }
 
             if (targetSubFolderData is not null)
