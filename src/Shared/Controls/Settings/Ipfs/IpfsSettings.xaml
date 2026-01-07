@@ -4,15 +4,14 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:appModels="using:StrixMusic.AppModels"
 	xmlns:behaviors="using:OwlCore.WinUI.Behaviors"
-	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:controls="using:CommunityToolkit.WinUI.Controls"
 	xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
-	xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
 	xmlns:tkcontrols="using:CommunityToolkit.WinUI.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ocext="using:OwlCore.Extensions"
-	xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+	xmlns:ui="using:CommunityToolkit.WinUI"
 	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	x:Name="RootUserControl"
 	mc:Ignorable="d">
@@ -23,9 +22,9 @@
 		Spacing="4">
 
 		<interactivity:Interaction.Behaviors>
-			<core:EventTriggerBehavior EventName="Loaded">
-				<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand}" />
-			</core:EventTriggerBehavior>
+			<interactivity:EventTriggerBehavior EventName="Loaded">
+				<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand}" />
+			</interactivity:EventTriggerBehavior>
 		</interactivity:Interaction.Behaviors>
 
 		<tkcontrols:SettingsExpander
@@ -39,9 +38,9 @@
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/ipfs.png}"
 					IsClickEnabled="True">
 					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Click">
+						<interactivity:EventTriggerBehavior EventName="Click">
 							<behaviors:OpenUriAction Source="https://ipfs.io/ipfs/QmWzA1FerU3ecYPk7i3W8qLJJxFE6KKQgwKqEBKW9ryC5B/concepts/what-is-ipfs/#decentralization" />
-						</core:EventTriggerBehavior>
+						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 				</tkcontrols:SettingsCard>
 
@@ -72,10 +71,10 @@
 			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.Enabled), Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.Enabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Toggled">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="Toggled">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 		</tkcontrols:SettingsCard>
@@ -88,10 +87,10 @@
 			Visibility="{x:Bind Ipfs.Settings.Enabled, Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.Enabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Toggled">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="Toggled">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.InitCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 
@@ -178,9 +177,9 @@
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeApiPort, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="LostFocus">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="LostFocus">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</controls1:NumberBox>
 		</tkcontrols:SettingsCard>
@@ -192,9 +191,9 @@
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeGatewayPort, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="LostFocus">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="LostFocus">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</controls1:NumberBox>
 		</tkcontrols:SettingsCard>
@@ -214,9 +213,9 @@
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.BootstrapNodeEnableLocalDiscovery, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Toggled">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="Toggled">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 		</tkcontrols:SettingsCard>
@@ -235,9 +234,9 @@
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="View latest" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpns), Mode=OneWay, FallbackValue=Collapsed}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Click">
+					<interactivity:EventTriggerBehavior EventName="Click">
 						<behaviors:OpenUriAction Source="{x:Bind IpnsPathToProtocolUrl(Ipfs.Settings.ReleaseIpns), Mode=OneWay, FallbackValue={x:Null}}" />
-					</core:EventTriggerBehavior>
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</Button>
 		</tkcontrols:SettingsCard>
@@ -250,9 +249,9 @@
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="View snapshot" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpnsResolved), Mode=OneWay, FallbackValue=Collapsed}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Click">
+					<interactivity:EventTriggerBehavior EventName="Click">
 						<behaviors:OpenUriAction Source="{x:Bind IpfsPathToProtocolUrl(Ipfs.Settings.ReleaseIpnsResolved), Mode=OneWay, FallbackValue={x:Null}}" />
-					</core:EventTriggerBehavior>
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</Button>
 		</tkcontrols:SettingsCard>
@@ -340,9 +339,9 @@
 			Visibility="Collapsed">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
-					<core:EventTriggerBehavior EventName="Toggled">
-						<core:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
-					</core:EventTriggerBehavior>
+					<interactivity:EventTriggerBehavior EventName="Toggled">
+						<interactivity:InvokeCommandAction Command="{x:Bind Ipfs.Settings.SaveCommand, Mode=OneWay}" CommandParameter="{x:Null}" />
+					</interactivity:EventTriggerBehavior>
 				</interactivity:Interaction.Behaviors>
 			</ToggleSwitch>
 		</tkcontrols:SettingsCard>

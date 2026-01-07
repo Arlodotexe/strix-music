@@ -17,9 +17,9 @@
 					<ControlTemplate TargetType="items:AlbumItem">
 						<Grid MaxWidth="128">
 							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="Loaded">
-									<core:InvokeCommandAction Command="{Binding AlbumVm.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource TemplatedParent}}" />
-								</core:EventTriggerBehavior>
+								<interactivity:EventTriggerBehavior EventName="Loaded">
+									<interactivity:InvokeCommandAction Command="{Binding AlbumVm.InitArtistCollectionAsyncCommand, RelativeSource={RelativeSource TemplatedParent}}" />
+								</interactivity:EventTriggerBehavior>
 							</interactivity:Interaction.Behaviors>
 
 							<Grid.RowDefinitions>

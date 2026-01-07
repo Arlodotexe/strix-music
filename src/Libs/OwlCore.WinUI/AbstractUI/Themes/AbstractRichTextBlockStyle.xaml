@@ -5,7 +5,7 @@
 	xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
 	xmlns:controls="using:OwlCore.WinUI.AbstractUI.Controls"
 	xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
-	xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls">
+	xmlns:tkcontrols="using:CommunityToolkit.WinUI">
 
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="ms-appx:///OwlCore.WinUI/AbstractUI/Themes/AbstractUIResources.xaml" />
@@ -41,7 +41,8 @@
 				TextWrapping="WrapWholeWords"
 				Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}" />
 
-			<tkcontrols:MarkdownTextBlock Text="{x:Bind RichText}" />
+            <!-- TODO: -->
+			<!--<tkcontrols:MarkdownTextBlock Text="{x:Bind RichText}" />-->
 		</StackPanel>
 	</DataTemplate>
 

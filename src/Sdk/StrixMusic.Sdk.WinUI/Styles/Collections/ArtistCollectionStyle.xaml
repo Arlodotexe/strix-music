@@ -34,9 +34,9 @@
 											SelectionMode="None">
 
 											<interactivity:Interaction.Behaviors>
-												<core:EventTriggerBehavior EventName="ItemClick">
-													<core:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
-												</core:EventTriggerBehavior>
+												<interactivity:EventTriggerBehavior EventName="ItemClick">
+													<interactivity:InvokeCommandAction Command="{x:Bind ItemClickCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+												</interactivity:EventTriggerBehavior>
 											</interactivity:Interaction.Behaviors>
 
 											<GridView.Header>
@@ -51,9 +51,9 @@
 												<DataTemplate x:Key="DefaultArtistCollectionItemStyle">
 													<items:ArtistItem Artist="{Binding}">
 														<interactivity:Interaction.Behaviors>
-															<core:EventTriggerBehavior EventName="DoubleTapped">
-																<core:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=ContextHolder.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-															</core:EventTriggerBehavior>
+															<interactivity:EventTriggerBehavior EventName="DoubleTapped">
+																<interactivity:InvokeCommandAction Command="{Binding ElementName=ContextHolder, Path=ContextHolder.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+															</interactivity:EventTriggerBehavior>
 														</interactivity:Interaction.Behaviors>
 													</items:ArtistItem>
 												</DataTemplate>

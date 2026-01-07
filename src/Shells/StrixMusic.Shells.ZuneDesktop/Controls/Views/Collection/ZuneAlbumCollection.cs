@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Uwp.UI.Animations;
+using CommunityToolkit.WinUI.Animations;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;

@@ -8,7 +8,6 @@
     xmlns:vms="using:StrixMusic.Shells.Groove.ViewModels"
     xmlns:convertnumtime="using:OwlCore.WinUI.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaTransportStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -24,26 +23,26 @@
                             <FontIcon Glyph="&#xE8B1;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
 
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Click">
-                                    <core:InvokeCommandAction Command="{Binding Device.ToggleShuffleCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="Click">
+                                    <interactivity:InvokeCommandAction Command="{Binding Device.ToggleShuffleCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ToggleButton>
 
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <FontIcon Glyph="&#xE100;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </Button>
                             <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{Binding Device.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Device.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding Device.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <owlcoreuno:ToggleContentButton.CheckedContent>
                                     <FontIcon Glyph="&#xE103;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
@@ -52,9 +51,9 @@
                             </owlcoreuno:ToggleContentButton>
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
-                                    <core:EventTriggerBehavior EventName="Click">
-                                        <core:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-                                    </core:EventTriggerBehavior>
+                                    <interactivity:EventTriggerBehavior EventName="Click">
+                                        <interactivity:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                    </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <FontIcon Glyph="&#xE101;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
                             </Button>
@@ -63,9 +62,9 @@
                         <owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
 
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Click">
-                                    <core:InvokeCommandAction Command="{Binding Device.ToggleRepeatCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-                                </core:EventTriggerBehavior>
+                                <interactivity:EventTriggerBehavior EventName="Click">
+                                    <interactivity:InvokeCommandAction Command="{Binding Device.ToggleRepeatCommandAsync, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
 
                             <owlcoreuno:ToggleContentButton.IndeterminateContent>

@@ -19,16 +19,16 @@
 							<Button Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Style="{StaticResource MediaButton}">
 								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE100;" />
 								<interactivity:Interaction.Behaviors>
-									<core:EventTriggerBehavior EventName="Click">
-										<core:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-									</core:EventTriggerBehavior>
+									<interactivity:EventTriggerBehavior EventName="Click">
+										<interactivity:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+									</interactivity:EventTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 							</Button>
 							<owlcoreuno:ToggleContentButton IsChecked="{Binding Device.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Style="{StaticResource MediaToggleContentButton}">
 								<interactivity:Interaction.Behaviors>
-									<core:EventTriggerBehavior EventName="Click">
-										<core:InvokeCommandAction Command="{Binding Device.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-									</core:EventTriggerBehavior>
+									<interactivity:EventTriggerBehavior EventName="Click">
+										<interactivity:InvokeCommandAction Command="{Binding Device.TogglePauseResumeCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+									</interactivity:EventTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 								<owlcoreuno:ToggleContentButton.CheckedContent>
 									<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE103;" />
@@ -38,9 +38,9 @@
 							<Button Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Style="{StaticResource MediaButton}">
 								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE101;" />
 								<interactivity:Interaction.Behaviors>
-									<core:EventTriggerBehavior EventName="Click">
-										<core:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
-									</core:EventTriggerBehavior>
+									<interactivity:EventTriggerBehavior EventName="Click">
+										<interactivity:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+									</interactivity:EventTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 							</Button>
 						</StackPanel>

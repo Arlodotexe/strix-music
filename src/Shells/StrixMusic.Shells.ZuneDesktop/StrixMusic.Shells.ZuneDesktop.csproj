@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
@@ -20,6 +21,7 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
     <PackageReference Include="OwlCore" Version="0.6.1" />
@@ -114,9 +116,8 @@
     <UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="9.0.5" />
+    <PackageReference Include="System.Text.Json" Version="9.0.9" />
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0" />
-    <PackageReference Include="Uno.UI" Version="5.6.99" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
@@ -185,6 +186,6 @@
     <SourceGeneratorInput Remove="Controls\NowPlaying\ZuneNowPlayingView.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-    <PackageReference Include="Uno.UI" Version="4.8.15" />
+    <PackageReference Include="Uno.UI" Version="5.6.99" />
   </ItemGroup>
 </Project>

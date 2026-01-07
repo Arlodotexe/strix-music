@@ -6,7 +6,6 @@
     xmlns:groovevms="using:StrixMusic.Shells.Groove.ViewModels.Collections"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.PanePlaylistCollectionStyle">
     
     <ResourceDictionary.MergedDictionaries>
@@ -18,12 +17,12 @@
                   HorizontalAlignment="Stretch" SelectedItem="{x:Bind ViewModel.SelectedPlaylist, Mode=TwoWay}"
                   SelectionMode="Single" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.PlaylistCollection.InitPlaylistCollectionAsyncCommand, Mode=OneWay}"/>
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="Loaded">
+                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.PlaylistCollection.InitPlaylistCollectionAsyncCommand, Mode=OneWay}"/>
+                </interactivity:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="ItemClick">
+                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.NavigateToPlaylistCommand, Mode=OneWay}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}"/>
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.Header>
                 <Grid>
