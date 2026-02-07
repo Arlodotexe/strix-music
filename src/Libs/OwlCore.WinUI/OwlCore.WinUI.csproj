@@ -1,113 +1,124 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
-  <PropertyGroup>
-    <TargetFrameworks>uap10.0.19041;net9.0</TargetFrameworks>
-    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <Nullable>enable</Nullable>
-    <LangVersion>12</LangVersion>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <UserSecretsId>6fa950de-976e-453b-bfcb-f0abe43fa342</UserSecretsId>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
-    <PackageReference Include="OwlCore" Version="0.6.1" />
-    <PackageReference Include="OwlCore.AbstractUI" Version="0.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
-    <PackageReference Include="System.Text.Json" Version="9.0.9" />
-	<PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.250402" />
-	<PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250402" />
-	<PackageReference Include="CommunityToolkit.Uwp.Controls.MetadataControl" Version="8.2.250402" />
-	<PackageReference Include="CommunityToolkit.Uwp.Triggers" Version="8.2.250402" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
-	  <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" Version="7.1.3" />
-	  <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-	<PackageReference Include="Uno.UI" Version="5.6.99" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" Version="7.1.11" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="3.0.3" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.4.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
-    <None Remove="AbstractUI\AbstractUICollectionPresenterTemplateSelector.xaml" />
-    <None Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
-    <None Remove="Controls\ContentOverlay.xaml" />
-    <None Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
-    <None Remove="LICENSE" />
-    <None Remove="Themes\CenteredPivotHeadersStyle.xaml" />
-    <None Remove="Themes\Generic.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenterTemplateSelector.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
-    <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
-    <UpToDateCheckInput Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
-    <UpToDateCheckInput Remove="Themes\CenteredPivotHeadersStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\Generic.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="AbstractUI\Controls\AbstractUICollectionPresenter.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractBooleanStyle.xaml.cs">
-      <DependentUpon>AbstractBooleanStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
-      <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml.cs">
-      <DependentUpon>AbstractMultiChoiceStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
-      <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
-      <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
-      <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
-      <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml.cs">
-      <DependentUpon>AbstractUICollectionPresenterStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Controls\ContentOverlay.xaml.cs">
-      <DependentUpon>ContentOverlay.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle.xaml.cs">
-      <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+﻿<Project>
+    <PropertyGroup>
+        <EnableUwp>False</EnableUwp>
+        <EnableUwp Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">True</EnableUwp>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!--suppress MsbuildTargetFrameworkTagInspection -->
+        <TargetFrameworks>net9.0</TargetFrameworks>
+        <TargetFrameworks Condition="$(EnableUwp)">$(TargetFrameworks);uap10.0.19041</TargetFrameworks>
+
+        <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+        <GenerateLibraryLayout>true</GenerateLibraryLayout>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <UserSecretsId>6fa950de-976e-453b-bfcb-f0abe43fa342</UserSecretsId>
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+
+    <Sdk Condition="$(EnableUwp)" Name="MSBuild.Sdk.Extras" Version="3.0.23"/>
+
+    <ItemGroup>
+        <PackageReference Include="ClusterNet" Version="0.0.3-alpha"/>
+        <PackageReference Include="OwlCore" Version="0.6.1"/>
+        <PackageReference Include="OwlCore.AbstractUI" Version="0.0.0"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11"/>
+        <PackageReference Include="System.Text.Json" Version="9.0.9"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Animations" Version="8.2.250402"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250402"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.MetadataControl" Version="8.2.250402"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Triggers" Version="8.2.250402"/>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
+        <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" Version="7.1.3"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed" Version="3.0.0"/>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
+        <PackageReference Include="Uno.UI" Version="5.6.99"/>
+        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls.DataGrid" Version="7.1.11"/>
+        <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="3.0.3"/>
+        <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.4.2"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml"/>
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml"/>
+        <None Remove="AbstractUI\AbstractUICollectionPresenterTemplateSelector.xaml"/>
+        <None Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml"/>
+        <None Remove="AbstractUI\Themes\AbstractUIResources.xaml"/>
+        <None Remove="Controls\ContentOverlay.xaml"/>
+        <None Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml"/>
+        <None Remove="LICENSE"/>
+        <None Remove="Themes\CenteredPivotHeadersStyle.xaml"/>
+        <None Remove="Themes\Generic.xaml"/>
+    </ItemGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenterTemplateSelector.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml"/>
+        <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml"/>
+        <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml"/>
+        <UpToDateCheckInput Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml"/>
+        <UpToDateCheckInput Remove="Themes\CenteredPivotHeadersStyle.xaml"/>
+        <UpToDateCheckInput Remove="Themes\Generic.xaml"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="AbstractUI\Controls\AbstractUICollectionPresenter.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractBooleanStyle.xaml.cs">
+            <DependentUpon>AbstractBooleanStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
+            <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml.cs">
+            <DependentUpon>AbstractMultiChoiceStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
+            <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
+            <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
+            <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
+            <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml.cs">
+            <DependentUpon>AbstractUICollectionPresenterStyle.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="Controls\ContentOverlay.xaml.cs">
+            <DependentUpon>ContentOverlay.xaml</DependentUpon>
+        </Compile>
+        <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle.xaml.cs">
+            <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
 </Project>
