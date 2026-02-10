@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+        <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup Condition="exists('..\StrixMusic.UWP')">
+        <EmbeddedResource Include="..\StrixMusic.UWP\Package.appxmanifest" LogicalName="Package.appxmanifest"/>
+<!--        <Content Include="..\StrixMusic.UWP\Assets\StoreLogo.png" Link="Assets\StoreLogo.png"/>-->
+        <Content Include="Assets\Fonts\uno-fluentui-assets.ttf"/>
+    </ItemGroup>
+    <ItemGroup>
+        <UpToDateCheckInput Include="..\..\Shared\**\*.xaml"/>
+    </ItemGroup>
+    <ItemGroup>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402"/>
+        <PackageReference Include="OwlCore.Kubo" Version="0.20.2"/>
+        <PackageReference Include="OwlCore.Storage" Version="0.12.2"/>
+        <PackageReference Include="SkiaSharp.Views.Uno" Version="2.88.9" />
+        <PackageReference Include="Svg.Skia" Version="3.4.1" />
+        <PackageReference Include="System.Text.Json" Version="9.0.9"/>
+        <PackageReference Include="CommunityToolkit.Common" Version="8.4.0"/>
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0"/>
+        <PackageReference Include="CommunityToolkit.Labs.Uwp.CanvasView" Version="0.1.250319-build.2093"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls" Version="8.2.250402"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="OwlCore" Version="0.6.1"/>
+        <PackageReference Include="OwlCore.ComponentModel" Version="0.9.1"/>
+        <PackageReference Include="OwlCore.Storage.Uwp" Version="0.2.0"/>
+        <PackageReference Include="OwlCore.Storage.OneDrive" Version="0.2.1"/>
+
+        <PackageReference Include="NLog" Version="5.4.0"/>
+        <PackageReference Include="NLog.Extensions.Logging" Version="5.4.0"/>
+        <PackageReference Include="Uno.Extensions.Logging.UWP" Version="4.2.14" />
+        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.11"/>
+        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.11"/>
+        <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.11"/>
+
+        <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="3.0.3"/>
+        <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.4.2"/>
+        <PackageReference Include="Uno.UI.Svg" Version="5.6.99" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.5"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.5"/>
+        <PackageReference Include="Uno.SourceGeneration" Version="4.2.0"/>
+        <PackageReference Include="Uno.UI.Skia.Gtk" Version="5.6.99"/>
+        <PackageReference Include="Uno.UI.RemoteControl" Version="5.6.99" Condition="'$(Configuration)'=='Debug'"/>
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.6.99" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Cores\Storage\src\StrixMusic.Cores.Storage.csproj" />
+        <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj"/>
+        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj"/>
+        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj"/>
+        <ProjectReference Include="..\..\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj"/>
+        <ProjectReference Include="..\..\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj"/>
+    </ItemGroup>
+    <Import Project="..\..\Shared\StrixMusic.Shared.projitems" Label="Shared"/>
+</Project>
