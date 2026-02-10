@@ -78,7 +78,7 @@ public sealed partial class LandingPage : Page
         var token = folder.Id.HashMD5Fast();
         var instanceId = folder.Id; // Same way a StorageCore gets the InstanceId.
 
-#if __WASM__
+#if HAS_UNO
         // FutureAccessList isn't implemented in Uno. The folder must be tracked manually.
         AppRoot.KnownFolders.Add(folder);
 #else
