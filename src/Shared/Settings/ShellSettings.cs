@@ -37,7 +37,7 @@ public partial class ShellSettings : SettingsBase, IInstanceId
         LoadFailed += AppSettings_LoadFailed;
         SaveFailed += AppSettings_SaveFailed;
 
-#if !__WASM__
+#if !HAS_UNO
         _localSettings = ApplicationData.Current.LocalSettings.CreateContainer(nameof(ShellSettings), ApplicationDataCreateDisposition.Always);
 # endif
     }

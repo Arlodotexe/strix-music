@@ -63,7 +63,7 @@ public sealed partial class App : Application
             MainWindow.Activate();
 #endif
 
-#if __WASM__
+#if HAS_UNO
         MainWindow = Window.Current;
 #endif
 

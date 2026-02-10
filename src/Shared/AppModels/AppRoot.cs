@@ -64,12 +64,12 @@ public partial class AppRoot : ObservableObject, IAsyncInit
     {
         _dataFolder = dataFolder;
 
-#if !__WASM__
+#if !HAS_UNO
         _smtcHandler = new SystemMediaTransportControlsHandler(_playbackHandler);
 #endif
     }
 
-#if __WASM__
+#if HAS_UNO
     public static List<IFolder> KnownFolders { get; set; } = new();
 #endif
 
