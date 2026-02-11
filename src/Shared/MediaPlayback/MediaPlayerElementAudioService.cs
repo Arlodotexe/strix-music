@@ -60,6 +60,7 @@ namespace StrixMusic.MediaPlayback
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            OwlCore.Diagnostics.Logger.LogInformation($"PlaybackState: {sender.PlaybackState}");
             PlaybackState = sender.PlaybackState switch
             {
                 MediaPlaybackState.Playing => PlaybackState.Playing,
@@ -94,7 +95,7 @@ namespace StrixMusic.MediaPlayback
 
         private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
         {
-            Debug.WriteLine(args.ErrorMessage);
+            OwlCore.Diagnostics.Logger.LogError($"MediaFailed: {args.ErrorMessage}, ExtendedErrorCode: {args.ExtendedErrorCode}");
         }
 
         /// <inheritdoc />
@@ -152,6 +153,8 @@ namespace StrixMusic.MediaPlayback
             var sourceConfig = playbackItem.MediaConfig;
 
             Guard.IsNotNull(sourceConfig, nameof(sourceConfig));
+            
+            OwlCore.Diagnostics.Logger.LogInformation($"Id={sourceConfig.Id}, HasUri={sourceConfig.MediaSourceUri != null}, HasStream={sourceConfig.FileStreamSource != null}");
 
             await _synchronizationContext.PostAsync(async () =>
             {
@@ -172,13 +175,34 @@ namespace StrixMusic.MediaPlayback
                 }
                 else if (sourceConfig.FileStreamSource != null)
                 {
+#if HAS_UNO
+                    // MediaSource.CreateFromStream is not implemented in Uno.
+                    // Use CreateFromUri with file:// path instead. The sourceConfig.Id is the file path.
+                    OwlCore.Diagnostics.Logger.LogInformation($"Uno: checking if file exists: {sourceConfig.Id}");
+                    if (File.Exists(sourceConfig.Id))
+                    {
+                        var fileUri = new Uri("file://" + sourceConfig.Id);
+                        OwlCore.Diagnostics.Logger.LogInformation($"Creating MediaSource from URI: {fileUri}");
+                        var source = MediaSource.CreateFromUri(fileUri);
+                        // Uno requires setting Source on MediaPlayerElement, not MediaPlayer
+                        _player.Source = source;
+                        OwlCore.Diagnostics.Logger.LogInformation($"Source set on MediaPlayerElement");
+                    }
+                    else
+                    {
+                        OwlCore.Diagnostics.Logger.LogError($"File not found: {sourceConfig.Id}");
+                        throw new NotSupportedException("Stream-based playback is not supported on Uno. File path not found: " + sourceConfig.Id);
+                    }
+#else
                     var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);
                     _player.MediaPlayer.Source = source;
+#endif
                 }
 
                 CurrentSource = playbackItem;
 
                 _player.MediaPlayer.Play();
+                OwlCore.Diagnostics.Logger.LogInformation($"Play complete. CurrentState: {_player.MediaPlayer.PlaybackSession.PlaybackState}");
             });
         }
 

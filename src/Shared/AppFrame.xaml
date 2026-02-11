@@ -90,7 +90,8 @@
 			<ProgressBar IsEnabled="{x:Bind AppRoot.InitCommand.IsRunning, Mode=OneWay}" IsIndeterminate="True" />
 		</StackPanel>
 
-		<ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Visibility="Collapsed" />
+		<!-- VLC on Linux requires MediaPlayerElement to be in visual tree but not necessarily visible -->
+		<ItemsControl ItemsSource="{x:Bind AppRoot.MediaPlayerElements, Mode=OneWay}" Opacity="0" IsHitTestVisible="False" Width="1" Height="1" />
 
 		<Border
 			x:Name="SettingsBorder"
