@@ -171,7 +171,7 @@
                                 </interactivity:Interaction.Behaviors>
 
                                 <TextBlock x:Name="AlbumName" Text="{Binding Album.Name}" FontSize="11" TextTrimming="Clip" Foreground="#242628" />
-                                <TextBlock x:Name="ArtistName" Text="{Binding Album.Artists[0].Name}" FontSize="11" Foreground="#919497" Margin="0,-2,0,0"/>
+                                <TextBlock x:Name="ArtistName" FontSize="11" Foreground="#919497" Margin="0,-2,0,0"/>
                             </StackPanel>
                         </Grid>
                     </ControlTemplate>
