@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+  <Import Project="..\..\props\PlatformConditionals.props"/>
   <PropertyGroup>
 	<TargetFrameworks>uap10.0.19041;net9.0</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->

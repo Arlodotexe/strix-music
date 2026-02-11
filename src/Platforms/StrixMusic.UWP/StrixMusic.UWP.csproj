@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\..\props\PlatformConditionals.props"/>
   <PropertyGroup>
     <LangVersion>12</LangVersion>
     <PackageCertificateThumbprint>828E42B157F3BFACA11AE265A50B17A4FC07EDD2</PackageCertificateThumbprint>

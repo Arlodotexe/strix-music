@@ -18,6 +18,7 @@ using OwlCore.Extensions;
 using OwlCore.Kubo;
 using OwlCore.Storage;
 using StrixMusic.Controls;
+using StrixMusic.Helpers;
 using StrixMusic.MediaPlayback;
 using StrixMusic.Plugins;
 using StrixMusic.Sdk.AdapterModels;
@@ -68,10 +69,6 @@ public partial class AppRoot : ObservableObject, IAsyncInit
         _smtcHandler = new SystemMediaTransportControlsHandler(_playbackHandler);
 #endif
     }
-
-#if HAS_UNO
-    public static List<IFolder> KnownFolders { get; set; } = new();
-#endif
 
     /// <summary>
     /// Responsible for handling app debug and diagnostics.
@@ -193,6 +190,12 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
                 var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
                 MusicSourcesSettings = new MusicSourcesSettings(musicSourceSettingsFolder);
+
+#if __LINUX__
+                // Initialize the FutureAccessList polyfill with the storage path
+                var futureAccessListPath = Path.Combine(musicSourceSettingsFolder.Id, "FutureAccessList.json");
+                StorageApplicationPermissionsEx.Initialize(futureAccessListPath);
+#endif
 
                 await MusicSourcesSettings.LoadCommand.ExecuteAsync(cancellationToken);
             }
