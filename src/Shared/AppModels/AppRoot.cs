@@ -588,7 +588,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
     private void SetupMediaPlayerForCore(ICore core)
     {
-#if __WASM__
+#if HAS_UNO
         return;
 #endif
 
