@@ -19,8 +19,8 @@
             <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
             <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
-            <SolidColorBrush x:Key="Foreground" Color="#FFFFFF"/>
-            <UI:Color x:Key="ForegroundColor">#FFFFFF</UI:Color>
+            <SolidColorBrush x:Key="Foreground" Color="#828689"/>
+            <UI:Color x:Key="ForegroundColor">#828689</UI:Color>
 
             <SolidColorBrush x:Key="ZuneButtonForeground" Color="#FFFFFF"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#FFFFFF"/>

@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
-using StrixMusic.Sdk.WinUI.Controls.Collections;
+using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
+using StrixMusic.Sdk.WinUI.Controls.Items;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
     /// <summary>
-    /// Zune implementation of the <see cref="ArtistCollection"/>.
+    /// Zune implementation of an artist collection.
     /// </summary>
-    public partial class ZuneArtistCollection : ArtistCollection
+    public partial class ZuneArtistCollection : CollectionControl<ArtistViewModel, ArtistItem>
     {
         private object _lockObj = new object();
 
@@ -44,18 +45,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ));
 
         /// <summary>
-        /// Backing dependency property for <see cref="ArtistCollection" />.
+        /// Backing dependency property for <see cref="Collection" />.
         /// </summary>
-        public new IArtistCollectionViewModel? Collection
+        public IArtistCollectionViewModel? Collection
         {
-            get { return (IArtistCollectionViewModel)GetValue(CollectionProperty); }
+            get { return (IArtistCollectionViewModel?)GetValue(CollectionProperty); }
             set { SetValue(CollectionProperty, value); }
         }
 
         /// <summary>
         /// Dependency property for <ses cref="IArtistCollectionViewModel" />.
         /// </summary>
-        public static readonly new DependencyProperty CollectionProperty =
+        public static readonly DependencyProperty CollectionProperty =
             DependencyProperty.Register(nameof(Collection), typeof(IArtistCollectionViewModel), typeof(ZuneArtistCollection), new PropertyMetadata(null, (s, e) =>
             {
                 if (s is ZuneArtistCollection zc)
@@ -69,6 +70,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         {
             if (Collection != null && !Collection.PopulateMoreArtistsCommand.IsRunning)
                 await Collection.PopulateMoreArtistsCommand.ExecuteAsync(25);
+        }
+
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (Collection is null)
+                return;
+
+            if (!Collection.PopulateMoreArtistsCommand.IsRunning && Collection.TotalArtistItemsCount == 0)
+                EmptyContentVisibility = Visibility.Visible;
         }
 
         /// <inheritdoc />
