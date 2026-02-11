@@ -32,7 +32,7 @@ namespace StrixMusic.AppModels
     {
         private readonly SynchronizationContext _syncContext;
 
-#if !__WASM__
+#if !HAS_UNO
         private readonly DispatcherTimer _memoryWatchTimer;
 #endif
 
@@ -73,7 +73,7 @@ namespace StrixMusic.AppModels
             // Listen for config change
             _settings.PropertyChanged += SettingsOnPropertyChanged;
 
-#if !__WASM__
+#if !HAS_UNO
             MemoryManager.AppMemoryUsageIncreased += MemoryManager_MemoryChanged;
             MemoryManager.AppMemoryUsageDecreased += MemoryManager_MemoryChanged;
 
@@ -209,7 +209,7 @@ namespace StrixMusic.AppModels
 
         private void DispatchTimer_Elapsed(object? sender, object e)
         {
-#if !__WASM__
+#if !HAS_UNO
             _memoryWatchTimer.Stop();
             UpdateMemoryUsage();
             _memoryWatchTimer.Start();

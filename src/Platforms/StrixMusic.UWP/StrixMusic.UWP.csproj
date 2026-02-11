@@ -58,6 +58,9 @@
     <PackageReference Include="OwlCore.ComponentModel">
       <Version>0.9.1</Version>
     </PackageReference>
+    <PackageReference Include="OwlCore.ComponentModel.Settings">
+      <Version>0.1.2</Version>
+    </PackageReference>
     <PackageReference Include="OwlCore.Storage.OneDrive">
       <Version>0.2.1</Version>
     </PackageReference>

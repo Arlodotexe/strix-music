@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.ComponentModel;
@@ -17,6 +18,12 @@ public abstract class CoreSettingsBase : SettingsBase
 {
     private readonly Dictionary<string, bool> _settingsValidity = new();
     private bool _canCreateCore;
+
+    [JsonIgnore]
+    public override IModifiableFolder Folder => base.Folder;
+
+    [JsonIgnore]
+    public override bool HasUnsavedChanges => base.HasUnsavedChanges;
 
     /// <summary>
     /// Creates a new instance of <see cref="CoreSettingsBase"/>.
