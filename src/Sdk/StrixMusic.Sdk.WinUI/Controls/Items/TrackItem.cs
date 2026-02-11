@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// Dependency property for <see cref="TrackVm"/>.
         /// </summary>
         public static readonly DependencyProperty TrackViewModelProperty =
-            DependencyProperty.Register(nameof(Track), typeof(TrackViewModel), typeof(TrackItem), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(TrackVm), typeof(TrackViewModel), typeof(TrackItem), new PropertyMetadata(null));
 
         /// <summary>
         /// ViewModel holding the data for <see cref="TrackItem" />

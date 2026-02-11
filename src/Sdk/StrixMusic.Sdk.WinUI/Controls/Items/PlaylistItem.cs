@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// Dependency property for <see cref="PlaylistVm"/>.
         /// </summary>
         public static readonly DependencyProperty PlaylistViewModelProperty =
-            DependencyProperty.Register(nameof(Playlist), typeof(PlaylistViewModel), typeof(PlaylistItem), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(PlaylistVm), typeof(PlaylistViewModel), typeof(PlaylistItem), new PropertyMetadata(null));
 
         /// <summary>
         /// Fires when the <see cref="Playlist"/> is changed.
