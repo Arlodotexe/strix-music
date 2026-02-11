@@ -55,7 +55,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="#919497"/>
                                             <Setter Target="AlbumName.Foreground" Value="#242628"/>
                                             <Setter Target="ImageOutline.Opacity" Value="0"/>
-                                            <Setter Target="HoverShadow.Opacity" Value="0"/>
+                                            <Setter Target="HoverShadowTarget.Translation" Value="0,0,0"/>
                                             <Setter Target="PART_PlayIcon.Opacity" Value="0"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
@@ -74,7 +74,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="Black"/>
                                             <Setter Target="AlbumName.Foreground" Value="Black"/>
                                             <Setter Target="ImageOutline.Opacity" Value="1"/>
-                                            <Setter Target="HoverShadow.Opacity" Value="1"/>
+                                            <Setter Target="HoverShadowTarget.Translation" Value="0,0,12"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
@@ -103,17 +103,19 @@
 
                             <!--Image-->
                             <Grid x:Name="PART_AlbumGrid" Height="98" Width="99" Padding="6">
-                                <Border x:Name="SelectionShadowTarget" Opacity="0">
-                                    <ui:Effects.Shadow>
-                                        <ui:AttachedDropShadow BlurRadius="4" Color="Black" CastTo="{Binding ElementName=SelectionShadowTarget}"/>
-                                    </ui:Effects.Shadow>
+                                <Border x:Name="SelectionShadowTarget" Opacity="0"
+                                        Translation="0,0,8">
+                                    <Border.Shadow>
+                                        <ThemeShadow />
+                                    </Border.Shadow>
                                 </Border>
                                 <Grid Background="White">
                                     <Grid Margin="6">
-                                        <Border x:Name="HoverShadowTarget">
-                                            <ui:Effects.Shadow>
-                                                <ui:AttachedDropShadow x:Name="HoverShadow" BlurRadius="6" Color="#191919" Opacity="0" CastTo="{Binding ElementName=HoverShadowTarget}"/>
-                                            </ui:Effects.Shadow>
+                                        <Border x:Name="HoverShadowTarget"
+                                                Translation="0,0,0">
+                                            <Border.Shadow>
+                                                <ThemeShadow x:Name="HoverShadow" />
+                                            </Border.Shadow>
                                         </Border>
                                         <Border Background="#F4F4F4"/>
                                         <strix:SafeImage ImageCollection="{Binding Album}" />
