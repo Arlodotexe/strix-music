@@ -56,7 +56,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
         /// Dependency property for <ses cref="SortState" />.
         /// </summary>
         public static readonly DependencyProperty SortStateProperty =
-            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneArtistCollection), new PropertyMetadata(ZuneSortState.AZ, null));
+            DependencyProperty.Register(nameof(SortState), typeof(ZuneSortState), typeof(ZuneTrackCollection), new PropertyMetadata(ZuneSortState.AZ, null));
 
         /// <summary>
         /// Creates a new instance for <see cref="ZuneTrackCollection"/>.
