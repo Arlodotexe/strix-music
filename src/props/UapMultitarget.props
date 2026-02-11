@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup>
+        <EnableUwp>False</EnableUwp>
+        <EnableUwp Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">True</EnableUwp>
+        <TargetFrameworks Condition="$(EnableUwp)">$(TargetFrameworks);uap10.0.19041</TargetFrameworks>
+    </PropertyGroup>
+
+    <Sdk Condition="$(EnableUwp)" Name="MSBuild.Sdk.Extras" Version="3.0.23"/>
+</Project>

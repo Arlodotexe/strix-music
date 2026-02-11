@@ -1,13 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
-        <EnableUwp>False</EnableUwp>
-        <EnableUwp Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">True</EnableUwp>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <!--suppress MsbuildTargetFrameworkTagInspection -->
         <TargetFrameworks>net9.0</TargetFrameworks>
-        <TargetFrameworks Condition="$(EnableUwp)">$(TargetFrameworks);uap10.0.19041</TargetFrameworks>
 
         <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
         <GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -19,7 +13,7 @@
         <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
 
-    <Sdk Condition="$(EnableUwp)" Name="MSBuild.Sdk.Extras" Version="3.0.23"/>
+    <Import Project="../../props/UapMultitarget.props" />
     
     <ItemGroup>
         <PackageReference Include="OwlCore" Version="0.6.1"/>
