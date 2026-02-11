@@ -21,29 +21,34 @@
                                     <VisualState.Setters>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForeground}"/>
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrush}"/>
+                                        <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackground}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundHover}"/>
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushHover}"/>
+                                        <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundHover}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundPressed}"/>
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushPressed}"/>
+                                        <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundPressed}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <VisualState.Setters>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundDisabled}"/>
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushDisabled}"/>
+                                        <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundDisabled}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
+                                    Background="{ThemeResource ZuneButtonBackground}"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                             <ContentPresenter x:Name="ContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"
                                                 AutomationProperties.AccessibilityView="Raw"
@@ -201,30 +206,35 @@
                                         <VisualState.Setters>
                                             <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForeground}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrush}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackground}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <VisualState.Setters>
                                             <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundHover}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushHover}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundHover}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <VisualState.Setters>
                                             <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundPressed}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushPressed}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundPressed}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <VisualState.Setters>
                                             <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundDisabled}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushDisabled}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundDisabled}"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Checked">
                                         <VisualState.Setters>
                                             <Setter Target="CheckedContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForeground}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrush}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackground}"/>
                                             <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
                                             <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
@@ -233,6 +243,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="CheckedContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundHover}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushHover}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundHover}"/>
                                             <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
                                             <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
@@ -241,6 +252,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="CheckedContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundPressed}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushPressed}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundPressed}"/>
                                             <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
                                             <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
@@ -249,6 +261,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="CheckedContentPresenter.Foreground" Value="{ThemeResource ZuneButtonForegroundDisabled}"/>
                                             <Setter Target="Border.BorderBrush" Value="{ThemeResource ZuneButtonBorderBrushDisabled}"/>
+                                            <Setter Target="Border.Background" Value="{ThemeResource ZuneButtonBackgroundDisabled}"/>
                                             <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
                                             <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
@@ -256,6 +269,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
+                                    Background="{ThemeResource ZuneButtonBackground}"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                                 <Grid>
                                     <ContentPresenter x:Name="ContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"

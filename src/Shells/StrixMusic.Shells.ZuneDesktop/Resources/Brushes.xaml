@@ -27,11 +27,16 @@
             <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
 
-            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#828689"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="Transparent"/>
 
+
+            <SolidColorBrush x:Key="ZuneButtonBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundDisabled" Color="Transparent"/>
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
 
@@ -72,10 +77,15 @@
             <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
 
-            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#828689"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="Transparent"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundDisabled" Color="Transparent"/>
 
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
@@ -116,11 +126,15 @@
             <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
 
-            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#828689"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="Transparent"/>
 
+            <SolidColorBrush x:Key="ZuneButtonBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundDisabled" Color="Transparent"/>
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
 
@@ -158,10 +172,15 @@
             <SolidColorBrush x:Key="ZuneButtonForegroundBrushPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundBrushDisabled" Color="#D9D9D9"/>
 
-            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#000000"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="Transparent"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundHover" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundPressed" Color="Transparent"/>
+            <SolidColorBrush x:Key="ZuneButtonBackgroundDisabled" Color="Transparent"/>
 
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
