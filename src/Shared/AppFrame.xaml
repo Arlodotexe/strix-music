@@ -236,6 +236,58 @@
 			</interactivity:Interaction.Behaviors>
 		</ToggleButton>
 
+		<!-- Custom caption buttons for Uno/Skia (native title bar is hidden by ExtendViewIntoTitleBar) -->
+		<Button
+			x:Name="CaptionMinimizeBtn"
+			Width="46"
+			Height="32"
+			Margin="0,0,92,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="Transparent"
+			BorderThickness="0"
+			Click="CaptionMinimize_Click"
+			Content="&#x2015;"
+			CornerRadius="0"
+			FontSize="10"
+			Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			ToolTipService.ToolTip="Minimize"
+			Visibility="Collapsed" />
+		<Button
+			x:Name="CaptionMaximizeBtn"
+			Width="46"
+			Height="32"
+			Margin="0,0,46,0"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="Transparent"
+			BorderThickness="0"
+			Click="CaptionMaximize_Click"
+			Content="&#x25A1;"
+			CornerRadius="0"
+			FontSize="12"
+			Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			ToolTipService.ToolTip="Maximize"
+			Visibility="Collapsed" />
+		<Button
+			x:Name="CaptionCloseBtn"
+			Width="46"
+			Height="32"
+			Padding="0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Background="Transparent"
+			BorderThickness="0"
+			Click="CaptionClose_Click"
+			Content="&#x2715;"
+			CornerRadius="0"
+			FontSize="12"
+			Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
+			ToolTipService.ToolTip="Close"
+			Visibility="Collapsed" />
+
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="ShellSettingsVisualStateGroup">
 				<VisualState x:Name="SettingsDialogVisible">

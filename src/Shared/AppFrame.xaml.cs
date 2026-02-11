@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using StrixMusic.AppModels;
 using StrixMusic.Controls;
 using StrixMusic.Sdk.WinUI.Controls;
@@ -6,6 +7,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace StrixMusic;
 
@@ -17,6 +19,23 @@ public sealed partial class AppFrame : UserControl
     private Shell? _currentShell;
 
     /// <summary>
+    /// Platform-specific action to minimize the window. Set from the platform host (e.g. Program.cs).
+    /// </summary>
+    internal static Action? MinimizeWindowAction { get; set; }
+
+    /// <summary>
+    /// Platform-specific action to maximize/restore the window. Set from the platform host (e.g. Program.cs).
+    /// </summary>
+    internal static Action? MaximizeWindowAction { get; set; }
+
+    /// <summary>
+    /// Platform-specific action to begin a window drag. Set from the platform host (e.g. Program.cs).
+    /// </summary>
+    internal static Action? BeginWindowDragAction { get; set; }
+
+    private Windows.UI.Xaml.UIElement? _currentTitleBar;
+
+    /// <summary>
     /// Creates a new instance of <see cref="AppFrame"/>.
     /// </summary>
     public AppFrame(AppRoot root)
@@ -24,6 +43,12 @@ public sealed partial class AppFrame : UserControl
         InitializeComponent();
 
         AppRoot = root;
+
+#if HAS_UNO
+        CaptionMinimizeBtn.Visibility = Visibility.Visible;
+        CaptionMaximizeBtn.Visibility = Visibility.Visible;
+        CaptionCloseBtn.Visibility = Visibility.Visible;
+#endif
     }
 
     /// <summary>
@@ -76,7 +101,40 @@ public sealed partial class AppFrame : UserControl
 
         if (Window.Current is not null)
             Window.Current.SetTitleBar(hostOptions?.CustomTitleBar);
+
+#if HAS_UNO
+        // On Uno/Skia, SetTitleBar doesn't implement window drag.
+        // Manually hook PointerPressed to initiate drag via platform action.
+        if (_currentTitleBar != hostOptions?.CustomTitleBar)
+        {
+            if (_currentTitleBar is not null)
+                _currentTitleBar.PointerPressed -= TitleBar_PointerPressed;
+
+            _currentTitleBar = hostOptions?.CustomTitleBar;
+
+            if (_currentTitleBar is not null)
+                _currentTitleBar.PointerPressed += TitleBar_PointerPressed;
+        }
+#endif
     }
 
     private void ShellOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => SetupShellWindowHostOptions(CurrentApplicationView, CurrentCoreApplicationView, sender as ShellWindowHostOptions);
+
+    private void TitleBar_PointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        BeginWindowDragAction?.Invoke();
+    }
+
+    private void CaptionMinimize_Click(object sender, RoutedEventArgs e)
+        => MinimizeWindowAction?.Invoke();
+
+    private void CaptionMaximize_Click(object sender, RoutedEventArgs e)
+        => MaximizeWindowAction?.Invoke();
+
+    private void CaptionClose_Click(object sender, RoutedEventArgs e)
+    {
+#if HAS_UNO
+        Application.Current.Exit();
+#endif
+    }
 }
