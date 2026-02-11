@@ -1,5 +1,6 @@
 ﻿using System;
 using CommunityToolkit.Diagnostics;
+using StrixMusic.Sdk.AppModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Items;
 using StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections;
@@ -64,6 +65,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
         public Grid? PART_AlbumGrid { get; private set; }
 
         /// <summary>
+        /// The ArtistName TextBlock.
+        /// </summary>
+        public TextBlock? PART_ArtistName { get; private set; }
+
+        /// <summary>
         /// The LabelGrid Grid of AlbumItem.
         /// </summary>
         public StackPanel? PART_LabelPnl { get; private set; }
@@ -89,6 +95,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             PART_RootGrid = GetTemplateChild(nameof(PART_RootGrid)) as Grid;
             PART_AlbumGrid = GetTemplateChild(nameof(PART_AlbumGrid)) as Grid;
             PART_LabelPnl = GetTemplateChild(nameof(PART_LabelPnl)) as StackPanel;
+            PART_ArtistName = GetTemplateChild("ArtistName") as TextBlock;
 
             if (ZuneCollectionType == CollectionContentType.Albums)
             {
@@ -165,6 +172,22 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Items
             {
                 AlbumPlaybackTriggered?.Invoke(this, Album as AlbumViewModel ?? new AlbumViewModel(Album));
             }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAlbumChanged(IAlbum? oldValue, IAlbum? newValue)
+        {
+            base.OnAlbumChanged(oldValue, newValue);
+            UpdateArtistName();
+
+            if (AlbumVm != null)
+                AlbumVm.Artists.CollectionChanged += (_, _) => UpdateArtistName();
+        }
+
+        private void UpdateArtistName()
+        {
+            if (PART_ArtistName != null && AlbumVm?.Artists.Count > 0 && AlbumVm.Artists[0] is IPlayable playable)
+                PART_ArtistName.Text = playable.Name;
         }
     }
 }
