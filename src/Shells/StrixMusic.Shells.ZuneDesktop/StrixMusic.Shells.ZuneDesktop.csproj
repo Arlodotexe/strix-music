@@ -1,5 +1,5 @@
 ﻿<Project>
-    <Import Project="..\..\props\PlatformConditionals.props"/>
+    <Import Project="..\..\props\PlatformConditionals.props" />
     <PropertyGroup>
         <!--suppress MsbuildTargetFrameworkTagInspection -->
         <TargetFrameworks>net9.0</TargetFrameworks>
@@ -27,114 +27,115 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5"/>
-        <PackageReference Include="OwlCore" Version="0.6.1"/>
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.Segmented" Version="8.2.251219" />
+        <PackageReference Include="CommunityToolkit.Uwp.Controls.Sizers" Version="8.2.250402" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+        <PackageReference Include="OwlCore" Version="0.6.1" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml"/>
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
         <Compile Update="**\*.xaml.cs">
             <DependentUpon>%(Filename)</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml"/>
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     </ItemGroup>
     <ItemGroup>
-        <None Remove="Controls\AlbumWall.xaml"/>
-        <None Remove="Controls\NowPlayingButtonContent.xaml"/>
-        <None Remove="Controls\QuickplayContent.xaml"/>
-        <None Remove="Controls\SettingsView.xaml"/>
-        <None Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml"/>
-        <None Remove="Controls\Views\Settings\BackgroundSettings.xaml"/>
-        <None Remove="Controls\ZuneShell.xaml"/>
-        <None Remove="LICENSE.txt"/>
-        <None Remove="Preview.xaml"/>
-        <None Remove="Resources.xaml"/>
-        <None Remove="Resources\Brushes.xaml"/>
-        <None Remove="Resources\ButtonStyles.xaml"/>
-        <None Remove="Resources\ZuneDataGrid.xaml"/>
-        <None Remove="Resources\ZuneSlider.xaml"/>
-        <None Remove="Styles\AlbumCollectionStyle.xaml"/>
-        <None Remove="Styles\AlbumItemStyle.xaml"/>
-        <None Remove="Styles\ArtistCollectionStyle.xaml"/>
-        <None Remove="Styles\ArtistItemStyle.xaml"/>
-        <None Remove="Styles\Collections\PlaylistCollectionStyle.xaml"/>
-        <None Remove="Styles\Collections\TrackTableStyle.xaml"/>
-        <None Remove="Styles\Items\PlaylistItemStyle.xaml"/>
-        <None Remove="Styles\NowPlayingBarStyle.xaml"/>
-        <None Remove="Styles\NowPlayingViewStyle.xaml"/>
-        <None Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml"/>
-        <None Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml"/>
-        <None Remove="Styles\PrimaryPivotItemStyle.xaml"/>
-        <None Remove="Styles\SettingsViewStyle.xaml"/>
-        <None Remove="Styles\SmallPivotItemStyle.xaml"/>
-        <None Remove="Styles\ThinGridSplitterStyle.xaml"/>
-        <None Remove="Styles\TrackCollectionStyle.xaml"/>
-        <None Remove="Styles\TrackItemStyle.xaml"/>
-        <None Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml"/>
-        <None Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml"/>
-        <None Remove="Styles\ZuneRadioButtonListViewItem.xaml"/>
-        <None Remove="Styles\ZuneSettingsListViewItem.xaml"/>
-        <None Remove="Styles\ZuneTrackListViewItemStyle.xaml"/>
+        <None Remove="Controls\AlbumWall.xaml" />
+        <None Remove="Controls\NowPlayingButtonContent.xaml" />
+        <None Remove="Controls\QuickplayContent.xaml" />
+        <None Remove="Controls\SettingsView.xaml" />
+        <None Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
+        <None Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
+        <None Remove="Controls\ZuneShell.xaml" />
+        <None Remove="LICENSE.txt" />
+        <None Remove="Preview.xaml" />
+        <None Remove="Resources.xaml" />
+        <None Remove="Resources\Brushes.xaml" />
+        <None Remove="Resources\ButtonStyles.xaml" />
+        <None Remove="Resources\ZuneDataGrid.xaml" />
+        <None Remove="Resources\ZuneSlider.xaml" />
+        <None Remove="Styles\AlbumCollectionStyle.xaml" />
+        <None Remove="Styles\AlbumItemStyle.xaml" />
+        <None Remove="Styles\ArtistCollectionStyle.xaml" />
+        <None Remove="Styles\ArtistItemStyle.xaml" />
+        <None Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+        <None Remove="Styles\Collections\TrackTableStyle.xaml" />
+        <None Remove="Styles\Items\PlaylistItemStyle.xaml" />
+        <None Remove="Styles\NowPlayingBarStyle.xaml" />
+        <None Remove="Styles\NowPlayingViewStyle.xaml" />
+        <None Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
+        <None Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml" />
+        <None Remove="Styles\PrimaryPivotItemStyle.xaml" />
+        <None Remove="Styles\SettingsViewStyle.xaml" />
+        <None Remove="Styles\SmallPivotItemStyle.xaml" />
+        <None Remove="Styles\ThinGridSplitterStyle.xaml" />
+        <None Remove="Styles\TrackCollectionStyle.xaml" />
+        <None Remove="Styles\TrackItemStyle.xaml" />
+        <None Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+        <None Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+        <None Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+        <None Remove="Styles\ZuneSettingsListViewItem.xaml" />
+        <None Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
     </ItemGroup>
     <ItemGroup>
-        <UpToDateCheckInput Remove="Controls\AlbumWall.xaml"/>
-        <UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml"/>
-        <UpToDateCheckInput Remove="Controls\QuickplayContent.xaml"/>
-        <UpToDateCheckInput Remove="Controls\SettingsView.xaml"/>
-        <UpToDateCheckInput Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml"/>
-        <UpToDateCheckInput Remove="Controls\Views\Settings\BackgroundSettings.xaml"/>
-        <UpToDateCheckInput Remove="Controls\ZuneShell.xaml"/>
-        <UpToDateCheckInput Remove="Preview.xaml"/>
-        <UpToDateCheckInput Remove="Resources.xaml"/>
-        <UpToDateCheckInput Remove="Resources\Brushes.xaml"/>
-        <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml"/>
-        <UpToDateCheckInput Remove="Resources\ZuneDataGrid.xaml"/>
-        <UpToDateCheckInput Remove="Resources\ZuneSlider.xaml"/>
-        <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\Collections\PlaylistCollectionStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\Collections\TrackTableStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\Items\PlaylistItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ZuneRadioButtonListViewItem.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ZuneSettingsListViewItem.xaml"/>
-        <UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml"/>
+        <UpToDateCheckInput Remove="Controls\AlbumWall.xaml" />
+        <UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml" />
+        <UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
+        <UpToDateCheckInput Remove="Controls\SettingsView.xaml" />
+        <UpToDateCheckInput Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
+        <UpToDateCheckInput Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
+        <UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
+        <UpToDateCheckInput Remove="Preview.xaml" />
+        <UpToDateCheckInput Remove="Resources.xaml" />
+        <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
+        <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+        <UpToDateCheckInput Remove="Resources\ZuneDataGrid.xaml" />
+        <UpToDateCheckInput Remove="Resources\ZuneSlider.xaml" />
+        <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\Collections\TrackTableStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\Items\PlaylistItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+        <UpToDateCheckInput Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+        <UpToDateCheckInput Remove="Styles\ZuneSettingsListViewItem.xaml" />
+        <UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="9.0.9"/>
-        <PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0"/>
+        <PackageReference Include="System.Text.Json" Version="9.0.9" />
+        <PackageReference Include="Uno.Diagnostics.Eventing" Version="2.1.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj"/>
-        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj"/>
-        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj"/>
+        <ProjectReference Include="..\..\Libs\OwlCore.WinUI\OwlCore.WinUI.csproj" />
+        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.WinUI\StrixMusic.Sdk.WinUI.csproj" />
+        <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PRIResource Include="Strings\en\ZuneSettings.resw"/>
-        <PRIResource Include="Strings\en\ZuneUI.resw"/>
-        <PRIResource Include="Strings\he\ZuneSettings.resw"/>
-        <PRIResource Include="Strings\he\ZuneUI.resw"/>
+        <PRIResource Include="Strings\en\ZuneSettings.resw" />
+        <PRIResource Include="Strings\en\ZuneUI.resw" />
+        <PRIResource Include="Strings\he\ZuneSettings.resw" />
+        <PRIResource Include="Strings\he\ZuneUI.resw" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Controls\Shells\NowPlayingButtonContent.xaml.cs">
@@ -189,9 +190,9 @@
         </Page>
     </ItemGroup>
     <ItemGroup>
-        <SourceGeneratorInput Remove="Controls\NowPlaying\ZuneNowPlayingView.cs"/>
+        <SourceGeneratorInput Remove="Controls\NowPlaying\ZuneNowPlayingView.cs" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.19041'">
-        <PackageReference Include="Uno.UI" Version="5.6.99"/>
+        <PackageReference Include="Uno.UI" Version="5.6.99" />
     </ItemGroup>
 </Project>

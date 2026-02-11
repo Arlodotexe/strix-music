@@ -4,8 +4,10 @@ using CommunityToolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.WinUI.Controls.Collections.Abstract;
 using StrixMusic.Sdk.WinUI.Controls.Items;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
 {
@@ -91,6 +93,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
 
             PART_SortLbl.Tapped += PART_SortLbl_Tapped;
+
+            // Uno/Skia doesn't clip Grid column children by default.
+            // Apply a RectangleGeometry clip that updates with size.
+            SizeChanged += OnSizeChangedForClip;
+        }
+
+        private void OnSizeChangedForClip(object sender, SizeChangedEventArgs e)
+        {
+            Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
         }
 
         private void ZuneArtistCollection_Unloaded(object sender, RoutedEventArgs e)
@@ -98,6 +109,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection
             Guard.IsNotNull(PART_SortLbl, nameof(PART_SortLbl));
             PART_SortLbl.Tapped -= PART_SortLbl_Tapped;
 
+            SizeChanged -= OnSizeChangedForClip;
             Unloaded -= ZuneArtistCollection_Unloaded;
 
             if (Collection is not null)

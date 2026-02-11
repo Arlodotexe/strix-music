@@ -112,17 +112,18 @@ namespace StrixMusic.Shells.ZuneDesktop
             });
         }
 
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MainSegmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
+            var selectedTag = (MainSegmented.SelectedItem as CommunityToolkit.WinUI.Controls.SegmentedItem)?.Tag?.ToString();
+            RequestTheme(selectedTag == "quickplay" ? ElementTheme.Dark : ElementTheme.Light);
 
-            if (Pivot.SelectedIndex == 0)
+            if (selectedTag == "quickplay")
             {
                 QuickplayPage.RunEnterViewAnimation();
             }
 
-            // Collection index.
-            if (Pivot.SelectedIndex == 1)
+            // Collection page.
+            if (selectedTag == "collection")
             {
                 PART_CollectionContent.AnimateAlbumCollection();
             }
@@ -132,7 +133,8 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             if (theme == ElementTheme.Default)
             {
-                theme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
+                var selectedTag = (MainSegmented.SelectedItem as CommunityToolkit.WinUI.Controls.SegmentedItem)?.Tag?.ToString();
+                theme = selectedTag == "quickplay" ? ElementTheme.Dark : ElementTheme.Light;
             }
 
             RootControl.RequestedTheme = theme;

@@ -12,8 +12,14 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="items:ArtistItem">
                         <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
-                            <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Foreground="Black" Opacity=".8"
-                                       VerticalAlignment="Center"/>
+                            <Grid.Resources>
+                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" x:Key="ArtistItemTextFadeBrush">
+                                    <GradientStop Offset="0.7" Color="#000000" />
+                                    <GradientStop Offset="1.1" Color="Transparent" />
+                                </LinearGradientBrush>
+                            </Grid.Resources>
+                            <TextBlock Text="{Binding Artist.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource ArtistItemTextFadeBrush}" Opacity=".8"
+                                       VerticalAlignment="Center" TextTrimming="Clip"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

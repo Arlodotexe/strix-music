@@ -17,10 +17,11 @@
 	xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
 	xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
 	xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
+	xmlns:segmented="using:CommunityToolkit.WinUI.Controls"
 	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:not_win="http://uno.ui/not_win"
 	x:Name="RootControl"
-	win:RequestedTheme="Dark"
+	RequestedTheme="Dark"
 	mc:Ignorable="d not_win">
 
 	<controls:Shell.Resources>
@@ -31,6 +32,8 @@
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml" />
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/SmallPivotItemStyle.xaml" />
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/PrimaryPivotItemStyle.xaml" />
+				<ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
+				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZunePrimarySegmentedItemStyle.xaml" />
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ThinGridSplitterStyle.xaml" />
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDesktopSearchTextBoxStyle.xaml" />
 				<ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml" />
@@ -204,33 +207,42 @@
 				</StackPanel>
 			</StackPanel>
 
-			<Pivot
-				x:Name="Pivot"
-				Margin="0,36,0,0"
-				SelectionChanged="Pivot_SelectionChanged">
-				<Pivot.Resources>
-					<Style BasedOn="{StaticResource PrimaryPivotItemStyle}" TargetType="PivotHeaderItem" />
-				</Pivot.Resources>
-				<Pivot.LeftHeader>
-					<Grid Width="32" />
-				</Pivot.LeftHeader>
-				<PivotItem
-					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI"
-					a:TextHelpers.CharacterCasing="Lower"
-					Header="quickplay">
-					<quickplay:QuickplayContent x:Name="QuickplayPage" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
-				</PivotItem>
-				<PivotItem
-					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI"
-					a:TextHelpers.CharacterCasing="Lower"
-					Header="collection">
-					<collection:CollectionContent x:Name="PART_CollectionContent" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
-				</PivotItem>
-				<PivotItem
-					x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI"
-					a:TextHelpers.CharacterCasing="Lower"
-					Header="browse" />
-			</Pivot>
+			<Grid Margin="0,36,0,0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<segmented:Segmented
+					x:Name="MainSegmented"
+					Margin="32,0,0,0"
+					HorizontalAlignment="Left"
+					Background="Transparent"
+					BorderBrush="Transparent"
+					BorderThickness="0"
+					SelectedIndex="0"
+					SelectionChanged="MainSegmented_SelectionChanged"
+					ItemContainerStyle="{StaticResource ZunePrimarySegmentedItemStyle}">
+					<segmented:SegmentedItem Content="quickplay" Tag="quickplay" />
+					<segmented:SegmentedItem Content="collection" Tag="collection" />
+					<segmented:SegmentedItem Content="browse" Tag="browse" />
+				</segmented:Segmented>
+
+				<segmented:SwitchPresenter
+					x:Name="MainSwitchPresenter"
+					Grid.Row="1"
+					Value="{Binding SelectedItem.Tag, ElementName=MainSegmented}">
+					<segmented:Case Value="quickplay">
+						<quickplay:QuickplayContent x:Name="QuickplayPage" RequestedTheme="Dark" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
+					</segmented:Case>
+					<segmented:Case Value="collection">
+						<collection:CollectionContent x:Name="PART_CollectionContent" RequestedTheme="Light" DataRoot="{x:Bind RootVm, Mode=OneWay}" />
+					</segmented:Case>
+					<segmented:Case Value="browse">
+						<Grid />
+					</segmented:Case>
+				</segmented:SwitchPresenter>
+			</Grid>
 		</Grid>
 
 		<!--  SettingsOverlay  -->
