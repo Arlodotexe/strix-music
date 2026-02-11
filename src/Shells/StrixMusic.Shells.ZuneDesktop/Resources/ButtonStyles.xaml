@@ -47,7 +47,7 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
+                        <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="{StaticResource ZuneButtonCornerRadius}"
                                     Background="{ThemeResource ZuneButtonBackground}"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                             <ContentPresenter x:Name="ContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"
@@ -268,7 +268,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
+                            <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="{StaticResource ZuneButtonCornerRadius}"
                                     Background="{ThemeResource ZuneButtonBackground}"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                                 <Grid>
