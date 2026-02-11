@@ -38,10 +38,11 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center">
-                                <ui:Effects.Shadow>
-                                    <ui:AttachedDropShadow BlurRadius="8" Color="{ThemeResource ForegroundColor}" CastTo="{Binding ElementName=TrackCover}"/>
-                                </ui:Effects.Shadow>
+                            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center"
+                                     Translation="0,0,16">
+                                <Rectangle.Shadow>
+                                    <ThemeShadow />
+                                </Rectangle.Shadow>
                             </Rectangle>
 
                             <Rectangle Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center"/>
