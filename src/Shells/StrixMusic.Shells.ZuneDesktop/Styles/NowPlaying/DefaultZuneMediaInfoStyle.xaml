@@ -23,59 +23,54 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="MediaInfoDataTemplate" x:DataType="nowplaying:MediaInfo">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="64"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">-->
-            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center">
-                <ui:Effects.Shadow>
-                    <ui:AttachedDropShadow BlurRadius="8" Color="{ThemeResource ForegroundColor}" CastTo="{Binding ElementName=TrackCover}"/>
-                </ui:Effects.Shadow>
-            </Rectangle>
-            
-            <Rectangle Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center"/>
-
-
-            <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" ImageCollection="{Binding Device.NowPlaying.Track}"/>
-
-            <TextBlock Text="{Binding Device.NowPlaying.Track.Name}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
-
-            <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
-
-            <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    Value="{x:Bind Device.Position.TotalMilliseconds,Mode=OneWay}"
-                                    Maximum="{x:Bind Device.NowPlaying.Track.Duration.TotalMilliseconds,Mode=OneWay}"
-                                    FlowDirection="LeftToRight">
-                <interactivity:Interaction.Behaviors>
-                    <interactivity:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                        <interactivity:InvokeCommandAction Command="{x:Bind Device.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
-                    </interactivity:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </nowplaying:MediaSlider>
-        </Grid>
-    </DataTemplate>
-
     <Style x:Key="DefaultZuneMediaInfoStyle" TargetType="nowplaying:MediaInfo">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="nowplaying:MediaInfo">
-                        <ContentControl ContentTemplate="{StaticResource MediaInfoDataTemplate}" 
-                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center">
+                                <ui:Effects.Shadow>
+                                    <ui:AttachedDropShadow BlurRadius="8" Color="{ThemeResource ForegroundColor}" CastTo="{Binding ElementName=TrackCover}"/>
+                                </ui:Effects.Shadow>
+                            </Rectangle>
+
+                            <Rectangle Width="64" Height="64" Fill="#E6E6E6" Grid.RowSpan="3" VerticalAlignment="Center"/>
+
+                            <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center"
+                                             ImageCollection="{Binding Device.NowPlaying.Track}"/>
+
+                            <TextBlock Text="{Binding Device.NowPlaying.Track.Name, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                       FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Foreground="{ThemeResource Foreground}" />
+
+                            <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5" Foreground="{ThemeResource Foreground}" />
+
+                            <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+                                                    Value="{Binding Device.Position.TotalMilliseconds, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                                    Maximum="{Binding Device.NowPlaying.Track.Duration.TotalMilliseconds, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                                    FlowDirection="LeftToRight">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactivity:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                                        <interactivity:InvokeCommandAction Command="{Binding Device.SeekAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                                                           CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                                    </interactivity:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </nowplaying:MediaSlider>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
-
 
     <Style TargetType="nowplaying:MediaInfo" BasedOn="{StaticResource DefaultZuneMediaInfoStyle}"/>
 </ResourceDictionary>

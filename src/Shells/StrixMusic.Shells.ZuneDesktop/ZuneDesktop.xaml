@@ -16,6 +16,7 @@
 	xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
 	xmlns:views="using:StrixMusic.Sdk.WinUI.Controls.Views"
 	xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
+	xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
 	xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:not_win="http://uno.ui/not_win"
 	x:Name="RootControl"
@@ -275,7 +276,7 @@
 			VerticalAlignment="Stretch"
 			Visibility="Collapsed" />
 
-		<controls:NowPlayingBar
+		<zunecontrols:ZuneNowPlayingBar
 			x:Name="NowPlayingBar"
 			Grid.Row="1"
 			Devices="{x:Bind Root.Devices, Mode=OneWay}" />
