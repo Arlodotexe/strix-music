@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\props\PlatformConditionals.props"/>
     <PropertyGroup>
         <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
         <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>

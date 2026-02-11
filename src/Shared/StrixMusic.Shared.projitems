@@ -75,6 +75,7 @@
       <DependentUpon>StrixIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CoreModels\FileImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\StorageApplicationPermissionsEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\QuipLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\AnnualRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />

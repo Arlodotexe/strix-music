@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Linux'))">
+    <DefineConstants>$(DefineConstants);__LINUX__</DefineConstants>
+  </PropertyGroup>
+</Project>

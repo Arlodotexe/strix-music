@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OwlCore.Storage.Uwp;
 using StrixMusic.AppModels;
 using StrixMusic.Controls;
+using StrixMusic.Helpers;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;

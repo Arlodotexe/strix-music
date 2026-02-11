@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,13 +12,14 @@ using Microsoft.Kiota.Abstractions.Authentication;
 using OwlCore.Extensions;
 using OwlCore.Storage;
 using OwlCore.Storage.OneDrive;
+using OwlCore.Storage.System.IO;
 using OwlCore.Storage.Uwp;
 using StrixMusic.CoreModels;
 using StrixMusic.Cores.Storage;
+using StrixMusic.Helpers;
 using StrixMusic.Sdk.CoreModels;
 using StrixMusic.Settings;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Logger = OwlCore.Diagnostics.Logger;
 using OwlCore.Kubo;
 using Ipfs.Http;
@@ -48,12 +50,8 @@ public static class CoreFactory
 
         Guard.IsNotNullOrWhiteSpace(settings.FutureAccessToken);
 
-#if HAS_UNO
-        var folderToScan = (WindowsStorageFolder)AppRoot.KnownFolders.First(x => settings.ConfiguredFolderId == x.Id);
-#else
-        var storageFolderToScan = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
+        var storageFolderToScan = await StorageApplicationPermissionsEx.FutureAccessList.GetFolderAsync(settings.FutureAccessToken);
         var folderToScan = new WindowsStorageFolder(storageFolderToScan);
-#endif
 
         var logoFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Cores/LocalStorage/Logo.svg"));
         var logo = new CoreFileImage(new WindowsStorageFile(logoFile));
