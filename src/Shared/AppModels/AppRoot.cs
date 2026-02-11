@@ -591,21 +591,32 @@ public partial class AppRoot : ObservableObject, IAsyncInit
 
     private void SetupMediaPlayerForCore(ICore core)
     {
-#if HAS_UNO
+#if HAS_UNO && !__LINUX__
+        Logger.LogInformation($"Skipped for HAS_UNO && !__LINUX__");
         return;
 #endif
 
+        Logger.LogInformation($"Setting up for core {core.InstanceId}");
+
         if (MediaPlayerElements.Any(x => (string)x.Tag == core.InstanceId))
+        {
+            Logger.LogInformation($"Already exists for {core.InstanceId}");
             return;
+        }
 
         var mediaPlayer = new MediaPlayer();
         var mediaPlayerElement = new MediaPlayerElement { Tag = core.InstanceId };
 
+#if !__LINUX__
         mediaPlayer.CommandManager.IsEnabled = false;
+#endif
         mediaPlayerElement.SetMediaPlayer(mediaPlayer);
+        
+        Logger.LogInformation($"Registering audio player for {core.InstanceId}");
         _playbackHandler.RegisterAudioPlayer(new MediaPlayerElementAudioService(mediaPlayerElement), core.InstanceId);
 
         MediaPlayerElements.Add(mediaPlayerElement);
+        Logger.LogInformation($"Complete for {core.InstanceId}");
     }
 
     /// <summary>
