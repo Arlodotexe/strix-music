@@ -43,9 +43,9 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonForeground}" CornerRadius="1000"
+                        <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
-                            <ContentPresenter x:Name="ContentPresenter"
+                            <ContentPresenter x:Name="ContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"
                                                 AutomationProperties.AccessibilityView="Raw"
                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -255,10 +255,10 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonForeground}" CornerRadius="1000"
+                            <Border x:Name="Border" BorderThickness="3" BorderBrush="{ThemeResource ZuneButtonBorderBrush}" CornerRadius="1000"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                                 <Grid>
-                                    <ContentPresenter x:Name="ContentPresenter"
+                                    <ContentPresenter x:Name="ContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"
                                               AutomationProperties.AccessibilityView="Raw"
                                               BorderBrush="{TemplateBinding BorderBrush}"
                                               BorderThickness="{TemplateBinding BorderThickness}"
@@ -269,7 +269,7 @@
                                               Padding="{TemplateBinding Padding}"
                                               FontSize="{TemplateBinding FontSize}"
                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                    <ContentPresenter x:Name="CheckedContentPresenter"
+                                    <ContentPresenter x:Name="CheckedContentPresenter" Foreground="{ThemeResource ZuneButtonForeground}"
                                               AutomationProperties.AccessibilityView="Raw"
                                               BorderBrush="{TemplateBinding BorderBrush}"
                                               BorderThickness="{TemplateBinding BorderThickness}"

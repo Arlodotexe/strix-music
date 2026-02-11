@@ -22,36 +22,36 @@
             <SolidColorBrush x:Key="Foreground" Color="#828689"/>
             <UI:Color x:Key="ForegroundColor">#828689</UI:Color>
 
-            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#B8B6B7"/>
-            <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#342E33"/>
+            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
 
-            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#A09D9F"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#B8B6B7"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#342E33"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
 
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
 
             <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#828689"/>
 
-            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18FFFFFF"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#20FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#20828689"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
-            <SolidColorBrush x:Key="SliderHeaderForeground" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40FFFFFF"/>
+            <SolidColorBrush x:Key="SliderHeaderForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#828689"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40828689"/>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <!-- #828689 is used as a substitute for white to get Light mode usable on WASM while we wait for FrameworkElement.RequestedTheme. -->
@@ -99,6 +99,7 @@
             <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40828689"/>
         </ResourceDictionary>
 
+        <!-- Default theme uses Light theme button values for Linux/WASM fallback (visible on white backgrounds) -->
         <ResourceDictionary x:Key="Default">
             <SolidColorBrush x:Key="ZuneBackground" Color="#11090F"/>
             <UI:Color x:Key="ZuneBackgroundColor">#11090F</UI:Color>
@@ -107,16 +108,16 @@
             <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
             <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
-            <SolidColorBrush x:Key="Foreground" Color="#000000"/>
-            <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
+            <SolidColorBrush x:Key="Foreground" Color="#828689"/>
+            <UI:Color x:Key="ForegroundColor">#828689</UI:Color>
 
-            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#000000"/>
-            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
 
             <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
-            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
             <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
 
@@ -125,21 +126,21 @@
 
             <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#828689"/>
 
-            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00000000"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18000000"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18000000"/>
-            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18828689"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27828689"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
-            <SolidColorBrush x:Key="SliderHeaderForeground" Color="#000000"/>
-            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
-            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
+            <SolidColorBrush x:Key="SliderHeaderForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#828689"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40828689"/>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="ZuneBackground" Color="#FFFFFF"/>
