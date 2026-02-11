@@ -9,6 +9,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:tkcontrol="using:CommunityToolkit.WinUI.Controls"
     xmlns:zuneConverters="using:StrixMusic.Shells.ZuneDesktop.Converters"
+    xmlns:convertvis="using:OwlCore.WinUI.Converters.Bools.Visible"
     xmlns:a="using:OwlCore.WinUI.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackCollectionStyle">
 
@@ -116,10 +117,10 @@
                                                     </interactivity:EventTriggerBehavior>
                                                 </interactivity:Interaction.Behaviors>
 
-                                                <items:ZuneTrackItem Track="{x:Bind Track}" x:Phase="1" Foreground="{StaticResource ItemTextFadeBrush}"/>
+                                                <items:ZuneTrackItem Track="{x:Bind Track}" Foreground="{StaticResource ItemTextFadeBrush}"/>
 
-                                                <tkcontrol:MetadataControl x:Name="ArtistMetadata" x:Phase="2"
-                                                                           x:Load="{x:Bind ShouldShowArtistList, Mode=OneWay}"
+                                                <tkcontrol:MetadataControl x:Name="ArtistMetadata"
+                                                                           Visibility="{x:Bind convertvis:BoolToVisibilityConverter.Convert(ShouldShowArtistList), Mode=OneWay}"
                                                                            Items="{x:Bind ArtistNamesMetadata}"
                                                                            Separator=", "
                                                                            VerticalAlignment="Center" Grid.Column="1"
