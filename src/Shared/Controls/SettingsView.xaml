@@ -48,24 +48,24 @@
 				<NavigationViewItem
 					x:Name="AppearanceNavigationViewItem"
 					Content="Appearance"
-					Icon="{ui:FontIcon Glyph=&#xE2B1;}" />
+					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE790;}" />
 				<NavigationViewItem
 					x:Name="MusicSourcesNavigationViewItem"
 					Content="Music sources"
-					Icon="{ui:FontIcon Glyph=&#xEA69;}" />
+					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEA69;}" />
 				<NavigationViewItem
 					x:Name="IpfsNavigationViewItem"
 					Content="IPFS"
-					Icon="{ui:FontIcon Glyph=&#xEBD2;}" />
+					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEBD2;}" />
 				<NavigationViewItem
 					x:Name="AboutNavigationViewItem"
 					Content="About"
-					Icon="{ui:FontIcon Glyph=&#xEE57;}"
+					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEE57;}"
 					Tag="About" />
 				<NavigationViewItem
 					x:Name="DiagnosticsNavigationViewItem"
 					Content="Diagnostics"
-					Icon="{ui:FontIcon Glyph=&#xE9D9;}"
+					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE9D9;}"
 					Tag="Debug" />
 			</NavigationView.MenuItems>
 

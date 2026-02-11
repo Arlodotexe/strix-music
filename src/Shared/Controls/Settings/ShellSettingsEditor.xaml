@@ -266,7 +266,7 @@
 		</Border>
 
 		<StackPanel Grid.Row="1" Spacing="8">
-			<tkcontrols:SettingsCard Header="Preferred Skin" HeaderIcon="{ui:FontIcon Glyph=&#xE2AC;}">
+			<tkcontrols:SettingsCard Header="Preferred Skin" HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE771;}">
 				<ComboBox ItemsSource="{ui:EnumValues Type=appModels:StrixMusicShells}" SelectedItem="{x:Bind ShellSettings.PreferredShell, Mode=TwoWay}">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
@@ -285,7 +285,7 @@
 			<tkcontrols:SettingsCard
 				Description="The skin to use when the window size is unsupported by the Preferred Skin."
 				Header="Fallback Skin"
-				HeaderIcon="{ui:FontIcon Glyph=&#xE61F;}"
+				HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8AB;}"
 				Visibility="{x:Bind IsAdaptiveShellToInvertedVisibility(ShellSettings.PreferredShell), Mode=OneWay}">
 				<ComboBox ItemsSource="{ui:EnumValues Type=appModels:AdaptiveShells}" SelectedItem="{x:Bind ShellSettings.FallbackShell, Mode=TwoWay}">
 					<ComboBox.ItemTemplate>
@@ -302,7 +302,7 @@
 				</ComboBox>
 			</tkcontrols:SettingsCard>
 
-			<tkcontrols:SettingsCard Header="Restore appearance defaults" HeaderIcon="{ui:FontIcon Glyph=&#xE10E;}">
+			<tkcontrols:SettingsCard Header="Restore appearance defaults" HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE10E;}">
 				<Button
 					Command="{x:Bind ShellSettings.ResetAllSettingsCommand, Mode=OneWay}"
 					CommandParameter="{x:Null}"
