@@ -44,17 +44,17 @@
 					</interactivity:Interaction.Behaviors>
 				</tkcontrols:SettingsCard>
 
-				<tkcontrols:SettingsCard Description="HTTP retrieves content using a location (an IP address), while IPFS uses a unique content identifier generated from the content itself (the CID)." HeaderIcon="{ui:FontIcon Glyph=&#xE928;}" />
-				<tkcontrols:SettingsCard Description="Files can be accessed even if the original source is offline or censored, as long as someone has the data." HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
-				<tkcontrols:SettingsCard Description="IPFS enables real-time communication between devices, without the need for an internet connection or a server." HeaderIcon="{ui:FontIcon Glyph=&#xF22C;}" />
-				<tkcontrols:SettingsCard Description="Like http, ipfs is a protocol with many implementations. This app uses Kubo, the original and most widely used IPFS implementation." HeaderIcon="{ui:FontIcon Glyph=&#xEEA3;}" />
+				<tkcontrols:SettingsCard Description="HTTP retrieves content using a location (an IP address), while IPFS uses a unique content identifier generated from the content itself (the CID)." HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE928;}" />
+				<tkcontrols:SettingsCard Description="Files can be accessed even if the original source is offline or censored, as long as someone has the data." HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE774;}" />
+				<tkcontrols:SettingsCard Description="IPFS enables real-time communication between devices, without the need for an internet connection or a server." HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xF22C;}" />
+				<tkcontrols:SettingsCard Description="Like http, ipfs is a protocol with many implementations. This app uses Kubo, the original and most widely used IPFS implementation." HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEEA3;}" />
 			</tkcontrols:SettingsExpander.Items>
 		</tkcontrols:SettingsExpander>
 
 		<tkcontrols:SettingsCard
 			Description="Review your communication preferences before enabling. "
 			Header="IPFS is a public network. "
-			HeaderIcon="{ui:FontIcon Glyph=&#xE946;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE946;}"
 			Visibility="{x:Bind InvertBoolToVisibility(Ipfs.Settings.Enabled), Mode=OneWay}" />
 
 		<TextBlock
@@ -173,7 +173,7 @@
 		<tkcontrols:SettingsCard
 			Description="The port used to communicate with IPFS. If not already running on this port, we'll download Kubo and bootstrap it on this port for you."
 			Header="API Port"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEDA3;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeApiPort, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
@@ -187,7 +187,7 @@
 		<tkcontrols:SettingsCard
 			Description="The port to use for the gateway. If you have a local node already running and don't want to use it, make sure this is different."
 			Header="Gateway Port"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEDA3;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEDA3;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<controls1:NumberBox IsEnabled="{x:Bind InvertBool(Ipfs.InitCommand.IsRunning), FallbackValue=false, Mode=OneWay}" Value="{x:Bind Ipfs.Settings.NodeGatewayPort, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
@@ -201,7 +201,7 @@
 		<tkcontrols:SettingsCard
 			Description="{x:Bind RoutingModeToDescription(Ipfs.Settings.BootstrapNodeDhtRouting), Mode=OneWay}"
 			Header="Routing mode (Bootstrap only)"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE968;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<ComboBox win:ItemsSource="{ui:EnumValues Type={ocext:Type Fullname='OwlCore.Kubo.DhtRoutingMode, OwlCore.Kubo'}}" win:SelectedItem="{x:Bind Ipfs.Settings.BootstrapNodeDhtRouting, Mode=TwoWay}" />
 		</tkcontrols:SettingsCard>
@@ -209,7 +209,7 @@
 		<tkcontrols:SettingsCard
 			Description="Enable or disable discovery of peers on your local network."
 			Header="Local network discovery (Bootstrap only)"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE968;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE968;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.IsInitialized), FallbackValue=false, Mode=OneWay}">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.BootstrapNodeEnableLocalDiscovery, Mode=TwoWay}">
 				<interactivity:Interaction.Behaviors>
@@ -229,7 +229,7 @@
 		<tkcontrols:SettingsCard
 			Description="{x:Bind IpnsPathToProtocolUrl(Ipfs.Settings.ReleaseIpns), FallbackValue=?, Mode=OneWay}"
 			Header="Installed from"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF133;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xF133;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="View latest" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpns), Mode=OneWay, FallbackValue=Collapsed}">
@@ -244,7 +244,7 @@
 		<tkcontrols:SettingsCard
 			Description="{x:Bind IpfsPathToProtocolUrl(Ipfs.Settings.ReleaseIpnsResolved), FallbackValue=?, Mode=OneWay}"
 			Header="Last known release CID"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE928;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE928;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="View snapshot" Visibility="{x:Bind IsNotNullOrWhiteSpaceToVisibility(Ipfs.Settings.ReleaseIpnsResolved), Mode=OneWay, FallbackValue=Collapsed}">
@@ -259,7 +259,7 @@
 		<tkcontrols:SettingsCard
 			Description="Coming soon: sideload and update Strix Music over IPFS."
 			Header="App Updates"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE835;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE835;}"
 			IsEnabled="False"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Button Content="Check for updates" />
@@ -274,7 +274,7 @@
 		<tkcontrols:SettingsExpander
 			Description="Preload and pin content from the installation source on your local IPFS node for quick and offline access. Refreshed on app startup."
 			Header="Save release content"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE774;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			IsExpanded="True"
 			ItemsSource="{x:Bind Ipfs.AppReleaseContentLoader.Bundles, Mode=OneWay}"
@@ -302,7 +302,7 @@
 		<tkcontrols:SettingsCard
 			Description="The number of users who have enabled IPFS in the Strix Music app and are reachable by your node."
 			Header="Users online"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEB44;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEB44;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<TextBlock>
@@ -313,7 +313,7 @@
 		<tkcontrols:SettingsCard
 			Description="Content on your local node that isn't pinned or stored in MFS will be cleaned up."
 			Header="Garbage collection"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE107;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE107;}"
 			IsEnabled="{x:Bind Ipfs.IsInitialized, FallbackValue=false, Mode=OneWay}"
 			Visibility="{x:Bind Ipfs.IsInitialized, Mode=OneWay}">
 			<Grid>
@@ -334,7 +334,7 @@
 		<tkcontrols:SettingsCard
 			Description="Requires app restart. See how many people are listening to the same track, album, artist, playlist, etc., as you. Allows others to see when something is playing, paused, loading, or failing to load."
 			Header="Enable global playback state counters"
-			HeaderIcon="{ui:FontIcon Glyph=&#xEBDA;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xEBDA;}"
 			IsEnabled="{x:Bind InvertBool(Ipfs.Settings.LoadCommand.IsRunning), FallbackValue=true, Mode=OneWay}"
 			Visibility="Collapsed">
 			<ToggleSwitch IsEnabled="{x:Bind InvertBool(Ipfs.Settings.SaveCommand.IsRunning), FallbackValue=true, Mode=OneWay}" IsOn="{x:Bind Ipfs.Settings.GlobalPlaybackStateCountPluginEnabled, Mode=TwoWay}">

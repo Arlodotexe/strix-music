@@ -25,7 +25,7 @@
 			Text="Quick access" />
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			Header="Visit strixmusic.com"
 			HeaderIcon="{ui:SymbolIcon Symbol=Link}"
 			IsClickEnabled="True">
@@ -37,7 +37,7 @@
 		</tkcontrols:SettingsCard>
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			Header="Report a bug"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 			IsClickEnabled="True">
@@ -49,7 +49,7 @@
 		</tkcontrols:SettingsCard>
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			Header="Request a feature"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 			IsClickEnabled="True">
@@ -68,42 +68,42 @@
 		<tkcontrols:SettingsCard
 			Description="Local storage, cloud storage, streaming services, home servers - nothing is impossible."
 			Header="Any music"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE955;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE955;}" />
 
 		<tkcontrols:SettingsCard
 			Description="Refresh your experience by changing skins in the Appearance settings."
 			Header="Any look"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF4C3;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE890;}" />
 
 		<tkcontrols:SettingsCard
 			Description="Strix Music uses Uno Platform to enable support Windows, Android, iOS, Linux, MacOS and web browsers."
 			Header="Any device"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE975;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE975;}" />
 
 		<tkcontrols:SettingsCard
 			Description="The app will stay working when the internet goes down."
 			Header="Offline first"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF384;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xF384;}" />
 
 		<tkcontrols:SettingsCard
 			Description="No logs are generated and no servers are contacted, unless you say so."
 			Header="Private by design"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF439;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE72E;}" />
 
 		<tkcontrols:SettingsCard
 			Description="For more advanced features, this app uses IPFS instead of HTTP. Your devices will communicate with each other directly, without an external server."
 			Header="Distributed and permanent"
-			HeaderIcon="{ui:FontIcon Glyph=&#xF785;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE774;}" />
 
 		<tkcontrols:SettingsCard
 			Description="Strix Music is distributed to users at no cost. It will never have ads, paywalls or in app purchases. We're funded by donations from our supporters and code contributions from the community."
 			Header="Free of charge"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE1CB;}" />
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE1CB;}" />
 
 		<tkcontrols:SettingsExpander
 			Description="You have the freedom to inspect, run, copy, distribute, change and improve this software as licensed."
 			Header="Open source software"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE943;}">
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE943;}">
 			<tkcontrols:SettingsExpander.Items>
 				<tkcontrols:SettingsCard Header="The Strix Music SDK is licensed under a modified LGPL." />
 				<tkcontrols:SettingsCard Header="The Strix Music App and UI libraries are licensed under GPLv3." />
@@ -116,7 +116,7 @@
 			Text="For developers" />
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			ActionIconToolTip="Open getting started docs"
 			Description="Use any music source or plugin from our ecosystem in your own app."
 			Header="The universal music development kit"
@@ -130,11 +130,11 @@
 		</tkcontrols:SettingsCard>
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			ActionIconToolTip="Open core creation docs"
 			Description="Implement a new music source or plugin, and use it in any app that uses the Strix Music SDK."
 			Header="Add new functionality to any Strix-enabled app"
-			HeaderIcon="{ui:FontIcon Glyph=&#xE81E;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE81E;}"
 			IsClickEnabled="True">
 			<interactivity:Interaction.Behaviors>
 				<interactivity:EventTriggerBehavior EventName="Click">
@@ -149,7 +149,7 @@
 			Text="The team" />
 
 		<tkcontrols:SettingsCard
-			ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+			ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 			Description="Ask questions, get real-time updates and give us your feedback."
 			Header="Find us on Discord"
 			HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/discord.png}"
@@ -254,11 +254,11 @@
 		<tkcontrols:SettingsExpander
 			Description="Donations are used to keep things operational, and the remaining funds are split among our most active contributors."
 			Header="Support our efforts"
-			HeaderIcon="{ui:FontIcon Glyph=&#xECAD;}"
+			HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xECAD;}"
 			IsExpanded="True">
 			<tkcontrols:SettingsExpander.Items>
 				<tkcontrols:SettingsCard
-					ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+					ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 					Header="Support us on Patreon"
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/patreon.png}"
 					IsClickEnabled="True">
@@ -270,7 +270,7 @@
 				</tkcontrols:SettingsCard>
 
 				<tkcontrols:SettingsCard
-					ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+					ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 					Header="Support us on GitHub Sponsors"
 					HeaderIcon="{ui:BitmapIcon Source=/Assets/Settings/github.png}"
 					IsClickEnabled="True">
