@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.WinUI.Controls.Items
         /// Dependency property for <see cref="ArtistVm"/>.
         /// </summary>
         public static readonly DependencyProperty ArtistViewModelProperty =
-            DependencyProperty.Register(nameof(Artist), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(ArtistVm), typeof(ArtistViewModel), typeof(ArtistItem), new PropertyMetadata(null));
 
         /// <summary>
         /// Fires when the <see cref="Artist"/> is changed.
