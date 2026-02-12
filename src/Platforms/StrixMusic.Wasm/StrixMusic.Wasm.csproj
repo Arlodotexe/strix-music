@@ -43,6 +43,7 @@
     <UpToDateCheckInput Include="..\..\StrixMusic.Shared\**\*.xaml" />
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
     <EmbeddedResource Include="WasmScripts\AppManifest.js" />
+    <EmbeddedResource Include="WasmScripts\BlobInterop.js" />
     <LinkerDescriptor Include="LinkerConfig.xml" />
   </ItemGroup>
   <ItemGroup>

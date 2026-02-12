@@ -175,8 +175,8 @@ namespace StrixMusic.MediaPlayback
                 }
                 else if (sourceConfig.FileStreamSource != null)
                 {
-#if HAS_UNO
-                    // MediaSource.CreateFromStream is not implemented in Uno.
+#if HAS_UNO && !HAS_UNO_WASM
+                    // MediaSource.CreateFromStream is not implemented in Uno Skia.
                     // Use CreateFromUri with file:// path instead. The sourceConfig.Id is the file path.
                     OwlCore.Diagnostics.Logger.LogInformation($"Uno: checking if file exists: {sourceConfig.Id}");
                     if (File.Exists(sourceConfig.Id))
@@ -191,8 +191,28 @@ namespace StrixMusic.MediaPlayback
                     else
                     {
                         OwlCore.Diagnostics.Logger.LogError($"File not found: {sourceConfig.Id}");
-                        throw new NotSupportedException("Stream-based playback is not supported on Uno. File path not found: " + sourceConfig.Id);
+                        throw new NotSupportedException("Stream-based playback is not supported on Uno Skia. File path not found: " + sourceConfig.Id);
                     }
+#elif HAS_UNO_WASM
+                    // Uno WASM's MediaPlayer is not fully implemented.
+                    // Use JS HTML5 Audio element directly via blob URL.
+                    using var ms = new MemoryStream();
+                    await sourceConfig.FileStreamSource.CopyToAsync(ms);
+                    var base64 = Convert.ToBase64String(ms.ToArray());
+                    var contentType = sourceConfig.FileStreamContentType ?? "audio/mpeg";
+
+                    var blobUrl = Uno.Foundation.WebAssemblyRuntime.InvokeJS(
+                        $"BlobInterop.createBlobUrl('{base64}', '{contentType}')");
+
+                    OwlCore.Diagnostics.Logger.LogInformation($"Created blob URL for playback ({ms.Length} bytes)");
+
+                    Uno.Foundation.WebAssemblyRuntime.InvokeJS(
+                        $"BlobInterop.play('{blobUrl}')");
+
+                    CurrentSource = playbackItem;
+                    PlaybackState = PlaybackState.Playing;
+                    OwlCore.Diagnostics.Logger.LogInformation($"WASM audio playback started via JS Audio element");
+                    return;
 #else
                     var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);
                     _player.MediaPlayer.Source = source;
@@ -221,19 +241,49 @@ namespace StrixMusic.MediaPlayback
 
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task PauseAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Pause());
+        public Task PauseAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () =>
+        {
+#if HAS_UNO_WASM
+            Uno.Foundation.WebAssemblyRuntime.InvokeJS("BlobInterop.pause()");
+            PlaybackState = PlaybackState.Paused;
+#else
+            _player.MediaPlayer.Pause();
+#endif
+        });
 
         /// <param name="cancellationToken">A cancellation token that may be used to cancel the ongoing task.</param>
         /// <inheritdoc />
-        public Task ResumeAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Play());
+        public Task ResumeAsync(CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () =>
+        {
+#if HAS_UNO_WASM
+            Uno.Foundation.WebAssemblyRuntime.InvokeJS("BlobInterop.resume()");
+            PlaybackState = PlaybackState.Playing;
+#else
+            _player.MediaPlayer.Play();
+#endif
+        });
 
         /// <inheritdoc />
-        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.Volume = volume);
+        public Task ChangeVolumeAsync(double volume, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () =>
+        {
+#if HAS_UNO_WASM
+            Uno.Foundation.WebAssemblyRuntime.InvokeJS($"BlobInterop.setVolume({volume})");
+#else
+            _player.MediaPlayer.Volume = volume;
+#endif
+        });
 
         /// <inheritdoc />
         public Task ChangePlaybackSpeedAsync(double speed, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.PlaybackSession.PlaybackRate = speed);
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () => _player.MediaPlayer.PlaybackSession.Position = position);
+        public Task SeekAsync(TimeSpan position, CancellationToken cancellationToken = default) => _synchronizationContext.PostAsync(async () =>
+        {
+#if HAS_UNO_WASM
+            Uno.Foundation.WebAssemblyRuntime.InvokeJS($"BlobInterop.setPosition({position.TotalSeconds})");
+#else
+            _player.MediaPlayer.PlaybackSession.Position = position;
+#endif
+        });
     }
 }
