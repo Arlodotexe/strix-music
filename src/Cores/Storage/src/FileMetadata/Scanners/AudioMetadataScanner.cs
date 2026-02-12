@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
+using OwlCore.ComponentModel;
 using OwlCore.Extensions;
 using OwlCore.Storage;
 using StrixMusic.Cores.Storage.ComponentModel;
@@ -332,7 +333,10 @@ internal static class AudioMetadataScanner
             {
                 using var fileStream = await file.OpenReadAsync();
 
-                using var memoryStream = new LazyStream(fileStream);
+                using var memoryStream = new LazySeekStream(fileStream);
+                var preloadBuffer = new byte[81920];
+                while (await memoryStream.ReadAsync(preloadBuffer, 0, preloadBuffer.Length) > 0) { }
+                memoryStream.Position = 0;
 
                 using var tagFile = File.Create(new FileAbstraction(file.Name, memoryStream), ReadStyle.Average);
                 var tag = tagFile.Tag;
@@ -479,13 +483,15 @@ internal static class AudioMetadataScanner
             using var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
-            //   using var lazyLoadStream = new LazyLoadStream(stream);
-            using var memoryStream = new LazyStream(stream);
+            // LazySeekStream wraps a non-seekable/async-only source with a seekable MemoryStream backing.
+            // Pre-read via ReadAsync so all data lands in the backing stream.
+            // TagLib reads synchronously, which goes to the in-memory backing instead of the async-only source.
+            using var memoryStream = new LazySeekStream(stream);
+            var preloadBuffer = new byte[81920];
+            while (await memoryStream.ReadAsync(preloadBuffer, 0, preloadBuffer.Length, cancellationToken) > 0) { }
+            memoryStream.Position = 0;
 
             TagLibHelper.TryAddManualFileTypeResolver();
-
-            if (memoryStream.CanSeek)
-                memoryStream.Seek(0, SeekOrigin.Begin);
 
             Logger.LogInformation($"Loading {file.Name} with TagLib");
 
