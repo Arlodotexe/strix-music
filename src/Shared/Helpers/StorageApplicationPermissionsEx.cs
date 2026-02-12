@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
 namespace StrixMusic.Helpers;
+
+[JsonSerializable(typeof(Dictionary<string, string>))]
+internal partial class StoragePermissionsJsonContext : JsonSerializerContext { }
 
 /// <summary>
 /// Provides access to FutureAccessList, using a polyfill on Linux/WASM where the platform implementation throws.
@@ -14,7 +18,6 @@ namespace StrixMusic.Helpers;
 public static class StorageApplicationPermissionsEx
 {
 #if __LINUX__ || HAS_UNO_WASM
-    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.General) { WriteIndented = true };
     private static string? _storagePath;
     private static Dictionary<string, string>? _cache;
     private static readonly Dictionary<string, IStorageItem> _handleCache = new();
@@ -50,7 +53,7 @@ public static class StorageApplicationPermissionsEx
             try
             {
                 var json = File.ReadAllText(_storagePath);
-                _cache = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new();
+                _cache = JsonSerializer.Deserialize(json, StoragePermissionsJsonContext.Default.DictionaryStringString) ?? new();
             }
             catch
             {
@@ -70,7 +73,7 @@ public static class StorageApplicationPermissionsEx
         if (_storagePath is null)
             throw new InvalidOperationException("StorageApplicationPermissionsEx.Initialize must be called first.");
 
-        var json = JsonSerializer.Serialize(_cache, _jsonOptions);
+        var json = JsonSerializer.Serialize(_cache, StoragePermissionsJsonContext.Default.DictionaryStringString);
         File.WriteAllText(_storagePath, json);
     }
 #endif
