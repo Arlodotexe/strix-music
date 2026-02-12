@@ -191,7 +191,7 @@ public partial class AppRoot : ObservableObject, IAsyncInit
                 var musicSourceSettingsFolder = await GetOrCreateSettingsFolderAsync(nameof(MusicSourcesSettings));
                 MusicSourcesSettings = new MusicSourcesSettings(musicSourceSettingsFolder);
 
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
                 // Initialize the FutureAccessList polyfill with the storage path
                 var futureAccessListPath = Path.Combine(musicSourceSettingsFolder.Id, "FutureAccessList.json");
                 StorageApplicationPermissionsEx.Initialize(futureAccessListPath);

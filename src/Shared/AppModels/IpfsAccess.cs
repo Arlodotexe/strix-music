@@ -221,7 +221,7 @@ public partial class IpfsAccess : ObservableObject, IAsyncInit
 
             Client ??= await ScanLocalhostForRunningKuboCompliantRpcApi(cancellationToken);
 
-#if __WASM__
+#if HAS_UNO_WASM
             InitStatus = "Local Kubo node not found. IPFS cannot be initialized.";
             return;
 #endif

@@ -57,6 +57,21 @@ public sealed partial class LandingPage : Page
         Guard.IsNotNull(_param?.AppRoot?.MusicSourcesSettings);
         Guard.IsNotNull(_param.SelectedSourceToConnect);
 
+#if HAS_UNO_WASM
+        if (!Uno.Storage.Pickers.FileSystemAccessApiInformation.IsFolderPickerSupported)
+        {
+            var cd = new ContentDialog
+            {
+                Title = "Not supported",
+                Content = new TextBlock { Text = "Folder picking is not supported in this browser. Please use a Chromium-based browser (Chrome, Edge, Brave)." },
+                PrimaryButtonText = "Ok",
+            };
+
+            await cd.ShowAsync(ShowType.Interrupt);
+            return;
+        }
+#endif
+
         var pickedFolder = await PickFolder();
         if (pickedFolder == null)
             return;

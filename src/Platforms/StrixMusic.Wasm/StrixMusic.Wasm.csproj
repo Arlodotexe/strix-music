@@ -11,11 +11,12 @@
     <WasmShellEnableThreads>false</WasmShellEnableThreads>
     <WasmShellPThreadsPoolSize Condition="$(WasmShellEnableThreads) == 'true'">8</WasmShellPThreadsPoolSize>
     <UnoUIUseRoslynSourceGenerators>true</UnoUIUseRoslynSourceGenerators>
+    <DefineConstants>$(DefineConstants);HAS_UNO_WASM</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
-    <DefineConstants>$(DefineConstants);TRACE;DEBUG;HAS_UNO_WASM;</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <!--
