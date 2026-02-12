@@ -9,14 +9,15 @@ using Windows.Storage.AccessCache;
 namespace StrixMusic.Helpers;
 
 /// <summary>
-/// Provides access to FutureAccessList, using a polyfill on Linux where the platform implementation throws.
+/// Provides access to FutureAccessList, using a polyfill on Linux/WASM where the platform implementation throws.
 /// </summary>
 public static class StorageApplicationPermissionsEx
 {
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
     private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.General) { WriteIndented = true };
     private static string? _storagePath;
     private static Dictionary<string, string>? _cache;
+    private static readonly Dictionary<string, IStorageItem> _handleCache = new();
 #endif
 
     /// <summary>
@@ -24,7 +25,7 @@ public static class StorageApplicationPermissionsEx
     /// </summary>
     public static void Initialize(string storagePath)
     {
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
         _storagePath = storagePath;
         Directory.CreateDirectory(Path.GetDirectoryName(storagePath)!);
 #endif
@@ -35,7 +36,7 @@ public static class StorageApplicationPermissionsEx
     /// </summary>
     public static FutureAccessListEx FutureAccessList { get; } = new();
 
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
     private static Dictionary<string, string> GetCache()
     {
         if (_storagePath is null)
@@ -78,10 +79,11 @@ public static class StorageApplicationPermissionsEx
     {
         public void AddOrReplace(string token, IStorageItem item)
         {
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
             var cache = GetCache();
             cache[token] = item.Path;
             SaveCache();
+            _handleCache[token] = item;
 #else
             StorageApplicationPermissions.FutureAccessList.AddOrReplace(token, item);
 #endif
@@ -89,7 +91,12 @@ public static class StorageApplicationPermissionsEx
 
         public async Task<StorageFolder> GetFolderAsync(string token)
         {
-#if __LINUX__
+#if __LINUX__ || HAS_UNO_WASM
+            // On WASM, File System Access API handles can't be re-opened by path.
+            // Use the in-memory handle cache for the current session.
+            if (_handleCache.TryGetValue(token, out var item) && item is StorageFolder cachedFolder)
+                return cachedFolder;
+
             var cache = GetCache();
             if (cache.TryGetValue(token, out var path) && Directory.Exists(path))
                 return await StorageFolder.GetFolderFromPathAsync(path);

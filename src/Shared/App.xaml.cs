@@ -98,7 +98,7 @@ public sealed partial class App : Application
 
             var appRoot = new AppRoot(new WindowsStorageFolder(ApplicationData.Current.LocalFolder))
             {
-#if __WASM__
+#if HAS_UNO_WASM
         // TODO: Not needed anymore?
         // HttpMessageHandler = new Uno.UI.Wasm.WasmHttpHandler(),
 #endif
@@ -156,7 +156,7 @@ public sealed partial class App : Application
 
         var factory = LoggerFactory.Create(builder =>
         {
-#if __WASM__
+#if HAS_UNO_WASM
             builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__ && !__MACCATALYST__
             builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
