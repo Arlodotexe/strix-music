@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
   <Import Project="..\..\props\PlatformConditionals.props"/>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,7 +10,7 @@
     <WasmShellGenerateAOTProfile>false</WasmShellGenerateAOTProfile>
     <WasmShellEnableThreads>false</WasmShellEnableThreads>
     <WasmShellPThreadsPoolSize Condition="$(WasmShellEnableThreads) == 'true'">8</WasmShellPThreadsPoolSize>
-    <UnoUIUseRoslynSourceGenerators>false</UnoUIUseRoslynSourceGenerators>
+    <UnoUIUseRoslynSourceGenerators>true</UnoUIUseRoslynSourceGenerators>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -83,13 +83,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
-    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
-    <PackageReference Include="Uno.SourceGeneration" Version="4.2.0" />
+    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.9.0-dev.2" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="5.6.99" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="5.6.99" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="6.0.611" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.19" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.19" />
+    <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.6.99" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.10" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\Storage\src\StrixMusic.Cores.Storage.csproj" />
