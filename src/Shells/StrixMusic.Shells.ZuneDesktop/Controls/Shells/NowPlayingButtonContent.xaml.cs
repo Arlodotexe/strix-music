@@ -178,7 +178,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
                 _dAnimations[i].To = value;
             }
 
-            _storyboard.Begin();
+            // Defer to avoid StackOverflow on WASM where ImmediateAnimator completes synchronously
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => _storyboard.Begin());
         }
     }
 }
