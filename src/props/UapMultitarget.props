@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <EnableUwp>False</EnableUwp>
-        <EnableUwp Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">True</EnableUwp>
+        <EnableUwp Condition="$([MSBuild]::IsOSPlatform('windows'))">True</EnableUwp>
         <TargetFrameworks Condition="$(EnableUwp)">$(TargetFrameworks);uap10.0.19041</TargetFrameworks>
     </PropertyGroup>
 
