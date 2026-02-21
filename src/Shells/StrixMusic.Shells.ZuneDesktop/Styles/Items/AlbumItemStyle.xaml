@@ -55,7 +55,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="#919497"/>
                                             <Setter Target="AlbumName.Foreground" Value="#242628"/>
                                             <Setter Target="ImageOutline.Opacity" Value="0"/>
-                                            <Setter Target="HoverShadowTarget.Translation" Value="0,0,0"/>
+                                            <Setter Target="HoverShadowTarget.Opacity" Value="0"/>
                                             <Setter Target="PART_PlayIcon.Opacity" Value="0"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
@@ -74,7 +74,7 @@
                                             <Setter Target="ArtistName.Foreground" Value="Black"/>
                                             <Setter Target="AlbumName.Foreground" Value="Black"/>
                                             <Setter Target="ImageOutline.Opacity" Value="1"/>
-                                            <Setter Target="HoverShadowTarget.Translation" Value="0,0,12"/>
+                                            <Setter Target="HoverShadowTarget.Opacity" Value="1"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
@@ -112,7 +112,8 @@
                                 <Grid Background="White">
                                     <Grid Margin="6">
                                         <Border x:Name="HoverShadowTarget"
-                                                Translation="0,0,0">
+                                                Opacity="0"
+                                                Translation="0,0,12">
                                             <Border.Shadow>
                                                 <ThemeShadow x:Name="HoverShadow" />
                                             </Border.Shadow>
