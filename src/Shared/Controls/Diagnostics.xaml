@@ -64,7 +64,7 @@
 			</tkcontrols:SettingsCard>
 
 			<tkcontrols:SettingsCard
-				ActionIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
+				ActionIcon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xE8A7;}"
 				Header="Open logs folder"
 				HeaderIcon="{ui:SymbolIcon Symbol=Folder}"
 				IsClickEnabled="True">
@@ -78,7 +78,7 @@
 			<tkcontrols:SettingsCard
 				Description="An app restart will be required. All cores will be deleted and your preferences will be reset."
 				Header="Erase all data"
-				HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE75C;}"
+				HeaderIcon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xE75C;}"
 				IsClickEnabled="True">
 				<interactivity:Interaction.Behaviors>
 					<interactivity:EventTriggerBehavior EventName="Click">
@@ -91,7 +91,7 @@
 				Click="ManualCrash"
 				Description="Manually crash the app, for debug purposes."
 				Header="Crash the app"
-				HeaderIcon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE98F;}"
+				HeaderIcon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xE98F;}"
 				IsClickEnabled="True" />
 
 			<ListView

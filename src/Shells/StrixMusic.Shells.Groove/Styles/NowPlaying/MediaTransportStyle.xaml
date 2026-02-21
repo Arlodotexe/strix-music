@@ -20,7 +20,7 @@
                 <ControlTemplate TargetType="nowplaying:MediaTransports">
                     <StackPanel Orientation="Horizontal">
                         <ToggleButton Style="{StaticResource MediaToggleButton}">
-                            <FontIcon Glyph="&#xE8B1;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                            <FontIcon Glyph="&#xE8B1;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
 
                             <interactivity:Interaction.Behaviors>
                                 <interactivity:EventTriggerBehavior EventName="Click">
@@ -36,7 +36,7 @@
                                         <interactivity:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent},Mode=OneWay}" />
                                     </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <FontIcon Glyph="&#xE100;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                <FontIcon Glyph="&#xE100;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             </Button>
                             <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{Binding Device.IsPlaying, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
                                 <interactivity:Interaction.Behaviors>
@@ -45,9 +45,9 @@
                                     </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
                                 <owlcoreuno:ToggleContentButton.CheckedContent>
-                                    <FontIcon Glyph="&#xE103;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                    <FontIcon Glyph="&#xE103;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                                 </owlcoreuno:ToggleContentButton.CheckedContent>
-                                <FontIcon Glyph="&#xE102;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                <FontIcon Glyph="&#xE102;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton>
                             <Button Style="{StaticResource MediaButton}">
                                 <interactivity:Interaction.Behaviors>
@@ -55,7 +55,7 @@
                                         <interactivity:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
                                     </interactivity:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
-                                <FontIcon Glyph="&#xE101;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                <FontIcon Glyph="&#xE101;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             </Button>
                         </StackPanel>
 
@@ -68,12 +68,12 @@
                             </interactivity:Interaction.Behaviors>
 
                             <owlcoreuno:ToggleContentButton.IndeterminateContent>
-                                <FontIcon Glyph="&#xE8ED;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                <FontIcon Glyph="&#xE8ED;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton.IndeterminateContent>
                             <owlcoreuno:ToggleContentButton.CheckedContent>
-                                <FontIcon Glyph="&#xE8EE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                <FontIcon Glyph="&#xE8EE;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             </owlcoreuno:ToggleContentButton.CheckedContent>
-                            <FontIcon Glyph="&#xE8EE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                            <FontIcon Glyph="&#xE8EE;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                         </owlcoreuno:ToggleContentButton>
                     </StackPanel>
                 </ControlTemplate>

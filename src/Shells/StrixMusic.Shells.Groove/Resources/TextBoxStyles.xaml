@@ -89,7 +89,7 @@
                                                     FontStyle="Normal"
                                                     FontSize="{ThemeResource AutoSuggestBoxIconFontSize}"
                                                     Text="&#xE10A;"
-                                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                     AutomationProperties.AccessibilityView="Raw" />
                                             </Grid>
                                         </ControlTemplate>

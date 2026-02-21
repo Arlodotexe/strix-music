@@ -136,7 +136,7 @@
 
                                         <ContentPresenter Content="{TemplateBinding Content}"/>
 
-                                        <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}"
+                                        <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}"
                                                           FontSize="12" Foreground="{ThemeResource DataGridColumnHeaderForegroundBrush}"
                                                           HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"/>
                                     </Grid>
@@ -500,7 +500,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
-                            <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}" FontSize="8"
+                            <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}" FontSize="8"
                                               Foreground="{ThemeResource DataGridColumnHeaderForegroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"/>
                         </Grid>
                         <Grid x:Name="VerticalSeparator" BorderThickness="1,0" Margin="-1,0,0,0" VerticalAlignment="Stretch" BorderBrush="{TemplateBinding SeparatorBrush}" Opacity="0" Visibility="{TemplateBinding SeparatorVisibility}"/>
@@ -522,7 +522,7 @@
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="MinHeight" Value="16"/>
-        <Setter Target="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}"/>
+        <Setter Target="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="tkdgp:DataGridColumnHeader">

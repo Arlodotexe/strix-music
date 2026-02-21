@@ -194,7 +194,7 @@
 			Opacity="0.9">
 
 			<FontIcon
-				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontFamily="{StaticResource SymbolThemeFontFamily}"
 				FontSize="18"
 				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 				Glyph="&#xE7C2;" />
@@ -215,7 +215,7 @@
 			ToolTipService.ToolTip="Open app settings">
 
 			<FontIcon
-				FontFamily="{ThemeResource SymbolThemeFontFamily}"
+				FontFamily="{StaticResource SymbolThemeFontFamily}"
 				FontSize="16"
 				Foreground="{x:Bind ShellPresenter.CurrentShell.WindowHostOptions.ButtonForegroundColor, Converter={StaticResource ColorToSolidColorBrushConverter}, Mode=OneWay}"
 				Glyph="&#xE115;" />

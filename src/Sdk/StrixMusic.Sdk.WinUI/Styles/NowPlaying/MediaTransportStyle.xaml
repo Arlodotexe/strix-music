@@ -17,7 +17,7 @@
 						<!--  Skip and Prev buttons shouldn't flip with Bi-directional languages  -->
 						<StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
 							<Button Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Style="{StaticResource MediaButton}">
-								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE100;" />
+								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE100;" />
 								<interactivity:Interaction.Behaviors>
 									<interactivity:EventTriggerBehavior EventName="Click">
 										<interactivity:InvokeCommandAction Command="{Binding Device.PreviousAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
@@ -31,12 +31,12 @@
 									</interactivity:EventTriggerBehavior>
 								</interactivity:Interaction.Behaviors>
 								<owlcoreuno:ToggleContentButton.CheckedContent>
-									<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE103;" />
+									<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE103;" />
 								</owlcoreuno:ToggleContentButton.CheckedContent>
-								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE102;" />
+								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE102;" />
 							</owlcoreuno:ToggleContentButton>
 							<Button Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Style="{StaticResource MediaButton}">
-								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE101;" />
+								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE101;" />
 								<interactivity:Interaction.Behaviors>
 									<interactivity:EventTriggerBehavior EventName="Click">
 										<interactivity:InvokeCommandAction Command="{Binding Device.NextAsyncCommand, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
@@ -47,15 +47,15 @@
 
 						<owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
 							<owlcoreuno:ToggleContentButton.IndeterminateContent>
-								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE1CC;" />
+								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1CC;" />
 							</owlcoreuno:ToggleContentButton.IndeterminateContent>
 							<owlcoreuno:ToggleContentButton.CheckedContent>
-								<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE1CD;" />
+								<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1CD;" />
 							</owlcoreuno:ToggleContentButton.CheckedContent>
-							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE194;" />
+							<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE194;" />
 						</owlcoreuno:ToggleContentButton>
 						<Button Style="{StaticResource MediaButton}">
-							<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8B1;" />
+							<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B1;" />
 						</Button>
 					</StackPanel>
 				</ControlTemplate>

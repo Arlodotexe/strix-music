@@ -18,7 +18,7 @@
             <Button
                 Command="{x:Bind GoToParentCommand}"
                 Content="&#xE110;"
-                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
                 IsEnabled="{x:Bind IStorableChild(CurrentFolder), FallbackValue=false, Mode=OneWay}"
                 ToolTipService.ToolTip="Navigate up"
                 Visibility="{x:Bind InvertBoolToVisibility(GoToParentCommand.IsRunning), Mode=OneWay}" />
@@ -26,7 +26,7 @@
             <Button
                 Command="{x:Bind GoToParentCancelCommand}"
                 Content="&#xE10A;"
-                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
                 ToolTipService.ToolTip="Navigate up"
                 Visibility="{x:Bind GoToParentCommand.IsRunning, Mode=OneWay}" />
 

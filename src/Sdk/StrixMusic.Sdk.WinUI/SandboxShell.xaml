@@ -25,7 +25,7 @@
 				<muxc:NavigationViewItem
 					x:Name="HomeNavViewItem"
 					Content="Home"
-					Icon="{ui:FontIcon FontFamily={ThemeResource SymbolThemeFontFamily}, Glyph=&#xE10F;}" />
+					Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xE10F;}" />
 			</muxc:NavigationView.MenuItems>
 
 			<ScrollViewer MinHeight="{x:Bind NavViewSwitchPresenter.ActualHeight, Mode=OneWay}">

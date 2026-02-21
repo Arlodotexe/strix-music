@@ -99,7 +99,7 @@
                             Width="48"
                             Command="{x:Bind HamburgerPressedCommand}"
                             Style="{StaticResource GrooveButton}">
-                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
                         </Button>
 
                         <!--  Small Header text  -->
@@ -120,7 +120,7 @@
                             Width="48"
                             HorizontalAlignment="Right"
                             Style="{StaticResource GrooveButton}">
-                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
                         </Button>
                     </Grid>
 
@@ -164,7 +164,7 @@
                             Background="Transparent"
                             BorderThickness="0"
                             Command="{x:Bind HamburgerPressedCommand}">
-                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE700;" />
                         </Button>
 
                         <!--  Search Box  -->
@@ -173,7 +173,7 @@
                             Width="48"
                             HorizontalAlignment="Left"
                             Style="{StaticResource GrooveButton}">
-                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE11A;" />
                         </Button>
                         <AutoSuggestBox
                             x:Name="SearchBox"
@@ -196,7 +196,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEC4F;" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC4F;" />
 
                                 <TextBlock
                                     x:Uid="/Music/MyMusicTB"
@@ -216,7 +216,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--<SymbolIcon Symbol="Clock"/>-->
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE2AD;" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE2AD;" />
 
                                 <TextBlock
                                     x:Uid="/Music/RecentPlayedTB"
@@ -235,7 +235,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF61F;" />
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF61F;" />
 
                                 <TextBlock
                                     x:Uid="/Music/NowPlayingTB"
@@ -270,7 +270,7 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
 
-                                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE142;" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE142;" />
 
                                     <TextBlock
                                         x:Uid="/Music/PlaylistsTB"

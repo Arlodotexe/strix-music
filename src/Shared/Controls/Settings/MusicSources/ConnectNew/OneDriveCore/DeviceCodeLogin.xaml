@@ -82,7 +82,7 @@
 						</interactivity:EventTriggerBehavior>
 					</interactivity:Interaction.Behaviors>
 					<StackPanel Orientation="Horizontal" Spacing="5">
-						<FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
 
 						<TextBlock Text="{x:Bind DeviceCodeResult.VerificationUrl, FallbackValue='Loading', Mode=OneWay}" />
 					</StackPanel>

@@ -904,5 +904,6 @@ Global
 		Shared\StrixMusic.Shared.projitems*{2e82db60-ba1e-402c-a4f8-56da621b04e9}*SharedItemsImports = 13
 		Shared\StrixMusic.Shared.projitems*{6d55e3aa-a938-492c-83a9-f70c1866cfc3}*SharedItemsImports = 5
 		Shared\StrixMusic.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
+		Shared\StrixMusic.Shared.projitems*{d667a31b-a86c-465f-bffe-a47a060b17c8}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

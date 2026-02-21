@@ -182,7 +182,7 @@
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
                                         <FontIcon x:Name="Arrow"
-                        FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="12"
                         Foreground="{ThemeResource PivotNextButtonForeground}"
                         Glyph="&#xE0E3;"
@@ -229,7 +229,7 @@
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
                                         <FontIcon x:Name="Arrow"
-                        FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="12"
                         Foreground="{ThemeResource PivotPreviousButtonForeground}"
                         Glyph="&#xE0E2;"

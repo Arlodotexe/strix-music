@@ -148,7 +148,7 @@
                                                 </VisualState>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <FontIcon x:Name="Arrow" FontFamily="{ThemeResource SymbolThemeFontFamily}" FontSize="12" Foreground="{ThemeResource PivotNextButtonForeground}" Glyph="" HorizontalAlignment="Center" VerticalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" />
+                                        <FontIcon x:Name="Arrow" FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="12" Foreground="{ThemeResource PivotNextButtonForeground}" Glyph="" HorizontalAlignment="Center" VerticalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" />
                                     </Border>
                                 </ControlTemplate>
                                 <ControlTemplate x:Key="PreviousTemplate" TargetType="Button">
@@ -184,7 +184,7 @@
                                                 </VisualState>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <FontIcon x:Name="Arrow" FontFamily="{ThemeResource SymbolThemeFontFamily}" FontSize="12" Foreground="{ThemeResource PivotPreviousButtonForeground}" Glyph="" HorizontalAlignment="Center" VerticalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" />
+                                        <FontIcon x:Name="Arrow" FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="12" Foreground="{ThemeResource PivotPreviousButtonForeground}" Glyph="" HorizontalAlignment="Center" VerticalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" />
                                     </Border>
                                 </ControlTemplate>
                             </Grid.Resources>
