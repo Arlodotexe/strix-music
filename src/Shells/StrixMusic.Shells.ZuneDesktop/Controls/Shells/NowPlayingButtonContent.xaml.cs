@@ -86,6 +86,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
             _rectScaleTransforms = new ScaleTransform[BarCount];
 
             // Calculate the width of all rectangles to display
+            if (RootGrid.ActualWidth == 0)
+                return;
+
             double rectWidth = (RootGrid.ActualWidth / BarCount) - (PADDING * (BarCount - 1));
 
             for (int i = 0; i < BarCount; i++)
