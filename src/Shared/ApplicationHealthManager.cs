@@ -41,7 +41,8 @@ public class ApplicationHealthManager
         State.StackTrace = e.Exception.StackTrace;
 
         // Remove the stack trace from the reason message, if present.
-        State.UnhealthyShutdownReason = State.UnhealthyShutdownReason.Replace(State.StackTrace ?? string.Empty, string.Empty);
+        if (!string.IsNullOrWhiteSpace(State.StackTrace))
+            State.UnhealthyShutdownReason = State.UnhealthyShutdownReason.Replace(State.StackTrace, string.Empty);
 
         State.UnhealthyShutdown = shouldCrash;
         e.Handled = !shouldCrash;
