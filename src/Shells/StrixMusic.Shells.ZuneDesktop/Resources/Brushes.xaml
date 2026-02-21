@@ -210,7 +210,7 @@
     <UI:Color x:Key="ZunePink">#F10EA0</UI:Color>
     <UI:Color x:Key="ZuneOrange">#E95214</UI:Color>
 
-    <not_skia:CornerRadius x:Key="ZuneButtonCornerRadius">1000</not_skia:CornerRadius>
+    <win:CornerRadius x:Key="ZuneButtonCornerRadius">1000</win:CornerRadius>
     <skia:CornerRadius x:Key="ZuneButtonCornerRadius">0</skia:CornerRadius>
     
 </ResourceDictionary>
