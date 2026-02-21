@@ -117,13 +117,13 @@ namespace StrixMusic.Shells.ZuneDesktop
             var selectedTag = (MainSegmented.SelectedItem as CommunityToolkit.WinUI.Controls.SegmentedItem)?.Tag?.ToString();
             RequestTheme(selectedTag == "quickplay" ? ElementTheme.Dark : ElementTheme.Light);
 
-            if (selectedTag == "quickplay")
+            if (QuickplayPage is not null && selectedTag == (string)QuickplayPage.Tag)
             {
                 QuickplayPage.RunEnterViewAnimation();
             }
 
             // Collection page.
-            if (selectedTag == "collection")
+            if (PART_CollectionContent is not null && selectedTag == (string)PART_CollectionContent.Tag)
             {
                 PART_CollectionContent.AnimateAlbumCollection();
             }
@@ -138,8 +138,16 @@ namespace StrixMusic.Shells.ZuneDesktop
             }
 
             RootControl.RequestedTheme = theme;
-            var transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
-            transition.Begin();
+
+            if (DarkBackground.IsLoaded)
+            {
+                var transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
+                transition.Begin();
+            }
+            else
+            {
+                DarkBackground.Opacity = theme == ElementTheme.Dark ? 1 : 0;
+            }
 
             WindowHostOptions.ButtonForegroundColor = theme == ElementTheme.Dark ? Colors.White : Colors.Black;
         }
